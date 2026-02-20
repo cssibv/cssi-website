@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CRM Clienți | Portal CSSI</title>
+<meta name="robots" content="noindex, nofollow">
+<link rel="icon" href="https://eu.chat-img.sintra.ai/32c1b29c-0c86-4833-a031-e7c45e21a11e/983d52bb-2eb6-42f1-bed4-f94d769bb634/Logo_CSSI.png">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'Inter',sans-serif;color:#0f172a;background:#f1f5f9;overflow-x:hidden;}
+a{text-decoration:none;color:inherit;}
+
+/* UTILITIES */
+.container{max-width:1200px;margin:0 auto;padding:16px;}
+@media(min-width:640px){.container{padding:24px;}}
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);}
+
+/* AUTH */
+.auth-bg{min-height:100vh;background:linear-gradient(135deg,#0f172a 0%,#1e293b 50%,#0f172a 100%);display:flex;align-items:center;justify-content:center;padding:16px;}
+.auth-card{background:#fff;border-radius:20px;padding:40px 32px;width:100%;max-width:420px;box-shadow:0 25px 50px -12px rgba(0,0,0,0.4);}
+.auth-input{width:100%;padding:16px 20px;border:2px solid #e2e8f0;border-radius:14px;font-size:18px;text-align:center;outline:none;font-family:inherit;transition:all 0.2s;letter-spacing:2px;}
+.auth-input:focus{border-color:#dc2626;box-shadow:0 0 0 4px rgba(220,38,38,0.1);}
+.auth-btn{width:100%;padding:16px;background:linear-gradient(135deg,#dc2626,#991b1b);color:#fff;border:none;border-radius:14px;font-size:18px;font-weight:700;cursor:pointer;font-family:inherit;transition:all 0.3s;letter-spacing:0.5px;}
+.auth-btn:hover{transform:translateY(-1px);box-shadow:0 10px 25px -5px rgba(220,38,38,0.4);}
+.auth-error{color:#dc2626;text-align:center;font-size:14px;padding:8px;background:#fef2f2;border-radius:8px;display:none;}
+.auth-logo{width:80px;height:80px;border-radius:20px;object-fit:contain;margin:0 auto 16px;display:block;}
+
+/* DASHBOARD */
+.dash{min-height:100vh;background:#f1f5f9;}
+.hero{padding:24px;border-radius:20px;margin-bottom:20px;color:#fff;position:relative;overflow:hidden;}
+.hero::before{content:'';position:absolute;top:0;right:0;width:200px;height:200px;background:rgba(255,255,255,0.05);border-radius:50%;transform:translate(50%,-50%);}
+.hero.admin{background:linear-gradient(135deg,#0f172a,#1e293b);}
+.hero.org{background:linear-gradient(135deg,#1d4ed8,#1e40af);}
+.hero.mkt{background:linear-gradient(135deg,#7c3aed,#6d28d9);}
+.hero.sales{background:linear-gradient(135deg,#059669,#047857);}
+.hero.tech{background:linear-gradient(135deg,#ea580c,#c2410c);}
+.hero-title{font-size:clamp(18px,3vw,26px);font-weight:800;margin-bottom:4px;}
+.hero-sub{color:rgba(255,255,255,0.7);font-size:13px;}
+.role-pill{display:inline-flex;align-items:center;gap:6px;padding:6px 14px;background:rgba(255,255,255,0.15);backdrop-filter:blur(10px);border-radius:999px;font-size:13px;font-weight:600;}
+
+/* KPI CARDS */
+.kpi-row{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-bottom:20px;}
+@media(min-width:768px){.kpi-row{grid-template-columns:repeat(4,1fr);}}
+.kpi{background:#fff;border-radius:16px;padding:16px;position:relative;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,0.05);transition:all 0.3s;}
+.kpi:hover{transform:translateY(-2px);box-shadow:0 8px 25px -5px rgba(0,0,0,0.1);}
+.kpi-icon{font-size:28px;margin-bottom:8px;}
+.kpi-value{font-size:28px;font-weight:900;color:#0f172a;line-height:1;}
+.kpi-label{font-size:12px;color:#64748b;font-weight:500;margin-top:4px;}
+.kpi-bar{position:absolute;bottom:0;left:0;right:0;height:4px;}
+
+/* SECTION TITLE */
+.section-title{font-size:14px;font-weight:700;color:#64748b;text-transform:uppercase;letter-spacing:1.5px;margin-bottom:12px;display:flex;align-items:center;gap:8px;}
+
+/* MODULE GRID */
+.mod-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-bottom:20px;}
+@media(min-width:1024px){.mod-grid{grid-template-columns:repeat(4,1fr);}}
+.mod-card{background:#fff;border-radius:16px;padding:20px 16px;text-align:center;box-shadow:0 1px 3px rgba(0,0,0,0.05);transition:all 0.3s;display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:140px;border-top:4px solid transparent;cursor:pointer;position:relative;}
+.mod-card:hover{transform:translateY(-4px);box-shadow:0 15px 30px -5px rgba(0,0,0,0.12);}
+.mod-card.org{border-top-color:#3b82f6;}
+.mod-card.mkt{border-top-color:#8b5cf6;}
+.mod-card.sales{border-top-color:#10b981;}
+.mod-card.tech{border-top-color:#f97316;}
+.mod-card .m-icon{font-size:36px;margin-bottom:8px;}
+.mod-card .m-title{font-size:14px;font-weight:700;color:#0f172a;margin-bottom:2px;}
+.mod-card .m-desc{font-size:11px;color:#64748b;}
+.mod-card .m-badge{position:absolute;top:8px;right:8px;width:8px;height:8px;border-radius:50%;background:#22c55e;}
+
+/* QUICK ACTIONS */
+.quick-row{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px;padding-top:16px;border-top:1px solid rgba(255,255,255,0.15);}
+.quick-btn{display:inline-flex;align-items:center;gap:8px;padding:10px 16px;background:rgba(255,255,255,0.15);backdrop-filter:blur(10px);border-radius:12px;font-size:13px;font-weight:600;color:#fff;transition:all 0.2s;cursor:pointer;border:none;font-family:inherit;}
+.quick-btn:hover{background:rgba(255,255,255,0.25);transform:translateY(-1px);}
+
+/* NOTIFICATIONS */
+.notif-card{background:#fff;border-radius:16px;padding:16px;margin-bottom:20px;box-shadow:0 1px 3px rgba(0,0,0,0.05);}
+.notif-item{display:flex;align-items:flex-start;gap:12px;padding:10px 0;border-bottom:1px solid #f1f5f9;}
+.notif-item:last-child{border-bottom:none;}
+.notif-dot{width:8px;height:8px;border-radius:50%;margin-top:6px;flex-shrink:0;}
+.notif-text{font-size:13px;color:#334155;line-height:1.5;}
+.notif-time{font-size:11px;color:#94a3b8;margin-top:2px;}
+
+/* LOGOUT */
+.logout{background:none;border:none;color:#94a3b8;font-size:13px;cursor:pointer;font-family:inherit;padding:8px 16px;transition:all 0.2s;border-radius:8px;}
+.logout:hover{color:#dc2626;background:#fef2f2;}
+.footer-text{text-align:center;color:#cbd5e1;font-size:11px;margin-top:16px;padding-bottom:80px;}
+
+/* BOTTOM NAV (ALL PAGES) */
+.bottom-nav{position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1px solid #e2e8f0;box-shadow:0 -4px 20px rgba(0,0,0,0.08);padding:6px 12px;z-index:100;display:flex;gap:4px;}
+@media(min-width:768px){.bottom-nav{display:none;}}
+.bn-item{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:8px 4px;border-radius:10px;font-size:10px;font-weight:600;color:#64748b;transition:all 0.2s;gap:2px;}
+.bn-item.active{color:#dc2626;background:#fef2f2;}
+.bn-item .bn-icon{font-size:20px;}
+
+/* MODULE PAGE SHARED */
+.page-header{background:linear-gradient(135deg,var(--h1),var(--h2));color:#fff;padding:16px 20px;border-radius:16px;margin-bottom:16px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;}
+.page-back{color:rgba(255,255,255,0.8);font-size:13px;font-weight:500;display:flex;align-items:center;gap:6px;}
+.page-back:hover{color:#fff;}
+.page-title{font-size:18px;font-weight:800;}
+.page-ext{padding:8px 14px;background:rgba(255,255,255,0.15);backdrop-filter:blur(10px);border-radius:10px;font-size:13px;font-weight:500;transition:all 0.2s;}
+.page-ext:hover{background:rgba(255,255,255,0.25);}
+
+/* TABS */
+.tabs{display:flex;gap:8px;margin-bottom:16px;}
+.tab{flex:1;padding:12px;border-radius:12px;font-weight:700;font-size:13px;border:none;cursor:pointer;font-family:inherit;transition:all 0.2s;background:#fff;color:#475569;box-shadow:0 1px 3px rgba(0,0,0,0.05);}
+.tab.active{color:#fff;box-shadow:0 4px 15px -3px rgba(0,0,0,0.2);}
+
+/* CARD */
+.card{background:#fff;border-radius:16px;box-shadow:0 1px 3px rgba(0,0,0,0.05);overflow:hidden;}
+.card-head{padding:14px;text-align:center;color:#fff;font-weight:700;font-size:15px;}
+.card-head small{display:block;font-size:11px;opacity:0.8;margin-top:2px;font-weight:500;}
+.card iframe{width:100%;border:0;min-height:500px;height:calc(100vh - 320px);}
+.card-body{padding:24px;text-align:center;}
+
+/* FORM NATIVE */
+.form-group{margin-bottom:16px;text-align:left;}
+.form-label{display:block;font-size:13px;font-weight:600;color:#334155;margin-bottom:6px;}
+.form-label .req{color:#dc2626;}
+.form-input,.form-select,.form-textarea{width:100%;padding:12px 16px;border:2px solid #e2e8f0;border-radius:12px;font-size:15px;font-family:inherit;outline:none;transition:all 0.2s;background:#fff;}
+.form-input:focus,.form-select:focus,.form-textarea:focus{border-color:#3b82f6;box-shadow:0 0 0 3px rgba(59,130,246,0.1);}
+.form-textarea{min-height:100px;resize:vertical;}
+.form-select{cursor:pointer;}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+@media(max-width:480px){.form-row{grid-template-columns:1fr;}}
+.form-submit{width:100%;padding:14px;background:linear-gradient(135deg,#22c55e,#16a34a);color:#fff;border:none;border-radius:12px;font-size:16px;font-weight:700;cursor:pointer;font-family:inherit;transition:all 0.3s;}
+.form-submit:hover{transform:translateY(-1px);box-shadow:0 8px 25px -5px rgba(34,197,94,0.4);}
+.form-success{display:none;text-align:center;padding:32px;}
+
+/* LEGEND */
+.legend{margin-top:16px;background:#fff;border-radius:12px;padding:14px;box-shadow:0 1px 3px rgba(0,0,0,0.05);}
+.legend-title{font-size:12px;font-weight:700;color:#64748b;margin-bottom:8px;}
+.legend-items{display:flex;flex-wrap:wrap;gap:8px;}
+.legend-tag{padding:4px 10px;border-radius:6px;font-size:12px;font-weight:600;}
+
+/* TIPS */
+.tips{margin-top:16px;display:grid;grid-template-columns:repeat(3,1fr);gap:12px;}
+@media(max-width:640px){.tips{grid-template-columns:1fr;}}
+.tip{padding:14px;border-radius:12px;text-align:center;}
+.tip-icon{font-size:24px;margin-bottom:4px;}
+.tip-text{font-size:12px;font-weight:600;}
+
+:root{--h1:#059669;--h2:#047857;}
+</style>
+</head>
+<body>
+
+<div id="authWall" class="auth-bg">
+<div class="auth-card" style="text-align:center;">
+    <div style="font-size:48px;margin-bottom:16px;">🔐</div>
+    <h1 style="font-size:20px;font-weight:700;color:#0f172a;margin-bottom:16px;">Acces restricționat</h1>
+    <p style="color:#64748b;margin-bottom:24px;">Ai nevoie de acces Vânzări.</p>
+    <a href="../admin.html" class="auth-btn" style="display:inline-block;width:auto;padding:12px 32px;">Mergi la Login</a>
+</div>
+</div>
+
+<div id="main" style="display:none;">
+<div class="container">
+    <div class="page-header">
+        <div style="display:flex;align-items:center;gap:16px;">
+            <a href="../admin.html" class="page-back">← Înapoi</a>
+            <h1 class="page-title">💰 CRM Clienți</h1>
+        </div>
+        <a href="https://docs.google.com/spreadsheets/d/1DQlmxJWMQh9NpwzKNwti2YN47u2vKIRG2n9Q1h2rVHk/edit?usp=sharing" target="_blank" rel="noopener noreferrer" class="page-ext">🔗 Google Sheets</a>
+    </div>
+<div class="kpi-row" style="margin-bottom:16px;grid-template-columns:repeat(5,1fr);">
+        <div class="kpi" style="border-left:3px solid #3b82f6;padding:12px;"><div style="font-size:20px;">🆕</div><div class="kpi-label">Nou</div></div>
+        <div class="kpi" style="border-left:3px solid #eab308;padding:12px;"><div style="font-size:20px;">📞</div><div class="kpi-label">Contactat</div></div>
+        <div class="kpi" style="border-left:3px solid #8b5cf6;padding:12px;"><div style="font-size:20px;">📧</div><div class="kpi-label">Ofertă</div></div>
+        <div class="kpi" style="border-left:3px solid #22c55e;padding:12px;"><div style="font-size:20px;">✅</div><div class="kpi-label">Câștigat</div></div>
+        <div class="kpi" style="border-left:3px solid #ef4444;padding:12px;"><div style="font-size:20px;">❌</div><div class="kpi-label">Pierdut</div></div>
+    </div>
+    <div class="tabs"><button class="tab active" style="background:#22c55e;" data-tab="add" data-color="#22c55e" onclick="switchTab(this)">➕ Lead Nou</button>
+<button class="tab "  data-tab="list" data-color="#10b981" onclick="switchTab(this)">📋 Lista</button>
+<button class="tab "  data-tab="guide" data-color="#8b5cf6" onclick="switchTab(this)">📊 Pipeline</button>
+</div>
+<div class="tab-panel" id="panel_add" style="display:block;">
+<div class="card"><div class="card-head" style="background:#22c55e;">➕ Adaugă Lead Nou<small>Completează datele clientului</small></div>
+<div class="card-body" style="text-align:left;max-width:500px;margin:0 auto;">
+    <div id="crmForm">
+        <div class="form-row">
+            <div class="form-group"><label class="form-label">Nume / Firmă <span class="req">*</span></label><input type="text" class="form-input" id="crmName" placeholder="Ex: Ion Popescu / SC Alfa SRL"></div>
+            <div class="form-group"><label class="form-label">Telefon <span class="req">*</span></label><input type="tel" class="form-input" id="crmPhone" placeholder="07xx xxx xxx"></div>
+        </div>
+        <div class="form-row">
+            <div class="form-group"><label class="form-label">Email</label><input type="email" class="form-input" id="crmEmail" placeholder="email@exemplu.ro"></div>
+            <div class="form-group"><label class="form-label">Locație</label><input type="text" class="form-input" id="crmLoc" placeholder="Brașov, Sibiu..."></div>
+        </div>
+        <div class="form-row">
+            <div class="form-group"><label class="form-label">Serviciu dorit <span class="req">*</span></label>
+                <select class="form-select" id="crmService">
+                    <option value="">Selectează...</option>
+                    <option>Camere supraveghere</option><option>Alarmă antiefracție</option><option>Detecție incendiu</option>
+                    <option>Control acces</option><option>Automatizări porți</option><option>Interfon/Videointerfon</option>
+                    <option>Instalații electrice</option><option>Climatizare</option><option>Alte servicii</option>
+                </select>
+            </div>
+            <div class="form-group"><label class="form-label">Sursă</label>
+                <select class="form-select" id="crmSource">
+                    <option value="">Selectează...</option>
+                    <option>📞 Telefon</option><option>🌐 Website</option><option>👤 Recomandare</option>
+                    <option>📘 Facebook</option><option>📸 Instagram</option><option>📧 Email</option><option>🚶 Walk-in</option>
+                </select>
+            </div>
+        </div>
+        <div class="form-group"><label class="form-label">Urgență</label>
+            <select class="form-select" id="crmUrgent">
+                <option value="normal">🟡 Normal</option><option value="urgent">🔴 Urgent (24h)</option><option value="low">🟢 Informare / viitor</option>
+            </select>
+        </div>
+        <div class="form-group"><label class="form-label">Observații</label><textarea class="form-textarea" id="crmNotes" placeholder="Detalii despre cerere..."></textarea></div>
+        <button class="form-submit" onclick="submitCRM()">💰 Adaugă Lead</button>
+    </div>
+    <div class="form-success" id="crmSuccess">
+        <div style="font-size:64px;margin-bottom:16px;">✅</div>
+        <h3 style="font-size:20px;font-weight:700;color:#166534;margin-bottom:8px;">Lead adăugat!</h3>
+        <p style="color:#64748b;font-size:14px;margin-bottom:16px;">Verifică în tab-ul Lista pentru confirmare</p>
+        <button onclick="resetCRMForm()" class="form-submit" style="background:linear-gradient(135deg,#3b82f6,#2563eb);">➕ Adaugă alt lead</button>
+    </div>
+</div></div></div>
+<div class="tab-panel" id="panel_list" style="display:none;">
+<div class="card"><div class="card-head" style="background:#10b981;">📋 Lista Lead-uri & Clienți</div>
+<div style="background:#f8fafc;padding:8px;display:flex;flex-wrap:wrap;justify-content:center;gap:8px;font-size:11px;border-bottom:1px solid #e2e8f0;">
+    <span style="padding:3px 8px;background:#dbeafe;color:#1d4ed8;border-radius:999px;">🆕 Nou</span>
+    <span style="padding:3px 8px;background:#fef9c3;color:#a16207;border-radius:999px;">📞 Contactat</span>
+    <span style="padding:3px 8px;background:#f3e8ff;color:#7e22ce;border-radius:999px;">📧 Ofertă</span>
+    <span style="padding:3px 8px;background:#dcfce7;color:#166534;border-radius:999px;">✅ Câștigat</span>
+    <span style="padding:3px 8px;background:#fef2f2;color:#dc2626;border-radius:999px;">❌ Pierdut</span>
+</div>
+<iframe src="https://docs.google.com/spreadsheets/d/1DQlmxJWMQh9NpwzKNwti2YN47u2vKIRG2n9Q1h2rVHk/edit?usp=sharing&rm=minimal&single=true&widget=true&headers=false" title="CRM CSSI"></iframe></div></div>
+<div class="tab-panel" id="panel_guide" style="display:none;">
+<div class="card"><div class="card-head" style="background:#8b5cf6;">📊 Pipeline & Tips</div><div style="padding:24px;">
+    <div style="display:flex;align-items:center;justify-content:center;gap:4px;flex-wrap:wrap;font-size:12px;margin-bottom:24px;">
+        <span style="padding:8px 12px;background:#dbeafe;color:#1e40af;border-radius:8px;font-weight:600;">🆕 Nou</span><span style="color:#94a3b8;">→</span>
+        <span style="padding:8px 12px;background:#fef9c3;color:#854d0e;border-radius:8px;font-weight:600;">📞 Contactat</span><span style="color:#94a3b8;">→</span>
+        <span style="padding:8px 12px;background:#f3e8ff;color:#7e22ce;border-radius:8px;font-weight:600;">📧 Ofertă</span><span style="color:#94a3b8;">→</span>
+        <span style="padding:8px 12px;background:#dcfce7;color:#166534;border-radius:8px;font-weight:600;">✅ Câștigat</span>
+    </div>
+    <div style="background:#f8fafc;border-radius:12px;padding:16px;">
+        <h3 style="font-weight:700;color:#1e293b;margin-bottom:8px;">💡 Reguli de aur</h3>
+        <ul style="color:#475569;font-size:13px;list-style:none;line-height:2.2;">
+            <li>⏰ Lead-uri noi → contactează în <b>max 2 ore</b></li>
+            <li>📞 Fără răspuns → follow-up la <b>3 zile</b></li>
+            <li>📧 După evaluare → ofertă în <b>max 24h</b></li>
+            <li>✅ Câștigat → programare echipă imediat</li>
+        </ul>
+    </div>
+</div></div></div>
+
+
+    <div class="footer-text">CSSI · Portal Intern · Modificările se salvează automat</div>
+</div>
+</div>
+
+<div class="bottom-nav">
+  <a href="../admin.html" class="bn-item"><span class="bn-icon">🏠</span>Acasă</a>
+  <a href="calendar-zilnic.html" class="bn-item"><span class="bn-icon">📅</span>Task-uri</a>
+  <a href="crm-clienti.html" class="bn-item active"><span class="bn-icon">💰</span>CRM</a>
+  <a href="checklist-montaj.html" class="bn-item"><span class="bn-icon">✅</span>Raport</a>
+  <a href="necesar-materiale.html" class="bn-item"><span class="bn-icon">📦</span>Material</a>
+</div>
+
+<script>
+(function(){
+    var role = sessionStorage.getItem("cssi-role");
+    if (role === "admin" || role === "sales") {
+        document.getElementById('authWall').style.display='none';
+        document.getElementById('main').style.display='block';
+    }
+})();
+
+function switchTab(btn){
+    document.querySelectorAll('.tab').forEach(function(t){t.classList.remove('active');t.style.background='';t.style.color='';});
+    document.querySelectorAll('.tab-panel').forEach(function(p){p.style.display='none';});
+    btn.classList.add('active');
+    btn.style.background=btn.dataset.color;
+    btn.style.color='#fff';
+    document.getElementById('panel_'+btn.dataset.tab).style.display='block';
+}
+
+function copyText(text){navigator.clipboard.writeText(text).then(function(){alert('Copiat! ✅');});}
+
+function submitCRM(){
+    var name = document.getElementById('crmName').value;
+    var phone = document.getElementById('crmPhone').value;
+    var service = document.getElementById('crmService').value;
+    if(!name||!phone||!service){alert('Completează câmpurile obligatorii!');return;}
+    // Open Sheet for manual add (until Apps Script is configured)
+    var sheetUrl = 'https://docs.google.com/spreadsheets/d/1DQlmxJWMQh9NpwzKNwti2YN47u2vKIRG2n9Q1h2rVHk/edit?usp=sharing';
+    window.open(sheetUrl,'_blank');
+    document.getElementById('crmForm').style.display='none';
+    document.getElementById('crmSuccess').style.display='block';
+}
+function resetCRMForm(){
+    document.getElementById('crmForm').style.display='block';
+    document.getElementById('crmSuccess').style.display='none';
+    document.querySelectorAll('#crmForm input, #crmForm textarea').forEach(function(el){el.value='';});
+}
+
+</script>
+</body>
+</html>

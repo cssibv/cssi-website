@@ -1,0 +1,20 @@
+{
+  "name": "Portal CSSI",
+  "short_name": "CSSI",
+  "description": "Portal intern CSSI - Confort, Securitate, Siguranță, Imobil",
+  "start_url": "/admin.html",
+  "display": "standalone",
+  "background_color": "#0f172a",
+  "theme_color": "#dc2626",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "https://eu.chat-img.sintra.ai/32c1b29c-0c86-4833-a031-e7c45e21a11e/983d52bb-2eb6-42f1-bed4-f94d769bb634/Logo_CSSI.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["business", "productivity"],
+  "lang": "ro"
+}

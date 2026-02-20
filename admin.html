@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Portal Intern CSSI</title>
+<meta name="robots" content="noindex, nofollow">
+<link rel="icon" href="https://eu.chat-img.sintra.ai/32c1b29c-0c86-4833-a031-e7c45e21a11e/983d52bb-2eb6-42f1-bed4-f94d769bb634/Logo_CSSI.png">
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#dc2626">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Portal CSSI">
+<link rel="apple-touch-icon" href="https://eu.chat-img.sintra.ai/32c1b29c-0c86-4833-a031-e7c45e21a11e/983d52bb-2eb6-42f1-bed4-f94d769bb634/Logo_CSSI.png">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'Inter',sans-serif;color:#0f172a;background:#f1f5f9;overflow-x:hidden;}
+a{text-decoration:none;color:inherit;}
+
+/* UTILITIES */
+.container{max-width:1200px;margin:0 auto;padding:16px;}
+@media(min-width:640px){.container{padding:24px;}}
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);}
+
+/* AUTH */
+.auth-bg{min-height:100vh;background:linear-gradient(135deg,#0f172a 0%,#1e293b 50%,#0f172a 100%);display:flex;align-items:center;justify-content:center;padding:16px;}
+.auth-card{background:#fff;border-radius:20px;padding:40px 32px;width:100%;max-width:420px;box-shadow:0 25px 50px -12px rgba(0,0,0,0.4);}
+.auth-input{width:100%;padding:16px 20px;border:2px solid #e2e8f0;border-radius:14px;font-size:18px;text-align:center;outline:none;font-family:inherit;transition:all 0.2s;letter-spacing:2px;}
+.auth-input:focus{border-color:#dc2626;box-shadow:0 0 0 4px rgba(220,38,38,0.1);}
+.auth-btn{width:100%;padding:16px;background:linear-gradient(135deg,#dc2626,#991b1b);color:#fff;border:none;border-radius:14px;font-size:18px;font-weight:700;cursor:pointer;font-family:inherit;transition:all 0.3s;letter-spacing:0.5px;}
+.auth-btn:hover{transform:translateY(-1px);box-shadow:0 10px 25px -5px rgba(220,38,38,0.4);}
+.auth-error{color:#dc2626;text-align:center;font-size:14px;padding:8px;background:#fef2f2;border-radius:8px;display:none;}
+.auth-logo{width:80px;height:80px;border-radius:20px;object-fit:contain;margin:0 auto 16px;display:block;}
+
+/* DASHBOARD */
+.dash{min-height:100vh;background:#f1f5f9;}
+.hero{padding:24px;border-radius:20px;margin-bottom:20px;color:#fff;position:relative;overflow:hidden;}
+.hero::before{content:'';position:absolute;top:0;right:0;width:200px;height:200px;background:rgba(255,255,255,0.05);border-radius:50%;transform:translate(50%,-50%);}
+.hero.admin{background:linear-gradient(135deg,#0f172a,#1e293b);}
+.hero.org{background:linear-gradient(135deg,#1d4ed8,#1e40af);}
+.hero.mkt{background:linear-gradient(135deg,#7c3aed,#6d28d9);}
+.hero.sales{background:linear-gradient(135deg,#059669,#047857);}
+.hero.tech{background:linear-gradient(135deg,#ea580c,#c2410c);}
+.hero-title{font-size:clamp(18px,3vw,26px);font-weight:800;margin-bottom:4px;}
+.hero-sub{color:rgba(255,255,255,0.7);font-size:13px;}
+.role-pill{display:inline-flex;align-items:center;gap:6px;padding:6px 14px;background:rgba(255,255,255,0.15);backdrop-filter:blur(10px);border-radius:999px;font-size:13px;font-weight:600;}
+
+/* KPI CARDS */
+.kpi-row{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-bottom:20px;}
+@media(min-width:768px){.kpi-row{grid-template-columns:repeat(4,1fr);}}
+.kpi{background:#fff;border-radius:16px;padding:16px;position:relative;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,0.05);transition:all 0.3s;}
+.kpi:hover{transform:translateY(-2px);box-shadow:0 8px 25px -5px rgba(0,0,0,0.1);}
+.kpi-icon{font-size:28px;margin-bottom:8px;}
+.kpi-value{font-size:28px;font-weight:900;color:#0f172a;line-height:1;}
+.kpi-label{font-size:12px;color:#64748b;font-weight:500;margin-top:4px;}
+.kpi-bar{position:absolute;bottom:0;left:0;right:0;height:4px;}
+
+/* SECTION TITLE */
+.section-title{font-size:14px;font-weight:700;color:#64748b;text-transform:uppercase;letter-spacing:1.5px;margin-bottom:12px;display:flex;align-items:center;gap:8px;}
+
+/* MODULE GRID */
+.mod-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-bottom:20px;}
+@media(min-width:1024px){.mod-grid{grid-template-columns:repeat(4,1fr);}}
+.mod-card{background:#fff;border-radius:16px;padding:20px 16px;text-align:center;box-shadow:0 1px 3px rgba(0,0,0,0.05);transition:all 0.3s;display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:140px;border-top:4px solid transparent;cursor:pointer;position:relative;}
+.mod-card:hover{transform:translateY(-4px);box-shadow:0 15px 30px -5px rgba(0,0,0,0.12);}
+.mod-card.org{border-top-color:#3b82f6;}
+.mod-card.mkt{border-top-color:#8b5cf6;}
+.mod-card.sales{border-top-color:#10b981;}
+.mod-card.tech{border-top-color:#f97316;}
+.mod-card .m-icon{font-size:36px;margin-bottom:8px;}
+.mod-card .m-title{font-size:14px;font-weight:700;color:#0f172a;margin-bottom:2px;}
+.mod-card .m-desc{font-size:11px;color:#64748b;}
+.mod-card .m-badge{position:absolute;top:8px;right:8px;width:8px;height:8px;border-radius:50%;background:#22c55e;}
+
+/* QUICK ACTIONS */
+.quick-row{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px;padding-top:16px;border-top:1px solid rgba(255,255,255,0.15);}
+.quick-btn{display:inline-flex;align-items:center;gap:8px;padding:10px 16px;background:rgba(255,255,255,0.15);backdrop-filter:blur(10px);border-radius:12px;font-size:13px;font-weight:600;color:#fff;transition:all 0.2s;cursor:pointer;border:none;font-family:inherit;}
+.quick-btn:hover{background:rgba(255,255,255,0.25);transform:translateY(-1px);}
+
+/* NOTIFICATIONS */
+.notif-card{background:#fff;border-radius:16px;padding:16px;margin-bottom:20px;box-shadow:0 1px 3px rgba(0,0,0,0.05);}
+.notif-item{display:flex;align-items:flex-start;gap:12px;padding:10px 0;border-bottom:1px solid #f1f5f9;}
+.notif-item:last-child{border-bottom:none;}
+.notif-dot{width:8px;height:8px;border-radius:50%;margin-top:6px;flex-shrink:0;}
+.notif-text{font-size:13px;color:#334155;line-height:1.5;}
+.notif-time{font-size:11px;color:#94a3b8;margin-top:2px;}
+
+/* LOGOUT */
+.logout{background:none;border:none;color:#94a3b8;font-size:13px;cursor:pointer;font-family:inherit;padding:8px 16px;transition:all 0.2s;border-radius:8px;}
+.logout:hover{color:#dc2626;background:#fef2f2;}
+.footer-text{text-align:center;color:#cbd5e1;font-size:11px;margin-top:16px;padding-bottom:80px;}
+
+/* BOTTOM NAV (ALL PAGES) */
+.bottom-nav{position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1px solid #e2e8f0;box-shadow:0 -4px 20px rgba(0,0,0,0.08);padding:6px 12px;z-index:100;display:flex;gap:4px;}
+@media(min-width:768px){.bottom-nav{display:none;}}
+.bn-item{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:8px 4px;border-radius:10px;font-size:10px;font-weight:600;color:#64748b;transition:all 0.2s;gap:2px;}
+.bn-item.active{color:#dc2626;background:#fef2f2;}
+.bn-item .bn-icon{font-size:20px;}
+
+/* MODULE PAGE SHARED */
+.page-header{background:linear-gradient(135deg,var(--h1),var(--h2));color:#fff;padding:16px 20px;border-radius:16px;margin-bottom:16px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;}
+.page-back{color:rgba(255,255,255,0.8);font-size:13px;font-weight:500;display:flex;align-items:center;gap:6px;}
+.page-back:hover{color:#fff;}
+.page-title{font-size:18px;font-weight:800;}
+.page-ext{padding:8px 14px;background:rgba(255,255,255,0.15);backdrop-filter:blur(10px);border-radius:10px;font-size:13px;font-weight:500;transition:all 0.2s;}
+.page-ext:hover{background:rgba(255,255,255,0.25);}
+
+/* TABS */
+.tabs{display:flex;gap:8px;margin-bottom:16px;}
+.tab{flex:1;padding:12px;border-radius:12px;font-weight:700;font-size:13px;border:none;cursor:pointer;font-family:inherit;transition:all 0.2s;background:#fff;color:#475569;box-shadow:0 1px 3px rgba(0,0,0,0.05);}
+.tab.active{color:#fff;box-shadow:0 4px 15px -3px rgba(0,0,0,0.2);}
+
+/* CARD */
+.card{background:#fff;border-radius:16px;box-shadow:0 1px 3px rgba(0,0,0,0.05);overflow:hidden;}
+.card-head{padding:14px;text-align:center;color:#fff;font-weight:700;font-size:15px;}
+.card-head small{display:block;font-size:11px;opacity:0.8;margin-top:2px;font-weight:500;}
+.card iframe{width:100%;border:0;min-height:500px;height:calc(100vh - 320px);}
+.card-body{padding:24px;text-align:center;}
+
+/* FORM NATIVE */
+.form-group{margin-bottom:16px;text-align:left;}
+.form-label{display:block;font-size:13px;font-weight:600;color:#334155;margin-bottom:6px;}
+.form-label .req{color:#dc2626;}
+.form-input,.form-select,.form-textarea{width:100%;padding:12px 16px;border:2px solid #e2e8f0;border-radius:12px;font-size:15px;font-family:inherit;outline:none;transition:all 0.2s;background:#fff;}
+.form-input:focus,.form-select:focus,.form-textarea:focus{border-color:#3b82f6;box-shadow:0 0 0 3px rgba(59,130,246,0.1);}
+.form-textarea{min-height:100px;resize:vertical;}
+.form-select{cursor:pointer;}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+@media(max-width:480px){.form-row{grid-template-columns:1fr;}}
+.form-submit{width:100%;padding:14px;background:linear-gradient(135deg,#22c55e,#16a34a);color:#fff;border:none;border-radius:12px;font-size:16px;font-weight:700;cursor:pointer;font-family:inherit;transition:all 0.3s;}
+.form-submit:hover{transform:translateY(-1px);box-shadow:0 8px 25px -5px rgba(34,197,94,0.4);}
+.form-success{display:none;text-align:center;padding:32px;}
+
+/* LEGEND */
+.legend{margin-top:16px;background:#fff;border-radius:12px;padding:14px;box-shadow:0 1px 3px rgba(0,0,0,0.05);}
+.legend-title{font-size:12px;font-weight:700;color:#64748b;margin-bottom:8px;}
+.legend-items{display:flex;flex-wrap:wrap;gap:8px;}
+.legend-tag{padding:4px 10px;border-radius:6px;font-size:12px;font-weight:600;}
+
+/* TIPS */
+.tips{margin-top:16px;display:grid;grid-template-columns:repeat(3,1fr);gap:12px;}
+@media(max-width:640px){.tips{grid-template-columns:1fr;}}
+.tip{padding:14px;border-radius:12px;text-align:center;}
+.tip-icon{font-size:24px;margin-bottom:4px;}
+.tip-text{font-size:12px;font-weight:600;}
+</style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div id="login" class="auth-bg">
+<div class="auth-card">
+    <img src="https://eu.chat-img.sintra.ai/32c1b29c-0c86-4833-a031-e7c45e21a11e/983d52bb-2eb6-42f1-bed4-f94d769bb634/Logo_CSSI.png" alt="CSSI" class="auth-logo">
+    <h1 style="font-size:22px;font-weight:800;color:#0f172a;text-align:center;margin-bottom:4px;">Portal Intern CSSI</h1>
+    <p style="text-align:center;color:#64748b;font-size:14px;margin-bottom:24px;">Introdu parola pentru acces</p>
+    <form onsubmit="doLogin(event)">
+        <input type="password" id="pw" class="auth-input" placeholder="••••••••" autofocus>
+        <div id="err" class="auth-error" style="margin-top:12px;"></div>
+        <button type="submit" class="auth-btn" style="margin-top:16px;">Intră în Portal</button>
+    </form>
+    <p style="text-align:center;color:#cbd5e1;font-size:11px;margin-top:24px;">CSSI · Confort, Securitate, Siguranță, Imobil</p>
+</div>
+</div>
+
+<!-- DASHBOARD -->
+<div id="dash" class="dash" style="display:none;">
+<div class="container">
+
+    <!-- HERO -->
+    <div id="hero" class="hero admin">
+        <div style="display:flex;flex-wrap:wrap;justify-content:space-between;align-items:flex-start;gap:12px;position:relative;z-index:1;">
+            <div>
+                <h1 id="heroTitle" class="hero-title"></h1>
+                <p id="heroSub" class="hero-sub"></p>
+            </div>
+            <span id="heroPill" class="role-pill"></span>
+        </div>
+        <div id="quickActions" class="quick-row" style="display:none;"></div>
+    </div>
+
+    <!-- KPI (admin only) -->
+    <div id="kpiSection" style="display:none;">
+        <div class="section-title">📊 Rezumat Activitate</div>
+        <div class="kpi-row">
+            <div class="kpi"><div class="kpi-icon">📞</div><div class="kpi-value" id="kpiLeads">—</div><div class="kpi-label">Lead-uri luna asta</div><div class="kpi-bar" style="background:linear-gradient(90deg,#3b82f6,#60a5fa);"></div></div>
+            <div class="kpi"><div class="kpi-icon">🔧</div><div class="kpi-value" id="kpiLucrari">—</div><div class="kpi-label">Lucrări active</div><div class="kpi-bar" style="background:linear-gradient(90deg,#f97316,#fb923c);"></div></div>
+            <div class="kpi"><div class="kpi-icon">📦</div><div class="kpi-value" id="kpiMateriale">—</div><div class="kpi-label">Materiale în așteptare</div><div class="kpi-bar" style="background:linear-gradient(90deg,#eab308,#facc15);"></div></div>
+            <div class="kpi"><div class="kpi-icon">🚀</div><div class="kpi-value" id="kpiPostari">—</div><div class="kpi-label">Postări programate</div><div class="kpi-bar" style="background:linear-gradient(90deg,#8b5cf6,#a78bfa);"></div></div>
+        </div>
+    </div>
+
+    <!-- NOTIFICATIONS (admin only) -->
+    <div id="notifSection" style="display:none;">
+        <div class="section-title">🔔 Activitate Recentă</div>
+        <div class="notif-card">
+            <div class="notif-item"><div class="notif-dot" style="background:#3b82f6;"></div><div><div class="notif-text">Portalul CSSI v2.0 este activ! Toate modulele funcționează.</div><div class="notif-time">Astăzi</div></div></div>
+            <div class="notif-item"><div class="notif-dot" style="background:#22c55e;"></div><div><div class="notif-text">Sistemul de notificări va fi activat după conectarea Google Sheets.</div><div class="notif-time">În curând</div></div></div>
+            <div class="notif-item"><div class="notif-dot" style="background:#f97316;"></div><div><div class="notif-text">Conectează Google Apps Script pentru rapoarte automate zilnice.</div><div class="notif-time">De configurat</div></div></div>
+        </div>
+    </div>
+
+    <!-- MODULES -->
+    <div class="section-title" id="modulesTitle">📱 Module disponibile</div>
+    <div id="grid" class="mod-grid"></div>
+
+    <!-- LOGOUT -->
+    <div style="text-align:center;margin-top:24px;">
+        <button onclick="doLogout()" class="logout">🚪 Deconectare</button>
+    </div>
+    <div class="footer-text">CSSI · Confort, Securitate, Siguranță, Imobil · 20+ ani experiență</div>
+</div>
+</div>
+
+<div class="bottom-nav">
+  <a href="admin.html" class="bn-item active"><span class="bn-icon">🏠</span>Acasă</a>
+  <a href="admin/calendar-zilnic.html" class="bn-item"><span class="bn-icon">📅</span>Task-uri</a>
+  <a href="admin/crm-clienti.html" class="bn-item"><span class="bn-icon">💰</span>CRM</a>
+  <a href="admin/checklist-montaj.html" class="bn-item"><span class="bn-icon">✅</span>Raport</a>
+  <a href="admin/necesar-materiale.html" class="bn-item"><span class="bn-icon">📦</span>Material</a>
+</div>
+
+<script>
+var PW = {"6051fc84a7a0d74c225fb18a496b09952da5642e60723ecae543298edd7d82d6": "admin", "d0c5db817f2fe728604e80ea1107a14cc2934a71ba6688064dd6771d4c3ab216": "org", "f17acd4a2a19b5ce1148ea4390320e57dad568f56f0627ecfdbad2da8f98b203": "mkt", "abda7f1972b857d0eee7b4709e3e14a95c0b7cab6a25e554872c0a9e295af048": "sales", "b60951fb5402c6e1adc538c5bf74af8b217d02e67074810903d6092fdaa55acc": "tech"};
+
+var ROLES = {
+    admin: {name:"Administrator", greeting:"👋 Salut, Mihai!", sub:"Ai acces total la toate modulele", pill:"🔑 Admin", gradient:"admin",
+        qa:[]},
+    org: {name:"Organizare", greeting:"👋 Salut!", sub:"Verifică task-urile și agenda echipei", pill:"📅 Organizare", gradient:"org",
+        qa:[{l:"Task-uri azi",h:"admin/calendar-zilnic.html",i:"📅"},{l:"Agenda echipei",h:"admin/agenda-echipa.html",i:"👥"}]},
+    mkt: {name:"Marketing", greeting:"🎨 Salut, Echipa Marketing!", sub:"Ce postăm azi?", pill:"🚀 Marketing", gradient:"mkt",
+        qa:[{l:"Programează postare",h:"admin/calendar-social.html",i:"🚀"},{l:"Resurse & Hashtags",h:"admin/resurse-media.html",i:"🎨"}]},
+    sales: {name:"Vânzări", greeting:"💼 Salut, Echipa Vânzări!", sub:"Hai să facem oferte!", pill:"💰 Vânzări", gradient:"sales",
+        qa:[{l:"Calculator ofertă",h:"admin/calculator-pret.html",i:"🧮"},{l:"Lead-uri noi",h:"admin/crm-clienti.html",i:"💰"}]},
+    tech: {name:"Tehnic", greeting:"🔧 Salut, Echipa Tehnică!", sub:"Lucrare terminată? Completează raportul!", pill:"🔧 Tehnic", gradient:"tech",
+        qa:[{l:"Raport lucrare",h:"admin/checklist-montaj.html",i:"✅"},{l:"Solicită materiale",h:"admin/necesar-materiale.html",i:"📦"}]}
+};
+
+var MODULES = [
+    {id:"calendar-zilnic",h:"admin/calendar-zilnic.html",i:"📅",t:"Calendar Zilnic",d:"Task-uri & programări",c:"org",badge:true},
+    {id:"agenda-echipa",h:"admin/agenda-echipa.html",i:"👥",t:"Agenda Echipei",d:"Cine, unde lucrează",c:"org",badge:true},
+    {id:"calendar-social",h:"admin/calendar-social.html",i:"🚀",t:"Calendar Social",d:"Postări Social Media",c:"mkt",badge:true},
+    {id:"resurse-media",h:"admin/resurse-media.html",i:"🎨",t:"Resurse Media",d:"Logo, Poze, Hashtags",c:"mkt",badge:true},
+    {id:"calculator-pret",h:"admin/calculator-pret.html",i:"🧮",t:"Calculator Preț",d:"Generează ofertă rapidă",c:"sales",badge:true},
+    {id:"crm-clienti",h:"admin/crm-clienti.html",i:"💰",t:"CRM Clienți",d:"Lead-uri & Pipeline",c:"sales",badge:true},
+    {id:"checklist-montaj",h:"admin/checklist-montaj.html",i:"✅",t:"Checklist Montaj",d:"Raport finalizare",c:"tech",badge:true},
+    {id:"necesar-materiale",h:"admin/necesar-materiale.html",i:"📦",t:"Necesar Materiale",d:"Stocuri & Comenzi",c:"tech",badge:true},
+    {id:"documente",h:"admin/documente.html",i:"📁",t:"Documente Firmă",d:"Contracte, PV, Autorizații",c:"org",badge:false}
+];
+
+var role = "";
+
+function sha256(msg) {
+    return crypto.subtle.digest('SHA-256', new TextEncoder().encode(msg)).then(function(buf) {
+        return Array.from(new Uint8Array(buf)).map(function(b){return b.toString(16).padStart(2,'0');}).join('');
+    });
+}
+
+function doLogin(e) {
+    e.preventDefault();
+    var pw = document.getElementById('pw').value;
+    sha256(pw).then(function(hash) {
+        if (PW[hash]) {
+            role = PW[hash];
+            sessionStorage.setItem("cssi-role", role);
+            showDash();
+        } else {
+            var err = document.getElementById('err');
+            err.textContent = "Parolă incorectă!";
+            err.style.display = "block";
+            document.getElementById('pw').value = '';
+            document.getElementById('pw').focus();
+        }
+    });
+}
+
+function showDash() {
+    document.getElementById('login').style.display = 'none';
+    document.getElementById('dash').style.display = 'block';
+    var r = ROLES[role];
+    var hero = document.getElementById('hero');
+    hero.className = 'hero ' + r.gradient;
+    document.getElementById('heroTitle').textContent = r.greeting;
+    document.getElementById('heroSub').textContent = r.sub;
+    document.getElementById('heroPill').textContent = r.pill;
+
+    // Quick actions
+    var qa = document.getElementById('quickActions');
+    qa.innerHTML = '';
+    if (r.qa.length > 0) {
+        qa.style.display = 'flex';
+        r.qa.forEach(function(a) {
+            qa.innerHTML += '<a href="'+a.h+'" class="quick-btn"><span>'+a.i+'</span> '+a.l+'</a>';
+        });
+    }
+
+    // KPI + Notificări (admin only)
+    if (role === 'admin') {
+        document.getElementById('kpiSection').style.display = 'block';
+        document.getElementById('notifSection').style.display = 'block';
+        // Try to fetch live KPI from Apps Script
+        fetchKPI();
+    }
+
+    // Modules
+    var grid = document.getElementById('grid');
+    grid.innerHTML = '';
+    var visible = MODULES.filter(function(m) { return role === 'admin' || m.c === role; });
+    visible.forEach(function(m) {
+        var badge = m.badge ? '<div class="m-badge"></div>' : '';
+        grid.innerHTML += '<a href="'+m.h+'" class="mod-card '+m.c+'">'+badge+'<div class="m-icon">'+m.i+'</div><div class="m-title">'+m.t+'</div><div class="m-desc">'+m.d+'</div></a>';
+    });
+}
+
+function doLogout() {
+    sessionStorage.removeItem("cssi-role");
+    role = "";
+    document.getElementById('dash').style.display = 'none';
+    document.getElementById('login').style.display = 'flex';
+    document.getElementById('pw').value = '';
+    document.getElementById('kpiSection').style.display = 'none';
+    document.getElementById('notifSection').style.display = 'none';
+}
+
+// === APPS SCRIPT WEB APP URL ===
+// După deploy, pune URL-ul aici:
+var KPI_URL = ''; // Ex: 'https://script.google.com/macros/s/AKfycb.../exec'
+
+function fetchKPI() {
+    // Default values
+    document.getElementById('kpiLeads').textContent = '—';
+    document.getElementById('kpiLucrari').textContent = '—';
+    document.getElementById('kpiMateriale').textContent = '—';
+    document.getElementById('kpiPostari').textContent = '—';
+    
+    if (!KPI_URL) return; // Nu e configurat încă
+    
+    fetch(KPI_URL)
+        .then(function(r) { return r.json(); })
+        .then(function(data) {
+            if (data.leads !== undefined) document.getElementById('kpiLeads').textContent = data.leads;
+            if (data.lucrari !== undefined) document.getElementById('kpiLucrari').textContent = data.lucrari;
+            if (data.materiale !== undefined) document.getElementById('kpiMateriale').textContent = data.materiale;
+            if (data.postari !== undefined) document.getElementById('kpiPostari').textContent = data.postari;
+        })
+        .catch(function(e) { console.log('[CSSI] KPI fetch failed:', e); });
+}
+
+// Init
+(function() {
+    var saved = sessionStorage.getItem("cssi-role");
+    if (saved && ROLES[saved]) { role = saved; showDash(); }
+    // Register Service Worker for PWA
+    if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('sw.js').then(function(reg) {
+            console.log('[CSSI] Service Worker registered');
+        }).catch(function(err) {
+            console.log('[CSSI] SW registration failed:', err);
+        });
+    }
+})();
+</script>
+</body>
+</html>
