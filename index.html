@@ -1,0 +1,899 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CSSI | Confort, Securitate, Siguranta, Imobil</title>
+    <meta name="description" content="Solutii complete de securitate pentru afacerea ta: detectie incendiu ISU, camere supraveghere, alarme, control acces, automatizari porti. Peste 20 de ani experienta, 8.700+ proiecte in Brasov si national.">
+    <link rel="icon" href="https://eu.chat-img.sintra.ai/32c1b29c-0c86-4833-a031-e7c45e21a11e/983d52bb-2eb6-42f1-bed4-f94d769bb634/Logo_CSSI.png">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; color: #111827; background: #fff; overflow-x: hidden; }
+        html { scroll-behavior: smooth; }
+        a { text-decoration: none; color: inherit; }
+
+        /* Animations */
+        @keyframes fade-in { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes subtle-pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(0.92); } }
+        @keyframes badge-pulse { 0%, 100% { box-shadow: 0 0 0 0 rgba(34,197,94,0.4); } 50% { box-shadow: 0 0 0 8px rgba(34,197,94,0); } }
+        @keyframes slide-down { from { opacity: 0; transform: translateY(-20px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+
+        .animate-fade-in { animation: fade-in 0.6s ease-out forwards; }
+        .animate-subtle-pulse { animation: subtle-pulse 2.5s ease-in-out infinite; }
+        .animate-badge-pulse { animation: badge-pulse 2s ease-in-out infinite; }
+        .animate-slide-down { animation: slide-down 0.3s ease-out forwards; }
+        .animate-float { animation: float 3s ease-in-out infinite; }
+
+        .card-premium { transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
+        .card-premium:hover { transform: translateY(-8px); box-shadow: 0 25px 50px -12px rgba(0,0,0,0.15); }
+
+        .gradient-text {
+            background: linear-gradient(135deg, #dc2626 0%, #ea580c 50%, #f59e0b 100%);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+        }
+
+        /* Dropdown */
+        .dropdown-menu { display: none; }
+        .dropdown:hover .dropdown-menu { display: block; }
+
+        /* Mobile menu */
+        #mobileMenu { display: none; }
+        #mobileMenu.open { display: block; }
+        #servicesSubmenu { display: none; }
+        #servicesSubmenu.open { display: block; }
+
+        /* Chatbot */
+        #chatPanel { display: none; }
+        #chatPanel.open { display: flex; }
+
+        /* Exit popup */
+        #exitPopup { display: none; }
+        #exitPopup.show { display: flex; }
+
+        /* Form steps */
+        .step-2 { display: none; }
+        .step-2.active { display: block; }
+        .step-1.hidden { display: none; }
+
+        /* Custom scrollbar for dropdown */
+        .dropdown-scroll::-webkit-scrollbar { width: 4px; }
+        .dropdown-scroll::-webkit-scrollbar-track { background: #f1f1f1; }
+        .dropdown-scroll::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+
+        @media (max-width: 768px) {
+            button, a[href], input[type="submit"] { min-height: 44px; }
+            input, select, textarea { font-size: 16px !important; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- ========== HEADER ========== -->
+<header id="mainHeader" style="position:fixed;top:0;left:0;right:0;z-index:50;transition:all 0.3s;">
+
+    <!-- Top Bar Desktop -->
+    <div class="hidden sm:block" style="background:#0f172a;color:#fff;font-size:12px;padding:6px 0;">
+        <div style="max-width:1280px;margin:0 auto;padding:0 24px;display:flex;justify-content:space-between;align-items:center;">
+            <span>⭐ <span style="color:#4ade80;font-weight:600;">Peste 20 ani de experiență</span></span>
+            <div style="display:flex;align-items:center;gap:16px;">
+                <span class="animate-badge-pulse" style="display:inline-flex;align-items:center;gap:6px;padding:2px 8px;background:rgba(34,197,94,0.2);border-radius:999px;">
+                    <span style="color:#facc15;">⭐</span>
+                    <span style="font-weight:600;">4.9/5</span>
+                    <span style="color:#94a3b8;">•</span>
+                    <span>127 recenzii</span>
+                </span>
+                <span>⭐ <span style="font-weight:600;">8.700+ proiecte</span></span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Top Bar Mobile -->
+    <div class="sm:hidden" style="background:#0f172a;color:#fff;font-size:12px;padding:6px 0;">
+        <div style="max-width:1280px;margin:0 auto;padding:0 12px;display:flex;justify-content:space-between;align-items:center;">
+            <span>⭐ <span style="color:#4ade80;font-weight:600;">Peste 20 ani de experiență</span></span>
+            <a href="tel:0752288400" style="display:flex;align-items:center;gap:4px;font-weight:600;color:#4ade80;">
+                📞 Sună acum
+            </a>
+        </div>
+    </div>
+
+    <!-- Main Nav -->
+    <div id="navBg" style="transition:all 0.3s;">
+        <div style="max-width:1280px;margin:0 auto;padding:0 12px;display:flex;justify-content:space-between;align-items:center;height:64px;" class="sm:px-6">
+
+            <!-- Logo -->
+            <a href="index.html">
+                <img src="https://eu.chat-img.sintra.ai/32c1b29c-0c86-4833-a031-e7c45e21a11e/983d52bb-2eb6-42f1-bed4-f94d769bb634/Logo_CSSI.png" alt="CSSI Logo" id="logoImg" style="height:56px;width:auto;transition:all 0.3s;filter:brightness(0) invert(1) drop-shadow(0 0 1px rgba(255,255,255,0.8));">
+            </a>
+
+            <!-- Desktop Nav -->
+            <nav class="hidden lg:flex" style="align-items:center;gap:4px;">
+                <a href="index.html" id="navLink1" style="padding:6px 12px;font-size:14px;font-weight:500;color:#fff;transition:all 0.2s;border-radius:8px;" onmouseover="this.style.color='#f87171'" onmouseout="this.style.color=navTextColor">🏠 Acasă</a>
+
+                <div class="dropdown" style="position:relative;">
+                    <button id="navLink2" style="padding:6px 12px;font-size:14px;font-weight:500;color:#fff;transition:all 0.2s;border-radius:8px;background:none;border:none;cursor:pointer;display:flex;align-items:center;font-family:inherit;">
+                        🛠️ Servicii
+                        <svg style="margin-left:4px;width:16px;height:16px;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+                    </button>
+                    <div class="dropdown-menu dropdown-scroll" style="position:absolute;top:100%;left:0;width:280px;background:#fff;box-shadow:0 10px 15px -3px rgba(0,0,0,0.1);border-radius:12px;padding:8px;border:1px solid #f1f5f9;max-height:384px;overflow-y:auto;z-index:100;">
+                        <a href="detectie-incendiu-isu.html" style="display:block;padding:10px 16px;font-size:13px;color:#334155;border-radius:8px;" onmouseover="this.style.background='#fef2f2';this.style.color='#dc2626'" onmouseout="this.style.background='';this.style.color='#334155'">🔥 Detecție Incendiu ISU</a>
+                        <a href="camere-supraveghere.html" style="display:block;padding:10px 16px;font-size:13px;color:#334155;border-radius:8px;" onmouseover="this.style.background='#fef2f2';this.style.color='#dc2626'" onmouseout="this.style.background='';this.style.color='#334155'">📹 Camere Supraveghere</a>
+                        <a href="alarma-antiefractie.html" style="display:block;padding:10px 16px;font-size:13px;color:#334155;border-radius:8px;" onmouseover="this.style.background='#fef2f2';this.style.color='#dc2626'" onmouseout="this.style.background='';this.style.color='#334155'">🚨 Alarmă Antiefracție</a>
+                        <a href="control-acces.html" style="display:block;padding:10px 16px;font-size:13px;color:#334155;border-radius:8px;" onmouseover="this.style.background='#fef2f2';this.style.color='#dc2626'" onmouseout="this.style.background='';this.style.color='#334155'">🚪 Control Acces</a>
+                        <a href="pontaj-electronic.html" style="display:block;padding:10px 16px;font-size:13px;color:#334155;border-radius:8px;" onmouseover="this.style.background='#fef2f2';this.style.color='#dc2626'" onmouseout="this.style.background='';this.style.color='#334155'">⏱️ Pontaj Electronic</a>
+                        <a href="bariere-auto.html" style="display:block;padding:10px 16px;font-size:13px;color:#334155;border-radius:8px;" onmouseover="this.style.background='#fef2f2';this.style.color='#dc2626'" onmouseout="this.style.background='';this.style.color='#334155'">🚧 Bariere Auto</a>
+                        <a href="interfoane-videointerfoane.html" style="display:block;padding:10px 16px;font-size:13px;color:#334155;border-radius:8px;" onmouseover="this.style.background='#fef2f2';this.style.color='#dc2626'" onmouseout="this.style.background='';this.style.color='#334155'">🔔 Interfoane & Videointerfoane</a>
+                        <a href="sonorizare.html" style="display:block;padding:10px 16px;font-size:13px;color:#334155;border-radius:8px;" onmouseover="this.style.background='#fef2f2';this.style.color='#dc2626'" onmouseout="this.style.background='';this.style.color='#334155'">🔊 Sonorizare</a>
+                        <a href="automatizari-porti.html" style="display:block;padding:10px 16px;font-size:13px;color:#334155;border-radius:8px;" onmouseover="this.style.background='#fef2f2';this.style.color='#dc2626'" onmouseout="this.style.background='';this.style.color='#334155'">🚗 Automatizări Porți</a>
+                        <a href="usi-garaj.html" style="display:block;padding:10px 16px;font-size:13px;color:#334155;border-radius:8px;" onmouseover="this.style.background='#fef2f2';this.style.color='#dc2626'" onmouseout="this.style.background='';this.style.color='#334155'">🏠 Uși Garaj</a>
+                        <a href="aer-conditionat.html" style="display:block;padding:10px 16px;font-size:13px;color:#334155;border-radius:8px;" onmouseover="this.style.background='#fef2f2';this.style.color='#dc2626'" onmouseout="this.style.background='';this.style.color='#334155'">❄️ Aer Condiționat</a>
+                        <a href="ventilatie.html" style="display:block;padding:10px 16px;font-size:13px;color:#334155;border-radius:8px;" onmouseover="this.style.background='#fef2f2';this.style.color='#dc2626'" onmouseout="this.style.background='';this.style.color='#334155'">💨 Ventilație</a>
+                        <a href="instalatii-electrice.html" style="display:block;padding:10px 16px;font-size:13px;color:#334155;border-radius:8px;" onmouseover="this.style.background='#fef2f2';this.style.color='#dc2626'" onmouseout="this.style.background='';this.style.color='#334155'">⚡ Instalații Electrice</a>
+                        <a href="instalatii-termice-sanitare.html" style="display:block;padding:10px 16px;font-size:13px;color:#334155;border-radius:8px;" onmouseover="this.style.background='#fef2f2';this.style.color='#dc2626'" onmouseout="this.style.background='';this.style.color='#334155'">🔧 Instalații Termice & Sanitare</a>
+                    </div>
+                </div>
+
+                <a href="despre-noi.html" id="navLink3" style="padding:6px 12px;font-size:14px;font-weight:500;color:#fff;transition:all 0.2s;border-radius:8px;" onmouseover="this.style.color='#f87171'" onmouseout="this.style.color=navTextColor">ℹ️ Despre Noi</a>
+                <a href="portofoliu.html" id="navLink4" style="padding:6px 12px;font-size:14px;font-weight:500;color:#fff;transition:all 0.2s;border-radius:8px;" onmouseover="this.style.color='#f87171'" onmouseout="this.style.color=navTextColor">📁 Portofoliu</a>
+                <a href="contact.html" id="navLink5" style="padding:6px 12px;font-size:14px;font-weight:500;color:#fff;transition:all 0.2s;border-radius:8px;" onmouseover="this.style.color='#f87171'" onmouseout="this.style.color=navTextColor">📍 Contact</a>
+            </nav>
+
+            <!-- Desktop Actions -->
+            <div class="hidden lg:flex" style="align-items:center;gap:12px;">
+                <a href="tel:0752288400" id="phoneLink" style="display:flex;align-items:center;font-size:14px;font-weight:500;color:#fff;transition:all 0.2s;">
+                    <svg style="width:16px;height:16px;margin-right:6px;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/></svg>
+                    0752 288 400
+                </a>
+                <a href="contact.html" style="background:linear-gradient(to right,#dc2626,#b91c1c);color:#fff;padding:8px 20px;border-radius:8px;font-size:14px;font-weight:600;box-shadow:0 4px 6px -1px rgba(0,0,0,0.1);transition:all 0.2s;" onmouseover="this.style.background='linear-gradient(to right,#b91c1c,#991b1b)'" onmouseout="this.style.background='linear-gradient(to right,#dc2626,#b91c1c)'">Cere Ofertă</a>
+            </div>
+
+            <!-- Mobile Actions -->
+            <div class="lg:hidden" style="display:flex;align-items:center;gap:8px;">
+                <span class="animate-badge-pulse" style="display:inline-flex;align-items:center;gap:4px;padding:2px 6px;border-radius:999px;font-size:10px;background:rgba(255,255,255,0.2);color:#fff;">
+                    <span style="color:#facc15;font-size:9px;">⭐</span>
+                    <span style="font-weight:600;">4.9</span>
+                </span>
+                <button onclick="toggleMobileMenu()" id="menuBtn" class="animate-subtle-pulse" style="padding:4px;border-radius:6px;border:none;cursor:pointer;background:linear-gradient(to right,#ef4444,#dc2626);color:#fff;">
+                    <svg id="menuIcon" style="width:20px;height:20px;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
+                    <svg id="closeIcon" style="width:20px;height:20px;display:none;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+                </button>
+            </div>
+        </div>
+
+        <!-- Mobile Menu -->
+        <div id="mobileMenu" style="background:#fff;border-radius:16px;box-shadow:0 20px 25px -5px rgba(0,0,0,0.1);margin:8px 12px;padding:8px;">
+            <nav style="display:flex;flex-direction:column;gap:4px;">
+                <a href="index.html" style="padding:10px 16px;font-size:16px;font-weight:500;color:#334155;border-radius:8px;" onmouseover="this.style.background='#fef2f2';this.style.color='#dc2626'" onmouseout="this.style.background='';this.style.color='#334155'">🏠 Acasă</a>
+                <button onclick="toggleServicesSubmenu()" style="padding:10px 16px;font-size:16px;font-weight:500;color:#334155;border-radius:8px;background:none;border:none;cursor:pointer;display:flex;justify-content:space-between;align-items:center;width:100%;font-family:inherit;text-align:left;">
+                    🛠️ Servicii
+                    <svg id="servicesArrow" style="width:16px;height:16px;transition:transform 0.2s;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+                </button>
+                <div id="servicesSubmenu" style="padding-left:16px;max-height:256px;overflow-y:auto;">
+                    <a href="detectie-incendiu-isu.html" onclick="closeMobile()" style="display:block;padding:8px 16px;font-size:14px;color:#475569;border-radius:8px;">🔥 Detecție Incendiu ISU</a>
+                    <a href="camere-supraveghere.html" onclick="closeMobile()" style="display:block;padding:8px 16px;font-size:14px;color:#475569;border-radius:8px;">📹 Camere Supraveghere</a>
+                    <a href="alarma-antiefractie.html" onclick="closeMobile()" style="display:block;padding:8px 16px;font-size:14px;color:#475569;border-radius:8px;">🚨 Alarmă Antiefracție</a>
+                    <a href="control-acces.html" onclick="closeMobile()" style="display:block;padding:8px 16px;font-size:14px;color:#475569;border-radius:8px;">🚪 Control Acces</a>
+                    <a href="bariere-auto.html" onclick="closeMobile()" style="display:block;padding:8px 16px;font-size:14px;color:#475569;border-radius:8px;">🚧 Bariere Auto</a>
+                    <a href="automatizari-porti.html" onclick="closeMobile()" style="display:block;padding:8px 16px;font-size:14px;color:#475569;border-radius:8px;">🚗 Automatizări Porți</a>
+                    <a href="instalatii-electrice.html" onclick="closeMobile()" style="display:block;padding:8px 16px;font-size:14px;color:#475569;border-radius:8px;">⚡ Instalații Electrice</a>
+                    <a href="aer-conditionat.html" onclick="closeMobile()" style="display:block;padding:8px 16px;font-size:14px;color:#475569;border-radius:8px;">❄️ Aer Condiționat</a>
+                </div>
+                <a href="#about" onclick="closeMobile()" style="padding:10px 16px;font-size:16px;font-weight:500;color:#334155;border-radius:8px;">ℹ️ Despre Noi</a>
+                <a href="#clients" onclick="closeMobile()" style="padding:10px 16px;font-size:16px;font-weight:500;color:#334155;border-radius:8px;">📁 Portofoliu</a>
+                <a href="contact.html" onclick="closeMobile()" style="padding:10px 16px;font-size:16px;font-weight:500;color:#334155;border-radius:8px;">📍 Contact</a>
+                <div style="padding:12px 8px;">
+                    <a href="contact.html" onclick="closeMobile()" style="display:block;text-align:center;background:linear-gradient(to right,#dc2626,#b91c1c);color:#fff;padding:10px 16px;border-radius:12px;font-weight:600;">Cere Ofertă</a>
+                </div>
+            </nav>
+        </div>
+    </div>
+</header>
+
+<!-- ========== HERO ========== -->
+<section id="hero" style="position:relative;min-height:100vh;overflow:hidden;">
+    <div style="position:absolute;inset:0;">
+        <img src="https://eu.chat-img.sintra.ai/32c1b29c-0c86-4833-a031-e7c45e21a11e/bbb1508a-695e-4d85-a246-f1b7cb9f0919/image.png?w=1184&h=864" alt="CSSI Security" style="width:100%;height:100%;object-fit:cover;">
+        <div style="position:absolute;inset:0;background:linear-gradient(to right,rgba(15,23,42,0.95),rgba(15,23,42,0.8),rgba(15,23,42,0.6));"></div>
+    </div>
+
+    <div style="position:relative;max-width:1280px;margin:0 auto;padding:96px 16px 80px;" class="sm:pt-32">
+        <div style="display:grid;grid-template-columns:1fr;gap:64px;align-items:center;min-height:70vh;" class="lg-grid-2">
+
+            <!-- Left Content -->
+            <div style="color:#fff;" class="animate-fade-in">
+                <h1 style="font-size:clamp(2rem,5vw,3.75rem);font-weight:800;line-height:1.1;margin-bottom:16px;">
+                    <span style="color:#ef4444;">C</span>onfortul si securitatea.
+                </h1>
+                <h2 style="font-size:clamp(1.5rem,4vw,3rem);font-weight:800;line-height:1.1;margin-bottom:24px;background:linear-gradient(to right,#ef4444,#f97316);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">
+                    <span style="-webkit-text-fill-color:#ef4444;">S</span>iguranta pentru imobilul tau.
+                </h2>
+                <p style="font-size:clamp(1rem,2vw,1.25rem);color:#cbd5e1;margin-bottom:24px;line-height:1.7;max-width:576px;">
+                    Solutii profesionale de securitate: detectie incendiu, supraveghere video, alarme si control acces. De la proiectare la mentenanta.
+                </p>
+
+                <!-- Stats -->
+                <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:40px;">
+                    <div style="text-align:center;"><div style="font-size:clamp(1.25rem,3vw,1.875rem);font-weight:800;color:#fff;">8.700+</div><div style="color:#94a3b8;font-size:12px;margin-top:4px;">Proiecte</div></div>
+                    <div style="text-align:center;"><div style="font-size:clamp(1.25rem,3vw,1.875rem);font-weight:800;color:#fff;">4.700+</div><div style="color:#94a3b8;font-size:12px;margin-top:4px;">Clienți</div></div>
+                    <div style="text-align:center;"><div style="font-size:clamp(1.25rem,3vw,1.875rem);font-weight:800;color:#fff;">20+</div><div style="color:#94a3b8;font-size:12px;margin-top:4px;">Ani</div></div>
+                    <div style="text-align:center;"><div style="font-size:clamp(1.25rem,3vw,1.875rem);font-weight:800;color:#fff;">98</div><div style="color:#94a3b8;font-size:12px;margin-top:4px;">Parteneri</div></div>
+                </div>
+            </div>
+
+            <!-- Hero Form -->
+            <div class="animate-fade-in" style="animation-delay:0.2s;">
+                <div style="background:#fff;border-radius:24px;padding:32px;box-shadow:0 20px 25px -5px rgba(0,0,0,0.1);">
+                    <div style="text-align:center;margin-bottom:24px;">
+                        <h2 style="font-size:24px;font-weight:800;color:#0f172a;">Primești ofertă în 24h</h2>
+                        <p style="color:#475569;margin-top:8px;">Consultanță gratuită de la experți</p>
+                        <div id="formSteps" style="display:flex;align-items:center;justify-content:center;gap:8px;margin-top:16px;">
+                            <div id="dot1" style="width:12px;height:12px;border-radius:50%;background:#dc2626;"></div>
+                            <div id="bar" style="width:32px;height:4px;background:#e2e8f0;"></div>
+                            <div id="dot2" style="width:12px;height:12px;border-radius:50%;background:#e2e8f0;"></div>
+                        </div>
+                    </div>
+
+                    <div id="formSuccess" style="display:none;text-align:center;padding:48px 0;">
+                        <div style="width:80px;height:80px;background:#dcfce7;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 24px;">
+                            <svg style="width:40px;height:40px;color:#16a34a;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+                        </div>
+                        <h3 style="font-size:24px;font-weight:600;color:#0f172a;margin-bottom:8px;">Mulțumim!</h3>
+                        <p style="color:#475569;">Te contactăm în maxim 24 de ore.</p>
+                    </div>
+
+                    <form id="heroForm" onsubmit="return handleHeroSubmit(event)">
+                        <!-- Step 1 -->
+                        <div id="heroStep1" style="display:flex;flex-direction:column;gap:16px;">
+                            <input type="text" id="heroName" required placeholder="Nume complet *" style="width:100%;padding:16px 20px;border:1px solid #e2e8f0;border-radius:12px;font-size:16px;font-family:inherit;outline:none;" onfocus="this.style.borderColor='#dc2626';this.style.boxShadow='0 0 0 2px rgba(220,38,38,0.2)'" onblur="this.style.borderColor='#e2e8f0';this.style.boxShadow=''">
+                            <input type="tel" id="heroPhone" required placeholder="Telefon *" style="width:100%;padding:16px 20px;border:1px solid #e2e8f0;border-radius:12px;font-size:16px;font-family:inherit;outline:none;" onfocus="this.style.borderColor='#dc2626';this.style.boxShadow='0 0 0 2px rgba(220,38,38,0.2)'" onblur="this.style.borderColor='#e2e8f0';this.style.boxShadow=''">
+                            <select id="heroService" required style="width:100%;padding:16px 20px;border:1px solid #e2e8f0;border-radius:12px;font-size:16px;font-family:inherit;outline:none;background:#fff;color:#475569;" onfocus="this.style.borderColor='#dc2626'" onblur="this.style.borderColor='#e2e8f0'">
+                                <option value="">Ce serviciu te interesează? *</option>
+                                <option value="detectie-incendiu">Detecție Incendiu ISU</option>
+                                <option value="camere">Camere Supraveghere</option>
+                                <option value="alarma">Alarmă Antiefracție</option>
+                                <option value="control-acces">Control Acces</option>
+                                <option value="automatizari">Automatizări Porți</option>
+                                <option value="interfoane">Interfoane & Videointerfoane</option>
+                                <option value="altele">Altele</option>
+                            </select>
+                            <button type="submit" style="width:100%;background:linear-gradient(to right,#dc2626,#b91c1c);color:#fff;padding:16px;border-radius:12px;font-weight:700;font-size:18px;border:none;cursor:pointer;box-shadow:0 10px 15px -3px rgba(0,0,0,0.1);transition:all 0.2s;" onmouseover="this.style.background='linear-gradient(to right,#b91c1c,#991b1b)'" onmouseout="this.style.background='linear-gradient(to right,#dc2626,#b91c1c)'">Continuă →</button>
+                            <button type="button" onclick="handleQuickSubmit()" style="width:100%;background:none;border:none;color:#64748b;font-size:14px;cursor:pointer;font-family:inherit;padding:8px;">Sau trimite acum (fără detalii)</button>
+                            <p style="text-align:center;color:#64748b;font-size:14px;">✓ Răspundem în 1-12h • Fără obligații</p>
+                        </div>
+
+                        <!-- Step 2 -->
+                        <div id="heroStep2" class="step-2" style="flex-direction:column;gap:16px;">
+                            <div id="step2Summary" style="background:#f8fafc;border-radius:12px;padding:16px;margin-bottom:8px;"></div>
+                            <select id="heroTip" style="width:100%;padding:16px 20px;border:1px solid #e2e8f0;border-radius:12px;font-size:16px;font-family:inherit;outline:none;background:#fff;color:#475569;">
+                                <option value="">Tip serviciu (opțional)</option>
+                                <option value="proiectare">Proiectare</option>
+                                <option value="instalare">Instalare</option>
+                                <option value="mentenanta">Mentenanță</option>
+                            </select>
+                            <textarea id="heroDetalii" placeholder="Detalii proiect (opțional)" rows="3" style="width:100%;padding:16px 20px;border:1px solid #e2e8f0;border-radius:12px;font-size:16px;font-family:inherit;outline:none;resize:none;"></textarea>
+                            <div style="display:flex;gap:12px;">
+                                <button type="button" onclick="goToStep1()" style="padding:16px 24px;border:1px solid #e2e8f0;color:#475569;border-radius:12px;font-weight:600;background:#fff;cursor:pointer;font-family:inherit;">← Înapoi</button>
+                                <button type="submit" style="flex:1;background:linear-gradient(to right,#dc2626,#b91c1c);color:#fff;padding:16px;border-radius:12px;font-weight:700;font-size:18px;border:none;cursor:pointer;">Cere ofertă în 24h</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ========== PILLARS (3 Service Categories) ========== -->
+<section id="servicii" style="padding:48px 0;background:#fff;">
+    <div style="max-width:1280px;margin:0 auto;padding:0 16px;">
+        <div style="text-align:center;margin-bottom:32px;">
+            <span style="color:#dc2626;font-weight:600;font-size:14px;text-transform:uppercase;letter-spacing:0.5px;">Servicii</span>
+            <h2 style="font-size:clamp(1.5rem,3vw,1.875rem);font-weight:800;color:#0f172a;margin-top:4px;margin-bottom:8px;">Soluții Complete de Securitate</h2>
+            <p style="color:#475569;max-width:768px;margin:0 auto;font-size:14px;">Serviciile noastre grupate în 3 categorii: <strong>Safety</strong>, <strong>Automation</strong>, <strong>Facilities</strong>.</p>
+        </div>
+
+        <div style="display:grid;gap:20px;" class="lg-grid-3">
+
+            <!-- SAFETY -->
+            <div id="safety" style="border-radius:24px;overflow:hidden;border:1px solid #f1f5f9;box-shadow:0 1px 2px rgba(0,0,0,0.05);transition:all 0.3s;" onmouseover="this.style.boxShadow='0 10px 15px -3px rgba(0,0,0,0.1)'" onmouseout="this.style.boxShadow='0 1px 2px rgba(0,0,0,0.05)'">
+                <div style="background:linear-gradient(to bottom right,#dc2626,#b91c1c,#0f172a);padding:24px;">
+                    <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:16px;">
+                        <div>
+                            <h3 style="font-size:24px;font-weight:800;color:#fff;">Safety</h3>
+                            <p style="color:rgba(255,255,255,0.8);font-size:14px;margin-top:4px;">Siguranță & conformitate</p>
+                        </div>
+                        <span style="padding:4px 12px;border-radius:999px;background:rgba(255,255,255,0.15);color:#fff;font-size:12px;font-weight:600;">CSSI</span>
+                    </div>
+                    <p style="color:rgba(255,255,255,0.85);font-size:14px;margin-top:16px;line-height:1.6;">Sisteme autorizate ISU/IGPR pentru clădiri, instituții și business. Proiectare, instalare, mentenanță — cap-coadă.</p>
+                </div>
+                <div style="background:#fff;padding:24px;">
+                    <div style="display:flex;flex-direction:column;gap:12px;">
+                        <a href="#" style="display:block;border-radius:16px;border:1px solid #f1f5f9;background:#f8fafc;padding:16px;transition:all 0.2s;" onmouseover="this.style.background='#fff';this.style.borderColor='#fecaca'" onmouseout="this.style.background='#f8fafc';this.style.borderColor='#f1f5f9'">
+                            <div style="display:flex;align-items:flex-start;gap:12px;">
+                                <div style="width:40px;height:40px;border-radius:12px;background:#fff;border:1px solid #f1f5f9;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;">🔥</div>
+                                <div><p style="font-weight:600;color:#0f172a;">Detecție Incendiu ISU</p><p style="font-size:12px;color:#475569;margin-top:4px;">Scenariu, proiect, avizare, instalare, mentenanță (4/an)</p></div>
+                            </div>
+                        </a>
+                        <a href="#" style="display:block;border-radius:16px;border:1px solid #f1f5f9;background:#f8fafc;padding:16px;transition:all 0.2s;" onmouseover="this.style.background='#fff';this.style.borderColor='#fecaca'" onmouseout="this.style.background='#f8fafc';this.style.borderColor='#f1f5f9'">
+                            <div style="display:flex;align-items:flex-start;gap:12px;">
+                                <div style="width:40px;height:40px;border-radius:12px;background:#fff;border:1px solid #f1f5f9;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;">📹</div>
+                                <div><p style="font-weight:600;color:#0f172a;">Camere Supraveghere (CCTV)</p><p style="font-size:12px;color:#475569;margin-top:4px;">IP/Analog, vizualizare pe telefon, mentenanță (3/an)</p></div>
+                            </div>
+                        </a>
+                        <a href="#" style="display:block;border-radius:16px;border:1px solid #f1f5f9;background:#f8fafc;padding:16px;transition:all 0.2s;" onmouseover="this.style.background='#fff';this.style.borderColor='#fecaca'" onmouseout="this.style.background='#f8fafc';this.style.borderColor='#f1f5f9'">
+                            <div style="display:flex;align-items:flex-start;gap:12px;">
+                                <div style="width:40px;height:40px;border-radius:12px;background:#fff;border:1px solid #f1f5f9;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;">🚨</div>
+                                <div><p style="font-weight:600;color:#0f172a;">Alarmă Antiefracție</p><p style="font-size:12px;color:#475569;margin-top:4px;">Ajax/Paradox/DSC, monitorizare 24/7, mentenanță (3/an)</p></div>
+                            </div>
+                        </a>
+                        <a href="#" style="display:block;border-radius:16px;border:1px solid #f1f5f9;background:#f8fafc;padding:16px;transition:all 0.2s;" onmouseover="this.style.background='#fff';this.style.borderColor='#fecaca'" onmouseout="this.style.background='#f8fafc';this.style.borderColor='#f1f5f9'">
+                            <div style="display:flex;align-items:flex-start;gap:12px;">
+                                <div style="width:40px;height:40px;border-radius:12px;background:#fff;border:1px solid #f1f5f9;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;">🚪</div>
+                                <div><p style="font-weight:600;color:#0f172a;">Control Acces & Pontaj</p><p style="font-size:12px;color:#475569;margin-top:4px;">RFID/biometric, integrare pontaj, rapoarte</p></div>
+                            </div>
+                        </a>
+                    </div>
+                    <div style="margin-top:20px;">
+                        <a href="servicii.html" style="display:block;text-align:center;padding:12px;border-radius:16px;background:linear-gradient(to right,#dc2626,#b91c1c);color:#fff;font-weight:700;transition:all 0.2s;">Vezi Servicii Safety</a>
+                        <p style="font-size:11px;color:#64748b;text-align:center;margin-top:8px;">Răspundem în 1–12h • Ofertă în 24h</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- AUTOMATION -->
+            <div id="automation" style="border-radius:24px;overflow:hidden;border:1px solid #f1f5f9;box-shadow:0 1px 2px rgba(0,0,0,0.05);transition:all 0.3s;" onmouseover="this.style.boxShadow='0 10px 15px -3px rgba(0,0,0,0.1)'" onmouseout="this.style.boxShadow='0 1px 2px rgba(0,0,0,0.05)'">
+                <div style="background:linear-gradient(to bottom right,#4f46e5,#7c3aed,#0f172a);padding:24px;">
+                    <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:16px;">
+                        <div>
+                            <h3 style="font-size:24px;font-weight:800;color:#fff;">Automation</h3>
+                            <p style="color:rgba(255,255,255,0.8);font-size:14px;margin-top:4px;">Acces auto & automatizări</p>
+                        </div>
+                        <span style="padding:4px 12px;border-radius:999px;background:rgba(255,255,255,0.15);color:#fff;font-size:12px;font-weight:600;">CSSI</span>
+                    </div>
+                    <p style="color:rgba(255,255,255,0.85);font-size:14px;margin-top:16px;line-height:1.6;">Automatizări fiabile pentru porți, bariere și uși. Confort zilnic + control clar al accesului.</p>
+                </div>
+                <div style="background:#fff;padding:24px;">
+                    <div style="display:flex;flex-direction:column;gap:12px;">
+                        <a href="#" style="display:block;border-radius:16px;border:1px solid #f1f5f9;background:#f8fafc;padding:16px;"><div style="display:flex;align-items:flex-start;gap:12px;"><div style="width:40px;height:40px;border-radius:12px;background:#fff;border:1px solid #f1f5f9;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;">🚗</div><div><p style="font-weight:600;color:#0f172a;">Bariere Auto</p><p style="font-size:12px;color:#475569;margin-top:4px;">Parcări, instituții, acces controlat</p></div></div></a>
+                        <a href="#" style="display:block;border-radius:16px;border:1px solid #f1f5f9;background:#f8fafc;padding:16px;"><div style="display:flex;align-items:flex-start;gap:12px;"><div style="width:40px;height:40px;border-radius:12px;background:#fff;border:1px solid #f1f5f9;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;">🚪</div><div><p style="font-weight:600;color:#0f172a;">Automatizări Porți</p><p style="font-size:12px;color:#475569;margin-top:4px;">Batante/culisante, brushless, siguranță</p></div></div></a>
+                        <a href="#" style="display:block;border-radius:16px;border:1px solid #f1f5f9;background:#f8fafc;padding:16px;"><div style="display:flex;align-items:flex-start;gap:12px;"><div style="width:40px;height:40px;border-radius:12px;background:#fff;border:1px solid #f1f5f9;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;">🏠</div><div><p style="font-weight:600;color:#0f172a;">Uși de Garaj</p><p style="font-size:12px;color:#475569;margin-top:4px;">Secționale/rulou + automatizare</p></div></div></a>
+                        <a href="#" style="display:block;border-radius:16px;border:1px solid #f1f5f9;background:#f8fafc;padding:16px;"><div style="display:flex;align-items:flex-start;gap:12px;"><div style="width:40px;height:40px;border-radius:12px;background:#fff;border:1px solid #f1f5f9;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;">🔔</div><div><p style="font-weight:600;color:#0f172a;">Interfoane & Videointerfoane</p><p style="font-size:12px;color:#475569;margin-top:4px;">Audio/Video/IP, integrare cu acces</p></div></div></a>
+                    </div>
+                    <div style="margin-top:20px;">
+                        <a href="servicii.html" style="display:block;text-align:center;padding:12px;border-radius:16px;background:linear-gradient(to right,#dc2626,#b91c1c);color:#fff;font-weight:700;">Vezi Servicii Automation</a>
+                        <p style="font-size:11px;color:#64748b;text-align:center;margin-top:8px;">Răspundem în 1–12h • Ofertă în 24h</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- FACILITIES -->
+            <div id="facilities" style="border-radius:24px;overflow:hidden;border:1px solid #f1f5f9;box-shadow:0 1px 2px rgba(0,0,0,0.05);transition:all 0.3s;" onmouseover="this.style.boxShadow='0 10px 15px -3px rgba(0,0,0,0.1)'" onmouseout="this.style.boxShadow='0 1px 2px rgba(0,0,0,0.05)'">
+                <div style="background:linear-gradient(to bottom right,#059669,#0d9488,#0f172a);padding:24px;">
+                    <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:16px;">
+                        <div>
+                            <h3 style="font-size:24px;font-weight:800;color:#fff;">Facilities</h3>
+                            <p style="color:rgba(255,255,255,0.8);font-size:14px;margin-top:4px;">Infrastructură & confort</p>
+                        </div>
+                        <span style="padding:4px 12px;border-radius:999px;background:rgba(255,255,255,0.15);color:#fff;font-size:12px;font-weight:600;">CSSI</span>
+                    </div>
+                    <p style="color:rgba(255,255,255,0.85);font-size:14px;margin-top:16px;line-height:1.6;">Instalații și sisteme pentru funcționare sigură: electric, HVAC, ventilație, sonorizare și instalații termice/sanitare.</p>
+                </div>
+                <div style="background:#fff;padding:24px;">
+                    <div style="display:flex;flex-direction:column;gap:12px;">
+                        <a href="#" style="display:block;border-radius:16px;border:1px solid #f1f5f9;background:#f8fafc;padding:16px;"><div style="display:flex;align-items:flex-start;gap:12px;"><div style="width:40px;height:40px;border-radius:12px;background:#fff;border:1px solid #f1f5f9;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;">⚡</div><div><p style="font-weight:600;color:#0f172a;">Instalații Electrice</p><p style="font-size:12px;color:#475569;margin-top:4px;">Proiectare, execuție, verificări PRAM</p></div></div></a>
+                        <a href="#" style="display:block;border-radius:16px;border:1px solid #f1f5f9;background:#f8fafc;padding:16px;"><div style="display:flex;align-items:flex-start;gap:12px;"><div style="width:40px;height:40px;border-radius:12px;background:#fff;border:1px solid #f1f5f9;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;">❄️</div><div><p style="font-weight:600;color:#0f172a;">Aer Condiționat</p><p style="font-size:12px;color:#475569;margin-top:4px;">Instalare, service, mentenanță</p></div></div></a>
+                        <a href="#" style="display:block;border-radius:16px;border:1px solid #f1f5f9;background:#f8fafc;padding:16px;"><div style="display:flex;align-items:flex-start;gap:12px;"><div style="width:40px;height:40px;border-radius:12px;background:#fff;border:1px solid #f1f5f9;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;">💨</div><div><p style="font-weight:600;color:#0f172a;">Ventilație</p><p style="font-size:12px;color:#475569;margin-top:4px;">Sisteme mecanice, recuperare, debite</p></div></div></a>
+                        <a href="#" style="display:block;border-radius:16px;border:1px solid #f1f5f9;background:#f8fafc;padding:16px;"><div style="display:flex;align-items:flex-start;gap:12px;"><div style="width:40px;height:40px;border-radius:12px;background:#fff;border:1px solid #f1f5f9;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;">🔧</div><div><p style="font-weight:600;color:#0f172a;">Instalații Termice & Sanitare</p><p style="font-size:12px;color:#475569;margin-top:4px;">Încălzire, apă, canalizare, execuție</p></div></div></a>
+                    </div>
+                    <div style="margin-top:20px;">
+                        <a href="servicii.html" style="display:block;text-align:center;padding:12px;border-radius:16px;background:linear-gradient(to right,#059669,#047857);color:#fff;font-weight:700;">Vezi Servicii Facilities</a>
+                        <p style="font-size:11px;color:#64748b;text-align:center;margin-top:8px;">Răspundem în 1–12h • Ofertă în 24h</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ========== INDUSTRIES / CLIENTS ========== -->
+<section id="clients" style="padding:32px 0;background:#fff;">
+    <div style="max-width:1280px;margin:0 auto;padding:0 16px;text-align:center;">
+        <h2 style="font-size:clamp(1.25rem,3vw,1.5rem);font-weight:800;color:#0f172a;margin-bottom:8px;">4.700+ Clienți Mulțumiți</h2>
+        <p style="color:#475569;font-size:14px;margin-bottom:16px;">Din toate sectoarele de activitate.</p>
+        <a href="#" style="display:inline-flex;align-items:center;padding:10px 20px;background:linear-gradient(to right,#dc2626,#b91c1c);color:#fff;font-weight:600;border-radius:8px;font-size:14px;box-shadow:0 4px 6px -1px rgba(0,0,0,0.1);">
+            Vezi Portofoliul
+            <svg style="margin-left:8px;width:16px;height:16px;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
+        </a>
+    </div>
+</section>
+
+<!-- ========== WHY US ========== -->
+<section id="about" style="padding:32px 0;background:#f8fafc;">
+    <div style="max-width:1280px;margin:0 auto;padding:0 16px;">
+        <div style="text-align:center;margin-bottom:16px;">
+            <h2 style="font-size:clamp(1.25rem,3vw,1.5rem);font-weight:800;color:#0f172a;">De Ce Să Alegi CSSI</h2>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:8px;" class="lg-grid-4">
+            <div style="background:#fff;border-radius:8px;padding:12px;box-shadow:0 1px 2px rgba(0,0,0,0.05);border:1px solid #f1f5f9;">
+                <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px;"><span style="font-size:18px;">🏆</span><h3 style="font-size:14px;font-weight:700;color:#0f172a;">20+ Ani Experiență</h3></div>
+                <p style="color:#475569;font-size:12px;padding-left:26px;">Mii de proiecte finalizate cu succes în toată România.</p>
+            </div>
+            <div style="background:#fff;border-radius:8px;padding:12px;box-shadow:0 1px 2px rgba(0,0,0,0.05);border:1px solid #f1f5f9;">
+                <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px;"><span style="font-size:18px;">📜</span><h3 style="font-size:14px;font-weight:700;color:#0f172a;">Autorizații Complete</h3></div>
+                <p style="color:#475569;font-size:12px;padding-left:26px;">Autorizați ANRE, ISU și IGPR.</p>
+            </div>
+            <div style="background:#fff;border-radius:8px;padding:12px;box-shadow:0 1px 2px rgba(0,0,0,0.05);border:1px solid #f1f5f9;">
+                <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px;"><span style="font-size:18px;">🔧</span><h3 style="font-size:14px;font-weight:700;color:#0f172a;">Servicii Complete</h3></div>
+                <p style="color:#475569;font-size:12px;padding-left:26px;">De la proiectare la mentenanță.</p>
+            </div>
+            <div style="background:#fff;border-radius:8px;padding:12px;box-shadow:0 1px 2px rgba(0,0,0,0.05);border:1px solid #f1f5f9;">
+                <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px;"><span style="font-size:18px;">⚡</span><h3 style="font-size:14px;font-weight:700;color:#0f172a;">Intervenție Rapidă</h3></div>
+                <p style="color:#475569;font-size:12px;padding-left:26px;">Suport tehnic 24/7.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ========== TESTIMONIALS ========== -->
+<section style="padding:48px 0;background:#f8fafc;">
+    <div style="max-width:1280px;margin:0 auto;padding:0 16px;">
+        <div style="text-align:center;margin-bottom:32px;">
+            <span style="color:#dc2626;font-weight:600;font-size:14px;text-transform:uppercase;letter-spacing:0.5px;">Testimoniale</span>
+            <h2 style="font-size:clamp(1.5rem,3vw,2rem);font-weight:800;color:#0f172a;margin-top:8px;margin-bottom:8px;">Ce Spun Clienții Noștri</h2>
+            <p style="color:#475569;max-width:512px;margin:0 auto;font-size:16px;">Feedback real de la clienți reali</p>
+        </div>
+        <div style="display:grid;gap:24px;" class="md-grid-3">
+            <!-- Testimonial 1 -->
+            <div style="background:#fff;border-radius:16px;padding:32px;box-shadow:0 1px 2px rgba(0,0,0,0.05);border:1px solid #f1f5f9;transition:all 0.3s;" onmouseover="this.style.boxShadow='0 20px 25px -5px rgba(0,0,0,0.1)'" onmouseout="this.style.boxShadow='0 1px 2px rgba(0,0,0,0.05)'">
+                <div style="display:flex;margin-bottom:16px;">⭐⭐⭐⭐⭐</div>
+                <p style="color:#475569;margin-bottom:24px;font-style:italic;font-size:16px;line-height:1.7;">"Colaboram cu Break Sistems de peste 10 ani. Profesionalism, promptitudine si solutii tehnice de calitate."</p>
+                <div style="border-top:1px solid #f1f5f9;padding-top:16px;">
+                    <div style="font-weight:600;color:#0f172a;">Ing. Marian Popescu</div>
+                    <div style="font-size:14px;color:#64748b;">Director Tehnic</div>
+                    <div style="font-size:14px;color:#dc2626;font-weight:500;">CFR Calatori - Regionala Brasov</div>
+                </div>
+            </div>
+            <!-- Testimonial 2 -->
+            <div style="background:#fff;border-radius:16px;padding:32px;box-shadow:0 1px 2px rgba(0,0,0,0.05);border:1px solid #f1f5f9;transition:all 0.3s;" onmouseover="this.style.boxShadow='0 20px 25px -5px rgba(0,0,0,0.1)'" onmouseout="this.style.boxShadow='0 1px 2px rgba(0,0,0,0.05)'">
+                <div style="display:flex;margin-bottom:16px;">⭐⭐⭐⭐⭐</div>
+                <p style="color:#475569;margin-bottom:24px;font-style:italic;font-size:16px;line-height:1.7;">"Sistemul de detectie incendiu si nurse call functioneaza impecabil. Echipa de mentenanta intervine rapid."</p>
+                <div style="border-top:1px solid #f1f5f9;padding-top:16px;">
+                    <div style="font-weight:600;color:#0f172a;">Dr. Elena Ionescu</div>
+                    <div style="font-size:14px;color:#64748b;">Manager</div>
+                    <div style="font-size:14px;color:#dc2626;font-weight:500;">Spitalul Clinic Judetean Brasov</div>
+                </div>
+            </div>
+            <!-- Testimonial 3 -->
+            <div style="background:#fff;border-radius:16px;padding:32px;box-shadow:0 1px 2px rgba(0,0,0,0.05);border:1px solid #f1f5f9;transition:all 0.3s;" onmouseover="this.style.boxShadow='0 20px 25px -5px rgba(0,0,0,0.1)'" onmouseout="this.style.boxShadow='0 1px 2px rgba(0,0,0,0.05)'">
+                <div style="display:flex;margin-bottom:16px;">⭐⭐⭐⭐⭐</div>
+                <p style="color:#475569;margin-bottom:24px;font-style:italic;font-size:16px;line-height:1.7;">"Solutii integrate de securitate pentru intreaga fabrica. Recomand cu incredere!"</p>
+                <div style="border-top:1px solid #f1f5f9;padding-top:16px;">
+                    <div style="font-weight:600;color:#0f172a;">Adrian Dumitrescu</div>
+                    <div style="font-size:14px;color:#64748b;">Administrator</div>
+                    <div style="font-size:14px;color:#dc2626;font-weight:500;">Schaeffler Romania</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ========== CONTACT ========== -->
+<section id="contact" style="padding:96px 0;background:linear-gradient(to bottom right,#0f172a,#1e293b,#0f172a);">
+    <div style="max-width:1280px;margin:0 auto;padding:0 16px;">
+        <div style="display:grid;gap:64px;align-items:center;" class="lg-grid-2">
+
+            <!-- Contact Info (hidden on mobile) -->
+            <div class="hidden lg:block" style="color:#fff;">
+                <span style="color:#ef4444;font-weight:600;font-size:14px;text-transform:uppercase;letter-spacing:0.5px;">Contact</span>
+                <h2 style="font-size:clamp(1.5rem,3vw,2rem);font-weight:800;margin-top:8px;margin-bottom:24px;">Solicită o Ofertă Personalizată</h2>
+                <p style="color:#cbd5e1;margin-bottom:40px;font-size:18px;line-height:1.7;">Completați formularul și vă vom contacta în cel mai scurt timp pentru o consultanță gratuită.</p>
+
+                <div style="display:flex;flex-direction:column;gap:24px;">
+                    <div style="display:flex;align-items:flex-start;gap:16px;">
+                        <div style="width:56px;height:56px;background:rgba(220,38,38,0.2);border-radius:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+                            <svg style="width:28px;height:28px;color:#ef4444;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/></svg>
+                        </div>
+                        <div><h3 style="font-weight:600;margin-bottom:4px;font-size:18px;">Telefon</h3><a href="tel:0268414740" style="color:#cbd5e1;font-size:18px;">0268 414 740</a></div>
+                    </div>
+                    <div style="display:flex;align-items:flex-start;gap:16px;">
+                        <div style="width:56px;height:56px;background:rgba(34,197,94,0.2);border-radius:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+                            <svg style="width:28px;height:28px;color:#22c55e;" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+                        </div>
+                        <div><h3 style="font-weight:600;margin-bottom:4px;font-size:18px;">WhatsApp</h3><a href="https://wa.me/40752288400" style="color:#cbd5e1;font-size:18px;">0752 288 400</a></div>
+                    </div>
+                    <div style="display:flex;align-items:flex-start;gap:16px;">
+                        <div style="width:56px;height:56px;background:rgba(220,38,38,0.2);border-radius:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+                            <svg style="width:28px;height:28px;color:#ef4444;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+                        </div>
+                        <div><h3 style="font-weight:600;margin-bottom:4px;font-size:18px;">Email</h3><a href="mailto:office@breaksistems.ro" style="color:#cbd5e1;font-size:18px;"><span class="__cf_email__" data-cfemail="7c131a1a151f193c1e0e191d170f150f0819110f520e13">[email&#160;protected]</span></a></div>
+                    </div>
+                    <div style="display:flex;align-items:flex-start;gap:16px;">
+                        <div style="width:56px;height:56px;background:rgba(220,38,38,0.2);border-radius:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+                            <svg style="width:28px;height:28px;color:#ef4444;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                        </div>
+                        <div><h3 style="font-weight:600;margin-bottom:4px;font-size:18px;">Program</h3><p style="color:#cbd5e1;">Luni - Vineri: 08:00 - 17:00</p><p style="color:#64748b;font-size:14px;">Urgențe 24/7: 0752 288 400</p></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Mobile Header -->
+            <div class="lg:hidden" style="color:#fff;text-align:center;">
+                <span style="color:#ef4444;font-weight:600;font-size:14px;text-transform:uppercase;">Contact</span>
+                <h2 style="font-size:clamp(1.5rem,3vw,1.875rem);font-weight:800;margin-top:8px;margin-bottom:16px;">Solicită o Ofertă Personalizată</h2>
+                <p style="color:#cbd5e1;font-size:18px;">Completați formularul și vă vom contacta în cel mai scurt timp.</p>
+            </div>
+
+            <!-- Contact Form -->
+            <div style="background:#fff;border-radius:24px;padding:40px;box-shadow:0 20px 25px -5px rgba(0,0,0,0.1);">
+                <h3 style="font-size:24px;font-weight:800;color:#0f172a;margin-bottom:32px;">Trimite o cerere</h3>
+                <div id="contactSuccess" style="display:none;text-align:center;padding:48px 0;">
+                    <div style="width:80px;height:80px;background:#dcfce7;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 24px;"><svg style="width:40px;height:40px;color:#16a34a;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg></div>
+                    <h4 style="font-size:24px;font-weight:600;color:#0f172a;margin-bottom:8px;">Mulțumim!</h4>
+                    <p style="color:#475569;font-size:18px;">Cererea a fost trimisă. Vă vom contacta în curând.</p>
+                </div>
+                <form id="contactForm" onsubmit="return handleContactSubmit(event)" style="display:flex;flex-direction:column;gap:20px;">
+                    <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;">
+                        <input type="text" id="cName" required placeholder="Nume *" style="width:100%;padding:16px 20px;border:1px solid #e2e8f0;border-radius:12px;font-size:16px;font-family:inherit;outline:none;" onfocus="this.style.borderColor='#dc2626';this.style.boxShadow='0 0 0 2px rgba(220,38,38,0.2)'" onblur="this.style.borderColor='#e2e8f0';this.style.boxShadow=''">
+                        <input type="tel" id="cPhone" required placeholder="Telefon *" style="width:100%;padding:16px 20px;border:1px solid #e2e8f0;border-radius:12px;font-size:16px;font-family:inherit;outline:none;" onfocus="this.style.borderColor='#dc2626';this.style.boxShadow='0 0 0 2px rgba(220,38,38,0.2)'" onblur="this.style.borderColor='#e2e8f0';this.style.boxShadow=''">
+                    </div>
+                    <input type="email" id="cEmail" required placeholder="Email *" style="width:100%;padding:16px 20px;border:1px solid #e2e8f0;border-radius:12px;font-size:16px;font-family:inherit;outline:none;" onfocus="this.style.borderColor='#dc2626'" onblur="this.style.borderColor='#e2e8f0'">
+                    <select id="cService" style="width:100%;padding:16px 20px;border:1px solid #e2e8f0;border-radius:12px;font-size:16px;font-family:inherit;outline:none;background:#fff;color:#475569;">
+                        <option value="">Selectează serviciul</option>
+                        <option>Detecție Incendiu ISU</option><option>Camere Supraveghere</option><option>Alarmă Antiefracție</option><option>Control Acces</option><option>Automatizări Porți</option><option>Interfoane & Videointerfoane</option><option>Altele</option>
+                    </select>
+                    <textarea id="cMessage" rows="4" placeholder="Descrieți proiectul..." style="width:100%;padding:16px 20px;border:1px solid #e2e8f0;border-radius:12px;font-size:16px;font-family:inherit;outline:none;resize:none;"></textarea>
+                    <button type="submit" style="width:100%;background:linear-gradient(to right,#dc2626,#b91c1c);color:#fff;padding:16px;border-radius:12px;font-weight:700;font-size:18px;border:none;cursor:pointer;box-shadow:0 10px 15px -3px rgba(0,0,0,0.1);">Trimite Cererea</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ========== FOOTER ========== -->
+<footer style="background:#0f172a;color:rgba(255,255,255,0.7);padding:16px 0 24px;">
+    <div style="max-width:1280px;margin:0 auto;padding:0 16px;">
+        <div style="text-align:center;margin-bottom:8px;">
+            <span style="color:#94a3b8;font-size:12px;">Powered by <span style="color:#fff;font-weight:500;">Break Sistems</span> | 20+ Ani Experiență</span>
+        </div>
+
+        <!-- Social -->
+        <div style="display:flex;justify-content:center;align-items:center;gap:12px;margin-bottom:8px;">
+            <a href="https://www.facebook.com/CSSI.bv/" target="_blank" style="color:#94a3b8;" onmouseover="this.style.color='#3b82f6'" onmouseout="this.style.color='#94a3b8'">
+                <svg style="width:20px;height:20px;" fill="currentColor" viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+            </a>
+            <a href="https://www.instagram.com/cssi.ro/" target="_blank" style="color:#94a3b8;" onmouseover="this.style.color='#ec4899'" onmouseout="this.style.color='#94a3b8'">
+                <svg style="width:20px;height:20px;" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
+            </a>
+            <a href="https://www.youtube.com/@CSSI_ro" target="_blank" style="color:#94a3b8;" onmouseover="this.style.color='#ef4444'" onmouseout="this.style.color='#94a3b8'">
+                <svg style="width:20px;height:20px;" fill="currentColor" viewBox="0 0 24 24"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+            </a>
+            <a href="https://www.tiktok.com/@cssi.ro" target="_blank" style="color:#94a3b8;" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='#94a3b8'">
+                <svg style="width:20px;height:20px;" fill="currentColor" viewBox="0 0 24 24"><path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.19-3.44-3.37-3.65-5.71-.02-.5-.03-1-.01-1.49.18-1.9 1.12-3.72 2.58-4.96 1.66-1.44 3.98-2.13 6.15-1.72.02 1.48-.04 2.96-.04 4.44-.99-.32-2.15-.23-3.02.37-.63.41-1.11 1.04-1.36 1.75-.21.51-.15 1.07-.14 1.61.24 1.64 1.82 3.02 3.5 2.87 1.12-.01 2.19-.66 2.77-1.61.19-.33.4-.67.41-1.06.1-1.79.06-3.57.07-5.36.01-4.03-.01-8.05.02-12.07z"/></svg>
+            </a>
+        </div>
+
+        <!-- Contact links -->
+        <div style="display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:16px;font-size:12px;">
+            <a href="tel:0268414740" style="color:#cbd5e1;display:flex;align-items:center;gap:4px;">📞 0268 414 740</a>
+            <a href="https://wa.me/40752288400" style="color:#cbd5e1;display:flex;align-items:center;gap:4px;">💬 0752 288 400</a>
+            <a href="mailto:office@breaksistems.ro" style="color:#cbd5e1;display:flex;align-items:center;gap:4px;">✉️ <span class="__cf_email__" data-cfemail="5d323b3b343e381d3f2f383c362e342e2938302e732f32">[email&#160;protected]</span></a>
+            <span style="color:#64748b;">L-V: 08:00-17:00</span>
+        </div>
+
+        <div style="margin-top:16px;text-align:center;">
+            <p style="color:#475569;font-size:10px;">© 2024 CSSI · Powered by Break Sistems</p>
+        </div>
+    </div>
+</footer>
+
+<!-- ========== FLOATING WHATSAPP BUTTON ========== -->
+<a href="https://wa.me/40752288400" target="_blank" class="animate-subtle-pulse" style="position:fixed;bottom:12px;left:24px;z-index:50;width:56px;height:56px;background:#22c55e;border-radius:50%;box-shadow:0 10px 15px -3px rgba(0,0,0,0.1);display:flex;align-items:center;justify-content:center;transition:all 0.3s;" onmouseover="this.style.background='#16a34a'" onmouseout="this.style.background='#22c55e'" aria-label="WhatsApp">
+    <svg style="width:28px;height:28px;color:#fff;" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+</a>
+
+<!-- ========== CHATBOT BUTTON ========== -->
+<button onclick="toggleChat()" id="chatBtn" class="animate-subtle-pulse" style="position:fixed;bottom:12px;right:24px;z-index:50;width:56px;height:56px;border-radius:50%;box-shadow:0 10px 15px -3px rgba(0,0,0,0.1);display:flex;align-items:center;justify-content:center;border:none;cursor:pointer;background:linear-gradient(to right,#06b6d4,#10b981);color:#fff;transition:all 0.3s;" aria-label="Deschide chat">
+    <svg id="chatOpenIcon" style="width:24px;height:24px;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/></svg>
+    <svg id="chatCloseIcon" style="width:24px;height:24px;display:none;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+</button>
+
+<!-- ========== CHATBOT PANEL ========== -->
+<div id="chatPanel" class="animate-fade-in" style="position:fixed;bottom:80px;right:24px;z-index:40;width:320px;background:#fff;border-radius:16px;box-shadow:0 20px 25px -5px rgba(0,0,0,0.1);overflow:hidden;flex-direction:column;">
+    <div style="background:linear-gradient(to right,#dc2626,#b91c1c);padding:16px;color:#fff;">
+        <div style="display:flex;align-items:center;gap:12px;">
+            <div style="width:40px;height:40px;background:rgba(255,255,255,0.2);border-radius:50%;display:flex;align-items:center;justify-content:center;"><span style="font-size:18px;">🤖</span></div>
+            <div><h3 style="font-weight:600;">Alex - Asistent Virtual</h3><p style="font-size:12px;color:#fecaca;">CSSI</p></div>
+        </div>
+    </div>
+    <div id="chatMessages" style="height:320px;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:12px;background:#f9fafb;">
+        <div style="display:flex;justify-content:flex-start;">
+            <div style="max-width:80%;padding:12px;border-radius:16px;border-top-left-radius:0;background:#fff;color:#374151;font-size:14px;box-shadow:0 1px 2px rgba(0,0,0,0.05);white-space:pre-line;">Bună! Sunt Alex, asistentul virtual CSSI. 👋
+
+Cum vă pot ajuta? Scrieți: servicii, prețuri sau contact.</div>
+        </div>
+    </div>
+    <div style="padding:16px;border-top:1px solid #e2e8f0;background:#fff;">
+        <div style="display:flex;gap:8px;">
+            <input type="text" id="chatInput" placeholder="Scrieți un mesaj..." onkeypress="if(event.key==='Enter')sendChat()" style="flex:1;padding:8px 16px;border:1px solid #e5e7eb;border-radius:999px;font-size:14px;outline:none;font-family:inherit;" onfocus="this.style.borderColor='#dc2626'" onblur="this.style.borderColor='#e5e7eb'">
+            <button onclick="sendChat()" style="width:40px;height:40px;background:#dc2626;color:#fff;border-radius:50%;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;">
+                <svg style="width:20px;height:20px;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/></svg>
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- ========== EXIT INTENT POPUP ========== -->
+<div id="exitPopup" style="position:fixed;inset:0;z-index:100;align-items:center;justify-content:center;padding:16px;background:rgba(0,0,0,0.6);backdrop-filter:blur(4px);">
+    <div class="animate-slide-down" style="background:#fff;border-radius:24px;padding:32px;max-width:448px;width:100%;box-shadow:0 20px 25px -5px rgba(0,0,0,0.1);position:relative;">
+        <button onclick="closeExitPopup()" style="position:absolute;top:16px;right:16px;width:32px;height:32px;display:flex;align-items:center;justify-content:center;color:#94a3b8;background:none;border:none;cursor:pointer;">
+            <svg style="width:24px;height:24px;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+        </button>
+        <div style="text-align:center;">
+            <div style="width:64px;height:64px;background:#fee2e2;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 16px;"><span style="font-size:30px;">🎁</span></div>
+            <h3 style="font-size:24px;font-weight:800;color:#0f172a;margin-bottom:8px;">Stai! Nu pleca încă!</h3>
+            <p style="color:#475569;margin-bottom:24px;">Primești <span style="color:#dc2626;font-weight:700;">5% REDUCERE</span> la prima comandă dacă ne contactezi acum.</p>
+            <div style="display:flex;flex-direction:column;gap:12px;">
+                <a href="tel:0752288400" style="display:flex;align-items:center;justify-content:center;gap:8px;width:100%;padding:16px;background:linear-gradient(to right,#dc2626,#b91c1c);color:#fff;font-weight:600;border-radius:12px;">📞 Sună Acum: 0752 288 400</a>
+                <a href="https://wa.me/40752288400" target="_blank" style="display:flex;align-items:center;justify-content:center;gap:8px;width:100%;padding:16px;background:#22c55e;color:#fff;font-weight:600;border-radius:12px;">💬 WhatsApp</a>
+            </div>
+            <p style="font-size:12px;color:#94a3b8;margin-top:16px;">✓ Răspundem în 1-12h • Fără obligații</p>
+        </div>
+    </div>
+</div>
+
+<!-- ========== RESPONSIVE CSS ========== -->
+<style>
+    @media (min-width: 1024px) {
+        .lg-grid-2 { grid-template-columns: 1fr 1fr !important; }
+        .lg-grid-3 { grid-template-columns: repeat(3, 1fr) !important; }
+        .lg-grid-4 { grid-template-columns: repeat(4, 1fr) !important; }
+        .lg\:block { display: block !important; }
+        .lg\:flex { display: flex !important; }
+        .lg\:hidden { display: none !important; }
+    }
+    @media (max-width: 1023px) {
+        .hidden { display: none !important; }
+        .lg\:block { display: none !important; }
+        .lg\:flex { display: none !important; }
+        .lg\:hidden { display: block !important; }
+    }
+    @media (min-width: 768px) {
+        .md-grid-3 { grid-template-columns: repeat(3, 1fr) !important; }
+    }
+    @media (min-width: 640px) {
+        .sm\:block { display: block !important; }
+        .sm\:hidden { display: none !important; }
+        .sm\:pt-32 { padding-top: 128px !important; }
+        .sm\:px-6 { padding-left: 24px !important; padding-right: 24px !important; }
+    }
+    @media (max-width: 639px) {
+        .hidden.sm\:block { display: none !important; }
+        .sm\:hidden { display: block !important; }
+    }
+    @media (max-width: 640px) {
+        #chatPanel { width: calc(100vw - 48px) !important; right: 24px !important; }
+    }
+</style>
+
+<!-- ========== JAVASCRIPT ========== -->
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+    // ===== NAV SCROLL BEHAVIOR =====
+    let navTextColor = '#fff';
+    
+    window.addEventListener('scroll', function() {
+        const header = document.getElementById('mainHeader');
+        const navBg = document.getElementById('navBg');
+        const logo = document.getElementById('logoImg');
+        const scrolled = window.scrollY > 50;
+        
+        if (scrolled) {
+            navBg.style.background = 'rgba(255,255,255,0.95)';
+            navBg.style.backdropFilter = 'blur(12px)';
+            navBg.style.boxShadow = '0 1px 2px rgba(0,0,0,0.05)';
+            logo.style.filter = '';
+            navTextColor = '#334155';
+        } else {
+            navBg.style.background = 'transparent';
+            navBg.style.backdropFilter = '';
+            navBg.style.boxShadow = '';
+            logo.style.filter = 'brightness(0) invert(1) drop-shadow(0 0 1px rgba(255,255,255,0.8))';
+            navTextColor = '#fff';
+        }
+        
+        // Update nav link colors
+        ['navLink1','navLink2','navLink3','navLink4','navLink5','phoneLink'].forEach(id => {
+            const el = document.getElementById(id);
+            if (el) el.style.color = navTextColor;
+        });
+    });
+
+    // ===== MOBILE MENU =====
+    function toggleMobileMenu() {
+        const menu = document.getElementById('mobileMenu');
+        const menuIcon = document.getElementById('menuIcon');
+        const closeIcon = document.getElementById('closeIcon');
+        const btn = document.getElementById('menuBtn');
+        
+        if (menu.classList.contains('open')) {
+            menu.classList.remove('open');
+            menuIcon.style.display = '';
+            closeIcon.style.display = 'none';
+            btn.style.background = 'linear-gradient(to right,#ef4444,#dc2626)';
+            btn.classList.add('animate-subtle-pulse');
+        } else {
+            menu.classList.add('open');
+            menuIcon.style.display = 'none';
+            closeIcon.style.display = '';
+            btn.style.background = '#6b7280';
+            btn.classList.remove('animate-subtle-pulse');
+        }
+    }
+
+    function closeMobile() {
+        document.getElementById('mobileMenu').classList.remove('open');
+        document.getElementById('menuIcon').style.display = '';
+        document.getElementById('closeIcon').style.display = 'none';
+    }
+
+    function toggleServicesSubmenu() {
+        const sub = document.getElementById('servicesSubmenu');
+        const arrow = document.getElementById('servicesArrow');
+        if (sub.classList.contains('open')) {
+            sub.classList.remove('open');
+            arrow.style.transform = '';
+        } else {
+            sub.classList.add('open');
+            arrow.style.transform = 'rotate(180deg)';
+        }
+    }
+
+    // ===== HERO FORM =====
+    let heroStep = 1;
+    
+    function handleHeroSubmit(e) {
+        e.preventDefault();
+        if (heroStep === 1) {
+            heroStep = 2;
+            document.getElementById('heroStep1').style.display = 'none';
+            const s2 = document.getElementById('heroStep2');
+            s2.style.display = 'flex';
+            s2.classList.add('active');
+            document.getElementById('bar').style.background = '#dc2626';
+            document.getElementById('dot2').style.background = '#dc2626';
+            document.getElementById('step2Summary').innerHTML = 
+                '<p style="font-size:14px;color:#475569;"><span style="font-weight:600;">' + 
+                document.getElementById('heroName').value + '</span> • ' + 
+                document.getElementById('heroPhone').value + '</p><p style="font-size:14px;color:#dc2626;font-weight:500;">' + 
+                document.getElementById('heroService').value + '</p>';
+        } else {
+            showHeroSuccess();
+        }
+        return false;
+    }
+
+    function handleQuickSubmit() {
+        const name = document.getElementById('heroName').value;
+        const phone = document.getElementById('heroPhone').value;
+        const service = document.getElementById('heroService').value;
+        if (!name || !phone || !service) return;
+        showHeroSuccess();
+    }
+
+    function showHeroSuccess() {
+        document.getElementById('heroForm').style.display = 'none';
+        document.getElementById('formSteps').style.display = 'none';
+        document.getElementById('formSuccess').style.display = 'block';
+    }
+
+    function goToStep1() {
+        heroStep = 1;
+        document.getElementById('heroStep1').style.display = 'flex';
+        document.getElementById('heroStep2').style.display = 'none';
+        document.getElementById('bar').style.background = '#e2e8f0';
+        document.getElementById('dot2').style.background = '#e2e8f0';
+    }
+
+    // ===== CONTACT FORM =====
+    function handleContactSubmit(e) {
+        e.preventDefault();
+        document.getElementById('contactForm').style.display = 'none';
+        document.getElementById('contactSuccess').style.display = 'block';
+        return false;
+    }
+
+    // ===== CHATBOT =====
+    const chatResponses = {
+        'servicii': 'Oferim o gamă completă de servicii:\n\n🔥 Detecție incendiu ISU\n📹 Camere supraveghere\n🚨 Alarme antiefracție\n🚪 Control acces\n⏱️ Pontaj electronic\n🚧 Bariere auto\n🔔 Interfoane\n🔊 Sonorizare\n🚗 Automatizări porți\n🏠 Uși garaj\n❄️ Aer condiționat\n💨 Ventilație\n⚡ Instalații electrice\n🔧 Instalații termice\n\nPentru detalii, contactați-ne!',
+        'preturi': 'Prețurile variază în funcție de complexitatea proiectului. Pentru o ofertă personalizată:\n\n📞 Sunați: 0268 414 740\n💬 WhatsApp: 0752 288 400\n📧 Email: office@cssi.ro',
+        'contact': 'Ne puteți contacta prin:\n\n📞 Telefon: 0268 414 740\n💬 WhatsApp: 0752 288 400\n📧 Email: office@cssi.ro\n📍 Locație: Brașov\n\nProgram: Luni-Vineri, 08:00-17:00',
+        'default': 'Vă mulțumim pentru mesaj! 😊\n\nPentru asistență rapidă:\n📞 0268 414 740\n💬 WhatsApp: 0752 288 400\n\nSau scrieți: servicii, prețuri, contact'
+    };
+
+    function toggleChat() {
+        const panel = document.getElementById('chatPanel');
+        const openIcon = document.getElementById('chatOpenIcon');
+        const closeIcon = document.getElementById('chatCloseIcon');
+        const btn = document.getElementById('chatBtn');
+        
+        if (panel.classList.contains('open')) {
+            panel.classList.remove('open');
+            openIcon.style.display = '';
+            closeIcon.style.display = 'none';
+            btn.style.background = 'linear-gradient(to right,#06b6d4,#10b981)';
+            btn.classList.add('animate-subtle-pulse');
+        } else {
+            panel.classList.add('open');
+            openIcon.style.display = 'none';
+            closeIcon.style.display = '';
+            btn.style.background = '#6b7280';
+            btn.classList.remove('animate-subtle-pulse');
+        }
+    }
+
+    function sendChat() {
+        const input = document.getElementById('chatInput');
+        const text = input.value.trim();
+        if (!text) return;
+
+        const msgs = document.getElementById('chatMessages');
+        
+        // User message
+        msgs.innerHTML += '<div style="display:flex;justify-content:flex-end;"><div style="max-width:80%;padding:12px;border-radius:16px;border-top-right-radius:0;background:#dc2626;color:#fff;font-size:14px;">' + text + '</div></div>';
+        input.value = '';
+        
+        // Bot response
+        const lower = text.toLowerCase();
+        let response = chatResponses.default;
+        for (const [key, val] of Object.entries(chatResponses)) {
+            if (key !== 'default' && lower.includes(key)) { response = val; break; }
+        }
+        
+        setTimeout(() => {
+            msgs.innerHTML += '<div style="display:flex;justify-content:flex-start;"><div style="max-width:80%;padding:12px;border-radius:16px;border-top-left-radius:0;background:#fff;color:#374151;font-size:14px;box-shadow:0 1px 2px rgba(0,0,0,0.05);white-space:pre-line;">' + response + '</div></div>';
+            msgs.scrollTop = msgs.scrollHeight;
+        }, 500);
+        
+        msgs.scrollTop = msgs.scrollHeight;
+    }
+
+    // ===== EXIT INTENT POPUP (90s timer) =====
+    function closeExitPopup() {
+        document.getElementById('exitPopup').classList.remove('show');
+    }
+
+    setTimeout(() => {
+        if (!localStorage.getItem('exitPopupShown')) {
+            document.getElementById('exitPopup').classList.add('show');
+            localStorage.setItem('exitPopupShown', 'true');
+        }
+    }, 90000);
+
+    // ===== SMOOTH SCROLL =====
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function(e) {
+            const target = document.querySelector(this.getAttribute('href'));
+            if (target) {
+                e.preventDefault();
+                const offset = 100;
+                const pos = target.getBoundingClientRect().top + window.pageYOffset - offset;
+                window.scrollTo({ top: pos, behavior: 'smooth' });
+            }
+        });
+    });
+</script>
+
+<!-- Schema.org JSON-LD -->
+<script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "LocalBusiness",
+    "name": "CSSI - Confort, Securitate, Siguranță, Imobil",
+    "alternateName": "CSSI",
+    "description": "Soluții complete de securitate: detecție incendiu ISU, camere supraveghere, alarme antiefracție, control acces, automatizări porți.",
+    "url": "https://www.cssi.ro",
+    "telephone": "+40268414740",
+    "email": "office@breaksistems.ro",
+    "address": {"@type": "PostalAddress", "streetAddress": "Str. Busuiocului N
