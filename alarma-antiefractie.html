@@ -264,4 +264,14 @@ function toggleAccordion(id) {
         allIds.forEach(function(aid) {
             document.getElementById('content-'+aid).style.display = 'none';
             document.getElementById('icon-'+aid).textContent = '👆';
-            document.getEl
+            document.getElementById('icon-'+aid).style.transform = '';
+            });
+            document.getElementById('content-'+id).style.display = 'block';
+            document.getElementById('icon-'+id).textContent = '👇';
+            document.getElementById('icon-'+id).style.transform = 'rotate(180deg)';
+            openId = id;
+        }
+    }
+    </script>
+</body>
+</html>
