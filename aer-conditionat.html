@@ -3,8 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Aer Condiționat | CSSI</title>
-    <meta name="description" content="Sisteme de climatizare pentru spații rezidențiale și comerciale. Instalare, service și mentenanță profesională.">
+    <title>Aer Condiționat | CSSI - Montaj Aer Condiționat Brașov</title>
+    <meta name="description" content="Montaj aer condiționat profesional: split, multi-split, VRF, casete tavan. Branduri premium, instalare rapidă, mentenanță. 20+ ani experiență, 8.700+ proiecte.">
+    <meta name="keywords" content="aer conditionat, montaj aer conditionat, split, multi-split, VRF, clima, Brasov, CSSI">
+    <meta property="og:title" content="Aer Condiționat | CSSI">
+    <meta property="og:description" content="Montaj aer condiționat profesional. Split, multi-split, VRF. Branduri premium, instalare rapidă.">
+    <meta property="og:type" content="website">
+    <meta property="og:locale" content="ro_RO">
     <link rel="icon" href="https://eu.chat-img.sintra.ai/32c1b29c-0c86-4833-a031-e7c45e21a11e/983d52bb-2eb6-42f1-bed4-f94d769bb634/Logo_CSSI.png">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
     <style>
@@ -24,6 +29,11 @@
         @media(max-width:639px){.hidden.sm\:block{display:none!important;}.sm\:hidden{display:block!important;}}
         @media(max-width:640px){#chatPanel{width:calc(100vw - 48px)!important;right:24px!important;}}
         @media(max-width:768px){button,a[href]{min-height:44px;}}
+        .comp-grid{display:grid;grid-template-columns:1fr;gap:16px;margin-top:16px;}
+        @media(min-width:640px){.comp-grid{grid-template-columns:repeat(2,1fr);}}
+        @media(min-width:900px){.comp-grid{grid-template-columns:repeat(3,1fr);}}
+        .comp-card{background:#f9fafb;border:1px solid #e5e7eb;border-radius:12px;padding:20px;transition:all 0.3s;}
+        .comp-card:hover{transform:translateY(-4px);box-shadow:0 8px 16px -4px rgba(0,0,0,0.1);border-color:#0284c7;}
     </style>
 </head>
 <body>
@@ -64,7 +74,7 @@
                         <a href="usi-garaj.html" style="display:block;padding:10px 16px;font-size:13px;color:#334155;border-radius:8px;" onmouseover="this.style.background='#fef2f2';this.style.color='#dc2626'" onmouseout="this.style.background='';this.style.color='#334155'">🏠 Uși Garaj</a>
                         <a href="instalatii-electrice.html" style="display:block;padding:10px 16px;font-size:13px;color:#334155;border-radius:8px;" onmouseover="this.style.background='#fef2f2';this.style.color='#dc2626'" onmouseout="this.style.background='';this.style.color='#334155'">⚡ Instalații Electrice</a>
                         <a href="instalatii-termice-sanitare.html" style="display:block;padding:10px 16px;font-size:13px;color:#334155;border-radius:8px;" onmouseover="this.style.background='#fef2f2';this.style.color='#dc2626'" onmouseout="this.style.background='';this.style.color='#334155'">🔧 Instalații Termice & Sanitare</a>
-                        <a href="aer-conditionat.html" style="display:block;padding:10px 16px;font-size:13px;color:#334155;border-radius:8px;" onmouseover="this.style.background='#fef2f2';this.style.color='#dc2626'" onmouseout="this.style.background='';this.style.color='#334155'">❄️ Aer Condiționat</a>
+                        <a href="aer-conditionat.html" style="display:block;padding:10px 16px;font-size:13px;color:#dc2626;background:#fef2f2;border-radius:8px;font-weight:600;">❄️ Aer Condiționat</a>
                         <a href="ventilatie.html" style="display:block;padding:10px 16px;font-size:13px;color:#334155;border-radius:8px;" onmouseover="this.style.background='#fef2f2';this.style.color='#dc2626'" onmouseout="this.style.background='';this.style.color='#334155'">💨 Ventilație</a>
                         <a href="pontaj-electronic.html" style="display:block;padding:10px 16px;font-size:13px;color:#334155;border-radius:8px;" onmouseover="this.style.background='#fef2f2';this.style.color='#dc2626'" onmouseout="this.style.background='';this.style.color='#334155'">⏱️ Pontaj Electronic</a>
                     </div>
@@ -100,96 +110,244 @@
 
 <!-- ========== HERO ========== -->
 <section style="padding-top:112px;">
-    <div style="background:linear-gradient(135deg,#0891b2,#1d4ed8);padding:48px 16px;">
-        <div style="max-width:896px;margin:0 auto;text-align:center;">
-            <span style="display:inline-flex;align-items:center;padding:4px 12px;background:rgba(255,255,255,0.2);border-radius:999px;color:#fff;font-size:14px;font-weight:500;margin-bottom:16px;">❄️ Aer Condiționat</span>
-            <h1 style="font-size:clamp(28px,5vw,40px);font-weight:800;color:#fff;margin-bottom:16px;">Sisteme de Aer Condiționat</h1>
-            <p style="font-size:18px;color:rgba(207,250,254,0.9);">Climatizare pentru spații rezidențiale și comerciale. Instalare, service și mentenanță.</p>
+    <div style="background:linear-gradient(135deg,#0284c7,#0c4a6e);padding:48px 16px;position:relative;overflow:hidden;">
+        <div style="position:absolute;inset:0;opacity:0.06;background-image:repeating-radial-gradient(circle at 25% 25%,transparent,transparent 15px,rgba(255,255,255,0.06) 15px,rgba(255,255,255,0.06) 17px);"></div>
+        <div style="max-width:896px;margin:0 auto;text-align:center;position:relative;">
+            <span style="display:inline-flex;align-items:center;padding:4px 12px;background:rgba(255,255,255,0.15);border-radius:999px;color:#fff;font-size:14px;font-weight:500;margin-bottom:16px;">❄️ Climatizare Profesională</span>
+            <h1 style="font-size:clamp(28px,5vw,40px);font-weight:800;color:#fff;margin-bottom:16px;">Aer Condiționat</h1>
+            <p style="font-size:18px;color:rgba(186,230,253,0.9);max-width:640px;margin:0 auto;">Montaj profesional split, multi-split și VRF. Răcire, încălzire, dezumidificare. Branduri premium cu garanție extinsă.</p>
+            <div style="display:flex;justify-content:center;gap:32px;flex-wrap:wrap;margin-top:24px;">
+                <div style="text-align:center;color:#fff;">
+                    <span style="font-size:28px;font-weight:800;display:block;">A+++</span>
+                    <span style="font-size:12px;opacity:0.8;text-transform:uppercase;letter-spacing:0.5px;">Clasă Energetică</span>
+                </div>
+                <div style="text-align:center;color:#fff;">
+                    <span style="font-size:28px;font-weight:800;display:block;">R32</span>
+                    <span style="font-size:12px;opacity:0.8;text-transform:uppercase;letter-spacing:0.5px;">Refrigerant Eco</span>
+                </div>
+                <div style="text-align:center;color:#fff;">
+                    <span style="font-size:28px;font-weight:800;display:block;">WiFi</span>
+                    <span style="font-size:12px;opacity:0.8;text-transform:uppercase;letter-spacing:0.5px;">Control Telefon</span>
+                </div>
+            </div>
         </div>
     </div>
 </section>
 
-<!-- ========== GHID INSTALARE ========== -->
+<!-- ========== TIPURI ========== -->
 <section style="padding:40px 16px;background:#fff;">
     <div style="max-width:896px;margin:0 auto;">
-        <h2 style="font-size:24px;font-weight:700;color:#111827;margin-bottom:24px;">📚 Ghid Complet de Instalare</h2>
-        <div style="display:flex;flex-direction:column;gap:16px;">
-            <div class="accordion-item" style="border:1px solid #e5e7eb;border-radius:12px;overflow:hidden;">
-              <button onclick="toggleAccordion('proiectare')" style="width:100%;padding:16px 24px;background:#f9fafb;display:flex;justify-content:space-between;align-items:center;border:none;cursor:pointer;font-family:inherit;transition:background 0.2s;" onmouseover="this.style.background='#f3f4f6'" onmouseout="this.style.background='#f9fafb'">
-                <span style="font-size:18px;font-weight:700;color:#111827;">🔧 Proiectare</span>
-                <span id="icon-proiectare" style="font-size:24px;transition:transform 0.3s;">👆</span>
-              </button>
-              <div id="content-proiectare" style="display:none;padding:16px 24px;color:#374151;line-height:1.7;">
+        <h2 style="font-size:24px;font-weight:700;color:#111827;margin-bottom:8px;">❄️ Tipuri de Sisteme</h2>
+        <p style="color:#6b7280;margin-bottom:20px;">De la un singur split la sisteme centralizate VRF pentru clădiri întregi.</p>
+        <div class="comp-grid">
+            <div class="comp-card">
+                <div style="font-size:36px;margin-bottom:12px;">🏠</div>
+                <h3 style="font-size:18px;font-weight:700;color:#111827;margin-bottom:8px;">Split Rezidențial</h3>
+                <p style="color:#6b7280;font-size:14px;line-height:1.6;">Unitate interioară + exterioară. 9.000-24.000 BTU. Inverter, WiFi, filtre avansate. Cel mai popular.</p>
+                <div style="margin-top:12px;display:flex;flex-wrap:wrap;gap:6px;">
+                    <span style="padding:2px 8px;background:#e0f2fe;color:#0369a1;border-radius:6px;font-size:11px;font-weight:500;">Inverter</span>
+                    <span style="padding:2px 8px;background:#e0f2fe;color:#0369a1;border-radius:6px;font-size:11px;font-weight:500;">WiFi</span>
+                </div>
+            </div>
+            <div class="comp-card">
+                <div style="font-size:36px;margin-bottom:12px;">🏢</div>
+                <h3 style="font-size:18px;font-weight:700;color:#111827;margin-bottom:8px;">Multi-Split</h3>
+                <p style="color:#6b7280;font-size:14px;line-height:1.6;">O unitate exterioară alimentează 2-5 unități interioare. Ideal pentru mai multe camere, o singură unitate pe fațadă.</p>
+                <div style="margin-top:12px;display:flex;flex-wrap:wrap;gap:6px;">
+                    <span style="padding:2px 8px;background:#ecfdf5;color:#047857;border-radius:6px;font-size:11px;font-weight:500;">2-5 unități</span>
+                    <span style="padding:2px 8px;background:#ecfdf5;color:#047857;border-radius:6px;font-size:11px;font-weight:500;">1 exterior</span>
+                </div>
+            </div>
+            <div class="comp-card">
+                <div style="font-size:36px;margin-bottom:12px;">🏗️</div>
+                <h3 style="font-size:18px;font-weight:700;color:#111827;margin-bottom:8px;">Casetă Tavan</h3>
+                <p style="color:#6b7280;font-size:14px;line-height:1.6;">Montaj în tavanul fals, distribuție pe 4 direcții. Birouri, magazine, restaurante. Discret și eficient.</p>
+                <div style="margin-top:12px;display:flex;flex-wrap:wrap;gap:6px;">
+                    <span style="padding:2px 8px;background:#f3e8ff;color:#6b21a8;border-radius:6px;font-size:11px;font-weight:500;">4 direcții</span>
+                    <span style="padding:2px 8px;background:#f3e8ff;color:#6b21a8;border-radius:6px;font-size:11px;font-weight:500;">Discret</span>
+                </div>
+            </div>
+            <div class="comp-card">
+                <div style="font-size:36px;margin-bottom:12px;">🔄</div>
+                <h3 style="font-size:18px;font-weight:700;color:#111827;margin-bottom:8px;">Duct (Canalizat)</h3>
+                <p style="color:#6b7280;font-size:14px;line-height:1.6;">Unitate ascunsă în tavan, distribuție prin tubulatură și grile. Complet invizibil, design premium.</p>
+                <div style="margin-top:12px;display:flex;flex-wrap:wrap;gap:6px;">
+                    <span style="padding:2px 8px;background:#fef3c7;color:#92400e;border-radius:6px;font-size:11px;font-weight:500;">Invizibil</span>
+                    <span style="padding:2px 8px;background:#fef3c7;color:#92400e;border-radius:6px;font-size:11px;font-weight:500;">Tubulatură</span>
+                </div>
+            </div>
+            <div class="comp-card">
+                <div style="font-size:36px;margin-bottom:12px;">🏭</div>
+                <h3 style="font-size:18px;font-weight:700;color:#111827;margin-bottom:8px;">VRF / VRV</h3>
+                <p style="color:#6b7280;font-size:14px;line-height:1.6;">Sistem centralizat pentru clădiri mari. 10-60+ unități interioare, management pe zone, eficiență maximă.</p>
+                <div style="margin-top:12px;display:flex;flex-wrap:wrap;gap:6px;">
+                    <span style="padding:2px 8px;background:#fef2f2;color:#991b1b;border-radius:6px;font-size:11px;font-weight:500;">Centralizat</span>
+                    <span style="padding:2px 8px;background:#fef2f2;color:#991b1b;border-radius:6px;font-size:11px;font-weight:500;">BMS</span>
+                </div>
+            </div>
+            <div class="comp-card">
+                <div style="font-size:36px;margin-bottom:12px;">📱</div>
+                <h3 style="font-size:18px;font-weight:700;color:#111827;margin-bottom:8px;">Smart & WiFi</h3>
+                <p style="color:#6b7280;font-size:14px;line-height:1.6;">Control din telefon, programare, geofencing, integrare smart home (Alexa, Google). Monitorizare consum.</p>
+                <div style="margin-top:12px;display:flex;flex-wrap:wrap;gap:6px;">
+                    <span style="padding:2px 8px;background:#fce7f3;color:#9d174d;border-radius:6px;font-size:11px;font-weight:500;">App</span>
+                    <span style="padding:2px 8px;background:#fce7f3;color:#9d174d;border-radius:6px;font-size:11px;font-weight:500;">Alexa</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
 
-                <p>Proiectarea unui sistem de climatizare începe cu calculul sarcinii termice a spațiului.</p>
+<!-- ========== GHID ========== -->
+<section style="padding:40px 16px;background:#f9fafb;">
+    <div style="max-width:896px;margin:0 auto;">
+        <h2 style="font-size:24px;font-weight:700;color:#111827;margin-bottom:24px;">📚 Ghid Complet</h2>
+        <div style="display:flex;flex-direction:column;gap:16px;">
+
+            <div class="accordion-item" style="border:1px solid #e5e7eb;border-radius:12px;overflow:hidden;">
+              <button onclick="toggleAccordion('dimensionare')" style="width:100%;padding:16px 24px;background:#fff;display:flex;justify-content:space-between;align-items:center;border:none;cursor:pointer;font-family:inherit;transition:background 0.2s;" onmouseover="this.style.background='#f3f4f6'" onmouseout="this.style.background='#fff'">
+                <span style="font-size:18px;font-weight:700;color:#111827;">🔧 Dimensionare Corectă</span>
+                <span id="icon-dimensionare" style="font-size:24px;transition:transform 0.3s;">👆</span>
+              </button>
+              <div id="content-dimensionare" style="display:none;padding:16px 24px;color:#374151;line-height:1.7;">
+                <h4 style="font-weight:600;">Regulă orientativă BTU:</h4>
                 <ul style="list-style:disc;padding-left:24px;margin-top:8px;">
-                    <li style="margin-bottom:8px;">Calculul puterii frigorifice necesare în BTU sau kW</li>
-                    <li style="margin-bottom:8px;">Alegerea tipului de sistem: split, multi-split, VRF sau centralizat</li>
-                    <li style="margin-bottom:8px;">Poziționarea optimă a unităților interioare pentru distribuție uniformă</li>
-                    <li style="margin-bottom:8px;">Alegerea locației pentru unitatea exterioară</li>
-                    <li style="margin-bottom:8px;">Dimensionarea traseelor de freon și a conductelor de condens</li>
+                    <li style="margin-bottom:8px;"><strong>15-20 mp</strong> → 9.000 BTU (2.5 kW)</li>
+                    <li style="margin-bottom:8px;"><strong>20-30 mp</strong> → 12.000 BTU (3.5 kW)</li>
+                    <li style="margin-bottom:8px;"><strong>30-40 mp</strong> → 18.000 BTU (5 kW)</li>
+                    <li style="margin-bottom:8px;"><strong>40-55 mp</strong> → 24.000 BTU (7 kW)</li>
                 </ul>
+                <p style="margin-top:12px;">Factori suplimentari: orientare (sud = +20%), etaj ultim (+15%), geamuri mari (+10%), echipamente IT (+15%).</p>
+                <div style="margin-top:16px;padding:12px 16px;background:#e0f2fe;border-radius:8px;border-left:3px solid #0284c7;">
+                    <p style="font-size:14px;color:#0369a1;"><strong>💡 Sfat CSSI:</strong> Un aparat subdimensionat funcționează non-stop fără a atinge temperatura dorită, consumă mult și se uzează rapid. Mai bine ușor supradimensionat.</p>
+                </div>
               </div>
             </div>
+
             <div class="accordion-item" style="border:1px solid #e5e7eb;border-radius:12px;overflow:hidden;">
-              <button onclick="toggleAccordion('montaj')" style="width:100%;padding:16px 24px;background:#f9fafb;display:flex;justify-content:space-between;align-items:center;border:none;cursor:pointer;font-family:inherit;transition:background 0.2s;" onmouseover="this.style.background='#f3f4f6'" onmouseout="this.style.background='#f9fafb'">
-                <span style="font-size:18px;font-weight:700;color:#111827;">🔨 Montaj</span>
+              <button onclick="toggleAccordion('montaj')" style="width:100%;padding:16px 24px;background:#fff;display:flex;justify-content:space-between;align-items:center;border:none;cursor:pointer;font-family:inherit;transition:background 0.2s;" onmouseover="this.style.background='#f3f4f6'" onmouseout="this.style.background='#fff'">
+                <span style="font-size:18px;font-weight:700;color:#111827;">🔨 Montaj Profesional</span>
                 <span id="icon-montaj" style="font-size:24px;transition:transform 0.3s;">👆</span>
               </button>
               <div id="content-montaj" style="display:none;padding:16px 24px;color:#374151;line-height:1.7;">
-
-                <ul style="list-style:disc;padding-left:24px;">
-                    <li style="margin-bottom:8px;">Montarea suportului și a unității interioare</li>
-                    <li style="margin-bottom:8px;">Realizarea găurii de trecere prin perete</li>
-                    <li style="margin-bottom:8px;">Instalarea conductelor de freon și a cablurilor electrice</li>
-                    <li style="margin-bottom:8px;">Montarea unității exterioare pe suport sau consolă</li>
-                    <li style="margin-bottom:8px;">Conectarea conductelor și realizarea vidului în sistem</li>
-                    <li style="margin-bottom:8px;">Deschiderea robinetelor și verificarea etanșeității</li>
-                    <li style="margin-bottom:8px;">Testarea funcționării pe răcire și încălzire</li>
+                <h4 style="font-weight:600;">Etapele montajului:</h4>
+                <ul style="list-style:disc;padding-left:24px;margin-top:8px;">
+                    <li style="margin-bottom:8px;">Stabilire poziție unitate interioară (flux aer optim, acces service)</li>
+                    <li style="margin-bottom:8px;">Stabilire poziție unitate exterioară (ventilație, acces, suport/consolă)</li>
+                    <li style="margin-bottom:8px;">Gaură trecere perete exterior (Ø65mm) cu pantă spre exterior</li>
+                    <li style="margin-bottom:8px;">Montaj plăcuță și unitate interioară (nivel, solid)</li>
+                    <li style="margin-bottom:8px;">Trasare țevi cupru (izolate), cablu alimentare, furtun condensat</li>
+                    <li style="margin-bottom:8px;">Montaj unitate exterioară pe consolă/suport antivibrații</li>
+                    <li style="margin-bottom:8px;">Mandrinare, conectare țevi, proba de etanșeitate cu azot</li>
+                    <li style="margin-bottom:8px;">Vacuum 30min minim (eliminare umiditate și aer)</li>
+                    <li style="margin-bottom:8px;">Deschidere robinete, verificare funcționare, testare moduri</li>
                 </ul>
+                <div style="margin-top:16px;padding:12px 16px;background:#ecfdf5;border-radius:8px;border-left:3px solid #10b981;">
+                    <p style="font-size:14px;color:#047857;"><strong>✅ Inclus:</strong> Consolă/suport exterior + burlan protecție + vacuum cu pompa + probă azot + testare completă + instruire telecomandă.</p>
+                </div>
               </div>
             </div>
+
             <div class="accordion-item" style="border:1px solid #e5e7eb;border-radius:12px;overflow:hidden;">
-              <button onclick="toggleAccordion('mentenanta')" style="width:100%;padding:16px 24px;background:#f9fafb;display:flex;justify-content:space-between;align-items:center;border:none;cursor:pointer;font-family:inherit;transition:background 0.2s;" onmouseover="this.style.background='#f3f4f6'" onmouseout="this.style.background='#f9fafb'">
-                <span style="font-size:18px;font-weight:700;color:#111827;">🛠️ Mentenanță</span>
+              <button onclick="toggleAccordion('eficienta')" style="width:100%;padding:16px 24px;background:#fff;display:flex;justify-content:space-between;align-items:center;border:none;cursor:pointer;font-family:inherit;transition:background 0.2s;" onmouseover="this.style.background='#f3f4f6'" onmouseout="this.style.background='#fff'">
+                <span style="font-size:18px;font-weight:700;color:#111827;">⚡ Eficiență & Economie</span>
+                <span id="icon-eficienta" style="font-size:24px;transition:transform 0.3s;">👆</span>
+              </button>
+              <div id="content-eficienta" style="display:none;padding:16px 24px;color:#374151;line-height:1.7;">
+                <h4 style="font-weight:600;">Ce face diferența în consum:</h4>
+                <ul style="list-style:disc;padding-left:24px;margin-top:8px;">
+                    <li style="margin-bottom:8px;"><strong>Inverter DC</strong> — compresorul variază turația, consum cu 40-60% mai mic față de on/off</li>
+                    <li style="margin-bottom:8px;"><strong>Clasa A+++</strong> — SEER ≥ 8.5 (răcire), SCOP ≥ 5.1 (încălzire)</li>
+                    <li style="margin-bottom:8px;"><strong>R32</strong> — refrigerant cu GWP scăzut, performanță termică superioară R410A</li>
+                    <li style="margin-bottom:8px;"><strong>Dimensionare corectă</strong> — evită funcționarea continuă la capacitate maximă</li>
+                    <li style="margin-bottom:8px;"><strong>Programare</strong> — timer, sleep mode, geofencing reduc consumul cu 15-20%</li>
+                    <li style="margin-bottom:8px;"><strong>Filtre curate</strong> — filtrele murdare cresc consumul cu 5-15%</li>
+                </ul>
+                <div style="margin-top:16px;padding:12px 16px;background:#fef3c7;border-radius:8px;border-left:3px solid #f59e0b;">
+                    <p style="font-size:14px;color:#92400e;"><strong>💰 Economie:</strong> Un inverter A+++ de 12.000 BTU consumă ~0.3-0.5 kWh pe oră la funcționare normală. Cost orientativ: 0.15-0.25 lei/oră la prețul actual al energiei.</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="accordion-item" style="border:1px solid #e5e7eb;border-radius:12px;overflow:hidden;">
+              <button onclick="toggleAccordion('incalzire')" style="width:100%;padding:16px 24px;background:#fff;display:flex;justify-content:space-between;align-items:center;border:none;cursor:pointer;font-family:inherit;transition:background 0.2s;" onmouseover="this.style.background='#f3f4f6'" onmouseout="this.style.background='#fff'">
+                <span style="font-size:18px;font-weight:700;color:#111827;">🔥 Încălzire cu AC (Pompă de Căldură)</span>
+                <span id="icon-incalzire" style="font-size:24px;transition:transform 0.3s;">👆</span>
+              </button>
+              <div id="content-incalzire" style="display:none;padding:16px 24px;color:#374151;line-height:1.7;">
+                <p>Aparatele moderne funcționează eficient pe încălzire până la -15°C / -25°C (modele Hyper Heating).</p>
+                <ul style="list-style:disc;padding-left:24px;margin-top:12px;">
+                    <li style="margin-bottom:8px;">COP 3-5 = pentru fiecare 1 kW consumat, produce 3-5 kW căldură</li>
+                    <li style="margin-bottom:8px;">Mult mai economic decât convectorul electric (COP = 1)</li>
+                    <li style="margin-bottom:8px;">Ideal ca sursă principală de încălzire pentru apartamente și case izolate</li>
+                    <li style="margin-bottom:8px;">Modele Hyper Heating (Mitsubishi, Daikin) — funcționare la -25°C exterior</li>
+                </ul>
+                <div style="margin-top:16px;padding:12px 16px;background:#fef2f2;border-radius:8px;border-left:3px solid #dc2626;">
+                    <p style="font-size:14px;color:#991b1b;"><strong>⚠️ Atenție:</strong> Sub -10°C eficiența scade. Pentru Brașov recomandăm modele cu Hyper Heating sau sursă de încălzire suplimentară pentru zilele foarte reci.</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="accordion-item" style="border:1px solid #e5e7eb;border-radius:12px;overflow:hidden;">
+              <button onclick="toggleAccordion('mentenanta')" style="width:100%;padding:16px 24px;background:#fff;display:flex;justify-content:space-between;align-items:center;border:none;cursor:pointer;font-family:inherit;transition:background 0.2s;" onmouseover="this.style.background='#f3f4f6'" onmouseout="this.style.background='#fff'">
+                <span style="font-size:18px;font-weight:700;color:#111827;">🛠️ Mentenanță & Igienizare</span>
                 <span id="icon-mentenanta" style="font-size:24px;transition:transform 0.3s;">👆</span>
               </button>
               <div id="content-mentenanta" style="display:none;padding:16px 24px;color:#374151;line-height:1.7;">
-
-                <ul style="list-style:disc;padding-left:24px;">
-                    <li style="margin-bottom:8px;">Curățarea filtrelor unității interioare lunar</li>
-                    <li style="margin-bottom:8px;">Curățarea bateriei unității exterioare semestrial</li>
-                    <li style="margin-bottom:8px;">Verificarea nivelului de freon anual</li>
-                    <li style="margin-bottom:8px;">Curățarea și dezinfectarea evaporatorului</li>
-                    <li style="margin-bottom:8px;">Verificarea drenajului condensului</li>
-                    <li style="margin-bottom:8px;">Testarea funcționării pe ambele moduri</li>
+                <h4 style="font-weight:600;">Revizie anuală recomandată (primăvară):</h4>
+                <ul style="list-style:disc;padding-left:24px;margin-top:8px;">
+                    <li style="margin-bottom:8px;">Curățare și igienizare unitate interioară (evaporator, ventilator, tăviță condensat)</li>
+                    <li style="margin-bottom:8px;">Spălare filtre cu soluție antibacteriană</li>
+                    <li style="margin-bottom:8px;">Curățare unitate exterioară (condensator, elice)</li>
+                    <li style="margin-bottom:8px;">Verificare presiune freon și completare dacă este necesar</li>
+                    <li style="margin-bottom:8px;">Verificare funcționare pe toate modurile</li>
+                    <li style="margin-bottom:8px;">Verificare scurgere condensat</li>
+                    <li style="margin-bottom:8px;">Tratament antifungic și antibacterian</li>
                 </ul>
-              </div>
-            </div>
-            <div class="accordion-item" style="border:1px solid #e5e7eb;border-radius:12px;overflow:hidden;">
-              <button onclick="toggleAccordion('legislatie')" style="width:100%;padding:16px 24px;background:#f9fafb;display:flex;justify-content:space-between;align-items:center;border:none;cursor:pointer;font-family:inherit;transition:background 0.2s;" onmouseover="this.style.background='#f3f4f6'" onmouseout="this.style.background='#f9fafb'">
-                <span style="font-size:18px;font-weight:700;color:#111827;">📜 Legislație</span>
-                <span id="icon-legislatie" style="font-size:24px;transition:transform 0.3s;">👆</span>
-              </button>
-              <div id="content-legislatie" style="display:none;padding:16px 24px;color:#374151;line-height:1.7;">
-
-                <ul style="list-style:disc;padding-left:24px;">
-                    <li style="margin-bottom:12px;"><strong>Regulamentul UE 517/2014</strong> - privind gazele fluorurate cu efect de seră</li>
-                    <li style="margin-bottom:12px;"><strong>Certificare FGAS</strong> - obligatorie pentru tehnicieni care manipulează agent frigorific</li>
-                    <li style="margin-bottom:12px;"><strong>Normativul I5</strong> - proiectarea instalațiilor de ventilare și climatizare</li>
-                </ul>
+                <div style="margin-top:16px;padding:12px 16px;background:#e0f2fe;border-radius:8px;border-left:3px solid #0284c7;">
+                    <p style="font-size:14px;color:#0369a1;"><strong>🧹 Igienizare:</strong> Un AC neigienizat poate răspândi bacterii, mucegai și alergeni. Recomandăm igienizare anuală pentru sănătatea familiei.</p>
+                </div>
               </div>
             </div>
 
+        </div>
+    </div>
+</section>
+
+<!-- ========== BENEFICII ========== -->
+<section style="padding:48px 16px;background:#fff;">
+    <div style="max-width:896px;margin:0 auto;">
+        <h2 style="font-size:24px;font-weight:700;color:#111827;margin-bottom:24px;text-align:center;">✅ De Ce Să Alegeți CSSI?</h2>
+        <div style="display:grid;grid-template-columns:1fr;gap:16px;">
+            <div style="display:flex;gap:16px;padding:20px;background:#f9fafb;border-radius:12px;align-items:flex-start;">
+                <div style="width:48px;height:48px;min-width:48px;background:linear-gradient(135deg,#0284c7,#38bdf8);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:22px;">🏆</div>
+                <div><h3 style="font-weight:700;font-size:16px;color:#111827;margin-bottom:4px;">Branduri Premium</h3><p style="color:#6b7280;font-size:14px;line-height:1.5;">Montăm Daikin, Mitsubishi, Fujitsu, Gree, Midea. Garanție extinsă prin montaj autorizat.</p></div>
+            </div>
+            <div style="display:flex;gap:16px;padding:20px;background:#f9fafb;border-radius:12px;align-items:flex-start;">
+                <div style="width:48px;height:48px;min-width:48px;background:linear-gradient(135deg,#047857,#10b981);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:22px;">🔧</div>
+                <div><h3 style="font-weight:700;font-size:16px;color:#111827;margin-bottom:4px;">Montaj Conform</h3><p style="color:#6b7280;font-size:14px;line-height:1.5;">Vacuum cu pompă, probă azot, mandrinare profesională. Montaj care păstrează garanția producătorului.</p></div>
+            </div>
+            <div style="display:flex;gap:16px;padding:20px;background:#f9fafb;border-radius:12px;align-items:flex-start;">
+                <div style="width:48px;height:48px;min-width:48px;background:linear-gradient(135deg,#7c3aed,#a855f7);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:22px;">🧹</div>
+                <div><h3 style="font-weight:700;font-size:16px;color:#111827;margin-bottom:4px;">Igienizare Profesională</h3><p style="color:#6b7280;font-size:14px;line-height:1.5;">Curățare profundă cu demontare, tratament antibacterian și antifungic. Aer curat garantat.</p></div>
+            </div>
+            <div style="display:flex;gap:16px;padding:20px;background:#f9fafb;border-radius:12px;align-items:flex-start;">
+                <div style="width:48px;height:48px;min-width:48px;background:linear-gradient(135deg,#dc2626,#ef4444);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:22px;">⚡</div>
+                <div><h3 style="font-weight:700;font-size:16px;color:#111827;margin-bottom:4px;">Service Rapid</h3><p style="color:#6b7280;font-size:14px;line-height:1.5;">Depanare, completare freon, înlocuire componente. Intervenție rapidă în sezon.</p></div>
+            </div>
         </div>
     </div>
 </section>
 
 <!-- ========== CTA ========== -->
-<section style="padding:48px 16px;background:linear-gradient(to right,#dc2626,#b91c1c);">
+<section style="padding:48px 16px;background:linear-gradient(135deg,#0284c7,#0c4a6e);">
     <div style="max-width:768px;margin:0 auto;text-align:center;">
-        <h2 style="font-size:24px;font-weight:700;color:#fff;margin-bottom:16px;">Ai nevoie de aer condiționat?</h2>
-        <a href="contact.html" style="display:inline-block;padding:16px 32px;background:#fff;color:#dc2626;font-weight:600;border-radius:12px;font-size:16px;transition:all 0.2s;box-shadow:0 4px 6px -1px rgba(0,0,0,0.1);" onmouseover="this.style.background='#f1f5f9'" onmouseout="this.style.background='#fff'">Cere Ofertă Gratuită</a>
+        <h2 style="font-size:24px;font-weight:700;color:#fff;margin-bottom:8px;">Vrei aer condiționat nou sau igienizare?</h2>
+        <p style="color:rgba(186,230,253,0.8);margin-bottom:24px;">Evaluare gratuită + ofertă cu montaj inclus. Montaj rapid, curat și profesional.</p>
+        <div style="display:flex;flex-wrap:wrap;justify-content:center;gap:12px;">
+            <a href="contact.html" style="display:inline-block;padding:16px 32px;background:#fff;color:#0369a1;font-weight:600;border-radius:12px;font-size:16px;transition:all 0.2s;box-shadow:0 4px 6px -1px rgba(0,0,0,0.1);" onmouseover="this.style.background='#f1f5f9'" onmouseout="this.style.background='#fff'">Cere Ofertă Gratuită</a>
+            <a href="tel:0752288400" style="display:inline-block;padding:16px 32px;background:transparent;color:#fff;font-weight:600;border-radius:12px;font-size:16px;border:2px solid rgba(255,255,255,0.3);transition:all 0.2s;" onmouseover="this.style.borderColor='#fff'" onmouseout="this.style.borderColor='rgba(255,255,255,0.3)'">📞 0752 288 400</a>
+        </div>
     </div>
 </section>
 
@@ -206,7 +364,7 @@
         <div style="display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:16px;font-size:12px;">
             <a href="tel:0268414740" style="color:#cbd5e1;display:flex;align-items:center;gap:4px;">📞 0268 414 740</a>
             <a href="https://wa.me/40752288400" style="color:#cbd5e1;display:flex;align-items:center;gap:4px;">💬 0752 288 400</a>
-            <a href="/cdn-cgi/l/email-protection#84ebe2e2ede7e1c4e6f6e1e5eff7edf7f0e1e9f7aaf6eb" style="color:#cbd5e1;display:flex;align-items:center;gap:4px;">✉️ <span class="__cf_email__" data-cfemail="adc2cbcbc4cec8edcfdfc8ccc6dec4ded9c8c0de83dfc2">[email&#160;protected]</span></a>
+            <a href="mailto:office@cssi.ro" style="color:#cbd5e1;display:flex;align-items:center;gap:4px;">✉️ office@cssi.ro</a>
             <span style="color:#64748b;">L-V: 08:00-17:00</span>
         </div>
         <div style="margin-top:16px;text-align:center;"><p style="color:#475569;font-size:10px;">© 2024 CSSI · Powered by Break Sistems</p></div>
@@ -228,23 +386,22 @@ Cum vă pot ajuta? Scrieți: servicii, prețuri sau contact.</div></div></div>
     <div style="padding:16px;border-top:1px solid #e2e8f0;background:#fff;"><div style="display:flex;gap:8px;"><input type="text" id="chatInput" placeholder="Scrieți un mesaj..." onkeypress="if(event.key==='Enter')sendChat()" style="flex:1;padding:8px 16px;border:1px solid #e5e7eb;border-radius:999px;font-size:14px;outline:none;font-family:inherit;"><button onclick="sendChat()" style="width:40px;height:40px;background:#dc2626;color:#fff;border-radius:50%;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;"><svg style="width:20px;height:20px;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/></svg></button></div></div>
 </div>
 
-<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+<script>
 function toggleMobileMenu(){var m=document.getElementById('mobileMenu'),a=document.getElementById('menuIcon'),b=document.getElementById('closeIcon'),c=document.getElementById('menuBtn');if(m.classList.contains('open')){m.classList.remove('open');a.style.display='';b.style.display='none';c.style.background='linear-gradient(to right,#ef4444,#dc2626)';c.classList.add('animate-subtle-pulse');}else{m.classList.add('open');a.style.display='none';b.style.display='';c.style.background='#6b7280';c.classList.remove('animate-subtle-pulse');}}
 function closeMobile(){document.getElementById('mobileMenu').classList.remove('open');document.getElementById('menuIcon').style.display='';document.getElementById('closeIcon').style.display='none';}
-var chatR={'servicii':'Oferim o gamă completă de servicii:\n\n🔥 Detecție incendiu ISU\n📹 Camere supraveghere\n🚨 Alarme antiefracție\n🔐 Control acces\n⏱️ Pontaj electronic\n🚧 Bariere auto\n🔔 Interfoane\n🔊 Sonorizare\n🚗 Automatizări porți\n🏠 Uși garaj\n❄️ Aer condiționat\n💨 Ventilație\n⚡ Instalații electrice\n🔧 Instalații termice','preturi':'Prețurile variază. Pentru ofertă personalizată:\n\n📞 0268 414 740\n💬 WhatsApp: 0752 288 400\n📧 office@cssi.ro','contact':'📞 0268 414 740\n💬 0752 288 400\n📧 office@cssi.ro\n📍 Brașov\nL-V: 08:00-17:00','default':'Mulțumim! 😊\n📞 0268 414 740\n💬 0752 288 400\nSau scrieți: servicii, prețuri, contact'};
+var chatR={'servicii':'Oferim o gamă completă de servicii:\n\n🔥 Detecție incendiu ISU\n📹 Camere supraveghere\n🚨 Alarme antiefracție\n🔐 Control acces\n⏱️ Pontaj electronic\n🚧 Bariere auto\n🔔 Interfoane\n🔊 Sonorizare\n🚗 Automatizări porți\n🏠 Uși garaj\n❄️ Aer condiționat\n💨 Ventilație\n⚡ Instalații electrice\n🔧 Instalații termice','preturi':'Prețurile variază. Pentru ofertă personalizată:\n\n📞 0268 414 740\n💬 WhatsApp: 0752 288 400\n📧 office@cssi.ro','contact':'📞 0268 414 740\n💬 0752 288 400\n📧 office@cssi.ro\n📍 Brașov\nL-V: 08:00-17:00','clima':'Aer condiționat disponibil:\n\n🏠 Split rezidențial (Inverter)\n🏢 Multi-split (2-5 unități)\n🏗️ Casetă tavan\n🔄 Duct canalizat\n🏭 VRF/VRV centralizat\n📱 Smart & WiFi\n\nPentru ofertă: 0752 288 400','default':'Mulțumim! 😊\n📞 0268 414 740\n💬 0752 288 400\nSau scrieți: servicii, clima, prețuri, contact'};
 function toggleChat(){var p=document.getElementById('chatPanel'),a=document.getElementById('chatOpenIcon'),b=document.getElementById('chatCloseIcon'),c=document.getElementById('chatBtn');if(p.classList.contains('open')){p.classList.remove('open');a.style.display='';b.style.display='none';c.style.background='linear-gradient(to right,#06b6d4,#10b981)';c.classList.add('animate-subtle-pulse');}else{p.classList.add('open');a.style.display='none';b.style.display='';c.style.background='#6b7280';c.classList.remove('animate-subtle-pulse');}}
 function sendChat(){var i=document.getElementById('chatInput'),t=i.value.trim();if(!t)return;var m=document.getElementById('chatMessages');m.innerHTML+='<div style="display:flex;justify-content:flex-end;"><div style="max-width:80%;padding:12px;border-radius:16px;border-top-right-radius:0;background:#dc2626;color:#fff;font-size:14px;">'+t+'</div></div>';i.value='';var l=t.toLowerCase(),r=chatR.default;for(var k in chatR){if(k!=='default'&&l.includes(k)){r=chatR[k];break;}}setTimeout(function(){m.innerHTML+='<div style="display:flex;justify-content:flex-start;"><div style="max-width:80%;padding:12px;border-radius:16px;border-top-left-radius:0;background:#fff;color:#374151;font-size:14px;box-shadow:0 1px 2px rgba(0,0,0,0.05);white-space:pre-line;">'+r+'</div></div>';m.scrollTop=m.scrollHeight;},500);m.scrollTop=m.scrollHeight;}
 </script>
 
 <script>
-var openId = null;
-function toggleAccordion(id) {
-    var allIds = ['proiectare', 'montaj', 'mentenanta', 'legislatie'];
-    if (openId === id) {
-        document.getElementById('content-'+id).style.display = 'none';
-        document.getElementById('icon-'+id).textContent = '👆';
-        document.getElementById('icon-'+id).style.transform = '';
-        openId = null;
-    } else {
-        allIds.forEach(function(aid) {
-            document
+var openId=null;
+function toggleAccordion(id){var allIds=['dimensionare','montaj','eficienta','incalzire','mentenanta'];if(openId===id){document.getElementById('content-'+id).style.display='none';document.getElementById('icon-'+id).textContent='👆';document.getElementById('icon-'+id).style.transform='';openId=null;}else{allIds.forEach(function(aid){document.getElementById('content-'+aid).style.display='none';document.getElementById('icon-'+aid).textContent='👆';document.getElementById('icon-'+aid).style.transform='';});document.getElementById('content-'+id).style.display='block';document.getElementById('icon-'+id).textContent='👇';document.getElementById('icon-'+id).style.transform='rotate(180deg)';openId=id;}}
+</script>
+
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"Service","name":"Aer Condiționat - CSSI","description":"Montaj aer condiționat profesional: split, multi-split, VRF. Branduri premium, igienizare, service.","provider":{"@type":"LocalBusiness","name":"CSSI","telephone":"+40268414740","email":"office@cssi.ro","address":{"@type":"PostalAddress","addressLocality":"Brașov","addressCountry":"RO"},"aggregateRating":{"@type":"AggregateRating","ratingValue":"4.9","reviewCount":"127"}},"areaServed":"Brașov","serviceType":["Montaj aer condiționat","Igienizare AC","Service AC","Sisteme VRF"]}
+</script>
+
+</body>
+</html>
