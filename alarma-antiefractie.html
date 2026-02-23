@@ -3,8 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Alarmă Antiefracție | CSSI</title>
-    <meta name="description" content="Sisteme de alarmă antiefracție cu detectori de mișcare, senzori magnetici și monitorizare 24/7. Instalare profesională, mentenanță și service.">
+    <title>Alarmă Antiefracție | CSSI - Sisteme de Alarmă Profesionale Brașov</title>
+    <meta name="description" content="Sisteme de alarmă antiefracție profesionale: centrale wireless și cablate, detectori mișcare, sirene, monitorizare 24/7. Instalare și mentenanță. 20+ ani experiență, 8.700+ proiecte.">
+    <meta name="keywords" content="alarma antiefractie, sistem alarma, detectori miscare, sirena alarma, centrale alarma, alarma wireless, monitorizare alarma, Brasov, CSSI">
+    <meta property="og:title" content="Alarmă Antiefracție | CSSI">
+    <meta property="og:description" content="Sisteme de alarmă antiefracție profesionale. Proiectare, instalare și monitorizare. 20+ ani experiență.">
+    <meta property="og:type" content="website">
+    <meta property="og:locale" content="ro_RO">
     <link rel="icon" href="https://eu.chat-img.sintra.ai/32c1b29c-0c86-4833-a031-e7c45e21a11e/983d52bb-2eb6-42f1-bed4-f94d769bb634/Logo_CSSI.png">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
     <style>
@@ -24,6 +29,12 @@
         @media(max-width:639px){.hidden.sm\:block{display:none!important;}.sm\:hidden{display:block!important;}}
         @media(max-width:640px){#chatPanel{width:calc(100vw - 48px)!important;right:24px!important;}}
         @media(max-width:768px){button,a[href]{min-height:44px;}}
+
+        .comp-grid{display:grid;grid-template-columns:1fr;gap:16px;margin-top:16px;}
+        @media(min-width:640px){.comp-grid{grid-template-columns:repeat(2,1fr);}}
+        @media(min-width:900px){.comp-grid{grid-template-columns:repeat(3,1fr);}}
+        .comp-card{background:#f9fafb;border:1px solid #e5e7eb;border-radius:12px;padding:20px;transition:all 0.3s;}
+        .comp-card:hover{transform:translateY(-4px);box-shadow:0 8px 16px -4px rgba(0,0,0,0.1);border-color:#dc2626;}
     </style>
 </head>
 <body>
@@ -55,7 +66,7 @@
                     <div class="dropdown-menu dropdown-scroll" style="position:absolute;top:100%;left:0;width:280px;background:#fff;box-shadow:0 10px 15px -3px rgba(0,0,0,0.1);border-radius:12px;padding:8px;border:1px solid #f1f5f9;max-height:384px;overflow-y:auto;z-index:100;">
                         <a href="detectie-incendiu-isu.html" style="display:block;padding:10px 16px;font-size:13px;color:#334155;border-radius:8px;" onmouseover="this.style.background='#fef2f2';this.style.color='#dc2626'" onmouseout="this.style.background='';this.style.color='#334155'">🔥 Detecție Incendiu ISU</a>
                         <a href="camere-supraveghere.html" style="display:block;padding:10px 16px;font-size:13px;color:#334155;border-radius:8px;" onmouseover="this.style.background='#fef2f2';this.style.color='#dc2626'" onmouseout="this.style.background='';this.style.color='#334155'">📹 Camere Supraveghere</a>
-                        <a href="alarma-antiefractie.html" style="display:block;padding:10px 16px;font-size:13px;color:#334155;border-radius:8px;" onmouseover="this.style.background='#fef2f2';this.style.color='#dc2626'" onmouseout="this.style.background='';this.style.color='#334155'">🚨 Alarmă Antiefracție</a>
+                        <a href="alarma-antiefractie.html" style="display:block;padding:10px 16px;font-size:13px;color:#dc2626;background:#fef2f2;border-radius:8px;font-weight:600;">🚨 Alarmă Antiefracție</a>
                         <a href="control-acces.html" style="display:block;padding:10px 16px;font-size:13px;color:#334155;border-radius:8px;" onmouseover="this.style.background='#fef2f2';this.style.color='#dc2626'" onmouseout="this.style.background='';this.style.color='#334155'">🔐 Control Acces</a>
                         <a href="automatizari-porti.html" style="display:block;padding:10px 16px;font-size:13px;color:#334155;border-radius:8px;" onmouseover="this.style.background='#fef2f2';this.style.color='#dc2626'" onmouseout="this.style.background='';this.style.color='#334155'">🚗 Automatizări Porți</a>
                         <a href="bariere-auto.html" style="display:block;padding:10px 16px;font-size:13px;color:#334155;border-radius:8px;" onmouseover="this.style.background='#fef2f2';this.style.color='#dc2626'" onmouseout="this.style.background='';this.style.color='#334155'">🚧 Bariere Auto</a>
@@ -100,99 +111,245 @@
 
 <!-- ========== HERO ========== -->
 <section style="padding-top:112px;">
-    <div style="background:linear-gradient(135deg,#dc2626,#be185d);padding:48px 16px;">
-        <div style="max-width:896px;margin:0 auto;text-align:center;">
-            <span style="display:inline-flex;align-items:center;padding:4px 12px;background:rgba(255,255,255,0.2);border-radius:999px;color:#fff;font-size:14px;font-weight:500;margin-bottom:16px;">🚨 Protecție Antiefracție</span>
+    <div style="background:linear-gradient(135deg,#dc2626,#7f1d1d);padding:48px 16px;position:relative;overflow:hidden;">
+        <!-- Decorative shield pattern -->
+        <div style="position:absolute;inset:0;opacity:0.06;background-image:repeating-linear-gradient(45deg,transparent,transparent 20px,rgba(255,255,255,0.1) 20px,rgba(255,255,255,0.1) 40px);"></div>
+        <div style="max-width:896px;margin:0 auto;text-align:center;position:relative;">
+            <span style="display:inline-flex;align-items:center;padding:4px 12px;background:rgba(255,255,255,0.15);border-radius:999px;color:#fff;font-size:14px;font-weight:500;margin-bottom:16px;">🚨 Protecție Completă</span>
             <h1 style="font-size:clamp(28px,5vw,40px);font-weight:800;color:#fff;margin-bottom:16px;">Alarmă Antiefracție</h1>
-            <p style="font-size:18px;color:rgba(254,202,202,0.9);">Sisteme moderne de alarmă cu detectori de mișcare, senzori magnetici și monitorizare 24/7.</p>
+            <p style="font-size:18px;color:rgba(254,202,202,0.9);max-width:640px;margin:0 auto;">Sisteme profesionale de alarmă antiefracție cu monitorizare 24/7, notificări instant pe telefon și integrare completă cu alte sisteme de securitate.</p>
+            <!-- Hero stats -->
+            <div style="display:flex;justify-content:center;gap:32px;flex-wrap:wrap;margin-top:24px;">
+                <div style="text-align:center;color:#fff;">
+                    <span style="font-size:28px;font-weight:800;display:block;">24/7</span>
+                    <span style="font-size:12px;opacity:0.8;text-transform:uppercase;letter-spacing:0.5px;">Monitorizare</span>
+                </div>
+                <div style="text-align:center;color:#fff;">
+                    <span style="font-size:28px;font-weight:800;display:block;">&lt;30s</span>
+                    <span style="font-size:12px;opacity:0.8;text-transform:uppercase;letter-spacing:0.5px;">Timp Alertare</span>
+                </div>
+                <div style="text-align:center;color:#fff;">
+                    <span style="font-size:28px;font-weight:800;display:block;">128+</span>
+                    <span style="font-size:12px;opacity:0.8;text-transform:uppercase;letter-spacing:0.5px;">Zone Protejate</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ========== COMPONENTE SISTEM ========== -->
+<section style="padding:40px 16px;background:#fff;">
+    <div style="max-width:896px;margin:0 auto;">
+        <h2 style="font-size:24px;font-weight:700;color:#111827;margin-bottom:8px;">🛡️ Componentele Sistemului de Alarmă</h2>
+        <p style="color:#6b7280;margin-bottom:20px;">Fiecare sistem este configurat pe nevoile dumneavoastră specifice.</p>
+
+        <div class="comp-grid">
+            <!-- Centrala -->
+            <div class="comp-card">
+                <div style="font-size:36px;margin-bottom:12px;">🧠</div>
+                <h3 style="font-size:18px;font-weight:700;color:#111827;margin-bottom:8px;">Centrala de Alarmă</h3>
+                <p style="color:#6b7280;font-size:14px;line-height:1.6;">Creierul sistemului — gestionează toate zonele, comunică cu dispeceratul și trimite notificări. Suport SIM, WiFi, Ethernet.</p>
+                <div style="margin-top:12px;display:flex;flex-wrap:wrap;gap:6px;">
+                    <span style="padding:2px 8px;background:#fef2f2;color:#991b1b;border-radius:6px;font-size:11px;font-weight:500;">Wireless</span>
+                    <span style="padding:2px 8px;background:#fef2f2;color:#991b1b;border-radius:6px;font-size:11px;font-weight:500;">Cablat</span>
+                    <span style="padding:2px 8px;background:#fef2f2;color:#991b1b;border-radius:6px;font-size:11px;font-weight:500;">Hybrid</span>
+                </div>
+            </div>
+
+            <!-- Detectori mișcare -->
+            <div class="comp-card">
+                <div style="font-size:36px;margin-bottom:12px;">👁️</div>
+                <h3 style="font-size:18px;font-weight:700;color:#111827;margin-bottom:8px;">Detectori de Mișcare</h3>
+                <p style="color:#6b7280;font-size:14px;line-height:1.6;">Senzori PIR, dual-technology (PIR + microunde) și cu imunitate la animale. Interior și exterior.</p>
+                <div style="margin-top:12px;display:flex;flex-wrap:wrap;gap:6px;">
+                    <span style="padding:2px 8px;background:#eff6ff;color:#1e40af;border-radius:6px;font-size:11px;font-weight:500;">PIR</span>
+                    <span style="padding:2px 8px;background:#eff6ff;color:#1e40af;border-radius:6px;font-size:11px;font-weight:500;">Dual-Tech</span>
+                    <span style="padding:2px 8px;background:#eff6ff;color:#1e40af;border-radius:6px;font-size:11px;font-weight:500;">Pet Immune</span>
+                </div>
+            </div>
+
+            <!-- Contacte magnetice -->
+            <div class="comp-card">
+                <div style="font-size:36px;margin-bottom:12px;">🧲</div>
+                <h3 style="font-size:18px;font-weight:700;color:#111827;margin-bottom:8px;">Contacte Magnetice</h3>
+                <p style="color:#6b7280;font-size:14px;line-height:1.6;">Detectare deschidere uși și ferestre. Modele încastrabile, de suprafață și pentru uși de garaj.</p>
+                <div style="margin-top:12px;display:flex;flex-wrap:wrap;gap:6px;">
+                    <span style="padding:2px 8px;background:#ecfdf5;color:#047857;border-radius:6px;font-size:11px;font-weight:500;">Uși</span>
+                    <span style="padding:2px 8px;background:#ecfdf5;color:#047857;border-radius:6px;font-size:11px;font-weight:500;">Ferestre</span>
+                </div>
+            </div>
+
+            <!-- Sirene -->
+            <div class="comp-card">
+                <div style="font-size:36px;margin-bottom:12px;">🔔</div>
+                <h3 style="font-size:18px;font-weight:700;color:#111827;margin-bottom:8px;">Sirene de Avertizare</h3>
+                <p style="color:#6b7280;font-size:14px;line-height:1.6;">Sirene interior (piezo) și exterior (110dB+) cu flash stroboscopic și protecție antideschidere.</p>
+                <div style="margin-top:12px;display:flex;flex-wrap:wrap;gap:6px;">
+                    <span style="padding:2px 8px;background:#fef3c7;color:#92400e;border-radius:6px;font-size:11px;font-weight:500;">Interior</span>
+                    <span style="padding:2px 8px;background:#fef3c7;color:#92400e;border-radius:6px;font-size:11px;font-weight:500;">Exterior</span>
+                    <span style="padding:2px 8px;background:#fef3c7;color:#92400e;border-radius:6px;font-size:11px;font-weight:500;">110dB+</span>
+                </div>
+            </div>
+
+            <!-- Tastaturi -->
+            <div class="comp-card">
+                <div style="font-size:36px;margin-bottom:12px;">🔢</div>
+                <h3 style="font-size:18px;font-weight:700;color:#111827;margin-bottom:8px;">Tastaturi și Telecomenzi</h3>
+                <p style="color:#6b7280;font-size:14px;line-height:1.6;">Tastaturi LCD/touch cu ecran color, telecomenzi, tag-uri RFID și control din aplicație mobilă.</p>
+                <div style="margin-top:12px;display:flex;flex-wrap:wrap;gap:6px;">
+                    <span style="padding:2px 8px;background:#f3e8ff;color:#6b21a8;border-radius:6px;font-size:11px;font-weight:500;">LCD Touch</span>
+                    <span style="padding:2px 8px;background:#f3e8ff;color:#6b21a8;border-radius:6px;font-size:11px;font-weight:500;">Telecomandă</span>
+                </div>
+            </div>
+
+            <!-- Detectori speciali -->
+            <div class="comp-card">
+                <div style="font-size:36px;margin-bottom:12px;">🌊</div>
+                <h3 style="font-size:18px;font-weight:700;color:#111827;margin-bottom:8px;">Detectori Speciali</h3>
+                <p style="color:#6b7280;font-size:14px;line-height:1.6;">Detectori de spargere geam, vibrații, inundație, fum, gaz și temperatură extremă.</p>
+                <div style="margin-top:12px;display:flex;flex-wrap:wrap;gap:6px;">
+                    <span style="padding:2px 8px;background:#fce7f3;color:#9d174d;border-radius:6px;font-size:11px;font-weight:500;">Geam spart</span>
+                    <span style="padding:2px 8px;background:#fce7f3;color:#9d174d;border-radius:6px;font-size:11px;font-weight:500;">Inundație</span>
+                    <span style="padding:2px 8px;background:#fce7f3;color:#9d174d;border-radius:6px;font-size:11px;font-weight:500;">Gaz</span>
+                </div>
+            </div>
         </div>
     </div>
 </section>
 
 <!-- ========== GHID INSTALARE ========== -->
-<section style="padding:40px 16px;background:#fff;">
+<section style="padding:40px 16px;background:#f9fafb;">
     <div style="max-width:896px;margin:0 auto;">
         <h2 style="font-size:24px;font-weight:700;color:#111827;margin-bottom:24px;">📚 Ghid Complet de Instalare</h2>
         <div style="display:flex;flex-direction:column;gap:16px;">
+
+            <!-- Proiectare -->
             <div class="accordion-item" style="border:1px solid #e5e7eb;border-radius:12px;overflow:hidden;">
-              <button onclick="toggleAccordion('proiectare')" style="width:100%;padding:16px 24px;background:#f9fafb;display:flex;justify-content:space-between;align-items:center;border:none;cursor:pointer;font-family:inherit;transition:background 0.2s;" onmouseover="this.style.background='#f3f4f6'" onmouseout="this.style.background='#f9fafb'">
-                <span style="font-size:18px;font-weight:700;color:#111827;">🔧 Proiectare</span>
+              <button onclick="toggleAccordion('proiectare')" style="width:100%;padding:16px 24px;background:#fff;display:flex;justify-content:space-between;align-items:center;border:none;cursor:pointer;font-family:inherit;transition:background 0.2s;" onmouseover="this.style.background='#f3f4f6'" onmouseout="this.style.background='#fff'">
+                <span style="font-size:18px;font-weight:700;color:#111827;">🔧 Proiectare Sistem Alarmă</span>
                 <span id="icon-proiectare" style="font-size:24px;transition:transform 0.3s;">👆</span>
               </button>
               <div id="content-proiectare" style="display:none;padding:16px 24px;color:#374151;line-height:1.7;">
-
-                <p>Proiectarea unui sistem de alarmă antiefracție începe cu analiza de risc a obiectivului și identificarea vulnerabilităților.</p>
+                <p>Un sistem de alarmă eficient începe cu o evaluare atentă a vulnerabilităților și a specificului fiecărui obiectiv.</p>
                 <h4 style="font-weight:600;margin-top:16px;">Etapele proiectării:</h4>
                 <ul style="list-style:disc;padding-left:24px;margin-top:8px;">
-                    <li style="margin-bottom:8px;">Evaluarea riscului de efracție al obiectivului</li>
-                    <li style="margin-bottom:8px;">Identificarea căilor de acces și a punctelor vulnerabile</li>
-                    <li style="margin-bottom:8px;">Alegerea tipului de sistem (cablat, wireless, hybrid)</li>
-                    <li style="margin-bottom:8px;">Dimensionarea centralei și a numărului de zone</li>
-                    <li style="margin-bottom:8px;">Planificarea amplasării detectoarelor</li>
-                    <li style="margin-bottom:8px;">Stabilirea modului de comunicare (GSM, IP, radio)</li>
+                    <li style="margin-bottom:8px;">Evaluarea la fața locului — identificarea punctelor vulnerabile (uși, ferestre, zone de acces)</li>
+                    <li style="margin-bottom:8px;">Analiza nivelului de risc și a tipului de obiectiv (locuință, comercial, industrial)</li>
+                    <li style="margin-bottom:8px;">Alegerea tipului de sistem: wireless, cablat sau hybrid</li>
+                    <li style="margin-bottom:8px;">Dimensionarea numărului de zone și selectarea detectoarelor potrivite</li>
+                    <li style="margin-bottom:8px;">Planificarea modalităților de armare/dezarmare (tastatură, telecomandă, app)</li>
+                    <li style="margin-bottom:8px;">Definirea scenariilor de comunicare: dispecerat, SMS, push, apel telefonic</li>
+                    <li style="margin-bottom:8px;">Integrare cu alte sisteme: camere, control acces, automatizări</li>
                 </ul>
-                <h4 style="font-weight:600;margin-top:16px;">Tipuri de detectori:</h4>
-                <ul style="list-style:disc;padding-left:24px;margin-top:8px;">
-                    <li style="margin-bottom:8px;"><strong>PIR</strong> - Detectori de mișcare infraroșu pasiv</li>
-                    <li style="margin-bottom:8px;"><strong>Magnetici</strong> - Pentru uși și ferestre</li>
-                    <li style="margin-bottom:8px;"><strong>Dual</strong> - PIR + microunde (anti-alarme false)</li>
-                    <li style="margin-bottom:8px;"><strong>Cortină</strong> - Protecție perimetrală</li>
-                    <li style="margin-bottom:8px;"><strong>Spargere geam</strong> - Detectează vibrații specifice</li>
-                </ul>
+                <div style="margin-top:16px;padding:12px 16px;background:#fef2f2;border-radius:8px;border-left:3px solid #dc2626;">
+                    <p style="font-size:14px;color:#991b1b;"><strong>💡 Sfat CSSI:</strong> Pentru locuințe recomandăm minim: centrala + 2 detectori mișcare + contacte magnetice pe ușile de acces + sirenă exterior + tastatură + aplicație mobilă.</p>
+                </div>
               </div>
             </div>
+
+            <!-- Instalare -->
             <div class="accordion-item" style="border:1px solid #e5e7eb;border-radius:12px;overflow:hidden;">
-              <button onclick="toggleAccordion('instalare')" style="width:100%;padding:16px 24px;background:#f9fafb;display:flex;justify-content:space-between;align-items:center;border:none;cursor:pointer;font-family:inherit;transition:background 0.2s;" onmouseover="this.style.background='#f3f4f6'" onmouseout="this.style.background='#f9fafb'">
-                <span style="font-size:18px;font-weight:700;color:#111827;">🔨 Instalare</span>
+              <button onclick="toggleAccordion('instalare')" style="width:100%;padding:16px 24px;background:#fff;display:flex;justify-content:space-between;align-items:center;border:none;cursor:pointer;font-family:inherit;transition:background 0.2s;" onmouseover="this.style.background='#f3f4f6'" onmouseout="this.style.background='#fff'">
+                <span style="font-size:18px;font-weight:700;color:#111827;">🔨 Instalare și Punere în Funcțiune</span>
                 <span id="icon-instalare" style="font-size:24px;transition:transform 0.3s;">👆</span>
               </button>
               <div id="content-instalare" style="display:none;padding:16px 24px;color:#374151;line-height:1.7;">
-
-                <p>Instalarea se realizează de tehnicieni autorizați, cu respectarea standardelor de securitate.</p>
+                <p>Instalarea profesională asigură funcționarea fiabilă a sistemului și elimină alarmele false care pot apărea la montajul necorespunzător.</p>
                 <h4 style="font-weight:600;margin-top:16px;">Etapele instalării:</h4>
                 <ul style="list-style:disc;padding-left:24px;margin-top:8px;">
-                    <li style="margin-bottom:8px;">Montarea centralei de alarmă în locație securizată</li>
-                    <li style="margin-bottom:8px;">Instalarea tastaturii/tastaturilor de comandă</li>
-                    <li style="margin-bottom:8px;">Montarea detectoarelor în pozițiile stabilite</li>
-                    <li style="margin-bottom:8px;">Instalarea sirenelor interioare și exterioare</li>
-                    <li style="margin-bottom:8px;">Conectarea comunicatorului GSM/IP</li>
-                    <li style="margin-bottom:8px;">Programarea zonelor și a codurilor de acces</li>
-                    <li style="margin-bottom:8px;">Configurarea aplicației mobile pentru control remote</li>
-                    <li style="margin-bottom:8px;">Testarea completă a tuturor zonelor</li>
+                    <li style="margin-bottom:8px;">Montarea centralei de alarmă într-o locație protejată și discretă</li>
+                    <li style="margin-bottom:8px;">Instalarea detectoarelor de mișcare la înălțimea și unghiul optim (2.2-2.4m)</li>
+                    <li style="margin-bottom:8px;">Montarea contactelor magnetice pe uși și ferestre</li>
+                    <li style="margin-bottom:8px;">Instalarea sirenei exterioare și interioare</li>
+                    <li style="margin-bottom:8px;">Montarea tastaturii la intrarea principală</li>
+                    <li style="margin-bottom:8px;">Cablarea și conectarea tuturor componentelor (sau înrolarea wireless)</li>
+                    <li style="margin-bottom:8px;">Programarea zonelor, codurilor de utilizator și scenariilor</li>
+                    <li style="margin-bottom:8px;">Configurarea comunicării cu dispeceratul și a notificărilor pe telefon</li>
+                    <li style="margin-bottom:8px;">Testarea completă: walk test pe fiecare detector, test sirenă, test comunicare</li>
                 </ul>
+                <div style="margin-top:16px;padding:12px 16px;background:#ecfdf5;border-radius:8px;border-left:3px solid #10b981;">
+                    <p style="font-size:14px;color:#047857;"><strong>✅ Inclus:</strong> Instruire completă pentru armare/dezarmare + configurare aplicație pe telefon + coduri utilizator personalizate.</p>
+                </div>
               </div>
             </div>
+
+            <!-- Monitorizare -->
             <div class="accordion-item" style="border:1px solid #e5e7eb;border-radius:12px;overflow:hidden;">
-              <button onclick="toggleAccordion('mentenanta')" style="width:100%;padding:16px 24px;background:#f9fafb;display:flex;justify-content:space-between;align-items:center;border:none;cursor:pointer;font-family:inherit;transition:background 0.2s;" onmouseover="this.style.background='#f3f4f6'" onmouseout="this.style.background='#f9fafb'">
+              <button onclick="toggleAccordion('monitorizare')" style="width:100%;padding:16px 24px;background:#fff;display:flex;justify-content:space-between;align-items:center;border:none;cursor:pointer;font-family:inherit;transition:background 0.2s;" onmouseover="this.style.background='#f3f4f6'" onmouseout="this.style.background='#fff'">
+                <span style="font-size:18px;font-weight:700;color:#111827;">📡 Monitorizare și Comunicare</span>
+                <span id="icon-monitorizare" style="font-size:24px;transition:transform 0.3s;">👆</span>
+              </button>
+              <div id="content-monitorizare" style="display:none;padding:16px 24px;color:#374151;line-height:1.7;">
+                <p>Un sistem de alarmă este cu adevărat eficient doar dacă alertele ajung rapid la persoanele potrivite.</p>
+                <h4 style="font-weight:600;margin-top:16px;">Modalități de comunicare:</h4>
+                <ul style="list-style:disc;padding-left:24px;margin-top:8px;">
+                    <li style="margin-bottom:8px;"><strong>Dispecerat de monitorizare</strong> — personal specializat 24/7 care verifică și reacționează la alarme</li>
+                    <li style="margin-bottom:8px;"><strong>Notificări push</strong> — alertă instant pe aplicația mobilă cu detalii despre zona activată</li>
+                    <li style="margin-bottom:8px;"><strong>SMS și apel telefonic</strong> — notificare pe până la 8 numere de telefon</li>
+                    <li style="margin-bottom:8px;"><strong>Email</strong> — rapoarte detaliate pentru fiecare eveniment</li>
+                    <li style="margin-bottom:8px;"><strong>Comunicare IP + GSM</strong> — redundanță pentru siguranță maximă (dacă internetul cade, SIM-ul preia)</li>
+                </ul>
+                <div style="margin-top:16px;padding:12px 16px;background:#eff6ff;border-radius:8px;border-left:3px solid #3b82f6;">
+                    <p style="font-size:14px;color:#1e40af;"><strong>🔒 Securitate comunicare:</strong> Toate transmisiile sunt criptate AES-128/256. Centralele moderne detectează tentativele de sabotaj (jamming, tăiere cablu).</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Mentenanță -->
+            <div class="accordion-item" style="border:1px solid #e5e7eb;border-radius:12px;overflow:hidden;">
+              <button onclick="toggleAccordion('mentenanta')" style="width:100%;padding:16px 24px;background:#fff;display:flex;justify-content:space-between;align-items:center;border:none;cursor:pointer;font-family:inherit;transition:background 0.2s;" onmouseover="this.style.background='#f3f4f6'" onmouseout="this.style.background='#fff'">
                 <span style="font-size:18px;font-weight:700;color:#111827;">🛠️ Mentenanță</span>
                 <span id="icon-mentenanta" style="font-size:24px;transition:transform 0.3s;">👆</span>
               </button>
               <div id="content-mentenanta" style="display:none;padding:16px 24px;color:#374151;line-height:1.7;">
-
-                <p style="color:#dc2626;font-weight:600;">Obligatoriu: 3 verificări pe an conform legislației!</p>
+                <p style="color:#dc2626;font-weight:600;">⚠️ Recomandare: Verificare anuală obligatorie pentru funcționare optimă!</p>
+                <h4 style="font-weight:600;margin-top:16px;">Ce include verificarea periodică:</h4>
                 <ul style="list-style:disc;padding-left:24px;margin-top:8px;">
-                    <li style="margin-bottom:8px;">Testarea funcționării tuturor detectoarelor</li>
-                    <li style="margin-bottom:8px;">Verificarea sirenelor și a dispozitivelor de avertizare</li>
-                    <li style="margin-bottom:8px;">Testarea comunicării cu dispeceratul</li>
-                    <li style="margin-bottom:8px;">Verificarea stării bateriilor (centrală și detectori)</li>
-                    <li style="margin-bottom:8px;">Curățarea detectoarelor de praf</li>
-                    <li style="margin-bottom:8px;">Verificarea conexiunilor și a cablurilor</li>
-                    <li style="margin-bottom:8px;">Actualizarea firmware-ului</li>
+                    <li style="margin-bottom:8px;">Walk test complet pe toți detectorii de mișcare</li>
+                    <li style="margin-bottom:8px;">Testarea contactelor magnetice (uși și ferestre)</li>
+                    <li style="margin-bottom:8px;">Verificarea sirenelor (nivel sonor, flash, tamper)</li>
+                    <li style="margin-bottom:8px;">Testarea acumulatorului de rezervă (autonomie minim 12h)</li>
+                    <li style="margin-bottom:8px;">Verificarea comunicării cu dispeceratul / notificări push</li>
+                    <li style="margin-bottom:8px;">Înlocuirea bateriilor detectoarelor wireless (durată medie: 2-5 ani)</li>
+                    <li style="margin-bottom:8px;">Actualizarea firmware-ului centralei</li>
+                    <li style="margin-bottom:8px;">Verificarea integrității cablajului (pentru sisteme cablate)</li>
                 </ul>
+                <div style="margin-top:16px;padding:12px 16px;background:#fef3c7;border-radius:8px;border-left:3px solid #f59e0b;">
+                    <p style="font-size:14px;color:#92400e;"><strong>🔋 Important:</strong> Bateriile detectoarelor wireless trebuie verificate periodic. Centralele moderne semnalează automat bateria slabă cu cel puțin 30 de zile înainte de epuizare.</p>
+                </div>
               </div>
             </div>
-            <div class="accordion-item" style="border:1px solid #e5e7eb;border-radius:12px;overflow:hidden;">
-              <button onclick="toggleAccordion('legislatie')" style="width:100%;padding:16px 24px;background:#f9fafb;display:flex;justify-content:space-between;align-items:center;border:none;cursor:pointer;font-family:inherit;transition:background 0.2s;" onmouseover="this.style.background='#f3f4f6'" onmouseout="this.style.background='#f9fafb'">
-                <span style="font-size:18px;font-weight:700;color:#111827;">📜 Legislație și Obligații</span>
-                <span id="icon-legislatie" style="font-size:24px;transition:transform 0.3s;">👆</span>
-              </button>
-              <div id="content-legislatie" style="display:none;padding:16px 24px;color:#374151;line-height:1.7;">
 
-                <ul style="list-style:disc;padding-left:24px;">
-                    <li style="margin-bottom:12px;"><strong>Legea 333/2003</strong> - privind paza obiectivelor, bunurilor, valorilor și protecția persoanelor</li>
-                    <li style="margin-bottom:12px;"><strong>HG 301/2012</strong> - Normele metodologice de aplicare</li>
-                    <li style="margin-bottom:12px;"><strong>Ordinul 2761/2018</strong> - Cerințe tehnice pentru sisteme de alarmă</li>
-                </ul>
+            <!-- Wireless vs Cablat -->
+            <div class="accordion-item" style="border:1px solid #e5e7eb;border-radius:12px;overflow:hidden;">
+              <button onclick="toggleAccordion('comparatie')" style="width:100%;padding:16px 24px;background:#fff;display:flex;justify-content:space-between;align-items:center;border:none;cursor:pointer;font-family:inherit;transition:background 0.2s;" onmouseover="this.style.background='#f3f4f6'" onmouseout="this.style.background='#fff'">
+                <span style="font-size:18px;font-weight:700;color:#111827;">📊 Wireless vs. Cablat vs. Hybrid</span>
+                <span id="icon-comparatie" style="font-size:24px;transition:transform 0.3s;">👆</span>
+              </button>
+              <div id="content-comparatie" style="display:none;padding:16px 24px;color:#374151;line-height:1.7;">
+                <p>Alegerea între wireless, cablat sau hybrid depinde de tipul obiectivului și de cerințele specifice.</p>
+                <div style="margin-top:16px;overflow-x:auto;">
+                    <table style="width:100%;border-collapse:collapse;font-size:14px;">
+                        <thead>
+                            <tr style="background:#f3f4f6;">
+                                <th style="padding:10px 12px;text-align:left;border-bottom:2px solid #e5e7eb;">Criteriu</th>
+                                <th style="padding:10px 12px;text-align:left;border-bottom:2px solid #e5e7eb;">🔌 Cablat</th>
+                                <th style="padding:10px 12px;text-align:left;border-bottom:2px solid #e5e7eb;">📡 Wireless</th>
+                                <th style="padding:10px 12px;text-align:left;border-bottom:2px solid #e5e7eb;">🔀 Hybrid</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr><td style="padding:10px 12px;border-bottom:1px solid #e5e7eb;font-weight:600;">Fiabilitate</td><td style="padding:10px 12px;border-bottom:1px solid #e5e7eb;">⭐⭐⭐⭐⭐</td><td style="padding:10px 12px;border-bottom:1px solid #e5e7eb;">⭐⭐⭐⭐</td><td style="padding:10px 12px;border-bottom:1px solid #e5e7eb;">⭐⭐⭐⭐⭐</td></tr>
+                            <tr style="background:#f9fafb;"><td style="padding:10px 12px;border-bottom:1px solid #e5e7eb;font-weight:600;">Instalare</td><td style="padding:10px 12px;border-bottom:1px solid #e5e7eb;">Complexă</td><td style="padding:10px 12px;border-bottom:1px solid #e5e7eb;">Rapidă</td><td style="padding:10px 12px;border-bottom:1px solid #e5e7eb;">Medie</td></tr>
+                            <tr><td style="padding:10px 12px;border-bottom:1px solid #e5e7eb;font-weight:600;">Estetică</td><td style="padding:10px 12px;border-bottom:1px solid #e5e7eb;">Trasee vizibile</td><td style="padding:10px 12px;border-bottom:1px solid #e5e7eb;">Fără cabluri</td><td style="padding:10px 12px;border-bottom:1px solid #e5e7eb;">Minim cabluri</td></tr>
+                            <tr style="background:#f9fafb;"><td style="padding:10px 12px;border-bottom:1px solid #e5e7eb;font-weight:600;">Mentenanță</td><td style="padding:10px 12px;border-bottom:1px solid #e5e7eb;">Minimă</td><td style="padding:10px 12px;border-bottom:1px solid #e5e7eb;">Baterii</td><td style="padding:10px 12px;border-bottom:1px solid #e5e7eb;">Parțial baterii</td></tr>
+                            <tr><td style="padding:10px 12px;border-bottom:1px solid #e5e7eb;font-weight:600;">Recomandat</td><td style="padding:10px 12px;border-bottom:1px solid #e5e7eb;">Construcții noi</td><td style="padding:10px 12px;border-bottom:1px solid #e5e7eb;">Locuințe existente</td><td style="padding:10px 12px;border-bottom:1px solid #e5e7eb;">Orice obiectiv</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div style="margin-top:16px;padding:12px 16px;background:#ecfdf5;border-radius:8px;border-left:3px solid #10b981;">
+                    <p style="font-size:14px;color:#047857;"><strong>💡 Recomandarea noastră:</strong> Sistemele hybrid oferă cel mai bun raport între fiabilitate și flexibilitate — backbone cablat pentru elementele critice, wireless pentru extensii și zone greu accesibile.</p>
+                </div>
               </div>
             </div>
 
@@ -200,11 +357,52 @@
     </div>
 </section>
 
+<!-- ========== BENEFICII ========== -->
+<section style="padding:48px 16px;background:#fff;">
+    <div style="max-width:896px;margin:0 auto;">
+        <h2 style="font-size:24px;font-weight:700;color:#111827;margin-bottom:24px;text-align:center;">✅ De Ce Să Alegeți CSSI?</h2>
+        <div style="display:grid;grid-template-columns:1fr;gap:16px;">
+            <div style="display:flex;gap:16px;padding:20px;background:#f9fafb;border-radius:12px;align-items:flex-start;">
+                <div style="width:48px;height:48px;min-width:48px;background:linear-gradient(135deg,#dc2626,#ef4444);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:22px;">🏆</div>
+                <div>
+                    <h3 style="font-weight:700;font-size:16px;color:#111827;margin-bottom:4px;">20+ Ani Experiență în Securitate</h3>
+                    <p style="color:#6b7280;font-size:14px;line-height:1.5;">Peste 8.700 de sisteme instalate. Cunoaștem fiecare tip de obiectiv și cerință specifică.</p>
+                </div>
+            </div>
+            <div style="display:flex;gap:16px;padding:20px;background:#f9fafb;border-radius:12px;align-items:flex-start;">
+                <div style="width:48px;height:48px;min-width:48px;background:linear-gradient(135deg,#047857,#10b981);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:22px;">📱</div>
+                <div>
+                    <h3 style="font-weight:700;font-size:16px;color:#111827;margin-bottom:4px;">Control Total din Telefon</h3>
+                    <p style="color:#6b7280;font-size:14px;line-height:1.5;">Armare/dezarmare, verificare stare, istoric evenimente — totul din aplicația mobilă, oriunde v-ați afla.</p>
+                </div>
+            </div>
+            <div style="display:flex;gap:16px;padding:20px;background:#f9fafb;border-radius:12px;align-items:flex-start;">
+                <div style="width:48px;height:48px;min-width:48px;background:linear-gradient(135deg,#7c3aed,#a855f7);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:22px;">🔗</div>
+                <div>
+                    <h3 style="font-weight:700;font-size:16px;color:#111827;margin-bottom:4px;">Integrare Completă</h3>
+                    <p style="color:#6b7280;font-size:14px;line-height:1.5;">Conectăm alarma cu camerele, controlul acces și automatizările pentru un ecosistem de securitate unificat.</p>
+                </div>
+            </div>
+            <div style="display:flex;gap:16px;padding:20px;background:#f9fafb;border-radius:12px;align-items:flex-start;">
+                <div style="width:48px;height:48px;min-width:48px;background:linear-gradient(135deg,#0369a1,#38bdf8);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:22px;">⚡</div>
+                <div>
+                    <h3 style="font-weight:700;font-size:16px;color:#111827;margin-bottom:4px;">Intervenție Rapidă</h3>
+                    <p style="color:#6b7280;font-size:14px;line-height:1.5;">Service și depanare în maxim 24h. Contracte de mentenanță cu verificări periodice incluse.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
 <!-- ========== CTA ========== -->
-<section style="padding:48px 16px;background:linear-gradient(to right,#dc2626,#b91c1c);">
+<section style="padding:48px 16px;background:linear-gradient(135deg,#dc2626,#7f1d1d);">
     <div style="max-width:768px;margin:0 auto;text-align:center;">
-        <h2 style="font-size:24px;font-weight:700;color:#fff;margin-bottom:16px;">Protejează-ți proprietatea!</h2>
-        <a href="contact.html" style="display:inline-block;padding:16px 32px;background:#fff;color:#dc2626;font-weight:600;border-radius:12px;font-size:16px;transition:all 0.2s;box-shadow:0 4px 6px -1px rgba(0,0,0,0.1);" onmouseover="this.style.background='#f1f5f9'" onmouseout="this.style.background='#fff'">Cere Ofertă Gratuită</a>
+        <h2 style="font-size:24px;font-weight:700;color:#fff;margin-bottom:8px;">Protejează-ți casa sau afacerea acum!</h2>
+        <p style="color:rgba(254,202,202,0.8);margin-bottom:24px;">Evaluare gratuită la fața locului + ofertă personalizată în 24h.</p>
+        <div style="display:flex;flex-wrap:wrap;justify-content:center;gap:12px;">
+            <a href="contact.html" style="display:inline-block;padding:16px 32px;background:#fff;color:#dc2626;font-weight:600;border-radius:12px;font-size:16px;transition:all 0.2s;box-shadow:0 4px 6px -1px rgba(0,0,0,0.1);" onmouseover="this.style.background='#f1f5f9'" onmouseout="this.style.background='#fff'">Cere Ofertă Gratuită</a>
+            <a href="tel:0752288400" style="display:inline-block;padding:16px 32px;background:transparent;color:#fff;font-weight:600;border-radius:12px;font-size:16px;border:2px solid rgba(255,255,255,0.3);transition:all 0.2s;" onmouseover="this.style.borderColor='#fff'" onmouseout="this.style.borderColor='rgba(255,255,255,0.3)'">📞 0752 288 400</a>
+        </div>
     </div>
 </section>
 
@@ -221,20 +419,23 @@
         <div style="display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:16px;font-size:12px;">
             <a href="tel:0268414740" style="color:#cbd5e1;display:flex;align-items:center;gap:4px;">📞 0268 414 740</a>
             <a href="https://wa.me/40752288400" style="color:#cbd5e1;display:flex;align-items:center;gap:4px;">💬 0752 288 400</a>
-            <a href="/cdn-cgi/l/email-protection#fe919898979d9bbe9c8c9b9f958d978d8a9b938dd08c91" style="color:#cbd5e1;display:flex;align-items:center;gap:4px;">✉️ <span class="__cf_email__" data-cfemail="137c75757a7076537161767278607a6067767e603d617c">[email&#160;protected]</span></a>
+            <a href="mailto:office@cssi.ro" style="color:#cbd5e1;display:flex;align-items:center;gap:4px;">✉️ office@cssi.ro</a>
             <span style="color:#64748b;">L-V: 08:00-17:00</span>
         </div>
         <div style="margin-top:16px;text-align:center;"><p style="color:#475569;font-size:10px;">© 2024 CSSI · Powered by Break Sistems</p></div>
     </div>
 </footer>
 
+<!-- WhatsApp Button -->
 <a href="https://wa.me/40752288400" target="_blank" class="animate-subtle-pulse" style="position:fixed;bottom:12px;left:24px;z-index:50;width:56px;height:56px;background:#22c55e;border-radius:50%;box-shadow:0 10px 15px -3px rgba(0,0,0,0.1);display:flex;align-items:center;justify-content:center;" aria-label="WhatsApp"><svg style="width:28px;height:28px;color:#fff;" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg></a>
 
+<!-- Chat Button -->
 <button onclick="toggleChat()" id="chatBtn" class="animate-subtle-pulse" style="position:fixed;bottom:12px;right:24px;z-index:50;width:56px;height:56px;border-radius:50%;box-shadow:0 10px 15px -3px rgba(0,0,0,0.1);display:flex;align-items:center;justify-content:center;border:none;cursor:pointer;background:linear-gradient(to right,#06b6d4,#10b981);color:#fff;" aria-label="Chat">
     <svg id="chatOpenIcon" style="width:24px;height:24px;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/></svg>
     <svg id="chatCloseIcon" style="width:24px;height:24px;display:none;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
 </button>
 
+<!-- Chat Panel -->
 <div id="chatPanel" class="animate-fade-in" style="position:fixed;bottom:80px;right:24px;z-index:40;width:320px;background:#fff;border-radius:16px;box-shadow:0 20px 25px -5px rgba(0,0,0,0.1);overflow:hidden;flex-direction:column;">
     <div style="background:linear-gradient(to right,#dc2626,#b91c1c);padding:16px;color:#fff;"><div style="display:flex;align-items:center;gap:12px;"><div style="width:40px;height:40px;background:rgba(255,255,255,0.2);border-radius:50%;display:flex;align-items:center;justify-content:center;"><span style="font-size:18px;">🤖</span></div><div><h3 style="font-weight:600;">Alex - Asistent Virtual</h3><p style="font-size:12px;color:#fecaca;">CSSI</p></div></div></div>
     <div id="chatMessages" style="height:320px;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:12px;background:#f9fafb;"><div style="display:flex;justify-content:flex-start;"><div style="max-width:80%;padding:12px;border-radius:16px;border-top-left-radius:0;background:#fff;color:#374151;font-size:14px;box-shadow:0 1px 2px rgba(0,0,0,0.05);white-space:pre-line;">Bună! Sunt Alex, asistentul virtual CSSI. 👋
@@ -243,18 +444,20 @@ Cum vă pot ajuta? Scrieți: servicii, prețuri sau contact.</div></div></div>
     <div style="padding:16px;border-top:1px solid #e2e8f0;background:#fff;"><div style="display:flex;gap:8px;"><input type="text" id="chatInput" placeholder="Scrieți un mesaj..." onkeypress="if(event.key==='Enter')sendChat()" style="flex:1;padding:8px 16px;border:1px solid #e5e7eb;border-radius:999px;font-size:14px;outline:none;font-family:inherit;"><button onclick="sendChat()" style="width:40px;height:40px;background:#dc2626;color:#fff;border-radius:50%;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;"><svg style="width:20px;height:20px;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/></svg></button></div></div>
 </div>
 
-<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+<!-- ========== JAVASCRIPT ========== -->
+<script>
 function toggleMobileMenu(){var m=document.getElementById('mobileMenu'),a=document.getElementById('menuIcon'),b=document.getElementById('closeIcon'),c=document.getElementById('menuBtn');if(m.classList.contains('open')){m.classList.remove('open');a.style.display='';b.style.display='none';c.style.background='linear-gradient(to right,#ef4444,#dc2626)';c.classList.add('animate-subtle-pulse');}else{m.classList.add('open');a.style.display='none';b.style.display='';c.style.background='#6b7280';c.classList.remove('animate-subtle-pulse');}}
 function closeMobile(){document.getElementById('mobileMenu').classList.remove('open');document.getElementById('menuIcon').style.display='';document.getElementById('closeIcon').style.display='none';}
-var chatR={'servicii':'Oferim o gamă completă de servicii:\n\n🔥 Detecție incendiu ISU\n📹 Camere supraveghere\n🚨 Alarme antiefracție\n🔐 Control acces\n⏱️ Pontaj electronic\n🚧 Bariere auto\n🔔 Interfoane\n🔊 Sonorizare\n🚗 Automatizări porți\n🏠 Uși garaj\n❄️ Aer condiționat\n💨 Ventilație\n⚡ Instalații electrice\n🔧 Instalații termice','preturi':'Prețurile variază. Pentru ofertă personalizată:\n\n📞 0268 414 740\n💬 WhatsApp: 0752 288 400\n📧 office@cssi.ro','contact':'📞 0268 414 740\n💬 0752 288 400\n📧 office@cssi.ro\n📍 Brașov\nL-V: 08:00-17:00','default':'Mulțumim! 😊\n📞 0268 414 740\n💬 0752 288 400\nSau scrieți: servicii, prețuri, contact'};
+var chatR={'servicii':'Oferim o gamă completă de servicii:\n\n🔥 Detecție incendiu ISU\n📹 Camere supraveghere\n🚨 Alarme antiefracție\n🔐 Control acces\n⏱️ Pontaj electronic\n🚧 Bariere auto\n🔔 Interfoane\n🔊 Sonorizare\n🚗 Automatizări porți\n🏠 Uși garaj\n❄️ Aer condiționat\n💨 Ventilație\n⚡ Instalații electrice\n🔧 Instalații termice','preturi':'Prețurile variază. Pentru ofertă personalizată:\n\n📞 0268 414 740\n💬 WhatsApp: 0752 288 400\n📧 office@cssi.ro','contact':'📞 0268 414 740\n💬 0752 288 400\n📧 office@cssi.ro\n📍 Brașov\nL-V: 08:00-17:00','alarma':'Oferim sisteme complete de alarmă:\n\n🧠 Centrale wireless/cablate/hybrid\n👁️ Detectori mișcare PIR\n🧲 Contacte magnetice\n🔔 Sirene interior/exterior\n📡 Monitorizare 24/7\n📱 Control din aplicație\n\nPentru ofertă: 0752 288 400','default':'Mulțumim! 😊\n📞 0268 414 740\n💬 0752 288 400\nSau scrieți: servicii, alarma, prețuri, contact'};
 function toggleChat(){var p=document.getElementById('chatPanel'),a=document.getElementById('chatOpenIcon'),b=document.getElementById('chatCloseIcon'),c=document.getElementById('chatBtn');if(p.classList.contains('open')){p.classList.remove('open');a.style.display='';b.style.display='none';c.style.background='linear-gradient(to right,#06b6d4,#10b981)';c.classList.add('animate-subtle-pulse');}else{p.classList.add('open');a.style.display='none';b.style.display='';c.style.background='#6b7280';c.classList.remove('animate-subtle-pulse');}}
 function sendChat(){var i=document.getElementById('chatInput'),t=i.value.trim();if(!t)return;var m=document.getElementById('chatMessages');m.innerHTML+='<div style="display:flex;justify-content:flex-end;"><div style="max-width:80%;padding:12px;border-radius:16px;border-top-right-radius:0;background:#dc2626;color:#fff;font-size:14px;">'+t+'</div></div>';i.value='';var l=t.toLowerCase(),r=chatR.default;for(var k in chatR){if(k!=='default'&&l.includes(k)){r=chatR[k];break;}}setTimeout(function(){m.innerHTML+='<div style="display:flex;justify-content:flex-start;"><div style="max-width:80%;padding:12px;border-radius:16px;border-top-left-radius:0;background:#fff;color:#374151;font-size:14px;box-shadow:0 1px 2px rgba(0,0,0,0.05);white-space:pre-line;">'+r+'</div></div>';m.scrollTop=m.scrollHeight;},500);m.scrollTop=m.scrollHeight;}
 </script>
 
+<!-- Accordion Script -->
 <script>
 var openId = null;
 function toggleAccordion(id) {
-    var allIds = ['proiectare', 'instalare', 'mentenanta', 'legislatie'];
+    var allIds = ['proiectare', 'instalare', 'monitorizare', 'mentenanta', 'comparatie'];
     if (openId === id) {
         document.getElementById('content-'+id).style.display = 'none';
         document.getElementById('icon-'+id).textContent = '👆';
@@ -262,4 +465,45 @@ function toggleAccordion(id) {
         openId = null;
     } else {
         allIds.forEach(function(aid) {
-            document
+            document.getElementById('content-'+aid).style.display = 'none';
+            document.getElementById('icon-'+aid).textContent = '👆';
+            document.getElementById('icon-'+aid).style.transform = '';
+        });
+        document.getElementById('content-'+id).style.display = 'block';
+        document.getElementById('icon-'+id).textContent = '👇';
+        document.getElementById('icon-'+id).style.transform = 'rotate(180deg)';
+        openId = id;
+    }
+}
+</script>
+
+<!-- Schema.org JSON-LD -->
+<script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "Service",
+    "name": "Alarmă Antiefracție - CSSI",
+    "description": "Sisteme de alarmă antiefracție profesionale: centrale wireless și cablate, detectori mișcare, sirene, monitorizare 24/7.",
+    "provider": {
+        "@type": "LocalBusiness",
+        "name": "CSSI - Confort, Securitate, Siguranță, Imobil",
+        "telephone": "+40268414740",
+        "email": "office@cssi.ro",
+        "address": {
+            "@type": "PostalAddress",
+            "addressLocality": "Brașov",
+            "addressCountry": "RO"
+        },
+        "aggregateRating": {
+            "@type": "AggregateRating",
+            "ratingValue": "4.9",
+            "reviewCount": "127"
+        }
+    },
+    "areaServed": "Brașov",
+    "serviceType": ["Instalare alarmă antiefracție", "Sisteme de alarmă", "Monitorizare alarmă", "Mentenanță sisteme alarmă"]
+}
+</script>
+
+</body>
+</html>
