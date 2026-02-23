@@ -3,8 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Uși de Garaj Secționale | CSSI</title>
-    <meta name="description" content="Uși de garaj secționale și rulouri cu automatizare. Instalare profesională, service și garanție.">
+    <title>Uși Garaj | CSSI - Uși de Garaj Automate Brașov</title>
+    <meta name="description" content="Uși de garaj secționale, rulou și basculante. Motoare profesionale, telecomenzi, acces din telefon. Instalare și mentenanță. 20+ ani experiență, 8.700+ proiecte.">
+    <meta name="keywords" content="usi garaj, usa garaj sectionala, usa garaj rulou, motor usa garaj, usa garaj automata, telecomanda usa garaj, Brasov, CSSI">
+    <meta property="og:title" content="Uși Garaj | CSSI">
+    <meta property="og:description" content="Uși de garaj secționale, rulou și basculante cu motoare profesionale. Instalare și mentenanță.">
+    <meta property="og:type" content="website">
+    <meta property="og:locale" content="ro_RO">
     <link rel="icon" href="https://eu.chat-img.sintra.ai/32c1b29c-0c86-4833-a031-e7c45e21a11e/983d52bb-2eb6-42f1-bed4-f94d769bb634/Logo_CSSI.png">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
     <style>
@@ -24,6 +29,11 @@
         @media(max-width:639px){.hidden.sm\:block{display:none!important;}.sm\:hidden{display:block!important;}}
         @media(max-width:640px){#chatPanel{width:calc(100vw - 48px)!important;right:24px!important;}}
         @media(max-width:768px){button,a[href]{min-height:44px;}}
+        .comp-grid{display:grid;grid-template-columns:1fr;gap:16px;margin-top:16px;}
+        @media(min-width:640px){.comp-grid{grid-template-columns:repeat(2,1fr);}}
+        @media(min-width:900px){.comp-grid{grid-template-columns:repeat(3,1fr);}}
+        .comp-card{background:#f9fafb;border:1px solid #e5e7eb;border-radius:12px;padding:20px;transition:all 0.3s;}
+        .comp-card:hover{transform:translateY(-4px);box-shadow:0 8px 16px -4px rgba(0,0,0,0.1);border-color:#059669;}
     </style>
 </head>
 <body>
@@ -61,7 +71,7 @@
                         <a href="bariere-auto.html" style="display:block;padding:10px 16px;font-size:13px;color:#334155;border-radius:8px;" onmouseover="this.style.background='#fef2f2';this.style.color='#dc2626'" onmouseout="this.style.background='';this.style.color='#334155'">🚧 Bariere Auto</a>
                         <a href="interfoane-videointerfoane.html" style="display:block;padding:10px 16px;font-size:13px;color:#334155;border-radius:8px;" onmouseover="this.style.background='#fef2f2';this.style.color='#dc2626'" onmouseout="this.style.background='';this.style.color='#334155'">🔔 Interfoane & Videointerfoane</a>
                         <a href="sonorizare.html" style="display:block;padding:10px 16px;font-size:13px;color:#334155;border-radius:8px;" onmouseover="this.style.background='#fef2f2';this.style.color='#dc2626'" onmouseout="this.style.background='';this.style.color='#334155'">🔊 Sonorizare</a>
-                        <a href="usi-garaj.html" style="display:block;padding:10px 16px;font-size:13px;color:#334155;border-radius:8px;" onmouseover="this.style.background='#fef2f2';this.style.color='#dc2626'" onmouseout="this.style.background='';this.style.color='#334155'">🏠 Uși Garaj</a>
+                        <a href="usi-garaj.html" style="display:block;padding:10px 16px;font-size:13px;color:#dc2626;background:#fef2f2;border-radius:8px;font-weight:600;">🏠 Uși Garaj</a>
                         <a href="instalatii-electrice.html" style="display:block;padding:10px 16px;font-size:13px;color:#334155;border-radius:8px;" onmouseover="this.style.background='#fef2f2';this.style.color='#dc2626'" onmouseout="this.style.background='';this.style.color='#334155'">⚡ Instalații Electrice</a>
                         <a href="instalatii-termice-sanitare.html" style="display:block;padding:10px 16px;font-size:13px;color:#334155;border-radius:8px;" onmouseover="this.style.background='#fef2f2';this.style.color='#dc2626'" onmouseout="this.style.background='';this.style.color='#334155'">🔧 Instalații Termice & Sanitare</a>
                         <a href="aer-conditionat.html" style="display:block;padding:10px 16px;font-size:13px;color:#334155;border-radius:8px;" onmouseover="this.style.background='#fef2f2';this.style.color='#dc2626'" onmouseout="this.style.background='';this.style.color='#334155'">❄️ Aer Condiționat</a>
@@ -100,95 +110,268 @@
 
 <!-- ========== HERO ========== -->
 <section style="padding-top:112px;">
-    <div style="background:linear-gradient(135deg,#475569,#1e293b);padding:48px 16px;">
-        <div style="max-width:896px;margin:0 auto;text-align:center;">
-            <span style="display:inline-flex;align-items:center;padding:4px 12px;background:rgba(255,255,255,0.2);border-radius:999px;color:#fff;font-size:14px;font-weight:500;margin-bottom:16px;">🏠 Uși Garaj</span>
-            <h1 style="font-size:clamp(28px,5vw,40px);font-weight:800;color:#fff;margin-bottom:16px;">Uși de Garaj Secționale</h1>
-            <p style="font-size:18px;color:rgba(203,213,225,0.9);">Uși de garaj secționale și rulouri cu automatizare pentru confort și siguranță.</p>
+    <div style="background:linear-gradient(135deg,#059669,#064e3b);padding:48px 16px;position:relative;overflow:hidden;">
+        <div style="position:absolute;inset:0;opacity:0.06;background-image:repeating-linear-gradient(0deg,transparent,transparent 30px,rgba(255,255,255,0.08) 30px,rgba(255,255,255,0.08) 32px),repeating-linear-gradient(90deg,transparent,transparent 30px,rgba(255,255,255,0.08) 30px,rgba(255,255,255,0.08) 32px);"></div>
+        <div style="max-width:896px;margin:0 auto;text-align:center;position:relative;">
+            <span style="display:inline-flex;align-items:center;padding:4px 12px;background:rgba(255,255,255,0.15);border-radius:999px;color:#fff;font-size:14px;font-weight:500;margin-bottom:16px;">🏠 Garaj Automatizat</span>
+            <h1 style="font-size:clamp(28px,5vw,40px);font-weight:800;color:#fff;margin-bottom:16px;">Uși de Garaj</h1>
+            <p style="font-size:18px;color:rgba(209,250,229,0.9);max-width:640px;margin:0 auto;">Uși de garaj secționale, rulou și basculante cu motor automat. Izolație termică, telecomandă și control din telefon.</p>
+            <div style="display:flex;justify-content:center;gap:32px;flex-wrap:wrap;margin-top:24px;">
+                <div style="text-align:center;color:#fff;">
+                    <span style="font-size:28px;font-weight:800;display:block;">R=1.4</span>
+                    <span style="font-size:12px;opacity:0.8;text-transform:uppercase;letter-spacing:0.5px;">Izolație Termică</span>
+                </div>
+                <div style="text-align:center;color:#fff;">
+                    <span style="font-size:28px;font-weight:800;display:block;">40mm</span>
+                    <span style="font-size:12px;opacity:0.8;text-transform:uppercase;letter-spacing:0.5px;">Panou Sandwich</span>
+                </div>
+                <div style="text-align:center;color:#fff;">
+                    <span style="font-size:28px;font-weight:800;display:block;">20K+</span>
+                    <span style="font-size:12px;opacity:0.8;text-transform:uppercase;letter-spacing:0.5px;">Cicluri Garanție</span>
+                </div>
+            </div>
         </div>
     </div>
 </section>
 
-<!-- ========== GHID INSTALARE ========== -->
+<!-- ========== TIPURI ========== -->
 <section style="padding:40px 16px;background:#fff;">
     <div style="max-width:896px;margin:0 auto;">
-        <h2 style="font-size:24px;font-weight:700;color:#111827;margin-bottom:24px;">📚 Ghid Complet de Instalare</h2>
+        <h2 style="font-size:24px;font-weight:700;color:#111827;margin-bottom:8px;">🚪 Tipuri de Uși de Garaj</h2>
+        <p style="color:#6b7280;margin-bottom:20px;">Soluții pentru garaj simplu, dublu sau industrial — cu izolație și automatizare incluse.</p>
+
+        <div class="comp-grid">
+            <div class="comp-card">
+                <div style="font-size:36px;margin-bottom:12px;">🔲</div>
+                <h3 style="font-size:18px;font-weight:700;color:#111827;margin-bottom:8px;">Secțională Standard</h3>
+                <p style="color:#6b7280;font-size:14px;line-height:1.6;">Panouri sandwich 40mm cu izolație PU. Deschidere verticală pe tavan. Cea mai populară pentru rezidențial.</p>
+                <div style="margin-top:12px;display:flex;flex-wrap:wrap;gap:6px;">
+                    <span style="padding:2px 8px;background:#ecfdf5;color:#047857;border-radius:6px;font-size:11px;font-weight:500;">40mm PU</span>
+                    <span style="padding:2px 8px;background:#ecfdf5;color:#047857;border-radius:6px;font-size:11px;font-weight:500;">Izolată</span>
+                </div>
+            </div>
+
+            <div class="comp-card">
+                <div style="font-size:36px;margin-bottom:12px;">🎨</div>
+                <h3 style="font-size:18px;font-weight:700;color:#111827;margin-bottom:8px;">Secțională Design</h3>
+                <p style="color:#6b7280;font-size:14px;line-height:1.6;">Finisaje premium: woodgrain, microline, stucco. Culori RAL la comandă. Hublouri decorative opționale.</p>
+                <div style="margin-top:12px;display:flex;flex-wrap:wrap;gap:6px;">
+                    <span style="padding:2px 8px;background:#f3e8ff;color:#6b21a8;border-radius:6px;font-size:11px;font-weight:500;">Woodgrain</span>
+                    <span style="padding:2px 8px;background:#f3e8ff;color:#6b21a8;border-radius:6px;font-size:11px;font-weight:500;">RAL</span>
+                    <span style="padding:2px 8px;background:#f3e8ff;color:#6b21a8;border-radius:6px;font-size:11px;font-weight:500;">Hublouri</span>
+                </div>
+            </div>
+
+            <div class="comp-card">
+                <div style="font-size:36px;margin-bottom:12px;">🔄</div>
+                <h3 style="font-size:18px;font-weight:700;color:#111827;margin-bottom:8px;">Rulou</h3>
+                <p style="color:#6b7280;font-size:14px;line-height:1.6;">Lamele de aluminiu se rulează în casetă deasupra golului. Ideal când nu există spațiu pe tavan.</p>
+                <div style="margin-top:12px;display:flex;flex-wrap:wrap;gap:6px;">
+                    <span style="padding:2px 8px;background:#eff6ff;color:#1e40af;border-radius:6px;font-size:11px;font-weight:500;">Compact</span>
+                    <span style="padding:2px 8px;background:#eff6ff;color:#1e40af;border-radius:6px;font-size:11px;font-weight:500;">Aluminiu</span>
+                </div>
+            </div>
+
+            <div class="comp-card">
+                <div style="font-size:36px;margin-bottom:12px;">⬆️</div>
+                <h3 style="font-size:18px;font-weight:700;color:#111827;margin-bottom:8px;">Basculantă</h3>
+                <p style="color:#6b7280;font-size:14px;line-height:1.6;">Panou unic care basculează pe tavan. Soluție economică, ușor de automatizat cu motor pe tavan.</p>
+                <div style="margin-top:12px;display:flex;flex-wrap:wrap;gap:6px;">
+                    <span style="padding:2px 8px;background:#fef3c7;color:#92400e;border-radius:6px;font-size:11px;font-weight:500;">Economică</span>
+                    <span style="padding:2px 8px;background:#fef3c7;color:#92400e;border-radius:6px;font-size:11px;font-weight:500;">Panou unic</span>
+                </div>
+            </div>
+
+            <div class="comp-card">
+                <div style="font-size:36px;margin-bottom:12px;">🏭</div>
+                <h3 style="font-size:18px;font-weight:700;color:#111827;margin-bottom:8px;">Industrială</h3>
+                <p style="color:#6b7280;font-size:14px;line-height:1.6;">Dimensiuni mari, panouri 40-80mm, utilizare intensivă. Hale, depozite, centre logistice.</p>
+                <div style="margin-top:12px;display:flex;flex-wrap:wrap;gap:6px;">
+                    <span style="padding:2px 8px;background:#fef2f2;color:#991b1b;border-radius:6px;font-size:11px;font-weight:500;">Heavy-Duty</span>
+                    <span style="padding:2px 8px;background:#fef2f2;color:#991b1b;border-radius:6px;font-size:11px;font-weight:500;">Dimensiuni mari</span>
+                </div>
+            </div>
+
+            <div class="comp-card">
+                <div style="font-size:36px;margin-bottom:12px;">⚡</div>
+                <h3 style="font-size:18px;font-weight:700;color:#111827;margin-bottom:8px;">Motoare & Automatizare</h3>
+                <p style="color:#6b7280;font-size:14px;line-height:1.6;">Motor pe tavan sau lateral. Telecomenzi, WiFi, acces din telefon. Compatibil cu orice tip de ușă.</p>
+                <div style="margin-top:12px;display:flex;flex-wrap:wrap;gap:6px;">
+                    <span style="padding:2px 8px;background:#fce7f3;color:#9d174d;border-radius:6px;font-size:11px;font-weight:500;">WiFi</span>
+                    <span style="padding:2px 8px;background:#fce7f3;color:#9d174d;border-radius:6px;font-size:11px;font-weight:500;">App Mobile</span>
+                    <span style="padding:2px 8px;background:#fce7f3;color:#9d174d;border-radius:6px;font-size:11px;font-weight:500;">LED</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ========== GHID ========== -->
+<section style="padding:40px 16px;background:#f9fafb;">
+    <div style="max-width:896px;margin:0 auto;">
+        <h2 style="font-size:24px;font-weight:700;color:#111827;margin-bottom:24px;">📚 Ghid Complet</h2>
         <div style="display:flex;flex-direction:column;gap:16px;">
-            <div class="accordion-item" style="border:1px solid #e5e7eb;border-radius:12px;overflow:hidden;">
-              <button onclick="toggleAccordion('proiectare')" style="width:100%;padding:16px 24px;background:#f9fafb;display:flex;justify-content:space-between;align-items:center;border:none;cursor:pointer;font-family:inherit;transition:background 0.2s;" onmouseover="this.style.background='#f3f4f6'" onmouseout="this.style.background='#f9fafb'">
-                <span style="font-size:18px;font-weight:700;color:#111827;">🔧 Proiectare</span>
-                <span id="icon-proiectare" style="font-size:24px;transition:transform 0.3s;">👆</span>
-              </button>
-              <div id="content-proiectare" style="display:none;padding:16px 24px;color:#374151;line-height:1.7;">
 
-                <ul style="list-style:disc;padding-left:24px;">
-                    <li style="margin-bottom:8px;">Dimensiunile exacte ale golului de trecere</li>
-                    <li style="margin-bottom:8px;">Spațiul disponibil pe laterale și deasupra</li>
-                    <li style="margin-bottom:8px;">Tipul de ușă: secțională, rulou, basculantă</li>
-                    <li style="margin-bottom:8px;">Grosimea panourilor pentru izolare termică</li>
-                    <li style="margin-bottom:8px;">Tipul de acționare: cu lanț, cu curea sau direct</li>
-                    <li style="margin-bottom:8px;">Opțiuni de comandă: telecomandă, aplicație mobilă</li>
+            <div class="accordion-item" style="border:1px solid #e5e7eb;border-radius:12px;overflow:hidden;">
+              <button onclick="toggleAccordion('alegere')" style="width:100%;padding:16px 24px;background:#fff;display:flex;justify-content:space-between;align-items:center;border:none;cursor:pointer;font-family:inherit;transition:background 0.2s;" onmouseover="this.style.background='#f3f4f6'" onmouseout="this.style.background='#fff'">
+                <span style="font-size:18px;font-weight:700;color:#111827;">🔧 Cum Alegi Ușa Potrivită</span>
+                <span id="icon-alegere" style="font-size:24px;transition:transform 0.3s;">👆</span>
+              </button>
+              <div id="content-alegere" style="display:none;padding:16px 24px;color:#374151;line-height:1.7;">
+                <h4 style="font-weight:600;">Ce măsurăm și evaluăm:</h4>
+                <ul style="list-style:disc;padding-left:24px;margin-top:8px;">
+                    <li style="margin-bottom:8px;">Dimensiunile golului: lățime × înălțime (măsurare precisă în 3 puncte)</li>
+                    <li style="margin-bottom:8px;">Spațiul lateral (min. 10-12cm pe fiecare parte pentru ghidaje)</li>
+                    <li style="margin-bottom:8px;">Adâncimea garajului (ușa secțională necesită spațiu pe tavan = înălțimea ușii + 50cm)</li>
+                    <li style="margin-bottom:8px;">Buiandrugul deasupra golului (min. 20-30cm pentru montaj standard)</li>
+                    <li style="margin-bottom:8px;">Tipul de utilizare: rezidențial (3-5 cicluri/zi) sau intensiv</li>
+                    <li style="margin-bottom:8px;">Preferințe estetice: culoare, finisaj, hublouri, feronerie</li>
+                    <li style="margin-bottom:8px;">Necesitatea izolației termice (garaj încălzit vs. neîncălzit)</li>
                 </ul>
+                <div style="margin-top:16px;padding:12px 16px;background:#ecfdf5;border-radius:8px;border-left:3px solid #059669;">
+                    <p style="font-size:14px;color:#047857;"><strong>💡 Sfat CSSI:</strong> Ușa secțională cu panouri de 40mm izolate PU este cea mai bună alegere pentru majoritatea garajelor rezidențiale — izolație excelentă, durabilitate și funcționare silențioasă.</p>
+                </div>
               </div>
             </div>
-            <div class="accordion-item" style="border:1px solid #e5e7eb;border-radius:12px;overflow:hidden;">
-              <button onclick="toggleAccordion('montaj')" style="width:100%;padding:16px 24px;background:#f9fafb;display:flex;justify-content:space-between;align-items:center;border:none;cursor:pointer;font-family:inherit;transition:background 0.2s;" onmouseover="this.style.background='#f3f4f6'" onmouseout="this.style.background='#f9fafb'">
-                <span style="font-size:18px;font-weight:700;color:#111827;">🔨 Montaj</span>
-                <span id="icon-montaj" style="font-size:24px;transition:transform 0.3s;">👆</span>
-              </button>
-              <div id="content-montaj" style="display:none;padding:16px 24px;color:#374151;line-height:1.7;">
 
-                <ul style="list-style:disc;padding-left:24px;">
-                    <li style="margin-bottom:8px;">Montarea șinelor verticale și orizontale</li>
-                    <li style="margin-bottom:8px;">Instalarea arcurilor de echilibrare</li>
-                    <li style="margin-bottom:8px;">Asamblarea și montarea panourilor secționale</li>
-                    <li style="margin-bottom:8px;">Instalarea motorului și a sistemului de tracțiune</li>
-                    <li style="margin-bottom:8px;">Montarea senzorilor de siguranță</li>
-                    <li style="margin-bottom:8px;">Programarea telecomenzilor și testarea</li>
-                    <li style="margin-bottom:8px;">Reglarea finală a limitelor de cursă</li>
+            <div class="accordion-item" style="border:1px solid #e5e7eb;border-radius:12px;overflow:hidden;">
+              <button onclick="toggleAccordion('instalare')" style="width:100%;padding:16px 24px;background:#fff;display:flex;justify-content:space-between;align-items:center;border:none;cursor:pointer;font-family:inherit;transition:background 0.2s;" onmouseover="this.style.background='#f3f4f6'" onmouseout="this.style.background='#fff'">
+                <span style="font-size:18px;font-weight:700;color:#111827;">🔨 Instalare Completă</span>
+                <span id="icon-instalare" style="font-size:24px;transition:transform 0.3s;">👆</span>
+              </button>
+              <div id="content-instalare" style="display:none;padding:16px 24px;color:#374151;line-height:1.7;">
+                <h4 style="font-weight:600;">Etapele instalării:</h4>
+                <ul style="list-style:disc;padding-left:24px;margin-top:8px;">
+                    <li style="margin-bottom:8px;">Montarea ghidajelor verticale și orizontale (nivelare precisă)</li>
+                    <li style="margin-bottom:8px;">Asamblarea panourilor secționale cu garnituri între panouri</li>
+                    <li style="margin-bottom:8px;">Instalarea arcurilor de compensare (torsiune sau extensie)</li>
+                    <li style="margin-bottom:8px;">Montarea cablurilor de ridicare și a rolelor</li>
+                    <li style="margin-bottom:8px;">Instalarea motorului pe tavan (șină cu lanț/curea) sau lateral</li>
+                    <li style="margin-bottom:8px;">Conectarea electrică și configurarea limitelor de cursă</li>
+                    <li style="margin-bottom:8px;">Înrolarea telecomenilor și configurarea funcțiilor</li>
+                    <li style="margin-bottom:8px;">Montarea garniturilor perimetrale (etanșare)</li>
+                    <li style="margin-bottom:8px;">Testarea completă: deschidere, închidere, siguranță, deblocare</li>
                 </ul>
+                <div style="margin-top:16px;padding:12px 16px;background:#ecfdf5;border-radius:8px;border-left:3px solid #10b981;">
+                    <p style="font-size:14px;color:#047857;"><strong>✅ Inclus:</strong> Ușă + motor + 2 telecomenzi + lampă semnalizare + garnituri etanșare + instruire + deblocare manuală.</p>
+                </div>
               </div>
             </div>
+
             <div class="accordion-item" style="border:1px solid #e5e7eb;border-radius:12px;overflow:hidden;">
-              <button onclick="toggleAccordion('mentenanta')" style="width:100%;padding:16px 24px;background:#f9fafb;display:flex;justify-content:space-between;align-items:center;border:none;cursor:pointer;font-family:inherit;transition:background 0.2s;" onmouseover="this.style.background='#f3f4f6'" onmouseout="this.style.background='#f9fafb'">
-                <span style="font-size:18px;font-weight:700;color:#111827;">🛠️ Mentenanță</span>
+              <button onclick="toggleAccordion('comparatie')" style="width:100%;padding:16px 24px;background:#fff;display:flex;justify-content:space-between;align-items:center;border:none;cursor:pointer;font-family:inherit;transition:background 0.2s;" onmouseover="this.style.background='#f3f4f6'" onmouseout="this.style.background='#fff'">
+                <span style="font-size:18px;font-weight:700;color:#111827;">📊 Secțională vs. Rulou vs. Basculantă</span>
+                <span id="icon-comparatie" style="font-size:24px;transition:transform 0.3s;">👆</span>
+              </button>
+              <div id="content-comparatie" style="display:none;padding:16px 24px;color:#374151;line-height:1.7;">
+                <div style="overflow-x:auto;">
+                    <table style="width:100%;border-collapse:collapse;font-size:14px;">
+                        <thead>
+                            <tr style="background:#f3f4f6;">
+                                <th style="padding:10px 12px;text-align:left;border-bottom:2px solid #e5e7eb;">Criteriu</th>
+                                <th style="padding:10px 12px;text-align:left;border-bottom:2px solid #e5e7eb;">🔲 Secțională</th>
+                                <th style="padding:10px 12px;text-align:left;border-bottom:2px solid #e5e7eb;">🔄 Rulou</th>
+                                <th style="padding:10px 12px;text-align:left;border-bottom:2px solid #e5e7eb;">⬆️ Basculantă</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr><td style="padding:10px 12px;border-bottom:1px solid #e5e7eb;font-weight:600;">Izolație</td><td style="padding:10px 12px;border-bottom:1px solid #e5e7eb;">Excelentă (40mm PU)</td><td style="padding:10px 12px;border-bottom:1px solid #e5e7eb;">Bună (lamele umplute)</td><td style="padding:10px 12px;border-bottom:1px solid #e5e7eb;">Medie</td></tr>
+                            <tr style="background:#f9fafb;"><td style="padding:10px 12px;border-bottom:1px solid #e5e7eb;font-weight:600;">Spațiu tavan</td><td style="padding:10px 12px;border-bottom:1px solid #e5e7eb;">Necesar (înălțime ușă)</td><td style="padding:10px 12px;border-bottom:1px solid #e5e7eb;">Minim (doar caseta)</td><td style="padding:10px 12px;border-bottom:1px solid #e5e7eb;">Necesar</td></tr>
+                            <tr><td style="padding:10px 12px;border-bottom:1px solid #e5e7eb;font-weight:600;">Spațiu exterior</td><td style="padding:10px 12px;border-bottom:1px solid #e5e7eb;">Zero</td><td style="padding:10px 12px;border-bottom:1px solid #e5e7eb;">Zero</td><td style="padding:10px 12px;border-bottom:1px solid #e5e7eb;">Iese parțial</td></tr>
+                            <tr style="background:#f9fafb;"><td style="padding:10px 12px;border-bottom:1px solid #e5e7eb;font-weight:600;">Design</td><td style="padding:10px 12px;border-bottom:1px solid #e5e7eb;">Foarte variat</td><td style="padding:10px 12px;border-bottom:1px solid #e5e7eb;">Limitat</td><td style="padding:10px 12px;border-bottom:1px solid #e5e7eb;">Standard</td></tr>
+                            <tr><td style="padding:10px 12px;border-bottom:1px solid #e5e7eb;font-weight:600;">Zgomot</td><td style="padding:10px 12px;border-bottom:1px solid #e5e7eb;">Silențioasă</td><td style="padding:10px 12px;border-bottom:1px solid #e5e7eb;">Medie</td><td style="padding:10px 12px;border-bottom:1px solid #e5e7eb;">Mai zgomotoasă</td></tr>
+                            <tr style="background:#f9fafb;"><td style="padding:10px 12px;border-bottom:1px solid #e5e7eb;font-weight:600;">Ideal pentru</td><td style="padding:10px 12px;border-bottom:1px solid #e5e7eb;">Cea mai populară</td><td style="padding:10px 12px;border-bottom:1px solid #e5e7eb;">Spațiu limitat</td><td style="padding:10px 12px;border-bottom:1px solid #e5e7eb;">Buget redus</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+              </div>
+            </div>
+
+            <div class="accordion-item" style="border:1px solid #e5e7eb;border-radius:12px;overflow:hidden;">
+              <button onclick="toggleAccordion('izolatie')" style="width:100%;padding:16px 24px;background:#fff;display:flex;justify-content:space-between;align-items:center;border:none;cursor:pointer;font-family:inherit;transition:background 0.2s;" onmouseover="this.style.background='#f3f4f6'" onmouseout="this.style.background='#fff'">
+                <span style="font-size:18px;font-weight:700;color:#111827;">🌡️ Izolație și Etanșare</span>
+                <span id="icon-izolatie" style="font-size:24px;transition:transform 0.3s;">👆</span>
+              </button>
+              <div id="content-izolatie" style="display:none;padding:16px 24px;color:#374151;line-height:1.7;">
+                <p>O ușă de garaj bine izolată poate reduce pierderile de căldură cu până la 60% la un garaj adiacent locuinței.</p>
+                <h4 style="font-weight:600;margin-top:16px;">Elemente de izolație:</h4>
+                <ul style="list-style:disc;padding-left:24px;margin-top:8px;">
+                    <li style="margin-bottom:8px;"><strong>Panouri sandwich 40mm</strong> — spumă poliuretanică (PU) injectată, R ≈ 1.4 m²K/W</li>
+                    <li style="margin-bottom:8px;"><strong>Garnitură între panouri</strong> — elimină punțile termice între secțiuni</li>
+                    <li style="margin-bottom:8px;"><strong>Garnitură prag inferior</strong> — etanșează golul de la sol, oprește infiltrațiile</li>
+                    <li style="margin-bottom:8px;"><strong>Garnituri laterale și superioare</strong> — etanșare completă perimetrală</li>
+                    <li style="margin-bottom:8px;"><strong>Rupere punte termică la ghidaje</strong> — inserție plastic între ghidaj și perete</li>
+                </ul>
+                <div style="margin-top:16px;padding:12px 16px;background:#fef3c7;border-radius:8px;border-left:3px solid #f59e0b;">
+                    <p style="font-size:14px;color:#92400e;"><strong>🌡️ Economie:</strong> Un garaj izolat menține temperatura cu 10-15°C mai mare iarna, protejează mașina și reduce costul de încălzire dacă garajul este adiacent casei.</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="accordion-item" style="border:1px solid #e5e7eb;border-radius:12px;overflow:hidden;">
+              <button onclick="toggleAccordion('mentenanta')" style="width:100%;padding:16px 24px;background:#fff;display:flex;justify-content:space-between;align-items:center;border:none;cursor:pointer;font-family:inherit;transition:background 0.2s;" onmouseover="this.style.background='#f3f4f6'" onmouseout="this.style.background='#fff'">
+                <span style="font-size:18px;font-weight:700;color:#111827;">🛠️ Mentenanță și Service</span>
                 <span id="icon-mentenanta" style="font-size:24px;transition:transform 0.3s;">👆</span>
               </button>
               <div id="content-mentenanta" style="display:none;padding:16px 24px;color:#374151;line-height:1.7;">
-
-                <ul style="list-style:disc;padding-left:24px;">
-                    <li style="margin-bottom:8px;">Lubrifierea șinelor și a articulațiilor</li>
-                    <li style="margin-bottom:8px;">Verificarea tensiunii arcurilor</li>
-                    <li style="margin-bottom:8px;">Testarea senzorilor de siguranță</li>
-                    <li style="margin-bottom:8px;">Verificarea garniturilor de etanșare</li>
-                    <li style="margin-bottom:8px;">Curățarea și verificarea motorului</li>
+                <h4 style="font-weight:600;">Revizie anuală recomandată:</h4>
+                <ul style="list-style:disc;padding-left:24px;margin-top:8px;">
+                    <li style="margin-bottom:8px;">Ungerea rolelor, balamalelor și arcurilor</li>
+                    <li style="margin-bottom:8px;">Verificarea tensiunii arcurilor de compensare</li>
+                    <li style="margin-bottom:8px;">Verificarea cablurilor de ridicare (uzură, ravelare)</li>
+                    <li style="margin-bottom:8px;">Testarea motorului: forță, limite cursă, viteza</li>
+                    <li style="margin-bottom:8px;">Verificarea funcției de siguranță (reversare la obstacol)</li>
+                    <li style="margin-bottom:8px;">Starea garniturilor de etanșare (înlocuire dacă sunt uzate)</li>
+                    <li style="margin-bottom:8px;">Verificarea ghidajelor (aliniere, fixare)</li>
+                    <li style="margin-bottom:8px;">Testarea deblochării manuale</li>
                 </ul>
-              </div>
-            </div>
-            <div class="accordion-item" style="border:1px solid #e5e7eb;border-radius:12px;overflow:hidden;">
-              <button onclick="toggleAccordion('legislatie')" style="width:100%;padding:16px 24px;background:#f9fafb;display:flex;justify-content:space-between;align-items:center;border:none;cursor:pointer;font-family:inherit;transition:background 0.2s;" onmouseover="this.style.background='#f3f4f6'" onmouseout="this.style.background='#f9fafb'">
-                <span style="font-size:18px;font-weight:700;color:#111827;">📜 Legislație</span>
-                <span id="icon-legislatie" style="font-size:24px;transition:transform 0.3s;">👆</span>
-              </button>
-              <div id="content-legislatie" style="display:none;padding:16px 24px;color:#374151;line-height:1.7;">
-
-                <ul style="list-style:disc;padding-left:24px;">
-                    <li style="margin-bottom:12px;"><strong>Standardul EN 13241-1</strong> - cerințe de performanță pentru uși industriale și de garaj</li>
-                    <li style="margin-bottom:12px;"><strong>Standardul EN 12453</strong> - siguranța la utilizare</li>
-                    <li style="margin-bottom:12px;"><strong>Directiva Mașini 2006/42/CE</strong> - cerințe de siguranță pentru automatizări</li>
-                </ul>
+                <div style="margin-top:16px;padding:12px 16px;background:#fef2f2;border-radius:8px;border-left:3px solid #dc2626;">
+                    <p style="font-size:14px;color:#991b1b;"><strong>⚠️ Important:</strong> Arcurile de torsiune sunt sub tensiune mare — NU încercați reglarea singuri! Intervențiile la arcuri trebuie făcute doar de personal specializat.</p>
+                </div>
+                <div style="margin-top:12px;padding:12px 16px;background:#ecfdf5;border-radius:8px;border-left:3px solid #10b981;">
+                    <p style="font-size:14px;color:#047857;"><strong>🔧 Service:</strong> Depanare în 24-48h, arcuri și piese de schimb în stoc, înlocuire panouri deteriorate.</p>
+                </div>
               </div>
             </div>
 
+        </div>
+    </div>
+</section>
+
+<!-- ========== BENEFICII ========== -->
+<section style="padding:48px 16px;background:#fff;">
+    <div style="max-width:896px;margin:0 auto;">
+        <h2 style="font-size:24px;font-weight:700;color:#111827;margin-bottom:24px;text-align:center;">✅ De Ce Să Alegeți CSSI?</h2>
+        <div style="display:grid;grid-template-columns:1fr;gap:16px;">
+            <div style="display:flex;gap:16px;padding:20px;background:#f9fafb;border-radius:12px;align-items:flex-start;">
+                <div style="width:48px;height:48px;min-width:48px;background:linear-gradient(135deg,#059669,#34d399);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:22px;">🏆</div>
+                <div><h3 style="font-weight:700;font-size:16px;color:#111827;margin-bottom:4px;">Branduri Premium</h3><p style="color:#6b7280;font-size:14px;line-height:1.5;">Instalăm uși Hörmann, Normstahl, Wisniowski, Crawford — cele mai fiabile și durabile de pe piață.</p></div>
+            </div>
+            <div style="display:flex;gap:16px;padding:20px;background:#f9fafb;border-radius:12px;align-items:flex-start;">
+                <div style="width:48px;height:48px;min-width:48px;background:linear-gradient(135deg,#0369a1,#38bdf8);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:22px;">🌡️</div>
+                <div><h3 style="font-weight:700;font-size:16px;color:#111827;margin-bottom:4px;">Izolație Excelentă</h3><p style="color:#6b7280;font-size:14px;line-height:1.5;">Panouri sandwich 40mm cu spumă PU, garnituri perimetrale și rupere punte termică — garaj cald și uscat.</p></div>
+            </div>
+            <div style="display:flex;gap:16px;padding:20px;background:#f9fafb;border-radius:12px;align-items:flex-start;">
+                <div style="width:48px;height:48px;min-width:48px;background:linear-gradient(135deg,#7c3aed,#a855f7);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:22px;">📱</div>
+                <div><h3 style="font-weight:700;font-size:16px;color:#111827;margin-bottom:4px;">Control din Telefon</h3><p style="color:#6b7280;font-size:14px;line-height:1.5;">Deschide garajul de pe telefon, de oriunde. Ideal pentru livrări, acces vizitatori sau verificare status.</p></div>
+            </div>
+            <div style="display:flex;gap:16px;padding:20px;background:#f9fafb;border-radius:12px;align-items:flex-start;">
+                <div style="width:48px;height:48px;min-width:48px;background:linear-gradient(135deg,#dc2626,#ef4444);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:22px;">⚡</div>
+                <div><h3 style="font-weight:700;font-size:16px;color:#111827;margin-bottom:4px;">Service & Piese de Schimb</h3><p style="color:#6b7280;font-size:14px;line-height:1.5;">Depanare rapidă, arcuri și panouri în stoc. Contracte mentenanță anuale pentru funcționare optimă.</p></div>
+            </div>
         </div>
     </div>
 </section>
 
 <!-- ========== CTA ========== -->
-<section style="padding:48px 16px;background:linear-gradient(to right,#dc2626,#b91c1c);">
+<section style="padding:48px 16px;background:linear-gradient(135deg,#059669,#064e3b);">
     <div style="max-width:768px;margin:0 auto;text-align:center;">
-        <h2 style="font-size:24px;font-weight:700;color:#fff;margin-bottom:16px;">Ai nevoie de ușă de garaj?</h2>
-        <a href="contact.html" style="display:inline-block;padding:16px 32px;background:#fff;color:#dc2626;font-weight:600;border-radius:12px;font-size:16px;transition:all 0.2s;box-shadow:0 4px 6px -1px rgba(0,0,0,0.1);" onmouseover="this.style.background='#f1f5f9'" onmouseout="this.style.background='#fff'">Cere Ofertă Gratuită</a>
+        <h2 style="font-size:24px;font-weight:700;color:#fff;margin-bottom:8px;">Vrei ușă de garaj nouă sau service?</h2>
+        <p style="color:rgba(209,250,229,0.8);margin-bottom:24px;">Măsurare gratuită + ofertă cu preț fix. Montaj în 1-2 zile.</p>
+        <div style="display:flex;flex-wrap:wrap;justify-content:center;gap:12px;">
+            <a href="contact.html" style="display:inline-block;padding:16px 32px;background:#fff;color:#047857;font-weight:600;border-radius:12px;font-size:16px;transition:all 0.2s;box-shadow:0 4px 6px -1px rgba(0,0,0,0.1);" onmouseover="this.style.background='#f1f5f9'" onmouseout="this.style.background='#fff'">Cere Ofertă Gratuită</a>
+            <a href="tel:0752288400" style="display:inline-block;padding:16px 32px;background:transparent;color:#fff;font-weight:600;border-radius:12px;font-size:16px;border:2px solid rgba(255,255,255,0.3);transition:all 0.2s;" onmouseover="this.style.borderColor='#fff'" onmouseout="this.style.borderColor='rgba(255,255,255,0.3)'">📞 0752 288 400</a>
+        </div>
     </div>
 </section>
 
@@ -205,7 +388,7 @@
         <div style="display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:16px;font-size:12px;">
             <a href="tel:0268414740" style="color:#cbd5e1;display:flex;align-items:center;gap:4px;">📞 0268 414 740</a>
             <a href="https://wa.me/40752288400" style="color:#cbd5e1;display:flex;align-items:center;gap:4px;">💬 0752 288 400</a>
-            <a href="/cdn-cgi/l/email-protection#1b747d7d72787e5b79697e7a706872686f7e7668356974" style="color:#cbd5e1;display:flex;align-items:center;gap:4px;">✉️ <span class="__cf_email__" data-cfemail="e8878e8e818b8da88a9a8d89839b819b9c8d859bc69a87">[email&#160;protected]</span></a>
+            <a href="mailto:office@cssi.ro" style="color:#cbd5e1;display:flex;align-items:center;gap:4px;">✉️ office@cssi.ro</a>
             <span style="color:#64748b;">L-V: 08:00-17:00</span>
         </div>
         <div style="margin-top:16px;text-align:center;"><p style="color:#475569;font-size:10px;">© 2024 CSSI · Powered by Break Sistems</p></div>
@@ -227,23 +410,22 @@ Cum vă pot ajuta? Scrieți: servicii, prețuri sau contact.</div></div></div>
     <div style="padding:16px;border-top:1px solid #e2e8f0;background:#fff;"><div style="display:flex;gap:8px;"><input type="text" id="chatInput" placeholder="Scrieți un mesaj..." onkeypress="if(event.key==='Enter')sendChat()" style="flex:1;padding:8px 16px;border:1px solid #e5e7eb;border-radius:999px;font-size:14px;outline:none;font-family:inherit;"><button onclick="sendChat()" style="width:40px;height:40px;background:#dc2626;color:#fff;border-radius:50%;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;"><svg style="width:20px;height:20px;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/></svg></button></div></div>
 </div>
 
-<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+<script>
 function toggleMobileMenu(){var m=document.getElementById('mobileMenu'),a=document.getElementById('menuIcon'),b=document.getElementById('closeIcon'),c=document.getElementById('menuBtn');if(m.classList.contains('open')){m.classList.remove('open');a.style.display='';b.style.display='none';c.style.background='linear-gradient(to right,#ef4444,#dc2626)';c.classList.add('animate-subtle-pulse');}else{m.classList.add('open');a.style.display='none';b.style.display='';c.style.background='#6b7280';c.classList.remove('animate-subtle-pulse');}}
 function closeMobile(){document.getElementById('mobileMenu').classList.remove('open');document.getElementById('menuIcon').style.display='';document.getElementById('closeIcon').style.display='none';}
-var chatR={'servicii':'Oferim o gamă completă de servicii:\n\n🔥 Detecție incendiu ISU\n📹 Camere supraveghere\n🚨 Alarme antiefracție\n🔐 Control acces\n⏱️ Pontaj electronic\n🚧 Bariere auto\n🔔 Interfoane\n🔊 Sonorizare\n🚗 Automatizări porți\n🏠 Uși garaj\n❄️ Aer condiționat\n💨 Ventilație\n⚡ Instalații electrice\n🔧 Instalații termice','preturi':'Prețurile variază. Pentru ofertă personalizată:\n\n📞 0268 414 740\n💬 WhatsApp: 0752 288 400\n📧 office@cssi.ro','contact':'📞 0268 414 740\n💬 0752 288 400\n📧 office@cssi.ro\n📍 Brașov\nL-V: 08:00-17:00','default':'Mulțumim! 😊\n📞 0268 414 740\n💬 0752 288 400\nSau scrieți: servicii, prețuri, contact'};
+var chatR={'servicii':'Oferim o gamă completă de servicii:\n\n🔥 Detecție incendiu ISU\n📹 Camere supraveghere\n🚨 Alarme antiefracție\n🔐 Control acces\n⏱️ Pontaj electronic\n🚧 Bariere auto\n🔔 Interfoane\n🔊 Sonorizare\n🚗 Automatizări porți\n🏠 Uși garaj\n❄️ Aer condiționat\n💨 Ventilație\n⚡ Instalații electrice\n🔧 Instalații termice','preturi':'Prețurile variază. Pentru ofertă personalizată:\n\n📞 0268 414 740\n💬 WhatsApp: 0752 288 400\n📧 office@cssi.ro','contact':'📞 0268 414 740\n💬 0752 288 400\n📧 office@cssi.ro\n📍 Brașov\nL-V: 08:00-17:00','garaj':'Uși garaj disponibile:\n\n🔲 Secțională standard (40mm PU)\n🎨 Secțională design (RAL, woodgrain)\n🔄 Rulou (aluminiu, compact)\n⬆️ Basculantă (economică)\n🏭 Industrială (heavy-duty)\n⚡ Motoare & automatizare\n\nPentru ofertă: 0752 288 400','default':'Mulțumim! 😊\n📞 0268 414 740\n💬 0752 288 400\nSau scrieți: servicii, garaj, prețuri, contact'};
 function toggleChat(){var p=document.getElementById('chatPanel'),a=document.getElementById('chatOpenIcon'),b=document.getElementById('chatCloseIcon'),c=document.getElementById('chatBtn');if(p.classList.contains('open')){p.classList.remove('open');a.style.display='';b.style.display='none';c.style.background='linear-gradient(to right,#06b6d4,#10b981)';c.classList.add('animate-subtle-pulse');}else{p.classList.add('open');a.style.display='none';b.style.display='';c.style.background='#6b7280';c.classList.remove('animate-subtle-pulse');}}
 function sendChat(){var i=document.getElementById('chatInput'),t=i.value.trim();if(!t)return;var m=document.getElementById('chatMessages');m.innerHTML+='<div style="display:flex;justify-content:flex-end;"><div style="max-width:80%;padding:12px;border-radius:16px;border-top-right-radius:0;background:#dc2626;color:#fff;font-size:14px;">'+t+'</div></div>';i.value='';var l=t.toLowerCase(),r=chatR.default;for(var k in chatR){if(k!=='default'&&l.includes(k)){r=chatR[k];break;}}setTimeout(function(){m.innerHTML+='<div style="display:flex;justify-content:flex-start;"><div style="max-width:80%;padding:12px;border-radius:16px;border-top-left-radius:0;background:#fff;color:#374151;font-size:14px;box-shadow:0 1px 2px rgba(0,0,0,0.05);white-space:pre-line;">'+r+'</div></div>';m.scrollTop=m.scrollHeight;},500);m.scrollTop=m.scrollHeight;}
 </script>
 
 <script>
-var openId = null;
-function toggleAccordion(id) {
-    var allIds = ['proiectare', 'montaj', 'mentenanta', 'legislatie'];
-    if (openId === id) {
-        document.getElementById('content-'+id).style.display = 'none';
-        document.getElementById('icon-'+id).textContent = '👆';
-        document.getElementById('icon-'+id).style.transform = '';
-        openId = null;
-    } else {
-        allIds.forEach(function(aid) {
-            document
+var openId=null;
+function toggleAccordion(id){var allIds=['alegere','instalare','comparatie','izolatie','mentenanta'];if(openId===id){document.getElementById('content-'+id).style.display='none';document.getElementById('icon-'+id).textContent='👆';document.getElementById('icon-'+id).style.transform='';openId=null;}else{allIds.forEach(function(aid){document.getElementById('content-'+aid).style.display='none';document.getElementById('icon-'+aid).textContent='👆';document.getElementById('icon-'+aid).style.transform='';});document.getElementById('content-'+id).style.display='block';document.getElementById('icon-'+id).textContent='👇';document.getElementById('icon-'+id).style.transform='rotate(180deg)';openId=id;}}
+</script>
+
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"Service","name":"Uși de Garaj - CSSI","description":"Uși de garaj secționale, rulou și basculante cu motor automat. Izolație termică, telecomandă și control din telefon.","provider":{"@type":"LocalBusiness","name":"CSSI","telephone":"+40268414740","email":"office@cssi.ro","address":{"@type":"PostalAddress","addressLocality":"Brașov","addressCountry":"RO"},"aggregateRating":{"@type":"AggregateRating","ratingValue":"4.9","reviewCount":"127"}},"areaServed":"Brașov","serviceType":["Ușă garaj secțională","Ușă garaj rulou","Automatizare ușă garaj","Mentenanță uși garaj"]}
+</script>
+
+</body>
+</html>
