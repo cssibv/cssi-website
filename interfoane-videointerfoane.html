@@ -3,8 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Interfoane și Videointerfoane | CSSI</title>
-    <meta name="description" content="Interfoane și videointerfoane audio/video/IP pentru blocuri, case și birouri. Instalare profesională.">
+    <title>Interfoane & Videointerfoane | CSSI - Sisteme Interfon Profesionale Brașov</title>
+    <meta name="description" content="Interfoane și videointerfoane profesionale: audio, video color, IP, monitor touch, deschidere din telefon. Instalare bloc și vilă. 20+ ani experiență, 8.700+ proiecte.">
+    <meta name="keywords" content="interfon, videointerfon, interfon bloc, videointerfon IP, monitor interfon, panou exterior, interfon Brasov, CSSI">
+    <meta property="og:title" content="Interfoane & Videointerfoane | CSSI">
+    <meta property="og:description" content="Interfoane și videointerfoane profesionale audio și video. Instalare și mentenanță. 20+ ani experiență.">
+    <meta property="og:type" content="website">
+    <meta property="og:locale" content="ro_RO">
     <link rel="icon" href="https://eu.chat-img.sintra.ai/32c1b29c-0c86-4833-a031-e7c45e21a11e/983d52bb-2eb6-42f1-bed4-f94d769bb634/Logo_CSSI.png">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
     <style>
@@ -24,6 +29,11 @@
         @media(max-width:639px){.hidden.sm\:block{display:none!important;}.sm\:hidden{display:block!important;}}
         @media(max-width:640px){#chatPanel{width:calc(100vw - 48px)!important;right:24px!important;}}
         @media(max-width:768px){button,a[href]{min-height:44px;}}
+        .comp-grid{display:grid;grid-template-columns:1fr;gap:16px;margin-top:16px;}
+        @media(min-width:640px){.comp-grid{grid-template-columns:repeat(2,1fr);}}
+        @media(min-width:900px){.comp-grid{grid-template-columns:repeat(3,1fr);}}
+        .comp-card{background:#f9fafb;border:1px solid #e5e7eb;border-radius:12px;padding:20px;transition:all 0.3s;}
+        .comp-card:hover{transform:translateY(-4px);box-shadow:0 8px 16px -4px rgba(0,0,0,0.1);border-color:#0891b2;}
     </style>
 </head>
 <body>
@@ -59,7 +69,7 @@
                         <a href="control-acces.html" style="display:block;padding:10px 16px;font-size:13px;color:#334155;border-radius:8px;" onmouseover="this.style.background='#fef2f2';this.style.color='#dc2626'" onmouseout="this.style.background='';this.style.color='#334155'">🔐 Control Acces</a>
                         <a href="automatizari-porti.html" style="display:block;padding:10px 16px;font-size:13px;color:#334155;border-radius:8px;" onmouseover="this.style.background='#fef2f2';this.style.color='#dc2626'" onmouseout="this.style.background='';this.style.color='#334155'">🚗 Automatizări Porți</a>
                         <a href="bariere-auto.html" style="display:block;padding:10px 16px;font-size:13px;color:#334155;border-radius:8px;" onmouseover="this.style.background='#fef2f2';this.style.color='#dc2626'" onmouseout="this.style.background='';this.style.color='#334155'">🚧 Bariere Auto</a>
-                        <a href="interfoane-videointerfoane.html" style="display:block;padding:10px 16px;font-size:13px;color:#334155;border-radius:8px;" onmouseover="this.style.background='#fef2f2';this.style.color='#dc2626'" onmouseout="this.style.background='';this.style.color='#334155'">🔔 Interfoane & Videointerfoane</a>
+                        <a href="interfoane-videointerfoane.html" style="display:block;padding:10px 16px;font-size:13px;color:#dc2626;background:#fef2f2;border-radius:8px;font-weight:600;">🔔 Interfoane & Videointerfoane</a>
                         <a href="sonorizare.html" style="display:block;padding:10px 16px;font-size:13px;color:#334155;border-radius:8px;" onmouseover="this.style.background='#fef2f2';this.style.color='#dc2626'" onmouseout="this.style.background='';this.style.color='#334155'">🔊 Sonorizare</a>
                         <a href="usi-garaj.html" style="display:block;padding:10px 16px;font-size:13px;color:#334155;border-radius:8px;" onmouseover="this.style.background='#fef2f2';this.style.color='#dc2626'" onmouseout="this.style.background='';this.style.color='#334155'">🏠 Uși Garaj</a>
                         <a href="instalatii-electrice.html" style="display:block;padding:10px 16px;font-size:13px;color:#334155;border-radius:8px;" onmouseover="this.style.background='#fef2f2';this.style.color='#dc2626'" onmouseout="this.style.background='';this.style.color='#334155'">⚡ Instalații Electrice</a>
@@ -85,11 +95,27 @@
                 </button>
             </div>
         </div>
-        <div id="mobileMenu" style="background:#fff;border-radius:16px;box-shadow:0 20px 25px -5px rgba(0,0,0,0.1);margin:8px 12px;padding:8px;">
+        <div id="mobileMenu" style="background:#fff;border-radius:16px;box-shadow:0 20px 25px -5px rgba(0,0,0,0.1);margin:8px 12px;padding:8px;max-height:80vh;overflow-y:auto;">
             <nav style="display:flex;flex-direction:column;gap:4px;">
                 <a href="index.html" style="padding:10px 16px;font-size:16px;font-weight:500;color:#334155;border-radius:8px;">🏠 Acasă</a>
-                <a href="servicii.html" style="padding:10px 16px;font-size:16px;font-weight:500;color:#dc2626;border-radius:8px;background:#fef2f2;">🛠️ Servicii</a>
-                <a href="despre-noi.html" onclick="closeMobile()" style="padding:10px 16px;font-size:16px;font-weight:500;color:#334155;border-radius:8px;">ℹ️ Despre Noi</a>
+                <button onclick="var s=document.getElementById('mobileServList');if(s.style.display==='none'){s.style.display='flex';this.querySelector('span').textContent='▲';}else{s.style.display='none';this.querySelector('span').textContent='▼';}" style="padding:10px 16px;font-size:16px;font-weight:500;color:#dc2626;border-radius:8px;background:#fef2f2;border:none;cursor:pointer;text-align:left;font-family:inherit;display:flex;justify-content:space-between;align-items:center;width:100%;">🛠️ Servicii <span>▼</span></button>
+                <div id="mobileServList" style="display:none;flex-direction:column;gap:2px;padding-left:8px;border-left:3px solid #fecaca;margin-left:16px;">
+                        <a href="detectie-incendiu-isu.html" style="padding:8px 16px;font-size:14px;font-weight:500;color:#334155;border-radius:8px;">🔥 Detecție Incendiu ISU</a>
+                        <a href="camere-supraveghere.html" style="padding:8px 16px;font-size:14px;font-weight:500;color:#334155;border-radius:8px;">📹 Camere Supraveghere</a>
+                        <a href="alarma-antiefractie.html" style="padding:8px 16px;font-size:14px;font-weight:500;color:#334155;border-radius:8px;">🚨 Alarmă Antiefracție</a>
+                        <a href="control-acces.html" style="padding:8px 16px;font-size:14px;font-weight:500;color:#334155;border-radius:8px;">🔐 Control Acces</a>
+                        <a href="automatizari-porti.html" style="padding:8px 16px;font-size:14px;font-weight:500;color:#334155;border-radius:8px;">🚗 Automatizări Porți</a>
+                        <a href="bariere-auto.html" style="padding:8px 16px;font-size:14px;font-weight:500;color:#334155;border-radius:8px;">🚧 Bariere Auto</a>
+                        <a href="interfoane-videointerfoane.html" style="padding:8px 16px;font-size:14px;font-weight:600;color:#dc2626;border-radius:8px;background:#fef2f2;">🔔 Interfoane & Videointerfoane</a>
+                        <a href="sonorizare.html" style="padding:8px 16px;font-size:14px;font-weight:500;color:#334155;border-radius:8px;">🔊 Sonorizare</a>
+                        <a href="usi-garaj.html" style="padding:8px 16px;font-size:14px;font-weight:500;color:#334155;border-radius:8px;">🏠 Uși Garaj</a>
+                        <a href="instalatii-electrice.html" style="padding:8px 16px;font-size:14px;font-weight:500;color:#334155;border-radius:8px;">⚡ Instalații Electrice</a>
+                        <a href="instalatii-termice-sanitare.html" style="padding:8px 16px;font-size:14px;font-weight:500;color:#334155;border-radius:8px;">🔧 Instalații Termice & Sanitare</a>
+                        <a href="aer-conditionat.html" style="padding:8px 16px;font-size:14px;font-weight:500;color:#334155;border-radius:8px;">❄️ Aer Condiționat</a>
+                        <a href="ventilatie.html" style="padding:8px 16px;font-size:14px;font-weight:500;color:#334155;border-radius:8px;">💨 Ventilație</a>
+                        <a href="pontaj-electronic.html" style="padding:8px 16px;font-size:14px;font-weight:500;color:#334155;border-radius:8px;">⏱️ Pontaj Electronic</a>
+                </div>
+                <a href="despre-noi.html" style="padding:10px 16px;font-size:16px;font-weight:500;color:#334155;border-radius:8px;">ℹ️ Despre Noi</a>
                 <a href="portofoliu.html" style="padding:10px 16px;font-size:16px;font-weight:500;color:#334155;border-radius:8px;">📁 Portofoliu</a>
                 <a href="contact.html" style="padding:10px 16px;font-size:16px;font-weight:500;color:#334155;border-radius:8px;">📍 Contact</a>
                 <div style="padding:12px 8px;"><a href="contact.html" style="display:block;text-align:center;background:linear-gradient(to right,#dc2626,#b91c1c);color:#fff;padding:10px 16px;border-radius:12px;font-weight:600;">Cere Ofertă</a></div>
@@ -100,92 +126,261 @@
 
 <!-- ========== HERO ========== -->
 <section style="padding-top:112px;">
-    <div style="background:linear-gradient(135deg,#0891b2,#1d4ed8);padding:48px 16px;">
-        <div style="max-width:896px;margin:0 auto;text-align:center;">
-            <span style="display:inline-flex;align-items:center;padding:4px 12px;background:rgba(255,255,255,0.2);border-radius:999px;color:#fff;font-size:14px;font-weight:500;margin-bottom:16px;">🔔 Interfoane</span>
-            <h1 style="font-size:clamp(28px,5vw,40px);font-weight:800;color:#fff;margin-bottom:16px;">Interfoane și Videointerfoane</h1>
-            <p style="font-size:18px;color:rgba(207,250,254,0.9);">Sisteme audio și video pentru blocuri, case și birouri. Răspunde de pe telefon, oriunde ești.</p>
+    <div style="background:linear-gradient(135deg,#0891b2,#164e63);padding:48px 16px;position:relative;overflow:hidden;">
+        <div style="position:absolute;inset:0;opacity:0.06;background-image:radial-gradient(circle at 3px 3px,rgba(255,255,255,0.3) 1px,transparent 0);background-size:20px 20px;"></div>
+        <div style="max-width:896px;margin:0 auto;text-align:center;position:relative;">
+            <span style="display:inline-flex;align-items:center;padding:4px 12px;background:rgba(255,255,255,0.15);border-radius:999px;color:#fff;font-size:14px;font-weight:500;margin-bottom:16px;">🔔 Comunicare Inteligentă</span>
+            <h1 style="font-size:clamp(28px,5vw,40px);font-weight:800;color:#fff;margin-bottom:16px;">Interfoane & Videointerfoane</h1>
+            <p style="font-size:18px;color:rgba(207,250,254,0.9);max-width:640px;margin:0 auto;">Sisteme audio și video de comunicare: de la interfoane clasice pentru bloc până la videointerfoane IP cu deschidere din telefon.</p>
+            <div style="display:flex;justify-content:center;gap:32px;flex-wrap:wrap;margin-top:24px;">
+                <div style="text-align:center;color:#fff;">
+                    <span style="font-size:28px;font-weight:800;display:block;">7"</span>
+                    <span style="font-size:12px;opacity:0.8;text-transform:uppercase;letter-spacing:0.5px;">Monitor Touch</span>
+                </div>
+                <div style="text-align:center;color:#fff;">
+                    <span style="font-size:28px;font-weight:800;display:block;">2MP</span>
+                    <span style="font-size:12px;opacity:0.8;text-transform:uppercase;letter-spacing:0.5px;">Cameră HD</span>
+                </div>
+                <div style="text-align:center;color:#fff;">
+                    <span style="font-size:28px;font-weight:800;display:block;">WiFi</span>
+                    <span style="font-size:12px;opacity:0.8;text-transform:uppercase;letter-spacing:0.5px;">Acces Remote</span>
+                </div>
+            </div>
         </div>
     </div>
 </section>
 
-<!-- ========== GHID INSTALARE ========== -->
+<!-- ========== TIPURI ========== -->
 <section style="padding:40px 16px;background:#fff;">
+    <div style="max-width:896px;margin:0 auto;">
+        <h2 style="font-size:24px;font-weight:700;color:#111827;margin-bottom:8px;">📞 Tipuri de Interfoane</h2>
+        <p style="color:#6b7280;margin-bottom:20px;">De la soluții simple audio la sisteme video IP cu funcții smart.</p>
+
+        <div class="comp-grid">
+            <div class="comp-card">
+                <div style="font-size:36px;margin-bottom:12px;">🔊</div>
+                <h3 style="font-size:18px;font-weight:700;color:#111827;margin-bottom:8px;">Interfon Audio</h3>
+                <p style="color:#6b7280;font-size:14px;line-height:1.6;">Comunicare voce, deschidere yală electrică. Soluție economică pentru bloc sau vilă. Cablare pe 2 fire.</p>
+                <div style="margin-top:12px;display:flex;flex-wrap:wrap;gap:6px;">
+                    <span style="padding:2px 8px;background:#ecfeff;color:#0e7490;border-radius:6px;font-size:11px;font-weight:500;">2 fire</span>
+                    <span style="padding:2px 8px;background:#ecfeff;color:#0e7490;border-radius:6px;font-size:11px;font-weight:500;">Economic</span>
+                </div>
+            </div>
+
+            <div class="comp-card">
+                <div style="font-size:36px;margin-bottom:12px;">📺</div>
+                <h3 style="font-size:18px;font-weight:700;color:#111827;margin-bottom:8px;">Videointerfon Analog</h3>
+                <p style="color:#6b7280;font-size:14px;line-height:1.6;">Monitor color 4.3"-7", cameră cu unghi larg. Vezi cine sună înainte de a deschide. Cablare pe 4 fire.</p>
+                <div style="margin-top:12px;display:flex;flex-wrap:wrap;gap:6px;">
+                    <span style="padding:2px 8px;background:#eff6ff;color:#1e40af;border-radius:6px;font-size:11px;font-weight:500;">4 fire</span>
+                    <span style="padding:2px 8px;background:#eff6ff;color:#1e40af;border-radius:6px;font-size:11px;font-weight:500;">Video color</span>
+                </div>
+            </div>
+
+            <div class="comp-card">
+                <div style="font-size:36px;margin-bottom:12px;">🌐</div>
+                <h3 style="font-size:18px;font-weight:700;color:#111827;margin-bottom:8px;">Videointerfon IP / WiFi</h3>
+                <p style="color:#6b7280;font-size:14px;line-height:1.6;">Monitor touch 7"-10", cameră 2MP, conectare WiFi. Apel și deschidere din aplicația mobilă, de oriunde.</p>
+                <div style="margin-top:12px;display:flex;flex-wrap:wrap;gap:6px;">
+                    <span style="padding:2px 8px;background:#ecfdf5;color:#047857;border-radius:6px;font-size:11px;font-weight:500;">WiFi</span>
+                    <span style="padding:2px 8px;background:#ecfdf5;color:#047857;border-radius:6px;font-size:11px;font-weight:500;">App Mobile</span>
+                    <span style="padding:2px 8px;background:#ecfdf5;color:#047857;border-radius:6px;font-size:11px;font-weight:500;">Touch</span>
+                </div>
+            </div>
+
+            <div class="comp-card">
+                <div style="font-size:36px;margin-bottom:12px;">🏢</div>
+                <h3 style="font-size:18px;font-weight:700;color:#111827;margin-bottom:8px;">Sistem Bloc / Scară</h3>
+                <p style="color:#6b7280;font-size:14px;line-height:1.6;">Panou exterior cu directoare locatari, comunicare cu fiecare apartament. Sisteme modulare extensibile.</p>
+                <div style="margin-top:12px;display:flex;flex-wrap:wrap;gap:6px;">
+                    <span style="padding:2px 8px;background:#f3e8ff;color:#6b21a8;border-radius:6px;font-size:11px;font-weight:500;">Modular</span>
+                    <span style="padding:2px 8px;background:#f3e8ff;color:#6b21a8;border-radius:6px;font-size:11px;font-weight:500;">Multi-apart.</span>
+                </div>
+            </div>
+
+            <div class="comp-card">
+                <div style="font-size:36px;margin-bottom:12px;">🏠</div>
+                <h3 style="font-size:18px;font-weight:700;color:#111827;margin-bottom:8px;">Kit Vilă / Casă</h3>
+                <p style="color:#6b7280;font-size:14px;line-height:1.6;">Panou exterior + 1-2 monitoare interioare. Opțional: deschidere poartă auto, cameră suplimentară, RFID.</p>
+                <div style="margin-top:12px;display:flex;flex-wrap:wrap;gap:6px;">
+                    <span style="padding:2px 8px;background:#fef3c7;color:#92400e;border-radius:6px;font-size:11px;font-weight:500;">Kit complet</span>
+                    <span style="padding:2px 8px;background:#fef3c7;color:#92400e;border-radius:6px;font-size:11px;font-weight:500;">+Poartă</span>
+                </div>
+            </div>
+
+            <div class="comp-card">
+                <div style="font-size:36px;margin-bottom:12px;">🤖</div>
+                <h3 style="font-size:18px;font-weight:700;color:#111827;margin-bottom:8px;">Smart / Hybrid</h3>
+                <p style="color:#6b7280;font-size:14px;line-height:1.6;">Integrare cu sisteme smart home, recunoaștere facială, acces RFID, conectare cu alarma și camerele CCTV.</p>
+                <div style="margin-top:12px;display:flex;flex-wrap:wrap;gap:6px;">
+                    <span style="padding:2px 8px;background:#fce7f3;color:#9d174d;border-radius:6px;font-size:11px;font-weight:500;">Smart Home</span>
+                    <span style="padding:2px 8px;background:#fce7f3;color:#9d174d;border-radius:6px;font-size:11px;font-weight:500;">Face ID</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ========== GHID ========== -->
+<section style="padding:40px 16px;background:#f9fafb;">
     <div style="max-width:896px;margin:0 auto;">
         <h2 style="font-size:24px;font-weight:700;color:#111827;margin-bottom:24px;">📚 Ghid Complet de Instalare</h2>
         <div style="display:flex;flex-direction:column;gap:16px;">
+
             <div class="accordion-item" style="border:1px solid #e5e7eb;border-radius:12px;overflow:hidden;">
-              <button onclick="toggleAccordion('proiectare')" style="width:100%;padding:16px 24px;background:#f9fafb;display:flex;justify-content:space-between;align-items:center;border:none;cursor:pointer;font-family:inherit;transition:background 0.2s;" onmouseover="this.style.background='#f3f4f6'" onmouseout="this.style.background='#f9fafb'">
-                <span style="font-size:18px;font-weight:700;color:#111827;">🔧 Proiectare</span>
+              <button onclick="toggleAccordion('proiectare')" style="width:100%;padding:16px 24px;background:#fff;display:flex;justify-content:space-between;align-items:center;border:none;cursor:pointer;font-family:inherit;transition:background 0.2s;" onmouseover="this.style.background='#f3f4f6'" onmouseout="this.style.background='#fff'">
+                <span style="font-size:18px;font-weight:700;color:#111827;">🔧 Evaluare și Proiectare</span>
                 <span id="icon-proiectare" style="font-size:24px;transition:transform 0.3s;">👆</span>
               </button>
               <div id="content-proiectare" style="display:none;padding:16px 24px;color:#374151;line-height:1.7;">
-
-                <h4 style="font-weight:600;">Tipuri de sisteme:</h4>
+                <p>Alegerea sistemului potrivit depinde de tipul clădirii, numărul de apartamente/monitoare și funcțiile dorite.</p>
+                <h4 style="font-weight:600;margin-top:16px;">Ce evaluăm:</h4>
                 <ul style="list-style:disc;padding-left:24px;margin-top:8px;">
-                    <li style="margin-bottom:8px;"><strong>Interfon audio</strong> - Comunicare vocală, economic</li>
-                    <li style="margin-bottom:8px;"><strong>Videointerfon</strong> - Cameră video la intrare, monitor în interior</li>
-                    <li style="margin-bottom:8px;"><strong>Interfon IP</strong> - Conectare la internet, răspuns de pe telefon</li>
-                    <li style="margin-bottom:8px;"><strong>Sisteme pentru blocuri</strong> - Panou de apel cu taste sau touchscreen</li>
+                    <li style="margin-bottom:8px;">Tip obiectiv: vilă, casă, bloc, clădire birouri, complex rezidențial</li>
+                    <li style="margin-bottom:8px;">Număr de apartamente / monitoare necesare</li>
+                    <li style="margin-bottom:8px;">Starea cablajului existent (dacă este înlocuire/modernizare)</li>
+                    <li style="margin-bottom:8px;">Funcții dorite: doar audio, video, video + RFID, WiFi/IP</li>
+                    <li style="margin-bottom:8px;">Integrare cu alte sisteme: poartă automată, barieră, control acces</li>
+                    <li style="margin-bottom:8px;">Amplasarea panoului exterior: încastrat sau aplicat</li>
                 </ul>
+                <div style="margin-top:16px;padding:12px 16px;background:#ecfeff;border-radius:8px;border-left:3px solid #0891b2;">
+                    <p style="font-size:14px;color:#0e7490;"><strong>💡 Sfat CSSI:</strong> Pentru vilă recomandăm videointerfon IP cu monitor 7" touch — vezi cine sună și de pe telefon când nu ești acasă, și poți deschide poarta direct din aplicație.</p>
+                </div>
               </div>
             </div>
+
             <div class="accordion-item" style="border:1px solid #e5e7eb;border-radius:12px;overflow:hidden;">
-              <button onclick="toggleAccordion('instalare')" style="width:100%;padding:16px 24px;background:#f9fafb;display:flex;justify-content:space-between;align-items:center;border:none;cursor:pointer;font-family:inherit;transition:background 0.2s;" onmouseover="this.style.background='#f3f4f6'" onmouseout="this.style.background='#f9fafb'">
-                <span style="font-size:18px;font-weight:700;color:#111827;">🔨 Instalare</span>
+              <button onclick="toggleAccordion('instalare')" style="width:100%;padding:16px 24px;background:#fff;display:flex;justify-content:space-between;align-items:center;border:none;cursor:pointer;font-family:inherit;transition:background 0.2s;" onmouseover="this.style.background='#f3f4f6'" onmouseout="this.style.background='#fff'">
+                <span style="font-size:18px;font-weight:700;color:#111827;">🔨 Instalare și Configurare</span>
                 <span id="icon-instalare" style="font-size:24px;transition:transform 0.3s;">👆</span>
               </button>
               <div id="content-instalare" style="display:none;padding:16px 24px;color:#374151;line-height:1.7;">
-
-                <ul style="list-style:disc;padding-left:24px;">
-                    <li style="margin-bottom:8px;">Montarea panoului de apel la intrare</li>
-                    <li style="margin-bottom:8px;">Instalarea monitoarelor/receptoarelor în interior</li>
-                    <li style="margin-bottom:8px;">Trasarea cablurilor (2 fire, 4 fire sau Cat5/6 pentru IP)</li>
-                    <li style="margin-bottom:8px;">Conectarea la yala electrică sau electromagnet</li>
-                    <li style="margin-bottom:8px;">Configurarea sistemului și a codurilor de apel</li>
-                    <li style="margin-bottom:8px;">Testarea comunicării și a deschiderii ușii</li>
+                <h4 style="font-weight:600;">Etapele instalării:</h4>
+                <ul style="list-style:disc;padding-left:24px;margin-top:8px;">
+                    <li style="margin-bottom:8px;">Montarea panoului exterior (încastrat sau aplicat, la 1.4-1.6m înălțime)</li>
+                    <li style="margin-bottom:8px;">Instalarea monitoarelor interioare (la 1.5m, vizibilitate optimă)</li>
+                    <li style="margin-bottom:8px;">Cablarea între panou și monitoare (2 fire, 4 fire sau UTP Cat.5e/6)</li>
+                    <li style="margin-bottom:8px;">Conectarea yalei electrice / electromagnetice la ușa de intrare</li>
+                    <li style="margin-bottom:8px;">Conectarea la poarta automată (dacă este cazul)</li>
+                    <li style="margin-bottom:8px;">Configurarea WiFi și a aplicației mobile (pentru sisteme IP)</li>
+                    <li style="margin-bottom:8px;">Programarea tag-urilor RFID pentru locatari</li>
+                    <li style="margin-bottom:8px;">Testarea completă: apel, voce, video, deschidere, RFID</li>
                 </ul>
+                <div style="margin-top:16px;padding:12px 16px;background:#ecfdf5;border-radius:8px;border-left:3px solid #10b981;">
+                    <p style="font-size:14px;color:#047857;"><strong>✅ Inclus:</strong> Configurare aplicație mobilă + instruire utilizare + tag-uri RFID inițiale (pentru sisteme cu RFID).</p>
+                </div>
               </div>
             </div>
+
             <div class="accordion-item" style="border:1px solid #e5e7eb;border-radius:12px;overflow:hidden;">
-              <button onclick="toggleAccordion('mentenanta')" style="width:100%;padding:16px 24px;background:#f9fafb;display:flex;justify-content:space-between;align-items:center;border:none;cursor:pointer;font-family:inherit;transition:background 0.2s;" onmouseover="this.style.background='#f3f4f6'" onmouseout="this.style.background='#f9fafb'">
+              <button onclick="toggleAccordion('comparatie')" style="width:100%;padding:16px 24px;background:#fff;display:flex;justify-content:space-between;align-items:center;border:none;cursor:pointer;font-family:inherit;transition:background 0.2s;" onmouseover="this.style.background='#f3f4f6'" onmouseout="this.style.background='#fff'">
+                <span style="font-size:18px;font-weight:700;color:#111827;">📊 Audio vs. Video vs. IP — Comparație</span>
+                <span id="icon-comparatie" style="font-size:24px;transition:transform 0.3s;">👆</span>
+              </button>
+              <div id="content-comparatie" style="display:none;padding:16px 24px;color:#374151;line-height:1.7;">
+                <div style="overflow-x:auto;">
+                    <table style="width:100%;border-collapse:collapse;font-size:14px;">
+                        <thead>
+                            <tr style="background:#f3f4f6;">
+                                <th style="padding:10px 12px;text-align:left;border-bottom:2px solid #e5e7eb;">Criteriu</th>
+                                <th style="padding:10px 12px;text-align:left;border-bottom:2px solid #e5e7eb;">🔊 Audio</th>
+                                <th style="padding:10px 12px;text-align:left;border-bottom:2px solid #e5e7eb;">📺 Video Analog</th>
+                                <th style="padding:10px 12px;text-align:left;border-bottom:2px solid #e5e7eb;">🌐 Video IP</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr><td style="padding:10px 12px;border-bottom:1px solid #e5e7eb;font-weight:600;">Imagine</td><td style="padding:10px 12px;border-bottom:1px solid #e5e7eb;">—</td><td style="padding:10px 12px;border-bottom:1px solid #e5e7eb;">Color, SD-HD</td><td style="padding:10px 12px;border-bottom:1px solid #e5e7eb;">HD/2MP, unghi larg</td></tr>
+                            <tr style="background:#f9fafb;"><td style="padding:10px 12px;border-bottom:1px solid #e5e7eb;font-weight:600;">Acces telefon</td><td style="padding:10px 12px;border-bottom:1px solid #e5e7eb;">Nu</td><td style="padding:10px 12px;border-bottom:1px solid #e5e7eb;">Nu</td><td style="padding:10px 12px;border-bottom:1px solid #e5e7eb;">✅ Da (WiFi/4G)</td></tr>
+                            <tr><td style="padding:10px 12px;border-bottom:1px solid #e5e7eb;font-weight:600;">Cablare</td><td style="padding:10px 12px;border-bottom:1px solid #e5e7eb;">2 fire</td><td style="padding:10px 12px;border-bottom:1px solid #e5e7eb;">4 fire</td><td style="padding:10px 12px;border-bottom:1px solid #e5e7eb;">UTP Cat.5e / WiFi</td></tr>
+                            <tr style="background:#f9fafb;"><td style="padding:10px 12px;border-bottom:1px solid #e5e7eb;font-weight:600;">RFID</td><td style="padding:10px 12px;border-bottom:1px solid #e5e7eb;">Opțional</td><td style="padding:10px 12px;border-bottom:1px solid #e5e7eb;">Opțional</td><td style="padding:10px 12px;border-bottom:1px solid #e5e7eb;">✅ Integrat</td></tr>
+                            <tr><td style="padding:10px 12px;border-bottom:1px solid #e5e7eb;font-weight:600;">Preț</td><td style="padding:10px 12px;border-bottom:1px solid #e5e7eb;">Economic</td><td style="padding:10px 12px;border-bottom:1px solid #e5e7eb;">Mediu</td><td style="padding:10px 12px;border-bottom:1px solid #e5e7eb;">Premium</td></tr>
+                            <tr style="background:#f9fafb;"><td style="padding:10px 12px;border-bottom:1px solid #e5e7eb;font-weight:600;">Ideal pentru</td><td style="padding:10px 12px;border-bottom:1px solid #e5e7eb;">Bloc, buget redus</td><td style="padding:10px 12px;border-bottom:1px solid #e5e7eb;">Vilă, bloc modern</td><td style="padding:10px 12px;border-bottom:1px solid #e5e7eb;">Smart home, premium</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+              </div>
+            </div>
+
+            <div class="accordion-item" style="border:1px solid #e5e7eb;border-radius:12px;overflow:hidden;">
+              <button onclick="toggleAccordion('modernizare')" style="width:100%;padding:16px 24px;background:#fff;display:flex;justify-content:space-between;align-items:center;border:none;cursor:pointer;font-family:inherit;transition:background 0.2s;" onmouseover="this.style.background='#f3f4f6'" onmouseout="this.style.background='#fff'">
+                <span style="font-size:18px;font-weight:700;color:#111827;">🔄 Modernizare Interfon Existent</span>
+                <span id="icon-modernizare" style="font-size:24px;transition:transform 0.3s;">👆</span>
+              </button>
+              <div id="content-modernizare" style="display:none;padding:16px 24px;color:#374151;line-height:1.7;">
+                <p>Multe blocuri au interfoane vechi, defecte sau depășite tehnic. Modernizarea aduce funcții noi și fiabilitate.</p>
+                <h4 style="font-weight:600;margin-top:16px;">Ce presupune modernizarea:</h4>
+                <ul style="list-style:disc;padding-left:24px;margin-top:8px;">
+                    <li style="margin-bottom:8px;">Evaluarea stării cablajului existent — deseori poate fi reutilizat</li>
+                    <li style="margin-bottom:8px;">Înlocuirea panoului exterior cu model nou (antivandal, inox)</li>
+                    <li style="margin-bottom:8px;">Înlocuirea receptoarelor din apartamente cu monitoare noi</li>
+                    <li style="margin-bottom:8px;">Adăugare acces RFID (tag / card) pentru locatari</li>
+                    <li style="margin-bottom:8px;">Înlocuirea yalei electrice (dacă este uzată)</li>
+                    <li style="margin-bottom:8px;">Opțional: trecere la sistem video sau IP</li>
+                </ul>
+                <div style="margin-top:16px;padding:12px 16px;background:#fef3c7;border-radius:8px;border-left:3px solid #f59e0b;">
+                    <p style="font-size:14px;color:#92400e;"><strong>💰 Avantaj:</strong> Reutilizarea cablajului existent reduce semnificativ costul modernizării. Sistemele pe 2 fire sunt compatibile cu majoritatea instalațiilor vechi din blocuri.</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="accordion-item" style="border:1px solid #e5e7eb;border-radius:12px;overflow:hidden;">
+              <button onclick="toggleAccordion('mentenanta')" style="width:100%;padding:16px 24px;background:#fff;display:flex;justify-content:space-between;align-items:center;border:none;cursor:pointer;font-family:inherit;transition:background 0.2s;" onmouseover="this.style.background='#f3f4f6'" onmouseout="this.style.background='#fff'">
                 <span style="font-size:18px;font-weight:700;color:#111827;">🛠️ Mentenanță</span>
                 <span id="icon-mentenanta" style="font-size:24px;transition:transform 0.3s;">👆</span>
               </button>
               <div id="content-mentenanta" style="display:none;padding:16px 24px;color:#374151;line-height:1.7;">
-
-                <ul style="list-style:disc;padding-left:24px;">
-                    <li style="margin-bottom:8px;">Testarea funcționării audio/video</li>
-                    <li style="margin-bottom:8px;">Verificarea deschiderii ușii</li>
-                    <li style="margin-bottom:8px;">Curățarea camerei video și a ecranului</li>
-                    <li style="margin-bottom:8px;">Verificarea conexiunilor și a cablurilor</li>
-                    <li style="margin-bottom:8px;">Actualizarea firmware-ului (sisteme IP)</li>
+                <h4 style="font-weight:600;">Probleme frecvente și soluții:</h4>
+                <ul style="list-style:disc;padding-left:24px;margin-top:8px;">
+                    <li style="margin-bottom:8px;"><strong>Nu se aude / sunet slab</strong> — verificare difuzor, microfon, cablaj</li>
+                    <li style="margin-bottom:8px;"><strong>Yala nu deschide</strong> — alimentare, buton, stare yală</li>
+                    <li style="margin-bottom:8px;"><strong>Imagine neclară / fără imagine</strong> — cameră, cablaj video, conectori</li>
+                    <li style="margin-bottom:8px;"><strong>Tag-uri RFID nu funcționează</strong> — reprogramare, cititor defect</li>
+                    <li style="margin-bottom:8px;"><strong>Apel nu sună la apartament</strong> — conexiune la placa de bază, receptor</li>
                 </ul>
-              </div>
-            </div>
-            <div class="accordion-item" style="border:1px solid #e5e7eb;border-radius:12px;overflow:hidden;">
-              <button onclick="toggleAccordion('legislatie')" style="width:100%;padding:16px 24px;background:#f9fafb;display:flex;justify-content:space-between;align-items:center;border:none;cursor:pointer;font-family:inherit;transition:background 0.2s;" onmouseover="this.style.background='#f3f4f6'" onmouseout="this.style.background='#f9fafb'">
-                <span style="font-size:18px;font-weight:700;color:#111827;">📜 Legislație</span>
-                <span id="icon-legislatie" style="font-size:24px;transition:transform 0.3s;">👆</span>
-              </button>
-              <div id="content-legislatie" style="display:none;padding:16px 24px;color:#374151;line-height:1.7;">
-
-                <ul style="list-style:disc;padding-left:24px;">
-                    <li style="margin-bottom:12px;"><strong>Legea 196/2018</strong> - privind asociațiile de proprietari (pentru blocuri)</li>
-                    <li style="margin-bottom:12px;"><strong>GDPR</strong> - pentru sistemele cu înregistrare video</li>
-                </ul>
+                <div style="margin-top:16px;padding:12px 16px;background:#ecfeff;border-radius:8px;border-left:3px solid #0891b2;">
+                    <p style="font-size:14px;color:#0e7490;"><strong>🔧 Service:</strong> Depanare și reparații în maxim 24-48h. Piese de schimb și receptoare compatibile în stoc. Programare tag-uri RFID suplimentare.</p>
+                </div>
               </div>
             </div>
 
+        </div>
+    </div>
+</section>
+
+<!-- ========== BENEFICII ========== -->
+<section style="padding:48px 16px;background:#fff;">
+    <div style="max-width:896px;margin:0 auto;">
+        <h2 style="font-size:24px;font-weight:700;color:#111827;margin-bottom:24px;text-align:center;">✅ De Ce Să Alegeți CSSI?</h2>
+        <div style="display:grid;grid-template-columns:1fr;gap:16px;">
+            <div style="display:flex;gap:16px;padding:20px;background:#f9fafb;border-radius:12px;align-items:flex-start;">
+                <div style="width:48px;height:48px;min-width:48px;background:linear-gradient(135deg,#0891b2,#22d3ee);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:22px;">🏢</div>
+                <div><h3 style="font-weight:700;font-size:16px;color:#111827;margin-bottom:4px;">Experiență în Blocuri</h3><p style="color:#6b7280;font-size:14px;line-height:1.5;">Sute de scări de bloc echipate. Cunoaștem toate tipurile de instalații existente și cum să le modernizăm eficient.</p></div>
+            </div>
+            <div style="display:flex;gap:16px;padding:20px;background:#f9fafb;border-radius:12px;align-items:flex-start;">
+                <div style="width:48px;height:48px;min-width:48px;background:linear-gradient(135deg,#047857,#10b981);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:22px;">📱</div>
+                <div><h3 style="font-weight:700;font-size:16px;color:#111827;margin-bottom:4px;">Deschidere din Telefon</h3><p style="color:#6b7280;font-size:14px;line-height:1.5;">Sistemele IP permit vizualizarea vizitatorului și deschiderea ușii de oriunde, direct din aplicația mobilă.</p></div>
+            </div>
+            <div style="display:flex;gap:16px;padding:20px;background:#f9fafb;border-radius:12px;align-items:flex-start;">
+                <div style="width:48px;height:48px;min-width:48px;background:linear-gradient(135deg,#dc2626,#ef4444);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:22px;">🔗</div>
+                <div><h3 style="font-weight:700;font-size:16px;color:#111827;margin-bottom:4px;">Integrare Completă</h3><p style="color:#6b7280;font-size:14px;line-height:1.5;">Conectăm interfonul cu poarta automată, bariera, controlul acces și camerele de supraveghere.</p></div>
+            </div>
+            <div style="display:flex;gap:16px;padding:20px;background:#f9fafb;border-radius:12px;align-items:flex-start;">
+                <div style="width:48px;height:48px;min-width:48px;background:linear-gradient(135deg,#7c3aed,#a855f7);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:22px;">⚡</div>
+                <div><h3 style="font-weight:700;font-size:16px;color:#111827;margin-bottom:4px;">Service & Tag-uri RFID</h3><p style="color:#6b7280;font-size:14px;line-height:1.5;">Depanare rapidă, programare tag-uri suplimentare și piese de schimb compatibile pentru toate brandurile.</p></div>
+            </div>
         </div>
     </div>
 </section>
 
 <!-- ========== CTA ========== -->
-<section style="padding:48px 16px;background:linear-gradient(to right,#dc2626,#b91c1c);">
+<section style="padding:48px 16px;background:linear-gradient(135deg,#0891b2,#164e63);">
     <div style="max-width:768px;margin:0 auto;text-align:center;">
-        <h2 style="font-size:24px;font-weight:700;color:#fff;margin-bottom:16px;">Ai nevoie de interfon?</h2>
-        <a href="contact.html" style="display:inline-block;padding:16px 32px;background:#fff;color:#dc2626;font-weight:600;border-radius:12px;font-size:16px;transition:all 0.2s;box-shadow:0 4px 6px -1px rgba(0,0,0,0.1);" onmouseover="this.style.background='#f1f5f9'" onmouseout="this.style.background='#fff'">Cere Ofertă Gratuită</a>
+        <h2 style="font-size:24px;font-weight:700;color:#fff;margin-bottom:8px;">Vrei interfon nou sau modernizare?</h2>
+        <p style="color:rgba(207,250,254,0.8);margin-bottom:24px;">Evaluare gratuită + ofertă personalizată. Soluții pentru vilă și bloc.</p>
+        <div style="display:flex;flex-wrap:wrap;justify-content:center;gap:12px;">
+            <a href="contact.html" style="display:inline-block;padding:16px 32px;background:#fff;color:#0e7490;font-weight:600;border-radius:12px;font-size:16px;transition:all 0.2s;box-shadow:0 4px 6px -1px rgba(0,0,0,0.1);" onmouseover="this.style.background='#f1f5f9'" onmouseout="this.style.background='#fff'">Cere Ofertă Gratuită</a>
+            <a href="tel:0752288400" style="display:inline-block;padding:16px 32px;background:transparent;color:#fff;font-weight:600;border-radius:12px;font-size:16px;border:2px solid rgba(255,255,255,0.3);transition:all 0.2s;" onmouseover="this.style.borderColor='#fff'" onmouseout="this.style.borderColor='rgba(255,255,255,0.3)'">📞 0752 288 400</a>
+        </div>
     </div>
 </section>
 
@@ -202,7 +397,7 @@
         <div style="display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:16px;font-size:12px;">
             <a href="tel:0268414740" style="color:#cbd5e1;display:flex;align-items:center;gap:4px;">📞 0268 414 740</a>
             <a href="https://wa.me/40752288400" style="color:#cbd5e1;display:flex;align-items:center;gap:4px;">💬 0752 288 400</a>
-            <a href="/cdn-cgi/l/email-protection#553a33333c363015372730343e263c26213038267b273a" style="color:#cbd5e1;display:flex;align-items:center;gap:4px;">✉️ <span class="__cf_email__" data-cfemail="670801010e040227051502060c140e1413020a14491508">[email&#160;protected]</span></a>
+            <a href="/cdn-cgi/l/email-protection#a1cec7c7c8c2c4e1c2d2d2c88fd3ce" style="color:#cbd5e1;display:flex;align-items:center;gap:4px;">✉️ <span class="__cf_email__" data-cfemail="e18e8787888284a182929288cf938e">[email&#160;protected]</span></a>
             <span style="color:#64748b;">L-V: 08:00-17:00</span>
         </div>
         <div style="margin-top:16px;text-align:center;"><p style="color:#475569;font-size:10px;">© 2024 CSSI · Powered by Break Sistems</p></div>
@@ -224,23 +419,18 @@ Cum vă pot ajuta? Scrieți: servicii, prețuri sau contact.</div></div></div>
     <div style="padding:16px;border-top:1px solid #e2e8f0;background:#fff;"><div style="display:flex;gap:8px;"><input type="text" id="chatInput" placeholder="Scrieți un mesaj..." onkeypress="if(event.key==='Enter')sendChat()" style="flex:1;padding:8px 16px;border:1px solid #e5e7eb;border-radius:999px;font-size:14px;outline:none;font-family:inherit;"><button onclick="sendChat()" style="width:40px;height:40px;background:#dc2626;color:#fff;border-radius:50%;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;"><svg style="width:20px;height:20px;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/></svg></button></div></div>
 </div>
 
-<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
 function toggleMobileMenu(){var m=document.getElementById('mobileMenu'),a=document.getElementById('menuIcon'),b=document.getElementById('closeIcon'),c=document.getElementById('menuBtn');if(m.classList.contains('open')){m.classList.remove('open');a.style.display='';b.style.display='none';c.style.background='linear-gradient(to right,#ef4444,#dc2626)';c.classList.add('animate-subtle-pulse');}else{m.classList.add('open');a.style.display='none';b.style.display='';c.style.background='#6b7280';c.classList.remove('animate-subtle-pulse');}}
 function closeMobile(){document.getElementById('mobileMenu').classList.remove('open');document.getElementById('menuIcon').style.display='';document.getElementById('closeIcon').style.display='none';}
-var chatR={'servicii':'Oferim o gamă completă de servicii:\n\n🔥 Detecție incendiu ISU\n📹 Camere supraveghere\n🚨 Alarme antiefracție\n🔐 Control acces\n⏱️ Pontaj electronic\n🚧 Bariere auto\n🔔 Interfoane\n🔊 Sonorizare\n🚗 Automatizări porți\n🏠 Uși garaj\n❄️ Aer condiționat\n💨 Ventilație\n⚡ Instalații electrice\n🔧 Instalații termice','preturi':'Prețurile variază. Pentru ofertă personalizată:\n\n📞 0268 414 740\n💬 WhatsApp: 0752 288 400\n📧 office@cssi.ro','contact':'📞 0268 414 740\n💬 0752 288 400\n📧 office@cssi.ro\n📍 Brașov\nL-V: 08:00-17:00','default':'Mulțumim! 😊\n📞 0268 414 740\n💬 0752 288 400\nSau scrieți: servicii, prețuri, contact'};
+var chatR={'servicii':'Oferim o gamă completă de servicii:\n\n🔥 Detecție incendiu ISU\n📹 Camere supraveghere\n🚨 Alarme antiefracție\n🔐 Control acces\n⏱️ Pontaj electronic\n🚧 Bariere auto\n🔔 Interfoane\n🔊 Sonorizare\n🚗 Automatizări porți\n🏠 Uși garaj\n❄️ Aer condiționat\n💨 Ventilație\n⚡ Instalații electrice\n🔧 Instalații termice','preturi':'Prețurile variază. Pentru ofertă personalizată:\n\n📞 0268 414 740\n💬 WhatsApp: 0752 288 400\n📧 office@cssi.ro','contact':'📞 0268 414 740\n💬 0752 288 400\n📧 office@cssi.ro\n📍 Brașov\nL-V: 08:00-17:00','interfon':'Interfoane disponibile:\n\n🔊 Audio (2 fire, economic)\n📺 Video analog (4 fire)\n🌐 Video IP/WiFi + App\n🏢 Sisteme bloc/scară\n🏠 Kit-uri vilă\n🤖 Smart / recunoaștere facială\n\nPentru ofertă: 0752 288 400','default':'Mulțumim! 😊\n📞 0268 414 740\n💬 0752 288 400\nSau scrieți: servicii, interfon, prețuri, contact'};
 function toggleChat(){var p=document.getElementById('chatPanel'),a=document.getElementById('chatOpenIcon'),b=document.getElementById('chatCloseIcon'),c=document.getElementById('chatBtn');if(p.classList.contains('open')){p.classList.remove('open');a.style.display='';b.style.display='none';c.style.background='linear-gradient(to right,#06b6d4,#10b981)';c.classList.add('animate-subtle-pulse');}else{p.classList.add('open');a.style.display='none';b.style.display='';c.style.background='#6b7280';c.classList.remove('animate-subtle-pulse');}}
 function sendChat(){var i=document.getElementById('chatInput'),t=i.value.trim();if(!t)return;var m=document.getElementById('chatMessages');m.innerHTML+='<div style="display:flex;justify-content:flex-end;"><div style="max-width:80%;padding:12px;border-radius:16px;border-top-right-radius:0;background:#dc2626;color:#fff;font-size:14px;">'+t+'</div></div>';i.value='';var l=t.toLowerCase(),r=chatR.default;for(var k in chatR){if(k!=='default'&&l.includes(k)){r=chatR[k];break;}}setTimeout(function(){m.innerHTML+='<div style="display:flex;justify-content:flex-start;"><div style="max-width:80%;padding:12px;border-radius:16px;border-top-left-radius:0;background:#fff;color:#374151;font-size:14px;box-shadow:0 1px 2px rgba(0,0,0,0.05);white-space:pre-line;">'+r+'</div></div>';m.scrollTop=m.scrollHeight;},500);m.scrollTop=m.scrollHeight;}
 </script>
 
 <script>
-var openId = null;
-function toggleAccordion(id) {
-    var allIds = ['proiectare', 'instalare', 'mentenanta', 'legislatie'];
-    if (openId === id) {
-        document.getElementById('content-'+id).style.display = 'none';
-        document.getElementById('icon-'+id).textContent = '👆';
-        document.getElementById('icon-'+id).style.transform = '';
-        openId = null;
-    } else {
-        allIds.forEach(function(aid) {
-            document
+var openId=null;
+function toggleAccordion(id){var allIds=['proiectare','instalare','comparatie','modernizare','mentenanta'];if(openId===id){document.getElementById('content-'+id).style.display='none';document.getElementById('icon-'+id).textContent='👆';document.getElementById('icon-'+id).style.transform='';openId=null;}else{allIds.forEach(function(aid){document.getElementById('content-'+aid).style.display='none';document.getElementById('icon-'+aid).textContent='👆';document.getElementById('icon-'+aid).style.transform='';});document.getElementById('content-'+id).style.display='block';document.getElementById('icon-'+id).textContent='👇';document.getElementById('icon-'+id).style.transform='rotate(180deg)';openId=id;}}
+</script>
+
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"Service","name":"Interfoane & Videointerfoane - CSSI","description":"Interfoane și videointerfoane profesionale: audio, video, IP WiFi. Instalare bloc și vilă.","provider":{"@type":"LocalBusiness","name":"CSSI","telephone":"+40268414740","email":"office@cssi.ro","address":{"@type":"PostalAddress","addressLocality":"Brașov","addressCountry":"

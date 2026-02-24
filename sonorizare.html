@@ -95,11 +95,27 @@
                 </button>
             </div>
         </div>
-        <div id="mobileMenu" style="background:#fff;border-radius:16px;box-shadow:0 20px 25px -5px rgba(0,0,0,0.1);margin:8px 12px;padding:8px;">
+        <div id="mobileMenu" style="background:#fff;border-radius:16px;box-shadow:0 20px 25px -5px rgba(0,0,0,0.1);margin:8px 12px;padding:8px;max-height:80vh;overflow-y:auto;">
             <nav style="display:flex;flex-direction:column;gap:4px;">
                 <a href="index.html" style="padding:10px 16px;font-size:16px;font-weight:500;color:#334155;border-radius:8px;">🏠 Acasă</a>
-                <a href="servicii.html" style="padding:10px 16px;font-size:16px;font-weight:500;color:#dc2626;border-radius:8px;background:#fef2f2;">🛠️ Servicii</a>
-                <a href="despre-noi.html" onclick="closeMobile()" style="padding:10px 16px;font-size:16px;font-weight:500;color:#334155;border-radius:8px;">ℹ️ Despre Noi</a>
+                <button onclick="var s=document.getElementById('mobileServList');if(s.style.display==='none'){s.style.display='flex';this.querySelector('span').textContent='▲';}else{s.style.display='none';this.querySelector('span').textContent='▼';}" style="padding:10px 16px;font-size:16px;font-weight:500;color:#dc2626;border-radius:8px;background:#fef2f2;border:none;cursor:pointer;text-align:left;font-family:inherit;display:flex;justify-content:space-between;align-items:center;width:100%;">🛠️ Servicii <span>▼</span></button>
+                <div id="mobileServList" style="display:none;flex-direction:column;gap:2px;padding-left:8px;border-left:3px solid #fecaca;margin-left:16px;">
+                        <a href="detectie-incendiu-isu.html" style="padding:8px 16px;font-size:14px;font-weight:500;color:#334155;border-radius:8px;">🔥 Detecție Incendiu ISU</a>
+                        <a href="camere-supraveghere.html" style="padding:8px 16px;font-size:14px;font-weight:500;color:#334155;border-radius:8px;">📹 Camere Supraveghere</a>
+                        <a href="alarma-antiefractie.html" style="padding:8px 16px;font-size:14px;font-weight:500;color:#334155;border-radius:8px;">🚨 Alarmă Antiefracție</a>
+                        <a href="control-acces.html" style="padding:8px 16px;font-size:14px;font-weight:500;color:#334155;border-radius:8px;">🔐 Control Acces</a>
+                        <a href="automatizari-porti.html" style="padding:8px 16px;font-size:14px;font-weight:500;color:#334155;border-radius:8px;">🚗 Automatizări Porți</a>
+                        <a href="bariere-auto.html" style="padding:8px 16px;font-size:14px;font-weight:500;color:#334155;border-radius:8px;">🚧 Bariere Auto</a>
+                        <a href="interfoane-videointerfoane.html" style="padding:8px 16px;font-size:14px;font-weight:500;color:#334155;border-radius:8px;">🔔 Interfoane & Videointerfoane</a>
+                        <a href="sonorizare.html" style="padding:8px 16px;font-size:14px;font-weight:600;color:#dc2626;border-radius:8px;background:#fef2f2;">🔊 Sonorizare</a>
+                        <a href="usi-garaj.html" style="padding:8px 16px;font-size:14px;font-weight:500;color:#334155;border-radius:8px;">🏠 Uși Garaj</a>
+                        <a href="instalatii-electrice.html" style="padding:8px 16px;font-size:14px;font-weight:500;color:#334155;border-radius:8px;">⚡ Instalații Electrice</a>
+                        <a href="instalatii-termice-sanitare.html" style="padding:8px 16px;font-size:14px;font-weight:500;color:#334155;border-radius:8px;">🔧 Instalații Termice & Sanitare</a>
+                        <a href="aer-conditionat.html" style="padding:8px 16px;font-size:14px;font-weight:500;color:#334155;border-radius:8px;">❄️ Aer Condiționat</a>
+                        <a href="ventilatie.html" style="padding:8px 16px;font-size:14px;font-weight:500;color:#334155;border-radius:8px;">💨 Ventilație</a>
+                        <a href="pontaj-electronic.html" style="padding:8px 16px;font-size:14px;font-weight:500;color:#334155;border-radius:8px;">⏱️ Pontaj Electronic</a>
+                </div>
+                <a href="despre-noi.html" style="padding:10px 16px;font-size:16px;font-weight:500;color:#334155;border-radius:8px;">ℹ️ Despre Noi</a>
                 <a href="portofoliu.html" style="padding:10px 16px;font-size:16px;font-weight:500;color:#334155;border-radius:8px;">📁 Portofoliu</a>
                 <a href="contact.html" style="padding:10px 16px;font-size:16px;font-weight:500;color:#334155;border-radius:8px;">📍 Contact</a>
                 <div style="padding:12px 8px;"><a href="contact.html" style="display:block;text-align:center;background:linear-gradient(to right,#dc2626,#b91c1c);color:#fff;padding:10px 16px;border-radius:12px;font-weight:600;">Cere Ofertă</a></div>
@@ -378,7 +394,7 @@
         <div style="display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:16px;font-size:12px;">
             <a href="tel:0268414740" style="color:#cbd5e1;display:flex;align-items:center;gap:4px;">📞 0268 414 740</a>
             <a href="https://wa.me/40752288400" style="color:#cbd5e1;display:flex;align-items:center;gap:4px;">💬 0752 288 400</a>
-            <a href="mailto:office@cssi.ro" style="color:#cbd5e1;display:flex;align-items:center;gap:4px;">✉️ office@cssi.ro</a>
+            <a href="/cdn-cgi/l/email-protection#452a23232c2620052636362c6b372a" style="color:#cbd5e1;display:flex;align-items:center;gap:4px;">✉️ <span class="__cf_email__" data-cfemail="90fff6f6f9f3f5d0f3e3e3f9bee2ff">[email&#160;protected]</span></a>
             <span style="color:#64748b;">L-V: 08:00-17:00</span>
         </div>
         <div style="margin-top:16px;text-align:center;"><p style="color:#475569;font-size:10px;">© 2024 CSSI · Powered by Break Sistems</p></div>
@@ -400,7 +416,7 @@ Cum vă pot ajuta? Scrieți: servicii, prețuri sau contact.</div></div></div>
     <div style="padding:16px;border-top:1px solid #e2e8f0;background:#fff;"><div style="display:flex;gap:8px;"><input type="text" id="chatInput" placeholder="Scrieți un mesaj..." onkeypress="if(event.key==='Enter')sendChat()" style="flex:1;padding:8px 16px;border:1px solid #e5e7eb;border-radius:999px;font-size:14px;outline:none;font-family:inherit;"><button onclick="sendChat()" style="width:40px;height:40px;background:#dc2626;color:#fff;border-radius:50%;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;"><svg style="width:20px;height:20px;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/></svg></button></div></div>
 </div>
 
-<script>
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
 function toggleMobileMenu(){var m=document.getElementById('mobileMenu'),a=document.getElementById('menuIcon'),b=document.getElementById('closeIcon'),c=document.getElementById('menuBtn');if(m.classList.contains('open')){m.classList.remove('open');a.style.display='';b.style.display='none';c.style.background='linear-gradient(to right,#ef4444,#dc2626)';c.classList.add('animate-subtle-pulse');}else{m.classList.add('open');a.style.display='none';b.style.display='';c.style.background='#6b7280';c.classList.remove('animate-subtle-pulse');}}
 function closeMobile(){document.getElementById('mobileMenu').classList.remove('open');document.getElementById('menuIcon').style.display='';document.getElementById('closeIcon').style.display='none';}
 var chatR={'servicii':'Oferim o gamă completă de servicii:\n\n🔥 Detecție incendiu ISU\n📹 Camere supraveghere\n🚨 Alarme antiefracție\n🔐 Control acces\n⏱️ Pontaj electronic\n🚧 Bariere auto\n🔔 Interfoane\n🔊 Sonorizare\n🚗 Automatizări porți\n🏠 Uși garaj\n❄️ Aer condiționat\n💨 Ventilație\n⚡ Instalații electrice\n🔧 Instalații termice','preturi':'Prețurile variază. Pentru ofertă personalizată:\n\n📞 0268 414 740\n💬 WhatsApp: 0752 288 400\n📧 office@cssi.ro','contact':'📞 0268 414 740\n💬 0752 288 400\n📧 office@cssi.ro\n📍 Brașov\nL-V: 08:00-17:00','sonorizare':'Sisteme sonorizare disponibile:\n\n🎶 Muzică ambientală\n📢 Public Address (PA)\n🚨 Evacuare vocală EN54\n🎤 Conferințe & săli\n🏟️ Exterior & evenimente\n🌐 IP / Networked Audio\n\nPentru ofertă: 0752 288 400','default':'Mulțumim! 😊\n📞 0268 414 740\n💬 0752 288 400\nSau scrieți: servicii, sonorizare, prețuri, contact'};
@@ -414,8 +430,4 @@ function toggleAccordion(id){var allIds=['proiectare','instalare','evacuare','co
 </script>
 
 <script type="application/ld+json">
-{"@context":"https://schema.org","@type":"Service","name":"Sonorizare - CSSI","description":"Sisteme de sonorizare profesionale: PA/VA, muzică ambientală, evacuare vocală EN54, conferințe.","provider":{"@type":"LocalBusiness","name":"CSSI","telephone":"+40268414740","email":"office@cssi.ro","address":{"@type":"PostalAddress","addressLocality":"Brașov","addressCountry":"RO"},"aggregateRating":{"@type":"AggregateRating","ratingValue":"4.9","reviewCount":"127"}},"areaServed":"Brașov","serviceType":["Sonorizare ambientală","Public Address PA","Evacuare vocală EN54","Sonorizare conferințe"]}
-</script>
-
-</body>
-</html>
+{"@context":"https://schema.org","@type":"Service","name":"Sonorizare - CSSI","description":"Sisteme de sonorizare profesionale: PA/VA, muzică ambientală, evacuare vocală EN54, conferințe.","provider":{"@type":"LocalBusiness","name":"CSSI","telephone":"+40268414740","email":"office@cssi.ro","address":{"@type":"PostalAddress","addressLocality":"Brașov","addressCountry":"RO"},"aggregateRatin

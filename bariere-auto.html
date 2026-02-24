@@ -3,8 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bariere Auto | CSSI</title>
-    <meta name="description" content="Bariere auto pentru parcări și control acces vehicule. Instalare profesională, mentenanță și service.">
+    <title>Bariere Auto | CSSI - Bariere Acces Auto Profesionale Brașov</title>
+    <meta name="description" content="Bariere auto profesionale pentru parcări, rezidențial și industrial. Bariere cu braț de 3-8m, sisteme de taxare, LPR. Instalare și mentenanță. 20+ ani experiență.">
+    <meta name="keywords" content="bariere auto, bariere parcare, bariere acces, sistem taxare parcare, bariera automata, control acces vehicule, LPR, Brasov, CSSI">
+    <meta property="og:title" content="Bariere Auto | CSSI">
+    <meta property="og:description" content="Bariere auto profesionale pentru parcări și acces vehicule. Instalare și mentenanță. 20+ ani experiență.">
+    <meta property="og:type" content="website">
+    <meta property="og:locale" content="ro_RO">
     <link rel="icon" href="https://eu.chat-img.sintra.ai/32c1b29c-0c86-4833-a031-e7c45e21a11e/983d52bb-2eb6-42f1-bed4-f94d769bb634/Logo_CSSI.png">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
     <style>
@@ -24,6 +29,12 @@
         @media(max-width:639px){.hidden.sm\:block{display:none!important;}.sm\:hidden{display:block!important;}}
         @media(max-width:640px){#chatPanel{width:calc(100vw - 48px)!important;right:24px!important;}}
         @media(max-width:768px){button,a[href]{min-height:44px;}}
+
+        .comp-grid{display:grid;grid-template-columns:1fr;gap:16px;margin-top:16px;}
+        @media(min-width:640px){.comp-grid{grid-template-columns:repeat(2,1fr);}}
+        @media(min-width:900px){.comp-grid{grid-template-columns:repeat(3,1fr);}}
+        .comp-card{background:#f9fafb;border:1px solid #e5e7eb;border-radius:12px;padding:20px;transition:all 0.3s;}
+        .comp-card:hover{transform:translateY(-4px);box-shadow:0 8px 16px -4px rgba(0,0,0,0.1);border-color:#ea580c;}
     </style>
 </head>
 <body>
@@ -58,7 +69,7 @@
                         <a href="alarma-antiefractie.html" style="display:block;padding:10px 16px;font-size:13px;color:#334155;border-radius:8px;" onmouseover="this.style.background='#fef2f2';this.style.color='#dc2626'" onmouseout="this.style.background='';this.style.color='#334155'">🚨 Alarmă Antiefracție</a>
                         <a href="control-acces.html" style="display:block;padding:10px 16px;font-size:13px;color:#334155;border-radius:8px;" onmouseover="this.style.background='#fef2f2';this.style.color='#dc2626'" onmouseout="this.style.background='';this.style.color='#334155'">🔐 Control Acces</a>
                         <a href="automatizari-porti.html" style="display:block;padding:10px 16px;font-size:13px;color:#334155;border-radius:8px;" onmouseover="this.style.background='#fef2f2';this.style.color='#dc2626'" onmouseout="this.style.background='';this.style.color='#334155'">🚗 Automatizări Porți</a>
-                        <a href="bariere-auto.html" style="display:block;padding:10px 16px;font-size:13px;color:#334155;border-radius:8px;" onmouseover="this.style.background='#fef2f2';this.style.color='#dc2626'" onmouseout="this.style.background='';this.style.color='#334155'">🚧 Bariere Auto</a>
+                        <a href="bariere-auto.html" style="display:block;padding:10px 16px;font-size:13px;color:#dc2626;background:#fef2f2;border-radius:8px;font-weight:600;">🚧 Bariere Auto</a>
                         <a href="interfoane-videointerfoane.html" style="display:block;padding:10px 16px;font-size:13px;color:#334155;border-radius:8px;" onmouseover="this.style.background='#fef2f2';this.style.color='#dc2626'" onmouseout="this.style.background='';this.style.color='#334155'">🔔 Interfoane & Videointerfoane</a>
                         <a href="sonorizare.html" style="display:block;padding:10px 16px;font-size:13px;color:#334155;border-radius:8px;" onmouseover="this.style.background='#fef2f2';this.style.color='#dc2626'" onmouseout="this.style.background='';this.style.color='#334155'">🔊 Sonorizare</a>
                         <a href="usi-garaj.html" style="display:block;padding:10px 16px;font-size:13px;color:#334155;border-radius:8px;" onmouseover="this.style.background='#fef2f2';this.style.color='#dc2626'" onmouseout="this.style.background='';this.style.color='#334155'">🏠 Uși Garaj</a>
@@ -85,11 +96,27 @@
                 </button>
             </div>
         </div>
-        <div id="mobileMenu" style="background:#fff;border-radius:16px;box-shadow:0 20px 25px -5px rgba(0,0,0,0.1);margin:8px 12px;padding:8px;">
+        <div id="mobileMenu" style="background:#fff;border-radius:16px;box-shadow:0 20px 25px -5px rgba(0,0,0,0.1);margin:8px 12px;padding:8px;max-height:80vh;overflow-y:auto;">
             <nav style="display:flex;flex-direction:column;gap:4px;">
                 <a href="index.html" style="padding:10px 16px;font-size:16px;font-weight:500;color:#334155;border-radius:8px;">🏠 Acasă</a>
-                <a href="servicii.html" style="padding:10px 16px;font-size:16px;font-weight:500;color:#dc2626;border-radius:8px;background:#fef2f2;">🛠️ Servicii</a>
-                <a href="despre-noi.html" onclick="closeMobile()" style="padding:10px 16px;font-size:16px;font-weight:500;color:#334155;border-radius:8px;">ℹ️ Despre Noi</a>
+                <button onclick="var s=document.getElementById('mobileServList');if(s.style.display==='none'){s.style.display='flex';this.querySelector('span').textContent='▲';}else{s.style.display='none';this.querySelector('span').textContent='▼';}" style="padding:10px 16px;font-size:16px;font-weight:500;color:#dc2626;border-radius:8px;background:#fef2f2;border:none;cursor:pointer;text-align:left;font-family:inherit;display:flex;justify-content:space-between;align-items:center;width:100%;">🛠️ Servicii <span>▼</span></button>
+                <div id="mobileServList" style="display:none;flex-direction:column;gap:2px;padding-left:8px;border-left:3px solid #fecaca;margin-left:16px;">
+                        <a href="detectie-incendiu-isu.html" style="padding:8px 16px;font-size:14px;font-weight:500;color:#334155;border-radius:8px;">🔥 Detecție Incendiu ISU</a>
+                        <a href="camere-supraveghere.html" style="padding:8px 16px;font-size:14px;font-weight:500;color:#334155;border-radius:8px;">📹 Camere Supraveghere</a>
+                        <a href="alarma-antiefractie.html" style="padding:8px 16px;font-size:14px;font-weight:500;color:#334155;border-radius:8px;">🚨 Alarmă Antiefracție</a>
+                        <a href="control-acces.html" style="padding:8px 16px;font-size:14px;font-weight:500;color:#334155;border-radius:8px;">🔐 Control Acces</a>
+                        <a href="automatizari-porti.html" style="padding:8px 16px;font-size:14px;font-weight:500;color:#334155;border-radius:8px;">🚗 Automatizări Porți</a>
+                        <a href="bariere-auto.html" style="padding:8px 16px;font-size:14px;font-weight:600;color:#dc2626;border-radius:8px;background:#fef2f2;">🚧 Bariere Auto</a>
+                        <a href="interfoane-videointerfoane.html" style="padding:8px 16px;font-size:14px;font-weight:500;color:#334155;border-radius:8px;">🔔 Interfoane & Videointerfoane</a>
+                        <a href="sonorizare.html" style="padding:8px 16px;font-size:14px;font-weight:500;color:#334155;border-radius:8px;">🔊 Sonorizare</a>
+                        <a href="usi-garaj.html" style="padding:8px 16px;font-size:14px;font-weight:500;color:#334155;border-radius:8px;">🏠 Uși Garaj</a>
+                        <a href="instalatii-electrice.html" style="padding:8px 16px;font-size:14px;font-weight:500;color:#334155;border-radius:8px;">⚡ Instalații Electrice</a>
+                        <a href="instalatii-termice-sanitare.html" style="padding:8px 16px;font-size:14px;font-weight:500;color:#334155;border-radius:8px;">🔧 Instalații Termice & Sanitare</a>
+                        <a href="aer-conditionat.html" style="padding:8px 16px;font-size:14px;font-weight:500;color:#334155;border-radius:8px;">❄️ Aer Condiționat</a>
+                        <a href="ventilatie.html" style="padding:8px 16px;font-size:14px;font-weight:500;color:#334155;border-radius:8px;">💨 Ventilație</a>
+                        <a href="pontaj-electronic.html" style="padding:8px 16px;font-size:14px;font-weight:500;color:#334155;border-radius:8px;">⏱️ Pontaj Electronic</a>
+                </div>
+                <a href="despre-noi.html" style="padding:10px 16px;font-size:16px;font-weight:500;color:#334155;border-radius:8px;">ℹ️ Despre Noi</a>
                 <a href="portofoliu.html" style="padding:10px 16px;font-size:16px;font-weight:500;color:#334155;border-radius:8px;">📁 Portofoliu</a>
                 <a href="contact.html" style="padding:10px 16px;font-size:16px;font-weight:500;color:#334155;border-radius:8px;">📍 Contact</a>
                 <div style="padding:12px 8px;"><a href="contact.html" style="display:block;text-align:center;background:linear-gradient(to right,#dc2626,#b91c1c);color:#fff;padding:10px 16px;border-radius:12px;font-weight:600;">Cere Ofertă</a></div>
@@ -100,96 +127,265 @@
 
 <!-- ========== HERO ========== -->
 <section style="padding-top:112px;">
-    <div style="background:linear-gradient(135deg,#d97706,#ea580c);padding:48px 16px;">
-        <div style="max-width:896px;margin:0 auto;text-align:center;">
-            <span style="display:inline-flex;align-items:center;padding:4px 12px;background:rgba(255,255,255,0.2);border-radius:999px;color:#fff;font-size:14px;font-weight:500;margin-bottom:16px;">🚧 Bariere Auto</span>
-            <h1 style="font-size:clamp(28px,5vw,40px);font-weight:800;color:#fff;margin-bottom:16px;">Bariere Auto și Sisteme de Parcare</h1>
-            <p style="font-size:18px;color:rgba(254,243,199,0.9);">Control acces auto pentru parcări, instituții și zone rezidențiale.</p>
+    <div style="background:linear-gradient(135deg,#ea580c,#7c2d12);padding:48px 16px;position:relative;overflow:hidden;">
+        <div style="position:absolute;inset:0;opacity:0.06;background-image:repeating-linear-gradient(0deg,transparent,transparent 20px,rgba(255,255,255,0.08) 20px,rgba(255,255,255,0.08) 22px);"></div>
+        <div style="max-width:896px;margin:0 auto;text-align:center;position:relative;">
+            <span style="display:inline-flex;align-items:center;padding:4px 12px;background:rgba(255,255,255,0.15);border-radius:999px;color:#fff;font-size:14px;font-weight:500;margin-bottom:16px;">🚧 Control Acces Vehicule</span>
+            <h1 style="font-size:clamp(28px,5vw,40px);font-weight:800;color:#fff;margin-bottom:16px;">Bariere Auto</h1>
+            <p style="font-size:18px;color:rgba(254,215,170,0.9);max-width:640px;margin:0 auto;">Bariere auto profesionale pentru parcări, ansambluri rezidențiale și zone industriale. Trafic intens, funcționare fiabilă.</p>
+            <div style="display:flex;justify-content:center;gap:32px;flex-wrap:wrap;margin-top:24px;">
+                <div style="text-align:center;color:#fff;">
+                    <span style="font-size:28px;font-weight:800;display:block;">8m</span>
+                    <span style="font-size:12px;opacity:0.8;text-transform:uppercase;letter-spacing:0.5px;">Lungime Braț Max</span>
+                </div>
+                <div style="text-align:center;color:#fff;">
+                    <span style="font-size:28px;font-weight:800;display:block;">1.5s</span>
+                    <span style="font-size:12px;opacity:0.8;text-transform:uppercase;letter-spacing:0.5px;">Timp Deschidere</span>
+                </div>
+                <div style="text-align:center;color:#fff;">
+                    <span style="font-size:28px;font-weight:800;display:block;">∞</span>
+                    <span style="font-size:12px;opacity:0.8;text-transform:uppercase;letter-spacing:0.5px;">Cicluri Intensive</span>
+                </div>
+            </div>
         </div>
     </div>
 </section>
 
-<!-- ========== GHID INSTALARE ========== -->
+<!-- ========== TIPURI BARIERE ========== -->
 <section style="padding:40px 16px;background:#fff;">
+    <div style="max-width:896px;margin:0 auto;">
+        <h2 style="font-size:24px;font-weight:700;color:#111827;margin-bottom:8px;">🚧 Tipuri de Bariere și Soluții</h2>
+        <p style="color:#6b7280;margin-bottom:20px;">De la parcări rezidențiale la hub-uri logistice — soluția potrivită pentru fiecare aplicație.</p>
+
+        <div class="comp-grid">
+            <div class="comp-card">
+                <div style="font-size:36px;margin-bottom:12px;">🏠</div>
+                <h3 style="font-size:18px;font-weight:700;color:#111827;margin-bottom:8px;">Bariere Rezidențiale</h3>
+                <p style="color:#6b7280;font-size:14px;line-height:1.6;">Braț 3-4m, design compact. Ideale pentru blocuri, vile și ansambluri rezidențiale. Funcționare silențioasă.</p>
+                <div style="margin-top:12px;display:flex;flex-wrap:wrap;gap:6px;">
+                    <span style="padding:2px 8px;background:#fff7ed;color:#c2410c;border-radius:6px;font-size:11px;font-weight:500;">3-4m</span>
+                    <span style="padding:2px 8px;background:#fff7ed;color:#c2410c;border-radius:6px;font-size:11px;font-weight:500;">Silențioasă</span>
+                </div>
+            </div>
+
+            <div class="comp-card">
+                <div style="font-size:36px;margin-bottom:12px;">🏢</div>
+                <h3 style="font-size:18px;font-weight:700;color:#111827;margin-bottom:8px;">Bariere Comerciale</h3>
+                <p style="color:#6b7280;font-size:14px;line-height:1.6;">Braț 4-6m, trafic mediu-intens. Pentru centre comerciale, birouri, spitale. Deschidere rapidă sub 3s.</p>
+                <div style="margin-top:12px;display:flex;flex-wrap:wrap;gap:6px;">
+                    <span style="padding:2px 8px;background:#eff6ff;color:#1e40af;border-radius:6px;font-size:11px;font-weight:500;">4-6m</span>
+                    <span style="padding:2px 8px;background:#eff6ff;color:#1e40af;border-radius:6px;font-size:11px;font-weight:500;">Trafic Intens</span>
+                </div>
+            </div>
+
+            <div class="comp-card">
+                <div style="font-size:36px;margin-bottom:12px;">🏭</div>
+                <h3 style="font-size:18px;font-weight:700;color:#111827;margin-bottom:8px;">Bariere Industriale</h3>
+                <p style="color:#6b7280;font-size:14px;line-height:1.6;">Braț 6-8m, heavy-duty. Utilizare intensivă non-stop. Rezistență extremă la vânt și intemperii.</p>
+                <div style="margin-top:12px;display:flex;flex-wrap:wrap;gap:6px;">
+                    <span style="padding:2px 8px;background:#ecfdf5;color:#047857;border-radius:6px;font-size:11px;font-weight:500;">6-8m</span>
+                    <span style="padding:2px 8px;background:#ecfdf5;color:#047857;border-radius:6px;font-size:11px;font-weight:500;">Heavy-Duty</span>
+                </div>
+            </div>
+
+            <div class="comp-card">
+                <div style="font-size:36px;margin-bottom:12px;">🅿️</div>
+                <h3 style="font-size:18px;font-weight:700;color:#111827;margin-bottom:8px;">Sisteme Taxare Parcare</h3>
+                <p style="color:#6b7280;font-size:14px;line-height:1.6;">Barieră + tichetieră + terminal plată. Soluție completă de parcare cu plată, rapoarte și management.</p>
+                <div style="margin-top:12px;display:flex;flex-wrap:wrap;gap:6px;">
+                    <span style="padding:2px 8px;background:#f3e8ff;color:#6b21a8;border-radius:6px;font-size:11px;font-weight:500;">Tichetieră</span>
+                    <span style="padding:2px 8px;background:#f3e8ff;color:#6b21a8;border-radius:6px;font-size:11px;font-weight:500;">Plată Auto</span>
+                </div>
+            </div>
+
+            <div class="comp-card">
+                <div style="font-size:36px;margin-bottom:12px;">📷</div>
+                <h3 style="font-size:18px;font-weight:700;color:#111827;margin-bottom:8px;">LPR — Recunoaștere Număr</h3>
+                <p style="color:#6b7280;font-size:14px;line-height:1.6;">Cameră ANPR integrată. Deschidere automată pentru vehiculele autorizate, jurnal complet al intrărilor.</p>
+                <div style="margin-top:12px;display:flex;flex-wrap:wrap;gap:6px;">
+                    <span style="padding:2px 8px;background:#fef3c7;color:#92400e;border-radius:6px;font-size:11px;font-weight:500;">ANPR / LPR</span>
+                    <span style="padding:2px 8px;background:#fef3c7;color:#92400e;border-radius:6px;font-size:11px;font-weight:500;">Auto Open</span>
+                </div>
+            </div>
+
+            <div class="comp-card">
+                <div style="font-size:36px;margin-bottom:12px;">🔒</div>
+                <h3 style="font-size:18px;font-weight:700;color:#111827;margin-bottom:8px;">Bollards Retractabili</h3>
+                <p style="color:#6b7280;font-size:14px;line-height:1.6;">Stâlpi retractabili din oțel inoxidabil. Protecție perimetrală anti-ram, zone pietonale și acces restricționat.</p>
+                <div style="margin-top:12px;display:flex;flex-wrap:wrap;gap:6px;">
+                    <span style="padding:2px 8px;background:#fce7f3;color:#9d174d;border-radius:6px;font-size:11px;font-weight:500;">Anti-Ram</span>
+                    <span style="padding:2px 8px;background:#fce7f3;color:#9d174d;border-radius:6px;font-size:11px;font-weight:500;">Inox</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ========== GHID ========== -->
+<section style="padding:40px 16px;background:#f9fafb;">
     <div style="max-width:896px;margin:0 auto;">
         <h2 style="font-size:24px;font-weight:700;color:#111827;margin-bottom:24px;">📚 Ghid Complet de Instalare</h2>
         <div style="display:flex;flex-direction:column;gap:16px;">
+
             <div class="accordion-item" style="border:1px solid #e5e7eb;border-radius:12px;overflow:hidden;">
-              <button onclick="toggleAccordion('proiectare')" style="width:100%;padding:16px 24px;background:#f9fafb;display:flex;justify-content:space-between;align-items:center;border:none;cursor:pointer;font-family:inherit;transition:background 0.2s;" onmouseover="this.style.background='#f3f4f6'" onmouseout="this.style.background='#f9fafb'">
-                <span style="font-size:18px;font-weight:700;color:#111827;">🔧 Proiectare</span>
+              <button onclick="toggleAccordion('proiectare')" style="width:100%;padding:16px 24px;background:#fff;display:flex;justify-content:space-between;align-items:center;border:none;cursor:pointer;font-family:inherit;transition:background 0.2s;" onmouseover="this.style.background='#f3f4f6'" onmouseout="this.style.background='#fff'">
+                <span style="font-size:18px;font-weight:700;color:#111827;">🔧 Evaluare și Dimensionare</span>
                 <span id="icon-proiectare" style="font-size:24px;transition:transform 0.3s;">👆</span>
               </button>
               <div id="content-proiectare" style="display:none;padding:16px 24px;color:#374151;line-height:1.7;">
-
-                <p>Proiectarea unui sistem de bariere auto începe cu evaluarea traficului și a tipului de acces necesar.</p>
-                <h4 style="font-weight:600;margin-top:16px;">Criterii de selecție:</h4>
+                <p>Alegerea barierei potrivite depinde de lățimea drumului, volumul de trafic și nivelul de securitate necesar.</p>
+                <h4 style="font-weight:600;margin-top:16px;">Ce evaluăm:</h4>
                 <ul style="list-style:disc;padding-left:24px;margin-top:8px;">
-                    <li style="margin-bottom:8px;">Lungimea brațului barierei în funcție de lățimea drumului</li>
-                    <li style="margin-bottom:8px;">Timpul de deschidere și închidere necesar</li>
-                    <li style="margin-bottom:8px;">Frecvența de utilizare zilnică estimată</li>
-                    <li style="margin-bottom:8px;">Metoda de comandă: telecomandă, cartelă, cititor numere auto</li>
-                    <li style="margin-bottom:8px;">Integrarea cu sistemul de control acces existent</li>
+                    <li style="margin-bottom:8px;">Lățimea căii de acces (determină lungimea brațului)</li>
+                    <li style="margin-bottom:8px;">Volumul de trafic: cicluri pe oră și pe zi</li>
+                    <li style="margin-bottom:8px;">Tipul de utilizare: rezidențial, comercial sau industrial</li>
+                    <li style="margin-bottom:8px;">Metoda de acces dorită: telecomandă, card, LPR, tichet</li>
+                    <li style="margin-bottom:8px;">Necesitatea detectoarelor de bucle inductive (anti-blocare vehicul)</li>
+                    <li style="margin-bottom:8px;">Integrare cu sisteme existente: interfon, control acces, camere</li>
+                    <li style="margin-bottom:8px;">Cerințe speciale: braț cu grilă anti-acces pieton, braț articulat pentru înălțime redusă</li>
                 </ul>
+                <div style="margin-top:16px;padding:12px 16px;background:#fff7ed;border-radius:8px;border-left:3px solid #ea580c;">
+                    <p style="font-size:14px;color:#c2410c;"><strong>💡 Sfat CSSI:</strong> Pentru parcări cu peste 50 de locuri, recomandăm barieră cu timp de deschidere sub 1.5s și buclă inductivă pentru detectare automată la ieșire.</p>
+                </div>
               </div>
             </div>
+
             <div class="accordion-item" style="border:1px solid #e5e7eb;border-radius:12px;overflow:hidden;">
-              <button onclick="toggleAccordion('montaj')" style="width:100%;padding:16px 24px;background:#f9fafb;display:flex;justify-content:space-between;align-items:center;border:none;cursor:pointer;font-family:inherit;transition:background 0.2s;" onmouseover="this.style.background='#f3f4f6'" onmouseout="this.style.background='#f9fafb'">
-                <span style="font-size:18px;font-weight:700;color:#111827;">🔨 Montaj</span>
-                <span id="icon-montaj" style="font-size:24px;transition:transform 0.3s;">👆</span>
+              <button onclick="toggleAccordion('instalare')" style="width:100%;padding:16px 24px;background:#fff;display:flex;justify-content:space-between;align-items:center;border:none;cursor:pointer;font-family:inherit;transition:background 0.2s;" onmouseover="this.style.background='#f3f4f6'" onmouseout="this.style.background='#fff'">
+                <span style="font-size:18px;font-weight:700;color:#111827;">🔨 Instalare și Configurare</span>
+                <span id="icon-instalare" style="font-size:24px;transition:transform 0.3s;">👆</span>
               </button>
-              <div id="content-montaj" style="display:none;padding:16px 24px;color:#374151;line-height:1.7;">
-
-                <p>Montajul barierei auto necesită o fundație solidă din beton pentru stabilitate.</p>
+              <div id="content-instalare" style="display:none;padding:16px 24px;color:#374151;line-height:1.7;">
+                <p>Instalarea include lucrări de fundație, montaj electromecanic și configurare completă a sistemului.</p>
+                <h4 style="font-weight:600;margin-top:16px;">Etapele instalării:</h4>
                 <ul style="list-style:disc;padding-left:24px;margin-top:8px;">
-                    <li style="margin-bottom:8px;">Turnarea fundației din beton armat conform specificațiilor</li>
-                    <li style="margin-bottom:8px;">Montarea corpului barierei pe fundație</li>
-                    <li style="margin-bottom:8px;">Instalarea brațului barierei și reglarea echilibrului</li>
-                    <li style="margin-bottom:8px;">Conectarea la alimentarea electrică</li>
-                    <li style="margin-bottom:8px;">Instalarea dispozitivelor de comandă și a senzorilor de siguranță</li>
-                    <li style="margin-bottom:8px;">Programarea și testarea sistemului</li>
+                    <li style="margin-bottom:8px;">Turnarea fundației din beton armat pentru corpul barierei</li>
+                    <li style="margin-bottom:8px;">Trecerea cablurilor subterane (alimentare, buclă, comunicare)</li>
+                    <li style="margin-bottom:8px;">Montarea corpului barierei și a brațului</li>
+                    <li style="margin-bottom:8px;">Tăierea și instalarea buclelor inductive în asfalt</li>
+                    <li style="margin-bottom:8px;">Conectarea cititoarelor de acces / tichetierelor</li>
+                    <li style="margin-bottom:8px;">Configurarea centralei: timpi, moduri de operare, interblocări</li>
+                    <li style="margin-bottom:8px;">Testarea dispozitivelor de siguranță (bandă senzorială, fotocellule)</li>
+                    <li style="margin-bottom:8px;">Integrarea cu software-ul de management parcare</li>
+                </ul>
+                <div style="margin-top:16px;padding:12px 16px;background:#ecfdf5;border-radius:8px;border-left:3px solid #10b981;">
+                    <p style="font-size:14px;color:#047857;"><strong>✅ Inclus:</strong> Fundație + buclă inductivă + 2 telecomenzi + lampă semnalizare + fotocellule + configurare completă.</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="accordion-item" style="border:1px solid #e5e7eb;border-radius:12px;overflow:hidden;">
+              <button onclick="toggleAccordion('integrari')" style="width:100%;padding:16px 24px;background:#fff;display:flex;justify-content:space-between;align-items:center;border:none;cursor:pointer;font-family:inherit;transition:background 0.2s;" onmouseover="this.style.background='#f3f4f6'" onmouseout="this.style.background='#fff'">
+                <span style="font-size:18px;font-weight:700;color:#111827;">🔗 Integrări și Automatizare</span>
+                <span id="icon-integrari" style="font-size:24px;transition:transform 0.3s;">👆</span>
+              </button>
+              <div id="content-integrari" style="display:none;padding:16px 24px;color:#374151;line-height:1.7;">
+                <p>Bariera auto devine și mai eficientă când este integrată cu alte sisteme de securitate și management.</p>
+                <h4 style="font-weight:600;margin-top:16px;">Integrări disponibile:</h4>
+                <ul style="list-style:disc;padding-left:24px;margin-top:8px;">
+                    <li style="margin-bottom:8px;"><strong>LPR / ANPR</strong> — deschidere automată prin recunoașterea numărului de înmatriculare</li>
+                    <li style="margin-bottom:8px;"><strong>Control acces cu card</strong> — cititoare RFID la distanță (long-range) pentru acces hands-free</li>
+                    <li style="margin-bottom:8px;"><strong>Interfon video</strong> — comunicare vizitator-rezident cu deschidere barieră de la distanță</li>
+                    <li style="margin-bottom:8px;"><strong>Camere supraveghere</strong> — înregistrare eveniment la fiecare acționare a barierei</li>
+                    <li style="margin-bottom:8px;"><strong>Sistem taxare</strong> — tichetieră intrare + automat plată + barieră ieșire</li>
+                    <li style="margin-bottom:8px;"><strong>Semafor</strong> — indicator roșu/verde pentru direcționarea traficului</li>
+                    <li style="margin-bottom:8px;"><strong>Software management</strong> — rapoarte, statistici trafic, abonamente, liste albe/negre</li>
                 </ul>
               </div>
             </div>
+
             <div class="accordion-item" style="border:1px solid #e5e7eb;border-radius:12px;overflow:hidden;">
-              <button onclick="toggleAccordion('mentenanta')" style="width:100%;padding:16px 24px;background:#f9fafb;display:flex;justify-content:space-between;align-items:center;border:none;cursor:pointer;font-family:inherit;transition:background 0.2s;" onmouseover="this.style.background='#f3f4f6'" onmouseout="this.style.background='#f9fafb'">
-                <span style="font-size:18px;font-weight:700;color:#111827;">🛠️ Mentenanță</span>
+              <button onclick="toggleAccordion('siguranta')" style="width:100%;padding:16px 24px;background:#fff;display:flex;justify-content:space-between;align-items:center;border:none;cursor:pointer;font-family:inherit;transition:background 0.2s;" onmouseover="this.style.background='#f3f4f6'" onmouseout="this.style.background='#fff'">
+                <span style="font-size:18px;font-weight:700;color:#111827;">🛡️ Siguranță</span>
+                <span id="icon-siguranta" style="font-size:24px;transition:transform 0.3s;">👆</span>
+              </button>
+              <div id="content-siguranta" style="display:none;padding:16px 24px;color:#374151;line-height:1.7;">
+                <h4 style="font-weight:600;">Dispozitive de siguranță standard:</h4>
+                <ul style="list-style:disc;padding-left:24px;margin-top:8px;">
+                    <li style="margin-bottom:8px;"><strong>Buclă inductivă</strong> — detectează prezența vehiculului sub barieră, previne coborârea pe mașină</li>
+                    <li style="margin-bottom:8px;"><strong>Bandă senzorială (costa)</strong> — senzor pe braț, oprire imediată la contact cu obstacol</li>
+                    <li style="margin-bottom:8px;"><strong>Fotocellule</strong> — barieră optică suplimentară de protecție</li>
+                    <li style="margin-bottom:8px;"><strong>Lampă semnalizare</strong> — avertizare vizuală în timpul mișcării</li>
+                    <li style="margin-bottom:8px;"><strong>Sistem break-away</strong> — brațul se desparte la impact puternic, prevenind daune majore</li>
+                    <li style="margin-bottom:8px;"><strong>Deblocare manuală</strong> — cheie pentru ridicare manuală în caz de urgență/pană curent</li>
+                </ul>
+              </div>
+            </div>
+
+            <div class="accordion-item" style="border:1px solid #e5e7eb;border-radius:12px;overflow:hidden;">
+              <button onclick="toggleAccordion('mentenanta')" style="width:100%;padding:16px 24px;background:#fff;display:flex;justify-content:space-between;align-items:center;border:none;cursor:pointer;font-family:inherit;transition:background 0.2s;" onmouseover="this.style.background='#f3f4f6'" onmouseout="this.style.background='#fff'">
+                <span style="font-size:18px;font-weight:700;color:#111827;">🛠️ Mentenanță și Service</span>
                 <span id="icon-mentenanta" style="font-size:24px;transition:transform 0.3s;">👆</span>
               </button>
               <div id="content-mentenanta" style="display:none;padding:16px 24px;color:#374151;line-height:1.7;">
-
-                <h4 style="font-weight:600;">Verificări semestriale:</h4>
+                <p style="color:#dc2626;font-weight:600;">⚠️ Barierele cu trafic intens necesită revizie la fiecare 6 luni!</p>
+                <h4 style="font-weight:600;margin-top:16px;">Ce include revizia:</h4>
                 <ul style="list-style:disc;padding-left:24px;margin-top:8px;">
-                    <li style="margin-bottom:8px;">Lubrifierea mecanismului de ridicare</li>
-                    <li style="margin-bottom:8px;">Verificarea și reglarea echilibrului brațului</li>
-                    <li style="margin-bottom:8px;">Inspecția conexiunilor electrice</li>
-                    <li style="margin-bottom:8px;">Testarea dispozitivelor de siguranță</li>
+                    <li style="margin-bottom:8px;">Ungerea mecanismului de ridicare și a articulațiilor</li>
+                    <li style="margin-bottom:8px;">Verificarea stării brațului (deformare, joc, uzură)</li>
+                    <li style="margin-bottom:8px;">Testarea buclei inductive și a sensibilității detectoarelor</li>
+                    <li style="margin-bottom:8px;">Verificarea benzii senzoriale și a fotocellulelor</li>
+                    <li style="margin-bottom:8px;">Inspecția cablajului și a conexiunilor electrice</li>
+                    <li style="margin-bottom:8px;">Verificarea acumulatorului de backup</li>
+                    <li style="margin-bottom:8px;">Testarea sistemului de deblocare manuală</li>
+                    <li style="margin-bottom:8px;">Reglarea timpilor de funcționare și a forței motorului</li>
                 </ul>
-              </div>
-            </div>
-            <div class="accordion-item" style="border:1px solid #e5e7eb;border-radius:12px;overflow:hidden;">
-              <button onclick="toggleAccordion('legislatie')" style="width:100%;padding:16px 24px;background:#f9fafb;display:flex;justify-content:space-between;align-items:center;border:none;cursor:pointer;font-family:inherit;transition:background 0.2s;" onmouseover="this.style.background='#f3f4f6'" onmouseout="this.style.background='#f9fafb'">
-                <span style="font-size:18px;font-weight:700;color:#111827;">📜 Legislație</span>
-                <span id="icon-legislatie" style="font-size:24px;transition:transform 0.3s;">👆</span>
-              </button>
-              <div id="content-legislatie" style="display:none;padding:16px 24px;color:#374151;line-height:1.7;">
-
-                <ul style="list-style:disc;padding-left:24px;">
-                    <li style="margin-bottom:12px;"><strong>Directiva Mașini 2006/42/CE</strong> - cerințe de siguranță pentru echipamente</li>
-                    <li style="margin-bottom:12px;"><strong>Standardul EN 12453</strong> - siguranța la utilizare a porților și barierelor</li>
-                    <li style="margin-bottom:12px;"><strong>Codul Rutier</strong> - semnalizarea corespunzătoare a barierelor pe căile de acces</li>
-                </ul>
+                <div style="margin-top:16px;padding:12px 16px;background:#fef3c7;border-radius:8px;border-left:3px solid #f59e0b;">
+                    <p style="font-size:14px;color:#92400e;"><strong>🔧 Contract mentenanță:</strong> Verificări semestriale, piese de schimb originale, intervenție de urgență în maxim 24h, brațe de rezervă în stoc.</p>
+                </div>
               </div>
             </div>
 
+        </div>
+    </div>
+</section>
+
+<!-- ========== BENEFICII ========== -->
+<section style="padding:48px 16px;background:#fff;">
+    <div style="max-width:896px;margin:0 auto;">
+        <h2 style="font-size:24px;font-weight:700;color:#111827;margin-bottom:24px;text-align:center;">✅ De Ce Să Alegeți CSSI?</h2>
+        <div style="display:grid;grid-template-columns:1fr;gap:16px;">
+            <div style="display:flex;gap:16px;padding:20px;background:#f9fafb;border-radius:12px;align-items:flex-start;">
+                <div style="width:48px;height:48px;min-width:48px;background:linear-gradient(135deg,#ea580c,#f97316);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:22px;">🏆</div>
+                <div>
+                    <h3 style="font-weight:700;font-size:16px;color:#111827;margin-bottom:4px;">Branduri de Top</h3>
+                    <p style="color:#6b7280;font-size:14px;line-height:1.5;">Instalăm bariere CAME, BFT, Nice, Beninca și FAAC — cele mai fiabile branduri de pe piață, cu garanție extinsă.</p>
+                </div>
+            </div>
+            <div style="display:flex;gap:16px;padding:20px;background:#f9fafb;border-radius:12px;align-items:flex-start;">
+                <div style="width:48px;height:48px;min-width:48px;background:linear-gradient(135deg,#047857,#10b981);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:22px;">🔗</div>
+                <div>
+                    <h3 style="font-weight:700;font-size:16px;color:#111827;margin-bottom:4px;">Soluții Complete Parcare</h3>
+                    <p style="color:#6b7280;font-size:14px;line-height:1.5;">De la o singură barieră până la sisteme complete de taxare cu tichetieră, LPR și software de management.</p>
+                </div>
+            </div>
+            <div style="display:flex;gap:16px;padding:20px;background:#f9fafb;border-radius:12px;align-items:flex-start;">
+                <div style="width:48px;height:48px;min-width:48px;background:linear-gradient(135deg,#7c3aed,#a855f7);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:22px;">⚡</div>
+                <div>
+                    <h3 style="font-weight:700;font-size:16px;color:#111827;margin-bottom:4px;">Depanare Urgentă 24h</h3>
+                    <p style="color:#6b7280;font-size:14px;line-height:1.5;">Barierele nu pot sta blocate. Intervenție de urgență rapidă, brațe și piese de schimb în stoc permanent.</p>
+                </div>
+            </div>
+            <div style="display:flex;gap:16px;padding:20px;background:#f9fafb;border-radius:12px;align-items:flex-start;">
+                <div style="width:48px;height:48px;min-width:48px;background:linear-gradient(135deg,#0369a1,#38bdf8);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:22px;">📊</div>
+                <div>
+                    <h3 style="font-weight:700;font-size:16px;color:#111827;margin-bottom:4px;">Management și Rapoarte</h3>
+                    <p style="color:#6b7280;font-size:14px;line-height:1.5;">Software centralizat: statistici trafic, abonamente, liste de acces, rapoarte financiare pentru parcări cu plată.</p>
+                </div>
+            </div>
         </div>
     </div>
 </section>
 
 <!-- ========== CTA ========== -->
-<section style="padding:48px 16px;background:linear-gradient(to right,#dc2626,#b91c1c);">
+<section style="padding:48px 16px;background:linear-gradient(135deg,#ea580c,#7c2d12);">
     <div style="max-width:768px;margin:0 auto;text-align:center;">
-        <h2 style="font-size:24px;font-weight:700;color:#fff;margin-bottom:16px;">Ai nevoie de barieră auto?</h2>
-        <a href="contact.html" style="display:inline-block;padding:16px 32px;background:#fff;color:#dc2626;font-weight:600;border-radius:12px;font-size:16px;transition:all 0.2s;box-shadow:0 4px 6px -1px rgba(0,0,0,0.1);" onmouseover="this.style.background='#f1f5f9'" onmouseout="this.style.background='#fff'">Cere Ofertă Gratuită</a>
+        <h2 style="font-size:24px;font-weight:700;color:#fff;margin-bottom:8px;">Ai nevoie de barieră auto?</h2>
+        <p style="color:rgba(254,215,170,0.8);margin-bottom:24px;">Evaluare gratuită + ofertă personalizată. Instalare completă cu fundație inclusă.</p>
+        <div style="display:flex;flex-wrap:wrap;justify-content:center;gap:12px;">
+            <a href="contact.html" style="display:inline-block;padding:16px 32px;background:#fff;color:#c2410c;font-weight:600;border-radius:12px;font-size:16px;transition:all 0.2s;box-shadow:0 4px 6px -1px rgba(0,0,0,0.1);" onmouseover="this.style.background='#f1f5f9'" onmouseout="this.style.background='#fff'">Cere Ofertă Gratuită</a>
+            <a href="tel:0752288400" style="display:inline-block;padding:16px 32px;background:transparent;color:#fff;font-weight:600;border-radius:12px;font-size:16px;border:2px solid rgba(255,255,255,0.3);transition:all 0.2s;" onmouseover="this.style.borderColor='#fff'" onmouseout="this.style.borderColor='rgba(255,255,255,0.3)'">📞 0752 288 400</a>
+        </div>
     </div>
 </section>
 
@@ -206,7 +402,7 @@
         <div style="display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:16px;font-size:12px;">
             <a href="tel:0268414740" style="color:#cbd5e1;display:flex;align-items:center;gap:4px;">📞 0268 414 740</a>
             <a href="https://wa.me/40752288400" style="color:#cbd5e1;display:flex;align-items:center;gap:4px;">💬 0752 288 400</a>
-            <a href="/cdn-cgi/l/email-protection#4e212828272d2b0e2c3c2b2f253d273d3a2b233d603c21" style="color:#cbd5e1;display:flex;align-items:center;gap:4px;">✉️ <span class="__cf_email__" data-cfemail="8ae5ecece3e9efcae8f8efebe1f9e3f9feefe7f9a4f8e5">[email&#160;protected]</span></a>
+            <a href="/cdn-cgi/l/email-protection#97f8f1f1fef4f2d7f4e4e4feb9e5f8" style="color:#cbd5e1;display:flex;align-items:center;gap:4px;">✉️ <span class="__cf_email__" data-cfemail="0e616868676d6b4e6d7d7d67207c61">[email&#160;protected]</span></a>
             <span style="color:#64748b;">L-V: 08:00-17:00</span>
         </div>
         <div style="margin-top:16px;text-align:center;"><p style="color:#475569;font-size:10px;">© 2024 CSSI · Powered by Break Sistems</p></div>
@@ -228,23 +424,18 @@ Cum vă pot ajuta? Scrieți: servicii, prețuri sau contact.</div></div></div>
     <div style="padding:16px;border-top:1px solid #e2e8f0;background:#fff;"><div style="display:flex;gap:8px;"><input type="text" id="chatInput" placeholder="Scrieți un mesaj..." onkeypress="if(event.key==='Enter')sendChat()" style="flex:1;padding:8px 16px;border:1px solid #e5e7eb;border-radius:999px;font-size:14px;outline:none;font-family:inherit;"><button onclick="sendChat()" style="width:40px;height:40px;background:#dc2626;color:#fff;border-radius:50%;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;"><svg style="width:20px;height:20px;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/></svg></button></div></div>
 </div>
 
-<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
 function toggleMobileMenu(){var m=document.getElementById('mobileMenu'),a=document.getElementById('menuIcon'),b=document.getElementById('closeIcon'),c=document.getElementById('menuBtn');if(m.classList.contains('open')){m.classList.remove('open');a.style.display='';b.style.display='none';c.style.background='linear-gradient(to right,#ef4444,#dc2626)';c.classList.add('animate-subtle-pulse');}else{m.classList.add('open');a.style.display='none';b.style.display='';c.style.background='#6b7280';c.classList.remove('animate-subtle-pulse');}}
 function closeMobile(){document.getElementById('mobileMenu').classList.remove('open');document.getElementById('menuIcon').style.display='';document.getElementById('closeIcon').style.display='none';}
-var chatR={'servicii':'Oferim o gamă completă de servicii:\n\n🔥 Detecție incendiu ISU\n📹 Camere supraveghere\n🚨 Alarme antiefracție\n🔐 Control acces\n⏱️ Pontaj electronic\n🚧 Bariere auto\n🔔 Interfoane\n🔊 Sonorizare\n🚗 Automatizări porți\n🏠 Uși garaj\n❄️ Aer condiționat\n💨 Ventilație\n⚡ Instalații electrice\n🔧 Instalații termice','preturi':'Prețurile variază. Pentru ofertă personalizată:\n\n📞 0268 414 740\n💬 WhatsApp: 0752 288 400\n📧 office@cssi.ro','contact':'📞 0268 414 740\n💬 0752 288 400\n📧 office@cssi.ro\n📍 Brașov\nL-V: 08:00-17:00','default':'Mulțumim! 😊\n📞 0268 414 740\n💬 0752 288 400\nSau scrieți: servicii, prețuri, contact'};
+var chatR={'servicii':'Oferim o gamă completă de servicii:\n\n🔥 Detecție incendiu ISU\n📹 Camere supraveghere\n🚨 Alarme antiefracție\n🔐 Control acces\n⏱️ Pontaj electronic\n🚧 Bariere auto\n🔔 Interfoane\n🔊 Sonorizare\n🚗 Automatizări porți\n🏠 Uși garaj\n❄️ Aer condiționat\n💨 Ventilație\n⚡ Instalații electrice\n🔧 Instalații termice','preturi':'Prețurile variază. Pentru ofertă personalizată:\n\n📞 0268 414 740\n💬 WhatsApp: 0752 288 400\n📧 office@cssi.ro','contact':'📞 0268 414 740\n💬 0752 288 400\n📧 office@cssi.ro\n📍 Brașov\nL-V: 08:00-17:00','bariere':'Bariere auto disponibile:\n\n🏠 Rezidențiale (braț 3-4m)\n🏢 Comerciale (braț 4-6m)\n🏭 Industriale (braț 6-8m)\n🅿️ Sisteme taxare parcare\n📷 LPR recunoaștere număr\n🔒 Bollards retractabili\n\nPentru ofertă: 0752 288 400','default':'Mulțumim! 😊\n📞 0268 414 740\n💬 0752 288 400\nSau scrieți: servicii, bariere, prețuri, contact'};
 function toggleChat(){var p=document.getElementById('chatPanel'),a=document.getElementById('chatOpenIcon'),b=document.getElementById('chatCloseIcon'),c=document.getElementById('chatBtn');if(p.classList.contains('open')){p.classList.remove('open');a.style.display='';b.style.display='none';c.style.background='linear-gradient(to right,#06b6d4,#10b981)';c.classList.add('animate-subtle-pulse');}else{p.classList.add('open');a.style.display='none';b.style.display='';c.style.background='#6b7280';c.classList.remove('animate-subtle-pulse');}}
 function sendChat(){var i=document.getElementById('chatInput'),t=i.value.trim();if(!t)return;var m=document.getElementById('chatMessages');m.innerHTML+='<div style="display:flex;justify-content:flex-end;"><div style="max-width:80%;padding:12px;border-radius:16px;border-top-right-radius:0;background:#dc2626;color:#fff;font-size:14px;">'+t+'</div></div>';i.value='';var l=t.toLowerCase(),r=chatR.default;for(var k in chatR){if(k!=='default'&&l.includes(k)){r=chatR[k];break;}}setTimeout(function(){m.innerHTML+='<div style="display:flex;justify-content:flex-start;"><div style="max-width:80%;padding:12px;border-radius:16px;border-top-left-radius:0;background:#fff;color:#374151;font-size:14px;box-shadow:0 1px 2px rgba(0,0,0,0.05);white-space:pre-line;">'+r+'</div></div>';m.scrollTop=m.scrollHeight;},500);m.scrollTop=m.scrollHeight;}
 </script>
 
 <script>
-var openId = null;
-function toggleAccordion(id) {
-    var allIds = ['proiectare', 'montaj', 'mentenanta', 'legislatie'];
-    if (openId === id) {
-        document.getElementById('content-'+id).style.display = 'none';
-        document.getElementById('icon-'+id).textContent = '👆';
-        document.getElementById('icon-'+id).style.transform = '';
-        openId = null;
-    } else {
-        allIds.forEach(function(aid) {
-            document
+var openId=null;
+function toggleAccordion(id){var allIds=['proiectare','instalare','integrari','siguranta','mentenanta'];if(openId===id){document.getElementById('content-'+id).style.display='none';document.getElementById('icon-'+id).textContent='👆';document.getElementById('icon-'+id).style.transform='';openId=null;}else{allIds.forEach(function(aid){document.getElementById('content-'+aid).style.display='none';document.getElementById('icon-'+aid).textContent='👆';document.getElementById('icon-'+aid).style.transform='';});document.getElementById('content-'+id).style.display='block';document.getElementById('icon-'+id).textContent='👇';document.getElementById('icon-'+id).style.transform='rotate(180deg)';openId=id;}}
+</script>
+
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"Service","name":"Bariere Auto - CSSI","description":"Bariere auto profesionale pentru parcări, rezidențial și industrial. Bariere cu braț 3-8m, sisteme taxare, LPR.","provider":{"@type":"LocalBusiness","name":"CSSI","telephone":"+40268414740","email":"office@cssi.ro","address":{"@type":"PostalAddress","addressLocality":"Brașov","addressCountry":"RO"},"aggr
