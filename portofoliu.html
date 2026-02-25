@@ -34,7 +34,7 @@
     /* NAV */
     .nav{position:sticky;top:0;z-index:1000;background:rgba(17,17,17,.98);backdrop-filter:blur(20px);border-bottom:1px solid #222;padding:0 24px}
     .nav-inner{max-width:1280px;margin:0 auto;display:flex;align-items:center;height:60px;gap:6px}
-    .nav-logo img{height:38px;width:auto;margin-right:12px}
+    .nav-logo img{height:38px;width:auto;margin-right:12px;background:rgba(255,255,255,0.12);padding:4px 8px;border-radius:6px;filter:drop-shadow(0 1px 2px rgba(0,0,0,0.3))}
     .nav-links{display:flex;align-items:center;gap:2px;flex:1}
     .nav-link{padding:7px 12px;border-radius:7px;font-size:13.5px;font-weight:500;color:#aaa;transition:all .2s;white-space:nowrap;cursor:pointer}
     .nav-link:hover{color:#fff;background:#1a1a1a}
@@ -246,9 +246,9 @@
       <button class="fb" onclick="fc('institutii',this)">&#127963; Institu&#x21B;ii publice <span class="fc">16</span></button>
       <button class="fb" onclick="fc('mai',this)">&#128737; MAI &amp; Securitate <span class="fc">4</span></button>
       <button class="fb" onclick="fc('transport',this)">&#128642; Transport &amp; Infra <span class="fc">8</span></button>
-      <button class="fb" onclick="fc('sanatate',this)">&#127973; S&#x103;n&#x103;tate <span class="fc">6</span></button>
+      <button class="fb" onclick="fc('sanatate',this)">&#127973; S&#x103;n&#x103;tate <span class="fc">7</span></button>
       <button class="fb" onclick="fc('educatie',this)">&#127891; Educa&#x21B;ie &amp; Cultur&#x103; <span class="fc">5</span></button>
-      <button class="fb" onclick="fc('companii',this)">&#127970; Companii private <span class="fc">9</span></button>
+      <button class="fb" onclick="fc('companii',this)">&#127970; Companii private <span class="fc">8</span></button>
       <button class="fb" onclick="fc('horeca',this)">&#127976; HoReCa &amp; Turism <span class="fc">4</span></button>
       <button class="fb" onclick="fc('cult',this)">&#9962; L&#x103;ca&#x219;uri de cult <span class="fc">5</span></button>
     </div>
@@ -342,7 +342,7 @@
     <div class="cat-hdr">
       <div class="cat-ico">&#127973;</div>
       <div><div class="cat-ttl">S&#x103;n&#x103;tate</div><div class="cat-sub">Spitale, clinici, laboratoare medicale</div></div>
-      <div class="cat-badge">6 clien&#x21B;i</div>
+      <div class="cat-badge">7 clien&#x21B;i</div>
     </div>
     <div class="grid">
       <div class="card feat">
@@ -358,6 +358,7 @@
       <div class="card"><div class="cn">Spitalul Boli Infec&#x21B;ioase Bra&#x219;ov</div><div class="cl">&#128205; Bra&#x219;ov</div><div class="tags"><span class="tag">&#128293; Detec&#x21B;ie incendiu</span></div></div>
       <div class="card"><div class="cn">Spitalul Or&#x103;&#x219;enesc S&acirc;nnicolau Mare</div><div class="cl">&#128205; Timi&#x219;</div><div class="tags"><span class="tag">&#128293; Detec&#x21B;ie incendiu</span></div></div>
       <div class="card"><div class="cn">Spitalul C&acirc;mpulung Moldovenesc</div><div class="cl">&#128205; Suceava</div><div class="tags"><span class="tag">&#128293; Detec&#x21B;ie incendiu</span></div></div>
+      <div class="card"><div class="cn">Medical Work Center</div><div class="cl">&#128205; Bra&#x219;ov</div><div class="tags"><span class="tag">&#9889; Instala&#x21B;ii electrice</span><span class="tag">&#128295; Sanitare</span></div></div>
     </div>
   </div>
 
@@ -389,7 +390,7 @@
     <div class="cat-hdr">
       <div class="cat-ico">&#127970;</div>
       <div><div class="cat-ttl">Companii Private &amp; Industrie</div><div class="cat-sub">Produc&#x21B;ie, servicii, construc&#x21B;ii, distribu&#x21B;ie</div></div>
-      <div class="cat-badge">9 clien&#x21B;i</div>
+      <div class="cat-badge">8 clien&#x21B;i</div>
     </div>
     <div class="grid">
       <div class="card feat">
@@ -404,7 +405,6 @@
       <div class="card"><div class="cn">Fabrica Marelli</div><div class="cl">&#128205; Ploie&#x219;ti</div><div class="tags"><span class="tag">&#128249; CCTV</span><span class="tag">&#128682; Control acces</span></div></div>
       <div class="card"><div class="cn">ROMCOLOR 2000 SA</div><div class="cl">&#128205; Rom&acirc;nia</div><div class="tags"><span class="tag">&#127968; U&#x219;i industriale garaj</span></div></div>
       <div class="card"><div class="cn">Algabeth SGI</div><div class="cl">&#128205; Rom&acirc;nia</div><div class="tags"><span class="tag">&#128682; Control acces</span><span class="tag">&#128663; Por&#x21B;i autoportante</span></div></div>
-      <div class="card"><div class="cn">Medical Work Center</div><div class="cl">&#128205; Bra&#x219;ov</div><div class="tags"><span class="tag">&#9889; Instala&#x21B;ii electrice</span><span class="tag">&#128295; Sanitare</span></div></div>
       <div class="card"><div class="cn">RECOBOL</div><div class="cl">&#128205; Bra&#x219;ov</div><div class="tags"><span class="tag">&#128682; Control acces</span><span class="tag">&#9201; Pontaj</span></div></div>
       <div class="card"><div class="cn">VERYTAS PLUS CONSTRUCT</div><div class="cl">&#128205; Rom&acirc;nia</div><div class="tags"><span class="tag">&#128682; Control acces</span></div></div>
       <div class="card"><div class="cn">Cavilas</div><div class="cl">&#128205; Bra&#x219;ov</div><div class="tags"><span class="tag">&#9889; Instala&#x21B;ii electrice</span><span class="tag">&#128295; Sanitare</span></div></div>
@@ -498,9 +498,4 @@
     x.target.textContent=v.toLocaleString('ro-RO')+(p===1?'+':'');if(p<1)requestAnimationFrame(tick);};
     requestAnimationFrame(tick);
   });},{threshold:.5});
-  document.querySelectorAll('[data-target]').forEach(el=>cobs.observe(el));
-
-  function fc(cat,btn){
-    document.querySelectorAll('.fb').forEach(b=>b.classList.remove('active'));
-    btn.classList.add('active');
-    document.querySelectorAll('.cat-sec
+  document.querySel
