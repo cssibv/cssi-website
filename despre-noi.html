@@ -365,4 +365,59 @@ function toggleAccordion(id) {
         openId = null;
     } else {
         allIds.forEach(function(aid) {
-            document.getElementById('
+            document.getElementById('content-'+aid).style.display = 'none';
+            document.getElementById('icon-'+aid).textContent = '👆';
+            document.getElementById('icon-'+aid).style.transform = '';
+        });
+        document.getElementById('content-'+id).style.display = 'block';
+        document.getElementById('icon-'+id).textContent = '👇';
+        document.getElementById('icon-'+id).style.transform = 'rotate(180deg)';
+        openId = id;
+    }
+}
+</script>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  "name": "CSSI - Confort, Securitate, Siguranță, Imobil",
+  "alternateName": "CSSI Brașov",
+  "url": "https://cssi.ro",
+  "logo": "https://cssi.ro/images/cssi-logo.png",
+  "foundingDate": "2003",
+  "description": "Companie cu peste 20 de ani experiență în sisteme de securitate, detecție incendiu, supraveghere video, control acces și instalații în Brașov și la nivel național.",
+  "address": {
+    "@type": "PostalAddress",
+    "streetAddress": "Str. Busuiocului Nr. 6",
+    "addressLocality": "Brașov",
+    "addressRegion": "Brașov",
+    "postalCode": "500234",
+    "addressCountry": "RO"
+  },
+  "contactPoint": {
+    "@type": "ContactPoint",
+    "telephone": "+40268414740",
+    "contactType": "customer service",
+    "availableLanguage": "Romanian"
+  },
+  "sameAs": [
+    "https://www.facebook.com/CSSI.bv/",
+    "https://www.instagram.com/cssi.ro/",
+    "https://www.youtube.com/@CSSI_ro",
+    "https://www.tiktok.com/@cssi.ro"
+  ],
+  "aggregateRating": {
+    "@type": "AggregateRating",
+    "ratingValue": "4.9",
+    "reviewCount": "127",
+    "bestRating": "5"
+  },
+  "numberOfEmployees": {
+    "@type": "QuantitativeValue",
+    "value": "50+"
+  }
+}
+</script>
+</body>
+</html>

@@ -1,8 +1,30 @@
 // CSSI Portal Service Worker v2.0
 // Enables: Install on phone, offline caching, fast loading
 
-const CACHE_NAME = 'cssi-portal-v2';
-const PAGES = [
+const CACHE_NAME = 'cssi-portal-v3';
+const PUBLIC_PAGES = [
+  '/',
+  '/servicii.html',
+  '/despre-noi.html',
+  '/contact.html',
+  '/portofoliu.html',
+  '/camere-supraveghere.html',
+  '/alarma-antiefractie.html',
+  '/detectie-incendiu-isu.html',
+  '/control-acces.html',
+  '/automatizari-porti.html',
+  '/bariere-auto.html',
+  '/aer-conditionat.html',
+  '/ventilatie.html',
+  '/instalatii-electrice.html',
+  '/instalatii-termice-sanitare.html',
+  '/pontaj-electronic.html',
+  '/interfoane-videointerfoane.html',
+  '/sonorizare.html',
+  '/usi-garaj.html',
+  '/politica-cookies.html'
+];
+const ADMIN_PAGES = [
   '/admin.html',
   '/admin/calendar-zilnic.html',
   '/admin/agenda-echipa.html',
@@ -14,6 +36,7 @@ const PAGES = [
   '/admin/necesar-materiale.html',
   '/admin/documente.html'
 ];
+const PAGES = [...PUBLIC_PAGES, ...ADMIN_PAGES];
 
 // Install: cache all portal pages
 self.addEventListener('install', event => {
@@ -59,7 +82,7 @@ self.addEventListener('fetch', event => {
           if (cached) return cached;
           // Fallback for HTML pages
           if (event.request.headers.get('accept').includes('text/html')) {
-            return caches.match('/admin.html');
+            return caches.match('/');
           }
         });
       })

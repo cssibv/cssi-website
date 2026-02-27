@@ -280,4 +280,64 @@ async function submitForm(e) {
         });
         if (resp.ok) {
             document.getElementById('contactForm').style.display = 'none';
-            document.getElementBy
+            document.getElementById('contactSuccess').style.display = 'block';
+        } else {
+            alert('Eroare la trimitere. Vă rugăm încercați din nou sau sunați la 0268 414 740.');
+        }
+    } catch(err) {
+        alert('Eroare de conexiune. Vă rugăm sunați la 0268 414 740.');
+    }
+});
+</script>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "LocalBusiness",
+  "name": "CSSI - Confort, Securitate, Siguranță, Imobil",
+  "url": "https://cssi.ro",
+  "telephone": "+40268414740",
+  "email": "office@cssi.ro",
+  "address": {
+    "@type": "PostalAddress",
+    "streetAddress": "Str. Busuiocului Nr. 6",
+    "addressLocality": "Brașov",
+    "addressRegion": "Brașov",
+    "postalCode": "500234",
+    "addressCountry": "RO"
+  },
+  "geo": {
+    "@type": "GeoCoordinates",
+    "latitude": "45.6427",
+    "longitude": "25.5944"
+  },
+  "openingHoursSpecification": {
+    "@type": "OpeningHoursSpecification",
+    "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
+    "opens": "08:00",
+    "closes": "17:00"
+  },
+  "contactPoint": [
+    {
+      "@type": "ContactPoint",
+      "telephone": "+40268414740",
+      "contactType": "customer service",
+      "availableLanguage": "Romanian"
+    },
+    {
+      "@type": "ContactPoint",
+      "telephone": "+40752288400",
+      "contactType": "sales",
+      "availableLanguage": "Romanian"
+    }
+  ],
+  "aggregateRating": {
+    "@type": "AggregateRating",
+    "ratingValue": "4.9",
+    "reviewCount": "127",
+    "bestRating": "5"
+  }
+}
+</script>
+</body>
+</html>

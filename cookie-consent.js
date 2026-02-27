@@ -93,7 +93,7 @@
                     '<button id="cssiCookieAccept" style="flex:1;padding:12px 16px;background:linear-gradient(135deg,#dc2626,#b91c1c);color:#fff;border:none;border-radius:10px;font-size:14px;font-weight:600;cursor:pointer;font-family:inherit;transition:transform 0.2s,box-shadow 0.2s;">Acceptă</button>' +
                     '<button id="cssiCookieReject" style="flex:1;padding:12px 16px;background:rgba(255,255,255,0.08);color:#9ca3af;border:1px solid rgba(255,255,255,0.1);border-radius:10px;font-size:14px;font-weight:500;cursor:pointer;font-family:inherit;transition:all 0.2s;">Refuză</button>' +
                 '</div>' +
-                '<p style="color:#6b7280;font-size:11px;text-align:center;margin:12px 0 0;line-height:1.5;">Puteți schimba preferințele oricând. <a href="politica-cookies.html" style="color:#f87171;text-decoration:underline;">Politica de cookies</a></p>' +
+                '<p style="color:#6b7280;font-size:11px;text-align:center;margin:12px 0 0;line-height:1.5;">Puteți schimba preferințele oricând. <a href="/politica-cookies.html" style="color:#f87171;text-decoration:underline;">Politica de cookies</a></p>' +
             '</div>';
 
         document.body.appendChild(overlay);
