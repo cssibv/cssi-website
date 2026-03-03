@@ -481,4 +481,24 @@ function toggleAccordion(id){var allIds=['proiectare','instalare','evacuare','co
 {"@context": "https://schema.org", "@type": "Service", "name": "Sonorizare - CSSI", "description": "Sisteme de sonorizare profesionale: PA/VA, muzică ambientală, evacuare vocală. Proiectare și instalare.", "provider": {"@type": "LocalBusiness", "name": "CSSI - Confort, Securitate, Siguranță, Imobil", "telephone": "+40268414740", "email": "office@cssi.ro", "url": "https://cssi.ro", "address": {"@type": "PostalAddress", "streetAddress": "Str. Busuiocului Nr. 6", "addressLocality": "Brașov", "addressRegion": "Brașov", "postalCode": "500234", "addressCountry": "RO"}, "aggregateRating": {"@type": "AggregateRating", "ratingValue": "4.9", "reviewCount": "127", "bestRating": "5"}}, "areaServed": {"@type": "City", "name": "Brașov"}, "serviceType": ["Sonorizare PA/VA", "Muzică ambientală", "Evacuare vocală", "Sonorizare evenimente"]}
 </script>
 <script>
-document.querySelectorAll('.faq-item').forEa
+document.querySelectorAll('.faq-item').forEach(function(item){
+    item.querySelector('.faq-q').addEventListener('click',function(){
+        var wasOpen=item.classList.contains('open');
+        document.querySelectorAll('.faq-item').forEach(function(i){
+            i.classList.remove('open');
+            i.querySelector('.faq-a').style.maxHeight=null;
+        });
+        if(!wasOpen){
+            item.classList.add('open');
+            var a=item.querySelector('.faq-a');
+            a.style.maxHeight=a.scrollHeight+'px';
+        }
+    });
+});
+</script>
+
+<script type="application/ld+json">
+{"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "Ce sistem de sonorizare e potrivit pentru restaurantul meu?", "acceptedAnswer": {"@type": "Answer", "text": "Sonorizare ambientală cu boxe de tavan sau perete, amplificator cu zone, control volum per zonă. CSSI proiectează acustic pentru difuzare uniformă."}}, {"@type": "Question", "name": "Instalați și sisteme de evacuare vocală (EVAC)?", "acceptedAnswer": {"@type": "Answer", "text": "Da, sisteme de evacuare vocală conform EN 54-16, obligatorii pentru clădiri publice. Proiectare, instalare și certificare completă."}}, {"@type": "Question", "name": "Pot controla muzica din mai multe zone independent?", "acceptedAnswer": {"@type": "Answer", "text": "Da, sistemele multi-zonă permit surse audio și volume diferite în fiecare zonă — recepție, restaurant, terasă, sală conferințe."}}, {"@type": "Question", "name": "Se poate integra cu sistemul de detecție incendiu?", "acceptedAnswer": {"@type": "Answer", "text": "Absolut. La alarmă de incendiu, muzica se oprește automat și se activează mesajele de evacuare — integrare conformă cu normele ISU."}}, {"@type": "Question", "name": "Cât costă un sistem de sonorizare pentru un spațiu de 200 mp?", "acceptedAnswer": {"@type": "Answer", "text": "Prețul depinde de calitatea echipamentelor și numărul de zone. Sună la 0752 288 400 pentru evaluare gratuită și ofertă personalizată."}}]}
+</script>
+</body>
+</html>

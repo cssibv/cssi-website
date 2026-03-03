@@ -510,6 +510,28 @@ function toggleAccordion(id) {
     }
 }
 </script>
+<script>
+document.querySelectorAll('.faq-item').forEach(function(item){
+    item.querySelector('.faq-q').addEventListener('click',function(){
+        var wasOpen=item.classList.contains('open');
+        document.querySelectorAll('.faq-item').forEach(function(i){
+            i.classList.remove('open');
+            i.querySelector('.faq-a').style.maxHeight=null;
+        });
+        if(!wasOpen){
+            item.classList.add('open');
+            var a=item.querySelector('.faq-a');
+            a.style.maxHeight=a.scrollHeight+'px';
+        }
+    });
+});
+</script>
 
 <script type="application/ld+json">
-{"@context": "https://schema.org", "@type": "Organization", "name": "CSSI - Confort, Securitate, Siguranță, Imobil", "alternateName": "CSSI Brașov", "url": "https://cssi.ro", "logo": "https://cssi.ro/images/cssi-logo.png", "foundingDate": "2003", "description": "Companie cu peste 20 de ani experiență în sisteme de securitate, detecție incendiu, supraveghere video, control acces și instalații în Brașov și la nivel național.", "address": {"@type": "PostalAddress", "streetAddress": "Str. Busuiocului Nr. 6", "addressLocality": "Brașov", "addressRegion": "Brașov", "postalCode": "500234", "addressCountry": "RO"}, "telephone": "+40268414740", "email": "office@cssi.ro", "sameAs": ["https://www.facebook.com/CSSI.bv/", "https://www.instagram.com/cssi.ro/", "https://www.youtube.com/@CSSI_ro", "https://www.tiktok.com/@cssi.ro"], "aggregateRating": {"@type": "AggregateRating", "ratingValue": "4.9", "reviewCount": "127", "bestRating": "5"}, "numberOfEmployees": {"@type": "Q
+{"@context": "https://schema.org", "@type": "Organization", "name": "CSSI - Confort, Securitate, Siguranță, Imobil", "alternateName": "CSSI Brașov", "url": "https://cssi.ro", "logo": "https://cssi.ro/images/cssi-logo.png", "foundingDate": "2003", "description": "Companie cu peste 20 de ani experiență în sisteme de securitate, detecție incendiu, supraveghere video, control acces și instalații în Brașov și la nivel național.", "address": {"@type": "PostalAddress", "streetAddress": "Str. Busuiocului Nr. 6", "addressLocality": "Brașov", "addressRegion": "Brașov", "postalCode": "500234", "addressCountry": "RO"}, "telephone": "+40268414740", "email": "office@cssi.ro", "sameAs": ["https://www.facebook.com/CSSI.bv/", "https://www.instagram.com/cssi.ro/", "https://www.youtube.com/@CSSI_ro", "https://www.tiktok.com/@cssi.ro"], "aggregateRating": {"@type": "AggregateRating", "ratingValue": "4.9", "reviewCount": "127", "bestRating": "5"}, "numberOfEmployees": {"@type": "QuantitativeValue", "value": "30"}}
+</script>
+<script type="application/ld+json">
+{"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "De când activează CSSI pe piață?", "acceptedAnswer": {"@type": "Answer", "text": "CSSI (sub brandul Break Sistems) activează de peste 20 de ani în Brașov, cu experiență în sisteme de securitate, detecție incendiu, instalații electrice și HVAC. Am crescut de la o echipă mică la o companie cu multiple autorizații și mii de proiecte finalizate."}}, {"@type": "Question", "name": "Ce autorizații și licențe deține CSSI?", "acceptedAnswer": {"@type": "Answer", "text": "Deținem autorizare ANRE tip B pentru instalații electrice de joasă tensiune, autorizare ISU pentru proiectarea și instalarea sistemelor de detecție incendiu, și licență IGPR pentru sisteme de securitate. Toate autorizațiile sunt active și verificabile."}}, {"@type": "Question", "name": "În ce zone geografice oferiți servicii?", "acceptedAnswer": {"@type": "Answer", "text": "Sediul nostru e în Brașov, dar executăm lucrări în tot județul Brașov și în județele limitrofe (Sibiu, Covasna, Harghita, Prahova). Pentru proiecte mari (instituții, companii naționale), lucrăm în toată România."}}, {"@type": "Question", "name": "Oferiți garanție pe lucrări?", "acceptedAnswer": {"@type": "Answer", "text": "Da. Toate lucrările CSSI vin cu garanție pe manoperă (minim 2 ani) și garanția producătorului pe echipamente (2-5 ani, în funcție de brand). Oferim și contracte de mentenanță post-garanție pentru funcționare optimă pe termen lung."}}, {"@type": "Question", "name": "Cum pot solicita o ofertă?", "acceptedAnswer": {"@type": "Answer", "text": "Simplu: sună la 0752 288 400, trimite email la office@cssi.ro sau completează formularul de pe pagina de contact. Consultanța inițială și evaluarea la fața locului sunt gratuite — primești ofertă detaliată în maxim 48 ore."}}]}
+</script>
+</body>
+</html>

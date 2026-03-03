@@ -473,4 +473,24 @@ function toggleAccordion(id){var allIds=['centrala','instalare','sanitare','pard
 {"@context": "https://schema.org", "@type": "Service", "name": "Instalații Termice & Sanitare - CSSI", "description": "Instalații termice și sanitare: centrale termice, calorifere, pardoseală radiantă, instalații sanitare. Firmă autorizată.", "provider": {"@type": "LocalBusiness", "name": "CSSI - Confort, Securitate, Siguranță, Imobil", "telephone": "+40268414740", "email": "office@cssi.ro", "url": "https://cssi.ro", "address": {"@type": "PostalAddress", "streetAddress": "Str. Busuiocului Nr. 6", "addressLocality": "Brașov", "addressRegion": "Brașov", "postalCode": "500234", "addressCountry": "RO"}, "aggregateRating": {"@type": "AggregateRating", "ratingValue": "4.9", "reviewCount": "127", "bestRating": "5"}}, "areaServed": {"@type": "City", "name": "Brașov"}, "serviceType": ["Instalații termice", "Instalații sanitare", "Centrale termice", "Pardoseală radiantă"]}
 </script>
 <script>
-document.querySelectorAll('.faq-item').forEa
+document.querySelectorAll('.faq-item').forEach(function(item){
+    item.querySelector('.faq-q').addEventListener('click',function(){
+        var wasOpen=item.classList.contains('open');
+        document.querySelectorAll('.faq-item').forEach(function(i){
+            i.classList.remove('open');
+            i.querySelector('.faq-a').style.maxHeight=null;
+        });
+        if(!wasOpen){
+            item.classList.add('open');
+            var a=item.querySelector('.faq-a');
+            a.style.maxHeight=a.scrollHeight+'px';
+        }
+    });
+});
+</script>
+
+<script type="application/ld+json">
+{"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "Ce tip de centrală termică recomandați?", "acceptedAnswer": {"@type": "Answer", "text": "Centralele în condensare sunt cele mai eficiente (randament 98%+). Dimensionarea depinde de suprafață, izolație și nevoi de apă caldă. CSSI oferă consultanță gratuită."}}, {"@type": "Question", "name": "Faceți instalații de încălzire în pardoseală?", "acceptedAnswer": {"@type": "Answer", "text": "Da, proiectăm și executăm sisteme de încălzire în pardoseală — cea mai eficientă și confortabilă soluție de încălzire."}}, {"@type": "Question", "name": "Aveți autorizare ANRE pentru gaze?", "acceptedAnswer": {"@type": "Answer", "text": "Da, CSSI deține autorizări ANRE pentru instalații de gaze naturale și termice — lucrări executate legal, cu toate avizele necesare."}}, {"@type": "Question", "name": "Cât durează montajul unui sistem complet de încălzire?", "acceptedAnswer": {"@type": "Answer", "text": "Pentru o casă de 150 mp: 2-4 săptămâni, în funcție de complexitate. Include proiectare, execuție, probe și punere în funcțiune."}}, {"@type": "Question", "name": "Oferiți service pentru centrale termice?", "acceptedAnswer": {"@type": "Answer", "text": "Da, oferim service, mentenanță anuală, reparații și punere în funcțiune pentru principalele branduri: Vaillant, Viessmann, Buderus, Ariston, Bosch."}}]}
+</script>
+</body>
+</html>

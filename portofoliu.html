@@ -4,30 +4,9 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Portofoliu | CSSI</title>
-  <meta name="description" content="Peste 8.700 de proiecte finalizate in 20+ ani. Camere supraveghere, detectie incendiu, alarme, control acces, instalatii electrice si HVAC in Brasov." />
-  <meta name="robots" content="index, follow">
-  <link rel="canonical" href="https://cssi.ro/portofoliu.html">
-  <meta property="og:title" content="Portofoliu | CSSI Brașov">
-  <meta property="og:description" content="Peste 8.700 de proiecte finalizate în 20+ ani. Securitate, detecție incendiu, instalații.">
-  <meta property="og:type" content="website">
-  <meta property="og:url" content="https://cssi.ro/portofoliu.html">
-  <meta property="og:locale" content="ro_RO">
-  <meta property="og:site_name" content="CSSI Brașov">
-  <meta property="og:image" content="https://cssi.ro/images/og-cssi.png">
-  <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="Portofoliu | CSSI Brașov">
-  <meta name="twitter:description" content="Peste 8.700 de proiecte finalizate în 20+ ani.">
-  <meta name="twitter:image" content="https://cssi.ro/images/og-cssi.png">
-  <link rel="icon" type="image/png" sizes="96x96" href="/images/favicon-96x96.png">
-  <link rel="icon" type="image/x-icon" href="/images/favicon.ico">
-  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
-  <link rel="manifest" href="/images/site.webmanifest">
+  <meta name="description" content="Peste 8.700 de proiecte finalizate in 20+ ani." />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
-  <script src="/cookie-consent.js" defer></script>
-  <script type="application/ld+json">
-  {"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Acasă","item":"https://cssi.ro/"},{"@type":"ListItem","position":2,"name":"Portofoliu","item":"https://cssi.ro/portofoliu.html"}]}
-  </script>
   <style>
     *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
     html{scroll-behavior:smooth}
@@ -168,7 +147,8 @@
       .feat-count strong{display:inline;font-size:18px}
     }
   </style>
-  </head>
+  <script src="cookie-consent.js" defer></script>
+</head>
 <body>
 
 <div class="topbar">
@@ -181,7 +161,7 @@
 <nav class="nav">
   <div class="nav-inner">
     <a href="index.html" class="nav-logo">
-      <img src="/images/cssi-logo.png" alt="CSSI" />
+      <img src="https://eu.chat-img.sintra.ai/32c1b29c-0c86-4833-a031-e7c45e21a11e/983d52bb-2eb6-42f1-bed4-f94d769bb634/Logo_CSSI.png" alt="CSSI" />
     </a>
     <div class="nav-links">
       <a href="index.html" class="nav-link">&#127968; Acas&#x103;</a>
@@ -478,7 +458,7 @@
   <div class="ft-links">
     <a href="tel:0268414740">&#128222; 0268 414 740</a>
     <a href="https://wa.me/40752288400">&#128172; 0752 288 400</a>
-    <a href="mailto:office@cssi.ro" style="color:#cbd5e1;display:flex;align-items:center;gap:4px;">✉️ office@cssi.ro</a>
+    <a href="mailto:office@cssi.ro">&#9993; office@cssi.ro</a>
     <span style="color:#333">|</span>
     <span>L-V: 08:00-17:00</span>
   </div>
@@ -496,4 +476,15 @@
     x.target.textContent=v.toLocaleString('ro-RO')+(p===1?'+':'');if(p<1)requestAnimationFrame(tick);};
     requestAnimationFrame(tick);
   });},{threshold:.5});
-  document.querySelecto
+  document.querySelectorAll('[data-target]').forEach(el=>cobs.observe(el));
+
+  function fc(cat,btn){
+    document.querySelectorAll('.fb').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    document.querySelectorAll('.cat-sec').forEach(s=>{
+      s.style.display=(cat==='all'||s.dataset.cat===cat)?'':'none';
+    });
+  }
+</script>
+</body>
+</html>

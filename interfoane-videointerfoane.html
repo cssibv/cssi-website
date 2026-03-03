@@ -483,4 +483,24 @@ function toggleAccordion(id){var allIds=['proiectare','instalare','comparatie','
 {"@context": "https://schema.org", "@type": "Service", "name": "Interfoane & Videointerfoane - CSSI", "description": "Interfoane și videointerfoane profesionale: audio, video, IP WiFi. Instalare bloc și vilă.", "provider": {"@type": "LocalBusiness", "name": "CSSI - Confort, Securitate, Siguranță, Imobil", "telephone": "+40268414740", "email": "office@cssi.ro", "url": "https://cssi.ro", "address": {"@type": "PostalAddress", "streetAddress": "Str. Busuiocului Nr. 6", "addressLocality": "Brașov", "addressRegion": "Brașov", "postalCode": "500234", "addressCountry": "RO"}, "aggregateRating": {"@type": "AggregateRating", "ratingValue": "4.9", "reviewCount": "127", "bestRating": "5"}}, "areaServed": {"@type": "City", "name": "Brașov"}, "serviceType": ["Interfoane audio", "Videointerfoane", "Interfoane IP WiFi", "Instalare interfoane bloc"]}
 </script>
 <script>
-document.querySelectorAll('.faq-item').forEa
+document.querySelectorAll('.faq-item').forEach(function(item){
+    item.querySelector('.faq-q').addEventListener('click',function(){
+        var wasOpen=item.classList.contains('open');
+        document.querySelectorAll('.faq-item').forEach(function(i){
+            i.classList.remove('open');
+            i.querySelector('.faq-a').style.maxHeight=null;
+        });
+        if(!wasOpen){
+            item.classList.add('open');
+            var a=item.querySelector('.faq-a');
+            a.style.maxHeight=a.scrollHeight+'px';
+        }
+    });
+});
+</script>
+
+<script type="application/ld+json">
+{"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "Ce diferență e între interfon și videointerfon?", "acceptedAnswer": {"@type": "Answer", "text": "Interfonul permite doar comunicare audio, videinterfonul adaugă imagine video — vezi cine sună înainte să deschizi. Recomandăm videointerfon pentru securitate sporită."}}, {"@type": "Question", "name": "Pot conecta videointerfonul la telefon?", "acceptedAnswer": {"@type": "Answer", "text": "Da, modelele IP moderne permit comunicare și deschidere ușă direct de pe smartphone, chiar dacă nu ești acasă."}}, {"@type": "Question", "name": "Ce videointerfon e potrivit pentru un bloc?", "acceptedAnswer": {"@type": "Answer", "text": "Panou exterior vandal-proof cu taste/cod, monitor interior în fiecare apartament, posibilitate de integrare cu yala electrică și control acces."}}, {"@type": "Question", "name": "Cât durează instalarea pentru un bloc cu 20 apartamente?", "acceptedAnswer": {"@type": "Answer", "text": "Aproximativ 3-5 zile, în funcție de infrastructura existentă. CSSI realizează trasee discrete, fără deteriorarea esteticii clădirii."}}, {"@type": "Question", "name": "Pot păstra cablajul vechi?", "acceptedAnswer": {"@type": "Answer", "text": "Depinde de starea și tipul cablajului. Sistemele pe 2 fire funcționează pe instalația existentă. CSSI evaluează gratuit dacă e nevoie de recablare."}}]}
+</script>
+</body>
+</html>

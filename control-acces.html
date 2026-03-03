@@ -531,4 +531,24 @@ function toggleAccordion(id) {
 {"@context": "https://schema.org", "@type": "Service", "name": "Control Acces - CSSI", "description": "Sisteme de control acces profesionale: cititoare card, cod PIN, biometric, amprentă, recunoaștere facială. Proiectare, instalare și mentenanță.", "provider": {"@type": "LocalBusiness", "name": "CSSI - Confort, Securitate, Siguranță, Imobil", "telephone": "+40268414740", "email": "office@cssi.ro", "url": "https://cssi.ro", "address": {"@type": "PostalAddress", "streetAddress": "Str. Busuiocului Nr. 6", "addressLocality": "Brașov", "addressRegion": "Brașov", "postalCode": "500234", "addressCountry": "RO"}, "aggregateRating": {"@type": "AggregateRating", "ratingValue": "4.9", "reviewCount": "127", "bestRating": "5"}}, "areaServed": {"@type": "City", "name": "Brașov"}, "serviceType": ["Control acces card", "Control acces biometric", "Control acces recunoaștere facială", "Mentenanță control acces"]}
 </script>
 <script>
-document.querySelectorAll('.faq-item').forEa
+document.querySelectorAll('.faq-item').forEach(function(item){
+    item.querySelector('.faq-q').addEventListener('click',function(){
+        var wasOpen=item.classList.contains('open');
+        document.querySelectorAll('.faq-item').forEach(function(i){
+            i.classList.remove('open');
+            i.querySelector('.faq-a').style.maxHeight=null;
+        });
+        if(!wasOpen){
+            item.classList.add('open');
+            var a=item.querySelector('.faq-a');
+            a.style.maxHeight=a.scrollHeight+'px';
+        }
+    });
+});
+</script>
+
+<script type="application/ld+json">
+{"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "Ce tipuri de control acces instalați?", "acceptedAnswer": {"@type": "Answer", "text": "Cartele de proximitate, cititoare biometrice (amprentă, facial), cod PIN, smartphone (Bluetooth/NFC). Combinații multiple pentru securitate maximă."}}, {"@type": "Question", "name": "Pot gestiona accesul angajaților de la distanță?", "acceptedAnswer": {"@type": "Answer", "text": "Da, software-ul de management permite adăugarea/ștergerea utilizatorilor, setarea programelor de acces și vizualizarea rapoartelor de la orice calculator sau telefon."}}, {"@type": "Question", "name": "Se poate integra cu pontajul electronic?", "acceptedAnswer": {"@type": "Answer", "text": "Absolut. Sistemul de control acces CSSI se integrează nativ cu pontajul electronic — un singur badge pentru acces și prezență."}}, {"@type": "Question", "name": "Ce se întâmplă la o pană de curent?", "acceptedAnswer": {"@type": "Answer", "text": "Yalele electromagnetice se deblocează automat (fail-safe) pentru evacuare. Yalele electrice rămân blocate (fail-secure) pentru securitate. Alegem varianta potrivită fiecărei uși."}}, {"@type": "Question", "name": "Câte uși pot controla cu un singur sistem?", "acceptedAnswer": {"@type": "Answer", "text": "De la 1 la sute de uși, pe un singur software centralizat. Sistemele sunt scalabile — poți adăuga oricâte puncte de acces ulterior."}}]}
+</script>
+</body>
+</html>

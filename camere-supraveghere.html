@@ -542,4 +542,24 @@ function toggleAccordion(id) {
 {"@context": "https://schema.org", "@type": "Service", "name": "Camere Supraveghere - CSSI", "description": "Sisteme de supraveghere video profesionale: camere IP, NVR, DVR, camere PTZ. Proiectare, instalare și mentenanță. Peste 20 ani experiență, 8.700+ proiecte finalizate în Brașov.", "provider": {"@type": "LocalBusiness", "name": "CSSI - Confort, Securitate, Siguranță, Imobil", "telephone": "+40268414740", "email": "office@cssi.ro", "url": "https://cssi.ro", "address": {"@type": "PostalAddress", "streetAddress": "Str. Busuiocului Nr. 6", "addressLocality": "Brașov", "addressRegion": "Brașov", "postalCode": "500234", "addressCountry": "RO"}, "aggregateRating": {"@type": "AggregateRating", "ratingValue": "4.9", "reviewCount": "127", "bestRating": "5"}}, "areaServed": {"@type": "City", "name": "Brașov"}, "serviceType": ["Camere IP supraveghere", "Sisteme NVR/DVR", "Camere PTZ", "Mentenanță CCTV"]}
 </script>
 <script>
-document.querySelectorAll('.faq-item').forEa
+document.querySelectorAll('.faq-item').forEach(function(item){
+    item.querySelector('.faq-q').addEventListener('click',function(){
+        var wasOpen=item.classList.contains('open');
+        document.querySelectorAll('.faq-item').forEach(function(i){
+            i.classList.remove('open');
+            i.querySelector('.faq-a').style.maxHeight=null;
+        });
+        if(!wasOpen){
+            item.classList.add('open');
+            var a=item.querySelector('.faq-a');
+            a.style.maxHeight=a.scrollHeight+'px';
+        }
+    });
+});
+</script>
+
+<script type="application/ld+json">
+{"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "Câte camere am nevoie pentru un apartament?", "acceptedAnswer": {"@type": "Answer", "text": "Pentru un apartament standard, 2-4 camere sunt suficiente: intrarea principală, balcon/terasă și eventualele zone comune. CSSI oferă evaluare gratuită la fața locului."}}, {"@type": "Question", "name": "Pot vizualiza camerele de pe telefon?", "acceptedAnswer": {"@type": "Answer", "text": "Da, toate sistemele CSSI includ acces remote gratuit. Vizualizare live de pe telefon, tabletă sau laptop, oriunde în lume, fără abonament lunar."}}, {"@type": "Question", "name": "Cât stochează un sistem NVR?", "acceptedAnswer": {"@type": "Answer", "text": "Depinde de numărul de camere și rezoluție. Cu un HDD de 4TB, 8 camere la 4MP înregistrează continuu aproximativ 15-20 zile. CSSI dimensionează stocarea conform nevoilor tale."}}, {"@type": "Question", "name": "Camerele funcționează pe timp de noapte?", "acceptedAnswer": {"@type": "Answer", "text": "Da, camerele profesionale au infraroșu (IR) integrat cu rază de 30-80 metri. Modelele premium au și ColorVu — imagine color și noaptea."}}, {"@type": "Question", "name": "Cât costă un sistem complet de supraveghere?", "acceptedAnswer": {"@type": "Answer", "text": "Prețul variază în funcție de numărul de camere, rezoluție și funcționalități. Pentru o ofertă personalizată, sună la 0752 288 400 — consultanța e gratuită."}}]}
+</script>
+</body>
+</html>

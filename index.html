@@ -183,22 +183,28 @@
         </div>
 
         <!-- Mobile Menu -->
-        <div id="mobileMenu" style="background:#fff;border-radius:16px;box-shadow:0 20px 25px -5px rgba(0,0,0,0.1);margin:8px 12px;padding:8px;">
+        <div id="mobileMenu" style="background:#fff;border-radius:16px;box-shadow:0 20px 25px -5px rgba(0,0,0,0.1);margin:8px 12px;padding:8px;max-height:80vh;overflow-y:auto;">
             <nav style="display:flex;flex-direction:column;gap:4px;">
                 <a href="index.html" style="padding:10px 16px;font-size:16px;font-weight:500;color:#334155;border-radius:8px;" onmouseover="this.style.background='#fef2f2';this.style.color='#dc2626'" onmouseout="this.style.background='';this.style.color='#334155'">🏠 Acasă</a>
                 <button onclick="toggleServicesSubmenu()" style="padding:10px 16px;font-size:16px;font-weight:500;color:#334155;border-radius:8px;background:none;border:none;cursor:pointer;display:flex;justify-content:space-between;align-items:center;width:100%;font-family:inherit;text-align:left;">
                     🛠️ Servicii
                     <svg id="servicesArrow" style="width:16px;height:16px;transition:transform 0.2s;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
                 </button>
-                <div id="servicesSubmenu" style="padding-left:16px;max-height:256px;overflow-y:auto;">
+                <div id="servicesSubmenu" style="padding-left:16px;overflow-y:auto;">
                     <a href="detectie-incendiu-isu.html" onclick="closeMobile()" style="display:block;padding:8px 16px;font-size:14px;color:#475569;border-radius:8px;">🔥 Detecție Incendiu ISU</a>
                     <a href="camere-supraveghere.html" onclick="closeMobile()" style="display:block;padding:8px 16px;font-size:14px;color:#475569;border-radius:8px;">📹 Camere Supraveghere</a>
                     <a href="alarma-antiefractie.html" onclick="closeMobile()" style="display:block;padding:8px 16px;font-size:14px;color:#475569;border-radius:8px;">🚨 Alarmă Antiefracție</a>
                     <a href="control-acces.html" onclick="closeMobile()" style="display:block;padding:8px 16px;font-size:14px;color:#475569;border-radius:8px;">🚪 Control Acces</a>
+                    <a href="pontaj-electronic.html" onclick="closeMobile()" style="display:block;padding:8px 16px;font-size:14px;color:#475569;border-radius:8px;">⏱️ Pontaj Electronic</a>
                     <a href="bariere-auto.html" onclick="closeMobile()" style="display:block;padding:8px 16px;font-size:14px;color:#475569;border-radius:8px;">🚧 Bariere Auto</a>
+                    <a href="interfoane-videointerfoane.html" onclick="closeMobile()" style="display:block;padding:8px 16px;font-size:14px;color:#475569;border-radius:8px;">🔔 Interfoane & Videointerfoane</a>
+                    <a href="sonorizare.html" onclick="closeMobile()" style="display:block;padding:8px 16px;font-size:14px;color:#475569;border-radius:8px;">🔊 Sonorizare</a>
                     <a href="automatizari-porti.html" onclick="closeMobile()" style="display:block;padding:8px 16px;font-size:14px;color:#475569;border-radius:8px;">🚗 Automatizări Porți</a>
-                    <a href="instalatii-electrice.html" onclick="closeMobile()" style="display:block;padding:8px 16px;font-size:14px;color:#475569;border-radius:8px;">⚡ Instalații Electrice</a>
+                    <a href="usi-garaj.html" onclick="closeMobile()" style="display:block;padding:8px 16px;font-size:14px;color:#475569;border-radius:8px;">🏠 Uși Garaj</a>
                     <a href="aer-conditionat.html" onclick="closeMobile()" style="display:block;padding:8px 16px;font-size:14px;color:#475569;border-radius:8px;">❄️ Aer Condiționat</a>
+                    <a href="ventilatie.html" onclick="closeMobile()" style="display:block;padding:8px 16px;font-size:14px;color:#475569;border-radius:8px;">💨 Ventilație</a>
+                    <a href="instalatii-electrice.html" onclick="closeMobile()" style="display:block;padding:8px 16px;font-size:14px;color:#475569;border-radius:8px;">⚡ Instalații Electrice</a>
+                    <a href="instalatii-termice-sanitare.html" onclick="closeMobile()" style="display:block;padding:8px 16px;font-size:14px;color:#475569;border-radius:8px;">🔧 Instalații Termice & Sanitare</a>
                 </div>
                 <a href="despre-noi.html" onclick="closeMobile()" style="padding:10px 16px;font-size:16px;font-weight:500;color:#334155;border-radius:8px;">ℹ️ Despre Noi</a>
                 <a href="portofoliu.html" onclick="closeMobile()" style="padding:10px 16px;font-size:16px;font-weight:500;color:#334155;border-radius:8px;">📁 Portofoliu</a>
@@ -218,15 +224,15 @@
         <div style="position:absolute;inset:0;background:linear-gradient(to right,rgba(15,23,42,0.95),rgba(15,23,42,0.8),rgba(15,23,42,0.6));"></div>
     </div>
 
-    <div style="position:relative;max-width:1280px;margin:0 auto;padding:96px 16px 80px;" class="sm:pt-32">
+    <div class="hero-content sm:pt-32" style="position:relative;max-width:1280px;margin:0 auto;padding:96px 16px 80px;">
         <div style="display:grid;grid-template-columns:1fr;gap:64px;align-items:center;min-height:70vh;" class="lg-grid-2">
 
             <!-- Left Content -->
             <div style="color:#fff;" class="animate-fade-in">
-                <h1 style="font-size:clamp(2rem,5vw,3.75rem);font-weight:800;line-height:1.1;margin-bottom:16px;">
+                <h1 class="hero-title" style="font-size:clamp(2rem,5vw,3.75rem);font-weight:800;line-height:1.1;margin-bottom:16px;">
                     <span style="color:#ef4444;">Securitate</span> și Instalații în Brașov
                 </h1>
-                <h2 style="font-size:clamp(1.5rem,4vw,3rem);font-weight:800;line-height:1.1;margin-bottom:24px;background:linear-gradient(to right,#ef4444,#f97316);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">
+                <h2 class="hero-subtitle" style="font-size:clamp(1.5rem,4vw,3rem);font-weight:800;line-height:1.1;margin-bottom:24px;background:linear-gradient(to right,#ef4444,#f97316);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">
                     <span style="-webkit-text-fill-color:#ef4444;">S</span>iguranta pentru imobilul tau.
                 </h2>
                 <p style="font-size:clamp(1rem,2vw,1.25rem);color:#cbd5e1;margin-bottom:24px;line-height:1.7;max-width:576px;">
@@ -234,7 +240,7 @@
                 </p>
 
                 <!-- Stats -->
-                <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:40px;">
+                <div class="hero-stats" style="display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:40px;">
                     <div style="text-align:center;"><div style="font-size:clamp(1.25rem,3vw,1.875rem);font-weight:800;color:#fff;">8.700+</div><div style="color:#94a3b8;font-size:12px;margin-top:4px;">Proiecte</div></div>
                     <div style="text-align:center;"><div style="font-size:clamp(1.25rem,3vw,1.875rem);font-weight:800;color:#fff;">4.700+</div><div style="color:#94a3b8;font-size:12px;margin-top:4px;">Clienți</div></div>
                     <div style="text-align:center;"><div style="font-size:clamp(1.25rem,3vw,1.875rem);font-weight:800;color:#fff;">20+</div><div style="color:#94a3b8;font-size:12px;margin-top:4px;">Ani</div></div>
@@ -691,6 +697,10 @@ Cum vă pot ajuta? Scrieți: servicii, prețuri sau contact.</div>
     @media (max-width: 639px) {
         .hidden.sm\:block { display: none !important; }
         .sm\:hidden { display: block !important; }
+        .hero-content { padding-top: 110px !important; }
+        .hero-title { font-size: 1.75rem !important; margin-bottom: 8px !important; }
+        .hero-subtitle { font-size: 1.25rem !important; margin-bottom: 16px !important; }
+        .hero-stats { gap: 8px !important; margin-bottom: 24px !important; }
     }
     @media (max-width: 640px) {
         #chatPanel { width: calc(100vw - 48px) !important; right: 24px !important; }

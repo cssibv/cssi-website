@@ -488,4 +488,24 @@ function toggleAccordion(id){var allIds=['alegere','instalare','comparatie','izo
 {"@context": "https://schema.org", "@type": "Service", "name": "Uși de Garaj - CSSI", "description": "Uși de garaj secționale, rulou și basculante cu motor automat. Izolație termică, telecomandă și control din telefon.", "provider": {"@type": "LocalBusiness", "name": "CSSI - Confort, Securitate, Siguranță, Imobil", "telephone": "+40268414740", "email": "office@cssi.ro", "url": "https://cssi.ro", "address": {"@type": "PostalAddress", "streetAddress": "Str. Busuiocului Nr. 6", "addressLocality": "Brașov", "addressRegion": "Brașov", "postalCode": "500234", "addressCountry": "RO"}, "aggregateRating": {"@type": "AggregateRating", "ratingValue": "4.9", "reviewCount": "127", "bestRating": "5"}}, "areaServed": {"@type": "City", "name": "Brașov"}, "serviceType": ["Uși garaj secționale", "Uși garaj rulou", "Uși garaj basculante", "Automatizare uși garaj"]}
 </script>
 <script>
-document.querySelectorAll('.faq-item').forEa
+document.querySelectorAll('.faq-item').forEach(function(item){
+    item.querySelector('.faq-q').addEventListener('click',function(){
+        var wasOpen=item.classList.contains('open');
+        document.querySelectorAll('.faq-item').forEach(function(i){
+            i.classList.remove('open');
+            i.querySelector('.faq-a').style.maxHeight=null;
+        });
+        if(!wasOpen){
+            item.classList.add('open');
+            var a=item.querySelector('.faq-a');
+            a.style.maxHeight=a.scrollHeight+'px';
+        }
+    });
+});
+</script>
+
+<script type="application/ld+json">
+{"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "Ce tip de ușă de garaj e cea mai bună?", "acceptedAnswer": {"@type": "Answer", "text": "Ușile secționale sunt cele mai populare — izolație termică excelentă, funcționare silențioasă și nu ocupă spațiu în fața garajului."}}, {"@type": "Question", "name": "Pot automatiza o ușă de garaj existentă?", "acceptedAnswer": {"@type": "Answer", "text": "Da, în majoritatea cazurilor. CSSI evaluează gratuit compatibilitatea și montează motorul potrivit pe ușa existentă."}}, {"@type": "Question", "name": "Cât de sigure sunt ușile automate?", "acceptedAnswer": {"@type": "Answer", "text": "Foarte sigure — senzori de obstacol, limitatoare de forță, deblocare manuală de urgență. Toate sistemele CSSI respectă normele CE de siguranță."}}, {"@type": "Question", "name": "Ușa funcționează la pană de curent?", "acceptedAnswer": {"@type": "Answer", "text": "Da, toate motoarele au sistem de deblocare manuală. Opțional, se poate adăuga baterie de backup pentru funcționare electrică continuă."}}, {"@type": "Question", "name": "Cât durează montajul?", "acceptedAnswer": {"@type": "Answer", "text": "Ușă secțională nouă cu motor: 4-6 ore. Doar automatizare pe ușă existentă: 2-3 ore. Include montaj, reglaj și instruire."}}]}
+</script>
+</body>
+</html>

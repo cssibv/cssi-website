@@ -537,4 +537,24 @@ function toggleAccordion(id) {
 {"@context": "https://schema.org", "@type": "Service", "name": "Automatizări Porți - CSSI", "description": "Automatizări porți batante și culisante: motoare profesionale, telecomenzi, fotocellule, acces din telefon. Instalare și mentenanță.", "provider": {"@type": "LocalBusiness", "name": "CSSI - Confort, Securitate, Siguranță, Imobil", "telephone": "+40268414740", "email": "office@cssi.ro", "url": "https://cssi.ro", "address": {"@type": "PostalAddress", "streetAddress": "Str. Busuiocului Nr. 6", "addressLocality": "Brașov", "addressRegion": "Brașov", "postalCode": "500234", "addressCountry": "RO"}, "aggregateRating": {"@type": "AggregateRating", "ratingValue": "4.9", "reviewCount": "127", "bestRating": "5"}}, "areaServed": {"@type": "City", "name": "Brașov"}, "serviceType": ["Automatizare porți batante", "Automatizare porți culisante", "Telecomenzi și acces telefon", "Mentenanță automatizări"]}
 </script>
 <script>
-document.querySelectorAll('.faq-item').forEa
+document.querySelectorAll('.faq-item').forEach(function(item){
+    item.querySelector('.faq-q').addEventListener('click',function(){
+        var wasOpen=item.classList.contains('open');
+        document.querySelectorAll('.faq-item').forEach(function(i){
+            i.classList.remove('open');
+            i.querySelector('.faq-a').style.maxHeight=null;
+        });
+        if(!wasOpen){
+            item.classList.add('open');
+            var a=item.querySelector('.faq-a');
+            a.style.maxHeight=a.scrollHeight+'px';
+        }
+    });
+});
+</script>
+
+<script type="application/ld+json">
+{"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "Ce tip de automatizare e potrivită pentru poarta mea?", "acceptedAnswer": {"@type": "Answer", "text": "Depinde de tipul porții (culisantă, batantă, secțională) și greutatea acesteia. CSSI evaluează gratuit și recomandă motorul potrivit."}}, {"@type": "Question", "name": "Pot deschide poarta de pe telefon?", "acceptedAnswer": {"@type": "Answer", "text": "Da, cu modul Wi-Fi sau GSM poți controla poarta de oriunde. Funcționează și cu telecomenzi clasice, coduri PIN sau cartele de proximitate."}}, {"@type": "Question", "name": "Cât durează instalarea?", "acceptedAnswer": {"@type": "Answer", "text": "Pentru o poartă culisantă standard: 4-6 ore. Porți batante: 1 zi. Include montaj, reglaj și instruirea utilizatorului."}}, {"@type": "Question", "name": "Ce se întâmplă dacă se defectează motorul?", "acceptedAnswer": {"@type": "Answer", "text": "Cu contract de service CSSI, intervenție în maxim 24 ore. Folosim motoare de la producători de top cu garanție extinsă 3-5 ani."}}, {"@type": "Question", "name": "Automatizarea funcționează iarna la -20°C?", "acceptedAnswer": {"@type": "Answer", "text": "Da, motoarele profesionale funcționează între -20°C și +55°C. CSSI instalează și sisteme de încălzire pentru mecanisme, dacă e necesar."}}]}
+</script>
+</body>
+</html>

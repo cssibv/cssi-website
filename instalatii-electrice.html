@@ -476,4 +476,24 @@ function toggleAccordion(id){var allIds=['proiectare','executie','tablou','verif
 {"@context": "https://schema.org", "@type": "Service", "name": "Instalații Electrice - CSSI", "description": "Instalații electrice profesionale: tablouri electrice, cablare structurată, iluminat, priză de pământ. Autorizare ANRE.", "provider": {"@type": "LocalBusiness", "name": "CSSI - Confort, Securitate, Siguranță, Imobil", "telephone": "+40268414740", "email": "office@cssi.ro", "url": "https://cssi.ro", "address": {"@type": "PostalAddress", "streetAddress": "Str. Busuiocului Nr. 6", "addressLocality": "Brașov", "addressRegion": "Brașov", "postalCode": "500234", "addressCountry": "RO"}, "aggregateRating": {"@type": "AggregateRating", "ratingValue": "4.9", "reviewCount": "127", "bestRating": "5"}}, "areaServed": {"@type": "City", "name": "Brașov"}, "serviceType": ["Tablouri electrice", "Cablare structurată", "Iluminat profesional", "Priză de pământ"]}
 </script>
 <script>
-document.querySelectorAll('.faq-item').forEa
+document.querySelectorAll('.faq-item').forEach(function(item){
+    item.querySelector('.faq-q').addEventListener('click',function(){
+        var wasOpen=item.classList.contains('open');
+        document.querySelectorAll('.faq-item').forEach(function(i){
+            i.classList.remove('open');
+            i.querySelector('.faq-a').style.maxHeight=null;
+        });
+        if(!wasOpen){
+            item.classList.add('open');
+            var a=item.querySelector('.faq-a');
+            a.style.maxHeight=a.scrollHeight+'px';
+        }
+    });
+});
+</script>
+
+<script type="application/ld+json">
+{"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "Aveți autorizare ANRE?", "acceptedAnswer": {"@type": "Answer", "text": "Da, CSSI deține autorizare ANRE tip B (instalații electrice de joasă tensiune) — obligatorie pentru execuția legală a lucrărilor electrice."}}, {"@type": "Question", "name": "Cât costă o instalație electrică completă pentru o casă?", "acceptedAnswer": {"@type": "Answer", "text": "Depinde de suprafață, număr de circuite și dotări. CSSI oferă deviz detaliat gratuit după vizita la fața locului."}}, {"@type": "Question", "name": "Faceți și tablouri electrice industriale?", "acceptedAnswer": {"@type": "Answer", "text": "Da, proiectăm și executăm tablouri electrice de distribuție, automatizare și comandă pentru aplicații industriale și comerciale."}}, {"@type": "Question", "name": "Cât durează refacerea instalației electrice într-un apartament?", "acceptedAnswer": {"@type": "Answer", "text": "Pentru un apartament de 2-3 camere: 5-10 zile lucrătoare, în funcție de complexitate și finisaje. Lucrăm curat și eficient."}}, {"@type": "Question", "name": "Oferiți certificat de conformitate?", "acceptedAnswer": {"@type": "Answer", "text": "Da, la finalizare emitem buletinul de verificare PRAM (Proces Verbal de Recepție și Admitere) conform normativelor în vigoare."}}]}
+</script>
+</body>
+</html>

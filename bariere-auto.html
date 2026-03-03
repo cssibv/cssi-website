@@ -487,4 +487,24 @@ function toggleAccordion(id){var allIds=['proiectare','instalare','integrari','s
 {"@context": "https://schema.org", "@type": "Service", "name": "Bariere Auto - CSSI", "description": "Bariere auto profesionale pentru parcări, rezidențial și industrial. Bariere cu braț de 3-8m, sisteme de taxare, LPR. Instalare și mentenanță.", "provider": {"@type": "LocalBusiness", "name": "CSSI - Confort, Securitate, Siguranță, Imobil", "telephone": "+40268414740", "email": "office@cssi.ro", "url": "https://cssi.ro", "address": {"@type": "PostalAddress", "streetAddress": "Str. Busuiocului Nr. 6", "addressLocality": "Brașov", "addressRegion": "Brașov", "postalCode": "500234", "addressCountry": "RO"}, "aggregateRating": {"@type": "AggregateRating", "ratingValue": "4.9", "reviewCount": "127", "bestRating": "5"}}, "areaServed": {"@type": "City", "name": "Brașov"}, "serviceType": ["Bariere auto parcări", "Sisteme taxare parcare", "Bariere industriale", "Mentenanță bariere"]}
 </script>
 <script>
-document.querySelectorAll('.faq-item').forEa
+document.querySelectorAll('.faq-item').forEach(function(item){
+    item.querySelector('.faq-q').addEventListener('click',function(){
+        var wasOpen=item.classList.contains('open');
+        document.querySelectorAll('.faq-item').forEach(function(i){
+            i.classList.remove('open');
+            i.querySelector('.faq-a').style.maxHeight=null;
+        });
+        if(!wasOpen){
+            item.classList.add('open');
+            var a=item.querySelector('.faq-a');
+            a.style.maxHeight=a.scrollHeight+'px';
+        }
+    });
+});
+</script>
+
+<script type="application/ld+json">
+{"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "Ce tip de barieră e potrivită pentru parcarea mea?", "acceptedAnswer": {"@type": "Answer", "text": "Depinde de lățimea căii de acces (3-8 metri), frecvența de utilizare și nivelul de securitate dorit. CSSI oferă consultanță gratuită."}}, {"@type": "Question", "name": "Cât de rapid se ridică o barieră?", "acceptedAnswer": {"@type": "Answer", "text": "Barierele profesionale se ridică în 1-3 secunde. Modelele high-traffic procesează până la 400 de vehicule pe oră."}}, {"@type": "Question", "name": "Se pot integra cu sistemul de parcări?", "acceptedAnswer": {"@type": "Answer", "text": "Da — cititor LPR (recunoaștere numere), cartele, token-uri, aplicație mobilă. Integrare completă cu soft de management parcări."}}, {"@type": "Question", "name": "Ce barieră recomandați pentru o asociație de proprietari?", "acceptedAnswer": {"@type": "Answer", "text": "Barieră cu braț de 3-4 metri, telecomandă pentru fiecare locatar, plus opțional cititor de cartele. Soluție economică și durabilă."}}, {"@type": "Question", "name": "Cât costă montajul unei bariere auto?", "acceptedAnswer": {"@type": "Answer", "text": "Prețul include bariera, fundația, montajul și configurarea. Sună la 0752 288 400 pentru ofertă personalizată — estimare gratuită."}}]}
+</script>
+</body>
+</html>

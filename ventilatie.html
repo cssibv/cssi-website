@@ -445,4 +445,24 @@ function toggleAccordion(id){var allIds=['proiectare','recuperator','desfumare',
 {"@context": "https://schema.org", "@type": "Service", "name": "Ventilație - CSSI", "description": "Sisteme ventilație: recuperatoare căldură, hote industriale, ventilație mecanică. Proiectare și instalare.", "provider": {"@type": "LocalBusiness", "name": "CSSI - Confort, Securitate, Siguranță, Imobil", "telephone": "+40268414740", "email": "office@cssi.ro", "url": "https://cssi.ro", "address": {"@type": "PostalAddress", "streetAddress": "Str. Busuiocului Nr. 6", "addressLocality": "Brașov", "addressRegion": "Brașov", "postalCode": "500234", "addressCountry": "RO"}, "aggregateRating": {"@type": "AggregateRating", "ratingValue": "4.9", "reviewCount": "127", "bestRating": "5"}}, "areaServed": {"@type": "City", "name": "Brașov"}, "serviceType": ["Ventilație mecanică", "Recuperatoare căldură", "Hote industriale", "Ventilație climatizare"]}
 </script>
 <script>
-document.querySelectorAll('.faq-item').forEa
+document.querySelectorAll('.faq-item').forEach(function(item){
+    item.querySelector('.faq-q').addEventListener('click',function(){
+        var wasOpen=item.classList.contains('open');
+        document.querySelectorAll('.faq-item').forEach(function(i){
+            i.classList.remove('open');
+            i.querySelector('.faq-a').style.maxHeight=null;
+        });
+        if(!wasOpen){
+            item.classList.add('open');
+            var a=item.querySelector('.faq-a');
+            a.style.maxHeight=a.scrollHeight+'px';
+        }
+    });
+});
+</script>
+
+<script type="application/ld+json">
+{"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "Am nevoie de ventilație mecanică dacă am geamuri?", "acceptedAnswer": {"@type": "Answer", "text": "Geamurile termopan sunt etanșe și nu asigură ventilația necesară. Ventilația mecanică controlată este esențială pentru calitatea aerului interior și prevenirea mucegaiului."}}, {"@type": "Question", "name": "Ce tip de ventilație recomandați pentru birou?", "acceptedAnswer": {"@type": "Answer", "text": "Sistem centralizat cu recuperare de căldură (eficiență 90%+), filtrare HEPA și control CO₂. CSSI proiectează conform normativelor de sănătate în muncă."}}, {"@type": "Question", "name": "Ventilația cu recuperare de căldură chiar economisește energie?", "acceptedAnswer": {"@type": "Answer", "text": "Da, recuperează 80-95% din căldura aerului evacuat. Investiția se amortizează în 2-4 ani prin reducerea costurilor de încălzire."}}, {"@type": "Question", "name": "Faceți și hote industriale / ventilație pentru bucătării?", "acceptedAnswer": {"@type": "Answer", "text": "Da, proiectăm și instalăm hote profesionale, canale de ventilație și sisteme de compensare aer pentru bucătării comerciale și industriale."}}, {"@type": "Question", "name": "Cât de zgomotos este un sistem de ventilație?", "acceptedAnswer": {"@type": "Answer", "text": "Sistemele moderne sunt foarte silențioase: 25-35 dB la viteza normală — comparabil cu o șoaptă. CSSI instalează și atenuatoare de zgomot."}}]}
+</script>
+</body>
+</html>
