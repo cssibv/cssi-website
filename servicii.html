@@ -27,6 +27,9 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
     <script src="/cookie-consent.js" defer></script>
+    <script type="application/ld+json">
+    {"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Acasă","item":"https://cssi.ro/"},{"@type":"ListItem","position":2,"name":"Servicii","item":"https://cssi.ro/servicii.html"}]}
+    </script>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { font-family: 'Inter', sans-serif; color: #111827; background: #fff; overflow-x: hidden; }
@@ -155,11 +158,6 @@
             #chatPanel { width: calc(100vw - 48px) !important; right: 24px !important; }
         }
     </style>
-    <script src="cookie-consent.js" defer></script>
-    <link rel="canonical" href="https://cssi.ro/servicii.html">
-    <meta name="robots" content="index, follow">
-    <meta property="og:image" content="https://cssi.ro/images/og-cssi.png">
-    <meta property="og:url" content="https://cssi.ro/servicii.html">
 </head>
 <body>
 
@@ -191,7 +189,7 @@
     </div>
 
     <!-- Main Nav -->
-    <div id="navBg" style="transition:all 0.3s;background:rgba(255,255,255,0.95);backdrop-filter:blur(12px);box-shadow:0 1px 2px rgba(0,0,0,0.05);">
+    <div id="navBg" style="transition:all 0.3s;background:#ffffff;backdrop-filter:blur(12px);box-shadow:0 1px 2px rgba(0,0,0,0.05);">
         <div style="max-width:1280px;margin:0 auto;padding:0 12px;display:flex;justify-content:space-between;align-items:center;height:64px;" class="sm:px-6">
 
             <!-- Logo -->
@@ -534,7 +532,7 @@
         <div style="display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:16px;font-size:12px;">
             <a href="tel:0268414740" style="color:#cbd5e1;display:flex;align-items:center;gap:4px;">📞 0268 414 740</a>
             <a href="https://wa.me/40752288400" style="color:#cbd5e1;display:flex;align-items:center;gap:4px;">💬 0752 288 400</a>
-            <a href="/cdn-cgi/l/email-protection#92fdf4f4fbf1f7d2f1e1e1fbbce0fd" style="color:#cbd5e1;display:flex;align-items:center;gap:4px;">✉️ <span class="__cf_email__" data-cfemail="aac5ccccc3c9cfeac9d9d9c384d8c5">[email&#160;protected]</span></a>
+            <a href="mailto:office@cssi.ro" style="color:#cbd5e1;display:flex;align-items:center;gap:4px;">✉️ office@cssi.ro</a>
             <span style="color:#64748b;">L-V: 08:00-17:00</span>
         </div>
 
@@ -585,7 +583,7 @@ Cum vă pot ajuta? Scrieți: servicii, prețuri sau contact.</div>
 
 
 <!-- ========== JAVASCRIPT ========== -->
-<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+<script>
     // ===== MOBILE MENU =====
     function toggleMobileMenu() {
         const menu = document.getElementById('mobileMenu');
