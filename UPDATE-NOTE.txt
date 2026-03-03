@@ -1,0 +1,1 @@
+Note: index.html and contact.html have been updated with WhatsApp form integration.

@@ -1,6 +1,14 @@
 <!DOCTYPE html>
 <html lang="ro">
 <head>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-XGSRGB0BCS"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-XGSRGB0BCS');
+    </script>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Portofoliu | CSSI</title>
@@ -13,12 +21,15 @@
   <meta property="og:url" content="https://cssi.ro/portofoliu.html">
   <meta property="og:locale" content="ro_RO">
   <meta property="og:site_name" content="CSSI Brașov">
-  <meta property="og:image" content="https://cssi.ro/images/og-portofoliu.jpg">
+  <meta property="og:image" content="https://cssi.ro/images/og-cssi.png">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Portofoliu | CSSI Brașov">
   <meta name="twitter:description" content="Peste 8.700 de proiecte finalizate în 20+ ani.">
-  <meta name="twitter:image" content="https://cssi.ro/images/og-portofoliu.jpg">
-  <link rel="icon" href="https://eu.chat-img.sintra.ai/32c1b29c-0c86-4833-a031-e7c45e21a11e/983d52bb-2eb6-42f1-bed4-f94d769bb634/Logo_CSSI.png">
+  <meta name="twitter:image" content="https://cssi.ro/images/og-cssi.png">
+  <link rel="icon" type="image/png" sizes="96x96" href="/images/favicon-96x96.png">
+  <link rel="icon" type="image/x-icon" href="/images/favicon.ico">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+  <link rel="manifest" href="/images/site.webmanifest">
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
   <script src="cookie-consent.js" defer></script>
@@ -176,7 +187,7 @@
 <nav class="nav">
   <div class="nav-inner">
     <a href="index.html" class="nav-logo">
-      <img src="https://eu.chat-img.sintra.ai/32c1b29c-0c86-4833-a031-e7c45e21a11e/983d52bb-2eb6-42f1-bed4-f94d769bb634/Logo_CSSI.png" alt="CSSI" />
+      <img src="/images/cssi-logo.png" alt="CSSI" />
     </a>
     <div class="nav-links">
       <a href="index.html" class="nav-link">&#127968; Acas&#x103;</a>
@@ -473,7 +484,7 @@
   <div class="ft-links">
     <a href="tel:0268414740">&#128222; 0268 414 740</a>
     <a href="https://wa.me/40752288400">&#128172; 0752 288 400</a>
-    <a href="/cdn-cgi/l/email-protection#9af5fcfcf3f9ffdaf9e9e9f3f8ecb4e8f5">&#9993; <span class="__cf_email__" data-cfemail="87e8e1e1eee4e2c7e4f4f4eee5f1a9f5e8">[email&#160;protected]</span></a>
+    <a href="/cdn-cgi/l/email-protection#503f363639333510332323397e223f" style="color:#cbd5e1;display:flex;align-items:center;gap:4px;">✉️ <span class="__cf_email__" data-cfemail="e38c85858a8086a38090908acd918c">[email&#160;protected]</span></a>
     <span style="color:#333">|</span>
     <span>L-V: 08:00-17:00</span>
   </div>
@@ -491,21 +502,4 @@
     x.target.textContent=v.toLocaleString('ro-RO')+(p===1?'+':'');if(p<1)requestAnimationFrame(tick);};
     requestAnimationFrame(tick);
   });},{threshold:.5});
-  document.querySelectorAll('[data-target]').forEach(el=>cobs.observe(el));
-
-  function fc(cat,btn){
-    document.querySelectorAll('.fb').forEach(b=>b.classList.remove('active'));
-    btn.classList.add('active');
-    document.querySelectorAll('.cat-sec').forEach(s=>{
-      const show=cat==='all'||s.dataset.cat===cat;
-      s.style.display=show?'':'none';
-      if(show)setTimeout(()=>s.classList.add('vis'),10);
-      else s.classList.remove('vis');
-    });
-  }
-</script>
-<script type="application/ld+json">
-{"@context": "https://schema.org", "@type": "ItemList", "name": "Portofoliu CSSI Brașov", "description": "Peste 8.700 de proiecte finalizate în 20+ ani de activitate", "numberOfItems": 8700, "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Sisteme Detecție Incendiu ISU"}, {"@type": "ListItem", "position": 2, "name": "Camere Supraveghere CCTV"}, {"@type": "ListItem", "position": 3, "name": "Alarme Antiefracție"}, {"@type": "ListItem", "position": 4, "name": "Control Acces & Pontaj"}, {"@type": "ListItem", "position": 5, "name": "Automatizări Porți & Bariere"}, {"@type": "ListItem", "position": 6, "name": "Interfoane & Videointerfoane"}, {"@type": "ListItem", "position": 7, "name": "Instalații Electrice"}, {"@type": "ListItem", "position": 8, "name": "Instalații Termice & Sanitare"}, {"@type": "ListItem", "position": 9, "name": "Aer Condiționat & Ventilație"}, {"@type": "ListItem", "position": 10, "name": "Sonorizare"}, {"@type": "ListItem", "position": 11, "name": "Uși Garaj"}]}
-</script>
-</body>
-</html>
+  document.querySelecto
