@@ -37,19 +37,19 @@ a{text-decoration:none;color:inherit;}button{font-family:inherit;cursor:pointer;
 
 /* DASHBOARD */
 .dash{min-height:100vh;display:none;}
-.container{max-width:1400px;margin:0 auto;padding:16px;}
-@media(min-width:768px){.container{padding:24px;}}
+.container{max-width:1400px;margin:0 auto;padding:16px;}@media(min-width:768px){.container{padding:24px;}}
 
 /* Top Bar */
 .topbar{display:flex;align-items:center;justify-content:space-between;padding:12px 0 8px;}
 .topbar-left{display:flex;align-items:center;gap:12px;}
 .topbar-logo{width:36px;height:36px;border-radius:10px;object-fit:contain;}
-.topbar-brand{font-size:15px;font-weight:800;color:var(--dark);}
-.topbar-brand span{color:var(--red);}
+.topbar-brand{font-size:15px;font-weight:800;color:var(--dark);}.topbar-brand span{color:var(--red);}
 .topbar-right{display:flex;align-items:center;gap:8px;}
 .topbar-pill{display:inline-flex;align-items:center;gap:5px;padding:6px 12px;background:var(--dark);color:#fff;border-radius:99px;font-size:12px;font-weight:600;}
 .topbar-logout{background:none;border:1px solid var(--gray-b);color:var(--gray);font-size:12px;padding:6px 14px;border-radius:99px;font-weight:600;transition:all 0.2s;}
 .topbar-logout:hover{color:var(--red);border-color:var(--red);background:#fef2f2;}
+.sync-dot{width:8px;height:8px;border-radius:50%;display:inline-block;margin-right:4px;}
+.sync-dot.ok{background:var(--green);box-shadow:0 0 6px rgba(34,197,94,0.5);}.sync-dot.off{background:var(--gray-l);}
 
 /* Hero */
 .hero{padding:28px 24px;border-radius:20px;color:#fff;position:relative;overflow:hidden;margin-bottom:20px;}
@@ -68,67 +68,62 @@ a{text-decoration:none;color:inherit;}button{font-family:inherit;cursor:pointer;
 .hero-action:hover{background:rgba(255,255,255,0.18);transform:translateY(-1px);}
 
 /* KPI */
-.kpi-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-bottom:20px;}
-@media(min-width:768px){.kpi-grid{grid-template-columns:repeat(4,1fr);gap:16px;}}
-.kpi{background:#fff;border-radius:var(--radius);padding:18px;position:relative;overflow:hidden;box-shadow:var(--shadow);transition:all 0.3s;}
+.kpi-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:20px;}
+@media(min-width:768px){.kpi-grid{grid-template-columns:repeat(4,1fr);gap:12px;}}
+.kpi{background:#fff;border-radius:var(--radius);padding:16px;position:relative;overflow:hidden;box-shadow:var(--shadow);transition:all 0.3s;cursor:pointer;}
 .kpi:hover{transform:translateY(-2px);box-shadow:var(--shadow-md);}
-.kpi-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;}
-.kpi-icon{width:40px;height:40px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:20px;}
-.kpi-value{font-size:30px;font-weight:900;color:var(--dark);line-height:1;letter-spacing:-1px;}
-.kpi-label{font-size:12px;color:var(--gray);font-weight:500;margin-top:4px;}
+.kpi-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;}
+.kpi-icon{width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;}
+.kpi-change{font-size:10px;font-weight:700;padding:2px 6px;border-radius:4px;}
+.kpi-value{font-size:26px;font-weight:900;color:var(--dark);line-height:1;letter-spacing:-1px;}
+.kpi-label{font-size:11px;color:var(--gray);font-weight:500;margin-top:3px;}
 .kpi-bar{position:absolute;bottom:0;left:0;right:0;height:3px;}
 
 /* Section */
 .section-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;}
 .section-title{font-size:13px;font-weight:700;color:var(--gray);text-transform:uppercase;letter-spacing:1.5px;display:flex;align-items:center;gap:8px;}
-.section-action{font-size:12px;font-weight:600;color:var(--blue);padding:6px 12px;border-radius:8px;transition:all 0.2s;border:none;background:none;}
-.section-action:hover{background:#eff6ff;}
+.section-action{font-size:12px;font-weight:600;color:var(--blue);padding:6px 12px;border-radius:8px;transition:all 0.2s;border:none;background:none;}.section-action:hover{background:#eff6ff;}
 
 /* Kanban */
 .kanban-wrap{margin-bottom:24px;overflow-x:auto;-webkit-overflow-scrolling:touch;padding-bottom:8px;}
-.kanban-wrap::-webkit-scrollbar{height:6px;}
-.kanban-wrap::-webkit-scrollbar-track{background:transparent;}
-.kanban-wrap::-webkit-scrollbar-thumb{background:var(--gray-b);border-radius:3px;}
-.kanban{display:flex;gap:12px;min-width:max-content;padding:2px;}
-.kanban-col{width:200px;flex-shrink:0;background:#fff;border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden;}
-@media(min-width:1200px){.kanban-col{width:calc((100% - 84px)/8);min-width:160px;}}
-.kcol-head{padding:12px 14px;display:flex;align-items:center;justify-content:space-between;border-bottom:2px solid transparent;}
-.kcol-head.lead{border-color:var(--blue);background:#eff6ff;}
-.kcol-head.oferta{border-color:var(--purple);background:#f5f3ff;}
-.kcol-head.contract{border-color:var(--green);background:#f0fdf4;}
-.kcol-head.proiectare{border-color:var(--teal);background:#f0fdfa;}
-.kcol-head.executie{border-color:var(--orange);background:#fff7ed;}
-.kcol-head.receptie{border-color:var(--yellow);background:#fefce8;}
-.kcol-head.facturat{border-color:var(--pink);background:#fdf2f8;}
-.kcol-head.mentenanta{border-color:var(--gray);background:var(--gray-bg);}
-.kcol-name{font-size:11px;font-weight:700;color:var(--dark);text-transform:uppercase;letter-spacing:0.5px;}
-.kcol-count{font-size:11px;font-weight:700;width:22px;height:22px;border-radius:6px;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,0.06);color:var(--gray);}
-.kcol-body{padding:8px;min-height:100px;display:flex;flex-direction:column;gap:8px;}
-.kcard{background:var(--gray-bg);border-radius:var(--radius-sm);padding:12px;cursor:pointer;transition:all 0.2s;border:1px solid transparent;}
+.kanban-wrap::-webkit-scrollbar{height:6px;}.kanban-wrap::-webkit-scrollbar-thumb{background:var(--gray-b);border-radius:3px;}
+.kanban{display:flex;gap:10px;min-width:max-content;padding:2px;}
+.kanban-col{width:175px;flex-shrink:0;background:#fff;border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden;}
+@media(min-width:1200px){.kanban-col{width:calc((100% - 70px)/8);min-width:150px;}}
+.kcol-head{padding:10px 12px;display:flex;align-items:center;justify-content:space-between;border-bottom:2px solid transparent;}
+.kcol-head.lead{border-color:var(--blue);background:#eff6ff;}.kcol-head.oferta{border-color:var(--purple);background:#f5f3ff;}.kcol-head.contract{border-color:var(--green);background:#f0fdf4;}.kcol-head.proiectare{border-color:var(--teal);background:#f0fdfa;}.kcol-head.executie{border-color:var(--orange);background:#fff7ed;}.kcol-head.receptie{border-color:var(--yellow);background:#fefce8;}.kcol-head.facturat{border-color:var(--pink);background:#fdf2f8;}.kcol-head.mentenanta{border-color:var(--gray);background:var(--gray-bg);}
+.kcol-name{font-size:10px;font-weight:700;color:var(--dark);text-transform:uppercase;letter-spacing:0.5px;}
+.kcol-count{font-size:10px;font-weight:700;width:20px;height:20px;border-radius:6px;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,0.06);color:var(--gray);}
+.kcol-body{padding:6px;min-height:80px;display:flex;flex-direction:column;gap:6px;}
+.kcard{background:var(--gray-bg);border-radius:var(--radius-sm);padding:10px;cursor:pointer;transition:all 0.2s;border:1px solid transparent;}
 .kcard:hover{border-color:var(--gray-b);box-shadow:var(--shadow);transform:translateY(-1px);}
-.kcard-id{font-size:10px;font-weight:700;color:var(--gray);letter-spacing:0.5px;}
-.kcard-title{font-size:13px;font-weight:600;color:var(--dark);margin:4px 0;line-height:1.3;}
-.kcard-meta{display:flex;align-items:center;gap:6px;font-size:11px;color:var(--gray);flex-wrap:wrap;}
-.kcard-tag{padding:2px 8px;border-radius:6px;font-size:10px;font-weight:600;}
-.kcard-tag.alarm{background:#fef2f2;color:var(--red);}
-.kcard-tag.camera{background:#eff6ff;color:var(--blue);}
-.kcard-tag.incendiu{background:#fff7ed;color:var(--orange);}
-.kcard-tag.electric{background:#fefce8;color:#a16207;}
-.kcard-tag.install{background:#f0fdf4;color:#059669;}
-.kcard-tag.auto{background:#f5f3ff;color:var(--purple);}
-.kcard-val{font-size:11px;font-weight:700;color:var(--dark);margin-top:6px;}
-.kanban-empty{text-align:center;padding:16px;color:var(--gray-l);font-size:12px;font-style:italic;}
+.kcard-id{font-size:9px;font-weight:700;color:var(--gray);letter-spacing:0.5px;}
+.kcard-title{font-size:12px;font-weight:600;color:var(--dark);margin:3px 0;line-height:1.3;}
+.kcard-meta{display:flex;align-items:center;gap:4px;font-size:10px;color:var(--gray);flex-wrap:wrap;}
+.kcard-tag{padding:2px 6px;border-radius:5px;font-size:9px;font-weight:600;}
+.kcard-tag.alarm{background:#fef2f2;color:var(--red);}.kcard-tag.camera{background:#eff6ff;color:var(--blue);}.kcard-tag.incendiu{background:#fff7ed;color:var(--orange);}.kcard-tag.electric{background:#fefce8;color:#a16207;}.kcard-tag.install{background:#f0fdf4;color:#059669;}.kcard-tag.auto{background:#f5f3ff;color:var(--purple);}
+.kcard-val{font-size:10px;font-weight:700;color:var(--dark);margin-top:4px;}
+.kanban-empty{text-align:center;padding:12px;color:var(--gray-l);font-size:11px;font-style:italic;}
+
+/* Quick Stats Row */
+.quick-row{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:10px;margin-bottom:20px;}
+.quick-card{background:#fff;border-radius:var(--radius);padding:16px;box-shadow:var(--shadow);transition:all 0.2s;cursor:pointer;border-left:4px solid var(--gray-b);}
+.quick-card:hover{box-shadow:var(--shadow-md);transform:translateY(-1px);}
+.quick-title{font-size:11px;font-weight:700;color:var(--gray);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:8px;}
+.quick-items{font-size:12px;color:var(--dark);line-height:1.8;}
+.quick-items strong{font-weight:800;}
 
 /* Module Grid */
-.mod-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-bottom:24px;}
+.mod-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:24px;}
 @media(min-width:640px){.mod-grid{grid-template-columns:repeat(3,1fr);}}
 @media(min-width:1024px){.mod-grid{grid-template-columns:repeat(4,1fr);}}
-.mod-card{background:#fff;border-radius:var(--radius);padding:20px 16px;text-align:center;box-shadow:var(--shadow);transition:all 0.3s;display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:130px;border-left:4px solid transparent;cursor:pointer;position:relative;}
+@media(min-width:1280px){.mod-grid{grid-template-columns:repeat(5,1fr);}}
+.mod-card{background:#fff;border-radius:var(--radius);padding:18px 14px;text-align:center;box-shadow:var(--shadow);transition:all 0.3s;display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:120px;border-left:4px solid transparent;cursor:pointer;position:relative;}
 .mod-card:hover{transform:translateY(-3px);box-shadow:var(--shadow-lg);}
-.mod-card.new::after{content:'NOU';position:absolute;top:8px;right:8px;font-size:9px;font-weight:800;padding:2px 7px;border-radius:6px;background:var(--red);color:#fff;}
-.mod-card .m-icon{font-size:32px;margin-bottom:8px;}
-.mod-card .m-title{font-size:13px;font-weight:700;color:var(--dark);margin-bottom:2px;}
-.mod-card .m-desc{font-size:11px;color:var(--gray);}
+.mod-card.new::after{content:'v3';position:absolute;top:6px;right:6px;font-size:8px;font-weight:800;padding:2px 6px;border-radius:4px;background:var(--green);color:#fff;}
+.mod-card .m-icon{font-size:28px;margin-bottom:6px;}
+.mod-card .m-title{font-size:12px;font-weight:700;color:var(--dark);margin-bottom:1px;}
+.mod-card .m-desc{font-size:10px;color:var(--gray);}
 .mod-card[data-cat="proiecte"]{border-left-color:var(--red);}
 .mod-card[data-cat="org"]{border-left-color:var(--blue);}
 .mod-card[data-cat="mkt"]{border-left-color:var(--purple);}
@@ -136,21 +131,21 @@ a{text-decoration:none;color:inherit;}button{font-family:inherit;cursor:pointer;
 .mod-card[data-cat="tech"]{border-left-color:var(--orange);}
 .mod-card[data-cat="finance"]{border-left-color:var(--pink);}
 .mod-card[data-cat="maint"]{border-left-color:var(--teal);}
+.mod-card[data-cat="docs"]{border-left-color:#0ea5e9;}
 
 /* Alerts */
-.alerts{background:#fff;border-radius:var(--radius);box-shadow:var(--shadow);padding:16px;margin-bottom:24px;}
-.alert-item{display:flex;align-items:flex-start;gap:12px;padding:12px 0;border-bottom:1px solid var(--gray-bg);}
+.alerts{background:#fff;border-radius:var(--radius);box-shadow:var(--shadow);padding:14px;margin-bottom:24px;}
+.alert-item{display:flex;align-items:flex-start;gap:10px;padding:10px 0;border-bottom:1px solid var(--gray-bg);}
 .alert-item:last-child{border-bottom:none;}
 .alert-dot{width:8px;height:8px;border-radius:50%;margin-top:5px;flex-shrink:0;}
-.alert-text{font-size:13px;color:var(--dark);line-height:1.5;}
-.alert-time{font-size:11px;color:var(--gray-l);margin-top:2px;}
+.alert-text{font-size:12px;color:var(--dark);line-height:1.5;}
+.alert-time{font-size:10px;color:var(--gray-l);margin-top:2px;}
 
 /* Bottom Nav */
 .bottom-nav{position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1px solid var(--gray-b);box-shadow:0 -4px 20px rgba(0,0,0,0.06);padding:6px 12px;z-index:100;display:flex;gap:4px;}
 @media(min-width:768px){.bottom-nav{display:none;}}
 .bn-item{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:8px 4px;border-radius:10px;font-size:10px;font-weight:600;color:var(--gray);transition:all 0.2s;gap:2px;}
-.bn-item.active{color:var(--red);background:#fef2f2;}
-.bn-item .bn-icon{font-size:20px;}
+.bn-item.active{color:var(--red);background:#fef2f2;}.bn-item .bn-icon{font-size:20px;}
 
 /* Modal */
 .modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);backdrop-filter:blur(4px);z-index:200;align-items:center;justify-content:center;padding:16px;}
@@ -158,24 +153,20 @@ a{text-decoration:none;color:inherit;}button{font-family:inherit;cursor:pointer;
 .modal{background:#fff;border-radius:20px;width:100%;max-width:500px;max-height:90vh;overflow-y:auto;box-shadow:0 25px 60px rgba(0,0,0,0.3);}
 .modal-head{padding:20px 24px;border-bottom:1px solid var(--gray-b);display:flex;align-items:center;justify-content:space-between;}
 .modal-title{font-size:18px;font-weight:800;color:var(--dark);}
-.modal-close{width:32px;height:32px;border-radius:8px;border:none;background:var(--gray-bg);color:var(--gray);font-size:18px;display:flex;align-items:center;justify-content:center;transition:all 0.2s;}
-.modal-close:hover{background:#fef2f2;color:var(--red);}
+.modal-close{width:32px;height:32px;border-radius:8px;border:none;background:var(--gray-bg);color:var(--gray);font-size:18px;display:flex;align-items:center;justify-content:center;transition:all 0.2s;}.modal-close:hover{background:#fef2f2;color:var(--red);}
 .modal-body{padding:24px;}
 .form-group{margin-bottom:16px;}
-.form-label{display:block;font-size:13px;font-weight:600;color:var(--dark);margin-bottom:6px;}
-.form-label .req{color:var(--red);}
+.form-label{display:block;font-size:13px;font-weight:600;color:var(--dark);margin-bottom:6px;}.form-label .req{color:var(--red);}
 .form-input,.form-select,.form-textarea{width:100%;padding:12px 16px;border:2px solid var(--gray-b);border-radius:var(--radius-sm);font-size:14px;font-family:inherit;outline:none;transition:all 0.2s;background:#fff;}
 .form-input:focus,.form-select:focus,.form-textarea:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(59,130,246,0.08);}
 .form-textarea{min-height:80px;resize:vertical;}
-.form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
-@media(max-width:480px){.form-row{grid-template-columns:1fr;}}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;}@media(max-width:480px){.form-row{grid-template-columns:1fr;}}
 .form-submit{width:100%;padding:14px;background:linear-gradient(135deg,var(--green),#16a34a);color:#fff;border:none;border-radius:var(--radius-sm);font-size:15px;font-weight:700;transition:all 0.3s;}
 .form-submit:hover{transform:translateY(-1px);box-shadow:0 8px 20px -5px rgba(34,197,94,0.4);}
 
 .footer{text-align:center;color:var(--gray-xl);font-size:11px;padding:24px 0 100px;}
 .hidden{display:none!important;}
-@keyframes fadeUp{from{opacity:0;transform:translateY(12px);}to{opacity:1;transform:translateY(0);}}
-.fade-up{animation:fadeUp 0.4s ease both;}
+@keyframes fadeUp{from{opacity:0;transform:translateY(12px);}to{opacity:1;transform:translateY(0);}}.fade-up{animation:fadeUp 0.4s ease both;}
 </style>
 </head>
 <body>
@@ -204,6 +195,7 @@ a{text-decoration:none;color:inherit;}button{font-family:inherit;cursor:pointer;
             <div class="topbar-brand">CSSI <span>Portal</span></div>
         </div>
         <div class="topbar-right">
+            <span id="syncBadge" style="font-size:11px;color:var(--gray);display:flex;align-items:center"><span class="sync-dot off"></span>Demo</span>
             <span id="rolePill" class="topbar-pill"></span>
             <button onclick="doLogout()" class="topbar-logout">Ieși</button>
         </div>
@@ -216,33 +208,37 @@ a{text-decoration:none;color:inherit;}button{font-family:inherit;cursor:pointer;
         </div>
     </div>
 
+    <!-- KPI ROW 1: Proiecte & Financiar -->
     <div id="kpiSection" class="hidden">
-        <div class="section-head"><div class="section-title">📊 Rezumat</div></div>
-        <div class="kpi-grid fade-up">
-            <div class="kpi"><div class="kpi-top"><div class="kpi-icon" style="background:#eff6ff;">📋</div></div><div class="kpi-value" id="kpiProiecte">—</div><div class="kpi-label">Proiecte active</div><div class="kpi-bar" style="background:linear-gradient(90deg,var(--blue),#60a5fa);"></div></div>
-            <div class="kpi"><div class="kpi-top"><div class="kpi-icon" style="background:#f0fdf4;">💰</div></div><div class="kpi-value" id="kpiValoare">—</div><div class="kpi-label">Pipeline (RON)</div><div class="kpi-bar" style="background:linear-gradient(90deg,var(--green),#4ade80);"></div></div>
-            <div class="kpi"><div class="kpi-top"><div class="kpi-icon" style="background:#fef2f2;">📄</div></div><div class="kpi-value" id="kpiRestante">—</div><div class="kpi-label">Facturi restante</div><div class="kpi-bar" style="background:linear-gradient(90deg,var(--red),#f87171);"></div></div>
-            <div class="kpi"><div class="kpi-top"><div class="kpi-icon" style="background:#fff7ed;">🔧</div></div><div class="kpi-value" id="kpiMentenanta">—</div><div class="kpi-label">Mentenanțe scadente</div><div class="kpi-bar" style="background:linear-gradient(90deg,var(--orange),#fb923c);"></div></div>
-        </div>
+        <div class="section-head"><div class="section-title">📊 Rezumat General</div></div>
+        <div class="kpi-grid fade-up" id="kpiGrid"></div>
     </div>
 
+    <!-- QUICK STATS -->
+    <div id="quickSection" class="hidden">
+        <div class="quick-row" id="quickRow"></div>
+    </div>
+
+    <!-- KANBAN -->
     <div id="kanbanSection" class="hidden">
         <div class="section-head">
             <div class="section-title">📌 Board Proiecte</div>
-            <button class="section-action" onclick="openModal()">+ Proiect Nou</button>
+            <div><button class="section-action" onclick="openModal()">+ Proiect Nou</button><a href="admin/proiecte.html" class="section-action">Vezi toate →</a></div>
         </div>
         <div class="kanban-wrap fade-up"><div class="kanban" id="kanbanBoard"></div></div>
     </div>
 
+    <!-- ALERTS -->
     <div id="alertSection" class="hidden">
         <div class="section-head"><div class="section-title">🔔 Activitate Recentă</div></div>
         <div class="alerts fade-up" id="alertList"></div>
     </div>
 
-    <div class="section-head"><div class="section-title">📱 Module</div></div>
+    <!-- MODULES -->
+    <div class="section-head"><div class="section-title">📱 Module Portal</div></div>
     <div id="modGrid" class="mod-grid fade-up"></div>
 
-    <div class="footer">CSSI · Portal v3.0 · Sistem Integrat de Management</div>
+    <div class="footer">CSSI · Portal v3.0 · 14 Module · Sistem Integrat de Management</div>
 </div>
 </div>
 
@@ -283,14 +279,9 @@ a{text-decoration:none;color:inherit;}button{font-family:inherit;cursor:pointer;
             </div>
             <div class="form-group"><label class="form-label">Status inițial <span class="req">*</span></label>
                 <select class="form-select" name="status" required>
-                    <option value="Lead">📞 Lead</option>
-                    <option value="Ofertă">📋 Ofertă</option>
-                    <option value="Contract">✅ Contract</option>
-                    <option value="Proiectare">📐 Proiectare</option>
-                    <option value="Execuție">🔧 Execuție</option>
-                    <option value="Recepție">📸 Recepție</option>
-                    <option value="Facturat">💳 Facturat</option>
-                    <option value="Mentenanță">🔄 Mentenanță</option>
+                    <option value="Lead">📞 Lead</option><option value="Ofertă">📋 Ofertă</option><option value="Contract">✅ Contract</option>
+                    <option value="Proiectare">📐 Proiectare</option><option value="Execuție">🔧 Execuție</option><option value="Recepție">📸 Recepție</option>
+                    <option value="Facturat">💳 Facturat</option><option value="Mentenanță">🔄 Mentenanță</option>
                 </select>
             </div>
             <div class="form-group"><label class="form-label">Observații</label><textarea class="form-textarea" name="note" placeholder="Detalii suplimentare..."></textarea></div>
@@ -301,92 +292,88 @@ a{text-decoration:none;color:inherit;}button{font-family:inherit;cursor:pointer;
 </div>
 
 <script>
-// ═══════ PASSWORD HASHES (same as v2.0) ═══════
+// ═══════ PASSWORD HASHES ═══════
 var PW={"8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918":"admin","e87cb45c05ad389d58904ea398345c24b50f46c15d412d0f671e66b766247d39":"org","aceea3feef0902bbab40e8832bf7b92c2e058348d53602e7652fc571b3b9d3ff":"mkt","e04eb29020eaa961e99d3162635e9fe9585c5a1121bd88784c1378aa8837195c":"sales","fe9bbd400bb6cb314531e3462507661401959afc69aae96bc6aec2c213b83bc1":"tech"};
 
 // ═══════ ROLE CONFIG ═══════
 var ROLES={
-    admin:{name:"Administrator",greeting:"\ud83d\udc4b Salut, Mihai!",sub:"Acces total \u2014 proiecte, financiar, mentenan\u021b\u0103",pill:"\ud83d\udd11 Admin",gradient:"admin",
-        actions:[{l:"+ Proiect Nou",h:"javascript:openModal()",i:"\ud83d\udccb"},{l:"Board Proiecte",h:"admin/proiecte.html",i:"\ud83d\udccc"},{l:"Mentenan\u021b\u0103",h:"admin/mentenanta.html",i:"\ud83d\udd04"},{l:"Financiar",h:"admin/financiar.html",i:"\ud83d\udcb3"}],
-        showKanban:true,showKpi:true,showAlerts:true},
-    org:{name:"Organizare",greeting:"\ud83d\udc4b Salut!",sub:"Planific\u0103ri, echipe, agenda zilnic\u0103",pill:"\ud83d\udcc5 Organizare",gradient:"org",
-        actions:[{l:"Planificare",h:"admin/planificare.html",i:"\ud83d\udcc5"},{l:"Proiecte",h:"admin/proiecte.html",i:"\ud83d\udccb"}],
-        showKanban:true,showKpi:false,showAlerts:true},
-    mkt:{name:"Marketing",greeting:"\ud83c\udfa8 Salut, Echipa Marketing!",sub:"Post\u0103ri, campanii, resurse",pill:"\ud83d\ude80 Marketing",gradient:"mkt",
-        actions:[{l:"Calendar Social",h:"admin/marketing.html",i:"\ud83d\ude80"},{l:"Resurse Media",h:"admin/marketing.html#resurse",i:"\ud83c\udfa8"}],
-        showKanban:false,showKpi:false,showAlerts:false},
-    sales:{name:"V\u00e2nz\u0103ri",greeting:"\ud83d\udcbc Salut, Echipa V\u00e2nz\u0103ri!",sub:"Lead-uri, oferte, contracte",pill:"\ud83d\udcb0 V\u00e2nz\u0103ri",gradient:"sales",
-        actions:[{l:"CRM Clien\u021bi",h:"admin/crm-clienti.html",i:"\ud83d\udcb0"},{l:"Calculator Pre\u021b",h:"admin/calculator-pret.html",i:"\ud83e\uddee"},{l:"+ Proiect Nou",h:"javascript:openModal()",i:"\ud83d\udccb"}],
-        showKanban:true,showKpi:false,showAlerts:true},
-    tech:{name:"Tehnic",greeting:"\ud83d\udd27 Salut, Echipa Tehnic\u0103!",sub:"Execu\u021bie, rapoarte, materiale, proiectare",pill:"\ud83d\udd27 Tehnic",gradient:"tech",
-        actions:[{l:"Raport Lucrare",h:"admin/executie.html",i:"\u2705"},{l:"Solicit\u0103 Materiale",h:"admin/materiale.html",i:"\ud83d\udce6"},{l:"Proiectare",h:"admin/proiectare.html",i:"\ud83d\udcd0"}],
-        showKanban:true,showKpi:false,showAlerts:true}
+    admin:{name:"Administrator",greeting:"👋 Salut, Mihai!",sub:"Acces total — toate modulele portalului",pill:"🔑 Admin",gradient:"admin",
+        actions:[{l:"+ Proiect Nou",h:"javascript:openModal()",i:"📋"},{l:"Board Proiecte",h:"admin/proiecte.html",i:"📌"},{l:"CRM Clienți",h:"admin/crm-clienti.html",i:"💰"},{l:"Financiar",h:"admin/financiar.html",i:"💳"},{l:"Mentenanță",h:"admin/mentenanta.html",i:"🔄"}],
+        showKanban:true,showKpi:true,showQuick:true,showAlerts:true},
+    org:{name:"Organizare",greeting:"👋 Salut!",sub:"Planificări, echipe, agenda zilnică",pill:"📅 Organizare",gradient:"org",
+        actions:[{l:"Planificare",h:"admin/planificare.html",i:"📅"},{l:"Proiecte",h:"admin/proiecte.html",i:"📋"},{l:"Materiale",h:"admin/necesar-materiale.html",i:"📦"}],
+        showKanban:true,showKpi:false,showQuick:true,showAlerts:true},
+    mkt:{name:"Marketing",greeting:"🎨 Salut, Echipa Marketing!",sub:"Calendar social, campanii, resurse",pill:"🚀 Marketing",gradient:"mkt",
+        actions:[{l:"Calendar Social",h:"admin/calendar-social.html",i:"📅"},{l:"Marketing Hub",h:"admin/marketing.html",i:"📊"},{l:"Resurse Media",h:"admin/documente.html",i:"🎨"}],
+        showKanban:false,showKpi:false,showQuick:false,showAlerts:false},
+    sales:{name:"Vânzări",greeting:"💼 Salut, Echipa Vânzări!",sub:"Lead-uri, oferte, contracte",pill:"💰 Vânzări",gradient:"sales",
+        actions:[{l:"CRM Clienți",h:"admin/crm-clienti.html",i:"💰"},{l:"Calculator Preț",h:"admin/calculator-pret.html",i:"🧮"},{l:"+ Proiect Nou",h:"javascript:openModal()",i:"📋"}],
+        showKanban:true,showKpi:false,showQuick:true,showAlerts:true},
+    tech:{name:"Tehnic",greeting:"🔧 Salut, Echipa Tehnică!",sub:"Execuție, materiale, proiectare",pill:"🔧 Tehnic",gradient:"tech",
+        actions:[{l:"Raport Lucrare",h:"admin/executie.html",i:"✅"},{l:"Inventar",h:"admin/materiale.html",i:"📦"},{l:"Necesar Materiale",h:"admin/necesar-materiale.html",i:"🛒"},{l:"Proiectare",h:"admin/proiectare.html",i:"📐"}],
+        showKanban:true,showKpi:false,showQuick:true,showAlerts:true}
 };
 
 // ═══════ KANBAN STATUSES ═══════
 var STATUSES=[
-    {id:"lead",name:"Lead",icon:"\ud83d\udcde",cls:"lead"},
-    {id:"oferta",name:"Ofert\u0103",icon:"\ud83d\udccb",cls:"oferta"},
-    {id:"contract",name:"Contract",icon:"\u2705",cls:"contract"},
-    {id:"proiectare",name:"Proiectare",icon:"\ud83d\udcd0",cls:"proiectare"},
-    {id:"executie",name:"Execu\u021bie",icon:"\ud83d\udd27",cls:"executie"},
-    {id:"receptie",name:"Recep\u021bie",icon:"\ud83d\udcf8",cls:"receptie"},
-    {id:"facturat",name:"Facturat",icon:"\ud83d\udcb3",cls:"facturat"},
-    {id:"mentenanta",name:"Mentenan\u021b\u0103",icon:"\ud83d\udd04",cls:"mentenanta"}
+    {id:"lead",name:"Lead",icon:"📞",cls:"lead"},{id:"oferta",name:"Ofertă",icon:"📋",cls:"oferta"},
+    {id:"contract",name:"Contract",icon:"✅",cls:"contract"},{id:"proiectare",name:"Proiectare",icon:"📐",cls:"proiectare"},
+    {id:"executie",name:"Execuție",icon:"🔧",cls:"executie"},{id:"receptie",name:"Recepție",icon:"📸",cls:"receptie"},
+    {id:"facturat",name:"Facturat",icon:"💳",cls:"facturat"},{id:"mentenanta",name:"Mentenanță",icon:"🔄",cls:"mentenanta"}
 ];
+var SERVICE_TAGS={"Detecție Incendiu":{cls:"incendiu",s:"Incendiu"},"Alarmă Antiefracție":{cls:"alarm",s:"Alarmă"},"Supraveghere Video":{cls:"camera",s:"Camere"},"Instalații Electrice":{cls:"electric",s:"Electric"},"Instalații Sanitare":{cls:"install",s:"Sanitare"},"Automatizări Porți":{cls:"auto",s:"Porți"},"Proiect Complex":{cls:"incendiu",s:"Complex"}};
 
-var SERVICE_TAGS={"Detec\u021bie Incendiu":{cls:"incendiu",s:"Incendiu"},"Alarm\u0103 Antiefrac\u021bie":{cls:"alarm",s:"Alarm\u0103"},"Supraveghere Video":{cls:"camera",s:"Camere"},"Instala\u021bii Electrice":{cls:"electric",s:"Electric"},"Instala\u021bii Sanitare":{cls:"install",s:"Sanitare"},"Automatiz\u0103ri Por\u021bi":{cls:"auto",s:"Por\u021bi"},"Proiect Complex":{cls:"incendiu",s:"Complex"}};
-
-// ═══════ MODULES (12 connected) ═══════
+// ═══════ ALL 14 MODULES ═══════
 var MODULES=[
-    {id:"proiecte",h:"admin/proiecte.html",i:"\ud83d\udccb",t:"Proiecte",d:"Board Kanban + List\u0103",cat:"proiecte",isNew:true,roles:["admin","org","sales","tech"]},
-    {id:"crm",h:"admin/crm-clienti.html",i:"\ud83d\udcb0",t:"CRM Clien\u021bi",d:"Lead-uri & Pipeline",cat:"sales",roles:["admin","sales"]},
-    {id:"planificare",h:"admin/planificare.html",i:"\ud83d\udcc5",t:"Planificare",d:"Calendar + Agenda echipei",cat:"org",roles:["admin","org","tech"]},
-    {id:"executie",h:"admin/executie.html",i:"\u2705",t:"Execu\u021bie",d:"Rapoarte de lucrare",cat:"tech",roles:["admin","org","tech"]},
-    {id:"proiectare",h:"admin/proiectare.html",i:"\ud83d\udcd0",t:"Proiectare",d:"Avize ISU, scheme, dosare",cat:"tech",isNew:true,roles:["admin","tech"]},
-    {id:"mentenanta",h:"admin/mentenanta.html",i:"\ud83d\udd04",t:"Mentenan\u021b\u0103",d:"Contracte & verific\u0103ri",cat:"maint",isNew:true,roles:["admin","org","tech"]},
-    {id:"financiar",h:"admin/financiar.html",i:"\ud83d\udcb3",t:"Financiar",d:"Facturi emise / \u00eencasate / restante",cat:"finance",isNew:true,roles:["admin"]},
-    {id:"materiale",h:"admin/materiale.html",i:"\ud83d\udce6",t:"Materiale",d:"Solicit\u0103ri & stocuri",cat:"tech",roles:["admin","org","tech"]},
-    {id:"calculator",h:"admin/calculator-pret.html",i:"\ud83e\uddee",t:"Calculator Pre\u021b",d:"Genereaz\u0103 ofert\u0103 rapid\u0103",cat:"sales",roles:["admin","sales"]},
-    {id:"marketing",h:"admin/marketing.html",i:"\ud83d\ude80",t:"Marketing",d:"Calendar Social + Resurse",cat:"mkt",roles:["admin","mkt"]},
-    {id:"documente",h:"admin/documente.html",i:"\ud83d\udcc1",t:"Documente",d:"Contracte, PV, Autoriza\u021bii",cat:"org",roles:["admin","org","sales","tech"]}
+    {id:"proiecte",h:"admin/proiecte.html",i:"📋",t:"Proiecte",d:"Board Kanban + Listă",cat:"proiecte",v3:true,roles:["admin","org","sales","tech"]},
+    {id:"crm",h:"admin/crm-clienti.html",i:"💰",t:"CRM Clienți",d:"Lead-uri & Pipeline",cat:"sales",v3:true,roles:["admin","sales"]},
+    {id:"planificare",h:"admin/planificare.html",i:"📅",t:"Planificare",d:"Calendar · Agenda · Liste",cat:"org",v3:true,roles:["admin","org","tech"]},
+    {id:"executie",h:"admin/executie.html",i:"✅",t:"Execuție",d:"Rapoarte de lucrare",cat:"tech",v3:true,roles:["admin","org","tech"]},
+    {id:"proiectare",h:"admin/proiectare.html",i:"📐",t:"Proiectare",d:"Avize ISU, scheme, dosare",cat:"tech",v3:true,roles:["admin","tech"]},
+    {id:"mentenanta",h:"admin/mentenanta.html",i:"🔄",t:"Mentenanță",d:"Contracte & verificări",cat:"maint",v3:true,roles:["admin","org","tech"]},
+    {id:"financiar",h:"admin/financiar.html",i:"💳",t:"Financiar",d:"Facturi · Încasări · Restanțe",cat:"finance",v3:true,roles:["admin"]},
+    {id:"materiale",h:"admin/materiale.html",i:"📦",t:"Inventar & Stocuri",d:"Produse, stoc, mișcări",cat:"tech",v3:true,roles:["admin","org","tech"]},
+    {id:"necesar",h:"admin/necesar-materiale.html",i:"🛒",t:"Necesar Materiale",d:"Solicitări & Aprovizionare",cat:"tech",v3:true,roles:["admin","org","tech"]},
+    {id:"calculator",h:"admin/calculator-pret.html",i:"🧮",t:"Calculator Preț",d:"Estimări rapide",cat:"sales",v3:true,roles:["admin","sales"]},
+    {id:"social",h:"admin/calendar-social.html",i:"📅",t:"Calendar Social",d:"Postări · Calendar · Kanban",cat:"mkt",v3:true,roles:["admin","mkt"]},
+    {id:"marketing",h:"admin/marketing.html",i:"📊",t:"Marketing Hub",d:"Campanii · Resurse · Idei",cat:"mkt",v3:true,roles:["admin","mkt"]},
+    {id:"documente",h:"admin/documente.html",i:"📁",t:"Documente & Resurse",d:"Dosare · Template-uri · Media",cat:"docs",v3:true,roles:["admin","org","sales","tech"]}
 ];
 
-// ═══════ DEMO DATA (replaced by Sheets API) ═══════
+// ═══════ DEMO DATA ═══════
 var PROJECTS=[
-    {id:"CSSI-2026-001",client:"Hotel Cheile R\u00e2\u0219noavei",serviciu:"Detec\u021bie Incendiu",status:"Execu\u021bie",valoare:45000,loc:"R\u00e2\u0219nov"},
-    {id:"CSSI-2026-002",client:"Magazin Coresi",serviciu:"Supraveghere Video",status:"Lead",valoare:12000,loc:"Bra\u0219ov"},
-    {id:"CSSI-2026-003",client:"Vila Poiana",serviciu:"Alarm\u0103 Antiefrac\u021bie",status:"Ofert\u0103",valoare:8500,loc:"Poiana Bra\u0219ov"},
-    {id:"CSSI-2026-004",client:"Birouri IT Hub",serviciu:"Instala\u021bii Electrice",status:"Contract",valoare:67000,loc:"Bra\u0219ov"},
-    {id:"CSSI-2026-005",client:"Restaurant Central",serviciu:"Detec\u021bie Incendiu",status:"Proiectare",valoare:23000,loc:"Bra\u0219ov"},
-    {id:"CSSI-2026-006",client:"Depozit Ghimbav",serviciu:"Supraveghere Video",status:"Execu\u021bie",valoare:35000,loc:"Ghimbav"},
-    {id:"CSSI-2026-007",client:"\u0218coala Nr. 5",serviciu:"Detec\u021bie Incendiu",status:"Recep\u021bie",valoare:52000,loc:"Bra\u0219ov"},
-    {id:"CSSI-2026-008",client:"Pensiune Bran",serviciu:"Alarm\u0103 Antiefrac\u021bie",status:"Facturat",valoare:6200,loc:"Bran"},
-    {id:"CSSI-2026-009",client:"Prim\u0103ria S\u0103cele",serviciu:"Detec\u021bie Incendiu",status:"Mentenan\u021b\u0103",valoare:89000,loc:"S\u0103cele"},
-    {id:"CSSI-2026-010",client:"Mall Bra\u0219ov Center",serviciu:"Proiect Complex",status:"Lead",valoare:120000,loc:"Bra\u0219ov"},
-    {id:"CSSI-2026-011",client:"Clinica MedLife",serviciu:"Supraveghere Video",status:"Ofert\u0103",valoare:15000,loc:"Bra\u0219ov"},
-    {id:"CSSI-2026-012",client:"Fabrica Autoliv",serviciu:"Instala\u021bii Electrice",status:"Execu\u021bie",valoare:95000,loc:"Bra\u0219ov"},
-    {id:"CSSI-2026-013",client:"Reziden\u021bial Avantgarden",serviciu:"Automatiz\u0103ri Por\u021bi",status:"Contract",valoare:18000,loc:"Bra\u0219ov"},
-    {id:"CSSI-2026-014",client:"ANAF Bra\u0219ov",serviciu:"Detec\u021bie Incendiu",status:"Mentenan\u021b\u0103",valoare:42000,loc:"Bra\u0219ov"}
+    {id:"CSSI-2026-001",client:"Hotel Cheile Râșnoavei",serviciu:"Detecție Incendiu",status:"Execuție",valoare:45000,loc:"Râșnov"},
+    {id:"CSSI-2026-002",client:"Magazin Coresi",serviciu:"Supraveghere Video",status:"Lead",valoare:12000,loc:"Brașov"},
+    {id:"CSSI-2026-003",client:"Vila Poiana",serviciu:"Alarmă Antiefracție",status:"Ofertă",valoare:8500,loc:"Poiana Brașov"},
+    {id:"CSSI-2026-004",client:"Birouri IT Hub",serviciu:"Instalații Electrice",status:"Contract",valoare:67000,loc:"Brașov"},
+    {id:"CSSI-2026-005",client:"Restaurant Central",serviciu:"Detecție Incendiu",status:"Proiectare",valoare:23000,loc:"Brașov"},
+    {id:"CSSI-2026-006",client:"Depozit Ghimbav",serviciu:"Supraveghere Video",status:"Execuție",valoare:35000,loc:"Ghimbav"},
+    {id:"CSSI-2026-007",client:"Școala Nr. 5",serviciu:"Detecție Incendiu",status:"Recepție",valoare:52000,loc:"Brașov"},
+    {id:"CSSI-2026-008",client:"Pensiune Bran",serviciu:"Alarmă Antiefracție",status:"Facturat",valoare:6200,loc:"Bran"},
+    {id:"CSSI-2026-009",client:"Primăria Săcele",serviciu:"Detecție Incendiu",status:"Mentenanță",valoare:89000,loc:"Săcele"},
+    {id:"CSSI-2026-010",client:"Mall Brașov Center",serviciu:"Proiect Complex",status:"Lead",valoare:120000,loc:"Brașov"},
+    {id:"CSSI-2026-011",client:"Clinica MedLife",serviciu:"Supraveghere Video",status:"Ofertă",valoare:15000,loc:"Brașov"},
+    {id:"CSSI-2026-012",client:"Fabrica Autoliv",serviciu:"Instalații Electrice",status:"Execuție",valoare:95000,loc:"Brașov"},
+    {id:"CSSI-2026-013",client:"Rezidențial Avantgarden",serviciu:"Automatizări Porți",status:"Contract",valoare:18000,loc:"Brașov"},
+    {id:"CSSI-2026-014",client:"ANAF Brașov",serviciu:"Detecție Incendiu",status:"Mentenanță",valoare:42000,loc:"Brașov"}
 ];
 
 var ALERTS=[
-    {text:"Proiect CSSI-2026-012 (Fabrica Autoliv) \u2014 echipa a \u00eenceput montajul",color:"var(--green)",time:"Acum 2h"},
-    {text:"Mentenan\u021b\u0103 scadent\u0103: Prim\u0103ria S\u0103cele \u2014 verificare trimestrial\u0103 pe 15 martie",color:"var(--orange)",time:"M\u00e2ine"},
-    {text:"Factur\u0103 restant\u0103: Hotel Cheile R\u00e2\u0219noavei \u2014 45.000 RON, scadent\u0103 de 5 zile",color:"var(--red)",time:"Urgent"},
-    {text:"Lead nou de pe site: Mall Bra\u0219ov Center \u2014 proiect complex, 120.000 RON",color:"var(--blue)",time:"Azi"},
-    {text:"Proiectare complet\u0103: Restaurant Central \u2014 dosar ISU aprobat",color:"var(--teal)",time:"Ieri"}
+    {text:"🔧 Proiect CSSI-2026-012 (Fabrica Autoliv) — echipa a început montajul electric",color:"var(--green)",time:"Acum 2h"},
+    {text:"⏰ Mentenanță scadentă: Primăria Săcele — verificare trimestrială pe 15 martie",color:"var(--orange)",time:"Mâine"},
+    {text:"🔴 Factură restantă: Hotel Cheile Râșnoavei — 45.000 RON, scadentă de 5 zile",color:"var(--red)",time:"Urgent"},
+    {text:"📞 Lead nou: Mall Brașov Center — proiect complex CCTV + incendiu, 120.000 RON",color:"var(--blue)",time:"Azi"},
+    {text:"✅ Proiectare completă: Restaurant Central — dosar ISU aprobat, gata de execuție",color:"var(--teal)",time:"Ieri"},
+    {text:"📦 Stoc scăzut: Cablu FTP Cat6 — 8 role rămase (minim: 10)",color:"var(--orange)",time:"Ieri"},
+    {text:"📅 Post programat: Facebook — Sistem detecție Hotel Cheile Râșnoavei (5 martie)",color:"var(--purple)",time:"Mâine"},
+    {text:"🛒 Cerere materiale aprobată: Detectoare Bosch × 24 buc — proiect CSSI-2026-001",color:"var(--green)",time:"Acum 4h"}
 ];
 
 // ═══════ AUTH ═══════
 var role="";
 function sha256(m){return crypto.subtle.digest('SHA-256',new TextEncoder().encode(m)).then(function(b){return Array.from(new Uint8Array(b)).map(function(x){return x.toString(16).padStart(2,'0')}).join('')})}
-
-function doLogin(e){e.preventDefault();var p=document.getElementById('pw').value;sha256(p).then(function(h){if(PW[h]){role=PW[h];sessionStorage.setItem("cssi-role",role);showDash()}else{var err=document.getElementById('err');err.textContent="Parol\u0103 incorect\u0103!";err.style.display="block";document.getElementById('pw').value='';document.getElementById('pw').focus()}})}
-
+function doLogin(e){e.preventDefault();var p=document.getElementById('pw').value;sha256(p).then(function(h){if(PW[h]){role=PW[h];sessionStorage.setItem("cssi-role",role);showDash()}else{var err=document.getElementById('err');err.textContent="Parolă incorectă!";err.style.display="block";document.getElementById('pw').value='';document.getElementById('pw').focus()}})}
 function doLogout(){sessionStorage.removeItem("cssi-role");role="";document.getElementById('dash').style.display='none';document.getElementById('login').style.display='';document.getElementById('pw').value=''}
-
-// Auto-login
 (function(){var s=sessionStorage.getItem("cssi-role");if(s&&ROLES[s]){role=s;showDash()}})();
 
 // ═══════ DASHBOARD ═══════
@@ -398,46 +385,76 @@ function showDash(){
     document.getElementById('heroTitle').textContent=r.greeting;
     document.getElementById('heroSub').textContent=r.sub;
     document.getElementById('rolePill').textContent=r.pill;
-
     var ha=document.getElementById('heroActions');ha.innerHTML='';
     if(r.actions&&r.actions.length){ha.style.display='flex';r.actions.forEach(function(a){ha.innerHTML+='<a href="'+a.h+'" class="hero-action"><span>'+a.i+'</span> '+a.l+'</a>'})}
-
     tog('kpiSection',r.showKpi);if(r.showKpi)renderKPI();
+    tog('quickSection',r.showQuick);if(r.showQuick)renderQuick();
     tog('kanbanSection',r.showKanban);if(r.showKanban)renderKanban();
     tog('alertSection',r.showAlerts);if(r.showAlerts)renderAlerts();
     renderModules();
 }
-
 function tog(id,s){document.getElementById(id).classList.toggle('hidden',!s)}
-
-// ═══════ KPI ═══════
-function renderKPI(){
-    var active=PROJECTS.filter(function(p){return["Lead","Ofert\u0103","Contract","Proiectare","Execu\u021bie","Recep\u021bie"].indexOf(p.status)>=0}).length;
-    var val=PROJECTS.reduce(function(s,p){return s+p.valoare},0);
-    var rest=PROJECTS.filter(function(p){return p.status==="Facturat"}).length;
-    var mnt=PROJECTS.filter(function(p){return p.status==="Mentenan\u021b\u0103"}).length;
-    document.getElementById('kpiProiecte').textContent=active;
-    document.getElementById('kpiValoare').textContent=fmtRON(val);
-    document.getElementById('kpiRestante').textContent=rest;
-    document.getElementById('kpiMentenanta').textContent=mnt;
-}
 function fmtRON(n){if(n>=1e6)return(n/1e6).toFixed(1)+'M';if(n>=1e3)return(n/1e3).toFixed(0)+'K';return n+''}
+
+// ═══════ KPI — 8 cards for Admin ═══════
+function renderKPI(){
+    var active=PROJECTS.filter(function(p){return["Lead","Ofertă","Contract","Proiectare","Execuție","Recepție"].indexOf(p.status)>=0}).length;
+    var val=PROJECTS.reduce(function(s,p){return s+p.valoare},0);
+    var exec=PROJECTS.filter(function(p){return p.status==="Execuție"}).length;
+    var leads=PROJECTS.filter(function(p){return p.status==="Lead"||p.status==="Ofertă"}).length;
+    var rest=PROJECTS.filter(function(p){return p.status==="Facturat"}).length;
+    var mnt=PROJECTS.filter(function(p){return p.status==="Mentenanță"}).length;
+
+    var html='';
+    html+=kpiCard('📋','#eff6ff',active,'Proiecte active','var(--blue)');
+    html+=kpiCard('💰','#f0fdf4',fmtRON(val),'Pipeline total','var(--green)');
+    html+=kpiCard('🔧','#fff7ed',exec,'În execuție','var(--orange)');
+    html+=kpiCard('📞','#eff6ff',leads,'Lead-uri & Oferte','var(--blue)');
+    html+=kpiCard('📄','#fef2f2',rest,'Facturi emise','var(--red)');
+    html+=kpiCard('🔄','#f0fdfa',mnt,'Mentenanțe','var(--teal)');
+    html+=kpiCard('📦','#f5f3ff','3','Stoc scăzut','var(--purple)');
+    html+=kpiCard('📅','#fdf2f8','2','Postări programate','var(--pink)');
+    document.getElementById('kpiGrid').innerHTML=html;
+}
+function kpiCard(icon,bg,val,label,color){
+    return '<div class="kpi"><div class="kpi-top"><div class="kpi-icon" style="background:'+bg+'">'+icon+'</div></div><div class="kpi-value">'+val+'</div><div class="kpi-label">'+label+'</div><div class="kpi-bar" style="background:'+color+'"></div></div>';
+}
+
+// ═══════ QUICK STATS ═══════
+function renderQuick(){
+    var html='';
+    if(role==='admin'||role==='sales'){
+        html+='<a href="admin/crm-clienti.html" class="quick-card" style="border-left-color:var(--green)"><div class="quick-title">💰 CRM Pipeline</div><div class="quick-items"><strong>4</strong> lead-uri noi luna asta<br><strong>2</strong> oferte în așteptare<br><strong>627K</strong> RON valoare pipeline</div></a>';
+    }
+    if(role==='admin'||role==='org'||role==='tech'){
+        html+='<a href="admin/planificare.html" class="quick-card" style="border-left-color:var(--blue)"><div class="quick-title">📅 Planificare Azi</div><div class="quick-items"><strong>3</strong> echipe pe teren<br><strong>Hotel Cheile</strong> — montaj etaj 2<br><strong>Autoliv</strong> — cablare electrică</div></a>';
+    }
+    if(role==='admin'){
+        html+='<a href="admin/financiar.html" class="quick-card" style="border-left-color:var(--pink)"><div class="quick-title">💳 Financiar Luna</div><div class="quick-items"><strong>12</strong> facturi emise<br><strong>45K</strong> RON restant > 30 zile<br><strong>78%</strong> rată încasare</div></a>';
+    }
+    if(role==='admin'||role==='tech'){
+        html+='<a href="admin/materiale.html" class="quick-card" style="border-left-color:var(--orange)"><div class="quick-title">📦 Inventar</div><div class="quick-items"><strong>3</strong> produse sub stoc minim<br><strong>5</strong> cereri materiale noi<br><strong>2</strong> livrări în așteptare</div></a>';
+    }
+    if(role==='admin'||role==='mkt'){
+        html+='<a href="admin/calendar-social.html" class="quick-card" style="border-left-color:var(--purple)"><div class="quick-title">📅 Social Media</div><div class="quick-items"><strong>2</strong> postări programate<br><strong>3</strong> drafturi de finalizat<br><strong>7</strong> postări publicate luna asta</div></a>';
+    }
+    document.getElementById('quickRow').innerHTML=html;
+}
 
 // ═══════ KANBAN ═══════
 function renderKanban(){
     var b=document.getElementById('kanbanBoard');b.innerHTML='';
-    var statusMap={"Lead":"lead","Ofert\u0103":"oferta","Contract":"contract","Proiectare":"proiectare","Execu\u021bie":"executie","Recep\u021bie":"receptie","Facturat":"facturat","Mentenan\u021b\u0103":"mentenanta"};
-
+    var sm={"Lead":"lead","Ofertă":"oferta","Contract":"contract","Proiectare":"proiectare","Execuție":"executie","Recepție":"receptie","Facturat":"facturat","Mentenanță":"mentenanta"};
     STATUSES.forEach(function(st){
-        var prj=PROJECTS.filter(function(p){return statusMap[p.status]===st.id});
+        var prj=PROJECTS.filter(function(p){return sm[p.status]===st.id});
         var col=document.createElement('div');col.className='kanban-col';
         col.innerHTML='<div class="kcol-head '+st.cls+'"><span class="kcol-name">'+st.icon+' '+st.name+'</span><span class="kcol-count">'+prj.length+'</span></div>';
         var body=document.createElement('div');body.className='kcol-body';
-        if(!prj.length){body.innerHTML='<div class="kanban-empty">Niciun proiect</div>'}
+        if(!prj.length){body.innerHTML='<div class="kanban-empty">—</div>'}
         else{prj.forEach(function(p){
             var t=SERVICE_TAGS[p.serviciu]||{cls:"install",s:p.serviciu};
             var c=document.createElement('div');c.className='kcard';
-            c.innerHTML='<div class="kcard-id">'+p.id+'</div><div class="kcard-title">'+p.client+'</div><div class="kcard-meta"><span class="kcard-tag '+t.cls+'">'+t.s+'</span><span>\ud83d\udccd '+p.loc+'</span></div><div class="kcard-val">'+p.valoare.toLocaleString('ro-RO')+' RON</div>';
+            c.innerHTML='<div class="kcard-id">'+p.id+'</div><div class="kcard-title">'+p.client+'</div><div class="kcard-meta"><span class="kcard-tag '+t.cls+'">'+t.s+'</span><span>📍 '+p.loc+'</span></div><div class="kcard-val">'+p.valoare.toLocaleString('ro-RO')+' RON</div>';
             body.appendChild(c);
         })}
         col.appendChild(body);b.appendChild(col);
@@ -455,7 +472,7 @@ function renderModules(){
     var g=document.getElementById('modGrid');g.innerHTML='';
     MODULES.forEach(function(m){
         if(role!=='admin'&&m.roles.indexOf(role)<0)return;
-        var c=document.createElement('a');c.href=m.h;c.className='mod-card'+(m.isNew?' new':'');c.setAttribute('data-cat',m.cat);
+        var c=document.createElement('a');c.href=m.h;c.className='mod-card'+(m.v3?' new':'');c.setAttribute('data-cat',m.cat);
         c.innerHTML='<div class="m-icon">'+m.i+'</div><div class="m-title">'+m.t+'</div><div class="m-desc">'+m.d+'</div>';
         g.appendChild(c);
     });
@@ -464,17 +481,25 @@ function renderModules(){
 // ═══════ ADD PROJECT MODAL ═══════
 function openModal(){document.getElementById('addProjectModal').classList.add('active')}
 function closeModal(){document.getElementById('addProjectModal').classList.remove('active')}
-
 function addProject(e){
     e.preventDefault();var f=document.getElementById('addProjectForm');var d=new FormData(f);
     var mx=0;PROJECTS.forEach(function(p){var n=parseInt(p.id.split('-')[2]);if(n>mx)mx=n});
-    var np={id:"CSSI-2026-"+String(mx+1).padStart(3,'0'),client:d.get('client'),serviciu:d.get('serviciu'),status:d.get('status'),valoare:parseInt(d.get('valoare'))||0,loc:d.get('locatie')||'Bra\u0219ov'};
+    var np={id:"CSSI-2026-"+String(mx+1).padStart(3,'0'),client:d.get('client'),serviciu:d.get('serviciu'),status:d.get('status'),valoare:parseInt(d.get('valoare'))||0,loc:d.get('locatie')||'Brașov'};
     PROJECTS.push(np);renderKanban();renderKPI();closeModal();f.reset();
 }
 
-// ═══════ APPS SCRIPT API PLACEHOLDER ═══════
-var API_URL=''; // Set after deploying Apps Script v3.0
-function loadLive(){if(!API_URL)return;fetch(API_URL+'?action=getAll').then(function(r){return r.json()}).then(function(d){if(d.projects){PROJECTS=d.projects;renderKanban();renderKPI()}if(d.alerts){ALERTS=d.alerts;renderAlerts()}}).catch(function(){})}
+// ═══════ APPS SCRIPT API ═══════
+var API_URL='';
+function loadLive(){
+    if(!API_URL)return;
+    document.getElementById('syncBadge').innerHTML='<span class="sync-dot" style="background:var(--orange);animation:pulse 1s infinite"></span>Sync...';
+    fetch(API_URL+'?action=getAll').then(function(r){return r.json()}).then(function(d){
+        if(d.projects){PROJECTS=d.projects;renderKanban();renderKPI()}
+        if(d.alerts){ALERTS=d.alerts;renderAlerts()}
+        document.getElementById('syncBadge').innerHTML='<span class="sync-dot ok"></span>Live';
+    }).catch(function(){document.getElementById('syncBadge').innerHTML='<span class="sync-dot off"></span>Offline'})
+}
+if(API_URL) setTimeout(loadLive,500);
 </script>
 </body>
 </html>

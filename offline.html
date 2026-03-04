@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Offline — Portal CSSI 3.0</title>
+<meta name="theme-color" content="#dc2626">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'Inter',system-ui,sans-serif;background:#0f172a;color:#fff;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px;text-align:center;}
+.card{max-width:420px;width:100%;}
+.icon{font-size:80px;margin-bottom:24px;opacity:0.6;}
+h1{font-size:24px;font-weight:800;margin-bottom:8px;letter-spacing:-0.5px;}
+p{color:rgba(255,255,255,0.6);font-size:14px;line-height:1.6;margin-bottom:24px;}
+.status{display:inline-flex;align-items:center;gap:6px;padding:8px 16px;background:rgba(255,255,255,0.08);border-radius:99px;font-size:12px;font-weight:600;color:rgba(255,255,255,0.5);margin-bottom:32px;}
+.status .dot{width:8px;height:8px;border-radius:50%;background:#f97316;animation:pulse 2s infinite;}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.3}}
+.btn{display:inline-block;padding:14px 32px;background:#dc2626;color:#fff;border:none;border-radius:14px;font-size:15px;font-weight:700;font-family:inherit;cursor:pointer;transition:all 0.3s;text-decoration:none;}
+.btn:hover{background:#991b1b;transform:translateY(-2px);box-shadow:0 8px 20px rgba(220,38,38,0.3);}
+.tips{margin-top:32px;text-align:left;background:rgba(255,255,255,0.04);border-radius:16px;padding:20px;}
+.tips h3{font-size:13px;font-weight:700;color:rgba(255,255,255,0.8);margin-bottom:12px;}
+.tips li{font-size:12px;color:rgba(255,255,255,0.5);line-height:1.8;list-style:none;padding-left:20px;position:relative;}
+.tips li::before{content:'→';position:absolute;left:0;color:#dc2626;}
+.footer{margin-top:32px;font-size:11px;color:rgba(255,255,255,0.2);}
+</style>
+</head>
+<body>
+<div class="card">
+    <div class="icon">📡</div>
+    <div class="status"><span class="dot"></span> Fără conexiune</div>
+    <h1>Ești offline</h1>
+    <p>Portalul CSSI necesită conexiune la internet pentru a sincroniza datele cu Google Sheets. Paginile vizitate anterior sunt disponibile din cache.</p>
+    <button class="btn" onclick="location.reload()">🔄 Încearcă din nou</button>
+    <div class="tips">
+        <h3>Ce poți face:</h3>
+        <ul>
+            <li>Verifică conexiunea Wi-Fi sau datele mobile</li>
+            <li>Paginile vizitate recent funcționează offline</li>
+            <li>Calculatorul de preț funcționează complet offline</li>
+            <li>Datele se vor sincroniza automat la reconectare</li>
+        </ul>
+    </div>
+    <div class="footer">CSSI · Portal v3.0 · Offline Mode</div>
+</div>
+<script>
+if('serviceWorker' in navigator){navigator.serviceWorker.register('/sw.js').then(function(r){console.log('[PWA] SW registered, scope:',r.scope)}).catch(function(e){console.log('[PWA] SW failed:',e)})}
+</script>
+</body>
+</html>
