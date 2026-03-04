@@ -7,6 +7,12 @@
 <meta name="robots" content="noindex, nofollow">
 <link rel="icon" type="image/x-icon" href="/images/favicon.ico">
 <meta name="theme-color" content="#dc2626">
+<link rel="manifest" href="../manifest.json">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Portal CSSI">
+<link rel="apple-touch-icon" sizes="180x180" href="../icons/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="96x96" href="../icons/favicon-96x96.png">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 <style>
 *{margin:0;padding:0;box-sizing:border-box;}
@@ -139,6 +145,7 @@ tr:hover td{background:rgba(59,130,246,0.03);}
             <div class="page-subtitle" id="syncStatus"><span class="sync-indicator sync-off"></span>Date locale (demo)</div>
         </div>
         <div class="page-actions">
+            <a href="proiectare.html" class="page-btn secondary">📐 Proiectare</a>
             <button class="page-btn secondary" onclick="refreshData()">🔄 Sync</button>
             <button class="page-btn primary" onclick="openAddModal()">+ Raport Nou</button>
         </div>
@@ -231,7 +238,7 @@ tr:hover td{background:rgba(59,130,246,0.03);}
 
 <script>
 // ═══════ CONFIG ═══════
-var API_URL = '';
+var API_URL = 'https://script.google.com/macros/s/AKfycbzdM_e5DY5nmd57TmB24sXz8dML93gKIolkmlqKxE7_d-_o3jHMVYuQ06YiQ5zJgZiB/exec';
 
 // ═══════ AUTH ═══════
 var role = sessionStorage.getItem('cssi-role');
@@ -542,6 +549,9 @@ populateDropdowns();
 REPORTS = JSON.parse(JSON.stringify(DEMO_REPORTS));
 render();
 if (API_URL) refreshData();
+</script>
+<script>
+if('serviceWorker' in navigator){navigator.serviceWorker.register('../sw.js').then(function(r){console.log('[PWA] SW registered, scope:',r.scope)}).catch(function(e){console.log('[PWA] SW failed:',e)})}
 </script>
 </body>
 </html>

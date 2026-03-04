@@ -7,6 +7,12 @@
 <meta name="robots" content="noindex, nofollow">
 <link rel="icon" type="image/x-icon" href="/images/favicon.ico">
 <meta name="theme-color" content="#dc2626">
+<link rel="manifest" href="../manifest.json">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Portal CSSI">
+<link rel="apple-touch-icon" sizes="180x180" href="../icons/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="96x96" href="../icons/favicon-96x96.png">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 <style>
 *{margin:0;padding:0;box-sizing:border-box;}
@@ -219,6 +225,7 @@ a{text-decoration:none;color:inherit;}button{font-family:inherit;cursor:pointer;
 
 <script>
 // ═══════ AUTH CHECK ═══════
+var API_URL = 'https://script.google.com/macros/s/AKfycbzdM_e5DY5nmd57TmB24sXz8dML93gKIolkmlqKxE7_d-_o3jHMVYuQ06YiQ5zJgZiB/exec';
 var role=sessionStorage.getItem("cssi-role");
 if(!role||!["admin","org","sales","tech"].includes(role)){window.location.href="../admin.html";}
 
@@ -343,7 +350,7 @@ function changeStatus(projectId,newStatus){
         p.status=newStatus;
         renderKanban();renderSummary();
         // TODO: Sync to Google Sheets via Apps Script
-        // fetch(API_URL+'?action=updateStatus&id='+projectId+'&status='+encodeURIComponent(newStatus));
+        if(API_URL) fetch(API_URL+'?action=updateStatus&id='+projectId+'&status='+encodeURIComponent(newStatus));
     }
 }
 
@@ -357,6 +364,9 @@ function addProject(e){
     PROJECTS.push({id:"CSSI-2026-"+String(mx+1).padStart(3,'0'),client:d.get('client'),serviciu:d.get('serviciu'),status:d.get('status'),valoare:parseInt(d.get('valoare'))||0,loc:d.get('locatie')||'Brașov'});
     renderKanban();renderTable();renderSummary();closeModal();f.reset();
 }
+</script>
+<script>
+if('serviceWorker' in navigator){navigator.serviceWorker.register('../sw.js').then(function(r){console.log('[PWA] SW registered, scope:',r.scope)}).catch(function(e){console.log('[PWA] SW failed:',e)})}
 </script>
 </body>
 </html>
