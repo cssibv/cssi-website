@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Marketing — Portal CSSI 3.0</title>
+<meta name="robots" content="noindex, nofollow">
+<link rel="icon" type="image/x-icon" href="/images/favicon.ico">
+<meta name="theme-color" content="#dc2626">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+:root{--red:#dc2626;--red-d:#991b1b;--dark:#0f172a;--dark2:#1e293b;--gray:#64748b;--gray-l:#94a3b8;--gray-xl:#cbd5e1;--gray-bg:#f1f5f9;--gray-b:#e2e8f0;--blue:#3b82f6;--green:#22c55e;--orange:#f97316;--purple:#8b5cf6;--yellow:#eab308;--teal:#14b8a6;--pink:#ec4899;--radius:16px;--radius-sm:12px;--shadow:0 1px 3px rgba(0,0,0,0.06);--shadow-md:0 4px 12px rgba(0,0,0,0.08);--font:'Inter',system-ui,sans-serif;}
+body{font-family:var(--font);color:var(--dark);background:var(--gray-bg);-webkit-font-smoothing:antialiased;}
+a{text-decoration:none;color:inherit;}button{font-family:inherit;cursor:pointer;}
+.page-header{background:linear-gradient(135deg,#ec4899,#db2777);color:#fff;padding:20px 24px;border-radius:20px;margin-bottom:16px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;}
+.page-back{color:rgba(255,255,255,0.7);font-size:13px;font-weight:500;}.page-back:hover{color:#fff;}
+.page-title{font-size:22px;font-weight:800;letter-spacing:-0.5px;}
+.page-subtitle{font-size:12px;color:rgba(255,255,255,0.5);margin-top:2px;}
+.page-actions{display:flex;gap:8px;align-items:center;}
+.page-btn{padding:10px 18px;border-radius:12px;font-size:13px;font-weight:700;border:none;transition:all 0.2s;}
+.page-btn.primary{background:#fff;color:#ec4899;}.page-btn.primary:hover{transform:translateY(-1px);}
+.page-btn.secondary{background:rgba(255,255,255,0.15);color:#fff;border:1px solid rgba(255,255,255,0.3);}.page-btn.secondary:hover{background:rgba(255,255,255,0.25);}
+.sync-indicator{width:8px;height:8px;border-radius:50%;display:inline-block;margin-right:6px;}
+.sync-ok{background:var(--green);box-shadow:0 0 6px rgba(34,197,94,0.5);}.sync-off{background:rgba(255,255,255,0.4);}.sync-loading{background:var(--orange);animation:pulse 1s infinite;}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.4}}
+.container{max-width:1400px;margin:0 auto;padding:16px;}@media(min-width:768px){.container{padding:24px;}}
+
+.tabs{display:flex;gap:4px;background:#fff;border-radius:var(--radius);padding:4px;box-shadow:var(--shadow);margin-bottom:16px;}
+.tab{flex:1;padding:12px;border-radius:var(--radius-sm);font-weight:700;font-size:13px;border:none;background:transparent;color:var(--gray);transition:all 0.2s;text-align:center;cursor:pointer;}.tab.active{background:var(--dark);color:#fff;box-shadow:var(--shadow-md);}.tab:hover:not(.active){background:var(--gray-bg);}
+
+/* CAMPAIGNS */
+.campaigns{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:12px;margin-bottom:16px;}
+.camp-card{background:#fff;border-radius:var(--radius);padding:20px;box-shadow:var(--shadow);border-left:4px solid var(--pink);transition:all 0.2s;cursor:pointer;}
+.camp-card:hover{box-shadow:var(--shadow-md);transform:translateY(-1px);}
+.camp-card.activa{border-left-color:var(--green);}.camp-card.planificata{border-left-color:var(--blue);}.camp-card.finalizata{border-left-color:var(--gray);opacity:0.8;}
+.camp-top{display:flex;justify-content:space-between;align-items:start;margin-bottom:8px;}
+.camp-name{font-size:16px;font-weight:800;flex:1;}
+.camp-badge{padding:3px 10px;border-radius:6px;font-size:10px;font-weight:700;}
+.badge-activa{background:#f0fdf4;color:var(--green);}.badge-planificata{background:#eff6ff;color:var(--blue);}.badge-finalizata{background:var(--gray-bg);color:var(--gray);}.badge-pauza{background:#fff7ed;color:var(--orange);}
+.camp-desc{font-size:13px;color:var(--gray);margin-bottom:10px;line-height:1.5;}
+.camp-meta{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px;}
+.camp-tag{font-size:10px;font-weight:700;padding:3px 8px;border-radius:6px;background:var(--gray-bg);color:var(--gray);}
+.camp-progress{margin-bottom:8px;}
+.camp-bar{width:100%;height:8px;background:var(--gray-bg);border-radius:4px;overflow:hidden;}.camp-bar-fill{height:100%;background:var(--green);border-radius:4px;transition:width 0.5s;}
+.camp-pct{font-size:11px;color:var(--gray);margin-top:4px;text-align:right;}
+.camp-footer{display:flex;justify-content:space-between;font-size:11px;color:var(--gray);padding-top:8px;border-top:1px solid var(--gray-bg);}
+
+/* RESOURCES */
+.resources{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px;margin-bottom:16px;}
+.res-card{background:#fff;border-radius:var(--radius);padding:20px;box-shadow:var(--shadow);text-align:center;transition:all 0.2s;cursor:pointer;}
+.res-card:hover{box-shadow:var(--shadow-md);transform:translateY(-2px);}
+.res-icon{font-size:40px;margin-bottom:8px;}.res-title{font-size:14px;font-weight:800;margin-bottom:4px;}.res-desc{font-size:11px;color:var(--gray);margin-bottom:8px;}
+.res-link{display:inline-block;padding:6px 16px;border-radius:8px;background:var(--gray-bg);font-size:12px;font-weight:600;color:var(--dark);transition:all 0.2s;}.res-link:hover{background:var(--pink);color:#fff;}
+
+/* HASHTAGS */
+.hashtag-section{background:#fff;border-radius:var(--radius);padding:20px;box-shadow:var(--shadow);margin-bottom:16px;}
+.hashtag-title{font-size:14px;font-weight:800;margin-bottom:12px;color:var(--dark);}
+.hashtags{display:flex;flex-wrap:wrap;gap:8px;}
+.hashtag{background:var(--gray-bg);padding:6px 14px;border-radius:99px;font-size:12px;font-weight:600;color:var(--dark);cursor:pointer;transition:all 0.2s;}.hashtag:hover{background:var(--pink);color:#fff;}
+
+/* IDEAS */
+.ideas{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px;margin-bottom:16px;}
+.idea-card{background:#fff;border-radius:var(--radius);padding:16px;box-shadow:var(--shadow);transition:all 0.2s;border-left:3px solid var(--purple);}
+.idea-card:hover{box-shadow:var(--shadow-md);}
+.idea-title{font-size:14px;font-weight:800;margin-bottom:4px;}.idea-desc{font-size:12px;color:var(--gray);line-height:1.5;margin-bottom:8px;}
+.idea-tags{display:flex;flex-wrap:wrap;gap:4px;}
+
+.toast-container{position:fixed;top:20px;right:20px;z-index:300;display:flex;flex-direction:column;gap:8px;}
+.toast{padding:14px 20px;border-radius:12px;color:#fff;font-size:13px;font-weight:600;box-shadow:0 8px 24px rgba(0,0,0,0.15);animation:slideIn 0.3s ease;max-width:380px;}
+.toast.success{background:var(--green);}.toast.info{background:var(--pink);}
+@keyframes slideIn{from{transform:translateX(100%);opacity:0}to{transform:translateX(0);opacity:1}}
+
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);backdrop-filter:blur(4px);z-index:200;align-items:center;justify-content:center;padding:16px;}.modal-overlay.active{display:flex;}
+.modal{background:#fff;border-radius:20px;width:100%;max-width:520px;max-height:90vh;overflow-y:auto;box-shadow:0 25px 60px rgba(0,0,0,0.3);}
+.modal-head{padding:20px 24px;border-bottom:1px solid var(--gray-b);display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;background:#fff;border-radius:20px 20px 0 0;z-index:1;}
+.modal-title{font-size:18px;font-weight:800;}
+.modal-close{width:32px;height:32px;border-radius:8px;border:none;background:var(--gray-bg);color:var(--gray);font-size:18px;display:flex;align-items:center;justify-content:center;}.modal-close:hover{background:#fef2f2;color:var(--red);}
+.modal-body{padding:24px;}
+.form-group{margin-bottom:16px;}.form-label{display:block;font-size:13px;font-weight:600;color:var(--dark);margin-bottom:6px;}.form-label .req{color:var(--red);}
+.form-input,.form-select,.form-textarea{width:100%;padding:12px 16px;border:2px solid var(--gray-b);border-radius:var(--radius-sm);font-size:14px;font-family:inherit;outline:none;transition:all 0.2s;background:#fff;}.form-input:focus,.form-select:focus,.form-textarea:focus{border-color:var(--pink);box-shadow:0 0 0 3px rgba(236,72,153,0.08);}
+.form-textarea{min-height:60px;resize:vertical;}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;}@media(max-width:480px){.form-row{grid-template-columns:1fr;}}
+.form-submit{width:100%;padding:14px;background:linear-gradient(135deg,#ec4899,#db2777);color:#fff;border:none;border-radius:var(--radius-sm);font-size:15px;font-weight:700;cursor:pointer;transition:all 0.3s;}.form-submit:hover{transform:translateY(-1px);}
+
+.bottom-nav{position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1px solid var(--gray-b);box-shadow:0 -4px 20px rgba(0,0,0,0.06);padding:6px 12px;z-index:100;display:flex;gap:4px;}@media(min-width:768px){.bottom-nav{display:none;}}
+.bn-item{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:8px 4px;border-radius:10px;font-size:10px;font-weight:600;color:var(--gray);transition:all 0.2s;gap:2px;}.bn-item.active{color:var(--pink);background:#fdf2f8;}.bn-item .bn-icon{font-size:20px;}
+.empty-msg{text-align:center;padding:40px;color:var(--gray-l);font-size:14px;}
+.footer{text-align:center;color:var(--gray-xl);font-size:11px;padding:24px 0 100px;}
+.loading-bar{position:fixed;top:0;left:0;right:0;height:3px;z-index:400;display:none;}.loading-bar.active{display:block;}.loading-bar::after{content:'';display:block;width:30%;height:100%;background:var(--pink);border-radius:2px;animation:loadSlide 1.2s infinite ease-in-out;}
+@keyframes loadSlide{0%{margin-left:-30%}100%{margin-left:100%}}
+</style>
+</head>
+<body>
+<div class="loading-bar" id="loadBar"></div>
+<div class="toast-container" id="toastContainer"></div>
+
+<div class="container">
+    <div class="page-header">
+        <div>
+            <a href="../admin.html" class="page-back">← Dashboard</a>
+            <div class="page-title">📊 Marketing Hub</div>
+            <div class="page-subtitle" id="syncStatus"><span class="sync-indicator sync-off"></span>Date locale (demo)</div>
+        </div>
+        <div class="page-actions">
+            <a href="calendar-social.html" class="page-btn secondary">📅 Calendar</a>
+            <button class="page-btn secondary" onclick="refreshData()">🔄 Sync</button>
+            <button class="page-btn primary" onclick="openAddModal()">+ Campanie Nouă</button>
+        </div>
+    </div>
+
+    <div class="tabs">
+        <button class="tab active" onclick="setTab('campanii',this)">🎯 Campanii</button>
+        <button class="tab" onclick="setTab('resurse',this)">📁 Resurse & Brand</button>
+        <button class="tab" onclick="setTab('idei',this)">💡 Idei Conținut</button>
+    </div>
+
+    <div id="tab-campanii"></div>
+    <div id="tab-resurse" style="display:none"></div>
+    <div id="tab-idei" style="display:none"></div>
+
+    <div class="footer">Portal CSSI 3.0 · Marketing Hub v3.0</div>
+</div>
+
+<div class="bottom-nav">
+    <a href="../admin.html" class="bn-item"><span class="bn-icon">🏠</span>Acasă</a>
+    <a href="calendar-social.html" class="bn-item"><span class="bn-icon">📅</span>Social</a>
+    <a href="marketing.html" class="bn-item active"><span class="bn-icon">📊</span>Marketing</a>
+    <a href="crm-clienti.html" class="bn-item"><span class="bn-icon">💰</span>CRM</a>
+    <a href="financiar.html" class="bn-item"><span class="bn-icon">📄</span>Facturi</a>
+</div>
+
+<!-- ADD CAMPAIGN MODAL -->
+<div id="addModal" class="modal-overlay" onclick="if(event.target===this)closeAddModal()">
+<div class="modal">
+    <div class="modal-head"><div class="modal-title" id="modalTitle">🎯 Campanie Nouă</div><button class="modal-close" onclick="closeAddModal()">✕</button></div>
+    <div class="modal-body">
+        <form id="addForm" onsubmit="saveCampaign(event)">
+            <input type="hidden" name="editId" id="editId" value="">
+            <div class="form-group"><label class="form-label">Nume campanie <span class="req">*</span></label><input type="text" class="form-input" name="nume" id="fNume" required placeholder="ex: Lansare serviciu PRAM"></div>
+            <div class="form-group"><label class="form-label">Descriere</label><textarea class="form-textarea" name="desc" id="fDesc" placeholder="Obiective, mesaje cheie..."></textarea></div>
+            <div class="form-row">
+                <div class="form-group"><label class="form-label">Perioadă start</label><input type="date" class="form-input" name="start" id="fStart"></div>
+                <div class="form-group"><label class="form-label">Perioadă final</label><input type="date" class="form-input" name="end" id="fEnd"></div>
+            </div>
+            <div class="form-row">
+                <div class="form-group"><label class="form-label">Status</label>
+                    <select class="form-select" name="status" id="fStatus"><option>Planificată</option><option>Activă</option><option>Pauză</option><option>Finalizată</option></select>
+                </div>
+                <div class="form-group"><label class="form-label">Buget (RON)</label><input type="number" class="form-input" name="buget" id="fBuget" min="0" placeholder="0"></div>
+            </div>
+            <div class="form-group"><label class="form-label">Platforme</label><input type="text" class="form-input" name="platforme" id="fPlat" placeholder="Facebook, Instagram, Google Ads..."></div>
+            <button type="submit" class="form-submit" id="submitBtn">🎯 Salvează Campanie</button>
+        </form>
+    </div>
+</div>
+</div>
+
+<script>
+var API_URL = '';
+var role = sessionStorage.getItem('cssi-role');
+if (!role || !['admin','mkt'].includes(role)) { window.location.href = '../admin.html'; }
+
+var CAMPAIGNS = [
+    {id:1,row:1,nume:'Lansare Servicii PRAM',desc:'Campanie de promovare a serviciilor de verificări electrice PRAM + buletin. Target: proprietari imobile comerciale din Brașov.',start:'2026-03-01',end:'2026-03-31',status:'Activă',buget:1200,platforme:'Facebook, Instagram, Google Ads',progres:40,postari:3},
+    {id:2,row:2,nume:'CSSI — 15 Ani',desc:'Campanie aniversară. Testimoniale clienți, portofoliu proiecte, behind-the-scenes cu echipa.',start:'2026-03-08',end:'2026-04-08',status:'Planificată',buget:800,platforme:'Facebook, Instagram, LinkedIn, YouTube',progres:10,postari:1},
+    {id:3,row:3,nume:'Detectie Incendiu 2026',desc:'Promovare sisteme detecție incendiu Bosch. Conținut educativ + studii de caz reale.',start:'2026-02-01',end:'2026-02-28',status:'Finalizată',buget:600,platforme:'Facebook, Instagram',progres:100,postari:8},
+    {id:4,row:4,nume:'Promo CCTV Primăvară',desc:'Ofertă specială sisteme CCTV Hikvision. Pachete complete cameră + NVR + montaj.',start:'2026-03-15',end:'2026-04-15',status:'Planificată',buget:1500,platforme:'Facebook, Instagram, Google Ads, TikTok',progres:5,postari:0},
+    {id:5,row:5,nume:'Google Business Optimization',desc:'Actualizare profil Google Business, postări regulate, răspunsuri recenzii.',start:'2026-01-01',end:'2026-12-31',status:'Activă',buget:0,platforme:'Google Business',progres:25,postari:4}
+];
+
+var RESOURCES = [
+    {icon:'🎨',title:'Brand Guidelines',desc:'Logo, culori, fonturi, reguli folosire',link:'#'},
+    {icon:'📷',title:'Galerie Proiecte',desc:'Fotografii profesionale per proiect',link:'#'},
+    {icon:'📐',title:'Template-uri Canva',desc:'Șabloane social media',link:'#'},
+    {icon:'📹',title:'Video B-roll',desc:'Clip-uri montaj, echipamente, echipă',link:'#'},
+    {icon:'📋',title:'Calendar Editorial',desc:'Planificare lunară conținut',link:'calendar-social.html'},
+    {icon:'⭐',title:'Testimoniale',desc:'Recenzii clienți pentru postări',link:'#'},
+    {icon:'📊',title:'Rapoarte Analytics',desc:'Statistici Facebook, Instagram',link:'#'},
+    {icon:'📝',title:'Copywriting Templates',desc:'Texte tip pentru fiecare serviciu',link:'#'}
+];
+
+var IDEAS = [
+    {title:'Timelapse montaj CCTV',desc:'Filmează de la gol la sistem funcțional. 30-60 sec, muzică energică.',tags:['Video','Instagram Reel','TikTok'],prio:'high'},
+    {title:'Infografic: De ce ai nevoie de alarmă?',desc:'Statistici furturi România, beneficii sistem alarmă, CTA contactare.',tags:['Foto','Facebook','Instagram'],prio:'medium'},
+    {title:'Studiu de caz: Hotel Cheile Râșnoavei',desc:'Before/after, echipamente folosite, testimonial client, rezultate.',tags:['Carusel','Facebook','LinkedIn'],prio:'high'},
+    {title:'FAQ: Întrebări frecvente CCTV',desc:'Răspunsuri la cele mai comune întrebări. Format card cu text scurt.',tags:['Carusel','Instagram'],prio:'low'},
+    {title:'Behind the scenes: Echipa CSSI',desc:'Prezentarea echipei, echipamente, depozit, mașini de lucru.',tags:['Video','Facebook','Instagram Story'],prio:'medium'},
+    {title:'Ghid: Cum alegi un sistem de alarmă?',desc:'Post educativ cu criterii de selecție, comparații, recomandări.',tags:['Text lung','Blog','Facebook'],prio:'medium'},
+    {title:'Reel: 5 semne că ai nevoie de camere',desc:'Format scurt, rapid, cu text overlay. Muzică trending.',tags:['Reel','Instagram','TikTok'],prio:'high'},
+    {title:'Post automatizări porți',desc:'BFT, NICE — avantaje automatizare vs manuală. Video demo funcționare.',tags:['Video','Facebook'],prio:'low'}
+];
+
+var HASHTAGS_SEC = ['#securitate','#CSSI','#Brasov','#CCTV','#detectieincendiu','#alarma','#automatizari','#supraveghere','#Hikvision','#Bosch','#PRAM','#montaj','#workinprogress','#Romania','#securitatecladiri','#cameredesupraveghere','#protectieincendiu','#controlacces','#CSSIBrasov','#proiect2026'];
+
+var currentTab = 'campanii';
+var isLive = false;
+
+function esc(s){if(!s)return '';var d=document.createElement('div');d.textContent=s;return d.innerHTML;}
+function fmt(n){return Number(n||0).toLocaleString('ro-RO');}
+function toast(msg,type){var c=document.getElementById('toastContainer');var t=document.createElement('div');t.className='toast '+(type||'info');t.textContent=msg;c.appendChild(t);setTimeout(function(){t.style.opacity='0';t.style.transform='translateX(100px)';t.style.transition='all 0.3s'},3000);setTimeout(function(){t.remove()},3500);}
+function updateSync(s){var el=document.getElementById('syncStatus');if(!isLive)el.innerHTML='<span class="sync-indicator sync-off"></span>Date locale (demo)';else el.innerHTML='<span class="sync-indicator sync-ok"></span>Conectat';}
+
+function refreshData(){toast('⚠️ API nesetat. Date demo.','info');updateSync();}
+
+function setTab(id,btn){
+    currentTab=id;
+    document.querySelectorAll('.tab').forEach(function(t){t.classList.remove('active')});
+    if(btn)btn.classList.add('active');
+    ['campanii','resurse','idei'].forEach(function(t){document.getElementById('tab-'+t).style.display=t===id?'':'none';});
+    render();
+}
+
+function render(){
+    if(currentTab==='campanii') renderCampaigns();
+    else if(currentTab==='resurse') renderResources();
+    else renderIdeas();
+}
+
+function renderCampaigns(){
+    var html='';
+    CAMPAIGNS.forEach(function(c){
+        var badgeCls=c.status==='Activă'?'badge-activa':c.status==='Planificată'?'badge-planificata':c.status==='Finalizată'?'badge-finalizata':'badge-pauza';
+        var cardCls=c.status==='Activă'?'activa':c.status==='Planificată'?'planificata':c.status==='Finalizată'?'finalizata':'';
+        html+='<div class="camp-card '+cardCls+'">';
+        html+='<div class="camp-top"><div class="camp-name">'+esc(c.nume)+'</div><span class="camp-badge '+badgeCls+'">'+c.status+'</span></div>';
+        html+='<div class="camp-desc">'+esc(c.desc)+'</div>';
+        html+='<div class="camp-meta">';
+        if(c.platforme) c.platforme.split(',').forEach(function(p){html+='<span class="camp-tag">'+p.trim()+'</span>';});
+        html+='</div>';
+        html+='<div class="camp-progress"><div class="camp-bar"><div class="camp-bar-fill" style="width:'+c.progres+'%"></div></div><div class="camp-pct">'+c.progres+'% completat · '+c.postari+' postări</div></div>';
+        html+='<div class="camp-footer"><span>📅 '+c.start+' → '+c.end+'</span>';
+        if(c.buget) html+='<span>💰 '+fmt(c.buget)+' RON</span>';
+        html+='</div>';
+        html+='</div>';
+    });
+    document.getElementById('tab-campanii').innerHTML='<div class="campaigns">'+html+'</div>';
+}
+
+function renderResources(){
+    var html='<div class="resources">';
+    RESOURCES.forEach(function(r){
+        html+='<a href="'+r.link+'" class="res-card"><div class="res-icon">'+r.icon+'</div><div class="res-title">'+r.title+'</div><div class="res-desc">'+r.desc+'</div><span class="res-link">Deschide →</span></a>';
+    });
+    html+='</div>';
+    html+='<div class="hashtag-section"><div class="hashtag-title">🏷️ Hashtag-uri recomandate</div><div class="hashtags">';
+    HASHTAGS_SEC.forEach(function(h){html+='<span class="hashtag" onclick="copyHashtag(this)">'+h+'</span>';});
+    html+='</div></div>';
+    document.getElementById('tab-resurse').innerHTML=html;
+}
+
+function renderIdeas(){
+    var html='';
+    var prio={high:'🔴',medium:'🟡',low:'🟢'};
+    IDEAS.forEach(function(idea){
+        html+='<div class="idea-card"><div style="display:flex;justify-content:space-between;align-items:start"><div class="idea-title">'+(prio[idea.prio]||'')+' '+esc(idea.title)+'</div></div>';
+        html+='<div class="idea-desc">'+esc(idea.desc)+'</div>';
+        html+='<div class="idea-tags">';
+        idea.tags.forEach(function(t){html+='<span class="camp-tag">'+t+'</span>';});
+        html+='</div></div>';
+    });
+    document.getElementById('tab-idei').innerHTML='<div class="ideas">'+html+'</div>';
+}
+
+function copyHashtag(el){
+    var t=el.textContent;
+    if(navigator.clipboard) navigator.clipboard.writeText(t);
+    toast('📋 Copiat: '+t,'info');
+}
+
+function openAddModal(){
+    document.getElementById('editId').value='';
+    document.getElementById('addForm').reset();
+    document.getElementById('addModal').classList.add('active');
+}
+function closeAddModal(){document.getElementById('addModal').classList.remove('active');}
+
+function saveCampaign(e){
+    e.preventDefault();var fd=new FormData(document.getElementById('addForm'));
+    var maxId=0;CAMPAIGNS.forEach(function(x){if(x.id>maxId)maxId=x.id});
+    CAMPAIGNS.push({id:maxId+1,row:maxId+1,nume:fd.get('nume'),desc:fd.get('desc')||'',start:fd.get('start')||'',end:fd.get('end')||'',status:fd.get('status')||'Planificată',buget:parseFloat(fd.get('buget'))||0,platforme:fd.get('platforme')||'',progres:0,postari:0});
+    render();closeAddModal();toast('🎯 Campanie adăugată','success');
+}
+
+render();
+</script>
+</body>
+</html>

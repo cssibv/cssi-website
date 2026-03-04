@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Inventar & Stocuri — Portal CSSI 3.0</title>
+<meta name="robots" content="noindex, nofollow">
+<link rel="icon" type="image/x-icon" href="/images/favicon.ico">
+<meta name="theme-color" content="#dc2626">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+:root{--red:#dc2626;--red-d:#991b1b;--dark:#0f172a;--dark2:#1e293b;--gray:#64748b;--gray-l:#94a3b8;--gray-xl:#cbd5e1;--gray-bg:#f1f5f9;--gray-b:#e2e8f0;--blue:#3b82f6;--green:#22c55e;--orange:#f97316;--purple:#8b5cf6;--yellow:#eab308;--teal:#14b8a6;--pink:#ec4899;--radius:16px;--radius-sm:12px;--shadow:0 1px 3px rgba(0,0,0,0.06);--shadow-md:0 4px 12px rgba(0,0,0,0.08);--font:'Inter',system-ui,sans-serif;}
+body{font-family:var(--font);color:var(--dark);background:var(--gray-bg);-webkit-font-smoothing:antialiased;}
+a{text-decoration:none;color:inherit;}button{font-family:inherit;cursor:pointer;}
+.page-header{background:linear-gradient(135deg,var(--dark),var(--dark2));color:#fff;padding:20px 24px;border-radius:20px;margin-bottom:16px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;}
+.page-back{color:rgba(255,255,255,0.7);font-size:13px;font-weight:500;display:flex;align-items:center;gap:6px;}.page-back:hover{color:#fff;}
+.page-title{font-size:22px;font-weight:800;letter-spacing:-0.5px;}
+.page-subtitle{font-size:12px;color:rgba(255,255,255,0.5);margin-top:2px;}
+.page-actions{display:flex;gap:8px;align-items:center;}
+.page-btn{padding:10px 18px;border-radius:12px;font-size:13px;font-weight:700;border:none;transition:all 0.2s;}
+.page-btn.primary{background:var(--red);color:#fff;}.page-btn.primary:hover{background:var(--red-d);transform:translateY(-1px);}
+.page-btn.secondary{background:rgba(255,255,255,0.1);color:#fff;border:1px solid rgba(255,255,255,0.2);}.page-btn.secondary:hover{background:rgba(255,255,255,0.2);}
+.sync-indicator{width:8px;height:8px;border-radius:50%;display:inline-block;margin-right:6px;}
+.sync-ok{background:var(--green);box-shadow:0 0 6px rgba(34,197,94,0.5);}.sync-off{background:var(--gray-l);}.sync-loading{background:var(--orange);animation:pulse 1s infinite;}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.4}}
+.container{max-width:1400px;margin:0 auto;padding:16px;}@media(min-width:768px){.container{padding:24px;}}
+
+.summary{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:16px;}
+.s-item{background:#fff;border-radius:var(--radius-sm);padding:14px 18px;box-shadow:var(--shadow);flex:1;min-width:130px;display:flex;align-items:center;gap:12px;transition:all 0.2s;cursor:pointer;}
+.s-item:hover{box-shadow:var(--shadow-md);transform:translateY(-1px);}
+.s-item.active-filter{border:2px solid var(--blue);}
+.s-icon{width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;}
+.s-val{font-size:22px;font-weight:900;}.s-label{font-size:11px;color:var(--gray);margin-top:1px;}
+
+.filters{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:16px;align-items:center;}
+.filter-search{padding:10px 16px;border-radius:99px;font-size:13px;border:1px solid var(--gray-b);outline:none;font-family:inherit;min-width:200px;background:#fff;flex:1;max-width:300px;}.filter-search:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(59,130,246,0.08);}
+.filter-select{padding:8px 14px;border-radius:99px;font-size:12px;font-weight:600;border:1px solid var(--gray-b);background:#fff;font-family:inherit;outline:none;cursor:pointer;}
+.view-toggle{display:flex;background:#fff;border-radius:10px;padding:3px;box-shadow:var(--shadow);border:1px solid var(--gray-b);margin-left:auto;}
+.view-btn{padding:7px 14px;border-radius:8px;font-size:12px;font-weight:600;border:none;background:none;color:var(--gray);cursor:pointer;transition:all 0.2s;}.view-btn.active{background:var(--dark);color:#fff;}
+.filter-count{font-size:12px;color:var(--gray);font-weight:500;}
+
+.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:12px;margin-bottom:16px;}
+.icard{background:#fff;border-radius:var(--radius);padding:18px;box-shadow:var(--shadow);border-left:4px solid var(--green);transition:all 0.2s;cursor:pointer;}
+.icard:hover{box-shadow:var(--shadow-md);transform:translateY(-1px);}
+.icard.low{border-left-color:var(--orange);}.icard.critical{border-left-color:var(--red);}.icard.out{border-left-color:var(--gray);opacity:0.7;}
+.icard-top{display:flex;justify-content:space-between;align-items:start;margin-bottom:6px;}
+.icard-name{font-size:15px;font-weight:800;flex:1;}
+.icard-cat{font-size:10px;font-weight:700;padding:3px 8px;border-radius:6px;}
+.icard-sku{font-size:11px;color:var(--gray);margin-bottom:8px;}
+.icard-stock{display:flex;align-items:center;gap:12px;margin-bottom:8px;}
+.icard-qty{font-size:28px;font-weight:900;}
+.icard-unit{font-size:12px;color:var(--gray);font-weight:600;}
+.icard-bar{flex:1;height:8px;background:var(--gray-bg);border-radius:4px;overflow:hidden;}
+.icard-bar-fill{height:100%;border-radius:4px;transition:width 0.5s;}
+.icard-meta{display:flex;justify-content:space-between;font-size:11px;color:var(--gray);padding-top:8px;border-top:1px solid var(--gray-bg);}
+.icard-alert{padding:6px 10px;border-radius:8px;font-size:11px;font-weight:700;margin-top:8px;}
+.icard-actions{display:flex;gap:6px;margin-top:10px;padding-top:10px;border-top:1px solid var(--gray-bg);}
+.btn-sm{padding:6px 12px;border-radius:8px;border:none;font-size:11px;font-weight:700;cursor:pointer;transition:all 0.2s;}
+.btn-in{background:#f0fdf4;color:var(--green);}.btn-in:hover{background:var(--green);color:#fff;}
+.btn-out{background:#fef2f2;color:var(--red);}.btn-out:hover{background:var(--red);color:#fff;}
+.btn-edit{background:#eff6ff;color:var(--blue);}.btn-edit:hover{background:var(--blue);color:#fff;}
+
+.table-wrap{background:#fff;border-radius:var(--radius);box-shadow:var(--shadow);overflow-x:auto;}
+table{width:100%;border-collapse:collapse;font-size:13px;}
+th{background:var(--dark);color:#fff;padding:12px 14px;text-align:left;font-weight:700;font-size:11px;text-transform:uppercase;letter-spacing:0.5px;white-space:nowrap;}
+td{padding:10px 14px;border-bottom:1px solid var(--gray-bg);}
+tr:hover td{background:rgba(59,130,246,0.03);}
+
+.toast-container{position:fixed;top:20px;right:20px;z-index:300;display:flex;flex-direction:column;gap:8px;}
+.toast{padding:14px 20px;border-radius:12px;color:#fff;font-size:13px;font-weight:600;box-shadow:0 8px 24px rgba(0,0,0,0.15);animation:slideIn 0.3s ease;max-width:380px;}
+.toast.success{background:var(--green);}.toast.error{background:var(--red);}.toast.info{background:var(--blue);}
+@keyframes slideIn{from{transform:translateX(100%);opacity:0}to{transform:translateX(0);opacity:1}}
+
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);backdrop-filter:blur(4px);z-index:200;align-items:center;justify-content:center;padding:16px;}.modal-overlay.active{display:flex;}
+.modal{background:#fff;border-radius:20px;width:100%;max-width:520px;max-height:90vh;overflow-y:auto;box-shadow:0 25px 60px rgba(0,0,0,0.3);}
+.modal-head{padding:20px 24px;border-bottom:1px solid var(--gray-b);display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;background:#fff;border-radius:20px 20px 0 0;z-index:1;}
+.modal-title{font-size:18px;font-weight:800;}
+.modal-close{width:32px;height:32px;border-radius:8px;border:none;background:var(--gray-bg);color:var(--gray);font-size:18px;display:flex;align-items:center;justify-content:center;}.modal-close:hover{background:#fef2f2;color:var(--red);}
+.modal-body{padding:24px;}
+.form-group{margin-bottom:16px;}.form-label{display:block;font-size:13px;font-weight:600;color:var(--dark);margin-bottom:6px;}.form-label .req{color:var(--red);}
+.form-input,.form-select,.form-textarea{width:100%;padding:12px 16px;border:2px solid var(--gray-b);border-radius:var(--radius-sm);font-size:14px;font-family:inherit;outline:none;transition:all 0.2s;background:#fff;}.form-input:focus,.form-select:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(59,130,246,0.08);}
+.form-textarea{min-height:60px;resize:vertical;}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;}@media(max-width:480px){.form-row{grid-template-columns:1fr;}}
+.form-submit{width:100%;padding:14px;background:linear-gradient(135deg,var(--green),#16a34a);color:#fff;border:none;border-radius:var(--radius-sm);font-size:15px;font-weight:700;cursor:pointer;transition:all 0.3s;}.form-submit:hover{transform:translateY(-1px);box-shadow:0 8px 20px -5px rgba(34,197,94,0.4);}
+.form-submit:disabled{background:var(--gray-l);cursor:not-allowed;}
+
+.bottom-nav{position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1px solid var(--gray-b);box-shadow:0 -4px 20px rgba(0,0,0,0.06);padding:6px 12px;z-index:100;display:flex;gap:4px;}@media(min-width:768px){.bottom-nav{display:none;}}
+.bn-item{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:8px 4px;border-radius:10px;font-size:10px;font-weight:600;color:var(--gray);transition:all 0.2s;gap:2px;}.bn-item.active{color:var(--red);background:#fef2f2;}.bn-item .bn-icon{font-size:20px;}
+.empty-msg{text-align:center;padding:40px;color:var(--gray-l);font-size:14px;}
+.footer{text-align:center;color:var(--gray-xl);font-size:11px;padding:24px 0 100px;}
+.loading-bar{position:fixed;top:0;left:0;right:0;height:3px;z-index:400;display:none;}.loading-bar.active{display:block;}.loading-bar::after{content:'';display:block;width:30%;height:100%;background:var(--red);border-radius:2px;animation:loadSlide 1.2s infinite ease-in-out;}
+@keyframes loadSlide{0%{margin-left:-30%}100%{margin-left:100%}}
+</style>
+</head>
+<body>
+<div class="loading-bar" id="loadBar"></div>
+<div class="toast-container" id="toastContainer"></div>
+
+<div class="container">
+    <div class="page-header">
+        <div>
+            <a href="../admin.html" class="page-back">← Dashboard</a>
+            <div class="page-title">📦 Inventar & Stocuri</div>
+            <div class="page-subtitle" id="syncStatus"><span class="sync-indicator sync-off"></span>Date locale (demo)</div>
+        </div>
+        <div class="page-actions">
+            <a href="necesar-materiale.html" class="page-btn secondary">📋 Necesar</a>
+            <button class="page-btn secondary" onclick="refreshData()">🔄 Sync</button>
+            <button class="page-btn primary" onclick="openAddModal()">+ Produs Nou</button>
+        </div>
+    </div>
+
+    <div class="summary" id="summary"></div>
+
+    <div class="filters">
+        <input type="text" class="filter-search" id="searchInput" placeholder="🔍 Caută produs, cod..." oninput="render()">
+        <select class="filter-select" id="filterCat" onchange="render()"><option value="">Toate categoriile</option></select>
+        <select class="filter-select" id="filterStock" onchange="render()">
+            <option value="">Toate nivelurile</option>
+            <option value="ok">✅ Stoc OK</option>
+            <option value="low">🟠 Stoc scăzut</option>
+            <option value="critical">🔴 Sub minim</option>
+            <option value="out">⛔ Epuizat</option>
+        </select>
+        <div class="view-toggle">
+            <button class="view-btn active" id="vCards" onclick="setView('cards')">☷ Carduri</button>
+            <button class="view-btn" id="vTable" onclick="setView('table')">☰ Tabel</button>
+        </div>
+        <div class="filter-count" id="filterCount"></div>
+    </div>
+
+    <div id="cardsView" class="cards"></div>
+    <div id="tableView" class="table-wrap" style="display:none"></div>
+    <div class="footer">Portal CSSI 3.0 · Inventar & Stocuri v3.0</div>
+</div>
+
+<div class="bottom-nav">
+    <a href="../admin.html" class="bn-item"><span class="bn-icon">🏠</span>Acasă</a>
+    <a href="proiecte.html" class="bn-item"><span class="bn-icon">📋</span>Proiecte</a>
+    <a href="materiale.html" class="bn-item active"><span class="bn-icon">📦</span>Stocuri</a>
+    <a href="necesar-materiale.html" class="bn-item"><span class="bn-icon">🛒</span>Necesar</a>
+    <a href="executie.html" class="bn-item"><span class="bn-icon">🔧</span>Execuție</a>
+</div>
+
+<!-- ADD/EDIT MODAL -->
+<div id="addModal" class="modal-overlay" onclick="if(event.target===this)closeAddModal()">
+<div class="modal">
+    <div class="modal-head"><div class="modal-title" id="modalTitle">📦 Produs Nou</div><button class="modal-close" onclick="closeAddModal()">✕</button></div>
+    <div class="modal-body">
+        <form id="addForm" onsubmit="saveItem(event)">
+            <input type="hidden" name="editId" id="editId" value="">
+            <div class="form-group"><label class="form-label">Denumire produs <span class="req">*</span></label><input type="text" class="form-input" name="nume" id="fNume" required placeholder="ex: Detector fum adresabil Bosch"></div>
+            <div class="form-row">
+                <div class="form-group"><label class="form-label">Cod / SKU</label><input type="text" class="form-input" name="cod" id="fCod" placeholder="ex: DET-BOSCH-001"></div>
+                <div class="form-group"><label class="form-label">Categorie</label>
+                    <select class="form-select" name="categorie" id="fCat">
+                        <option>Detectoare</option><option>Camere IP</option><option>Cabluri</option><option>Centrale</option><option>Sirene</option><option>Accesorii</option><option>Echipamente rețea</option><option>Automatizări</option><option>Altele</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group"><label class="form-label">Cantitate în stoc <span class="req">*</span></label><input type="number" class="form-input" name="stoc" id="fStoc" required min="0" placeholder="0"></div>
+                <div class="form-group"><label class="form-label">Unitate</label>
+                    <select class="form-select" name="unitate" id="fUnit"><option>buc</option><option>m</option><option>cutie</option><option>rolă</option><option>set</option></select>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group"><label class="form-label">Stoc minim</label><input type="number" class="form-input" name="minim" id="fMin" min="0" placeholder="5"></div>
+                <div class="form-group"><label class="form-label">Preț unitar (RON)</label><input type="number" class="form-input" name="pret" id="fPret" min="0" step="0.01" placeholder="0"></div>
+            </div>
+            <div class="form-row">
+                <div class="form-group"><label class="form-label">Furnizor principal</label><input type="text" class="form-input" name="furnizor" id="fFurnizor" placeholder="ex: Atu Tech"></div>
+                <div class="form-group"><label class="form-label">Locație depozit</label><input type="text" class="form-input" name="locatie" id="fLocatie" placeholder="ex: Raft A3"></div>
+            </div>
+            <div class="form-group"><label class="form-label">Observații</label><textarea class="form-textarea" name="note" id="fNote" placeholder="Specificații, compatibilitate..."></textarea></div>
+            <button type="submit" class="form-submit" id="submitBtn">📦 Adaugă Produs</button>
+        </form>
+    </div>
+</div>
+</div>
+
+<!-- STOCK MOVEMENT MODAL -->
+<div id="moveModal" class="modal-overlay" onclick="if(event.target===this)closeMoveModal()">
+<div class="modal" style="max-width:400px">
+    <div class="modal-head"><div class="modal-title" id="moveTitle">📦 Mișcare Stoc</div><button class="modal-close" onclick="closeMoveModal()">✕</button></div>
+    <div class="modal-body">
+        <div id="moveInfo" style="margin-bottom:16px"></div>
+        <div class="form-group"><label class="form-label">Cantitate <span class="req">*</span></label><input type="number" class="form-input" id="moveQty" min="1" value="1"></div>
+        <div class="form-group"><label class="form-label">Motiv / Proiect</label><input type="text" class="form-input" id="moveReason" placeholder="ex: CSSI-2026-001, Transfer, Retur..."></div>
+        <button class="form-submit" id="moveBtn" onclick="doMove()">Confirmă</button>
+    </div>
+</div>
+</div>
+
+<!-- DETAIL MODAL -->
+<div id="detailModal" class="modal-overlay" onclick="if(event.target===this)closeDetailModal()">
+<div class="modal">
+    <div class="modal-head"><div class="modal-title" id="detailTitle">📦 Detalii Produs</div><button class="modal-close" onclick="closeDetailModal()">✕</button></div>
+    <div class="modal-body" id="detailBody"></div>
+</div>
+</div>
+
+<script>
+var API_URL = '';
+var role = sessionStorage.getItem('cssi-role');
+if (!role || !['admin','org','tech'].includes(role)) { window.location.href = '../admin.html'; }
+var canEdit = ['admin','org','tech'].includes(role);
+
+var CATEGORIES = ['Detectoare','Camere IP','Cabluri','Centrale','Sirene','Accesorii','Echipamente rețea','Automatizări','Altele'];
+var CAT_COLORS = {'Detectoare':'#dc2626','Camere IP':'#3b82f6','Cabluri':'#f97316','Centrale':'#8b5cf6','Sirene':'#ec4899','Accesorii':'#64748b','Echipamente rețea':'#14b8a6','Automatizări':'#eab308','Altele':'#94a3b8'};
+var CAT_ICONS = {'Detectoare':'🔥','Camere IP':'📷','Cabluri':'🔌','Centrale':'🖥️','Sirene':'🔔','Accesorii':'🔩','Echipamente rețea':'🌐','Automatizări':'⚙️','Altele':'📦'};
+
+var ITEMS = [];
+var currentView = 'cards';
+var isLive = false;
+var kpiFilter = '';
+var moveTarget = null;
+var moveType = '';
+
+var DEMO = [
+    {id:1,row:1,nume:'Detector fum adresabil Bosch FCP-O320',cod:'DET-BOSCH-320',cat:'Detectoare',stoc:45,unit:'buc',minim:10,pret:185,furnizor:'Atu Tech',locatie:'Raft A1',note:'Compatibil FPA-5000',history:[{data:'2026-03-01',tip:'in',cant:50,motiv:'Aprovizionare'},{data:'2026-03-03',tip:'out',cant:5,motiv:'CSSI-2026-001'}]},
+    {id:2,row:2,nume:'Cameră IP Hikvision DS-2CD2143G2-I 4MP',cod:'CAM-HIK-4MP',cat:'Camere IP',stoc:12,unit:'buc',minim:5,pret:520,furnizor:'Atu Tech',locatie:'Raft B2',note:'POE, IP67, IR 30m',history:[{data:'2026-02-28',tip:'in',cant:20,motiv:'Comandă #127'},{data:'2026-03-02',tip:'out',cant:8,motiv:'CSSI-2026-006'}]},
+    {id:3,row:3,nume:'Cablu FTP Cat6 Legrand',cod:'CAB-FTP-CAT6',cat:'Cabluri',stoc:8,unit:'rolă',minim:5,pret:310,furnizor:'Elko',locatie:'Raft C1',note:'305m/rolă, cupru solid',history:[{data:'2026-02-20',tip:'in',cant:15,motiv:'Aprovizionare'},{data:'2026-03-01',tip:'out',cant:4,motiv:'CSSI-2026-012'},{data:'2026-03-04',tip:'out',cant:3,motiv:'CSSI-2026-004'}]},
+    {id:4,row:4,nume:'Centrală incendiu Bosch FPA-5000',cod:'CEN-BOSCH-5000',cat:'Centrale',stoc:2,unit:'buc',minim:1,pret:8500,furnizor:'Bosch Direct',locatie:'Raft A3',note:'2 bucle, extensibil la 8',history:[{data:'2026-01-15',tip:'in',cant:3,motiv:'Comandă #98'}]},
+    {id:5,row:5,nume:'Sirenă convențională interior',cod:'SIR-INT-001',cat:'Sirene',stoc:22,unit:'buc',minim:10,pret:45,furnizor:'Atu Tech',locatie:'Raft A2',note:'95dB, LED roșu',history:[]},
+    {id:6,row:6,nume:'NVR Hikvision 8 canale',cod:'NVR-HIK-8CH',cat:'Echipamente rețea',stoc:3,unit:'buc',minim:2,pret:1750,furnizor:'Atu Tech',locatie:'Raft B3',note:'H.265+, 2x HDD',history:[{data:'2026-03-02',tip:'out',cant:1,motiv:'CSSI-2026-006'}]},
+    {id:7,row:7,nume:'Motor poartă culisantă BFT Deimos BT A600',cod:'AUT-BFT-600',cat:'Automatizări',stoc:0,unit:'buc',minim:1,pret:1850,furnizor:'BFT Romania',locatie:'Raft D1',note:'Max 600kg, 24V',history:[{data:'2026-03-03',tip:'out',cant:2,motiv:'CSSI-2026-013'}]},
+    {id:8,row:8,nume:'Cablu incendiu 2x1.5 E30',cod:'CAB-INC-2x15',cat:'Cabluri',stoc:3,unit:'rolă',minim:5,pret:480,furnizor:'Elko',locatie:'Raft C2',note:'100m/rolă, rezistent foc',history:[]},
+    {id:9,row:9,nume:'Buton manual incendiu adresabil',cod:'BUT-INC-ADR',cat:'Detectoare',stoc:18,unit:'buc',minim:8,pret:95,furnizor:'Atu Tech',locatie:'Raft A1',note:'Compatibil Bosch FPA',history:[]},
+    {id:10,row:10,nume:'Switch POE 8 porturi Hikvision',cod:'SW-POE-8P',cat:'Echipamente rețea',stoc:6,unit:'buc',minim:3,pret:420,furnizor:'Atu Tech',locatie:'Raft B3',note:'8x POE+, 120W total',history:[]},
+    {id:11,row:11,nume:'Pat cabluri 200x60 (3m)',cod:'PAT-200x60',cat:'Accesorii',stoc:35,unit:'buc',minim:15,pret:42,furnizor:'Elko',locatie:'Depozit Exterior',note:'Zincat, cu capac',history:[]},
+    {id:12,row:12,nume:'Tablou electric 36 module',cod:'TAB-36M',cat:'Accesorii',stoc:4,unit:'buc',minim:2,pret:185,furnizor:'Elko',locatie:'Raft D2',note:'IP40, montaj aparent',history:[]}
+];
+
+function esc(s){if(!s)return '';var d=document.createElement('div');d.textContent=s;return d.innerHTML;}
+function fmt(n){return Number(n||0).toLocaleString('ro-RO');}
+function showLoading(s){document.getElementById('loadBar').classList.toggle('active',s);}
+function toast(msg,type){var c=document.getElementById('toastContainer');var t=document.createElement('div');t.className='toast '+(type||'info');t.textContent=msg;c.appendChild(t);setTimeout(function(){t.style.opacity='0';t.style.transform='translateX(100px)';t.style.transition='all 0.3s'},3000);setTimeout(function(){t.remove()},3500);}
+
+function stockLevel(item){if(item.stoc<=0)return 'out';if(item.stoc<item.minim)return 'critical';if(item.stoc<item.minim*1.5)return 'low';return 'ok';}
+function stockPct(item){if(!item.minim)return 100;return Math.min(100,Math.round(item.stoc/item.minim*50));}
+function stockColor(lvl){return lvl==='ok'?'var(--green)':lvl==='low'?'var(--orange)':lvl==='critical'?'var(--red)':'var(--gray)';}
+function valoareTotala(){return ITEMS.reduce(function(s,i){return s+(i.stoc*i.pret)},0);}
+
+function apiGet(a){if(!API_URL)return Promise.reject('No API');showLoading(true);return fetch(API_URL+'?action='+a).then(function(r){return r.json()}).finally(function(){showLoading(false)});}
+function apiPost(d){if(!API_URL)return Promise.reject('No API');showLoading(true);return fetch(API_URL,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(d)}).then(function(r){return r.json()}).finally(function(){showLoading(false)});}
+
+function refreshData(){
+    if(!API_URL){toast('⚠️ API nesetat. Date demo.','info');ITEMS=JSON.parse(JSON.stringify(DEMO));isLive=false;updateSync();render();return;}
+    updateSync('loading');
+    apiGet('getInventar').then(function(res){
+        if(Array.isArray(res)){ITEMS=res.map(function(r,i){return {id:i+1,row:r.row||i+1,nume:r.nume||'',cod:r.cod||'',cat:r.categorie||'Altele',stoc:Number(r.stoc)||0,unit:r.unitate||'buc',minim:Number(r.minim)||0,pret:Number(r.pret)||0,furnizor:r.furnizor||'',locatie:r.locatie||'',note:r.note||'',history:parseH(r.history)};});}
+        isLive=true;updateSync();render();toast('✅ Sincronizat','success');
+    }).catch(function(){isLive=false;updateSync();toast('❌ Sync eșuat','error');});
+}
+function parseH(h){if(Array.isArray(h))return h;if(typeof h==='string'&&h){try{return JSON.parse(h)}catch(e){}}return [];}
+function updateSync(s){var el=document.getElementById('syncStatus');if(s==='loading')el.innerHTML='<span class="sync-indicator sync-loading"></span>Se sincronizează...';else if(isLive)el.innerHTML='<span class="sync-indicator sync-ok"></span>Conectat la Google Sheets';else el.innerHTML='<span class="sync-indicator sync-off"></span>Date locale (demo)';}
+
+function getFiltered(){
+    var q=document.getElementById('searchInput').value.toLowerCase();
+    var fc=document.getElementById('filterCat').value;
+    var fs=document.getElementById('filterStock').value;
+    var filtered=ITEMS.filter(function(i){
+        if(fc&&i.cat!==fc)return false;
+        if(fs&&stockLevel(i)!==fs)return false;
+        if(kpiFilter&&stockLevel(i)!==kpiFilter)return false;
+        if(q&&!(i.nume.toLowerCase().includes(q)||i.cod.toLowerCase().includes(q)||(i.furnizor&&i.furnizor.toLowerCase().includes(q))))return false;
+        return true;
+    });
+    filtered.sort(function(a,b){var la=stockLevel(a),lb=stockLevel(b);var ord={out:0,critical:1,low:2,ok:3};if(ord[la]!==ord[lb])return ord[la]-ord[lb];return a.nume.localeCompare(b.nume);});
+    document.getElementById('filterCount').textContent=filtered.length+' produse';
+    return filtered;
+}
+
+function toggleKpiFilter(f){kpiFilter=kpiFilter===f?'':f;render();}
+
+function render(){renderSummary();var f=getFiltered();if(currentView==='cards'){renderCards(f);document.getElementById('cardsView').style.display='';document.getElementById('tableView').style.display='none';}else{renderTable(f);document.getElementById('cardsView').style.display='none';document.getElementById('tableView').style.display='';}}
+
+function renderSummary(){
+    var total=ITEMS.length;
+    var ok=ITEMS.filter(function(i){return stockLevel(i)==='ok'}).length;
+    var low=ITEMS.filter(function(i){return stockLevel(i)==='low'}).length;
+    var crit=ITEMS.filter(function(i){return stockLevel(i)==='critical'||stockLevel(i)==='out'}).length;
+    var val=valoareTotala();
+    document.getElementById('summary').innerHTML=
+        '<div class="s-item" onclick="toggleKpiFilter(\'\')"><div class="s-icon" style="background:#eff6ff">📦</div><div><div class="s-val">'+total+'</div><div class="s-label">Total produse</div></div></div>'+
+        '<div class="s-item'+(kpiFilter==='ok'?' active-filter':'')+'" onclick="toggleKpiFilter(\'ok\')"><div class="s-icon" style="background:#f0fdf4">✅</div><div><div class="s-val" style="color:var(--green)">'+ok+'</div><div class="s-label">Stoc OK</div></div></div>'+
+        '<div class="s-item'+(kpiFilter==='low'?' active-filter':'')+'" onclick="toggleKpiFilter(\'low\')"><div class="s-icon" style="background:#fff7ed">🟠</div><div><div class="s-val" style="color:var(--orange)">'+low+'</div><div class="s-label">Stoc scăzut</div></div></div>'+
+        '<div class="s-item'+(kpiFilter==='critical'?' active-filter':'')+'" onclick="toggleKpiFilter(\'critical\')"><div class="s-icon" style="background:#fef2f2">🔴</div><div><div class="s-val" style="color:var(--red)">'+crit+'</div><div class="s-label">Sub minim / Epuizat</div></div></div>'+
+        '<div class="s-item"><div class="s-icon" style="background:#f5f3ff">💰</div><div><div class="s-val" style="color:var(--purple)">'+fmt(val)+'</div><div class="s-label">Valoare stoc (RON)</div></div></div>';
+}
+
+function renderCards(filtered){
+    if(!filtered.length){document.getElementById('cardsView').innerHTML='<div class="empty-msg">Niciun produs găsit</div>';return;}
+    var html='';
+    filtered.forEach(function(i){
+        var lvl=stockLevel(i);var pct=stockPct(i);var clr=stockColor(lvl);
+        var cardCls=lvl==='low'?'low':lvl==='critical'?'critical':lvl==='out'?'out':'';
+        var catClr=CAT_COLORS[i.cat]||'#64748b';
+
+        html+='<div class="icard '+cardCls+'" onclick="openDetailModal('+i.id+')">';
+        html+='<div class="icard-top"><div class="icard-name">'+(CAT_ICONS[i.cat]||'📦')+' '+esc(i.nume)+'</div><span class="icard-cat" style="background:'+catClr+'15;color:'+catClr+'">'+i.cat+'</span></div>';
+        if(i.cod) html+='<div class="icard-sku">SKU: '+esc(i.cod)+'</div>';
+        html+='<div class="icard-stock"><div><span class="icard-qty" style="color:'+clr+'">'+i.stoc+'</span> <span class="icard-unit">'+i.unit+'</span></div>';
+        html+='<div style="flex:1"><div class="icard-bar"><div class="icard-bar-fill" style="width:'+pct+'%;background:'+clr+'"></div></div>';
+        html+='<div style="font-size:10px;color:var(--gray);margin-top:2px;text-align:right">min: '+i.minim+'</div></div></div>';
+        if(lvl==='out') html+='<div class="icard-alert" style="background:#fef2f2;color:var(--red)">⛔ EPUIZAT — necesită comandă urgentă</div>';
+        else if(lvl==='critical') html+='<div class="icard-alert" style="background:#fef2f2;color:var(--red)">🔴 Sub stocul minim!</div>';
+        else if(lvl==='low') html+='<div class="icard-alert" style="background:#fff7ed;color:var(--orange)">🟠 Stoc scăzut — planifică aprovizionare</div>';
+        html+='<div class="icard-meta"><span>💰 '+fmt(i.pret)+' RON/'+i.unit+'</span>';
+        if(i.furnizor) html+='<span>🏭 '+esc(i.furnizor)+'</span>';
+        if(i.locatie) html+='<span>📍 '+esc(i.locatie)+'</span>';
+        html+='</div>';
+        if(canEdit){
+            html+='<div class="icard-actions" onclick="event.stopPropagation()">';
+            html+='<button class="btn-sm btn-in" onclick="openMoveModal('+i.id+',\'in\')">+ Intrare</button>';
+            html+='<button class="btn-sm btn-out" onclick="openMoveModal('+i.id+',\'out\')">- Ieșire</button>';
+            html+='<button class="btn-sm btn-edit" onclick="openEditModal('+i.id+')">✏️</button>';
+            html+='</div>';
+        }
+        html+='</div>';
+    });
+    document.getElementById('cardsView').innerHTML=html;
+}
+
+function renderTable(filtered){
+    if(!filtered.length){document.getElementById('tableView').innerHTML='<div class="empty-msg">Niciun produs găsit</div>';return;}
+    var html='<table><thead><tr><th>Produs</th><th>Cod</th><th>Categorie</th><th>Stoc</th><th>Minim</th><th>Nivel</th><th>Preț</th><th>Valoare</th><th>Furnizor</th></tr></thead><tbody>';
+    filtered.forEach(function(i){
+        var lvl=stockLevel(i);var clr=stockColor(lvl);
+        html+='<tr style="cursor:pointer" onclick="openDetailModal('+i.id+')">';
+        html+='<td style="font-weight:700">'+(CAT_ICONS[i.cat]||'')+'  '+esc(i.nume)+'</td>';
+        html+='<td style="color:var(--gray);font-size:12px">'+esc(i.cod)+'</td>';
+        html+='<td>'+i.cat+'</td>';
+        html+='<td style="font-weight:900;color:'+clr+'">'+i.stoc+' '+i.unit+'</td>';
+        html+='<td>'+i.minim+'</td>';
+        html+='<td><span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:'+clr+';margin-right:4px"></span>'+(lvl==='ok'?'OK':lvl==='low'?'Scăzut':lvl==='critical'?'Sub minim':'Epuizat')+'</td>';
+        html+='<td>'+fmt(i.pret)+' RON</td>';
+        html+='<td style="font-weight:700">'+fmt(i.stoc*i.pret)+' RON</td>';
+        html+='<td>'+esc(i.furnizor)+'</td></tr>';
+    });
+    html+='</tbody></table>';
+    document.getElementById('tableView').innerHTML=html;
+}
+
+function setView(v){currentView=v;document.getElementById('vCards').classList.toggle('active',v==='cards');document.getElementById('vTable').classList.toggle('active',v==='table');render();}
+
+// ═══════ DETAIL ═══════
+function openDetailModal(id){
+    var i=ITEMS.find(function(x){return x.id===id});if(!i)return;
+    var lvl=stockLevel(i);var clr=stockColor(lvl);
+    document.getElementById('detailTitle').textContent=(CAT_ICONS[i.cat]||'📦')+' '+i.nume;
+    var html='<div style="display:grid;gap:14px">';
+    html+='<div style="text-align:center;padding:16px 0"><div style="font-size:48px;font-weight:900;color:'+clr+'">'+i.stoc+'</div><div style="font-size:14px;color:var(--gray)">'+i.unit+' în stoc (min: '+i.minim+')</div></div>';
+    html+=infoRow('📦 Denumire','<strong>'+esc(i.nume)+'</strong>');
+    if(i.cod) html+=infoRow('🏷️ Cod/SKU',i.cod);
+    html+=infoRow('📂 Categorie','<span style="color:'+(CAT_COLORS[i.cat]||'#64748b')+';font-weight:700">'+i.cat+'</span>');
+    html+=infoRow('💰 Preț unitar',fmt(i.pret)+' RON/'+i.unit);
+    html+=infoRow('💎 Valoare stoc','<strong>'+fmt(i.stoc*i.pret)+' RON</strong>');
+    if(i.furnizor) html+=infoRow('🏭 Furnizor',esc(i.furnizor));
+    if(i.locatie) html+=infoRow('📍 Locație',esc(i.locatie));
+    if(i.note) html+='<div style="background:var(--gray-bg);padding:10px 14px;border-radius:8px;font-size:13px;color:var(--gray);font-style:italic">📝 '+esc(i.note)+'</div>';
+    if(i.history&&i.history.length){
+        html+='<div style="border-top:1px solid var(--gray-bg);padding-top:12px"><div style="font-size:13px;font-weight:700;margin-bottom:8px">📜 Ultimele mișcări ('+i.history.length+')</div>';
+        i.history.slice().reverse().slice(0,10).forEach(function(h){
+            var isIn=h.tip==='in';
+            html+='<div style="display:flex;justify-content:space-between;align-items:center;padding:6px 0;font-size:12px;border-bottom:1px solid var(--gray-bg)"><span style="color:var(--gray)">'+h.data+'</span><span style="font-weight:800;color:'+(isIn?'var(--green)':'var(--red)')+'">'+(isIn?'+':'-')+h.cant+' '+i.unit+'</span><span style="font-size:11px;color:var(--gray)">'+esc(h.motiv||'')+'</span></div>';
+        });
+        html+='</div>';
+    }
+    if(canEdit){
+        html+='<div style="display:flex;gap:8px;margin-top:12px">';
+        html+='<button onclick="closeDetailModal();openMoveModal('+i.id+',\'in\')" style="flex:1;padding:12px;border-radius:12px;border:none;background:var(--green);color:#fff;font-weight:700;font-size:14px;cursor:pointer">+ Intrare</button>';
+        html+='<button onclick="closeDetailModal();openMoveModal('+i.id+',\'out\')" style="flex:1;padding:12px;border-radius:12px;border:none;background:var(--red);color:#fff;font-weight:700;font-size:14px;cursor:pointer">- Ieșire</button>';
+        html+='<button onclick="closeDetailModal();openEditModal('+i.id+')" style="padding:12px 16px;border-radius:12px;border:none;background:var(--blue);color:#fff;font-weight:700;cursor:pointer">✏️</button>';
+        html+='</div>';
+    }
+    html+='</div>';
+    document.getElementById('detailBody').innerHTML=html;
+    document.getElementById('detailModal').classList.add('active');
+}
+function closeDetailModal(){document.getElementById('detailModal').classList.remove('active');}
+function infoRow(l,v){return '<div style="display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px solid var(--gray-bg)"><span style="font-size:13px;color:var(--gray)">'+l+'</span><span style="font-size:14px;font-weight:600">'+v+'</span></div>';}
+
+// ═══════ STOCK MOVEMENT ═══════
+function openMoveModal(id,type){
+    var i=ITEMS.find(function(x){return x.id===id});if(!i)return;
+    moveTarget=id;moveType=type;
+    document.getElementById('moveTitle').textContent=type==='in'?'📥 Intrare Stoc':'📤 Ieșire Stoc';
+    document.getElementById('moveInfo').innerHTML='<div style="font-weight:700">'+esc(i.nume)+'</div><div style="font-size:13px;color:var(--gray)">Stoc actual: <strong>'+i.stoc+' '+i.unit+'</strong></div>';
+    document.getElementById('moveQty').value=1;
+    document.getElementById('moveReason').value='';
+    document.getElementById('moveBtn').textContent=type==='in'?'📥 Adaugă în stoc':'📤 Scoate din stoc';
+    document.getElementById('moveBtn').style.background=type==='in'?'linear-gradient(135deg,var(--green),#16a34a)':'linear-gradient(135deg,var(--red),var(--red-d))';
+    document.getElementById('moveModal').classList.add('active');
+}
+function closeMoveModal(){document.getElementById('moveModal').classList.remove('active');moveTarget=null;}
+
+function doMove(){
+    if(!moveTarget)return;
+    var i=ITEMS.find(function(x){return x.id===moveTarget});if(!i)return;
+    var qty=parseInt(document.getElementById('moveQty').value)||0;
+    var reason=document.getElementById('moveReason').value||'';
+    if(qty<=0){toast('⚠️ Cantitate invalidă','error');return;}
+    if(moveType==='out'&&qty>i.stoc){toast('⚠️ Nu sunt suficiente în stoc','error');return;}
+
+    if(moveType==='in') i.stoc+=qty; else i.stoc-=qty;
+    if(!i.history)i.history=[];
+    i.history.push({data:new Date().toISOString().split('T')[0],tip:moveType,cant:qty,motiv:reason});
+
+    if(API_URL) apiPost({action:'updateInventarStock',row:i.row,stoc:i.stoc,history:JSON.stringify(i.history)}).catch(function(){});
+
+    closeMoveModal();render();
+    toast((moveType==='in'?'📥 +':'📤 -')+qty+' '+i.unit+' — '+i.nume,'success');
+}
+
+// ═══════ ADD/EDIT ═══════
+function openAddModal(){
+    document.getElementById('editId').value='';
+    document.getElementById('modalTitle').textContent='📦 Produs Nou';
+    document.getElementById('submitBtn').textContent='📦 Adaugă Produs';
+    document.getElementById('addForm').reset();
+    document.getElementById('addModal').classList.add('active');
+}
+function openEditModal(id){
+    var i=ITEMS.find(function(x){return x.id===id});if(!i)return;
+    document.getElementById('editId').value=i.id;
+    document.getElementById('modalTitle').textContent='✏️ Editare Produs';
+    document.getElementById('submitBtn').textContent='💾 Salvează';
+    document.getElementById('fNume').value=i.nume;
+    document.getElementById('fCod').value=i.cod;
+    document.getElementById('fCat').value=i.cat;
+    document.getElementById('fStoc').value=i.stoc;
+    document.getElementById('fUnit').value=i.unit;
+    document.getElementById('fMin').value=i.minim;
+    document.getElementById('fPret').value=i.pret;
+    document.getElementById('fFurnizor').value=i.furnizor;
+    document.getElementById('fLocatie').value=i.locatie;
+    document.getElementById('fNote').value=i.note;
+    document.getElementById('addModal').classList.add('active');
+}
+function closeAddModal(){document.getElementById('addModal').classList.remove('active');}
+
+function saveItem(e){
+    e.preventDefault();var fd=new FormData(document.getElementById('addForm'));
+    var editId=parseInt(fd.get('editId'));
+    var itemData={nume:fd.get('nume'),cod:fd.get('cod')||'',cat:fd.get('categorie'),stoc:parseInt(fd.get('stoc'))||0,unit:fd.get('unitate'),minim:parseInt(fd.get('minim'))||0,pret:parseFloat(fd.get('pret'))||0,furnizor:fd.get('furnizor')||'',locatie:fd.get('locatie')||'',note:fd.get('note')||''};
+    if(editId){
+        var i=ITEMS.find(function(x){return x.id===editId});
+        if(i) Object.assign(i,itemData);
+        if(API_URL) apiPost({action:'updateInventar',row:i.row,item:itemData}).catch(function(){});
+        toast('✅ Produs actualizat','success');
+    } else {
+        var maxId=0;ITEMS.forEach(function(x){if(x.id>maxId)maxId=x.id});
+        var newI=Object.assign({id:maxId+1,row:maxId+1,history:[]},itemData);
+        if(API_URL) apiPost({action:'addInventar',item:itemData}).then(function(res){newI.row=res.row||newI.row}).catch(function(){});
+        ITEMS.push(newI);
+        toast('✅ Produs adăugat','success');
+    }
+    render();closeAddModal();document.getElementById('addForm').reset();
+}
+
+// ═══════ INIT ═══════
+function populateCatFilter(){
+    var opts='<option value="">Toate categoriile</option>';
+    CATEGORIES.forEach(function(c){opts+='<option>'+c+'</option>'});
+    document.getElementById('filterCat').innerHTML=opts;
+}
+populateCatFilter();
+ITEMS=JSON.parse(JSON.stringify(DEMO));
+render();
+if(API_URL) refreshData();
+</script>
+</body>
+</html>

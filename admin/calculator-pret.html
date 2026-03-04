@@ -3,212 +3,346 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Calculator Preț | Portal CSSI</title>
+<title>Calculator Preț — Portal CSSI 3.0</title>
 <meta name="robots" content="noindex, nofollow">
-<link rel="icon" type="image/png" sizes="96x96" href="/images/favicon-96x96.png">
+<link rel="icon" type="image/x-icon" href="/images/favicon.ico">
+<meta name="theme-color" content="#dc2626">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 <style>
-
 *{margin:0;padding:0;box-sizing:border-box;}
-body{font-family:'Inter',sans-serif;color:#0f172a;background:#f1f5f9;overflow-x:hidden;}
-a{text-decoration:none;color:inherit;}
+:root{--red:#dc2626;--red-d:#991b1b;--dark:#0f172a;--dark2:#1e293b;--gray:#64748b;--gray-l:#94a3b8;--gray-xl:#cbd5e1;--gray-bg:#f1f5f9;--gray-b:#e2e8f0;--blue:#3b82f6;--green:#22c55e;--orange:#f97316;--purple:#8b5cf6;--radius:16px;--radius-sm:12px;--shadow:0 1px 3px rgba(0,0,0,0.06);--shadow-md:0 4px 12px rgba(0,0,0,0.08);--font:'Inter',system-ui,sans-serif;}
+body{font-family:var(--font);color:var(--dark);background:var(--gray-bg);-webkit-font-smoothing:antialiased;}
+a{text-decoration:none;color:inherit;}button{font-family:inherit;cursor:pointer;}
+.page-header{background:linear-gradient(135deg,#059669,#047857);color:#fff;padding:20px 24px;border-radius:20px;margin-bottom:16px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;}
+.page-back{color:rgba(255,255,255,0.7);font-size:13px;font-weight:500;}.page-back:hover{color:#fff;}
+.page-title{font-size:22px;font-weight:800;letter-spacing:-0.5px;}
+.page-subtitle{font-size:12px;color:rgba(255,255,255,0.5);margin-top:2px;}
+.page-actions{display:flex;gap:8px;align-items:center;}
+.page-btn{padding:10px 18px;border-radius:12px;font-size:13px;font-weight:700;border:none;transition:all 0.2s;}
+.page-btn.primary{background:#fff;color:#059669;}.page-btn.primary:hover{transform:translateY(-1px);}
+.page-btn.secondary{background:rgba(255,255,255,0.15);color:#fff;border:1px solid rgba(255,255,255,0.3);}.page-btn.secondary:hover{background:rgba(255,255,255,0.25);}
+.container{max-width:1000px;margin:0 auto;padding:16px;}@media(min-width:768px){.container{padding:24px;}}
 
-/* UTILITIES */
-.container{max-width:1200px;margin:0 auto;padding:16px;}
-@media(min-width:640px){.container{padding:24px;}}
-.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);}
+.tabs{display:flex;gap:4px;background:#fff;border-radius:var(--radius);padding:4px;box-shadow:var(--shadow);margin-bottom:16px;}
+.tab{flex:1;padding:12px;border-radius:var(--radius-sm);font-weight:700;font-size:13px;border:none;background:transparent;color:var(--gray);transition:all 0.2s;text-align:center;cursor:pointer;}.tab.active{background:var(--dark);color:#fff;box-shadow:var(--shadow-md);}
 
-/* AUTH */
-.auth-bg{min-height:100vh;background:linear-gradient(135deg,#0f172a 0%,#1e293b 50%,#0f172a 100%);display:flex;align-items:center;justify-content:center;padding:16px;}
-.auth-card{background:#fff;border-radius:20px;padding:40px 32px;width:100%;max-width:420px;box-shadow:0 25px 50px -12px rgba(0,0,0,0.4);}
-.auth-input{width:100%;padding:16px 20px;border:2px solid #e2e8f0;border-radius:14px;font-size:18px;text-align:center;outline:none;font-family:inherit;transition:all 0.2s;letter-spacing:2px;}
-.auth-input:focus{border-color:#dc2626;box-shadow:0 0 0 4px rgba(220,38,38,0.1);}
-.auth-btn{width:100%;padding:16px;background:linear-gradient(135deg,#dc2626,#991b1b);color:#fff;border:none;border-radius:14px;font-size:18px;font-weight:700;cursor:pointer;font-family:inherit;transition:all 0.3s;letter-spacing:0.5px;}
-.auth-btn:hover{transform:translateY(-1px);box-shadow:0 10px 25px -5px rgba(220,38,38,0.4);}
-.auth-error{color:#dc2626;text-align:center;font-size:14px;padding:8px;background:#fef2f2;border-radius:8px;display:none;}
-.auth-logo{width:80px;height:80px;border-radius:20px;object-fit:contain;margin:0 auto 16px;display:block;}
+.calc-card{background:#fff;border-radius:var(--radius);box-shadow:var(--shadow);padding:24px;margin-bottom:16px;}
+.calc-title{font-size:16px;font-weight:800;margin-bottom:16px;display:flex;align-items:center;gap:8px;}
+.form-group{margin-bottom:16px;}.form-label{display:block;font-size:13px;font-weight:600;color:var(--dark);margin-bottom:6px;}
+.form-select,.form-input{width:100%;padding:12px 16px;border:2px solid var(--gray-b);border-radius:var(--radius-sm);font-size:14px;font-family:inherit;outline:none;transition:all 0.2s;background:#fff;}.form-select:focus,.form-input:focus{border-color:var(--green);box-shadow:0 0 0 3px rgba(5,150,105,0.08);}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;}@media(max-width:480px){.form-row{grid-template-columns:1fr;}}
 
-/* DASHBOARD */
-.dash{min-height:100vh;background:#f1f5f9;}
-.hero{padding:24px;border-radius:20px;margin-bottom:20px;color:#fff;position:relative;overflow:hidden;}
-.hero::before{content:'';position:absolute;top:0;right:0;width:200px;height:200px;background:rgba(255,255,255,0.05);border-radius:50%;transform:translate(50%,-50%);}
-.hero.admin{background:linear-gradient(135deg,#0f172a,#1e293b);}
-.hero.org{background:linear-gradient(135deg,#1d4ed8,#1e40af);}
-.hero.mkt{background:linear-gradient(135deg,#7c3aed,#6d28d9);}
-.hero.sales{background:linear-gradient(135deg,#059669,#047857);}
-.hero.tech{background:linear-gradient(135deg,#ea580c,#c2410c);}
-.hero-title{font-size:clamp(18px,3vw,26px);font-weight:800;margin-bottom:4px;}
-.hero-sub{color:rgba(255,255,255,0.7);font-size:13px;}
-.role-pill{display:inline-flex;align-items:center;gap:6px;padding:6px 14px;background:rgba(255,255,255,0.15);backdrop-filter:blur(10px);border-radius:999px;font-size:13px;font-weight:600;}
+.service-chips{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:16px;}
+.chip{padding:10px 18px;border-radius:12px;font-size:13px;font-weight:600;border:2px solid var(--gray-b);background:#fff;cursor:pointer;transition:all 0.2s;user-select:none;}
+.chip:hover{border-color:var(--green);background:#f0fdf4;}
+.chip.active{border-color:var(--green);background:#f0fdf4;color:#059669;}
 
-/* KPI CARDS */
-.kpi-row{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-bottom:20px;}
-@media(min-width:768px){.kpi-row{grid-template-columns:repeat(4,1fr);}}
-.kpi{background:#fff;border-radius:16px;padding:16px;position:relative;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,0.05);transition:all 0.3s;}
-.kpi:hover{transform:translateY(-2px);box-shadow:0 8px 25px -5px rgba(0,0,0,0.1);}
-.kpi-icon{font-size:28px;margin-bottom:8px;}
-.kpi-value{font-size:28px;font-weight:900;color:#0f172a;line-height:1;}
-.kpi-label{font-size:12px;color:#64748b;font-weight:500;margin-top:4px;}
-.kpi-bar{position:absolute;bottom:0;left:0;right:0;height:4px;}
+.opt-row{display:flex;align-items:center;justify-content:space-between;padding:12px 0;border-bottom:1px solid var(--gray-bg);}.opt-row:last-child{border:none;}
+.opt-label{font-size:14px;font-weight:600;}.opt-desc{font-size:12px;color:var(--gray);}
+.opt-ctrl{display:flex;align-items:center;gap:8px;}
+.opt-btn{width:32px;height:32px;border-radius:8px;border:1px solid var(--gray-b);background:#fff;font-size:16px;display:flex;align-items:center;justify-content:center;transition:all 0.2s;}.opt-btn:hover{background:var(--gray-bg);}
+.opt-val{font-size:16px;font-weight:700;min-width:32px;text-align:center;}
 
-/* SECTION TITLE */
-.section-title{font-size:14px;font-weight:700;color:#64748b;text-transform:uppercase;letter-spacing:1.5px;margin-bottom:12px;display:flex;align-items:center;gap:8px;}
+.result-card{background:linear-gradient(135deg,var(--dark),var(--dark2));border-radius:var(--radius);padding:28px;color:#fff;text-align:center;margin-bottom:16px;}
+.result-label{font-size:13px;color:rgba(255,255,255,0.7);margin-bottom:8px;}
+.result-val{font-size:42px;font-weight:900;margin-bottom:4px;}.result-tva{font-size:14px;color:rgba(255,255,255,0.6);}
+.result-breakdown{margin-top:20px;text-align:left;}
+.result-line{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid rgba(255,255,255,0.1);font-size:13px;}
+.result-line:last-child{border:none;font-weight:700;font-size:15px;padding-top:12px;margin-top:4px;border-top:2px solid rgba(255,255,255,0.2);}
+.result-line .rl-label{color:rgba(255,255,255,0.8);}
+.btn-actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px;justify-content:center;}
+.btn-act{padding:12px 24px;border-radius:12px;font-size:13px;font-weight:700;border:none;transition:all 0.2s;cursor:pointer;}
+.btn-act.primary{background:var(--green);color:#fff;}.btn-act.primary:hover{background:#047857;}
+.btn-act.secondary{background:rgba(255,255,255,0.15);color:#fff;border:1px solid rgba(255,255,255,0.2);}.btn-act.secondary:hover{background:rgba(255,255,255,0.25);}
+.btn-act.blue{background:var(--blue);color:#fff;}.btn-act.blue:hover{background:#2563eb;}
 
-/* MODULE GRID */
-.mod-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-bottom:20px;}
-@media(min-width:1024px){.mod-grid{grid-template-columns:repeat(4,1fr);}}
-.mod-card{background:#fff;border-radius:16px;padding:20px 16px;text-align:center;box-shadow:0 1px 3px rgba(0,0,0,0.05);transition:all 0.3s;display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:140px;border-top:4px solid transparent;cursor:pointer;position:relative;}
-.mod-card:hover{transform:translateY(-4px);box-shadow:0 15px 30px -5px rgba(0,0,0,0.12);}
-.mod-card.org{border-top-color:#3b82f6;}
-.mod-card.mkt{border-top-color:#8b5cf6;}
-.mod-card.sales{border-top-color:#10b981;}
-.mod-card.tech{border-top-color:#f97316;}
-.mod-card .m-icon{font-size:36px;margin-bottom:8px;}
-.mod-card .m-title{font-size:14px;font-weight:700;color:#0f172a;margin-bottom:2px;}
-.mod-card .m-desc{font-size:11px;color:#64748b;}
-.mod-card .m-badge{position:absolute;top:8px;right:8px;width:8px;height:8px;border-radius:50%;background:#22c55e;}
+.discount-row{display:flex;align-items:center;gap:12px;margin-top:12px;padding:12px;background:rgba(255,255,255,0.05);border-radius:10px;}
+.discount-row label{color:rgba(255,255,255,0.8);font-size:13px;font-weight:600;}
+.discount-row input{width:60px;padding:6px 10px;border-radius:8px;border:none;text-align:center;font-weight:700;font-size:14px;}
+.discount-row select{padding:6px 10px;border-radius:8px;border:none;font-weight:600;font-size:13px;}
 
-/* QUICK ACTIONS */
-.quick-row{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px;padding-top:16px;border-top:1px solid rgba(255,255,255,0.15);}
-.quick-btn{display:inline-flex;align-items:center;gap:8px;padding:10px 16px;background:rgba(255,255,255,0.15);backdrop-filter:blur(10px);border-radius:12px;font-size:13px;font-weight:600;color:#fff;transition:all 0.2s;cursor:pointer;border:none;font-family:inherit;}
-.quick-btn:hover{background:rgba(255,255,255,0.25);transform:translateY(-1px);}
+/* SAVED ESTIMATES */
+.saved-list{display:grid;gap:10px;}
+.saved-card{background:#fff;border-radius:var(--radius);padding:16px;box-shadow:var(--shadow);display:flex;justify-content:space-between;align-items:center;transition:all 0.2s;cursor:pointer;border-left:4px solid var(--green);}
+.saved-card:hover{box-shadow:var(--shadow-md);transform:translateY(-1px);}
+.saved-info{flex:1;}.saved-name{font-size:14px;font-weight:800;}.saved-meta{font-size:12px;color:var(--gray);margin-top:2px;}
+.saved-total{font-size:20px;font-weight:900;color:var(--green);text-align:right;}
+.saved-actions{display:flex;gap:6px;margin-top:4px;}
+.saved-btn{padding:4px 10px;border-radius:6px;border:none;font-size:11px;font-weight:600;cursor:pointer;transition:all 0.2s;}
 
-/* NOTIFICATIONS */
-.notif-card{background:#fff;border-radius:16px;padding:16px;margin-bottom:20px;box-shadow:0 1px 3px rgba(0,0,0,0.05);}
-.notif-item{display:flex;align-items:flex-start;gap:12px;padding:10px 0;border-bottom:1px solid #f1f5f9;}
-.notif-item:last-child{border-bottom:none;}
-.notif-dot{width:8px;height:8px;border-radius:50%;margin-top:6px;flex-shrink:0;}
-.notif-text{font-size:13px;color:#334155;line-height:1.5;}
-.notif-time{font-size:11px;color:#94a3b8;margin-top:2px;}
+.disclaimer{font-size:11px;color:var(--gray-l);text-align:center;margin-top:12px;font-style:italic;}
 
-/* LOGOUT */
-.logout{background:none;border:none;color:#94a3b8;font-size:13px;cursor:pointer;font-family:inherit;padding:8px 16px;transition:all 0.2s;border-radius:8px;}
-.logout:hover{color:#dc2626;background:#fef2f2;}
-.footer-text{text-align:center;color:#cbd5e1;font-size:11px;margin-top:16px;padding-bottom:80px;}
+.toast-container{position:fixed;top:20px;right:20px;z-index:300;display:flex;flex-direction:column;gap:8px;}
+.toast{padding:14px 20px;border-radius:12px;color:#fff;font-size:13px;font-weight:600;box-shadow:0 8px 24px rgba(0,0,0,0.15);animation:slideIn 0.3s ease;max-width:380px;}
+.toast.success{background:var(--green);}.toast.info{background:var(--blue);}
+@keyframes slideIn{from{transform:translateX(100%);opacity:0}to{transform:translateX(0);opacity:1}}
 
-/* BOTTOM NAV (ALL PAGES) */
-.bottom-nav{position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1px solid #e2e8f0;box-shadow:0 -4px 20px rgba(0,0,0,0.08);padding:6px 12px;z-index:100;display:flex;gap:4px;}
-@media(min-width:768px){.bottom-nav{display:none;}}
-.bn-item{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:8px 4px;border-radius:10px;font-size:10px;font-weight:600;color:#64748b;transition:all 0.2s;gap:2px;}
-.bn-item.active{color:#dc2626;background:#fef2f2;}
-.bn-item .bn-icon{font-size:20px;}
-
-/* MODULE PAGE SHARED */
-.page-header{background:linear-gradient(135deg,var(--h1),var(--h2));color:#fff;padding:16px 20px;border-radius:16px;margin-bottom:16px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;}
-.page-back{color:rgba(255,255,255,0.8);font-size:13px;font-weight:500;display:flex;align-items:center;gap:6px;}
-.page-back:hover{color:#fff;}
-.page-title{font-size:18px;font-weight:800;}
-.page-ext{padding:8px 14px;background:rgba(255,255,255,0.15);backdrop-filter:blur(10px);border-radius:10px;font-size:13px;font-weight:500;transition:all 0.2s;}
-.page-ext:hover{background:rgba(255,255,255,0.25);}
-
-/* TABS */
-.tabs{display:flex;gap:8px;margin-bottom:16px;}
-.tab{flex:1;padding:12px;border-radius:12px;font-weight:700;font-size:13px;border:none;cursor:pointer;font-family:inherit;transition:all 0.2s;background:#fff;color:#475569;box-shadow:0 1px 3px rgba(0,0,0,0.05);}
-.tab.active{color:#fff;box-shadow:0 4px 15px -3px rgba(0,0,0,0.2);}
-
-/* CARD */
-.card{background:#fff;border-radius:16px;box-shadow:0 1px 3px rgba(0,0,0,0.05);overflow:hidden;}
-.card-head{padding:14px;text-align:center;color:#fff;font-weight:700;font-size:15px;}
-.card-head small{display:block;font-size:11px;opacity:0.8;margin-top:2px;font-weight:500;}
-.card iframe{width:100%;border:0;min-height:500px;height:calc(100vh - 320px);}
-.card-body{padding:24px;text-align:center;}
-
-/* FORM NATIVE */
-.form-group{margin-bottom:16px;text-align:left;}
-.form-label{display:block;font-size:13px;font-weight:600;color:#334155;margin-bottom:6px;}
-.form-label .req{color:#dc2626;}
-.form-input,.form-select,.form-textarea{width:100%;padding:12px 16px;border:2px solid #e2e8f0;border-radius:12px;font-size:15px;font-family:inherit;outline:none;transition:all 0.2s;background:#fff;}
-.form-input:focus,.form-select:focus,.form-textarea:focus{border-color:#3b82f6;box-shadow:0 0 0 3px rgba(59,130,246,0.1);}
-.form-textarea{min-height:100px;resize:vertical;}
-.form-select{cursor:pointer;}
-.form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
-@media(max-width:480px){.form-row{grid-template-columns:1fr;}}
-.form-submit{width:100%;padding:14px;background:linear-gradient(135deg,#22c55e,#16a34a);color:#fff;border:none;border-radius:12px;font-size:16px;font-weight:700;cursor:pointer;font-family:inherit;transition:all 0.3s;}
-.form-submit:hover{transform:translateY(-1px);box-shadow:0 8px 25px -5px rgba(34,197,94,0.4);}
-.form-success{display:none;text-align:center;padding:32px;}
-
-/* LEGEND */
-.legend{margin-top:16px;background:#fff;border-radius:12px;padding:14px;box-shadow:0 1px 3px rgba(0,0,0,0.05);}
-.legend-title{font-size:12px;font-weight:700;color:#64748b;margin-bottom:8px;}
-.legend-items{display:flex;flex-wrap:wrap;gap:8px;}
-.legend-tag{padding:4px 10px;border-radius:6px;font-size:12px;font-weight:600;}
-
-/* TIPS */
-.tips{margin-top:16px;display:grid;grid-template-columns:repeat(3,1fr);gap:12px;}
-@media(max-width:640px){.tips{grid-template-columns:1fr;}}
-.tip{padding:14px;border-radius:12px;text-align:center;}
-.tip-icon{font-size:24px;margin-bottom:4px;}
-.tip-text{font-size:12px;font-weight:600;}
-
-:root{--h1:#059669;--h2:#047857;}
+.bottom-nav{position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1px solid var(--gray-b);box-shadow:0 -4px 20px rgba(0,0,0,0.06);padding:6px 12px;z-index:100;display:flex;gap:4px;}@media(min-width:768px){.bottom-nav{display:none;}}
+.bn-item{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:8px 4px;border-radius:10px;font-size:10px;font-weight:600;color:var(--gray);transition:all 0.2s;gap:2px;}.bn-item.active{color:var(--green);background:#f0fdf4;}.bn-item .bn-icon{font-size:20px;}
+.footer{text-align:center;color:var(--gray-xl);font-size:11px;padding:24px 0 100px;}
 </style>
 </head>
 <body>
-
-<div id="authWall" class="auth-bg">
-<div class="auth-card" style="text-align:center;">
-    <div style="font-size:48px;margin-bottom:16px;">🔐</div>
-    <h1 style="font-size:20px;font-weight:700;color:#0f172a;margin-bottom:16px;">Acces restricționat</h1>
-    <p style="color:#64748b;margin-bottom:24px;">Ai nevoie de acces Vânzări.</p>
-    <a href="../admin.html" class="auth-btn" style="display:inline-block;width:auto;padding:12px 32px;">Mergi la Login</a>
-</div>
-</div>
-
-<div id="main" style="display:none;">
+<div class="toast-container" id="toastContainer"></div>
 <div class="container">
     <div class="page-header">
-        <div style="display:flex;align-items:center;gap:16px;">
-            <a href="../admin.html" class="page-back">← Înapoi</a>
-            <h1 class="page-title">🧮 Calculator Preț</h1>
+        <div>
+            <a href="../admin.html" class="page-back">← Dashboard</a>
+            <div class="page-title">🧮 Calculator Preț</div>
+            <div class="page-subtitle">Estimări rapide pentru ofertare</div>
         </div>
-        <a href="https://docs.google.com/spreadsheets/d/18Wkkvdg7hpYHCkufvCNkxbGWv0BS6epzNelD2IWGWfw/edit?usp=sharing" target="_blank" rel="noopener noreferrer" class="page-ext">🔗 Google Sheets</a>
-    </div>
-<div style="background:#fff;border-radius:12px;padding:14px;margin-bottom:16px;box-shadow:0 1px 3px rgba(0,0,0,0.05);">
-        <div style="display:flex;flex-wrap:wrap;gap:16px;justify-content:center;font-size:13px;">
-            <div style="display:flex;align-items:center;gap:8px;"><span style="width:28px;height:28px;background:#dcfce7;color:#16a34a;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:12px;">1</span><span style="color:#475569;">Introdu cantitățile</span></div>
-            <div style="display:flex;align-items:center;gap:8px;"><span style="width:28px;height:28px;background:#dcfce7;color:#16a34a;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:12px;">2</span><span style="color:#475569;">Total automat</span></div>
-            <div style="display:flex;align-items:center;gap:8px;"><span style="width:28px;height:28px;background:#dcfce7;color:#16a34a;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:12px;">3</span><span style="color:#475569;">Copiază oferta</span></div>
+        <div class="page-actions">
+            <button class="page-btn secondary" onclick="resetCalc()">🔄 Reset</button>
         </div>
     </div>
-    <div class="tabs"><button class="tab active" style="background:#22c55e;" data-tab="calc" data-color="#22c55e" onclick="switchTab(this)">🧮 Calculator Ofertă</button>
-</div>
-<div class="tab-panel" id="panel_calc" style="display:block;">
-<div class="card"><div class="card-head" style="background:#22c55e;">🧮 Calculator Ofertă CSSI<small>Introdu cantitățile în celulele galbene</small></div>
-<iframe src="https://docs.google.com/spreadsheets/d/18Wkkvdg7hpYHCkufvCNkxbGWv0BS6epzNelD2IWGWfw/edit?usp=sharing&rm=minimal&single=true&widget=true&headers=false" title="Calculator"></iframe></div></div>
 
+    <div class="tabs">
+        <button class="tab active" onclick="setTab('calc',this)">🧮 Calculator</button>
+        <button class="tab" onclick="setTab('saved',this)">📋 Estimări Salvate (<span id="savedCount">0</span>)</button>
+    </div>
 
-    <div class="footer-text">CSSI · Portal Intern · Modificările se salvează automat</div>
-</div>
-</div>
+    <div id="tab-calc">
+        <div class="calc-card">
+            <div class="calc-title">🔧 Selectează Servicii</div>
+            <div class="service-chips" id="serviceChips"></div>
+        </div>
+        <div class="calc-card" id="optionsCard">
+            <div class="calc-title">⚙️ Configurare</div>
+            <div id="optionsList"></div>
+        </div>
+        <div class="calc-card">
+            <div class="calc-title">📍 Detalii Proiect</div>
+            <div class="form-row">
+                <div class="form-group"><label class="form-label">Client / Proiect</label><input type="text" class="form-input" id="clientName" placeholder="ex: Hotel Cheile Râșnoavei"></div>
+                <div class="form-group"><label class="form-label">ID Proiect</label><input type="text" class="form-input" id="projectId" placeholder="ex: CSSI-2026-015"></div>
+            </div>
+            <div class="form-row">
+                <div class="form-group"><label class="form-label">Tip obiectiv</label>
+                    <select class="form-select" id="tipObiectiv" onchange="calculate()">
+                        <option value="1">Rezidențial</option><option value="1.15">Comercial</option><option value="1.3">Industrial</option><option value="1.4">Instituție publică</option>
+                    </select>
+                </div>
+                <div class="form-group"><label class="form-label">Distanță (km de Brașov)</label>
+                    <select class="form-select" id="distanta" onchange="calculate()">
+                        <option value="0">În Brașov (0 km)</option><option value="200">Până la 30 km</option><option value="400">30-60 km</option><option value="700">60-100 km</option><option value="1200">Peste 100 km</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div class="result-card" id="resultCard"></div>
+        <div class="disclaimer">* Prețuri orientative. Oferta finală se stabilește după evaluarea la fața locului.</div>
+    </div>
 
+    <div id="tab-saved" style="display:none">
+        <div class="saved-list" id="savedList"></div>
+    </div>
+
+    <div class="footer">Portal CSSI 3.0 · Calculator Preț v3.0</div>
+</div>
 <div class="bottom-nav">
-  <a href="../admin.html" class="bn-item active"><span class="bn-icon">🏠</span>Acasă</a>
-  <a href="calendar-zilnic.html" class="bn-item"><span class="bn-icon">📅</span>Task-uri</a>
-  <a href="crm-clienti.html" class="bn-item"><span class="bn-icon">💰</span>CRM</a>
-  <a href="checklist-montaj.html" class="bn-item"><span class="bn-icon">✅</span>Raport</a>
-  <a href="necesar-materiale.html" class="bn-item"><span class="bn-icon">📦</span>Material</a>
+    <a href="../admin.html" class="bn-item"><span class="bn-icon">🏠</span>Acasă</a>
+    <a href="proiecte.html" class="bn-item"><span class="bn-icon">📋</span>Proiecte</a>
+    <a href="crm-clienti.html" class="bn-item"><span class="bn-icon">💰</span>CRM</a>
+    <a href="calculator-pret.html" class="bn-item active"><span class="bn-icon">🧮</span>Preț</a>
+    <a href="financiar.html" class="bn-item"><span class="bn-icon">📄</span>Facturi</a>
 </div>
-
 <script>
-(function(){
-    var role = sessionStorage.getItem("cssi-role");
-    if (role === "admin" || role === "sales") {
-        document.getElementById('authWall').style.display='none';
-        document.getElementById('main').style.display='block';
-    }
-})();
+var API_URL = '';
+var role=sessionStorage.getItem("cssi-role");
+if(!role||!["admin","sales"].includes(role)){window.location.href="../admin.html";}
 
-function switchTab(btn){
-    document.querySelectorAll('.tab').forEach(function(t){t.classList.remove('active');t.style.background='';t.style.color='';});
-    document.querySelectorAll('.tab-panel').forEach(function(p){p.style.display='none';});
-    btn.classList.add('active');
-    btn.style.background=btn.dataset.color;
-    btn.style.color='#fff';
-    document.getElementById('panel_'+btn.dataset.tab).style.display='block';
+function toast(msg,type){var c=document.getElementById('toastContainer');var t=document.createElement('div');t.className='toast '+(type||'info');t.textContent=msg;c.appendChild(t);setTimeout(function(){t.style.opacity='0';t.style.transform='translateX(100px)';t.style.transition='all 0.3s'},3000);setTimeout(function(){t.remove()},3500);}
+
+var SERVICES=[
+    {id:"cctv",name:"📹 Supraveghere Video",active:false,items:[
+        {name:"Cameră IP 2MP",unit:450,min:0,max:64,val:4},
+        {name:"Cameră IP 4MP",unit:650,min:0,max:64,val:0},
+        {name:"Cameră IP 8MP (4K)",unit:980,min:0,max:64,val:0},
+        {name:"NVR (înregistrator)",unit:1800,min:0,max:4,val:1},
+        {name:"HDD 2TB",unit:400,min:0,max:8,val:1},
+        {name:"HDD 4TB",unit:650,min:0,max:8,val:0},
+        {name:"Switch POE 8P",unit:420,min:0,max:4,val:0},
+        {name:"Montaj + cablare (per cam.)",unit:250,min:0,max:64,val:4}
+    ]},
+    {id:"alarma",name:"🔔 Alarmă Antiefracție",active:false,items:[
+        {name:"Centrală alarmă",unit:1200,min:0,max:2,val:1},
+        {name:"Detector mișcare",unit:180,min:0,max:32,val:4},
+        {name:"Contact magnetic ușă",unit:80,min:0,max:20,val:2},
+        {name:"Sirenă interior",unit:150,min:0,max:4,val:1},
+        {name:"Sirenă exterior",unit:350,min:0,max:2,val:1},
+        {name:"Tastatură",unit:280,min:0,max:4,val:1},
+        {name:"Montaj + programare",unit:800,min:0,max:1,val:1}
+    ]},
+    {id:"incendiu",name:"🔥 Detecție Incendiu",active:false,items:[
+        {name:"Centrală incendiu 2 bucle",unit:4500,min:0,max:4,val:1},
+        {name:"Detector fum adresabil",unit:200,min:0,max:200,val:10},
+        {name:"Detector temperatură",unit:250,min:0,max:100,val:0},
+        {name:"Buton manual incendiu",unit:120,min:0,max:20,val:2},
+        {name:"Sirenă incendiu",unit:280,min:0,max:10,val:2},
+        {name:"Modul izolator",unit:160,min:0,max:20,val:0},
+        {name:"Montaj + cablare E30 (per det.)",unit:120,min:0,max:200,val:10},
+        {name:"Proiectare + aviz ISU",unit:3000,min:0,max:1,val:0}
+    ]},
+    {id:"electric",name:"⚡ Instalații Electrice",active:false,items:[
+        {name:"Tablou electric (per modul)",unit:45,min:0,max:72,val:24},
+        {name:"Punct priză / întrerupător",unit:120,min:0,max:100,val:10},
+        {name:"Corp iluminat montaj",unit:80,min:0,max:100,val:0},
+        {name:"Metru cablu + montaj",unit:15,min:0,max:2000,val:100},
+        {name:"Verificare PRAM + buletin",unit:1500,min:0,max:1,val:0}
+    ]},
+    {id:"porti",name:"🚪 Automatizări Porți",active:false,items:[
+        {name:"Motor poartă culisantă",unit:2200,min:0,max:4,val:1},
+        {name:"Motor poartă batantă (set)",unit:2800,min:0,max:4,val:0},
+        {name:"Barieră auto",unit:3500,min:0,max:2,val:0},
+        {name:"Telecomandă",unit:80,min:0,max:10,val:3},
+        {name:"Fotocelulă pereche",unit:120,min:0,max:4,val:1},
+        {name:"Montaj + configurare",unit:1200,min:0,max:4,val:1}
+    ]},
+    {id:"control",name:"🔑 Control Acces",active:false,items:[
+        {name:"Controler acces 2 uși",unit:1400,min:0,max:4,val:1},
+        {name:"Cititor card / amprentă",unit:350,min:0,max:8,val:2},
+        {name:"Yală electromagnetică",unit:280,min:0,max:8,val:2},
+        {name:"Card acces (10 buc)",unit:60,min:0,max:20,val:1},
+        {name:"Montaj + programare",unit:600,min:0,max:4,val:1}
+    ]}
+];
+
+var savedEstimates=[];
+var discountPct=0;
+var discountType='pct';
+
+function renderChips(){
+    var html='';
+    SERVICES.forEach(function(s){html+='<div class="chip'+(s.active?' active':'')+'" onclick="toggleService(\''+s.id+'\')">'+s.name+'</div>';});
+    document.getElementById('serviceChips').innerHTML=html;
+}
+function toggleService(id){var s=SERVICES.find(function(x){return x.id===id});if(s){s.active=!s.active;renderChips();renderOptions();calculate();}}
+
+function renderOptions(){
+    var active=SERVICES.filter(function(s){return s.active});
+    if(!active.length){document.getElementById('optionsList').innerHTML='<div style="color:var(--gray-l);font-size:13px;padding:10px">Selectează cel puțin un serviciu din lista de mai sus</div>';return;}
+    var html='';
+    active.forEach(function(s){
+        html+='<div style="font-size:14px;font-weight:800;color:var(--dark);margin:16px 0 8px;padding-bottom:6px;border-bottom:2px solid var(--gray-bg)">'+s.name+'</div>';
+        s.items.forEach(function(item,idx){
+            html+='<div class="opt-row"><div><div class="opt-label">'+item.name+'</div><div class="opt-desc">'+item.unit.toLocaleString('ro-RO')+' RON / buc</div></div>';
+            html+='<div class="opt-ctrl"><button class="opt-btn" onclick="adjVal(\''+s.id+'\','+idx+',-1)">−</button>';
+            html+='<span class="opt-val" id="val-'+s.id+'-'+idx+'">'+item.val+'</span>';
+            html+='<button class="opt-btn" onclick="adjVal(\''+s.id+'\','+idx+',1)">+</button></div></div>';
+        });
+    });
+    document.getElementById('optionsList').innerHTML=html;
+}
+function adjVal(sid,idx,dir){var s=SERVICES.find(function(x){return x.id===sid});if(!s)return;var item=s.items[idx];item.val=Math.max(item.min,Math.min(item.max,item.val+dir));document.getElementById('val-'+sid+'-'+idx).textContent=item.val;calculate();}
+
+function calculate(){
+    var active=SERVICES.filter(function(s){return s.active});
+    var coefTip=parseFloat(document.getElementById('tipObiectiv').value);
+    var transport=parseInt(document.getElementById('distanta').value);
+    var lines=[];var subtotal=0;
+    active.forEach(function(s){
+        var sTotal=0;s.items.forEach(function(item){sTotal+=item.unit*item.val;});
+        subtotal+=sTotal;lines.push({label:s.name,val:sTotal});
+    });
+    var coefVal=Math.round(subtotal*(coefTip-1));
+    if(coefTip>1){lines.push({label:'Coef. complexitate (×'+coefTip+')',val:coefVal});subtotal+=coefVal;}
+    if(transport>0){lines.push({label:'Transport',val:transport});subtotal+=transport;}
+    lines.push({label:'TOTAL (fără TVA)',val:subtotal});
+    var tva=Math.round(subtotal*0.19);var total=subtotal+tva;
+
+    var html='<div class="result-label">Estimare preț</div>';
+    html+='<div class="result-val">'+total.toLocaleString('ro-RO')+' RON</div>';
+    html+='<div class="result-tva">inclusiv TVA 19% ('+tva.toLocaleString('ro-RO')+' RON) · Fără TVA: '+subtotal.toLocaleString('ro-RO')+' RON</div>';
+    html+='<div class="result-breakdown">';
+    lines.forEach(function(l){var isT=l.label.startsWith('TOTAL');html+='<div class="result-line'+(isT?' total':'')+'"><span class="rl-label">'+l.label+'</span><span>'+l.val.toLocaleString('ro-RO')+' RON</span></div>';});
+    html+='</div>';
+    html+='<div class="discount-row"><label>🏷️ Discount:</label><input type="number" id="discountVal" value="0" min="0" max="100" onchange="applyDiscount()" style="width:60px">';
+    html+='<select id="discountType" onchange="applyDiscount()"><option value="pct">%</option><option value="fix">RON</option></select>';
+    html+='<span id="discountResult" style="color:var(--green);font-weight:700;font-size:14px"></span></div>';
+    html+='<div class="btn-actions">';
+    html+='<button class="btn-act primary" onclick="saveEstimate()">💾 Salvează</button>';
+    html+='<button class="btn-act blue" onclick="copyResult()">📋 Copiază</button>';
+    html+='<button class="btn-act secondary" onclick="resetCalc()">🔄 Reset</button>';
+    html+='</div>';
+    document.getElementById('resultCard').innerHTML=html;
 }
 
-function copyText(text){navigator.clipboard.writeText(text).then(function(){alert('Copiat! ✅');});}
+function applyDiscount(){
+    var dv=parseFloat(document.getElementById('discountVal').value)||0;
+    var dt=document.getElementById('discountType').value;
+    var active=SERVICES.filter(function(s){return s.active});
+    var sub=0;active.forEach(function(s){s.items.forEach(function(i){sub+=i.unit*i.val;});});
+    var coef=parseFloat(document.getElementById('tipObiectiv').value);
+    sub+=Math.round(sub*(coef-1));sub+=parseInt(document.getElementById('distanta').value);
+    var disc=dt==='pct'?Math.round(sub*dv/100):dv;
+    var after=sub-disc;var tva=Math.round(after*0.19);
+    document.getElementById('discountResult').textContent=disc>0?'−'+disc.toLocaleString('ro-RO')+' RON → Total cu TVA: '+(after+tva).toLocaleString('ro-RO')+' RON':'';
+}
 
+function saveEstimate(){
+    var active=SERVICES.filter(function(s){return s.active});
+    if(!active.length){toast('⚠️ Selectează servicii întâi','info');return;}
+    var client=document.getElementById('clientName').value||'Fără client';
+    var pid=document.getElementById('projectId').value||'';
+    var sub=0;var services=[];
+    active.forEach(function(s){var t=0;s.items.forEach(function(i){t+=i.unit*i.val;});sub+=t;services.push(s.name.replace(/[^\w\sÎîĂăȘșȚț]/g,'').trim());});
+    var coef=parseFloat(document.getElementById('tipObiectiv').value);sub+=Math.round(sub*(coef-1));sub+=parseInt(document.getElementById('distanta').value);
+    var tva=Math.round(sub*0.19);
+    savedEstimates.unshift({id:Date.now(),data:new Date().toISOString().split('T')[0],client:client,pid:pid,services:services,subtotal:sub,total:sub+tva});
+    document.getElementById('savedCount').textContent=savedEstimates.length;
+    toast('💾 Estimare salvată: '+client,'success');
+}
+
+function renderSaved(){
+    if(!savedEstimates.length){document.getElementById('savedList').innerHTML='<div style="text-align:center;color:var(--gray-l);padding:40px">Nicio estimare salvată. Creează una din Calculator.</div>';return;}
+    var html='';
+    savedEstimates.forEach(function(e){
+        html+='<div class="saved-card">';
+        html+='<div class="saved-info"><div class="saved-name">'+e.client+(e.pid?' · '+e.pid:'')+'</div>';
+        html+='<div class="saved-meta">📅 '+e.data+' · '+e.services.join(', ')+'</div>';
+        html+='<div class="saved-actions"><button class="saved-btn" style="background:#f0fdf4;color:var(--green)" onclick="event.stopPropagation();copyEstimate('+e.id+')">📋 Copiază</button>';
+        html+='<button class="saved-btn" style="background:#fef2f2;color:var(--red)" onclick="event.stopPropagation();deleteEstimate('+e.id+')">🗑️</button></div></div>';
+        html+='<div><div class="saved-total">'+e.total.toLocaleString('ro-RO')+'</div><div style="font-size:11px;color:var(--gray);text-align:right">RON cu TVA</div></div>';
+        html+='</div>';
+    });
+    document.getElementById('savedList').innerHTML=html;
+}
+
+function copyEstimate(id){
+    var e=savedEstimates.find(function(x){return x.id===id});if(!e)return;
+    var t='ESTIMARE PREȚ CSSI\n'+e.client+(e.pid?' ('+e.pid+')':'')+'\nServicii: '+e.services.join(', ')+'\nSubtotal: '+e.subtotal.toLocaleString('ro-RO')+' RON\nTVA 19%: '+(e.total-e.subtotal).toLocaleString('ro-RO')+' RON\nTOTAL: '+e.total.toLocaleString('ro-RO')+' RON';
+    if(navigator.clipboard)navigator.clipboard.writeText(t);
+    toast('📋 Copiat','success');
+}
+function deleteEstimate(id){savedEstimates=savedEstimates.filter(function(x){return x.id!==id});document.getElementById('savedCount').textContent=savedEstimates.length;renderSaved();}
+
+function copyResult(){
+    var active=SERVICES.filter(function(s){return s.active});
+    var client=document.getElementById('clientName').value||'';
+    var text='ESTIMARE PREȚ CSSI\n';
+    if(client) text+='Client: '+client+'\n';
+    text+='='+'='.repeat(30)+'\n';
+    active.forEach(function(s){
+        text+='\n'+s.name.replace(/[^\w\sÎîĂăȘșȚț]/g,'').trim()+':\n';
+        s.items.forEach(function(item){if(item.val>0) text+='  '+item.name+': '+item.val+' × '+item.unit.toLocaleString('ro-RO')+' = '+(item.val*item.unit).toLocaleString('ro-RO')+' RON\n';});
+    });
+    var el=document.getElementById('resultCard');
+    text+='\n'+el.textContent.replace(/💾.*|📋.*|🔄.*|🏷️.*/g,'').trim();
+    if(navigator.clipboard)navigator.clipboard.writeText(text);
+    toast('📋 Copiat în clipboard!','success');
+}
+
+function resetCalc(){SERVICES.forEach(function(s){s.active=false;s.items.forEach(function(i){i.val=0;})});document.getElementById('clientName').value='';document.getElementById('projectId').value='';renderChips();renderOptions();calculate();}
+
+function setTab(id,btn){
+    document.querySelectorAll('.tab').forEach(function(t){t.classList.remove('active')});
+    if(btn)btn.classList.add('active');
+    document.getElementById('tab-calc').style.display=id==='calc'?'':'none';
+    document.getElementById('tab-saved').style.display=id==='saved'?'':'none';
+    if(id==='saved')renderSaved();
+}
+
+renderChips();renderOptions();calculate();
 </script>
 </body>
 </html>

@@ -1,0 +1,593 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mentenanță — Portal CSSI 3.0</title>
+<meta name="robots" content="noindex, nofollow">
+<link rel="icon" type="image/x-icon" href="/images/favicon.ico">
+<meta name="theme-color" content="#dc2626">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+:root{--red:#dc2626;--red-d:#991b1b;--dark:#0f172a;--dark2:#1e293b;--gray:#64748b;--gray-l:#94a3b8;--gray-xl:#cbd5e1;--gray-bg:#f1f5f9;--gray-b:#e2e8f0;--blue:#3b82f6;--green:#22c55e;--orange:#f97316;--purple:#8b5cf6;--yellow:#eab308;--teal:#14b8a6;--pink:#ec4899;--radius:16px;--radius-sm:12px;--shadow:0 1px 3px rgba(0,0,0,0.06);--shadow-md:0 4px 12px rgba(0,0,0,0.08);--font:'Inter',system-ui,sans-serif;}
+body{font-family:var(--font);color:var(--dark);background:var(--gray-bg);-webkit-font-smoothing:antialiased;}
+a{text-decoration:none;color:inherit;}button{font-family:inherit;cursor:pointer;}
+
+.page-header{background:linear-gradient(135deg,var(--dark),var(--dark2));color:#fff;padding:20px 24px;border-radius:20px;margin-bottom:16px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;}
+.page-back{color:rgba(255,255,255,0.7);font-size:13px;font-weight:500;display:flex;align-items:center;gap:6px;}.page-back:hover{color:#fff;}
+.page-title{font-size:22px;font-weight:800;letter-spacing:-0.5px;}
+.page-subtitle{font-size:12px;color:rgba(255,255,255,0.5);margin-top:2px;}
+.page-actions{display:flex;gap:8px;align-items:center;}
+.page-btn{padding:10px 18px;border-radius:12px;font-size:13px;font-weight:700;border:none;transition:all 0.2s;}
+.page-btn.primary{background:var(--red);color:#fff;}.page-btn.primary:hover{background:var(--red-d);transform:translateY(-1px);}
+.page-btn.secondary{background:rgba(255,255,255,0.1);color:#fff;border:1px solid rgba(255,255,255,0.2);}.page-btn.secondary:hover{background:rgba(255,255,255,0.2);}
+.sync-indicator{width:8px;height:8px;border-radius:50%;display:inline-block;margin-right:6px;}
+.sync-ok{background:var(--green);box-shadow:0 0 6px rgba(34,197,94,0.5);}.sync-off{background:var(--gray-l);}.sync-loading{background:var(--orange);animation:pulse 1s infinite;}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.4}}
+.container{max-width:1400px;margin:0 auto;padding:16px;}@media(min-width:768px){.container{padding:24px;}}
+
+/* KPI */
+.summary{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:16px;}
+.s-item{background:#fff;border-radius:var(--radius-sm);padding:14px 18px;box-shadow:var(--shadow);flex:1;min-width:130px;display:flex;align-items:center;gap:12px;transition:all 0.2s;cursor:pointer;}
+.s-item:hover{box-shadow:var(--shadow-md);transform:translateY(-1px);}
+.s-item.active-filter{border:2px solid var(--blue);}
+.s-icon{width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;}
+.s-icon.green{background:#f0fdf4;}.s-icon.orange{background:#fff7ed;}.s-icon.red{background:#fef2f2;}.s-icon.gray{background:var(--gray-bg);}.s-icon.blue{background:#eff6ff;}.s-icon.teal{background:#f0fdfa;}
+.s-val{font-size:22px;font-weight:900;}.s-label{font-size:11px;color:var(--gray);margin-top:1px;}
+
+/* Filters */
+.filters{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:16px;align-items:center;}
+.filter-search{padding:10px 16px;border-radius:99px;font-size:13px;border:1px solid var(--gray-b);outline:none;font-family:inherit;min-width:200px;transition:all 0.2s;background:#fff;flex:1;max-width:300px;}
+.filter-search:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(59,130,246,0.08);}
+.filter-select{padding:8px 14px;border-radius:99px;font-size:12px;font-weight:600;border:1px solid var(--gray-b);background:#fff;font-family:inherit;outline:none;cursor:pointer;}
+.view-toggle{display:flex;background:#fff;border-radius:10px;padding:3px;box-shadow:var(--shadow);border:1px solid var(--gray-b);margin-left:auto;}
+.view-btn{padding:7px 14px;border-radius:8px;font-size:12px;font-weight:600;border:none;background:none;color:var(--gray);cursor:pointer;transition:all 0.2s;}.view-btn.active{background:var(--dark);color:#fff;}
+.filter-count{font-size:12px;color:var(--gray);font-weight:500;}
+
+/* Cards */
+.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(360px,1fr));gap:12px;margin-bottom:16px;}
+.mcard{background:#fff;border-radius:var(--radius);padding:20px;box-shadow:var(--shadow);border-left:4px solid var(--green);transition:all 0.2s;}
+.mcard:hover{box-shadow:var(--shadow-md);transform:translateY(-1px);}
+.mcard.warning{border-left-color:var(--orange);}.mcard.danger{border-left-color:var(--red);}.mcard.expired{border-left-color:var(--gray);opacity:0.7;}.mcard.suspendat{border-left-color:var(--yellow);opacity:0.8;}
+.mcard-top{display:flex;justify-content:space-between;align-items:start;margin-bottom:6px;}
+.mcard-client{font-size:16px;font-weight:800;}
+.mcard-badge{padding:3px 10px;border-radius:6px;font-size:11px;font-weight:700;}
+.mcard-badge.activ{background:#f0fdf4;color:var(--green);}.mcard-badge.expirat{background:var(--gray-bg);color:var(--gray);}.mcard-badge.suspendat{background:#fefce8;color:var(--yellow);}
+.mcard-pid{display:inline-flex;align-items:center;gap:3px;font-size:11px;color:var(--blue);font-weight:700;margin-bottom:8px;padding:3px 8px;background:#eff6ff;border-radius:6px;}
+.mcard-tags{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px;}
+.mcard-tag{font-size:11px;font-weight:700;padding:3px 10px;border-radius:6px;}
+.mcard-tag.tip{background:#f5f3ff;color:var(--purple);}.mcard-tag.freq{background:#f0fdfa;color:var(--teal);}
+.mcard-dates{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px;}
+.mcard-date{font-size:12px;padding:8px 10px;border-radius:8px;background:var(--gray-bg);}
+.mcard-date-label{font-size:10px;font-weight:700;color:var(--gray);text-transform:uppercase;display:block;margin-bottom:2px;}
+.mcard-date-val{font-size:13px;font-weight:700;}
+.mcard-note{font-size:12px;color:var(--gray);font-style:italic;margin-bottom:10px;background:var(--gray-bg);padding:8px 12px;border-radius:8px;line-height:1.4;}
+.mcard-alert{display:flex;align-items:center;gap:6px;padding:10px 14px;border-radius:10px;font-size:12px;font-weight:700;margin-bottom:10px;}
+.mcard-alert.ok{background:#f0fdf4;color:var(--green);}.mcard-alert.warn{background:#fff7ed;color:var(--orange);}.mcard-alert.urgent{background:#fef2f2;color:var(--red);}
+.mcard-actions{display:flex;gap:6px;padding-top:12px;border-top:1px solid var(--gray-bg);flex-wrap:wrap;}
+.mcard-actions select{flex:1;padding:8px 12px;border-radius:10px;border:1px solid var(--gray-b);font-size:12px;font-weight:600;font-family:inherit;cursor:pointer;background:#fff;outline:none;min-width:100px;}
+.btn-done{padding:8px 16px;border-radius:10px;border:none;background:var(--green);color:#fff;font-size:12px;font-weight:700;transition:all 0.2s;white-space:nowrap;cursor:pointer;}.btn-done:hover{background:#16a34a;transform:translateY(-1px);}
+.btn-detail{padding:8px 14px;border-radius:10px;border:none;background:var(--gray-bg);color:var(--gray);font-size:12px;font-weight:700;cursor:pointer;transition:all 0.2s;}.btn-detail:hover{background:var(--blue);color:#fff;}
+.btn-edit{padding:8px 14px;border-radius:10px;border:none;background:#eff6ff;color:var(--blue);font-size:12px;font-weight:700;cursor:pointer;transition:all 0.2s;}.btn-edit:hover{background:var(--blue);color:#fff;}
+
+/* Table */
+.table-wrap{background:#fff;border-radius:var(--radius);box-shadow:var(--shadow);overflow-x:auto;}
+table{width:100%;border-collapse:collapse;font-size:13px;}
+th{background:var(--dark);color:#fff;padding:12px 14px;text-align:left;font-weight:700;font-size:11px;text-transform:uppercase;letter-spacing:0.5px;white-space:nowrap;}
+td{padding:10px 14px;border-bottom:1px solid var(--gray-bg);}
+tr:hover td{background:rgba(59,130,246,0.03);}
+
+/* Toast */
+.toast-container{position:fixed;top:20px;right:20px;z-index:300;display:flex;flex-direction:column;gap:8px;}
+.toast{padding:14px 20px;border-radius:12px;color:#fff;font-size:13px;font-weight:600;box-shadow:0 8px 24px rgba(0,0,0,0.15);animation:slideIn 0.3s ease;max-width:380px;}
+.toast.success{background:var(--green);}.toast.error{background:var(--red);}.toast.info{background:var(--blue);}
+@keyframes slideIn{from{transform:translateX(100%);opacity:0}to{transform:translateX(0);opacity:1}}
+
+/* Modal */
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);backdrop-filter:blur(4px);z-index:200;align-items:center;justify-content:center;padding:16px;}
+.modal-overlay.active{display:flex;}
+.modal{background:#fff;border-radius:20px;width:100%;max-width:560px;max-height:90vh;overflow-y:auto;box-shadow:0 25px 60px rgba(0,0,0,0.3);}
+.modal-head{padding:20px 24px;border-bottom:1px solid var(--gray-b);display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;background:#fff;border-radius:20px 20px 0 0;z-index:1;}
+.modal-title{font-size:18px;font-weight:800;}
+.modal-close{width:32px;height:32px;border-radius:8px;border:none;background:var(--gray-bg);color:var(--gray);font-size:18px;display:flex;align-items:center;justify-content:center;transition:all 0.2s;}.modal-close:hover{background:#fef2f2;color:var(--red);}
+.modal-body{padding:24px;}
+.form-group{margin-bottom:16px;}
+.form-label{display:block;font-size:13px;font-weight:600;color:var(--dark);margin-bottom:6px;}.form-label .req{color:var(--red);}
+.form-input,.form-select,.form-textarea{width:100%;padding:12px 16px;border:2px solid var(--gray-b);border-radius:var(--radius-sm);font-size:14px;font-family:inherit;outline:none;transition:all 0.2s;background:#fff;}
+.form-input:focus,.form-select:focus,.form-textarea:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(59,130,246,0.08);}
+.form-textarea{min-height:70px;resize:vertical;}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;}@media(max-width:480px){.form-row{grid-template-columns:1fr;}}
+.form-submit{width:100%;padding:14px;background:linear-gradient(135deg,var(--green),#16a34a);color:#fff;border:none;border-radius:var(--radius-sm);font-size:15px;font-weight:700;transition:all 0.3s;cursor:pointer;}.form-submit:hover{transform:translateY(-1px);box-shadow:0 8px 20px -5px rgba(34,197,94,0.4);}
+.form-submit:disabled{background:var(--gray-l);cursor:not-allowed;transform:none;}
+
+/* History timeline */
+.hist-title{font-size:13px;font-weight:700;margin:16px 0 8px;padding-top:12px;border-top:1px solid var(--gray-bg);}
+.hist-item{display:flex;gap:10px;padding:6px 0;font-size:12px;position:relative;}
+.hist-dot{width:10px;height:10px;border-radius:50%;background:var(--green);flex-shrink:0;margin-top:3px;}
+.hist-date{color:var(--gray);font-weight:600;min-width:80px;}
+.hist-text{color:var(--dark);}
+
+/* Bottom Nav */
+.bottom-nav{position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1px solid var(--gray-b);box-shadow:0 -4px 20px rgba(0,0,0,0.06);padding:6px 12px;z-index:100;display:flex;gap:4px;}
+@media(min-width:768px){.bottom-nav{display:none;}}
+.bn-item{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:8px 4px;border-radius:10px;font-size:10px;font-weight:600;color:var(--gray);transition:all 0.2s;gap:2px;}.bn-item.active{color:var(--red);background:#fef2f2;}.bn-item .bn-icon{font-size:20px;}
+.empty-msg{text-align:center;padding:40px;color:var(--gray-l);font-size:14px;}
+.footer{text-align:center;color:var(--gray-xl);font-size:11px;padding:24px 0 100px;}
+.loading-bar{position:fixed;top:0;left:0;right:0;height:3px;z-index:400;display:none;}.loading-bar.active{display:block;}.loading-bar::after{content:'';display:block;width:30%;height:100%;background:var(--red);border-radius:2px;animation:loadSlide 1.2s infinite ease-in-out;}
+@keyframes loadSlide{0%{margin-left:-30%}100%{margin-left:100%}}
+
+/* Confirm dialog */
+.confirm-box{background:#fff;border-radius:16px;padding:24px;text-align:center;max-width:360px;box-shadow:0 25px 60px rgba(0,0,0,0.3);}
+.confirm-title{font-size:16px;font-weight:800;margin-bottom:8px;}
+.confirm-text{font-size:13px;color:var(--gray);margin-bottom:16px;line-height:1.5;}
+.confirm-btns{display:flex;gap:8px;justify-content:center;}
+.confirm-btns button{padding:10px 24px;border-radius:10px;border:none;font-weight:700;font-size:13px;cursor:pointer;}
+</style>
+</head>
+<body>
+
+<div class="loading-bar" id="loadBar"></div>
+<div class="toast-container" id="toastContainer"></div>
+
+<div class="container">
+    <div class="page-header">
+        <div>
+            <a href="../admin.html" class="page-back">← Dashboard</a>
+            <div class="page-title">🔄 Mentenanță & Service</div>
+            <div class="page-subtitle" id="syncStatus"><span class="sync-indicator sync-off"></span>Date locale (demo)</div>
+        </div>
+        <div class="page-actions">
+            <button class="page-btn secondary" onclick="refreshData()">🔄 Sync</button>
+            <button class="page-btn primary" onclick="openAddModal()">+ Contract Nou</button>
+        </div>
+    </div>
+
+    <div class="summary" id="summary"></div>
+
+    <div class="filters">
+        <input type="text" class="filter-search" id="searchInput" placeholder="🔍 Caută client, proiect..." oninput="render()">
+        <select class="filter-select" id="filterStatus" onchange="render()">
+            <option value="">Toate statusurile</option>
+            <option value="Activ">✅ Active</option>
+            <option value="Expirat">⛔ Expirate</option>
+            <option value="Suspendat">⏸️ Suspendate</option>
+        </select>
+        <select class="filter-select" id="filterTip" onchange="render()">
+            <option value="">Toate tipurile</option>
+            <option>Standard</option><option>Premium</option><option>Garanție</option>
+        </select>
+        <select class="filter-select" id="filterFreq" onchange="render()">
+            <option value="">Toate frecvențele</option>
+            <option>Lunar</option><option>Trimestrial</option><option>Semestrial</option><option>Anual</option>
+        </select>
+        <div class="view-toggle">
+            <button class="view-btn active" id="vCards" onclick="setView('cards')">☷ Carduri</button>
+            <button class="view-btn" id="vTable" onclick="setView('table')">☰ Tabel</button>
+        </div>
+        <div class="filter-count" id="filterCount"></div>
+    </div>
+
+    <div id="cardsView" class="cards"></div>
+    <div id="tableView" class="table-wrap" style="display:none"></div>
+
+    <div class="footer">Portal CSSI 3.0 · Modul Mentenanță v3.0</div>
+</div>
+
+<div class="bottom-nav">
+    <a href="../admin.html" class="bn-item"><span class="bn-icon">🏠</span>Acasă</a>
+    <a href="proiecte.html" class="bn-item"><span class="bn-icon">📋</span>Proiecte</a>
+    <a href="mentenanta.html" class="bn-item active"><span class="bn-icon">🔄</span>Mentenanță</a>
+    <a href="executie.html" class="bn-item"><span class="bn-icon">🔧</span>Execuție</a>
+    <a href="financiar.html" class="bn-item"><span class="bn-icon">📄</span>Facturi</a>
+</div>
+
+<!-- ADD/EDIT MODAL -->
+<div id="addModal" class="modal-overlay" onclick="if(event.target===this)closeAddModal()">
+<div class="modal">
+    <div class="modal-head"><div class="modal-title" id="modalTitle">🔄 Contract Mentenanță Nou</div><button class="modal-close" onclick="closeAddModal()">✕</button></div>
+    <div class="modal-body">
+        <form id="addForm" onsubmit="saveContract(event)">
+            <input type="hidden" name="editId" id="editId" value="">
+            <div class="form-group"><label class="form-label">Client <span class="req">*</span></label><input type="text" class="form-input" name="client" id="fClient" required placeholder="Numele clientului / obiectivul"></div>
+            <div class="form-group"><label class="form-label">Proiect asociat</label><select class="form-select" name="proiectId" id="fProiect"></select></div>
+            <div class="form-row">
+                <div class="form-group"><label class="form-label">Tip contract</label>
+                    <select class="form-select" name="tipContract" id="fTip">
+                        <option>Standard</option><option>Premium</option><option>Garanție</option>
+                    </select>
+                </div>
+                <div class="form-group"><label class="form-label">Frecvență verificare</label>
+                    <select class="form-select" name="frecventa" id="fFreq">
+                        <option>Lunar</option><option selected>Trimestrial</option><option>Semestrial</option><option>Anual</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group"><label class="form-label">Ultima verificare</label><input type="date" class="form-input" name="ultima" id="fUltima"></div>
+                <div class="form-group"><label class="form-label">Valoare contract (RON/an)</label><input type="number" class="form-input" name="valoare" id="fValoare" min="0" step="100" placeholder="ex: 2400"></div>
+            </div>
+            <div class="form-row">
+                <div class="form-group"><label class="form-label">Telefon client</label><input type="tel" class="form-input" name="telefon" id="fTelefon" placeholder="07xxxxxxxx"></div>
+                <div class="form-group"><label class="form-label">Echipa asignată</label>
+                    <select class="form-select" name="echipa" id="fEchipa">
+                        <option value="">— Nealocat —</option>
+                        <option>Echipa Mihai</option><option>Echipa Alex</option><option>Echipa Radu</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group"><label class="form-label">Detalii / Echipamente</label><textarea class="form-textarea" name="note" id="fNote" placeholder="Tip sistem, nr. detectoare, camere etc."></textarea></div>
+            <button type="submit" class="form-submit" id="submitBtn">🔄 Adaugă Contract</button>
+        </form>
+    </div>
+</div>
+</div>
+
+<!-- DETAIL MODAL -->
+<div id="detailModal" class="modal-overlay" onclick="if(event.target===this)closeDetailModal()">
+<div class="modal">
+    <div class="modal-head"><div class="modal-title" id="detailTitle">📋 Detalii Contract</div><button class="modal-close" onclick="closeDetailModal()">✕</button></div>
+    <div class="modal-body" id="detailBody"></div>
+</div>
+</div>
+
+<!-- CONFIRM MODAL -->
+<div id="confirmModal" class="modal-overlay" onclick="if(event.target===this)closeConfirm()">
+    <div class="confirm-box">
+        <div class="confirm-title" id="confirmTitle"></div>
+        <div class="confirm-text" id="confirmText"></div>
+        <div class="confirm-btns">
+            <button onclick="closeConfirm()" style="background:var(--gray-bg);color:var(--gray)">Anulează</button>
+            <button id="confirmOk" style="background:var(--green);color:#fff">Confirmă</button>
+        </div>
+    </div>
+</div>
+
+<script>
+// ═══════ CONFIG ═══════
+var API_URL = '';
+
+// ═══════ AUTH ═══════
+var role = sessionStorage.getItem('cssi-role');
+if (!role || !['admin','org','tech'].includes(role)) { window.location.href = '../admin.html'; }
+var canEdit = ['admin','org','tech'].includes(role);
+
+// ═══════ CONSTANTS ═══════
+var PROJECTS = [
+    {id:'CSSI-2026-001', client:'Hotel Cheile Râșnoavei'},
+    {id:'CSSI-2026-007', client:'Școala Nr. 5 Brașov'},
+    {id:'CSSI-2026-008', client:'Pensiune Bran'},
+    {id:'CSSI-2026-009', client:'Primăria Săcele'},
+    {id:'CSSI-2026-014', client:'ANAF Brașov'}
+];
+
+var TEAM_ICONS = {'Echipa Mihai':'👷','Echipa Alex':'👷‍♂️','Echipa Radu':'🔧'};
+var FREQ_MONTHS = {'Lunar':1,'Trimestrial':3,'Semestrial':6,'Anual':12};
+var TIP_COLORS = {'Standard':'var(--blue)','Premium':'var(--purple)','Garanție':'var(--teal)'};
+
+// ═══════ STATE ═══════
+var CONTRACTS = [];
+var currentView = 'cards';
+var isLive = false;
+var kpiFilter = '';
+
+// ═══════ DEMO DATA ═══════
+var DEMO_CONTRACTS = [
+    {id:1, row:1, client:'Primăria Săcele', pid:'CSSI-2026-009', tip:'Premium', frecventa:'Trimestrial', ultima:'2026-01-15', urmatoarea:'2026-04-15', status:'Activ', valoare:4800, telefon:'0268123456', echipa:'Echipa Mihai', note:'Detecție incendiu sediu + 3 anexe. 48 detectoare, 6 sirene, centrală Teletek.', history:['2025-10-12','2026-01-15']},
+    {id:2, row:2, client:'ANAF Brașov', pid:'CSSI-2026-014', tip:'Standard', frecventa:'Semestrial', ultima:'2025-12-01', urmatoarea:'2026-06-01', status:'Activ', valoare:2400, telefon:'0268234567', echipa:'Echipa Alex', note:'Verificare 24 detectoare + centrală, 2 sirene.', history:['2025-06-03','2025-12-01']},
+    {id:3, row:3, client:'Școala Nr. 5 Brașov', pid:'CSSI-2026-007', tip:'Garanție', frecventa:'Trimestrial', ultima:'2026-02-10', urmatoarea:'2026-05-10', status:'Activ', valoare:0, telefon:'0268345678', echipa:'Echipa Radu', note:'Garanție 2 ani detecție incendiu. 32 detectoare, 4 sirene.', history:['2025-11-08','2026-02-10']},
+    {id:4, row:4, client:'Magazin Kaufland BV', pid:'', tip:'Standard', frecventa:'Lunar', ultima:'2026-02-20', urmatoarea:'2026-03-20', status:'Activ', valoare:6000, telefon:'0268456789', echipa:'Echipa Radu', note:'CCTV 32 camere, NVR, verificare lunară obligatorie.', history:['2026-01-18','2026-02-20']},
+    {id:5, row:5, client:'Pensiune Bran', pid:'CSSI-2026-008', tip:'Standard', frecventa:'Anual', ultima:'2026-02-15', urmatoarea:'2027-02-15', status:'Activ', valoare:1200, telefon:'0268567890', echipa:'', note:'Alarmă antiefracție Paradox, 8 zone, 2 telecomenzi.', history:['2026-02-15']},
+    {id:6, row:6, client:'Hotel Cheile Râșnoavei', pid:'CSSI-2026-001', tip:'Premium', frecventa:'Trimestrial', ultima:'2026-01-05', urmatoarea:'2026-04-05', status:'Activ', valoare:7200, telefon:'0268678901', echipa:'Echipa Mihai', note:'Detecție incendiu complet hotel, 96 detectoare, 8 sirene, 2 centrale.', history:['2025-07-10','2025-10-08','2026-01-05']},
+    {id:7, row:7, client:'Benzinărie MOL Ghimbav', pid:'', tip:'Standard', frecventa:'Semestrial', ultima:'2025-09-01', urmatoarea:'2026-03-01', status:'Activ', valoare:1800, telefon:'0268789012', echipa:'Echipa Alex', note:'CCTV 8 camere + alarmă, contract vechi din 2023.', history:['2025-03-05','2025-09-01']},
+    {id:8, row:8, client:'SC Macon SA', pid:'', tip:'Standard', frecventa:'Trimestrial', ultima:'2025-06-15', urmatoarea:'2025-09-15', status:'Expirat', valoare:3600, telefon:'0268890123', echipa:'', note:'Contract nerenovat. Încercare recontactare.', history:['2025-03-12','2025-06-15']},
+    {id:9, row:9, client:'Selgros Cash&Carry', pid:'', tip:'Premium', frecventa:'Trimestrial', ultima:'2026-02-28', urmatoarea:'2026-05-28', status:'Activ', valoare:9600, telefon:'0268901234', echipa:'Echipa Radu', note:'CCTV 48 camere, detecție incendiu, control acces 4 puncte.', history:['2025-11-25','2026-02-28']},
+    {id:10, row:10, client:'Parcul Industrial Brașov', pid:'', tip:'Standard', frecventa:'Semestrial', ultima:'2025-11-20', urmatoarea:'2026-05-20', status:'Suspendat', valoare:4200, telefon:'0268012345', echipa:'', note:'Suspendat — se renegociază contractul.', history:['2025-05-18','2025-11-20']}
+];
+
+// ═══════ HELPERS ═══════
+function esc(s){if(!s)return '';var d=document.createElement('div');d.textContent=s;return d.innerHTML;}
+function getProjectName(pid){var p=PROJECTS.find(function(x){return x.id===pid});return p?p.client:'';}
+function daysUntil(d){if(!d)return 999;return Math.ceil((new Date(d+'T00:00:00')-new Date().setHours(0,0,0,0))/(86400000));}
+function fmtRON(v){return v?Number(v).toLocaleString('ro-RO')+' RON':'—';}
+function calcNext(ultima,frecventa){var d=new Date(ultima+'T00:00:00');var m=FREQ_MONTHS[frecventa]||3;d.setMonth(d.getMonth()+m);return d.toISOString().split('T')[0];}
+function showLoading(s){document.getElementById('loadBar').classList.toggle('active',s);}
+function toast(msg,type){var c=document.getElementById('toastContainer');var t=document.createElement('div');t.className='toast '+(type||'info');t.textContent=msg;c.appendChild(t);setTimeout(function(){t.style.opacity='0';t.style.transform='translateX(100px)';t.style.transition='all 0.3s'},3000);setTimeout(function(){t.remove()},3500);}
+
+// ═══════ API ═══════
+function apiGet(a){if(!API_URL)return Promise.reject('No API');showLoading(true);return fetch(API_URL+'?action='+a).then(function(r){return r.json()}).finally(function(){showLoading(false)});}
+function apiPost(d){if(!API_URL)return Promise.reject('No API');showLoading(true);return fetch(API_URL,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(d)}).then(function(r){return r.json()}).finally(function(){showLoading(false)});}
+
+function refreshData(){
+    if(!API_URL){toast('⚠️ API nesetat. Date demo.','info');CONTRACTS=JSON.parse(JSON.stringify(DEMO_CONTRACTS));isLive=false;updateSyncStatus();render();return;}
+    updateSyncStatus('loading');
+    Promise.all([apiGet('getMentenanta'),apiGet('getProjects')])
+        .then(function(res){
+            if(Array.isArray(res[0])){CONTRACTS=res[0].map(function(r,i){return {id:i+1,row:r.row||i+1,client:r.client||'',pid:r.proiectId||'',tip:r.tip||'Standard',frecventa:r.frecventa||'Trimestrial',ultima:r.ultima||'',urmatoarea:r.urmatoarea||'',status:r.status||'Activ',valoare:Number(r.valoare)||0,telefon:r.telefon||'',echipa:r.echipa||'',note:r.note||'',history:parseHistory(r.history)};});}
+            if(Array.isArray(res[1])){PROJECTS=res[1].map(function(p){return {id:p.id,client:p.client}});populateDropdowns();}
+            isLive=true;updateSyncStatus();render();toast('✅ Sincronizat','success');
+        }).catch(function(){isLive=false;updateSyncStatus();toast('❌ Sync eșuat','error');});
+}
+
+function parseHistory(h){if(Array.isArray(h))return h;if(typeof h==='string'&&h){try{return JSON.parse(h)}catch(e){}}return [];}
+function updateSyncStatus(s){var el=document.getElementById('syncStatus');if(s==='loading')el.innerHTML='<span class="sync-indicator sync-loading"></span>Se sincronizează...';else if(isLive)el.innerHTML='<span class="sync-indicator sync-ok"></span>Conectat la Google Sheets';else el.innerHTML='<span class="sync-indicator sync-off"></span>Date locale (demo)';}
+
+// ═══════ FILTERS ═══════
+function getFiltered(){
+    var q=document.getElementById('searchInput').value.toLowerCase();
+    var fs=document.getElementById('filterStatus').value;
+    var ft=document.getElementById('filterTip').value;
+    var ff=document.getElementById('filterFreq').value;
+
+    var filtered=CONTRACTS.filter(function(c){
+        if(fs&&c.status!==fs)return false;
+        if(ft&&c.tip!==ft)return false;
+        if(ff&&c.frecventa!==ff)return false;
+        if(kpiFilter==='scadente'&&!(c.status==='Activ'&&daysUntil(c.urmatoarea)<=14&&daysUntil(c.urmatoarea)>0))return false;
+        if(kpiFilter==='depasite'&&!(c.status==='Activ'&&daysUntil(c.urmatoarea)<=0))return false;
+        if(q&&!(c.client.toLowerCase().includes(q)||c.pid.toLowerCase().includes(q)||getProjectName(c.pid).toLowerCase().includes(q)||(c.note&&c.note.toLowerCase().includes(q))||(c.echipa&&c.echipa.toLowerCase().includes(q))))return false;
+        return true;
+    });
+
+    filtered.sort(function(a,b){
+        if(a.status!==b.status){if(a.status==='Activ')return -1;if(b.status==='Activ')return -1;return 0;}
+        return daysUntil(a.urmatoarea)-daysUntil(b.urmatoarea);
+    });
+
+    document.getElementById('filterCount').textContent=filtered.length+' contracte';
+    return filtered;
+}
+
+function toggleKpiFilter(f){kpiFilter=kpiFilter===f?'':f;render();}
+
+// ═══════ RENDER ═══════
+function render(){
+    renderSummary();
+    var filtered=getFiltered();
+    if(currentView==='cards'){renderCards(filtered);document.getElementById('cardsView').style.display='';document.getElementById('tableView').style.display='none';}
+    else{renderTable(filtered);document.getElementById('cardsView').style.display='none';document.getElementById('tableView').style.display='';}
+}
+
+function renderSummary(){
+    var active=CONTRACTS.filter(function(c){return c.status==='Activ'}).length;
+    var scadente=CONTRACTS.filter(function(c){return c.status==='Activ'&&daysUntil(c.urmatoarea)<=14&&daysUntil(c.urmatoarea)>0}).length;
+    var depasite=CONTRACTS.filter(function(c){return c.status==='Activ'&&daysUntil(c.urmatoarea)<=0}).length;
+    var expirate=CONTRACTS.filter(function(c){return c.status==='Expirat'}).length;
+    var valTotala=CONTRACTS.filter(function(c){return c.status==='Activ'}).reduce(function(s,c){return s+(c.valoare||0)},0);
+
+    document.getElementById('summary').innerHTML=
+        '<div class="s-item'+(kpiFilter===''?' ':'')+'" onclick="toggleKpiFilter(\'\')"><div class="s-icon green">✅</div><div><div class="s-val" style="color:var(--green)">'+active+'</div><div class="s-label">Active</div></div></div>'+
+        '<div class="s-item'+(kpiFilter==='scadente'?' active-filter':'')+'" onclick="toggleKpiFilter(\'scadente\')"><div class="s-icon orange">🟠</div><div><div class="s-val" style="color:var(--orange)">'+scadente+'</div><div class="s-label">Scadente (14 zile)</div></div></div>'+
+        '<div class="s-item'+(kpiFilter==='depasite'?' active-filter':'')+'" onclick="toggleKpiFilter(\'depasite\')"><div class="s-icon red">⚠️</div><div><div class="s-val" style="color:var(--red)">'+depasite+'</div><div class="s-label">Depășite</div></div></div>'+
+        '<div class="s-item"><div class="s-icon gray">⛔</div><div><div class="s-val" style="color:var(--gray)">'+expirate+'</div><div class="s-label">Expirate</div></div></div>'+
+        '<div class="s-item"><div class="s-icon teal">💰</div><div><div class="s-val" style="color:var(--teal)">'+fmtRON(valTotala)+'</div><div class="s-label">Valoare anuală</div></div></div>';
+}
+
+function renderCards(filtered){
+    if(!filtered.length){document.getElementById('cardsView').innerHTML='<div class="empty-msg">Niciun contract găsit</div>';return;}
+    var html='';
+    filtered.forEach(function(c){
+        var days=daysUntil(c.urmatoarea);
+        var cardCls=c.status==='Expirat'?'expired':c.status==='Suspendat'?'suspendat':days<=0?'danger':days<=14?'warning':'';
+        var badgeCls=c.status==='Activ'?'activ':c.status==='Expirat'?'expirat':'suspendat';
+        var alertCls='ok',alertText='✅ OK — '+days+' zile rămase';
+        if(c.status!=='Activ'){alertCls='';alertText='';}
+        else if(days<=0){alertCls='urgent';alertText='⚠️ DEPĂȘIT cu '+Math.abs(days)+' zile — necesită verificare URGENTĂ!';}
+        else if(days<=7){alertCls='urgent';alertText='🔴 Urgent — '+days+' zile rămase!';}
+        else if(days<=14){alertCls='warn';alertText='🟠 Scadent în '+days+' zile';}
+
+        var statusOpts=['Activ','Expirat','Suspendat'].map(function(s){return '<option'+(c.status===s?' selected':'')+'>'+s+'</option>'}).join('');
+
+        html+='<div class="mcard '+cardCls+'">';
+        html+='<div class="mcard-top"><div class="mcard-client">'+esc(c.client)+'</div><span class="mcard-badge '+badgeCls+'">'+c.status+'</span></div>';
+        if(c.pid) html+='<div class="mcard-pid">🔗 '+c.pid+' — '+esc(getProjectName(c.pid))+'</div>';
+        html+='<div class="mcard-tags">';
+        html+='<span class="mcard-tag tip" style="color:'+TIP_COLORS[c.tip]+'">'+c.tip+'</span>';
+        html+='<span class="mcard-tag freq">🔁 '+c.frecventa+'</span>';
+        if(c.valoare) html+='<span class="mcard-tag" style="background:#fef2f2;color:var(--red)">💰 '+fmtRON(c.valoare)+'/an</span>';
+        if(c.echipa) html+='<span class="mcard-tag" style="background:var(--gray-bg);color:var(--gray)">'+(TEAM_ICONS[c.echipa]||'')+'  '+c.echipa+'</span>';
+        html+='</div>';
+        html+='<div class="mcard-dates">';
+        html+='<div class="mcard-date"><span class="mcard-date-label">Ultima verificare</span><span class="mcard-date-val">'+c.ultima+'</span></div>';
+        html+='<div class="mcard-date"><span class="mcard-date-label">Următoarea</span><span class="mcard-date-val" style="color:'+(days<=0?'var(--red)':days<=14?'var(--orange)':'var(--green)')+'">'+c.urmatoarea+'</span></div>';
+        html+='</div>';
+        if(c.note) html+='<div class="mcard-note">🔧 '+esc(c.note)+'</div>';
+        if(alertCls) html+='<div class="mcard-alert '+alertCls+'">'+alertText+'</div>';
+        html+='<div class="mcard-actions">';
+        if(canEdit) html+='<select onchange="changeStatus('+c.id+',this.value)">'+statusOpts+'</select>';
+        if(canEdit&&c.status==='Activ') html+='<button class="btn-done" onclick="confirmVerificat('+c.id+')">✅ Verificat</button>';
+        html+='<button class="btn-edit" onclick="openEditModal('+c.id+')">✏️</button>';
+        html+='<button class="btn-detail" onclick="openDetailModal('+c.id+')">ℹ️</button>';
+        html+='</div></div>';
+    });
+    document.getElementById('cardsView').innerHTML=html;
+}
+
+function renderTable(filtered){
+    if(!filtered.length){document.getElementById('tableView').innerHTML='<div class="empty-msg">Niciun contract găsit</div>';return;}
+    var html='<table><thead><tr><th>Client</th><th>Proiect</th><th>Tip</th><th>Frecv.</th><th>Ultima</th><th>Următoarea</th><th>Status</th><th>Valoare</th><th>Echipa</th></tr></thead><tbody>';
+    filtered.forEach(function(c){
+        var days=daysUntil(c.urmatoarea);
+        var dlColor=c.status!=='Activ'?'var(--gray)':days<=0?'var(--red)':days<=14?'var(--orange)':'var(--green)';
+        var stColor=c.status==='Activ'?'var(--green)':c.status==='Expirat'?'var(--gray)':'var(--yellow)';
+        html+='<tr style="cursor:pointer" onclick="openDetailModal('+c.id+')">';
+        html+='<td style="font-weight:700">'+esc(c.client)+'</td>';
+        html+='<td>'+(c.pid?'<span style="color:var(--blue);font-weight:600">'+c.pid+'</span>':'—')+'</td>';
+        html+='<td style="color:'+TIP_COLORS[c.tip]+';font-weight:700">'+c.tip+'</td>';
+        html+='<td>'+c.frecventa+'</td>';
+        html+='<td>'+c.ultima+'</td>';
+        html+='<td style="color:'+dlColor+';font-weight:700">'+c.urmatoarea+'</td>';
+        html+='<td style="color:'+stColor+';font-weight:700">'+c.status+'</td>';
+        html+='<td>'+fmtRON(c.valoare)+'</td>';
+        html+='<td>'+(c.echipa?(TEAM_ICONS[c.echipa]||'')+' '+c.echipa:'—')+'</td>';
+        html+='</tr>';
+    });
+    html+='</tbody></table>';
+    document.getElementById('tableView').innerHTML=html;
+}
+
+function setView(v){currentView=v;document.getElementById('vCards').classList.toggle('active',v==='cards');document.getElementById('vTable').classList.toggle('active',v==='table');render();}
+
+// ═══════ ACTIONS ═══════
+function changeStatus(id,val){
+    var c=CONTRACTS.find(function(x){return x.id===id});
+    if(!c)return; c.status=val;
+    if(API_URL)apiPost({action:'updateMentenantaStatus',row:c.row,status:val}).catch(function(){});
+    render(); toast('✅ Status: '+val,'success');
+}
+
+function confirmVerificat(id){
+    var c=CONTRACTS.find(function(x){return x.id===id});
+    if(!c)return;
+    document.getElementById('confirmTitle').textContent='✅ Confirmă verificarea';
+    document.getElementById('confirmText').innerHTML='Marchezi <strong>'+esc(c.client)+'</strong> ca verificat astăzi?<br>Următoarea verificare: <strong>'+calcNext(new Date().toISOString().split('T')[0],c.frecventa)+'</strong>';
+    document.getElementById('confirmOk').onclick=function(){markDone(id);closeConfirm();};
+    document.getElementById('confirmModal').classList.add('active');
+}
+function closeConfirm(){document.getElementById('confirmModal').classList.remove('active');}
+
+function markDone(id){
+    var c=CONTRACTS.find(function(x){return x.id===id});
+    if(!c)return;
+    var today=new Date().toISOString().split('T')[0];
+    c.ultima=today;
+    c.urmatoarea=calcNext(today,c.frecventa);
+    if(!c.history)c.history=[];
+    c.history.push(today);
+    if(API_URL)apiPost({action:'markMentenantaDone',row:c.row,ultima:c.ultima,urmatoarea:c.urmatoarea,history:JSON.stringify(c.history)}).catch(function(){});
+    render(); toast('✅ '+c.client+' — verificat! Următoarea: '+c.urmatoarea,'success');
+}
+
+// ═══════ DETAIL MODAL ═══════
+function openDetailModal(id){
+    var c=CONTRACTS.find(function(x){return x.id===id});
+    if(!c)return;
+    var days=daysUntil(c.urmatoarea);
+    document.getElementById('detailTitle').textContent='🔄 '+c.client;
+    var html='<div style="display:grid;gap:14px">';
+
+    // Status big
+    var stIcon=c.status==='Activ'?(days<=0?'⚠️':days<=14?'🟠':'✅'):c.status==='Expirat'?'⛔':'⏸️';
+    var stColor=c.status==='Activ'?(days<=0?'var(--red)':days<=14?'var(--orange)':'var(--green)'):'var(--gray)';
+    html+='<div style="text-align:center;padding:16px 0"><div style="font-size:48px">'+stIcon+'</div><div style="font-size:16px;font-weight:800;color:'+stColor+';margin-top:4px">'+(c.status==='Activ'?(days<=0?'Depășit cu '+Math.abs(days)+' zile':days+' zile rămase'):c.status)+'</div></div>';
+
+    html+=infoRow('🏢 Client','<strong>'+esc(c.client)+'</strong>');
+    if(c.pid) html+=infoRow('🔗 Proiect','<span style="color:var(--blue);font-weight:700">'+c.pid+'</span> — '+esc(getProjectName(c.pid)));
+    html+=infoRow('📋 Tip contract','<span style="color:'+TIP_COLORS[c.tip]+';font-weight:700">'+c.tip+'</span>');
+    html+=infoRow('🔁 Frecvență',c.frecventa);
+    html+=infoRow('📅 Ultima verificare',c.ultima);
+    html+=infoRow('📅 Următoarea','<span style="color:'+(days<=0?'var(--red)':days<=14?'var(--orange)':'var(--green)')+';font-weight:800">'+c.urmatoarea+'</span>');
+    if(c.valoare) html+=infoRow('💰 Valoare',fmtRON(c.valoare)+'/an');
+    if(c.telefon) html+=infoRow('📱 Telefon','<a href="tel:'+c.telefon+'" style="color:var(--blue);font-weight:600">'+c.telefon+'</a>');
+    if(c.echipa) html+=infoRow('👷 Echipa',(TEAM_ICONS[c.echipa]||'')+' '+c.echipa);
+    if(c.note) html+='<div style="background:var(--gray-bg);padding:12px;border-radius:10px;font-size:13px;color:var(--gray);line-height:1.5;font-style:italic">🔧 '+esc(c.note)+'</div>';
+
+    // History
+    if(c.history&&c.history.length){
+        html+='<div class="hist-title">📜 Istoric verificări ('+c.history.length+')</div>';
+        c.history.slice().reverse().forEach(function(d,i){
+            html+='<div class="hist-item"><div class="hist-dot" style="background:'+(i===0?'var(--green)':'var(--gray-l)')+'"></div><div class="hist-date">'+d+'</div><div class="hist-text">'+(i===0?'Ultima verificare':'Verificare anterioară')+'</div></div>';
+        });
+    }
+
+    if(canEdit){
+        html+='<div style="display:flex;gap:8px;margin-top:12px">';
+        if(c.status==='Activ') html+='<button onclick="closeDetailModal();confirmVerificat('+c.id+')" style="flex:1;padding:12px;border-radius:12px;border:none;background:var(--green);color:#fff;font-weight:700;font-size:14px;cursor:pointer">✅ Marchează Verificat</button>';
+        html+='<button onclick="closeDetailModal();openEditModal('+c.id+')" style="flex:1;padding:12px;border-radius:12px;border:none;background:var(--blue);color:#fff;font-weight:700;font-size:14px;cursor:pointer">✏️ Editează</button>';
+        html+='</div>';
+    }
+    html+='</div>';
+    document.getElementById('detailBody').innerHTML=html;
+    document.getElementById('detailModal').classList.add('active');
+}
+function closeDetailModal(){document.getElementById('detailModal').classList.remove('active');}
+function infoRow(l,v){return '<div style="display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px solid var(--gray-bg)"><span style="font-size:13px;color:var(--gray)">'+l+'</span><span style="font-size:14px;font-weight:600">'+v+'</span></div>';}
+
+// ═══════ ADD / EDIT ═══════
+function openAddModal(){
+    document.getElementById('editId').value='';
+    document.getElementById('modalTitle').textContent='🔄 Contract Mentenanță Nou';
+    document.getElementById('submitBtn').textContent='🔄 Adaugă Contract';
+    document.getElementById('addForm').reset();
+    document.getElementById('fUltima').value=new Date().toISOString().split('T')[0];
+    document.getElementById('addModal').classList.add('active');
+}
+
+function openEditModal(id){
+    var c=CONTRACTS.find(function(x){return x.id===id});
+    if(!c)return;
+    document.getElementById('editId').value=c.id;
+    document.getElementById('modalTitle').textContent='✏️ Editare Contract';
+    document.getElementById('submitBtn').textContent='💾 Salvează';
+    document.getElementById('fClient').value=c.client;
+    document.getElementById('fProiect').value=c.pid;
+    document.getElementById('fTip').value=c.tip;
+    document.getElementById('fFreq').value=c.frecventa;
+    document.getElementById('fUltima').value=c.ultima;
+    document.getElementById('fValoare').value=c.valoare||'';
+    document.getElementById('fTelefon').value=c.telefon||'';
+    document.getElementById('fEchipa').value=c.echipa||'';
+    document.getElementById('fNote').value=c.note||'';
+    document.getElementById('addModal').classList.add('active');
+}
+
+function closeAddModal(){document.getElementById('addModal').classList.remove('active');}
+
+function saveContract(e){
+    e.preventDefault();
+    var f=document.getElementById('addForm');var fd=new FormData(f);
+    var editId=parseInt(fd.get('editId'));
+    var btn=document.getElementById('submitBtn');btn.disabled=true;
+
+    var ultima=fd.get('ultima')||new Date().toISOString().split('T')[0];
+    var frecventa=fd.get('frecventa');
+    var urmatoarea=calcNext(ultima,frecventa);
+
+    var contractData={
+        client:fd.get('client'), pid:fd.get('proiectId')||'',
+        tip:fd.get('tipContract'), frecventa:frecventa,
+        ultima:ultima, urmatoarea:urmatoarea, status:'Activ',
+        valoare:parseFloat(fd.get('valoare'))||0,
+        telefon:fd.get('telefon')||'', echipa:fd.get('echipa')||'',
+        note:fd.get('note')||''
+    };
+
+    if(editId){
+        var c=CONTRACTS.find(function(x){return x.id===editId});
+        if(c){
+            var oldFreq=c.frecventa;
+            Object.assign(c,contractData);
+            if(oldFreq!==frecventa)c.urmatoarea=calcNext(c.ultima,frecventa);
+        }
+        if(API_URL)apiPost({action:'updateMentenanta',row:c.row,contract:contractData}).catch(function(){});
+        toast('✅ Contract actualizat','success');
+    } else {
+        var maxId=0;CONTRACTS.forEach(function(x){if(x.id>maxId)maxId=x.id});
+        var newC=Object.assign({id:maxId+1,row:maxId+1,history:[ultima]},contractData);
+        if(API_URL){
+            apiPost({action:'addMentenanta',contract:contractData})
+                .then(function(res){if(res.error)throw new Error(res.error);newC.row=res.row||newC.row;CONTRACTS.push(newC);render();toast('✅ Contract adăugat și sincronizat','success');})
+                .catch(function(){CONTRACTS.push(newC);render();toast('⚠️ Salvat local','error');});
+        } else {
+            CONTRACTS.push(newC);
+            toast('✅ Contract adăugat (local)','success');
+        }
+    }
+    render();closeAddModal();f.reset();btn.disabled=false;
+}
+
+// ═══════ DROPDOWNS ═══════
+function populateDropdowns(){
+    var opts='<option value="">— Fără proiect —</option>';
+    PROJECTS.forEach(function(p){opts+='<option value="'+p.id+'">'+p.id+' — '+esc(p.client)+'</option>'});
+    document.getElementById('fProiect').innerHTML=opts;
+}
+
+// ═══════ INIT ═══════
+populateDropdowns();
+CONTRACTS=JSON.parse(JSON.stringify(DEMO_CONTRACTS));
+render();
+if(API_URL) refreshData();
+</script>
+</body>
+</html>

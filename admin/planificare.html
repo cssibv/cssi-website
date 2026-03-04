@@ -1,0 +1,711 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Planificare — Portal CSSI 3.0</title>
+<meta name="robots" content="noindex, nofollow">
+<link rel="icon" type="image/x-icon" href="/images/favicon.ico">
+<meta name="theme-color" content="#dc2626">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+:root{--red:#dc2626;--red-d:#991b1b;--dark:#0f172a;--dark2:#1e293b;--gray:#64748b;--gray-l:#94a3b8;--gray-xl:#cbd5e1;--gray-bg:#f1f5f9;--gray-b:#e2e8f0;--blue:#3b82f6;--green:#22c55e;--orange:#f97316;--purple:#8b5cf6;--yellow:#eab308;--teal:#14b8a6;--pink:#ec4899;--radius:16px;--radius-sm:12px;--shadow:0 1px 3px rgba(0,0,0,0.06);--shadow-md:0 4px 12px rgba(0,0,0,0.08);--font:'Inter',system-ui,sans-serif;}
+body{font-family:var(--font);color:var(--dark);background:var(--gray-bg);-webkit-font-smoothing:antialiased;}
+a{text-decoration:none;color:inherit;}button{font-family:inherit;cursor:pointer;}
+
+/* Header */
+.page-header{background:linear-gradient(135deg,var(--dark),var(--dark2));color:#fff;padding:20px 24px;border-radius:20px;margin-bottom:16px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;}
+.page-back{color:rgba(255,255,255,0.7);font-size:13px;font-weight:500;display:flex;align-items:center;gap:6px;transition:color 0.2s;}.page-back:hover{color:#fff;}
+.page-title{font-size:22px;font-weight:800;letter-spacing:-0.5px;}
+.page-subtitle{font-size:12px;color:rgba(255,255,255,0.5);margin-top:2px;}
+.page-actions{display:flex;gap:8px;align-items:center;}
+.page-btn{padding:10px 18px;border-radius:12px;font-size:13px;font-weight:700;border:none;transition:all 0.2s;}
+.page-btn.primary{background:var(--red);color:#fff;}.page-btn.primary:hover{background:var(--red-d);transform:translateY(-1px);}
+.page-btn.secondary{background:rgba(255,255,255,0.1);color:#fff;border:1px solid rgba(255,255,255,0.2);}.page-btn.secondary:hover{background:rgba(255,255,255,0.2);}
+.sync-indicator{width:8px;height:8px;border-radius:50%;display:inline-block;margin-right:6px;}
+.sync-ok{background:var(--green);box-shadow:0 0 6px rgba(34,197,94,0.5);}
+.sync-off{background:var(--gray-l);}
+.sync-loading{background:var(--orange);animation:pulse 1s infinite;}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.4}}
+
+.container{max-width:1400px;margin:0 auto;padding:16px;}@media(min-width:768px){.container{padding:24px;}}
+
+/* Summary strip */
+.summary-strip{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:16px;}
+.ss-item{background:#fff;border-radius:var(--radius-sm);padding:12px 16px;box-shadow:var(--shadow);display:flex;align-items:center;gap:10px;flex:1;min-width:150px;}
+.ss-icon{width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;}
+.ss-icon.blue{background:#eff6ff;}.ss-icon.green{background:#f0fdf4;}.ss-icon.orange{background:#fff7ed;}.ss-icon.purple{background:#f5f3ff;}
+.ss-val{font-size:20px;font-weight:900;}.ss-label{font-size:11px;color:var(--gray);}
+
+/* Week Nav */
+.week-nav{display:flex;align-items:center;justify-content:center;gap:12px;margin-bottom:16px;background:#fff;border-radius:var(--radius);padding:10px 16px;box-shadow:var(--shadow);flex-wrap:wrap;}
+.week-nav button{width:36px;height:36px;border-radius:10px;border:none;background:var(--gray-bg);font-size:16px;display:flex;align-items:center;justify-content:center;transition:all 0.2s;}
+.week-nav button:hover{background:var(--dark);color:#fff;}
+.week-label{font-size:16px;font-weight:800;min-width:200px;text-align:center;}
+.btn-today{padding:6px 14px;border-radius:8px;border:1px solid var(--gray-b);background:#fff;font-size:12px;font-weight:600;color:var(--gray);transition:all 0.2s;}.btn-today:hover{background:var(--gray-bg);}
+
+/* Filters */
+.filters-bar{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:16px;align-items:center;}
+.filter-select{padding:8px 14px;border-radius:99px;font-size:12px;font-weight:600;border:1px solid var(--gray-b);background:#fff;font-family:inherit;outline:none;cursor:pointer;}.filter-select:focus{border-color:var(--blue);}
+.view-toggle{display:flex;background:#fff;border-radius:10px;padding:3px;box-shadow:var(--shadow);border:1px solid var(--gray-b);margin-left:auto;}
+.view-btn{padding:7px 14px;border-radius:8px;font-size:12px;font-weight:600;border:none;background:none;color:var(--gray);cursor:pointer;transition:all 0.2s;}.view-btn.active{background:var(--dark);color:#fff;}
+
+/* Calendar Grid */
+.cal-grid{display:grid;grid-template-columns:90px repeat(7,1fr);gap:1px;background:var(--gray-b);border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow);margin-bottom:16px;}
+@media(max-width:768px){.cal-grid{grid-template-columns:70px repeat(7,1fr);}}
+.cal-header{background:var(--dark);color:#fff;padding:10px 6px;text-align:center;font-size:11px;font-weight:700;}
+.cal-header .ch-day{font-size:18px;font-weight:900;margin-top:2px;}
+.cal-header.today{background:var(--red);}
+.cal-header-label{background:var(--dark2);color:var(--gray-l);padding:10px 6px;text-align:center;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;}
+.cal-team{background:#fff;padding:10px 8px;font-weight:700;font-size:12px;display:flex;align-items:center;gap:4px;border-right:2px solid var(--gray-b);}
+.cal-cell{background:#fff;padding:4px;min-height:64px;position:relative;transition:background 0.2s;}
+.cal-cell.today{background:#fef2f2;}
+.cal-cell:hover{background:var(--gray-bg);}
+
+.cal-task{padding:3px 6px;border-radius:5px;font-size:10px;font-weight:600;margin-bottom:2px;cursor:pointer;transition:all 0.15s;line-height:1.3;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;border-left:3px solid transparent;}
+.cal-task:hover{transform:scale(1.03);box-shadow:0 2px 6px rgba(0,0,0,0.12);z-index:1;position:relative;}
+.cal-task.exec{background:#eff6ff;color:var(--blue);border-left-color:var(--blue);}
+.cal-task.design{background:#f5f3ff;color:var(--purple);border-left-color:var(--purple);}
+.cal-task.maint{background:#f0fdf4;color:var(--green);border-left-color:var(--green);}
+.cal-task.survey{background:#fff7ed;color:var(--orange);border-left-color:var(--orange);}
+.cal-task.done{opacity:0.5;text-decoration:line-through;}
+.cal-task .ct-pid{font-size:8px;opacity:0.7;display:block;margin-top:1px;}
+
+/* Agenda View */
+.agenda-day{margin-bottom:20px;}
+.agenda-day-header{font-size:14px;font-weight:800;padding:8px 14px;background:#fff;border-radius:10px;margin-bottom:8px;box-shadow:var(--shadow);display:flex;align-items:center;justify-content:space-between;}
+.agenda-day-header.today{background:var(--red);color:#fff;}
+.agenda-day-header .adh-count{font-size:11px;font-weight:600;padding:2px 8px;border-radius:6px;background:rgba(0,0,0,0.1);}
+.agenda-cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:8px;}
+.acard{background:#fff;border-radius:var(--radius-sm);padding:14px 16px;box-shadow:var(--shadow);border-left:4px solid var(--blue);transition:all 0.2s;cursor:pointer;}
+.acard:hover{box-shadow:var(--shadow-md);transform:translateY(-1px);}
+.acard.design{border-left-color:var(--purple);}.acard.maint{border-left-color:var(--green);}.acard.survey{border-left-color:var(--orange);}
+.acard.done{opacity:0.6;}.acard.done .acard-title{text-decoration:line-through;}
+.acard-top{display:flex;justify-content:space-between;align-items:start;margin-bottom:6px;}
+.acard-time{font-size:12px;color:var(--gray-l);font-weight:700;}
+.acard-status{font-size:10px;font-weight:700;padding:2px 8px;border-radius:5px;}
+.acard-status.pending{background:#fff7ed;color:var(--orange);}.acard-status.done{background:#f0fdf4;color:var(--green);}
+.acard-title{font-size:14px;font-weight:700;margin-bottom:4px;line-height:1.3;}
+.acard-meta{display:flex;flex-wrap:wrap;gap:8px;font-size:12px;color:var(--gray);}
+.acard-pid{display:inline-flex;align-items:center;gap:3px;font-size:11px;color:var(--blue);font-weight:700;margin-top:6px;padding:3px 8px;background:#eff6ff;border-radius:6px;}
+
+/* List View */
+.list-wrap{background:#fff;border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow);}
+table{width:100%;border-collapse:collapse;font-size:13px;}
+th{background:var(--dark);color:#fff;padding:10px 12px;text-align:left;font-weight:700;font-size:11px;text-transform:uppercase;letter-spacing:0.5px;white-space:nowrap;}
+td{padding:9px 12px;border-bottom:1px solid var(--gray-bg);}
+tr:hover td{background:rgba(59,130,246,0.03);}
+tr.done td{opacity:0.5;text-decoration:line-through;}
+.td-type{font-weight:700;font-size:11px;}
+.td-type.exec{color:var(--blue);}.td-type.design{color:var(--purple);}.td-type.maint{color:var(--green);}.td-type.survey{color:var(--orange);}
+
+/* Toast */
+.toast-container{position:fixed;top:20px;right:20px;z-index:300;display:flex;flex-direction:column;gap:8px;}
+.toast{padding:14px 20px;border-radius:12px;color:#fff;font-size:13px;font-weight:600;box-shadow:0 8px 24px rgba(0,0,0,0.15);animation:slideIn 0.3s ease;max-width:380px;}
+.toast.success{background:var(--green);}.toast.error{background:var(--red);}.toast.info{background:var(--blue);}
+@keyframes slideIn{from{transform:translateX(100%);opacity:0}to{transform:translateX(0);opacity:1}}
+
+/* Modal */
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);backdrop-filter:blur(4px);z-index:200;align-items:center;justify-content:center;padding:16px;}
+.modal-overlay.active{display:flex;}
+.modal{background:#fff;border-radius:20px;width:100%;max-width:520px;max-height:90vh;overflow-y:auto;box-shadow:0 25px 60px rgba(0,0,0,0.3);}
+.modal-head{padding:20px 24px;border-bottom:1px solid var(--gray-b);display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;background:#fff;border-radius:20px 20px 0 0;z-index:1;}
+.modal-title{font-size:18px;font-weight:800;}
+.modal-close{width:32px;height:32px;border-radius:8px;border:none;background:var(--gray-bg);color:var(--gray);font-size:18px;display:flex;align-items:center;justify-content:center;transition:all 0.2s;}.modal-close:hover{background:#fef2f2;color:var(--red);}
+.modal-body{padding:24px;}
+.form-group{margin-bottom:16px;}
+.form-label{display:block;font-size:13px;font-weight:600;color:var(--dark);margin-bottom:6px;}.form-label .req{color:var(--red);}
+.form-input,.form-select,.form-textarea{width:100%;padding:12px 16px;border:2px solid var(--gray-b);border-radius:var(--radius-sm);font-size:14px;font-family:inherit;outline:none;transition:all 0.2s;background:#fff;}
+.form-input:focus,.form-select:focus,.form-textarea:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(59,130,246,0.08);}
+.form-textarea{min-height:70px;resize:vertical;}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;}@media(max-width:480px){.form-row{grid-template-columns:1fr;}}
+.form-submit{width:100%;padding:14px;background:linear-gradient(135deg,var(--green),#16a34a);color:#fff;border:none;border-radius:var(--radius-sm);font-size:15px;font-weight:700;transition:all 0.3s;cursor:pointer;}.form-submit:hover{transform:translateY(-1px);box-shadow:0 8px 20px -5px rgba(34,197,94,0.4);}
+.form-submit:disabled{background:var(--gray-l);cursor:not-allowed;transform:none;box-shadow:none;}
+
+/* Checkbox toggle */
+.check-done{width:18px;height:18px;border-radius:5px;border:2px solid var(--gray-b);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:11px;transition:all 0.2s;flex-shrink:0;}
+.check-done.checked{background:var(--green);border-color:var(--green);color:#fff;}
+.check-done:hover{border-color:var(--green);}
+
+/* Bottom Nav */
+.bottom-nav{position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1px solid var(--gray-b);box-shadow:0 -4px 20px rgba(0,0,0,0.06);padding:6px 12px;z-index:100;display:flex;gap:4px;}
+@media(min-width:768px){.bottom-nav{display:none;}}
+.bn-item{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:8px 4px;border-radius:10px;font-size:10px;font-weight:600;color:var(--gray);transition:all 0.2s;gap:2px;}.bn-item.active{color:var(--red);background:#fef2f2;}.bn-item .bn-icon{font-size:20px;}
+.empty-msg{text-align:center;padding:40px;color:var(--gray-l);font-size:14px;}
+.footer{text-align:center;color:var(--gray-xl);font-size:11px;padding:24px 0 100px;}
+.loading-bar{position:fixed;top:0;left:0;right:0;height:3px;z-index:400;display:none;}
+.loading-bar.active{display:block;}.loading-bar::after{content:'';display:block;width:30%;height:100%;background:var(--red);border-radius:2px;animation:loadSlide 1.2s infinite ease-in-out;}
+@keyframes loadSlide{0%{margin-left:-30%}100%{margin-left:100%}}
+</style>
+</head>
+<body>
+
+<div class="loading-bar" id="loadBar"></div>
+<div class="toast-container" id="toastContainer"></div>
+
+<div class="container">
+    <div class="page-header">
+        <div>
+            <a href="../admin.html" class="page-back">← Dashboard</a>
+            <div class="page-title">📅 Planificare Echipe</div>
+            <div class="page-subtitle" id="syncStatus"><span class="sync-indicator sync-off"></span>Date locale (demo)</div>
+        </div>
+        <div class="page-actions">
+            <button class="page-btn secondary" onclick="refreshData()" title="Sincronizează">🔄 Sync</button>
+            <button class="page-btn primary" onclick="openAddModal()">+ Programare</button>
+        </div>
+    </div>
+
+    <div class="summary-strip" id="summaryStrip"></div>
+
+    <div class="week-nav">
+        <button onclick="changeWeek(-1)">◀</button>
+        <button class="btn-today" onclick="goToday()">Azi</button>
+        <div class="week-label" id="weekLabel"></div>
+        <button onclick="changeWeek(1)">▶</button>
+    </div>
+
+    <div class="filters-bar">
+        <select class="filter-select" id="filterEchipa" onchange="render()">
+            <option value="">Toate echipele</option>
+        </select>
+        <select class="filter-select" id="filterTip" onchange="render()">
+            <option value="">Toate tipurile</option>
+            <option value="exec">🔧 Execuție</option>
+            <option value="design">📐 Proiectare</option>
+            <option value="maint">🔄 Mentenanță</option>
+            <option value="survey">📍 Recunoaștere</option>
+        </select>
+        <select class="filter-select" id="filterProiect" onchange="render()">
+            <option value="">Toate proiectele</option>
+        </select>
+        <div class="view-toggle">
+            <button class="view-btn active" id="vCal" onclick="setView('cal')">📅 Calendar</button>
+            <button class="view-btn" id="vAgenda" onclick="setView('agenda')">📋 Agendă</button>
+            <button class="view-btn" id="vList" onclick="setView('list')">☰ Listă</button>
+        </div>
+    </div>
+
+    <div id="calView"></div>
+    <div id="agendaView" style="display:none"></div>
+    <div id="listView" style="display:none"></div>
+
+    <div class="footer">Portal CSSI 3.0 · Modul Planificare v3.0</div>
+</div>
+
+<!-- Bottom Nav -->
+<div class="bottom-nav">
+    <a href="../admin.html" class="bn-item"><span class="bn-icon">🏠</span>Acasă</a>
+    <a href="proiecte.html" class="bn-item"><span class="bn-icon">📋</span>Proiecte</a>
+    <a href="planificare.html" class="bn-item active"><span class="bn-icon">📅</span>Plan</a>
+    <a href="executie.html" class="bn-item"><span class="bn-icon">🔧</span>Execuție</a>
+    <a href="financiar.html" class="bn-item"><span class="bn-icon">📄</span>Facturi</a>
+</div>
+
+<!-- ADD/EDIT MODAL -->
+<div id="addModal" class="modal-overlay" onclick="if(event.target===this)closeAddModal()">
+<div class="modal">
+    <div class="modal-head"><div class="modal-title" id="modalTitle">📅 Programare Nouă</div><button class="modal-close" onclick="closeAddModal()">✕</button></div>
+    <div class="modal-body">
+        <form id="addForm" onsubmit="saveTask(event)">
+            <input type="hidden" name="editId" id="editId" value="">
+            <div class="form-group"><label class="form-label">Descriere activitate <span class="req">*</span></label><input type="text" class="form-input" name="desc" id="fDesc" required placeholder="Montaj camere, verificare, cablare..."></div>
+            <div class="form-group"><label class="form-label">Proiect legat</label><select class="form-select" name="proiectId" id="fProiect"></select></div>
+            <div class="form-row">
+                <div class="form-group"><label class="form-label">Echipa <span class="req">*</span></label><select class="form-select" name="echipa" id="fEchipa" required></select></div>
+                <div class="form-group"><label class="form-label">Tip activitate</label>
+                    <select class="form-select" name="tip" id="fTip">
+                        <option value="exec">🔧 Execuție</option>
+                        <option value="design">📐 Proiectare</option>
+                        <option value="maint">🔄 Mentenanță</option>
+                        <option value="survey">📍 Recunoaștere</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group"><label class="form-label">Data <span class="req">*</span></label><input type="date" class="form-input" name="data" id="fData" required></div>
+                <div class="form-group"><label class="form-label">Ora start</label><input type="time" class="form-input" name="ora" id="fOra" value="08:00"></div>
+            </div>
+            <div class="form-row">
+                <div class="form-group"><label class="form-label">Durată estimată (ore)</label><input type="number" class="form-input" name="durata" id="fDurata" value="8" min="1" max="24"></div>
+                <div class="form-group"><label class="form-label">Prioritate</label>
+                    <select class="form-select" name="prioritate" id="fPrioritate">
+                        <option value="normal">Normal</option>
+                        <option value="urgent">🔴 Urgent</option>
+                        <option value="low">Scăzută</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group"><label class="form-label">Observații</label><textarea class="form-textarea" name="note" id="fNote" placeholder="Instrucțiuni speciale, materiale necesare..."></textarea></div>
+            <button type="submit" class="form-submit" id="submitBtn">📅 Programează</button>
+        </form>
+    </div>
+</div>
+</div>
+
+<!-- DETAIL MODAL -->
+<div id="detailModal" class="modal-overlay" onclick="if(event.target===this)closeDetailModal()">
+<div class="modal">
+    <div class="modal-head"><div class="modal-title" id="detailTitle">📋 Detalii</div><button class="modal-close" onclick="closeDetailModal()">✕</button></div>
+    <div class="modal-body" id="detailBody"></div>
+</div>
+</div>
+
+<script>
+// ═══════════════════════════════════════════════════
+// CONFIG
+// ═══════════════════════════════════════════════════
+var API_URL = ''; // ← Pune URL-ul Apps Script Web App aici
+
+// ═══════ AUTH ═══════
+var role = sessionStorage.getItem('cssi-role');
+if (!role || !['admin','org','tech','sales'].includes(role)) { window.location.href = '../admin.html'; }
+var canEdit = ['admin','org','tech'].includes(role);
+
+// ═══════ CONSTANTS ═══════
+var TEAMS = ['Echipa Mihai','Echipa Alex','Echipa Radu','Subcontractor'];
+var TEAM_ICONS = {'Echipa Mihai':'👷','Echipa Alex':'👷‍♂️','Echipa Radu':'🔧','Subcontractor':'🏗️'};
+var TIP_LABELS = {exec:'🔧 Execuție', design:'📐 Proiectare', maint:'🔄 Mentenanță', survey:'📍 Recunoaștere'};
+var TIP_COLORS = {exec:'var(--blue)', design:'var(--purple)', maint:'var(--green)', survey:'var(--orange)'};
+var DAYS_RO = ['Dum','Lun','Mar','Mie','Joi','Vin','Sâm'];
+var DAYS_FULL = ['Duminică','Luni','Marți','Miercuri','Joi','Vineri','Sâmbătă'];
+var MONTHS_RO = ['Ianuarie','Februarie','Martie','Aprilie','Mai','Iunie','Iulie','August','Septembrie','Octombrie','Noiembrie','Decembrie'];
+var MONTHS_SHORT = ['Ian','Feb','Mar','Apr','Mai','Iun','Iul','Aug','Sep','Oct','Nov','Dec'];
+
+// Demo projects (loaded from API if available)
+var PROJECTS = [
+    {id:'CSSI-2026-001', client:'Hotel Cheile Râșnoavei'},
+    {id:'CSSI-2026-004', client:'Birouri IT Hub'},
+    {id:'CSSI-2026-005', client:'Restaurant Central'},
+    {id:'CSSI-2026-006', client:'Depozit Ghimbav'},
+    {id:'CSSI-2026-012', client:'Fabrica Autoliv'},
+    {id:'CSSI-2026-013', client:'Rezidențial Avantgarden'}
+];
+
+// ═══════ STATE ═══════
+var TASKS = [];
+var currentMonday = getMonday(new Date());
+var currentView = 'cal';
+var isLive = false;
+
+// ═══════ DEMO TASKS ═══════
+function genDemoTasks() {
+    var m = new Date(currentMonday);
+    TASKS = [
+        {id:1, desc:'Montaj detectoare etaj 2', pid:'CSSI-2026-001', echipa:'Echipa Mihai', tip:'exec', data:fmtD(m,0), ora:'08:00', durata:8, prioritate:'normal', note:'Etaj 2 complet', done:false, row:1},
+        {id:2, desc:'Configurare NVR + camere', pid:'CSSI-2026-006', echipa:'Echipa Alex', tip:'exec', data:fmtD(m,0), ora:'08:00', durata:8, prioritate:'normal', note:'', done:false, row:2},
+        {id:3, desc:'Trasare cabluri hală', pid:'CSSI-2026-012', echipa:'Echipa Radu', tip:'exec', data:fmtD(m,0), ora:'07:30', durata:10, prioritate:'urgent', note:'Termen scurt', done:false, row:3},
+        {id:4, desc:'Vizită teren proiectare ISU', pid:'CSSI-2026-005', echipa:'Echipa Mihai', tip:'survey', data:fmtD(m,1), ora:'09:00', durata:4, prioritate:'normal', note:'Măsurători + poze', done:false, row:4},
+        {id:5, desc:'Montaj detectoare etaj 3', pid:'CSSI-2026-001', echipa:'Echipa Mihai', tip:'exec', data:fmtD(m,1), ora:'13:00', durata:5, prioritate:'normal', note:'', done:false, row:5},
+        {id:6, desc:'Montaj camere interior', pid:'CSSI-2026-006', echipa:'Echipa Alex', tip:'exec', data:fmtD(m,1), ora:'08:00', durata:8, prioritate:'normal', note:'Zone 1-4', done:false, row:6},
+        {id:7, desc:'Verificare mentenanță Kaufland', pid:'', echipa:'Echipa Radu', tip:'maint', data:fmtD(m,2), ora:'08:00', durata:6, prioritate:'normal', note:'Contract trimestrial', done:false, row:7},
+        {id:8, desc:'Teste centrală incendiu', pid:'CSSI-2026-001', echipa:'Echipa Mihai', tip:'exec', data:fmtD(m,2), ora:'08:00', durata:8, prioritate:'urgent', note:'Teste finale înainte recepție', done:false, row:8},
+        {id:9, desc:'Proiectare electrică', pid:'CSSI-2026-004', echipa:'Subcontractor', tip:'design', data:fmtD(m,2), ora:'09:00', durata:8, prioritate:'normal', note:'Schema electrică completă', done:false, row:9},
+        {id:10, desc:'Montaj motor poartă 2', pid:'CSSI-2026-013', echipa:'Echipa Alex', tip:'exec', data:fmtD(m,3), ora:'08:00', durata:6, prioritate:'normal', note:'', done:false, row:10},
+        {id:11, desc:'Continuare cablare', pid:'CSSI-2026-012', echipa:'Echipa Radu', tip:'exec', data:fmtD(m,3), ora:'07:30', durata:10, prioritate:'normal', note:'', done:false, row:11},
+        {id:12, desc:'Recepție parțială birou', pid:'CSSI-2026-004', echipa:'Echipa Mihai', tip:'survey', data:fmtD(m,4), ora:'10:00', durata:3, prioritate:'normal', note:'Verificare cu beneficiarul', done:false, row:12},
+        {id:13, desc:'Programare telecomenzi', pid:'CSSI-2026-013', echipa:'Echipa Alex', tip:'exec', data:fmtD(m,4), ora:'08:00', durata:4, prioritate:'normal', note:'', done:false, row:13},
+        {id:14, desc:'Mentenanță Selgros', pid:'', echipa:'Echipa Radu', tip:'maint', data:fmtD(m,4), ora:'13:00', durata:4, prioritate:'low', note:'Verificare senzori', done:false, row:14}
+    ];
+}
+
+// ═══════ HELPERS ═══════
+function fmtD(monday, offset) { var d = new Date(monday); d.setDate(d.getDate() + offset); return d.toISOString().split('T')[0]; }
+function getMonday(d) { var day = d.getDay(), diff = d.getDate() - day + (day === 0 ? -6 : 1); var m = new Date(d); m.setDate(diff); m.setHours(0,0,0,0); return m; }
+function esc(s) { if (!s) return ''; var d = document.createElement('div'); d.textContent = s; return d.innerHTML; }
+function todayStr() { return new Date().toISOString().split('T')[0]; }
+function getProjectName(pid) { var p = PROJECTS.find(function(x) { return x.id === pid; }); return p ? p.client : ''; }
+function showLoading(s) { document.getElementById('loadBar').classList.toggle('active', s); }
+function toast(msg, type) { var c = document.getElementById('toastContainer'); var t = document.createElement('div'); t.className = 'toast ' + (type||'info'); t.textContent = msg; c.appendChild(t); setTimeout(function(){t.style.opacity='0';t.style.transform='translateX(100px)';t.style.transition='all 0.3s'},3000); setTimeout(function(){t.remove()},3500); }
+
+// ═══════ API ═══════
+function apiGet(action) {
+    if (!API_URL) return Promise.reject('No API');
+    showLoading(true);
+    return fetch(API_URL + '?action=' + action).then(function(r){return r.json()}).finally(function(){showLoading(false)});
+}
+function apiPost(data) {
+    if (!API_URL) return Promise.reject('No API');
+    showLoading(true);
+    return fetch(API_URL, {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(data)}).then(function(r){return r.json()}).finally(function(){showLoading(false)});
+}
+
+function refreshData() {
+    if (!API_URL) {
+        toast('⚠️ API URL nesetat. Date demo active.', 'info');
+        genDemoTasks(); isLive = false; updateSyncStatus(); render(); return;
+    }
+    updateSyncStatus('loading');
+    Promise.all([apiGet('getPlanificare'), apiGet('getProjects')])
+        .then(function(results) {
+            var planData = results[0], projData = results[1];
+            if (Array.isArray(planData)) {
+                TASKS = planData.map(function(r, i) {
+                    return {id:i+1, row:r.row||i+1, desc:r.descriere||'', pid:r.proiectId||'', echipa:r.echipa||'', tip:r.tip||'exec', data:r.data||'', ora:r.ora||'08:00', durata:Number(r.durata)||8, prioritate:r.prioritate||'normal', note:r.note||'', done:r.status==='Finalizat'};
+                });
+            }
+            if (Array.isArray(projData)) {
+                PROJECTS = projData.map(function(p) { return {id:p.id, client:p.client}; });
+                populateProjectDropdowns();
+            }
+            isLive = true; updateSyncStatus(); render();
+            toast('✅ Date sincronizate', 'success');
+        })
+        .catch(function(err) { isLive = false; updateSyncStatus(); toast('❌ Sync eșuat: ' + err, 'error'); });
+}
+
+function updateSyncStatus(state) {
+    var el = document.getElementById('syncStatus');
+    if (state === 'loading') el.innerHTML = '<span class="sync-indicator sync-loading"></span>Se sincronizează...';
+    else if (isLive) el.innerHTML = '<span class="sync-indicator sync-ok"></span>Conectat la Google Sheets';
+    else el.innerHTML = '<span class="sync-indicator sync-off"></span>Date locale (demo)';
+}
+
+
+// ═══════════════════════════════════════════════════
+// NAVIGATION
+// ═══════════════════════════════════════════════════
+function changeWeek(dir) { currentMonday.setDate(currentMonday.getDate() + dir * 7); if (!isLive) genDemoTasks(); render(); }
+function goToday() { currentMonday = getMonday(new Date()); if (!isLive) genDemoTasks(); render(); }
+
+function setView(v) {
+    currentView = v;
+    ['cal','agenda','list'].forEach(function(x) {
+        document.getElementById(x + 'View').style.display = x === v ? '' : 'none';
+        document.getElementById('v' + x.charAt(0).toUpperCase() + x.slice(1)).classList.toggle('active', x === v);
+    });
+    render();
+}
+
+
+// ═══════════════════════════════════════════════════
+// FILTERS
+// ═══════════════════════════════════════════════════
+function getWeekTasks() {
+    var fEchipa = document.getElementById('filterEchipa').value;
+    var fTip = document.getElementById('filterTip').value;
+    var fProiect = document.getElementById('filterProiect').value;
+    var weekEnd = new Date(currentMonday); weekEnd.setDate(weekEnd.getDate() + 6);
+    var ws = currentMonday.toISOString().split('T')[0];
+    var we = weekEnd.toISOString().split('T')[0];
+
+    return TASKS.filter(function(t) {
+        if (t.data < ws || t.data > we) return false;
+        if (fEchipa && t.echipa !== fEchipa) return false;
+        if (fTip && t.tip !== fTip) return false;
+        if (fProiect && t.pid !== fProiect) return false;
+        return true;
+    });
+}
+
+
+// ═══════════════════════════════════════════════════
+// RENDER
+// ═══════════════════════════════════════════════════
+function render() {
+    renderWeekLabel();
+    renderSummary();
+    if (currentView === 'cal') renderCalendar();
+    else if (currentView === 'agenda') renderAgenda();
+    else renderList();
+}
+
+function renderWeekLabel() {
+    var end = new Date(currentMonday); end.setDate(end.getDate() + 6);
+    document.getElementById('weekLabel').textContent =
+        currentMonday.getDate() + ' ' + MONTHS_SHORT[currentMonday.getMonth()] + ' — ' +
+        end.getDate() + ' ' + MONTHS_SHORT[end.getMonth()] + ' ' + end.getFullYear();
+}
+
+function renderSummary() {
+    var tasks = getWeekTasks();
+    var today = todayStr();
+    var todayTasks = tasks.filter(function(t) { return t.data === today; });
+    var doneTasks = tasks.filter(function(t) { return t.done; });
+    var totalHours = tasks.reduce(function(s, t) { return s + (t.durata || 0); }, 0);
+    var urgent = tasks.filter(function(t) { return t.prioritate === 'urgent' && !t.done; });
+
+    document.getElementById('summaryStrip').innerHTML =
+        '<div class="ss-item"><div class="ss-icon blue">📅</div><div><div class="ss-val">' + tasks.length + '</div><div class="ss-label">Activități săptămâna</div></div></div>' +
+        '<div class="ss-item"><div class="ss-icon orange">☀️</div><div><div class="ss-val">' + todayTasks.length + '</div><div class="ss-label">Azi</div></div></div>' +
+        '<div class="ss-item"><div class="ss-icon green">✅</div><div><div class="ss-val">' + doneTasks.length + '/' + tasks.length + '</div><div class="ss-label">Finalizate</div></div></div>' +
+        '<div class="ss-item"><div class="ss-icon purple">⏱️</div><div><div class="ss-val">' + totalHours + 'h</div><div class="ss-label">Ore planificate</div></div></div>' +
+        (urgent.length ? '<div class="ss-item" style="border:2px solid var(--red)"><div class="ss-icon" style="background:#fef2f2">🔴</div><div><div class="ss-val" style="color:var(--red)">' + urgent.length + '</div><div class="ss-label">Urgente</div></div></div>' : '');
+}
+
+function renderCalendar() {
+    var tasks = getWeekTasks();
+    var today = todayStr();
+    var fEchipa = document.getElementById('filterEchipa').value;
+    var teams = fEchipa ? [fEchipa] : TEAMS;
+
+    var html = '<div class="cal-grid">';
+    html += '<div class="cal-header-label">Echipa</div>';
+    for (var d = 0; d < 7; d++) {
+        var dd = new Date(currentMonday); dd.setDate(dd.getDate() + d);
+        var ds = dd.toISOString().split('T')[0];
+        html += '<div class="cal-header' + (ds === today ? ' today' : '') + '">' + DAYS_RO[dd.getDay()] + '<div class="ch-day">' + dd.getDate() + '</div></div>';
+    }
+    teams.forEach(function(team) {
+        html += '<div class="cal-team">' + (TEAM_ICONS[team] || '👷') + ' ' + team.replace('Echipa ','') + '</div>';
+        for (var d = 0; d < 7; d++) {
+            var dd = new Date(currentMonday); dd.setDate(dd.getDate() + d);
+            var ds = dd.toISOString().split('T')[0];
+            var dayTasks = tasks.filter(function(t) { return t.echipa === team && t.data === ds; });
+            html += '<div class="cal-cell' + (ds === today ? ' today' : '') + '">';
+            dayTasks.forEach(function(t) {
+                html += '<div class="cal-task ' + t.tip + (t.done ? ' done' : '') + (t.prioritate === 'urgent' ? '" style="font-weight:800' : '') + '" onclick="openDetailModal(' + t.id + ')" title="' + esc(t.desc) + (t.pid ? ' (' + t.pid + ')' : '') + '">';
+                if (t.prioritate === 'urgent') html += '🔴 ';
+                html += esc(t.desc);
+                if (t.pid) html += '<span class="ct-pid">' + t.pid + '</span>';
+                html += '</div>';
+            });
+            html += '</div>';
+        }
+    });
+    html += '</div>';
+    document.getElementById('calView').innerHTML = html;
+}
+
+function renderAgenda() {
+    var tasks = getWeekTasks();
+    var today = todayStr();
+    var html = '';
+
+    for (var d = 0; d < 7; d++) {
+        var dd = new Date(currentMonday); dd.setDate(dd.getDate() + d);
+        var ds = dd.toISOString().split('T')[0];
+        var dayTasks = tasks.filter(function(t) { return t.data === ds; });
+        dayTasks.sort(function(a, b) { return (a.ora || '').localeCompare(b.ora || ''); });
+
+        var isToday = ds === today;
+        html += '<div class="agenda-day">';
+        html += '<div class="agenda-day-header' + (isToday ? ' today' : '') + '">';
+        html += '<span>' + DAYS_FULL[dd.getDay()] + ', ' + dd.getDate() + ' ' + MONTHS_RO[dd.getMonth()] + '</span>';
+        html += '<span class="adh-count">' + dayTasks.length + ' activități</span>';
+        html += '</div>';
+
+        if (dayTasks.length) {
+            html += '<div class="agenda-cards">';
+            dayTasks.forEach(function(t) {
+                var pName = getProjectName(t.pid);
+                html += '<div class="acard ' + t.tip + (t.done ? ' done' : '') + '" onclick="openDetailModal(' + t.id + ')">';
+                html += '<div class="acard-top"><div class="acard-time">⏰ ' + t.ora + ' · ' + t.durata + 'h</div>';
+                html += '<span class="acard-status ' + (t.done ? 'done' : 'pending') + '">' + (t.done ? '✅ Finalizat' : '⏳ Planificat') + '</span></div>';
+                html += '<div class="acard-title">' + (t.prioritate === 'urgent' ? '🔴 ' : '') + esc(t.desc) + '</div>';
+                html += '<div class="acard-meta"><span>' + (TEAM_ICONS[t.echipa] || '') + ' ' + t.echipa + '</span><span>' + (TIP_LABELS[t.tip] || t.tip) + '</span></div>';
+                if (t.pid) html += '<div class="acard-pid">🔗 ' + t.pid + (pName ? ' — ' + esc(pName) : '') + '</div>';
+                html += '</div>';
+            });
+            html += '</div>';
+        }
+        html += '</div>';
+    }
+    document.getElementById('agendaView').innerHTML = html;
+}
+
+function renderList() {
+    var tasks = getWeekTasks();
+    if (!tasks.length) { document.getElementById('listView').innerHTML = '<div class="empty-msg">Nicio activitate în săptămâna selectată</div>'; return; }
+    tasks.sort(function(a, b) { return (a.data + a.ora).localeCompare(b.data + b.ora); });
+
+    var html = '<div class="list-wrap"><table><thead><tr><th>✓</th><th>Data</th><th>Ora</th><th>Activitate</th><th>Echipa</th><th>Tip</th><th>Proiect</th><th>Durata</th><th>Prio</th></tr></thead><tbody>';
+    tasks.forEach(function(t) {
+        var dd = new Date(t.data + 'T00:00:00');
+        html += '<tr class="' + (t.done ? 'done' : '') + '" style="cursor:pointer">';
+        html += '<td><div class="check-done ' + (t.done ? 'checked' : '') + '" onclick="event.stopPropagation();toggleDone(' + t.id + ')">' + (t.done ? '✓' : '') + '</div></td>';
+        html += '<td>' + DAYS_RO[dd.getDay()] + ' ' + dd.getDate() + '</td>';
+        html += '<td style="font-weight:600">' + t.ora + '</td>';
+        html += '<td onclick="openDetailModal(' + t.id + ')"><strong>' + (t.prioritate === 'urgent' ? '🔴 ' : '') + esc(t.desc) + '</strong></td>';
+        html += '<td>' + (TEAM_ICONS[t.echipa] || '') + ' ' + t.echipa.replace('Echipa ','') + '</td>';
+        html += '<td class="td-type ' + t.tip + '">' + (TIP_LABELS[t.tip] || t.tip) + '</td>';
+        html += '<td>' + (t.pid ? '<span style="color:var(--blue);font-weight:600">' + t.pid + '</span>' : '—') + '</td>';
+        html += '<td>' + t.durata + 'h</td>';
+        html += '<td>' + (t.prioritate === 'urgent' ? '🔴' : t.prioritate === 'low' ? '⚪' : '🟡') + '</td>';
+        html += '</tr>';
+    });
+    html += '</tbody></table></div>';
+    document.getElementById('listView').innerHTML = html;
+}
+
+
+// ═══════════════════════════════════════════════════
+// ACTIONS
+// ═══════════════════════════════════════════════════
+
+function toggleDone(taskId) {
+    var t = TASKS.find(function(x) { return x.id === taskId; });
+    if (!t) return;
+    t.done = !t.done;
+    if (API_URL) {
+        apiPost({action:'updatePlanificare', row:t.row, status:t.done ? 'Finalizat' : 'Planificat'}).catch(function(){});
+    }
+    render();
+    toast(t.done ? '✅ Marcat finalizat' : '🔄 Marcat planificat', 'success');
+}
+
+function openDetailModal(taskId) {
+    var t = TASKS.find(function(x) { return x.id === taskId; });
+    if (!t) return;
+    var pName = getProjectName(t.pid);
+    var dd = new Date(t.data + 'T00:00:00');
+
+    document.getElementById('detailTitle').textContent = (TIP_LABELS[t.tip] || '') + ' — Detalii';
+    var html = '<div style="display:grid;gap:14px">';
+    html += '<div style="font-size:18px;font-weight:800;line-height:1.3">' + (t.prioritate === 'urgent' ? '🔴 ' : '') + esc(t.desc) + '</div>';
+    html += infoRow('📅 Data', DAYS_FULL[dd.getDay()] + ', ' + dd.getDate() + ' ' + MONTHS_RO[dd.getMonth()]);
+    html += infoRow('⏰ Ora', t.ora + ' · ' + t.durata + ' ore');
+    html += infoRow('👷 Echipa', (TEAM_ICONS[t.echipa] || '') + ' ' + t.echipa);
+    html += infoRow('🏷️ Tip', TIP_LABELS[t.tip] || t.tip);
+    html += infoRow('⚡ Prioritate', t.prioritate === 'urgent' ? '🔴 Urgent' : t.prioritate === 'low' ? '⚪ Scăzută' : '🟡 Normal');
+    html += infoRow('📊 Status', t.done ? '<span style="color:var(--green);font-weight:700">✅ Finalizat</span>' : '<span style="color:var(--orange);font-weight:700">⏳ Planificat</span>');
+    if (t.pid) html += '<div style="padding:10px 14px;background:#eff6ff;border-radius:10px;border:1px solid #bfdbfe"><div style="font-size:11px;color:var(--gray);font-weight:600">PROIECT LEGAT</div><div style="font-size:15px;font-weight:800;color:var(--blue);margin-top:2px">🔗 ' + t.pid + '</div>' + (pName ? '<div style="font-size:13px;color:var(--gray);margin-top:2px">' + esc(pName) + '</div>' : '') + '</div>';
+    if (t.note) html += '<div style="background:var(--gray-bg);padding:12px;border-radius:10px;font-size:13px;color:var(--gray);line-height:1.5;font-style:italic">💬 ' + esc(t.note) + '</div>';
+
+    // Action buttons
+    html += '<div style="display:flex;gap:8px;margin-top:8px">';
+    if (canEdit) {
+        html += '<button onclick="closeDetailModal();openEditModal(' + t.id + ')" style="flex:1;padding:12px;border-radius:12px;border:none;background:var(--blue);color:#fff;font-weight:700;font-size:14px;cursor:pointer">✏️ Editează</button>';
+        html += '<button onclick="toggleDone(' + t.id + ');closeDetailModal()" style="flex:1;padding:12px;border-radius:12px;border:none;background:' + (t.done ? 'var(--orange)' : 'var(--green)') + ';color:#fff;font-weight:700;font-size:14px;cursor:pointer">' + (t.done ? '🔄 Replanifică' : '✅ Finalizat') + '</button>';
+    }
+    html += '</div></div>';
+
+    document.getElementById('detailBody').innerHTML = html;
+    document.getElementById('detailModal').classList.add('active');
+}
+function closeDetailModal() { document.getElementById('detailModal').classList.remove('active'); }
+
+function infoRow(label, value) {
+    return '<div style="display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px solid var(--gray-bg)"><span style="font-size:13px;color:var(--gray)">' + label + '</span><span style="font-size:14px;font-weight:600">' + value + '</span></div>';
+}
+
+
+// ═══════ ADD / EDIT TASK ═══════
+
+function openAddModal() {
+    document.getElementById('editId').value = '';
+    document.getElementById('modalTitle').textContent = '📅 Programare Nouă';
+    document.getElementById('submitBtn').textContent = '📅 Programează';
+    document.getElementById('addForm').reset();
+    document.getElementById('fData').value = todayStr();
+    document.getElementById('fOra').value = '08:00';
+    document.getElementById('fDurata').value = '8';
+    document.getElementById('addModal').classList.add('active');
+}
+
+function openEditModal(taskId) {
+    var t = TASKS.find(function(x) { return x.id === taskId; });
+    if (!t) return;
+    document.getElementById('editId').value = t.id;
+    document.getElementById('modalTitle').textContent = '✏️ Editare Programare';
+    document.getElementById('submitBtn').textContent = '💾 Salvează';
+    document.getElementById('fDesc').value = t.desc;
+    document.getElementById('fProiect').value = t.pid;
+    document.getElementById('fEchipa').value = t.echipa;
+    document.getElementById('fTip').value = t.tip;
+    document.getElementById('fData').value = t.data;
+    document.getElementById('fOra').value = t.ora;
+    document.getElementById('fDurata').value = t.durata;
+    document.getElementById('fPrioritate').value = t.prioritate;
+    document.getElementById('fNote').value = t.note || '';
+    document.getElementById('addModal').classList.add('active');
+}
+
+function closeAddModal() { document.getElementById('addModal').classList.remove('active'); }
+
+function saveTask(e) {
+    e.preventDefault();
+    var f = document.getElementById('addForm');
+    var d = new FormData(f);
+    var editId = parseInt(d.get('editId'));
+    var btn = document.getElementById('submitBtn');
+    btn.disabled = true;
+
+    var taskData = {
+        desc: d.get('desc'),
+        pid: d.get('proiectId') || '',
+        echipa: d.get('echipa'),
+        tip: d.get('tip'),
+        data: d.get('data'),
+        ora: d.get('ora') || '08:00',
+        durata: parseInt(d.get('durata')) || 8,
+        prioritate: d.get('prioritate') || 'normal',
+        note: d.get('note') || ''
+    };
+
+    if (editId) {
+        // Edit existing
+        var t = TASKS.find(function(x) { return x.id === editId; });
+        if (t) {
+            Object.assign(t, taskData);
+            if (API_URL) {
+                apiPost({action:'updatePlanificareTask', row:t.row, task:taskData}).catch(function(){});
+            }
+            toast('✅ Programare actualizată', 'success');
+        }
+    } else {
+        // Add new
+        var maxId = 0; TASKS.forEach(function(x) { if (x.id > maxId) maxId = x.id; });
+        var newTask = Object.assign({id: maxId + 1, row: maxId + 1, done: false}, taskData);
+
+        if (API_URL) {
+            apiPost({action:'addPlanificare', task:taskData})
+                .then(function(res) {
+                    if (res.error) throw new Error(res.error);
+                    newTask.row = res.row || newTask.row;
+                    TASKS.push(newTask);
+                    render();
+                    toast('✅ Programare salvată și sincronizată', 'success');
+                })
+                .catch(function() {
+                    TASKS.push(newTask);
+                    render();
+                    toast('⚠️ Salvat local, sync eșuat', 'error');
+                });
+        } else {
+            TASKS.push(newTask);
+            toast('✅ Programare adăugată (local)', 'success');
+        }
+    }
+
+    render();
+    closeAddModal();
+    f.reset();
+    btn.disabled = false;
+}
+
+
+// ═══════ POPULATE DROPDOWNS ═══════
+
+function populateProjectDropdowns() {
+    var opts = '<option value="">— Fără proiect —</option>';
+    PROJECTS.forEach(function(p) { opts += '<option value="' + p.id + '">' + p.id + ' — ' + esc(p.client) + '</option>'; });
+    document.getElementById('fProiect').innerHTML = opts;
+
+    var filterOpts = '<option value="">Toate proiectele</option>';
+    PROJECTS.forEach(function(p) { filterOpts += '<option value="' + p.id + '">' + p.id + '</option>'; });
+    document.getElementById('filterProiect').innerHTML = filterOpts;
+}
+
+function populateTeamDropdowns() {
+    var opts = '';
+    TEAMS.forEach(function(t) { opts += '<option value="' + t + '">' + (TEAM_ICONS[t] || '') + ' ' + t + '</option>'; });
+    document.getElementById('fEchipa').innerHTML = opts;
+
+    var filterOpts = '<option value="">Toate echipele</option>';
+    TEAMS.forEach(function(t) { filterOpts += '<option value="' + t + '">' + (TEAM_ICONS[t] || '') + ' ' + t + '</option>'; });
+    document.getElementById('filterEchipa').innerHTML = filterOpts;
+}
+
+
+// ═══════ INIT ═══════
+populateTeamDropdowns();
+populateProjectDropdowns();
+genDemoTasks();
+render();
+
+if (API_URL) refreshData();
+</script>
+</body>
+</html>

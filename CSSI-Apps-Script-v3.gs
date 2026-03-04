@@ -16,14 +16,16 @@
  * SHEET-URI NECESARE (creează manual cu headerele de mai jos):
  * 
  * 1. PROIECTE: ID | Client | Telefon | Email | Serviciu | Locatie | Valoare | Status | Echipa | DataStart | DataFin | Note | CreatedAt
- * 2. CRM: Timestamp | Nume | Telefon | Email | Serviciu | Sursa | Status | ProiectID | Note
- * 3. EXECUTIE: Data | ProiectID | Echipa | Ore | Stadiu | Observatii
- * 4. MENTENANTA: Client | ProiectID | TipContract | Frecventa | UltimaVerificare | UrmatoareaVerificare | Status | Note
- * 5. PROIECTARE: ProiectID | TipAviz | Status | Deadline | Responsabil | LinkDosar | Note
- * 6. MATERIALE: Data | ProiectID | Material | Cantitate | Urgenta | Cost | Status | Solicitant
- * 7. FINANCIAR: ProiectID | NrFactura | DataFactura | Suma | TVA | Total | Incasat | Restant | Status
- * 8. SOCIAL: Data | Platforma | Continut | Status | Programat
- * 9. CONFIG: Key | Value (pentru setări: email_admin, email_notificari, etc.)
+ * 2. CRM: Timestamp | Nume | Telefon | Email | Serviciu | Sursa | Status | ProiectID | Valoare | Locatie | Note
+ * 3. EXECUTIE: Data | ProiectID | Echipa | Ore | Muncitori | Stadiu | Observatii | Materiale
+ * 4. MENTENANTA: Client | ProiectID | TipContract | Frecventa | UltimaVerificare | UrmatoareaVerificare | Status | Valoare | Telefon | Echipa | Note | History (JSON)
+ * 5. PROIECTARE: ProiectID | TipAviz | Status | Deadline | Responsabil | LinkDosar | Note | Checks (JSON)
+ * 6. MATERIALE: Data | ProiectID | Material | Cantitate | Urgenta | Cost | Status | Solicitant | Furnizor | Note
+ * 6b. INVENTAR: Nume | Cod | Categorie | Stoc | Unitate | Minim | Pret | Furnizor | Locatie | Note | History (JSON)
+ * 7. FINANCIAR: ProiectID | NrFactura | DataFactura | Scadenta | Client | Suma | TVA | Total | Incasat | Restant | Status | Note | Payments (JSON)
+ * 8. SOCIAL: Data | Platforma | Continut | Status | Tip | Note
+ * 9. PLANIFICARE: Data | Ora | Descriere | ProiectID | Echipa | Tip | Durata | Prioritate | Status | Note
+ * 10. CONFIG: Key | Value (pentru setări: email_admin, email_notificari, etc.)
  */
 
 // ═══════ CONFIGURATION ═══════
@@ -38,8 +40,10 @@ var SH = {
   MENTENANTA: 'MENTENANTA',
   PROIECTARE: 'PROIECTARE',
   MATERIALE: 'MATERIALE',
+  INVENTAR: 'INVENTAR',
   FINANCIAR: 'FINANCIAR',
   SOCIAL: 'SOCIAL',
+  PLANIFICARE: 'PLANIFICARE',
   CONFIG: 'CONFIG'
 };
 
@@ -71,6 +75,27 @@ function doGet(e) {
         break;
       case 'getFinanciar':
         result = getFinanciar();
+        break;
+      case 'getCRM':
+        result = getCRM();
+        break;
+      case 'getMateriale':
+        result = getMaterialeData();
+        break;
+      case 'getInventar':
+        result = getInventarData();
+        break;
+      case 'getSocial':
+        result = getSocialData();
+        break;
+      case 'getPlanificare':
+        result = getPlanificare();
+        break;
+      case 'getExecutie':
+        result = getExecutieData();
+        break;
+      case 'getProiectare':
+        result = getProiectareData();
         break;
       case 'getAlerts':
         result = getAlerts();
@@ -107,17 +132,83 @@ function doPost(e) {
       case 'addMaterial':
         result = addMaterial(data);
         break;
+      case 'updateMaterialeStatus':
+        result = updateMaterialeStatus(data.row, data.status);
+        break;
+      case 'addInventar':
+        result = addInventarItem(data.item || data);
+        break;
+      case 'updateInventar':
+        result = updateInventarItem(data.row, data.item || data);
+        break;
+      case 'updateInventarStock':
+        result = updateInventarStock(data.row, data.stoc, data.history);
+        break;
+      case 'addSocial':
+        result = addSocialPost(data.post || data);
+        break;
+      case 'updateSocialStatus':
+        result = updateSocialStatus(data.row, data.status);
+        break;
+      case 'updateSocial':
+        result = updateSocialPost(data.row, data.post || data);
+        break;
       case 'addExecutie':
-        result = addExecutie(data);
+        result = addExecutie(data.report || data);
+        break;
+      case 'updateExecutie':
+        result = updateExecutieReport(data.row, data.report);
         break;
       case 'addFactura':
         result = addFactura(data);
         break;
+      case 'updateFinanciar':
+        result = updateFinanciarPayment(data.row, data.incasat, data.restant, data.status, data.payments);
+        break;
+      case 'updateFinanciarFull':
+        result = updateFinanciarFull(data.row, data.invoice || data);
+        break;
       case 'addMentenanta':
         result = addMentenanta(data);
         break;
+      case 'updateMentenantaStatus':
+        result = updateMentenantaStatus(data.row, data.status);
+        break;
+      case 'updateMentenanta':
+        result = updateMentenantaFull(data.row, data.contract || data);
+        break;
+      case 'markMentenantaDone':
+        result = markMentenantaDone(data.row, data.ultima, data.urmatoarea, data.history);
+        break;
       case 'crmToProject':
         result = convertCrmToProject(data.crmRow);
+        break;
+      case 'addCRM':
+        result = addCRM(data.lead);
+        break;
+      case 'updateCRMStatus':
+        result = updateCRMStatus(data.row, data.status);
+        break;
+      case 'addPlanificare':
+        result = addPlanificareTask(data.task);
+        break;
+      case 'updatePlanificare':
+        result = updatePlanificareStatus(data.row, data.status);
+        break;
+      case 'updatePlanificareTask':
+        result = updatePlanificareTask(data.row, data.task);
+        break;
+      case 'addProiectare':
+        result = addProiectareDosar(data.dosar || data);
+        break;
+      case 'updateProiectare':
+        result = updateProiectareChecks(data.row, data.status, data.checks);
+        break;
+      case 'updateProiectareStatus':
+        result = updateProiectareStatusOnly(data.row, data.status);
+        break;
+      case 'updateProiectareDosar':
+        result = updateProiectareFullDosar(data.row, data.dosar);
         break;
       default:
         result = {error: 'Unknown action: ' + action};
@@ -218,14 +309,19 @@ function getMentenanta() {
     var row = data[i];
     if (!row[0]) continue;
     result.push({
+      row: i,
       client: row[0],
-      proiectId: row[1],
-      tipContract: row[2],
-      frecventa: row[3],
+      proiectId: row[1] || '',
+      tip: row[2] || 'Standard',
+      frecventa: row[3] || 'Trimestrial',
       ultima: row[4] ? Utilities.formatDate(new Date(row[4]), 'Europe/Bucharest', 'yyyy-MM-dd') : '',
       urmatoarea: row[5] ? Utilities.formatDate(new Date(row[5]), 'Europe/Bucharest', 'yyyy-MM-dd') : '',
-      status: row[6],
-      note: row[7]
+      status: row[6] || 'Activ',
+      valoare: Number(row[7]) || 0,
+      telefon: row[8] || '',
+      echipa: row[9] || '',
+      note: row[10] || '',
+      history: row[11] || '[]'
     });
   }
   return result;
@@ -241,15 +337,20 @@ function getFinanciar() {
     var row = data[i];
     if (!row[0]) continue;
     result.push({
+      row: i,
       proiectId: row[0],
-      nrFactura: row[1],
-      dataFactura: row[2] ? Utilities.formatDate(new Date(row[2]), 'Europe/Bucharest', 'yyyy-MM-dd') : '',
-      suma: Number(row[3]) || 0,
-      tva: Number(row[4]) || 0,
-      total: Number(row[5]) || 0,
-      incasat: Number(row[6]) || 0,
-      restant: Number(row[7]) || 0,
-      status: row[8]
+      nrFactura: row[1] || '',
+      data: row[2] ? Utilities.formatDate(new Date(row[2]), 'Europe/Bucharest', 'yyyy-MM-dd') : '',
+      scadenta: row[3] ? Utilities.formatDate(new Date(row[3]), 'Europe/Bucharest', 'yyyy-MM-dd') : '',
+      client: row[4] || '',
+      suma: Number(row[5]) || 0,
+      tva: Number(row[6]) || 0,
+      total: Number(row[7]) || 0,
+      incasat: Number(row[8]) || 0,
+      restant: Number(row[9]) || 0,
+      status: row[10] || 'Emisă',
+      note: row[11] || '',
+      payments: row[12] || '[]'
     });
   }
   return result;
@@ -394,17 +495,234 @@ function updateProjectStatus(projectId, newStatus) {
  */
 function addMaterial(data) {
   var sheet = getSheet(SH.MATERIALE);
+  var rowNum = sheet.getLastRow() + 1;
+  var r = data.request || data;
   sheet.appendRow([
-    new Date(),
-    data.proiectId || '',
-    data.material || '',
-    Number(data.cantitate) || 0,
-    data.urgenta || 'Normal',
-    Number(data.cost) || 0,
-    'Solicitat',
-    data.solicitant || ''
+    r.data || new Date(),
+    r.pid || r.proiectId || '',
+    r.material || '',
+    Number(r.cant || r.cantitate) || 1,
+    r.urg || r.urgenta || 'Normal',
+    Number(r.cost) || 0,
+    r.status || 'Solicitat',
+    r.sol || r.solicitant || '',
+    r.furnizor || '',
+    r.note || ''
   ]);
-  return {success: true};
+  return {success: true, row: rowNum - 1};
+}
+
+/**
+ * Citește toate solicitările de materiale
+ */
+function getMaterialeData() {
+  var sheet = getSheet(SH.MATERIALE);
+  var data = sheet.getDataRange().getValues();
+  if (data.length <= 1) return [];
+  var result = [];
+  for (var i = 1; i < data.length; i++) {
+    var row = data[i];
+    if (!row[2]) continue; // skip empty material
+    result.push({
+      row: i,
+      data: row[0] ? Utilities.formatDate(new Date(row[0]), 'Europe/Bucharest', 'yyyy-MM-dd') : '',
+      proiectId: row[1] || '',
+      material: row[2] || '',
+      cantitate: Number(row[3]) || 1,
+      urgenta: row[4] || 'Normal',
+      cost: Number(row[5]) || 0,
+      status: row[6] || 'Solicitat',
+      solicitant: row[7] || '',
+      furnizor: row[8] || '',
+      note: row[9] || ''
+    });
+  }
+  return result;
+}
+
+/**
+ * Actualizează statusul unei solicitări de materiale
+ */
+function updateMaterialeStatus(mRow, newStatus) {
+  var sheet = getSheet(SH.MATERIALE);
+  if (mRow < 1) return {error: 'Invalid row'};
+  sheet.getRange(mRow + 1, 7).setValue(newStatus);
+  return {success: true, row: mRow, status: newStatus};
+}
+
+/**
+ * Citește inventarul complet
+ */
+function getInventarData() {
+  var sheet = getSheet(SH.INVENTAR);
+  var data = sheet.getDataRange().getValues();
+  if (data.length <= 1) return [];
+  var result = [];
+  for (var i = 1; i < data.length; i++) {
+    var row = data[i];
+    if (!row[0]) continue;
+    result.push({
+      row: i,
+      nume: row[0] || '',
+      cod: row[1] || '',
+      categorie: row[2] || 'Altele',
+      stoc: Number(row[3]) || 0,
+      unitate: row[4] || 'buc',
+      minim: Number(row[5]) || 0,
+      pret: Number(row[6]) || 0,
+      furnizor: row[7] || '',
+      locatie: row[8] || '',
+      note: row[9] || '',
+      history: row[10] || '[]'
+    });
+  }
+  return result;
+}
+
+/**
+ * Adaugă produs nou în inventar
+ */
+function addInventarItem(item) {
+  var sheet = getSheet(SH.INVENTAR);
+  var rowNum = sheet.getLastRow() + 1;
+  sheet.appendRow([
+    item.nume || '',
+    item.cod || '',
+    item.cat || item.categorie || 'Altele',
+    Number(item.stoc) || 0,
+    item.unit || item.unitate || 'buc',
+    Number(item.minim) || 0,
+    Number(item.pret) || 0,
+    item.furnizor || '',
+    item.locatie || '',
+    item.note || '',
+    '[]'
+  ]);
+  return {success: true, row: rowNum - 1};
+}
+
+/**
+ * Actualizează produs în inventar (editare completă)
+ */
+function updateInventarItem(iRow, item) {
+  var sheet = getSheet(SH.INVENTAR);
+  if (iRow < 1) return {error: 'Invalid row'};
+  var r = iRow + 1;
+  sheet.getRange(r, 1).setValue(item.nume || '');
+  sheet.getRange(r, 2).setValue(item.cod || '');
+  sheet.getRange(r, 3).setValue(item.cat || item.categorie || 'Altele');
+  sheet.getRange(r, 4).setValue(Number(item.stoc) || 0);
+  sheet.getRange(r, 5).setValue(item.unit || item.unitate || 'buc');
+  sheet.getRange(r, 6).setValue(Number(item.minim) || 0);
+  sheet.getRange(r, 7).setValue(Number(item.pret) || 0);
+  sheet.getRange(r, 8).setValue(item.furnizor || '');
+  sheet.getRange(r, 9).setValue(item.locatie || '');
+  sheet.getRange(r, 10).setValue(item.note || '');
+  return {success: true, row: iRow};
+}
+
+/**
+ * Actualizează stoc + istoric mișcări
+ */
+function updateInventarStock(iRow, newStoc, historyJson) {
+  var sheet = getSheet(SH.INVENTAR);
+  if (iRow < 1) return {error: 'Invalid row'};
+  var r = iRow + 1;
+  sheet.getRange(r, 4).setValue(Number(newStoc) || 0);
+  sheet.getRange(r, 11).setValue(historyJson || '[]');
+  return {success: true, row: iRow};
+}
+
+/**
+ * Citește toate postările social media
+ */
+function getSocialData() {
+  var sheet = getSheet(SH.SOCIAL);
+  var data = sheet.getDataRange().getValues();
+  if (data.length <= 1) return [];
+  var result = [];
+  for (var i = 1; i < data.length; i++) {
+    var row = data[i];
+    if (!row[2]) continue;
+    result.push({
+      row: i,
+      data: row[0] ? Utilities.formatDate(new Date(row[0]), 'Europe/Bucharest', 'yyyy-MM-dd') : '',
+      platforma: row[1] || 'fb',
+      continut: row[2] || '',
+      status: row[3] || 'Idee',
+      tip: row[4] || 'Foto',
+      note: row[5] || ''
+    });
+  }
+  return result;
+}
+
+/**
+ * Adaugă postare social media
+ */
+function addSocialPost(post) {
+  var sheet = getSheet(SH.SOCIAL);
+  var rowNum = sheet.getLastRow() + 1;
+  sheet.appendRow([
+    post.data || new Date(),
+    post.plat || post.platforma || 'fb',
+    post.content || post.continut || '',
+    post.status || 'Draft',
+    post.tip || 'Foto',
+    post.note || ''
+  ]);
+  return {success: true, row: rowNum - 1};
+}
+
+/**
+ * Actualizează status postare social
+ */
+function updateSocialStatus(sRow, newStatus) {
+  var sheet = getSheet(SH.SOCIAL);
+  if (sRow < 1) return {error: 'Invalid row'};
+  sheet.getRange(sRow + 1, 4).setValue(newStatus);
+  return {success: true, row: sRow, status: newStatus};
+}
+
+/**
+ * Actualizare completă postare social
+ */
+function updateSocialPost(sRow, post) {
+  var sheet = getSheet(SH.SOCIAL);
+  if (sRow < 1) return {error: 'Invalid row'};
+  var r = sRow + 1;
+  sheet.getRange(r, 1).setValue(post.data || '');
+  sheet.getRange(r, 2).setValue(post.plat || post.platforma || 'fb');
+  sheet.getRange(r, 3).setValue(post.content || post.continut || '');
+  sheet.getRange(r, 4).setValue(post.status || 'Draft');
+  sheet.getRange(r, 5).setValue(post.tip || 'Foto');
+  sheet.getRange(r, 6).setValue(post.note || '');
+  return {success: true, row: sRow};
+}
+ * Citește toate rapoartele din EXECUTIE
+ */
+function getExecutieData() {
+  var sheet = getSheet(SH.EXECUTIE);
+  var data = sheet.getDataRange().getValues();
+  if (data.length <= 1) return [];
+  
+  var result = [];
+  for (var i = 1; i < data.length; i++) {
+    var row = data[i];
+    if (!row[1]) continue; // Skip rows fără ProiectID
+    result.push({
+      row: i,
+      data: row[0] ? Utilities.formatDate(new Date(row[0]), 'Europe/Bucharest', 'yyyy-MM-dd') : '',
+      proiectId: row[1],
+      echipa: row[2] || '',
+      ore: Number(row[3]) || 0,
+      muncitori: Number(row[4]) || 1,
+      stadiu: Number(row[5]) || 0,
+      observatii: row[6] || '',
+      materiale: row[7] || ''
+    });
+  }
+  return result;
 }
 
 /**
@@ -412,15 +730,36 @@ function addMaterial(data) {
  */
 function addExecutie(data) {
   var sheet = getSheet(SH.EXECUTIE);
+  var rowNum = sheet.getLastRow() + 1;
   sheet.appendRow([
-    new Date(),
+    data.data || new Date(),
     data.proiectId || '',
     data.echipa || '',
     Number(data.ore) || 0,
-    data.stadiu || '',
-    data.observatii || ''
+    Number(data.muncitori) || 1,
+    Number(data.stadiu) || 0,
+    data.obs || data.observatii || '',
+    data.materiale || ''
   ]);
-  return {success: true};
+  return {success: true, row: rowNum - 1};
+}
+
+/**
+ * Actualizează un raport de execuție existent
+ */
+function updateExecutieReport(execRow, report) {
+  var sheet = getSheet(SH.EXECUTIE);
+  if (execRow < 1) return {error: 'Invalid row'};
+  var r = execRow + 1;
+  sheet.getRange(r, 1).setValue(report.data || '');
+  sheet.getRange(r, 2).setValue(report.proiectId || '');
+  sheet.getRange(r, 3).setValue(report.echipa || '');
+  sheet.getRange(r, 4).setValue(Number(report.ore) || 0);
+  sheet.getRange(r, 5).setValue(Number(report.muncitori) || 1);
+  sheet.getRange(r, 6).setValue(Number(report.stadiu) || 0);
+  sheet.getRange(r, 7).setValue(report.obs || '');
+  sheet.getRange(r, 8).setValue(report.materiale || '');
+  return {success: true, row: execRow};
 }
 
 /**
@@ -428,22 +767,65 @@ function addExecutie(data) {
  */
 function addFactura(data) {
   var sheet = getSheet(SH.FINANCIAR);
-  var suma = Number(data.suma) || 0;
-  var tva = suma * 0.19;
-  var total = suma + tva;
+  var rowNum = sheet.getLastRow() + 1;
+  var inv = data.invoice || data;
+  var suma = Number(inv.suma) || 0;
+  var tva = Number(inv.tva) || suma * 0.19;
+  var total = Number(inv.total) || suma + tva;
+  var incasat = Number(inv.incasat) || 0;
+  var restant = Number(inv.restant) || Math.max(0, total - incasat);
+  var status = incasat >= total ? 'Încasată' : incasat > 0 ? 'Parțial Încasată' : 'Emisă';
   
   sheet.appendRow([
-    data.proiectId || '',
-    data.nrFactura || '',
-    data.dataFactura || new Date(),
-    suma,
-    tva,
-    total,
-    0, // încasat
-    total, // restant
-    'Emisă'
+    inv.pid || inv.proiectId || '',
+    inv.nr || inv.nrFactura || '',
+    inv.data || inv.dataFactura || new Date(),
+    inv.scadenta || '',
+    inv.client || '',
+    suma, tva, total,
+    incasat, restant,
+    status,
+    inv.note || '',
+    '[]'
   ]);
-  return {success: true};
+  return {success: true, row: rowNum - 1};
+}
+
+/**
+ * Actualizează plata pe o factură (încasare parțială/totală)
+ */
+function updateFinanciarPayment(fRow, incasat, restant, status, paymentsJson) {
+  var sheet = getSheet(SH.FINANCIAR);
+  if (fRow < 1) return {error: 'Invalid row'};
+  var r = fRow + 1;
+  sheet.getRange(r, 9).setValue(Number(incasat) || 0);
+  sheet.getRange(r, 10).setValue(Number(restant) || 0);
+  sheet.getRange(r, 11).setValue(status || 'Emisă');
+  sheet.getRange(r, 13).setValue(paymentsJson || '[]');
+  return {success: true, row: fRow};
+}
+
+/**
+ * Actualizează complet o factură
+ */
+function updateFinanciarFull(fRow, invoice) {
+  var sheet = getSheet(SH.FINANCIAR);
+  if (fRow < 1) return {error: 'Invalid row'};
+  var r = fRow + 1;
+  var inv = invoice;
+  sheet.getRange(r, 1).setValue(inv.pid || '');
+  sheet.getRange(r, 2).setValue(inv.nr || '');
+  sheet.getRange(r, 3).setValue(inv.data || '');
+  sheet.getRange(r, 4).setValue(inv.scadenta || '');
+  sheet.getRange(r, 5).setValue(inv.client || '');
+  sheet.getRange(r, 6).setValue(Number(inv.suma) || 0);
+  sheet.getRange(r, 7).setValue(Number(inv.tva) || 0);
+  sheet.getRange(r, 8).setValue(Number(inv.total) || 0);
+  sheet.getRange(r, 9).setValue(Number(inv.incasat) || 0);
+  sheet.getRange(r, 10).setValue(Number(inv.restant) || 0);
+  sheet.getRange(r, 11).setValue(inv.status || 'Emisă');
+  sheet.getRange(r, 12).setValue(inv.note || '');
+  return {success: true, row: fRow};
 }
 
 /**
@@ -451,21 +833,321 @@ function addFactura(data) {
  */
 function addMentenanta(data) {
   var sheet = getSheet(SH.MENTENANTA);
-  
-  // Calculează următoarea verificare
-  var urmatoarea = calcUrmatoareaVerificare(new Date(), data.frecventa || 'Trimestrial');
+  var rowNum = sheet.getLastRow() + 1;
+  var c = data.contract || data;
+  var ultima = c.ultima || new Date();
+  var urmatoarea = c.urmatoarea || calcUrmatoareaVerificare(new Date(ultima), c.frecventa || 'Trimestrial');
   
   sheet.appendRow([
-    data.client || '',
-    data.proiectId || '',
-    data.tipContract || 'Standard',
-    data.frecventa || 'Trimestrial',
-    new Date(), // ultima verificare
+    c.client || '',
+    c.pid || c.proiectId || '',
+    c.tip || c.tipContract || 'Standard',
+    c.frecventa || 'Trimestrial',
+    ultima,
     urmatoarea,
-    'Activ',
-    data.note || ''
+    c.status || 'Activ',
+    Number(c.valoare) || 0,
+    c.telefon || '',
+    c.echipa || '',
+    c.note || '',
+    JSON.stringify([typeof ultima === 'string' ? ultima : new Date().toISOString().split('T')[0]])
   ]);
-  return {success: true};
+  return {success: true, row: rowNum - 1};
+}
+
+/**
+ * Actualizează statusul unui contract de mentenanță
+ */
+function updateMentenantaStatus(mRow, newStatus) {
+  var sheet = getSheet(SH.MENTENANTA);
+  if (mRow < 1) return {error: 'Invalid row'};
+  sheet.getRange(mRow + 1, 7).setValue(newStatus);
+  return {success: true, row: mRow, status: newStatus};
+}
+
+/**
+ * Actualizează complet un contract de mentenanță
+ */
+function updateMentenantaFull(mRow, contract) {
+  var sheet = getSheet(SH.MENTENANTA);
+  if (mRow < 1) return {error: 'Invalid row'};
+  var r = mRow + 1;
+  var c = contract;
+  sheet.getRange(r, 1).setValue(c.client || '');
+  sheet.getRange(r, 2).setValue(c.pid || '');
+  sheet.getRange(r, 3).setValue(c.tip || 'Standard');
+  sheet.getRange(r, 4).setValue(c.frecventa || 'Trimestrial');
+  sheet.getRange(r, 5).setValue(c.ultima || '');
+  sheet.getRange(r, 6).setValue(c.urmatoarea || '');
+  sheet.getRange(r, 7).setValue(c.status || 'Activ');
+  sheet.getRange(r, 8).setValue(Number(c.valoare) || 0);
+  sheet.getRange(r, 9).setValue(c.telefon || '');
+  sheet.getRange(r, 10).setValue(c.echipa || '');
+  sheet.getRange(r, 11).setValue(c.note || '');
+  return {success: true, row: mRow};
+}
+
+/**
+ * Marchează verificarea efectuată și calculează următoarea
+ */
+function markMentenantaDone(mRow, ultima, urmatoarea, historyJson) {
+  var sheet = getSheet(SH.MENTENANTA);
+  if (mRow < 1) return {error: 'Invalid row'};
+  var r = mRow + 1;
+  sheet.getRange(r, 5).setValue(ultima);
+  sheet.getRange(r, 6).setValue(urmatoarea);
+  sheet.getRange(r, 12).setValue(historyJson || '[]');
+  return {success: true, row: mRow};
+}
+
+/**
+ * Citește toate programările din PLANIFICARE
+ */
+function getPlanificare() {
+  var sheet = getSheet(SH.PLANIFICARE);
+  var data = sheet.getDataRange().getValues();
+  if (data.length <= 1) return [];
+  
+  var result = [];
+  for (var i = 1; i < data.length; i++) {
+    var row = data[i];
+    if (!row[2]) continue; // Skip rows fără Descriere
+    result.push({
+      row: i,
+      data: row[0] ? Utilities.formatDate(new Date(row[0]), 'Europe/Bucharest', 'yyyy-MM-dd') : '',
+      ora: row[1] || '08:00',
+      descriere: row[2],
+      proiectId: row[3] || '',
+      echipa: row[4] || '',
+      tip: row[5] || 'exec',
+      durata: Number(row[6]) || 8,
+      prioritate: row[7] || 'normal',
+      status: row[8] || 'Planificat',
+      note: row[9] || ''
+    });
+  }
+  return result;
+}
+
+/**
+ * Adaugă programare nouă în PLANIFICARE
+ */
+function addPlanificareTask(task) {
+  var sheet = getSheet(SH.PLANIFICARE);
+  var rowNum = sheet.getLastRow() + 1;
+  
+  sheet.appendRow([
+    task.data || new Date(),
+    task.ora || '08:00',
+    task.desc || '',
+    task.pid || '',
+    task.echipa || '',
+    task.tip || 'exec',
+    Number(task.durata) || 8,
+    task.prioritate || 'normal',
+    'Planificat',
+    task.note || ''
+  ]);
+  
+  return {success: true, row: rowNum - 1};
+}
+
+/**
+ * Actualizează statusul unei programări (Planificat / Finalizat)
+ */
+function updatePlanificareStatus(planRow, newStatus) {
+  var sheet = getSheet(SH.PLANIFICARE);
+  if (planRow < 1) return {error: 'Invalid row'};
+  sheet.getRange(planRow + 1, 9).setValue(newStatus); // Coloana I = Status
+  return {success: true, row: planRow, status: newStatus};
+}
+
+/**
+ * Actualizează complet o programare existentă
+ */
+function updatePlanificareTask(planRow, task) {
+  var sheet = getSheet(SH.PLANIFICARE);
+  if (planRow < 1) return {error: 'Invalid row'};
+  var r = planRow + 1;
+  sheet.getRange(r, 1).setValue(task.data || '');
+  sheet.getRange(r, 2).setValue(task.ora || '08:00');
+  sheet.getRange(r, 3).setValue(task.desc || '');
+  sheet.getRange(r, 4).setValue(task.pid || '');
+  sheet.getRange(r, 5).setValue(task.echipa || '');
+  sheet.getRange(r, 6).setValue(task.tip || 'exec');
+  sheet.getRange(r, 7).setValue(Number(task.durata) || 8);
+  sheet.getRange(r, 8).setValue(task.prioritate || 'normal');
+  sheet.getRange(r, 10).setValue(task.note || '');
+  return {success: true, row: planRow};
+}
+
+/**
+ * Citește toate dosarele din PROIECTARE
+ */
+function getProiectareData() {
+  var sheet = getSheet(SH.PROIECTARE);
+  var data = sheet.getDataRange().getValues();
+  if (data.length <= 1) return [];
+  
+  var result = [];
+  for (var i = 1; i < data.length; i++) {
+    var row = data[i];
+    if (!row[0]) continue;
+    result.push({
+      row: i,
+      proiectId: row[0],
+      tipAviz: row[1] || '',
+      status: row[2] || 'Activ',
+      deadline: row[3] ? Utilities.formatDate(new Date(row[3]), 'Europe/Bucharest', 'yyyy-MM-dd') : '',
+      responsabil: row[4] || '',
+      linkDosar: row[5] || '',
+      note: row[6] || '',
+      checks: row[7] || '[]'
+    });
+  }
+  return result;
+}
+
+/**
+ * Adaugă dosar proiectare nou
+ */
+function addProiectareDosar(dosar) {
+  var sheet = getSheet(SH.PROIECTARE);
+  var rowNum = sheet.getLastRow() + 1;
+  sheet.appendRow([
+    dosar.pid || '',
+    dosar.tip || '',
+    dosar.status || 'Activ',
+    dosar.deadline || '',
+    dosar.resp || '',
+    dosar.link || '',
+    dosar.note || '',
+    '[]'
+  ]);
+  return {success: true, row: rowNum - 1};
+}
+
+/**
+ * Actualizează checks + status pe un dosar
+ */
+function updateProiectareChecks(projRow, newStatus, checksJson) {
+  var sheet = getSheet(SH.PROIECTARE);
+  if (projRow < 1) return {error: 'Invalid row'};
+  var r = projRow + 1;
+  sheet.getRange(r, 3).setValue(newStatus); // Status col C
+  sheet.getRange(r, 8).setValue(checksJson || '[]'); // Checks col H
+  return {success: true, row: projRow};
+}
+
+/**
+ * Actualizează doar statusul unui dosar
+ */
+function updateProiectareStatusOnly(projRow, newStatus) {
+  var sheet = getSheet(SH.PROIECTARE);
+  if (projRow < 1) return {error: 'Invalid row'};
+  sheet.getRange(projRow + 1, 3).setValue(newStatus);
+  return {success: true, row: projRow, status: newStatus};
+}
+
+/**
+ * Actualizează complet un dosar de proiectare
+ */
+function updateProiectareFullDosar(projRow, dosar) {
+  var sheet = getSheet(SH.PROIECTARE);
+  if (projRow < 1) return {error: 'Invalid row'};
+  var r = projRow + 1;
+  sheet.getRange(r, 1).setValue(dosar.pid || '');
+  sheet.getRange(r, 2).setValue(dosar.tip || '');
+  sheet.getRange(r, 3).setValue(dosar.status || 'Activ');
+  sheet.getRange(r, 4).setValue(dosar.deadline || '');
+  sheet.getRange(r, 5).setValue(dosar.resp || '');
+  sheet.getRange(r, 6).setValue(dosar.link || '');
+  sheet.getRange(r, 7).setValue(dosar.note || '');
+  return {success: true, row: projRow};
+}
+
+/**
+ * Citește toate lead-urile din CRM
+ */
+function getCRM() {
+  var sheet = getSheet(SH.CRM);
+  var data = sheet.getDataRange().getValues();
+  if (data.length <= 1) return [];
+  
+  var result = [];
+  for (var i = 1; i < data.length; i++) {
+    var row = data[i];
+    if (!row[1]) continue; // Skip rows fără Nume
+    result.push({
+      row: i,
+      timestamp: row[0] ? Utilities.formatDate(new Date(row[0]), 'Europe/Bucharest', 'yyyy-MM-dd') : '',
+      nume: row[1],
+      telefon: row[2],
+      email: row[3],
+      serviciu: row[4],
+      sursa: row[5],
+      status: row[6] || 'Nou',
+      proiectId: row[7] || '',
+      valoare: Number(row[8]) || 0,
+      locatie: row[9] || '',
+      note: row[10] || ''
+    });
+  }
+  return result;
+}
+
+/**
+ * Adaugă lead nou în CRM
+ */
+function addCRM(lead) {
+  var sheet = getSheet(SH.CRM);
+  var rowNum = sheet.getLastRow() + 1;
+  
+  sheet.appendRow([
+    new Date(),          // Timestamp
+    lead.nume || '',     // Nume
+    lead.telefon || '',  // Telefon
+    lead.email || '',    // Email
+    lead.serviciu || '', // Serviciu
+    lead.sursa || '',    // Sursa
+    'Nou',               // Status
+    '',                  // ProiectID (gol inițial)
+    Number(lead.valoare) || 0,  // Valoare
+    lead.locatie || '',  // Locatie
+    lead.note || ''      // Note
+  ]);
+  
+  // Notificare admin
+  if (EMAIL_ADMIN) {
+    sendEmail(
+      EMAIL_ADMIN,
+      '🆕 Lead Nou CRM: ' + lead.nume,
+      'Lead nou adăugat în CRM:\n\n' +
+      'Client: ' + lead.nume + '\n' +
+      'Telefon: ' + lead.telefon + '\n' +
+      'Serviciu: ' + lead.serviciu + '\n' +
+      'Sursă: ' + lead.sursa + '\n' +
+      'Valoare: ' + lead.valoare + ' RON\n' +
+      'Note: ' + lead.note
+    );
+  }
+  
+  return {success: true, row: rowNum - 1};
+}
+
+/**
+ * Actualizează statusul unui lead în CRM
+ */
+function updateCRMStatus(crmRow, newStatus) {
+  var sheet = getSheet(SH.CRM);
+  var data = sheet.getDataRange().getValues();
+  
+  if (crmRow < 1 || crmRow >= data.length) {
+    return {error: 'Invalid CRM row: ' + crmRow};
+  }
+  
+  sheet.getRange(crmRow + 1, 7).setValue(newStatus); // Coloana G = Status (col 7)
+  return {success: true, row: crmRow, status: newStatus};
 }
 
 /**
@@ -480,19 +1162,22 @@ function convertCrmToProject(crmRow) {
   }
   
   var row = data[crmRow];
+  // CRM columns: 0=Timestamp, 1=Nume, 2=Telefon, 3=Email, 4=Serviciu, 5=Sursa, 6=Status, 7=ProiectID, 8=Valoare, 9=Locatie, 10=Note
   var result = addProject({
     client: row[1],
     telefon: row[2],
     email: row[3],
     serviciu: row[4],
+    locatie: row[9] || 'Brașov',
+    valoare: Number(row[8]) || 0,
     status: 'Contract',
-    note: 'Convertit din CRM'
+    note: 'Convertit din CRM — ' + (row[10] || '')
   });
   
   // Update CRM row cu Proiect ID
   if (result.success) {
-    crmSheet.getRange(crmRow + 1, 8).setValue(result.id); // Coloana ProiectID
-    crmSheet.getRange(crmRow + 1, 7).setValue('Câștigat'); // Status CRM
+    crmSheet.getRange(crmRow + 1, 8).setValue(result.id); // Coloana H = ProiectID
+    crmSheet.getRange(crmRow + 1, 7).setValue('Câștigat');  // Coloana G = Status
   }
   
   return result;
@@ -651,13 +1336,15 @@ function setupSheets() {
   
   var sheets = {
     'PROIECTE': ['ID', 'Client', 'Telefon', 'Email', 'Serviciu', 'Locatie', 'Valoare', 'Status', 'Echipa', 'DataStart', 'DataFin', 'Note', 'CreatedAt'],
-    'CRM': ['Timestamp', 'Nume', 'Telefon', 'Email', 'Serviciu', 'Sursa', 'Status', 'ProiectID', 'Note'],
-    'EXECUTIE': ['Data', 'ProiectID', 'Echipa', 'Ore', 'Stadiu', 'Observatii'],
-    'MENTENANTA': ['Client', 'ProiectID', 'TipContract', 'Frecventa', 'UltimaVerificare', 'UrmatoareaVerificare', 'Status', 'Note'],
-    'PROIECTARE': ['ProiectID', 'TipAviz', 'Status', 'Deadline', 'Responsabil', 'LinkDosar', 'Note'],
-    'MATERIALE': ['Data', 'ProiectID', 'Material', 'Cantitate', 'Urgenta', 'Cost', 'Status', 'Solicitant'],
-    'FINANCIAR': ['ProiectID', 'NrFactura', 'DataFactura', 'Suma', 'TVA', 'Total', 'Incasat', 'Restant', 'Status'],
-    'SOCIAL': ['Data', 'Platforma', 'Continut', 'Status', 'Programat'],
+    'CRM': ['Timestamp', 'Nume', 'Telefon', 'Email', 'Serviciu', 'Sursa', 'Status', 'ProiectID', 'Valoare', 'Locatie', 'Note'],
+    'EXECUTIE': ['Data', 'ProiectID', 'Echipa', 'Ore', 'Muncitori', 'Stadiu', 'Observatii', 'Materiale'],
+    'MENTENANTA': ['Client', 'ProiectID', 'TipContract', 'Frecventa', 'UltimaVerificare', 'UrmatoareaVerificare', 'Status', 'Valoare', 'Telefon', 'Echipa', 'Note', 'History'],
+    'PROIECTARE': ['ProiectID', 'TipAviz', 'Status', 'Deadline', 'Responsabil', 'LinkDosar', 'Note', 'Checks'],
+    'MATERIALE': ['Data', 'ProiectID', 'Material', 'Cantitate', 'Urgenta', 'Cost', 'Status', 'Solicitant', 'Furnizor', 'Note'],
+    'INVENTAR': ['Nume', 'Cod', 'Categorie', 'Stoc', 'Unitate', 'Minim', 'Pret', 'Furnizor', 'Locatie', 'Note', 'History'],
+    'FINANCIAR': ['ProiectID', 'NrFactura', 'DataFactura', 'Scadenta', 'Client', 'Suma', 'TVA', 'Total', 'Incasat', 'Restant', 'Status', 'Note', 'Payments'],
+    'SOCIAL': ['Data', 'Platforma', 'Continut', 'Status', 'Tip', 'Note'],
+    'PLANIFICARE': ['Data', 'Ora', 'Descriere', 'ProiectID', 'Echipa', 'Tip', 'Durata', 'Prioritate', 'Status', 'Note'],
     'CONFIG': ['Key', 'Value']
   };
   
@@ -715,6 +1402,53 @@ function setupValidation() {
   
   // MENTENANTA — Status dropdown
   var mentenanta = ss.getSheetByName('MENTENANTA');
+
+  // CRM — Status dropdown
+  var crm = ss.getSheetByName('CRM');
+  var crmStatusRule = SpreadsheetApp.newDataValidation()
+    .requireValueInList(['Nou', 'Contactat', 'Ofertă trimisă', 'Negociere', 'Câștigat', 'Pierdut'], true)
+    .setAllowInvalid(false)
+    .build();
+  crm.getRange('G2:G1000').setDataValidation(crmStatusRule);
+
+  // CRM — Serviciu dropdown
+  crm.getRange('E2:E1000').setDataValidation(serviciuRule);
+
+  // PLANIFICARE — Tip dropdown
+  var planificare = ss.getSheetByName('PLANIFICARE');
+  var planTipRule = SpreadsheetApp.newDataValidation()
+    .requireValueInList(['exec', 'design', 'maint', 'survey'], true)
+    .build();
+  planificare.getRange('F2:F1000').setDataValidation(planTipRule);
+
+  // PLANIFICARE — Status dropdown
+  var planStatusRule = SpreadsheetApp.newDataValidation()
+    .requireValueInList(['Planificat', 'Finalizat', 'Anulat'], true)
+    .setAllowInvalid(false)
+    .build();
+  planificare.getRange('I2:I1000').setDataValidation(planStatusRule);
+
+  // PLANIFICARE — Prioritate dropdown
+  var planPrioRule = SpreadsheetApp.newDataValidation()
+    .requireValueInList(['low', 'normal', 'urgent'], true)
+    .build();
+  planificare.getRange('H2:H1000').setDataValidation(planPrioRule);
+
+  // PROIECTARE — Status dropdown
+  var proiectare = ss.getSheetByName('PROIECTARE');
+  var projStatusRule = SpreadsheetApp.newDataValidation()
+    .requireValueInList(['Activ', 'În așteptare', 'Blocat', 'Finalizat'], true)
+    .setAllowInvalid(false)
+    .build();
+  proiectare.getRange('C2:C1000').setDataValidation(projStatusRule);
+
+  // PROIECTARE — Tip Aviz dropdown
+  var projTipRule = SpreadsheetApp.newDataValidation()
+    .requireValueInList(['Aviz ISU', 'Proiect Electric', 'Proiect Detecție Incendiu', 'Proiect CCTV', 'Proiect Control Acces', 'Documentație Recepție'], true)
+    .build();
+  proiectare.getRange('B2:B1000').setDataValidation(projTipRule);
+
+  // MENTENANTA
   var mStatusRule = SpreadsheetApp.newDataValidation()
     .requireValueInList(['Activ', 'Expirat', 'Suspendat'], true)
     .build();
@@ -731,7 +1465,7 @@ function setupValidation() {
   var fStatusRule = SpreadsheetApp.newDataValidation()
     .requireValueInList(['Emisă', 'Parțial Încasată', 'Încasată', 'Restantă', 'Anulată'], true)
     .build();
-  financiar.getRange('I2:I1000').setDataValidation(fStatusRule);
+  financiar.getRange('K2:K1000').setDataValidation(fStatusRule);
   
   // MATERIALE — Urgenta dropdown
   var materiale = ss.getSheetByName('MATERIALE');
@@ -742,9 +1476,37 @@ function setupValidation() {
   
   // MATERIALE — Status dropdown
   var matStatusRule = SpreadsheetApp.newDataValidation()
-    .requireValueInList(['Solicitat', 'Comandat', 'Livrat', 'Anulat'], true)
+    .requireValueInList(['Solicitat', 'Aprobat', 'Comandat', 'Livrat', 'Anulat'], true)
     .build();
   materiale.getRange('G2:G1000').setDataValidation(matStatusRule);
+
+  // INVENTAR — Categorie dropdown
+  var inventar = ss.getSheetByName('INVENTAR');
+  if (inventar) {
+    var invCatRule = SpreadsheetApp.newDataValidation()
+      .requireValueInList(['Detectoare', 'Camere IP', 'Cabluri', 'Centrale', 'Sirene', 'Accesorii', 'Echipamente rețea', 'Automatizări', 'Altele'], true)
+      .build();
+    inventar.getRange('C2:C1000').setDataValidation(invCatRule);
+
+    var invUnitRule = SpreadsheetApp.newDataValidation()
+      .requireValueInList(['buc', 'm', 'cutie', 'rolă', 'set'], true)
+      .build();
+    inventar.getRange('E2:E1000').setDataValidation(invUnitRule);
+  }
+
+  // SOCIAL — Status dropdown
+  var social = ss.getSheetByName('SOCIAL');
+  if (social) {
+    var socialStatusRule = SpreadsheetApp.newDataValidation()
+      .requireValueInList(['Idee', 'Draft', 'Programat', 'Publicat'], true)
+      .build();
+    social.getRange('D2:D1000').setDataValidation(socialStatusRule);
+
+    var socialTipRule = SpreadsheetApp.newDataValidation()
+      .requireValueInList(['Foto', 'Video', 'Carusel', 'Story', 'Reel', 'Text'], true)
+      .build();
+    social.getRange('E2:E1000').setDataValidation(socialTipRule);
+  }
   
   Logger.log('✅ Validări setate pe toate sheet-urile!');
 }

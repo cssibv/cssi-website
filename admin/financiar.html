@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Financiar — Portal CSSI 3.0</title>
+<meta name="robots" content="noindex, nofollow">
+<link rel="icon" type="image/x-icon" href="/images/favicon.ico">
+<meta name="theme-color" content="#dc2626">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+:root{--red:#dc2626;--red-d:#991b1b;--dark:#0f172a;--dark2:#1e293b;--gray:#64748b;--gray-l:#94a3b8;--gray-xl:#cbd5e1;--gray-bg:#f1f5f9;--gray-b:#e2e8f0;--blue:#3b82f6;--green:#22c55e;--orange:#f97316;--purple:#8b5cf6;--yellow:#eab308;--teal:#14b8a6;--pink:#ec4899;--radius:16px;--radius-sm:12px;--shadow:0 1px 3px rgba(0,0,0,0.06);--shadow-md:0 4px 12px rgba(0,0,0,0.08);--font:'Inter',system-ui,sans-serif;}
+body{font-family:var(--font);color:var(--dark);background:var(--gray-bg);-webkit-font-smoothing:antialiased;}
+a{text-decoration:none;color:inherit;}button{font-family:inherit;cursor:pointer;}
+.page-header{background:linear-gradient(135deg,var(--dark),var(--dark2));color:#fff;padding:20px 24px;border-radius:20px;margin-bottom:16px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;}
+.page-back{color:rgba(255,255,255,0.7);font-size:13px;font-weight:500;display:flex;align-items:center;gap:6px;}.page-back:hover{color:#fff;}
+.page-title{font-size:22px;font-weight:800;letter-spacing:-0.5px;}
+.page-subtitle{font-size:12px;color:rgba(255,255,255,0.5);margin-top:2px;}
+.page-actions{display:flex;gap:8px;align-items:center;}
+.page-btn{padding:10px 18px;border-radius:12px;font-size:13px;font-weight:700;border:none;transition:all 0.2s;}
+.page-btn.primary{background:var(--red);color:#fff;}.page-btn.primary:hover{background:var(--red-d);transform:translateY(-1px);}
+.page-btn.secondary{background:rgba(255,255,255,0.1);color:#fff;border:1px solid rgba(255,255,255,0.2);}.page-btn.secondary:hover{background:rgba(255,255,255,0.2);}
+.sync-indicator{width:8px;height:8px;border-radius:50%;display:inline-block;margin-right:6px;}
+.sync-ok{background:var(--green);box-shadow:0 0 6px rgba(34,197,94,0.5);}.sync-off{background:var(--gray-l);}.sync-loading{background:var(--orange);animation:pulse 1s infinite;}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.4}}
+.container{max-width:1400px;margin:0 auto;padding:16px;}@media(min-width:768px){.container{padding:24px;}}
+
+/* KPI */
+.kpi-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px;margin-bottom:16px;}
+.kpi-card{background:#fff;border-radius:var(--radius);padding:18px;box-shadow:var(--shadow);border-left:4px solid var(--gray-b);transition:all 0.2s;cursor:pointer;}
+.kpi-card:hover{box-shadow:var(--shadow-md);transform:translateY(-1px);}
+.kpi-card.active-filter{border:2px solid var(--blue);border-left:4px solid var(--blue);}
+.kpi-card.emise{border-left-color:var(--blue);}.kpi-card.incasate{border-left-color:var(--green);}.kpi-card.restante{border-left-color:var(--red);}.kpi-card.partial{border-left-color:var(--orange);}.kpi-card.total{border-left-color:var(--purple);}
+.kpi-val{font-size:22px;font-weight:900;}.kpi-label{font-size:11px;color:var(--gray);margin-top:2px;}.kpi-sub{font-size:10px;color:var(--gray-l);margin-top:4px;}
+
+/* Collection bar */
+.collection-bar{background:#fff;border-radius:var(--radius);padding:16px 20px;box-shadow:var(--shadow);margin-bottom:16px;}
+.cb-label{font-size:12px;font-weight:700;color:var(--gray);margin-bottom:8px;display:flex;justify-content:space-between;}
+.cb-track{width:100%;height:12px;background:var(--gray-bg);border-radius:6px;overflow:hidden;display:flex;}
+.cb-fill-green{height:100%;background:var(--green);transition:width 0.5s;}.cb-fill-orange{height:100%;background:var(--orange);transition:width 0.5s;}
+
+/* Filters */
+.filters{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:16px;align-items:center;}
+.filter-search{padding:10px 16px;border-radius:99px;font-size:13px;border:1px solid var(--gray-b);outline:none;font-family:inherit;min-width:200px;transition:all 0.2s;background:#fff;flex:1;max-width:300px;}.filter-search:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(59,130,246,0.08);}
+.filter-select{padding:8px 14px;border-radius:99px;font-size:12px;font-weight:600;border:1px solid var(--gray-b);background:#fff;font-family:inherit;outline:none;cursor:pointer;}
+.view-toggle{display:flex;background:#fff;border-radius:10px;padding:3px;box-shadow:var(--shadow);border:1px solid var(--gray-b);margin-left:auto;}
+.view-btn{padding:7px 14px;border-radius:8px;font-size:12px;font-weight:600;border:none;background:none;color:var(--gray);cursor:pointer;transition:all 0.2s;}.view-btn.active{background:var(--dark);color:#fff;}
+.filter-count{font-size:12px;color:var(--gray);font-weight:500;}
+
+/* Cards */
+.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(360px,1fr));gap:12px;margin-bottom:16px;}
+.fcard{background:#fff;border-radius:var(--radius);padding:20px;box-shadow:var(--shadow);border-left:4px solid var(--blue);transition:all 0.2s;cursor:pointer;}
+.fcard:hover{box-shadow:var(--shadow-md);transform:translateY(-1px);}
+.fcard.incasata{border-left-color:var(--green);opacity:0.8;}.fcard.restanta{border-left-color:var(--red);}.fcard.partial{border-left-color:var(--orange);}.fcard.anulata{border-left-color:var(--gray);opacity:0.6;}
+.fcard-top{display:flex;justify-content:space-between;align-items:start;margin-bottom:8px;}
+.fcard-nr{font-size:16px;font-weight:900;}.fcard-badge{padding:3px 10px;border-radius:6px;font-size:11px;font-weight:700;}
+.badge-emisa{background:#eff6ff;color:var(--blue);}.badge-incasata{background:#f0fdf4;color:var(--green);}.badge-restanta{background:#fef2f2;color:var(--red);}.badge-partial{background:#fff7ed;color:var(--orange);}.badge-anulata{background:var(--gray-bg);color:var(--gray);}
+.fcard-pid{font-size:11px;font-weight:700;color:var(--blue);background:#eff6ff;padding:3px 8px;border-radius:6px;display:inline-block;margin-bottom:6px;}
+.fcard-client{font-size:13px;color:var(--gray);margin-bottom:10px;}
+.fcard-amounts{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px;}
+.fcard-amt{padding:8px 10px;border-radius:8px;background:var(--gray-bg);}
+.fcard-amt-label{font-size:10px;font-weight:700;color:var(--gray);text-transform:uppercase;display:block;margin-bottom:1px;}
+.fcard-amt-val{font-size:15px;font-weight:900;}
+.fcard-bar{width:100%;height:8px;background:var(--gray-bg);border-radius:4px;overflow:hidden;margin-bottom:6px;display:flex;}
+.fcard-bar-g{height:100%;background:var(--green);border-radius:4px 0 0 4px;transition:width 0.5s;}.fcard-bar-o{height:100%;background:var(--orange);transition:width 0.5s;}
+.fcard-pct{font-size:11px;color:var(--gray);font-weight:600;text-align:right;}
+.fcard-meta{display:flex;justify-content:space-between;font-size:12px;color:var(--gray);margin-top:8px;padding-top:8px;border-top:1px solid var(--gray-bg);}
+.fcard-scadenta{font-weight:700;}
+.fcard-scadenta.ok{color:var(--green);}.fcard-scadenta.warn{color:var(--orange);}.fcard-scadenta.late{color:var(--red);}
+
+/* Table */
+.table-wrap{background:#fff;border-radius:var(--radius);box-shadow:var(--shadow);overflow-x:auto;}
+table{width:100%;border-collapse:collapse;font-size:13px;}
+th{background:var(--dark);color:#fff;padding:12px 14px;text-align:left;font-weight:700;font-size:11px;text-transform:uppercase;letter-spacing:0.5px;white-space:nowrap;}
+td{padding:10px 14px;border-bottom:1px solid var(--gray-bg);}
+tr:hover td{background:rgba(59,130,246,0.03);}
+
+/* Toast */
+.toast-container{position:fixed;top:20px;right:20px;z-index:300;display:flex;flex-direction:column;gap:8px;}
+.toast{padding:14px 20px;border-radius:12px;color:#fff;font-size:13px;font-weight:600;box-shadow:0 8px 24px rgba(0,0,0,0.15);animation:slideIn 0.3s ease;max-width:380px;}
+.toast.success{background:var(--green);}.toast.error{background:var(--red);}.toast.info{background:var(--blue);}
+@keyframes slideIn{from{transform:translateX(100%);opacity:0}to{transform:translateX(0);opacity:1}}
+
+/* Modal */
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);backdrop-filter:blur(4px);z-index:200;align-items:center;justify-content:center;padding:16px;}.modal-overlay.active{display:flex;}
+.modal{background:#fff;border-radius:20px;width:100%;max-width:560px;max-height:90vh;overflow-y:auto;box-shadow:0 25px 60px rgba(0,0,0,0.3);}
+.modal-head{padding:20px 24px;border-bottom:1px solid var(--gray-b);display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;background:#fff;border-radius:20px 20px 0 0;z-index:1;}
+.modal-title{font-size:18px;font-weight:800;}
+.modal-close{width:32px;height:32px;border-radius:8px;border:none;background:var(--gray-bg);color:var(--gray);font-size:18px;display:flex;align-items:center;justify-content:center;}.modal-close:hover{background:#fef2f2;color:var(--red);}
+.modal-body{padding:24px;}
+.form-group{margin-bottom:16px;}.form-label{display:block;font-size:13px;font-weight:600;color:var(--dark);margin-bottom:6px;}.form-label .req{color:var(--red);}
+.form-input,.form-select,.form-textarea{width:100%;padding:12px 16px;border:2px solid var(--gray-b);border-radius:var(--radius-sm);font-size:14px;font-family:inherit;outline:none;transition:all 0.2s;background:#fff;}
+.form-input:focus,.form-select:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(59,130,246,0.08);}
+.form-textarea{min-height:60px;resize:vertical;}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;}@media(max-width:480px){.form-row{grid-template-columns:1fr;}}
+.form-submit{width:100%;padding:14px;background:linear-gradient(135deg,var(--green),#16a34a);color:#fff;border:none;border-radius:var(--radius-sm);font-size:15px;font-weight:700;transition:all 0.3s;cursor:pointer;}.form-submit:hover{transform:translateY(-1px);box-shadow:0 8px 20px -5px rgba(34,197,94,0.4);}
+.form-submit:disabled{background:var(--gray-l);cursor:not-allowed;transform:none;}
+.form-hint{font-size:11px;color:var(--gray);margin-top:4px;}
+.tva-preview{background:var(--gray-bg);border-radius:var(--radius-sm);padding:14px 18px;margin-bottom:16px;}
+.tva-row{display:flex;justify-content:space-between;padding:3px 0;font-size:13px;}.tva-row strong{font-weight:800;}
+
+.bottom-nav{position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1px solid var(--gray-b);box-shadow:0 -4px 20px rgba(0,0,0,0.06);padding:6px 12px;z-index:100;display:flex;gap:4px;}
+@media(min-width:768px){.bottom-nav{display:none;}}
+.bn-item{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:8px 4px;border-radius:10px;font-size:10px;font-weight:600;color:var(--gray);transition:all 0.2s;gap:2px;}.bn-item.active{color:var(--red);background:#fef2f2;}.bn-item .bn-icon{font-size:20px;}
+.empty-msg{text-align:center;padding:40px;color:var(--gray-l);font-size:14px;}
+.footer{text-align:center;color:var(--gray-xl);font-size:11px;padding:24px 0 100px;}
+.loading-bar{position:fixed;top:0;left:0;right:0;height:3px;z-index:400;display:none;}.loading-bar.active{display:block;}.loading-bar::after{content:'';display:block;width:30%;height:100%;background:var(--red);border-radius:2px;animation:loadSlide 1.2s infinite ease-in-out;}
+@keyframes loadSlide{0%{margin-left:-30%}100%{margin-left:100%}}
+</style>
+</head>
+<body>
+<div class="loading-bar" id="loadBar"></div>
+<div class="toast-container" id="toastContainer"></div>
+
+<div class="container">
+    <div class="page-header">
+        <div>
+            <a href="../admin.html" class="page-back">← Dashboard</a>
+            <div class="page-title">💳 Financiar — Facturi</div>
+            <div class="page-subtitle" id="syncStatus"><span class="sync-indicator sync-off"></span>Date locale (demo)</div>
+        </div>
+        <div class="page-actions">
+            <button class="page-btn secondary" onclick="refreshData()">🔄 Sync</button>
+            <button class="page-btn primary" onclick="openAddModal()">+ Factură Nouă</button>
+        </div>
+    </div>
+
+    <div class="kpi-row" id="kpiRow"></div>
+    <div class="collection-bar" id="collectionBar"></div>
+
+    <div class="filters">
+        <input type="text" class="filter-search" id="searchInput" placeholder="🔍 Caută factură, client..." oninput="render()">
+        <select class="filter-select" id="filterStatus" onchange="render()">
+            <option value="">Toate statusurile</option>
+            <option value="Emisă">📤 Emise</option>
+            <option value="Încasată">✅ Încasate</option>
+            <option value="Restantă">🔴 Restante</option>
+            <option value="Parțial Încasată">🟠 Parțial</option>
+            <option value="Anulată">⛔ Anulate</option>
+        </select>
+        <select class="filter-select" id="filterProject" onchange="render()"><option value="">Toate proiectele</option></select>
+        <select class="filter-select" id="filterPeriod" onchange="render()">
+            <option value="">Toată perioada</option>
+            <option value="month">Luna curentă</option>
+            <option value="q">Trimestrul curent</option>
+            <option value="year">Anul curent</option>
+        </select>
+        <div class="view-toggle">
+            <button class="view-btn active" id="vCards" onclick="setView('cards')">☷ Carduri</button>
+            <button class="view-btn" id="vTable" onclick="setView('table')">☰ Tabel</button>
+        </div>
+        <div class="filter-count" id="filterCount"></div>
+    </div>
+
+    <div id="cardsView" class="cards"></div>
+    <div id="tableView" class="table-wrap" style="display:none"></div>
+
+    <div class="footer">Portal CSSI 3.0 · Modul Financiar v3.0</div>
+</div>
+
+<div class="bottom-nav">
+    <a href="../admin.html" class="bn-item"><span class="bn-icon">🏠</span>Acasă</a>
+    <a href="proiecte.html" class="bn-item"><span class="bn-icon">📋</span>Proiecte</a>
+    <a href="crm-clienti.html" class="bn-item"><span class="bn-icon">💰</span>CRM</a>
+    <a href="executie.html" class="bn-item"><span class="bn-icon">🔧</span>Execuție</a>
+    <a href="financiar.html" class="bn-item active"><span class="bn-icon">📄</span>Facturi</a>
+</div>
+
+<!-- ADD/EDIT MODAL -->
+<div id="addModal" class="modal-overlay" onclick="if(event.target===this)closeAddModal()">
+<div class="modal">
+    <div class="modal-head"><div class="modal-title" id="modalTitle">📄 Factură Nouă</div><button class="modal-close" onclick="closeAddModal()">✕</button></div>
+    <div class="modal-body">
+        <form id="addForm" onsubmit="saveInvoice(event)">
+            <input type="hidden" name="editId" id="editId" value="">
+            <div class="form-row">
+                <div class="form-group"><label class="form-label">Nr. Factură <span class="req">*</span></label><input type="text" class="form-input" name="nrFactura" id="fNr" required placeholder="CSSI-F-XXX"></div>
+                <div class="form-group"><label class="form-label">Data factură</label><input type="date" class="form-input" name="dataFactura" id="fData"></div>
+            </div>
+            <div class="form-group"><label class="form-label">Proiect <span class="req">*</span></label><select class="form-select" name="proiectId" id="fProiect" required></select></div>
+            <div class="form-row">
+                <div class="form-group"><label class="form-label">Client</label><input type="text" class="form-input" name="client" id="fClient" placeholder="Auto din proiect"></div>
+                <div class="form-group"><label class="form-label">Scadență</label><input type="date" class="form-input" name="scadenta" id="fScadenta"><div class="form-hint">Implicit: 30 zile de la emitere</div></div>
+            </div>
+            <div class="form-row">
+                <div class="form-group"><label class="form-label">Sumă fără TVA <span class="req">*</span></label><input type="number" class="form-input" name="suma" id="fSuma" required min="0" step="0.01" placeholder="0" oninput="calcTVA()"></div>
+                <div class="form-group"><label class="form-label">Încasat (RON)</label><input type="number" class="form-input" name="incasat" id="fIncasat" min="0" step="0.01" value="0"></div>
+            </div>
+            <div class="tva-preview">
+                <div class="tva-row"><span>Sumă fără TVA:</span><strong id="prevNet">0 RON</strong></div>
+                <div class="tva-row"><span>TVA 19%:</span><strong id="prevTVA">0 RON</strong></div>
+                <div class="tva-row" style="border-top:1px solid var(--gray-b);margin-top:4px;padding-top:6px"><span>Total cu TVA:</span><strong id="prevTotal" style="font-size:16px;color:var(--dark)">0 RON</strong></div>
+            </div>
+            <div class="form-group"><label class="form-label">Observații</label><textarea class="form-textarea" name="note" id="fNote" placeholder="Detalii factură, condiții plată..."></textarea></div>
+            <button type="submit" class="form-submit" id="submitBtn">📄 Adaugă Factură</button>
+        </form>
+    </div>
+</div>
+</div>
+
+<!-- DETAIL MODAL -->
+<div id="detailModal" class="modal-overlay" onclick="if(event.target===this)closeDetailModal()">
+<div class="modal">
+    <div class="modal-head"><div class="modal-title" id="detailTitle">📋 Detalii Factură</div><button class="modal-close" onclick="closeDetailModal()">✕</button></div>
+    <div class="modal-body" id="detailBody"></div>
+</div>
+</div>
+
+<!-- PAYMENT MODAL -->
+<div id="payModal" class="modal-overlay" onclick="if(event.target===this)closePayModal()">
+<div class="modal" style="max-width:400px">
+    <div class="modal-head"><div class="modal-title">💰 Înregistrare Plată</div><button class="modal-close" onclick="closePayModal()">✕</button></div>
+    <div class="modal-body">
+        <div id="payInfo" style="margin-bottom:16px"></div>
+        <div class="form-group"><label class="form-label">Sumă încasată (RON) <span class="req">*</span></label><input type="number" class="form-input" id="payAmount" min="0" step="0.01"></div>
+        <div class="form-group"><label class="form-label">Data încasare</label><input type="date" class="form-input" id="payDate"></div>
+        <button class="form-submit" onclick="recordPayment()" style="background:linear-gradient(135deg,var(--blue),#2563eb)">💰 Înregistrează Plata</button>
+    </div>
+</div>
+</div>
+
+<script>
+// ═══════ CONFIG ═══════
+var API_URL = '';
+
+// ═══════ AUTH ═══════
+var role = sessionStorage.getItem('cssi-role');
+if (!role || !['admin'].includes(role)) { window.location.href = '../admin.html'; }
+
+// ═══════ STATE ═══════
+var PROJECTS = [
+    {id:'CSSI-2026-001', client:'Hotel Cheile Râșnoavei'},
+    {id:'CSSI-2026-004', client:'Birouri IT Hub'},
+    {id:'CSSI-2026-006', client:'Depozit Ghimbav'},
+    {id:'CSSI-2026-007', client:'Școala Nr. 5 Brașov'},
+    {id:'CSSI-2026-008', client:'Pensiune Bran'},
+    {id:'CSSI-2026-009', client:'Primăria Săcele'},
+    {id:'CSSI-2026-012', client:'Fabrica Autoliv'},
+    {id:'CSSI-2026-013', client:'Rezidențial Avantgarden'},
+    {id:'CSSI-2026-014', client:'ANAF Brașov'}
+];
+var INVOICES = [];
+var currentView = 'cards';
+var isLive = false;
+var kpiFilter = '';
+var payTargetId = null;
+
+var STATUS_LIST = ['Emisă','Parțial Încasată','Încasată','Restantă','Anulată'];
+var BADGE_MAP = {'Emisă':'badge-emisa','Încasată':'badge-incasata','Restantă':'badge-restanta','Parțial Încasată':'badge-partial','Anulată':'badge-anulata'};
+var CARD_MAP = {'Emisă':'','Încasată':'incasata','Restantă':'restanta','Parțial Încasată':'partial','Anulată':'anulata'};
+
+// ═══════ DEMO ═══════
+var DEMO = [
+    {id:1, row:1, nr:'CSSI-F-001', pid:'CSSI-2026-008', client:'Pensiune Bran', data:'2026-02-15', scadenta:'2026-03-17', suma:5210, tva:989.9, total:6199.9, incasat:6199.9, restant:0, status:'Încasată', note:'Sistem alarmă completat', payments:[{data:'2026-03-01',suma:6199.9}]},
+    {id:2, row:2, nr:'CSSI-F-002', pid:'CSSI-2026-007', client:'Școala Nr. 5 Brașov', data:'2026-02-20', scadenta:'2026-03-22', suma:43700, tva:8303, total:52003, incasat:52003, restant:0, status:'Încasată', note:'Detecție incendiu — proiect complet', payments:[{data:'2026-03-10',suma:30000},{data:'2026-03-18',suma:22003}]},
+    {id:3, row:3, nr:'CSSI-F-003', pid:'CSSI-2026-009', client:'Primăria Săcele', data:'2026-02-25', scadenta:'2026-03-27', suma:74790, tva:14210.1, total:89000.1, incasat:45000, restant:44000.1, status:'Parțial Încasată', note:'Contract mare, plata în 2 tranșe', payments:[{data:'2026-03-05',suma:45000}]},
+    {id:4, row:4, nr:'CSSI-F-004', pid:'CSSI-2026-004', client:'Birouri IT Hub', data:'2026-03-01', scadenta:'2026-03-31', suma:56303, tva:10697.57, total:67000.57, incasat:0, restant:67000.57, status:'Emisă', note:'CCTV + control acces', payments:[]},
+    {id:5, row:5, nr:'CSSI-F-005', pid:'CSSI-2026-001', client:'Hotel Cheile Râșnoavei', data:'2026-03-01', scadenta:'2026-03-31', suma:22500, tva:4275, total:26775, incasat:0, restant:26775, status:'Emisă', note:'Avans proiect detecție incendiu', payments:[]},
+    {id:6, row:6, nr:'CSSI-F-006', pid:'CSSI-2026-012', client:'Fabrica Autoliv', data:'2026-02-10', scadenta:'2026-03-12', suma:47500, tva:9025, total:56525, incasat:0, restant:56525, status:'Restantă', note:'CCTV hală, termen depășit', payments:[]},
+    {id:7, row:7, nr:'CSSI-F-007', pid:'CSSI-2026-014', client:'ANAF Brașov', data:'2026-01-15', scadenta:'2026-02-14', suma:35294, tva:6705.86, total:41999.86, incasat:41999.86, restant:0, status:'Încasată', note:'Mentenanță anuală', payments:[{data:'2026-02-10',suma:41999.86}]},
+    {id:8, row:8, nr:'CSSI-F-008', pid:'CSSI-2026-013', client:'Rezidențial Avantgarden', data:'2026-03-03', scadenta:'2026-04-02', suma:15126, tva:2873.94, total:17999.94, incasat:0, restant:17999.94, status:'Emisă', note:'Automatizare porți', payments:[]},
+    {id:9, row:9, nr:'CSSI-F-009', pid:'CSSI-2026-006', client:'Depozit Ghimbav', data:'2026-03-04', scadenta:'2026-04-03', suma:31500, tva:5985, total:37485, incasat:0, restant:37485, status:'Emisă', note:'CCTV exterior 8 camere', payments:[]}
+];
+
+// ═══════ HELPERS ═══════
+function esc(s){if(!s)return '';var d=document.createElement('div');d.textContent=s;return d.innerHTML;}
+function getProjectName(pid){var p=PROJECTS.find(function(x){return x.id===pid});return p?p.client:pid;}
+function fmt(n){return Number(n||0).toLocaleString('ro-RO',{minimumFractionDigits:0,maximumFractionDigits:0});}
+function fmtDec(n){return Number(n||0).toLocaleString('ro-RO',{minimumFractionDigits:2,maximumFractionDigits:2});}
+function daysUntil(d){if(!d)return 999;return Math.ceil((new Date(d+'T00:00:00')-new Date().setHours(0,0,0,0))/(86400000));}
+function todayStr(){return new Date().toISOString().split('T')[0];}
+function showLoading(s){document.getElementById('loadBar').classList.toggle('active',s);}
+function toast(msg,type){var c=document.getElementById('toastContainer');var t=document.createElement('div');t.className='toast '+(type||'info');t.textContent=msg;c.appendChild(t);setTimeout(function(){t.style.opacity='0';t.style.transform='translateX(100px)';t.style.transition='all 0.3s'},3000);setTimeout(function(){t.remove()},3500);}
+
+// ═══════ API ═══════
+function apiGet(a){if(!API_URL)return Promise.reject('No API');showLoading(true);return fetch(API_URL+'?action='+a).then(function(r){return r.json()}).finally(function(){showLoading(false)});}
+function apiPost(d){if(!API_URL)return Promise.reject('No API');showLoading(true);return fetch(API_URL,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(d)}).then(function(r){return r.json()}).finally(function(){showLoading(false)});}
+
+function refreshData(){
+    if(!API_URL){toast('⚠️ API nesetat. Date demo.','info');INVOICES=JSON.parse(JSON.stringify(DEMO));isLive=false;updateSyncStatus();render();return;}
+    updateSyncStatus('loading');
+    Promise.all([apiGet('getFinanciar'),apiGet('getProjects')])
+        .then(function(res){
+            if(Array.isArray(res[0])){INVOICES=res[0].map(function(r,i){return {id:i+1,row:r.row||i+1,nr:r.nrFactura||'',pid:r.proiectId||'',client:r.client||'',data:r.data||'',scadenta:r.scadenta||'',suma:Number(r.suma)||0,tva:Number(r.tva)||0,total:Number(r.total)||0,incasat:Number(r.incasat)||0,restant:Number(r.restant)||0,status:r.status||'Emisă',note:r.note||'',payments:parsePayments(r.payments)};});}
+            if(Array.isArray(res[1])){PROJECTS=res[1].map(function(p){return {id:p.id,client:p.client}});populateDropdowns();}
+            isLive=true;updateSyncStatus();render();toast('✅ Sincronizat','success');
+        }).catch(function(){isLive=false;updateSyncStatus();toast('❌ Sync eșuat','error');});
+}
+function parsePayments(p){if(Array.isArray(p))return p;if(typeof p==='string'&&p){try{return JSON.parse(p)}catch(e){}}return [];}
+function updateSyncStatus(s){var el=document.getElementById('syncStatus');if(s==='loading')el.innerHTML='<span class="sync-indicator sync-loading"></span>Se sincronizează...';else if(isLive)el.innerHTML='<span class="sync-indicator sync-ok"></span>Conectat la Google Sheets';else el.innerHTML='<span class="sync-indicator sync-off"></span>Date locale (demo)';}
+
+// ═══════ FILTERS ═══════
+function getFiltered(){
+    var q=document.getElementById('searchInput').value.toLowerCase();
+    var fs=document.getElementById('filterStatus').value;
+    var fp=document.getElementById('filterProject').value;
+    var period=document.getElementById('filterPeriod').value;
+    var today=todayStr();
+
+    var filtered=INVOICES.filter(function(f){
+        if(fs&&f.status!==fs)return false;
+        if(fp&&f.pid!==fp)return false;
+        if(kpiFilter&&f.status!==kpiFilter)return false;
+        if(q&&!(f.nr.toLowerCase().includes(q)||f.pid.toLowerCase().includes(q)||f.client.toLowerCase().includes(q)||getProjectName(f.pid).toLowerCase().includes(q)))return false;
+        if(period==='month'&&!f.data.startsWith(today.substring(0,7)))return false;
+        if(period==='year'&&!f.data.startsWith(today.substring(0,4)))return false;
+        if(period==='q'){var m=parseInt(today.substring(5,7)),qStart=Math.floor((m-1)/3)*3+1;var qs=today.substring(0,4)+'-'+(qStart<10?'0':'')+qStart;var qe=today.substring(0,4)+'-'+(qStart+2<10?'0':'')+(qStart+2);if(f.data<qs+'-01'||f.data>qe+'-31')return false;}
+        return true;
+    });
+
+    filtered.sort(function(a,b){return (b.data+'').localeCompare(a.data+'');});
+    document.getElementById('filterCount').textContent=filtered.length+' facturi';
+    return filtered;
+}
+
+function toggleKpiFilter(f){kpiFilter=kpiFilter===f?'':f;render();}
+
+// ═══════ RENDER ═══════
+function render(){renderKPI();renderCollectionBar();var filtered=getFiltered();if(currentView==='cards'){renderCards(filtered);document.getElementById('cardsView').style.display='';document.getElementById('tableView').style.display='none';}else{renderTable(filtered);document.getElementById('cardsView').style.display='none';document.getElementById('tableView').style.display='';}}
+
+function renderKPI(){
+    var totalFacturat=INVOICES.reduce(function(s,f){return s+f.total},0);
+    var totalIncasat=INVOICES.reduce(function(s,f){return s+f.incasat},0);
+    var totalRestant=INVOICES.reduce(function(s,f){return s+f.restant},0);
+    var nrRestante=INVOICES.filter(function(f){return f.status==='Restantă'}).length;
+    var nrEmise=INVOICES.filter(function(f){return f.status==='Emisă'}).length;
+    var nrPartial=INVOICES.filter(function(f){return f.status==='Parțial Încasată'}).length;
+
+    document.getElementById('kpiRow').innerHTML=
+        '<div class="kpi-card total" onclick="toggleKpiFilter(\'\')"><div class="kpi-val" style="color:var(--purple)">'+fmt(totalFacturat)+'</div><div class="kpi-label">Total facturat (RON)</div><div class="kpi-sub">'+INVOICES.length+' facturi</div></div>'+
+        '<div class="kpi-card incasate'+(kpiFilter==='Încasată'?' active-filter':'')+'" onclick="toggleKpiFilter(\'Încasată\')"><div class="kpi-val" style="color:var(--green)">'+fmt(totalIncasat)+'</div><div class="kpi-label">Încasat (RON)</div><div class="kpi-sub">'+Math.round(totalFacturat?totalIncasat/totalFacturat*100:0)+'% din total</div></div>'+
+        '<div class="kpi-card restante'+(kpiFilter==='Restantă'?' active-filter':'')+'" onclick="toggleKpiFilter(\'Restantă\')"><div class="kpi-val" style="color:var(--red)">'+fmt(totalRestant)+'</div><div class="kpi-label">De încasat (RON)</div><div class="kpi-sub">'+(nrRestante+nrEmise+nrPartial)+' facturi</div></div>'+
+        '<div class="kpi-card emise'+(kpiFilter==='Emisă'?' active-filter':'')+'" onclick="toggleKpiFilter(\'Emisă\')"><div class="kpi-val" style="color:var(--blue)">'+nrEmise+'</div><div class="kpi-label">Emise (neachitate)</div></div>'+
+        '<div class="kpi-card partial'+(kpiFilter==='Parțial Încasată'?' active-filter':'')+'" onclick="toggleKpiFilter(\'Parțial Încasată\')"><div class="kpi-val" style="color:var(--orange)">'+nrPartial+'</div><div class="kpi-label">Parțial încasate</div></div>';
+}
+
+function renderCollectionBar(){
+    var totalFacturat=INVOICES.reduce(function(s,f){return s+f.total},0);
+    var totalIncasat=INVOICES.reduce(function(s,f){return s+f.incasat},0);
+    var partialSum=INVOICES.filter(function(f){return f.status==='Parțial Încasată'}).reduce(function(s,f){return s+f.incasat},0);
+    var pctFull=totalFacturat?Math.round((totalIncasat-partialSum)/totalFacturat*100):0;
+    var pctPartial=totalFacturat?Math.round(partialSum/totalFacturat*100):0;
+    document.getElementById('collectionBar').innerHTML=
+        '<div class="cb-label"><span>Rata de colectare</span><span style="font-weight:900;color:var(--dark)">'+(pctFull+pctPartial)+'%</span></div>'+
+        '<div class="cb-track"><div class="cb-fill-green" style="width:'+pctFull+'%"></div><div class="cb-fill-orange" style="width:'+pctPartial+'%"></div></div>';
+}
+
+function renderCards(filtered){
+    if(!filtered.length){document.getElementById('cardsView').innerHTML='<div class="empty-msg">Nicio factură găsită</div>';return;}
+    var html='';
+    filtered.forEach(function(f){
+        var days=daysUntil(f.scadenta);
+        var scCls=f.status==='Încasată'||f.status==='Anulată'?'ok':days<0?'late':days<=7?'warn':'ok';
+        var scText=f.status==='Încasată'?'✅ Achitată':f.status==='Anulată'?'⛔ Anulată':!f.scadenta?'Fără scadență':days<0?'⚠️ Depășită cu '+Math.abs(days)+' zile':days===0?'🔴 Scadentă azi':days<=7?'🟠 '+days+' zile rămase':'📅 '+f.scadenta;
+        var pctPaid=f.total?Math.round(f.incasat/f.total*100):0;
+
+        html+='<div class="fcard '+(CARD_MAP[f.status]||'')+'" onclick="openDetailModal('+f.id+')">';
+        html+='<div class="fcard-top"><div class="fcard-nr">'+esc(f.nr)+'</div><span class="fcard-badge '+(BADGE_MAP[f.status]||'')+'">'+f.status+'</span></div>';
+        html+='<div class="fcard-pid">🔗 '+f.pid+'</div>';
+        html+='<div class="fcard-client">'+esc(f.client||getProjectName(f.pid))+' · 📅 '+f.data+'</div>';
+        html+='<div class="fcard-amounts">';
+        html+='<div class="fcard-amt"><span class="fcard-amt-label">Total cu TVA</span><span class="fcard-amt-val">'+fmt(f.total)+' RON</span></div>';
+        html+='<div class="fcard-amt"><span class="fcard-amt-label">Încasat</span><span class="fcard-amt-val" style="color:var(--green)">'+fmt(f.incasat)+' RON</span></div>';
+        html+='</div>';
+        if(f.restant>0){
+            html+='<div class="fcard-bar"><div class="fcard-bar-g" style="width:'+pctPaid+'%"></div></div>';
+            html+='<div class="fcard-pct">'+pctPaid+'% achitat · <span style="color:var(--red);font-weight:800">'+fmt(f.restant)+' RON restant</span></div>';
+        }
+        html+='<div class="fcard-meta"><span class="fcard-scadenta '+scCls+'">'+scText+'</span>';
+        if(f.restant>0) html+='<button onclick="event.stopPropagation();openPayModal('+f.id+')" style="padding:4px 12px;border-radius:6px;border:none;background:var(--blue);color:#fff;font-size:11px;font-weight:700;cursor:pointer">💰 Plată</button>';
+        html+='</div></div>';
+    });
+    document.getElementById('cardsView').innerHTML=html;
+}
+
+function renderTable(filtered){
+    if(!filtered.length){document.getElementById('tableView').innerHTML='<div class="empty-msg">Nicio factură găsită</div>';return;}
+    var html='<table><thead><tr><th>Nr. Factură</th><th>Proiect</th><th>Data</th><th>Scadență</th><th>Total</th><th>Încasat</th><th>Restant</th><th>Status</th><th></th></tr></thead><tbody>';
+    filtered.forEach(function(f){
+        var days=daysUntil(f.scadenta);
+        var scColor=f.status==='Încasată'?'var(--green)':days<0?'var(--red)':days<=7?'var(--orange)':'inherit';
+        html+='<tr style="cursor:pointer" onclick="openDetailModal('+f.id+')">';
+        html+='<td style="font-weight:800">'+esc(f.nr)+'</td>';
+        html+='<td><span style="color:var(--blue);font-weight:700">'+f.pid+'</span><br><span style="font-size:11px;color:var(--gray)">'+esc(f.client||getProjectName(f.pid))+'</span></td>';
+        html+='<td>'+f.data+'</td>';
+        html+='<td style="color:'+scColor+';font-weight:600">'+(f.scadenta||'—')+'</td>';
+        html+='<td style="font-weight:800">'+fmt(f.total)+'</td>';
+        html+='<td style="color:var(--green);font-weight:700">'+fmt(f.incasat)+'</td>';
+        html+='<td style="color:'+(f.restant>0?'var(--red)':'var(--gray)')+';font-weight:800">'+(f.restant>0?fmt(f.restant):'—')+'</td>';
+        html+='<td><span class="fcard-badge '+(BADGE_MAP[f.status]||'')+'">'+f.status+'</span></td>';
+        html+='<td>'+(f.restant>0?'<button onclick="event.stopPropagation();openPayModal('+f.id+')" style="padding:5px 10px;border-radius:6px;border:none;background:var(--blue);color:#fff;font-size:11px;font-weight:700;cursor:pointer">💰</button>':'')+'</td>';
+        html+='</tr>';
+    });
+    html+='</tbody></table>';
+    document.getElementById('tableView').innerHTML=html;
+}
+
+function setView(v){currentView=v;document.getElementById('vCards').classList.toggle('active',v==='cards');document.getElementById('vTable').classList.toggle('active',v==='table');render();}
+
+// ═══════ DETAIL MODAL ═══════
+function openDetailModal(id){
+    var f=INVOICES.find(function(x){return x.id===id});if(!f)return;
+    var days=daysUntil(f.scadenta);var pctPaid=f.total?Math.round(f.incasat/f.total*100):0;
+    document.getElementById('detailTitle').textContent='📄 '+f.nr;
+    var html='<div style="display:grid;gap:14px">';
+    html+='<div style="text-align:center;padding:16px 0"><div style="font-size:36px;font-weight:900;color:var(--dark)">'+fmtDec(f.total)+' RON</div><div style="font-size:13px;color:var(--gray)">Total factură cu TVA</div></div>';
+    html+=infoRow('📄 Nr. factură','<strong>'+esc(f.nr)+'</strong>');
+    html+=infoRow('🔗 Proiect','<span style="color:var(--blue);font-weight:700">'+f.pid+'</span>');
+    html+=infoRow('🏢 Client',esc(f.client||getProjectName(f.pid)));
+    html+=infoRow('📅 Data emitere',f.data);
+    html+=infoRow('📅 Scadență','<span style="color:'+(f.status==='Încasată'?'var(--green)':days<0?'var(--red)':'var(--dark)')+';font-weight:700">'+(f.scadenta||'Nesetată')+(days<0&&f.status!=='Încasată'?' (depășită '+Math.abs(days)+' zile)':'')+'</span>');
+    html+=infoRow('📊 Status','<span class="fcard-badge '+(BADGE_MAP[f.status]||'')+'">'+f.status+'</span>');
+    html+='<div style="background:var(--gray-bg);padding:14px;border-radius:12px">';
+    html+='<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;text-align:center">';
+    html+='<div><div style="font-size:10px;color:var(--gray);font-weight:700">FĂRĂ TVA</div><div style="font-size:16px;font-weight:900">'+fmt(f.suma)+'</div></div>';
+    html+='<div><div style="font-size:10px;color:var(--gray);font-weight:700">TVA 19%</div><div style="font-size:16px;font-weight:900">'+fmt(f.tva)+'</div></div>';
+    html+='<div><div style="font-size:10px;color:var(--gray);font-weight:700">TOTAL</div><div style="font-size:16px;font-weight:900">'+fmt(f.total)+'</div></div>';
+    html+='</div></div>';
+    if(f.total>0){
+        html+='<div><div style="display:flex;justify-content:space-between;font-size:12px;font-weight:700;margin-bottom:4px"><span style="color:var(--green)">Încasat: '+fmt(f.incasat)+' RON</span><span style="color:var(--red)">Restant: '+fmt(f.restant)+' RON</span></div>';
+        html+='<div style="width:100%;height:12px;background:var(--gray-bg);border-radius:6px;overflow:hidden"><div style="height:100%;width:'+pctPaid+'%;background:var(--green);border-radius:6px;transition:width 0.5s"></div></div>';
+        html+='<div style="text-align:center;font-size:13px;font-weight:800;margin-top:4px;color:'+(pctPaid>=100?'var(--green)':'var(--dark)')+'">'+pctPaid+'% achitat</div></div>';
+    }
+    if(f.note) html+='<div style="background:var(--gray-bg);padding:10px 14px;border-radius:8px;font-size:13px;color:var(--gray);font-style:italic">💬 '+esc(f.note)+'</div>';
+    if(f.payments&&f.payments.length){
+        html+='<div style="border-top:1px solid var(--gray-bg);padding-top:12px"><div style="font-size:13px;font-weight:700;margin-bottom:8px">💰 Istoric plăți ('+f.payments.length+')</div>';
+        f.payments.forEach(function(p,i){
+            html+='<div style="display:flex;justify-content:space-between;padding:6px 0;font-size:13px;border-bottom:1px solid var(--gray-bg)"><span style="color:var(--gray)">📅 '+p.data+'</span><span style="font-weight:800;color:var(--green)">+'+fmtDec(p.suma)+' RON</span></div>';
+        });
+        html+='</div>';
+    }
+    html+='<div style="display:flex;gap:8px;margin-top:12px">';
+    if(f.restant>0) html+='<button onclick="closeDetailModal();openPayModal('+f.id+')" style="flex:1;padding:12px;border-radius:12px;border:none;background:var(--blue);color:#fff;font-weight:700;font-size:14px;cursor:pointer">💰 Înregistrează Plată</button>';
+    html+='<button onclick="closeDetailModal();openEditModal('+f.id+')" style="flex:1;padding:12px;border-radius:12px;border:none;background:var(--gray-bg);color:var(--gray);font-weight:700;font-size:14px;cursor:pointer">✏️ Editează</button>';
+    html+='</div></div>';
+    document.getElementById('detailBody').innerHTML=html;
+    document.getElementById('detailModal').classList.add('active');
+}
+function closeDetailModal(){document.getElementById('detailModal').classList.remove('active');}
+function infoRow(l,v){return '<div style="display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px solid var(--gray-bg)"><span style="font-size:13px;color:var(--gray)">'+l+'</span><span style="font-size:14px;font-weight:600">'+v+'</span></div>';}
+
+// ═══════ PAYMENT MODAL ═══════
+function openPayModal(id){
+    var f=INVOICES.find(function(x){return x.id===id});if(!f)return;
+    payTargetId=id;
+    document.getElementById('payInfo').innerHTML='<div style="font-size:14px;font-weight:700;margin-bottom:4px">'+esc(f.nr)+' — '+esc(f.client||getProjectName(f.pid))+'</div><div style="font-size:13px;color:var(--gray)">Restant: <strong style="color:var(--red)">'+fmtDec(f.restant)+' RON</strong></div>';
+    document.getElementById('payAmount').value=f.restant.toFixed(2);
+    document.getElementById('payAmount').max=f.restant;
+    document.getElementById('payDate').value=todayStr();
+    document.getElementById('payModal').classList.add('active');
+}
+function closePayModal(){document.getElementById('payModal').classList.remove('active');payTargetId=null;}
+
+function recordPayment(){
+    if(!payTargetId)return;
+    var f=INVOICES.find(function(x){return x.id===payTargetId});if(!f)return;
+    var amount=parseFloat(document.getElementById('payAmount').value)||0;
+    var pDate=document.getElementById('payDate').value||todayStr();
+    if(amount<=0){toast('⚠️ Sumă invalidă','error');return;}
+    if(amount>f.restant+0.01) amount=f.restant;
+
+    f.incasat+=amount;f.restant=Math.max(0,f.total-f.incasat);
+    if(!f.payments)f.payments=[];
+    f.payments.push({data:pDate,suma:amount});
+    f.status=f.restant<=0.01?'Încasată':f.incasat>0?'Parțial Încasată':'Emisă';
+
+    if(API_URL) apiPost({action:'updateFinanciar',row:f.row,incasat:f.incasat,restant:f.restant,status:f.status,payments:JSON.stringify(f.payments)}).catch(function(){});
+
+    closePayModal();render();
+    toast('💰 Plată de '+fmtDec(amount)+' RON înregistrată','success');
+}
+
+// ═══════ ADD / EDIT ═══════
+function openAddModal(){
+    document.getElementById('editId').value='';
+    document.getElementById('modalTitle').textContent='📄 Factură Nouă';
+    document.getElementById('submitBtn').textContent='📄 Adaugă Factură';
+    document.getElementById('addForm').reset();
+    document.getElementById('fData').value=todayStr();
+    var sc=new Date();sc.setDate(sc.getDate()+30);
+    document.getElementById('fScadenta').value=sc.toISOString().split('T')[0];
+    document.getElementById('fIncasat').value='0';
+    calcTVA();
+    document.getElementById('addModal').classList.add('active');
+}
+
+function openEditModal(id){
+    var f=INVOICES.find(function(x){return x.id===id});if(!f)return;
+    document.getElementById('editId').value=f.id;
+    document.getElementById('modalTitle').textContent='✏️ Editare Factură';
+    document.getElementById('submitBtn').textContent='💾 Salvează';
+    document.getElementById('fNr').value=f.nr;
+    document.getElementById('fData').value=f.data;
+    document.getElementById('fProiect').value=f.pid;
+    document.getElementById('fClient').value=f.client;
+    document.getElementById('fScadenta').value=f.scadenta;
+    document.getElementById('fSuma').value=f.suma;
+    document.getElementById('fIncasat').value=f.incasat;
+    document.getElementById('fNote').value=f.note||'';
+    calcTVA();
+    document.getElementById('addModal').classList.add('active');
+}
+function closeAddModal(){document.getElementById('addModal').classList.remove('active');}
+
+function saveInvoice(e){
+    e.preventDefault();var fd=new FormData(document.getElementById('addForm'));
+    var editId=parseInt(fd.get('editId'));
+    var btn=document.getElementById('submitBtn');btn.disabled=true;
+    var suma=parseFloat(fd.get('suma'))||0;
+    var tva=suma*0.19;var total=suma+tva;
+    var incasat=parseFloat(fd.get('incasat'))||0;
+    var restant=Math.max(0,total-incasat);
+    var status=incasat>=total?'Încasată':incasat>0?'Parțial Încasată':'Emisă';
+    var scadenta=fd.get('scadenta');if(!scadenta){var sc=new Date(fd.get('dataFactura')||todayStr());sc.setDate(sc.getDate()+30);scadenta=sc.toISOString().split('T')[0];}
+
+    var invoiceData={nr:fd.get('nrFactura'),pid:fd.get('proiectId'),client:fd.get('client')||getProjectName(fd.get('proiectId')),data:fd.get('dataFactura')||todayStr(),scadenta:scadenta,suma:suma,tva:tva,total:total,incasat:incasat,restant:restant,status:status,note:fd.get('note')||''};
+
+    if(editId){
+        var f=INVOICES.find(function(x){return x.id===editId});
+        if(f){Object.assign(f,invoiceData);}
+        if(API_URL) apiPost({action:'updateFinanciarFull',row:f.row,invoice:invoiceData}).catch(function(){});
+        toast('✅ Factură actualizată','success');
+    } else {
+        var maxId=0;INVOICES.forEach(function(x){if(x.id>maxId)maxId=x.id});
+        var newF=Object.assign({id:maxId+1,row:maxId+1,payments:[]},invoiceData);
+        if(API_URL){
+            apiPost({action:'addFactura',invoice:invoiceData}).then(function(res){newF.row=res.row||newF.row;INVOICES.unshift(newF);render();toast('✅ Factură adăugată și sincronizată','success');}).catch(function(){INVOICES.unshift(newF);render();toast('⚠️ Salvat local','error');});
+        } else {INVOICES.unshift(newF);toast('✅ Factură adăugată (local)','success');}
+    }
+    render();closeAddModal();document.getElementById('addForm').reset();btn.disabled=false;
+}
+
+function calcTVA(){
+    var suma=parseFloat(document.getElementById('fSuma').value)||0;
+    var tva=suma*0.19;var total=suma+tva;
+    document.getElementById('prevNet').textContent=fmt(suma)+' RON';
+    document.getElementById('prevTVA').textContent=fmt(tva)+' RON';
+    document.getElementById('prevTotal').textContent=fmt(total)+' RON';
+}
+
+// ═══════ DROPDOWNS ═══════
+function populateDropdowns(){
+    var opts='<option value="">— Alege proiect —</option>';
+    PROJECTS.forEach(function(p){opts+='<option value="'+p.id+'">'+p.id+' — '+esc(p.client)+'</option>'});
+    document.getElementById('fProiect').innerHTML=opts;
+    var fOpts='<option value="">Toate proiectele</option>';
+    PROJECTS.forEach(function(p){fOpts+='<option value="'+p.id+'">'+p.id+'</option>'});
+    document.getElementById('filterProject').innerHTML=fOpts;
+}
+
+// ═══════ INIT ═══════
+populateDropdowns();
+INVOICES=JSON.parse(JSON.stringify(DEMO));
+render();
+if(API_URL) refreshData();
+</script>
+</body>
+</html>

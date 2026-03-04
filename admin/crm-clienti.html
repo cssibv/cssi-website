@@ -3,300 +3,852 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>CRM Clienți | Portal CSSI</title>
+<title>CRM Clienți — Portal CSSI 3.0</title>
 <meta name="robots" content="noindex, nofollow">
-<link rel="icon" type="image/png" sizes="96x96" href="/images/favicon-96x96.png">
+<link rel="icon" type="image/x-icon" href="/images/favicon.ico">
+<meta name="theme-color" content="#dc2626">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 <style>
-
 *{margin:0;padding:0;box-sizing:border-box;}
-body{font-family:'Inter',sans-serif;color:#0f172a;background:#f1f5f9;overflow-x:hidden;}
-a{text-decoration:none;color:inherit;}
+:root{--red:#dc2626;--red-d:#991b1b;--dark:#0f172a;--dark2:#1e293b;--gray:#64748b;--gray-l:#94a3b8;--gray-xl:#cbd5e1;--gray-bg:#f1f5f9;--gray-b:#e2e8f0;--blue:#3b82f6;--green:#22c55e;--orange:#f97316;--purple:#8b5cf6;--yellow:#eab308;--teal:#14b8a6;--pink:#ec4899;--radius:16px;--radius-sm:12px;--shadow:0 1px 3px rgba(0,0,0,0.06);--shadow-md:0 4px 12px rgba(0,0,0,0.08);--font:'Inter',system-ui,sans-serif;}
+body{font-family:var(--font);color:var(--dark);background:var(--gray-bg);-webkit-font-smoothing:antialiased;}
+a{text-decoration:none;color:inherit;}button{font-family:inherit;cursor:pointer;}
 
-/* UTILITIES */
-.container{max-width:1200px;margin:0 auto;padding:16px;}
-@media(min-width:640px){.container{padding:24px;}}
-.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);}
-
-/* AUTH */
-.auth-bg{min-height:100vh;background:linear-gradient(135deg,#0f172a 0%,#1e293b 50%,#0f172a 100%);display:flex;align-items:center;justify-content:center;padding:16px;}
-.auth-card{background:#fff;border-radius:20px;padding:40px 32px;width:100%;max-width:420px;box-shadow:0 25px 50px -12px rgba(0,0,0,0.4);}
-.auth-input{width:100%;padding:16px 20px;border:2px solid #e2e8f0;border-radius:14px;font-size:18px;text-align:center;outline:none;font-family:inherit;transition:all 0.2s;letter-spacing:2px;}
-.auth-input:focus{border-color:#dc2626;box-shadow:0 0 0 4px rgba(220,38,38,0.1);}
-.auth-btn{width:100%;padding:16px;background:linear-gradient(135deg,#dc2626,#991b1b);color:#fff;border:none;border-radius:14px;font-size:18px;font-weight:700;cursor:pointer;font-family:inherit;transition:all 0.3s;letter-spacing:0.5px;}
-.auth-btn:hover{transform:translateY(-1px);box-shadow:0 10px 25px -5px rgba(220,38,38,0.4);}
-.auth-error{color:#dc2626;text-align:center;font-size:14px;padding:8px;background:#fef2f2;border-radius:8px;display:none;}
-.auth-logo{width:80px;height:80px;border-radius:20px;object-fit:contain;margin:0 auto 16px;display:block;}
-
-/* DASHBOARD */
-.dash{min-height:100vh;background:#f1f5f9;}
-.hero{padding:24px;border-radius:20px;margin-bottom:20px;color:#fff;position:relative;overflow:hidden;}
-.hero::before{content:'';position:absolute;top:0;right:0;width:200px;height:200px;background:rgba(255,255,255,0.05);border-radius:50%;transform:translate(50%,-50%);}
-.hero.admin{background:linear-gradient(135deg,#0f172a,#1e293b);}
-.hero.org{background:linear-gradient(135deg,#1d4ed8,#1e40af);}
-.hero.mkt{background:linear-gradient(135deg,#7c3aed,#6d28d9);}
-.hero.sales{background:linear-gradient(135deg,#059669,#047857);}
-.hero.tech{background:linear-gradient(135deg,#ea580c,#c2410c);}
-.hero-title{font-size:clamp(18px,3vw,26px);font-weight:800;margin-bottom:4px;}
-.hero-sub{color:rgba(255,255,255,0.7);font-size:13px;}
-.role-pill{display:inline-flex;align-items:center;gap:6px;padding:6px 14px;background:rgba(255,255,255,0.15);backdrop-filter:blur(10px);border-radius:999px;font-size:13px;font-weight:600;}
-
-/* KPI CARDS */
-.kpi-row{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-bottom:20px;}
-@media(min-width:768px){.kpi-row{grid-template-columns:repeat(4,1fr);}}
-.kpi{background:#fff;border-radius:16px;padding:16px;position:relative;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,0.05);transition:all 0.3s;}
-.kpi:hover{transform:translateY(-2px);box-shadow:0 8px 25px -5px rgba(0,0,0,0.1);}
-.kpi-icon{font-size:28px;margin-bottom:8px;}
-.kpi-value{font-size:28px;font-weight:900;color:#0f172a;line-height:1;}
-.kpi-label{font-size:12px;color:#64748b;font-weight:500;margin-top:4px;}
-.kpi-bar{position:absolute;bottom:0;left:0;right:0;height:4px;}
-
-/* SECTION TITLE */
-.section-title{font-size:14px;font-weight:700;color:#64748b;text-transform:uppercase;letter-spacing:1.5px;margin-bottom:12px;display:flex;align-items:center;gap:8px;}
-
-/* MODULE GRID */
-.mod-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-bottom:20px;}
-@media(min-width:1024px){.mod-grid{grid-template-columns:repeat(4,1fr);}}
-.mod-card{background:#fff;border-radius:16px;padding:20px 16px;text-align:center;box-shadow:0 1px 3px rgba(0,0,0,0.05);transition:all 0.3s;display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:140px;border-top:4px solid transparent;cursor:pointer;position:relative;}
-.mod-card:hover{transform:translateY(-4px);box-shadow:0 15px 30px -5px rgba(0,0,0,0.12);}
-.mod-card.org{border-top-color:#3b82f6;}
-.mod-card.mkt{border-top-color:#8b5cf6;}
-.mod-card.sales{border-top-color:#10b981;}
-.mod-card.tech{border-top-color:#f97316;}
-.mod-card .m-icon{font-size:36px;margin-bottom:8px;}
-.mod-card .m-title{font-size:14px;font-weight:700;color:#0f172a;margin-bottom:2px;}
-.mod-card .m-desc{font-size:11px;color:#64748b;}
-.mod-card .m-badge{position:absolute;top:8px;right:8px;width:8px;height:8px;border-radius:50%;background:#22c55e;}
-
-/* QUICK ACTIONS */
-.quick-row{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px;padding-top:16px;border-top:1px solid rgba(255,255,255,0.15);}
-.quick-btn{display:inline-flex;align-items:center;gap:8px;padding:10px 16px;background:rgba(255,255,255,0.15);backdrop-filter:blur(10px);border-radius:12px;font-size:13px;font-weight:600;color:#fff;transition:all 0.2s;cursor:pointer;border:none;font-family:inherit;}
-.quick-btn:hover{background:rgba(255,255,255,0.25);transform:translateY(-1px);}
-
-/* NOTIFICATIONS */
-.notif-card{background:#fff;border-radius:16px;padding:16px;margin-bottom:20px;box-shadow:0 1px 3px rgba(0,0,0,0.05);}
-.notif-item{display:flex;align-items:flex-start;gap:12px;padding:10px 0;border-bottom:1px solid #f1f5f9;}
-.notif-item:last-child{border-bottom:none;}
-.notif-dot{width:8px;height:8px;border-radius:50%;margin-top:6px;flex-shrink:0;}
-.notif-text{font-size:13px;color:#334155;line-height:1.5;}
-.notif-time{font-size:11px;color:#94a3b8;margin-top:2px;}
-
-/* LOGOUT */
-.logout{background:none;border:none;color:#94a3b8;font-size:13px;cursor:pointer;font-family:inherit;padding:8px 16px;transition:all 0.2s;border-radius:8px;}
-.logout:hover{color:#dc2626;background:#fef2f2;}
-.footer-text{text-align:center;color:#cbd5e1;font-size:11px;margin-top:16px;padding-bottom:80px;}
-
-/* BOTTOM NAV (ALL PAGES) */
-.bottom-nav{position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1px solid #e2e8f0;box-shadow:0 -4px 20px rgba(0,0,0,0.08);padding:6px 12px;z-index:100;display:flex;gap:4px;}
-@media(min-width:768px){.bottom-nav{display:none;}}
-.bn-item{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:8px 4px;border-radius:10px;font-size:10px;font-weight:600;color:#64748b;transition:all 0.2s;gap:2px;}
-.bn-item.active{color:#dc2626;background:#fef2f2;}
-.bn-item .bn-icon{font-size:20px;}
-
-/* MODULE PAGE SHARED */
-.page-header{background:linear-gradient(135deg,var(--h1),var(--h2));color:#fff;padding:16px 20px;border-radius:16px;margin-bottom:16px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;}
-.page-back{color:rgba(255,255,255,0.8);font-size:13px;font-weight:500;display:flex;align-items:center;gap:6px;}
+/* Header */
+.page-header{background:linear-gradient(135deg,var(--dark),var(--dark2));color:#fff;padding:20px 24px;border-radius:20px;margin-bottom:16px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;}
+.page-back{color:rgba(255,255,255,0.7);font-size:13px;font-weight:500;display:flex;align-items:center;gap:6px;transition:color 0.2s;}
 .page-back:hover{color:#fff;}
-.page-title{font-size:18px;font-weight:800;}
-.page-ext{padding:8px 14px;background:rgba(255,255,255,0.15);backdrop-filter:blur(10px);border-radius:10px;font-size:13px;font-weight:500;transition:all 0.2s;}
-.page-ext:hover{background:rgba(255,255,255,0.25);}
+.page-title{font-size:22px;font-weight:800;letter-spacing:-0.5px;}
+.page-subtitle{font-size:12px;color:rgba(255,255,255,0.5);margin-top:2px;}
+.page-actions{display:flex;gap:8px;align-items:center;}
+.page-btn{padding:10px 18px;border-radius:12px;font-size:13px;font-weight:700;border:none;transition:all 0.2s;}
+.page-btn.primary{background:var(--red);color:#fff;}
+.page-btn.primary:hover{background:var(--red-d);transform:translateY(-1px);}
+.page-btn.secondary{background:rgba(255,255,255,0.1);color:#fff;border:1px solid rgba(255,255,255,0.2);}
+.page-btn.secondary:hover{background:rgba(255,255,255,0.2);}
+.sync-indicator{width:8px;height:8px;border-radius:50%;display:inline-block;margin-right:6px;}
+.sync-ok{background:var(--green);box-shadow:0 0 6px rgba(34,197,94,0.5);}
+.sync-off{background:var(--gray-l);}
+.sync-loading{background:var(--orange);animation:pulse 1s infinite;}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.4}}
 
-/* TABS */
-.tabs{display:flex;gap:8px;margin-bottom:16px;}
-.tab{flex:1;padding:12px;border-radius:12px;font-weight:700;font-size:13px;border:none;cursor:pointer;font-family:inherit;transition:all 0.2s;background:#fff;color:#475569;box-shadow:0 1px 3px rgba(0,0,0,0.05);}
-.tab.active{color:#fff;box-shadow:0 4px 15px -3px rgba(0,0,0,0.2);}
+.container{max-width:1400px;margin:0 auto;padding:16px;}
+@media(min-width:768px){.container{padding:24px;}}
 
-/* CARD */
-.card{background:#fff;border-radius:16px;box-shadow:0 1px 3px rgba(0,0,0,0.05);overflow:hidden;}
-.card-head{padding:14px;text-align:center;color:#fff;font-weight:700;font-size:15px;}
-.card-head small{display:block;font-size:11px;opacity:0.8;margin-top:2px;font-weight:500;}
-.card iframe{width:100%;border:0;min-height:500px;height:calc(100vh - 320px);}
-.card-body{padding:24px;text-align:center;}
+/* Summary KPIs */
+.summary{display:flex;flex-wrap:wrap;gap:12px;margin-bottom:16px;}
+.summary-item{background:#fff;border-radius:var(--radius-sm);padding:14px 18px;box-shadow:var(--shadow);flex:1;min-width:130px;transition:all 0.2s;}
+.summary-item:hover{box-shadow:var(--shadow-md);transform:translateY(-1px);}
+.summary-val{font-size:22px;font-weight:900;color:var(--dark);}
+.summary-label{font-size:11px;color:var(--gray);margin-top:2px;}
+.summary-trend{font-size:10px;font-weight:600;margin-top:2px;}
+.trend-up{color:var(--green);}
+.trend-down{color:var(--red);}
 
-/* FORM NATIVE */
-.form-group{margin-bottom:16px;text-align:left;}
-.form-label{display:block;font-size:13px;font-weight:600;color:#334155;margin-bottom:6px;}
-.form-label .req{color:#dc2626;}
-.form-input,.form-select,.form-textarea{width:100%;padding:12px 16px;border:2px solid #e2e8f0;border-radius:12px;font-size:15px;font-family:inherit;outline:none;transition:all 0.2s;background:#fff;}
-.form-input:focus,.form-select:focus,.form-textarea:focus{border-color:#3b82f6;box-shadow:0 0 0 3px rgba(59,130,246,0.1);}
-.form-textarea{min-height:100px;resize:vertical;}
-.form-select{cursor:pointer;}
+/* Pipeline Stages */
+.pipeline{display:flex;gap:4px;margin-bottom:16px;background:#fff;border-radius:var(--radius);padding:6px;box-shadow:var(--shadow);overflow-x:auto;}
+.pipe-stage{flex:1;text-align:center;padding:10px 6px;border-radius:var(--radius-sm);cursor:pointer;transition:all 0.2s;position:relative;min-width:80px;}
+.pipe-stage:hover{background:var(--gray-bg);}
+.pipe-stage.active{color:#fff;}
+.pipe-stage.active.s-all{background:var(--dark);}
+.pipe-stage.active.s-nou{background:var(--blue);}
+.pipe-stage.active.s-contactat{background:var(--purple);}
+.pipe-stage.active.s-oferta{background:var(--orange);}
+.pipe-stage.active.s-negociere{background:var(--teal);}
+.pipe-stage.active.s-castigat{background:var(--green);}
+.pipe-stage.active.s-pierdut{background:var(--gray);}
+.pipe-name{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.3px;}
+.pipe-count{font-size:18px;font-weight:900;margin-top:2px;}
+
+/* Filters & Search */
+.filters{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:16px;align-items:center;}
+.filter-search{padding:10px 16px;border-radius:99px;font-size:13px;border:1px solid var(--gray-b);outline:none;font-family:inherit;min-width:200px;transition:all 0.2s;background:#fff;flex:1;max-width:360px;}
+.filter-search:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(59,130,246,0.08);}
+.filter-select{padding:10px 16px;border-radius:99px;font-size:13px;border:1px solid var(--gray-b);background:#fff;font-family:inherit;outline:none;cursor:pointer;font-weight:600;}
+.filter-select:focus{border-color:var(--blue);}
+.filter-count{font-size:12px;color:var(--gray);margin-left:auto;font-weight:500;}
+
+/* View toggle */
+.view-toggle{display:flex;background:#fff;border-radius:10px;padding:3px;box-shadow:var(--shadow);border:1px solid var(--gray-b);}
+.view-btn{padding:7px 14px;border-radius:8px;font-size:12px;font-weight:600;border:none;background:none;color:var(--gray);cursor:pointer;transition:all 0.2s;}
+.view-btn.active{background:var(--dark);color:#fff;}
+
+/* Cards Grid */
+.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:12px;}
+.card{background:#fff;border-radius:var(--radius);padding:18px;box-shadow:var(--shadow);border-left:4px solid var(--gray-b);transition:all 0.2s;position:relative;}
+.card:hover{box-shadow:var(--shadow-md);transform:translateY(-1px);}
+.card.s-nou{border-left-color:var(--blue);}
+.card.s-contactat{border-left-color:var(--purple);}
+.card.s-oferta{border-left-color:var(--orange);}
+.card.s-negociere{border-left-color:var(--teal);}
+.card.s-castigat{border-left-color:var(--green);}
+.card.s-pierdut{border-left-color:var(--gray);opacity:0.7;}
+.card-top{display:flex;justify-content:space-between;align-items:start;margin-bottom:10px;}
+.card-name{font-size:15px;font-weight:700;color:var(--dark);}
+.card-date{font-size:11px;color:var(--gray-l);}
+.card-info{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px;font-size:12px;color:var(--gray);}
+.card-info span{display:flex;align-items:center;gap:3px;}
+.card-tags{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin-bottom:4px;}
+.card-tag{display:inline-block;padding:3px 10px;border-radius:6px;font-size:11px;font-weight:600;}
+.card-tag.alarm{background:#fef2f2;color:var(--red);}
+.card-tag.camera{background:#eff6ff;color:var(--blue);}
+.card-tag.incendiu{background:#fff7ed;color:var(--orange);}
+.card-tag.electric{background:#fefce8;color:#a16207;}
+.card-tag.install{background:#f0fdf4;color:#059669;}
+.card-tag.auto{background:#f5f3ff;color:var(--purple);}
+.card-tag.complex{background:#fdf2f8;color:var(--pink);}
+.card-sursa{display:inline-block;padding:3px 8px;border-radius:6px;font-size:10px;font-weight:600;background:var(--gray-bg);color:var(--gray);}
+.card-valoare{font-size:14px;font-weight:800;color:var(--dark);}
+.card-note{font-size:12px;color:var(--gray);margin-top:8px;font-style:italic;line-height:1.5;background:var(--gray-bg);padding:8px 12px;border-radius:8px;}
+.card-pid{display:inline-flex;align-items:center;gap:4px;font-size:12px;font-weight:700;color:var(--green);margin-top:8px;padding:4px 10px;background:#f0fdf4;border-radius:8px;}
+.card-actions{display:flex;gap:6px;margin-top:14px;padding-top:14px;border-top:1px solid var(--gray-bg);}
+.card-actions select{padding:8px 12px;border-radius:10px;border:1px solid var(--gray-b);font-size:12px;font-weight:600;font-family:inherit;cursor:pointer;background:#fff;outline:none;flex:1;transition:all 0.2s;}
+.card-actions select:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(59,130,246,0.08);}
+.btn-convert{padding:8px 14px;border-radius:10px;border:none;font-size:12px;font-weight:700;transition:all 0.2s;white-space:nowrap;display:flex;align-items:center;gap:4px;}
+.btn-convert.ready{background:linear-gradient(135deg,var(--green),#16a34a);color:#fff;}
+.btn-convert.ready:hover{transform:translateY(-1px);box-shadow:0 4px 12px -2px rgba(34,197,94,0.4);}
+.btn-convert.done{background:#f0fdf4;color:var(--green);cursor:default;}
+.btn-convert.disabled{background:var(--gray-bg);color:var(--gray-l);cursor:not-allowed;}
+.btn-delete{padding:8px;border-radius:10px;border:none;background:none;color:var(--gray-l);font-size:14px;transition:all 0.2s;}
+.btn-delete:hover{background:#fef2f2;color:var(--red);}
+
+/* Table View */
+.table-wrap{overflow-x:auto;background:#fff;border-radius:var(--radius);box-shadow:var(--shadow);}
+table{width:100%;border-collapse:collapse;font-size:13px;}
+th{background:var(--dark);color:#fff;padding:12px 14px;text-align:left;font-weight:700;font-size:11px;text-transform:uppercase;letter-spacing:0.5px;white-space:nowrap;}
+td{padding:10px 14px;border-bottom:1px solid var(--gray-bg);}
+tr:hover td{background:rgba(59,130,246,0.03);}
+.td-status{font-weight:700;font-size:12px;}
+
+/* Toast Notifications */
+.toast-container{position:fixed;top:20px;right:20px;z-index:300;display:flex;flex-direction:column;gap:8px;}
+.toast{padding:14px 20px;border-radius:12px;color:#fff;font-size:13px;font-weight:600;box-shadow:0 8px 24px rgba(0,0,0,0.15);animation:slideIn 0.3s ease;display:flex;align-items:center;gap:8px;max-width:380px;}
+.toast.success{background:var(--green);}
+.toast.error{background:var(--red);}
+.toast.info{background:var(--blue);}
+@keyframes slideIn{from{transform:translateX(100%);opacity:0}to{transform:translateX(0);opacity:1}}
+
+/* Modal */
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);backdrop-filter:blur(4px);z-index:200;align-items:center;justify-content:center;padding:16px;}
+.modal-overlay.active{display:flex;}
+.modal{background:#fff;border-radius:20px;width:100%;max-width:520px;max-height:90vh;overflow-y:auto;box-shadow:0 25px 60px rgba(0,0,0,0.3);}
+.modal-head{padding:20px 24px;border-bottom:1px solid var(--gray-b);display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;background:#fff;border-radius:20px 20px 0 0;z-index:1;}
+.modal-title{font-size:18px;font-weight:800;}
+.modal-close{width:32px;height:32px;border-radius:8px;border:none;background:var(--gray-bg);color:var(--gray);font-size:18px;display:flex;align-items:center;justify-content:center;transition:all 0.2s;}
+.modal-close:hover{background:#fef2f2;color:var(--red);}
+.modal-body{padding:24px;}
+.form-group{margin-bottom:16px;}
+.form-label{display:block;font-size:13px;font-weight:600;color:var(--dark);margin-bottom:6px;}
+.form-label .req{color:var(--red);}
+.form-input,.form-select,.form-textarea{width:100%;padding:12px 16px;border:2px solid var(--gray-b);border-radius:var(--radius-sm);font-size:14px;font-family:inherit;outline:none;transition:all 0.2s;background:#fff;}
+.form-input:focus,.form-select:focus,.form-textarea:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(59,130,246,0.08);}
+.form-textarea{min-height:80px;resize:vertical;}
 .form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
 @media(max-width:480px){.form-row{grid-template-columns:1fr;}}
-.form-submit{width:100%;padding:14px;background:linear-gradient(135deg,#22c55e,#16a34a);color:#fff;border:none;border-radius:12px;font-size:16px;font-weight:700;cursor:pointer;font-family:inherit;transition:all 0.3s;}
-.form-submit:hover{transform:translateY(-1px);box-shadow:0 8px 25px -5px rgba(34,197,94,0.4);}
-.form-success{display:none;text-align:center;padding:32px;}
+.form-submit{width:100%;padding:14px;background:linear-gradient(135deg,var(--red),var(--red-d));color:#fff;border:none;border-radius:var(--radius-sm);font-size:15px;font-weight:700;transition:all 0.3s;cursor:pointer;}
+.form-submit:hover{transform:translateY(-1px);box-shadow:0 8px 20px -5px rgba(220,38,38,0.4);}
+.form-submit:disabled{background:var(--gray-l);cursor:not-allowed;transform:none;box-shadow:none;}
 
-/* LEGEND */
-.legend{margin-top:16px;background:#fff;border-radius:12px;padding:14px;box-shadow:0 1px 3px rgba(0,0,0,0.05);}
-.legend-title{font-size:12px;font-weight:700;color:#64748b;margin-bottom:8px;}
-.legend-items{display:flex;flex-wrap:wrap;gap:8px;}
-.legend-tag{padding:4px 10px;border-radius:6px;font-size:12px;font-weight:600;}
+/* Confirm dialog */
+.confirm-modal .modal{max-width:420px;}
+.confirm-text{font-size:14px;line-height:1.6;color:var(--gray);margin-bottom:20px;}
+.confirm-highlight{background:#f0fdf4;border:1px solid #bbf7d0;border-radius:10px;padding:12px 16px;margin:12px 0;}
+.confirm-highlight .ch-label{font-size:11px;color:var(--gray);font-weight:600;text-transform:uppercase;letter-spacing:0.3px;}
+.confirm-highlight .ch-value{font-size:16px;font-weight:800;color:var(--dark);margin-top:2px;}
+.confirm-btns{display:flex;gap:8px;}
+.confirm-btns button{flex:1;padding:12px;border-radius:12px;font-size:14px;font-weight:700;border:none;cursor:pointer;transition:all 0.2s;}
+.confirm-btns .btn-cancel{background:var(--gray-bg);color:var(--gray);}
+.confirm-btns .btn-cancel:hover{background:var(--gray-b);}
+.confirm-btns .btn-confirm{background:linear-gradient(135deg,var(--green),#16a34a);color:#fff;}
+.confirm-btns .btn-confirm:hover{transform:translateY(-1px);box-shadow:0 4px 12px rgba(34,197,94,0.3);}
 
-/* TIPS */
-.tips{margin-top:16px;display:grid;grid-template-columns:repeat(3,1fr);gap:12px;}
-@media(max-width:640px){.tips{grid-template-columns:1fr;}}
-.tip{padding:14px;border-radius:12px;text-align:center;}
-.tip-icon{font-size:24px;margin-bottom:4px;}
-.tip-text{font-size:12px;font-weight:600;}
+/* Bottom Nav */
+.bottom-nav{position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1px solid var(--gray-b);box-shadow:0 -4px 20px rgba(0,0,0,0.06);padding:6px 12px;z-index:100;display:flex;gap:4px;}
+@media(min-width:768px){.bottom-nav{display:none;}}
+.bn-item{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:8px 4px;border-radius:10px;font-size:10px;font-weight:600;color:var(--gray);transition:all 0.2s;gap:2px;}
+.bn-item.active{color:var(--red);background:#fef2f2;}
+.bn-item .bn-icon{font-size:20px;}
 
-:root{--h1:#059669;--h2:#047857;}
+.empty-msg{text-align:center;padding:60px 20px;color:var(--gray-l);font-size:14px;}
+.empty-msg .empty-icon{font-size:48px;margin-bottom:12px;}
+.footer{text-align:center;color:var(--gray-xl);font-size:11px;padding:24px 0 100px;}
+
+/* Loading */
+.loading-bar{position:fixed;top:0;left:0;right:0;height:3px;z-index:400;display:none;}
+.loading-bar.active{display:block;}
+.loading-bar::after{content:'';display:block;width:30%;height:100%;background:var(--red);border-radius:2px;animation:loadSlide 1.2s infinite ease-in-out;}
+@keyframes loadSlide{0%{margin-left:-30%}100%{margin-left:100%}}
 </style>
 </head>
 <body>
 
-<div id="authWall" class="auth-bg">
-<div class="auth-card" style="text-align:center;">
-    <div style="font-size:48px;margin-bottom:16px;">🔐</div>
-    <h1 style="font-size:20px;font-weight:700;color:#0f172a;margin-bottom:16px;">Acces restricționat</h1>
-    <p style="color:#64748b;margin-bottom:24px;">Ai nevoie de acces Vânzări.</p>
-    <a href="../admin.html" class="auth-btn" style="display:inline-block;width:auto;padding:12px 32px;">Mergi la Login</a>
-</div>
-</div>
+<div class="loading-bar" id="loadBar"></div>
+<div class="toast-container" id="toastContainer"></div>
 
-<div id="main" style="display:none;">
 <div class="container">
     <div class="page-header">
-        <div style="display:flex;align-items:center;gap:16px;">
-            <a href="../admin.html" class="page-back">← Înapoi</a>
-            <h1 class="page-title">💰 CRM Clienți</h1>
+        <div>
+            <a href="../admin.html" class="page-back">← Dashboard</a>
+            <div class="page-title">💰 CRM Clienți</div>
+            <div class="page-subtitle" id="syncStatus"><span class="sync-indicator sync-off"></span>Date locale (demo)</div>
         </div>
-        <a href="https://docs.google.com/spreadsheets/d/1DQlmxJWMQh9NpwzKNwti2YN47u2vKIRG2n9Q1h2rVHk/edit?usp=sharing" target="_blank" rel="noopener noreferrer" class="page-ext">🔗 Google Sheets</a>
-    </div>
-<div class="kpi-row" style="margin-bottom:16px;grid-template-columns:repeat(5,1fr);">
-        <div class="kpi" style="border-left:3px solid #3b82f6;padding:12px;"><div style="font-size:20px;">🆕</div><div class="kpi-label">Nou</div></div>
-        <div class="kpi" style="border-left:3px solid #eab308;padding:12px;"><div style="font-size:20px;">📞</div><div class="kpi-label">Contactat</div></div>
-        <div class="kpi" style="border-left:3px solid #8b5cf6;padding:12px;"><div style="font-size:20px;">📧</div><div class="kpi-label">Ofertă</div></div>
-        <div class="kpi" style="border-left:3px solid #22c55e;padding:12px;"><div style="font-size:20px;">✅</div><div class="kpi-label">Câștigat</div></div>
-        <div class="kpi" style="border-left:3px solid #ef4444;padding:12px;"><div style="font-size:20px;">❌</div><div class="kpi-label">Pierdut</div></div>
-    </div>
-    <div class="tabs"><button class="tab active" style="background:#22c55e;" data-tab="add" data-color="#22c55e" onclick="switchTab(this)">➕ Lead Nou</button>
-<button class="tab "  data-tab="list" data-color="#10b981" onclick="switchTab(this)">📋 Lista</button>
-<button class="tab "  data-tab="guide" data-color="#8b5cf6" onclick="switchTab(this)">📊 Pipeline</button>
-</div>
-<div class="tab-panel" id="panel_add" style="display:block;">
-<div class="card"><div class="card-head" style="background:#22c55e;">➕ Adaugă Lead Nou<small>Completează datele clientului</small></div>
-<div class="card-body" style="text-align:left;max-width:500px;margin:0 auto;">
-    <div id="crmForm">
-        <div class="form-row">
-            <div class="form-group"><label class="form-label">Nume / Firmă <span class="req">*</span></label><input type="text" class="form-input" id="crmName" placeholder="Ex: Ion Popescu / SC Alfa SRL"></div>
-            <div class="form-group"><label class="form-label">Telefon <span class="req">*</span></label><input type="tel" class="form-input" id="crmPhone" placeholder="07xx xxx xxx"></div>
+        <div class="page-actions">
+            <button class="page-btn secondary" onclick="refreshData()" title="Sincronizează cu Google Sheets">🔄 Sync</button>
+            <button class="page-btn primary" onclick="openAddModal()">+ Lead Nou</button>
         </div>
-        <div class="form-row">
-            <div class="form-group"><label class="form-label">Email</label><input type="email" class="form-input" id="crmEmail" placeholder="email@exemplu.ro"></div>
-            <div class="form-group"><label class="form-label">Locație</label><input type="text" class="form-input" id="crmLoc" placeholder="Brașov, Sibiu..."></div>
-        </div>
-        <div class="form-row">
-            <div class="form-group"><label class="form-label">Serviciu dorit <span class="req">*</span></label>
-                <select class="form-select" id="crmService">
-                    <option value="">Selectează...</option>
-                    <option>Camere supraveghere</option><option>Alarmă antiefracție</option><option>Detecție incendiu</option>
-                    <option>Control acces</option><option>Automatizări porți</option><option>Interfon/Videointerfon</option>
-                    <option>Instalații electrice</option><option>Climatizare</option><option>Alte servicii</option>
-                </select>
-            </div>
-            <div class="form-group"><label class="form-label">Sursă</label>
-                <select class="form-select" id="crmSource">
-                    <option value="">Selectează...</option>
-                    <option>📞 Telefon</option><option>🌐 Website</option><option>👤 Recomandare</option>
-                    <option>📘 Facebook</option><option>📸 Instagram</option><option>📧 Email</option><option>🚶 Walk-in</option>
-                </select>
-            </div>
-        </div>
-        <div class="form-group"><label class="form-label">Urgență</label>
-            <select class="form-select" id="crmUrgent">
-                <option value="normal">🟡 Normal</option><option value="urgent">🔴 Urgent (24h)</option><option value="low">🟢 Informare / viitor</option>
-            </select>
-        </div>
-        <div class="form-group"><label class="form-label">Observații</label><textarea class="form-textarea" id="crmNotes" placeholder="Detalii despre cerere..."></textarea></div>
-        <button class="form-submit" onclick="submitCRM()">💰 Adaugă Lead</button>
     </div>
-    <div class="form-success" id="crmSuccess">
-        <div style="font-size:64px;margin-bottom:16px;">✅</div>
-        <h3 style="font-size:20px;font-weight:700;color:#166534;margin-bottom:8px;">Lead adăugat!</h3>
-        <p style="color:#64748b;font-size:14px;margin-bottom:16px;">Verifică în tab-ul Lista pentru confirmare</p>
-        <button onclick="resetCRMForm()" class="form-submit" style="background:linear-gradient(135deg,#3b82f6,#2563eb);">➕ Adaugă alt lead</button>
-    </div>
-</div></div></div>
-<div class="tab-panel" id="panel_list" style="display:none;">
-<div class="card"><div class="card-head" style="background:#10b981;">📋 Lista Lead-uri & Clienți</div>
-<div style="background:#f8fafc;padding:8px;display:flex;flex-wrap:wrap;justify-content:center;gap:8px;font-size:11px;border-bottom:1px solid #e2e8f0;">
-    <span style="padding:3px 8px;background:#dbeafe;color:#1d4ed8;border-radius:999px;">🆕 Nou</span>
-    <span style="padding:3px 8px;background:#fef9c3;color:#a16207;border-radius:999px;">📞 Contactat</span>
-    <span style="padding:3px 8px;background:#f3e8ff;color:#7e22ce;border-radius:999px;">📧 Ofertă</span>
-    <span style="padding:3px 8px;background:#dcfce7;color:#166534;border-radius:999px;">✅ Câștigat</span>
-    <span style="padding:3px 8px;background:#fef2f2;color:#dc2626;border-radius:999px;">❌ Pierdut</span>
-</div>
-<iframe src="https://docs.google.com/spreadsheets/d/1DQlmxJWMQh9NpwzKNwti2YN47u2vKIRG2n9Q1h2rVHk/edit?usp=sharing&rm=minimal&single=true&widget=true&headers=false" title="CRM CSSI"></iframe></div></div>
-<div class="tab-panel" id="panel_guide" style="display:none;">
-<div class="card"><div class="card-head" style="background:#8b5cf6;">📊 Pipeline & Tips</div><div style="padding:24px;">
-    <div style="display:flex;align-items:center;justify-content:center;gap:4px;flex-wrap:wrap;font-size:12px;margin-bottom:24px;">
-        <span style="padding:8px 12px;background:#dbeafe;color:#1e40af;border-radius:8px;font-weight:600;">🆕 Nou</span><span style="color:#94a3b8;">→</span>
-        <span style="padding:8px 12px;background:#fef9c3;color:#854d0e;border-radius:8px;font-weight:600;">📞 Contactat</span><span style="color:#94a3b8;">→</span>
-        <span style="padding:8px 12px;background:#f3e8ff;color:#7e22ce;border-radius:8px;font-weight:600;">📧 Ofertă</span><span style="color:#94a3b8;">→</span>
-        <span style="padding:8px 12px;background:#dcfce7;color:#166534;border-radius:8px;font-weight:600;">✅ Câștigat</span>
-    </div>
-    <div style="background:#f8fafc;border-radius:12px;padding:16px;">
-        <h3 style="font-weight:700;color:#1e293b;margin-bottom:8px;">💡 Reguli de aur</h3>
-        <ul style="color:#475569;font-size:13px;list-style:none;line-height:2.2;">
-            <li>⏰ Lead-uri noi → contactează în <b>max 2 ore</b></li>
-            <li>📞 Fără răspuns → follow-up la <b>3 zile</b></li>
-            <li>📧 După evaluare → ofertă în <b>max 24h</b></li>
-            <li>✅ Câștigat → programare echipă imediat</li>
-        </ul>
-    </div>
-</div></div></div>
 
+    <div class="summary" id="summary"></div>
 
-    <div class="footer-text">CSSI · Portal Intern · Modificările se salvează automat</div>
-</div>
+    <div class="pipeline" id="pipeline"></div>
+
+    <div class="filters">
+        <input type="text" class="filter-search" id="searchInput" placeholder="🔍 Caută client, telefon, email..." oninput="render()">
+        <select class="filter-select" id="filterServici" onchange="render()">
+            <option value="">Toate serviciile</option>
+            <option>Detecție Incendiu</option><option>Alarmă Antiefracție</option>
+            <option>Supraveghere Video</option><option>Instalații Electrice</option>
+            <option>Instalații Sanitare</option><option>Automatizări Porți</option>
+            <option>Proiect Complex</option>
+        </select>
+        <select class="filter-select" id="filterSursa" onchange="render()">
+            <option value="">Toate sursele</option>
+            <option>Telefon</option><option>WhatsApp</option><option>Website</option>
+            <option>Referință</option><option>Facebook</option><option>Google</option><option>Altele</option>
+        </select>
+        <div class="view-toggle">
+            <button class="view-btn active" id="viewCards" onclick="setView('cards')">☷ Carduri</button>
+            <button class="view-btn" id="viewTable" onclick="setView('table')">☰ Tabel</button>
+        </div>
+        <div class="filter-count" id="filterCount"></div>
+    </div>
+
+    <div id="cardList" class="cards"></div>
+    <div id="tableWrap" class="table-wrap" style="display:none"></div>
+
+    <div class="footer">Portal CSSI 3.0 · Modul CRM Clienți v3.0</div>
 </div>
 
+<!-- Bottom Nav -->
 <div class="bottom-nav">
-  <a href="../admin.html" class="bn-item"><span class="bn-icon">🏠</span>Acasă</a>
-  <a href="calendar-zilnic.html" class="bn-item"><span class="bn-icon">📅</span>Task-uri</a>
-  <a href="crm-clienti.html" class="bn-item active"><span class="bn-icon">💰</span>CRM</a>
-  <a href="checklist-montaj.html" class="bn-item"><span class="bn-icon">✅</span>Raport</a>
-  <a href="necesar-materiale.html" class="bn-item"><span class="bn-icon">📦</span>Material</a>
+    <a href="../admin.html" class="bn-item"><span class="bn-icon">🏠</span>Acasă</a>
+    <a href="proiecte.html" class="bn-item"><span class="bn-icon">📋</span>Proiecte</a>
+    <a href="crm-clienti.html" class="bn-item active"><span class="bn-icon">💰</span>CRM</a>
+    <a href="executie.html" class="bn-item"><span class="bn-icon">🔧</span>Execuție</a>
+    <a href="financiar.html" class="bn-item"><span class="bn-icon">📄</span>Facturi</a>
+</div>
+
+<!-- ADD LEAD MODAL -->
+<div id="addModal" class="modal-overlay" onclick="if(event.target===this)closeAddModal()">
+<div class="modal">
+    <div class="modal-head"><div class="modal-title">➕ Lead Nou</div><button class="modal-close" onclick="closeAddModal()">✕</button></div>
+    <div class="modal-body">
+        <form id="addForm" onsubmit="addLead(event)">
+            <div class="form-group"><label class="form-label">Nume Client <span class="req">*</span></label><input type="text" class="form-input" name="nume" required placeholder="Numele complet sau firma"></div>
+            <div class="form-row">
+                <div class="form-group"><label class="form-label">Telefon <span class="req">*</span></label><input type="tel" class="form-input" name="telefon" required placeholder="07xx xxx xxx"></div>
+                <div class="form-group"><label class="form-label">Email</label><input type="email" class="form-input" name="email" placeholder="email@client.ro"></div>
+            </div>
+            <div class="form-group"><label class="form-label">Serviciu dorit <span class="req">*</span></label>
+                <select class="form-select" name="serviciu" required>
+                    <option value="">— Alege serviciul —</option>
+                    <option>Detecție Incendiu</option><option>Alarmă Antiefracție</option>
+                    <option>Supraveghere Video</option><option>Instalații Electrice</option>
+                    <option>Instalații Sanitare</option><option>Automatizări Porți</option>
+                    <option>Proiect Complex</option>
+                </select>
+            </div>
+            <div class="form-row">
+                <div class="form-group"><label class="form-label">Sursă lead</label>
+                    <select class="form-select" name="sursa">
+                        <option value="Telefon">📞 Telefon</option>
+                        <option value="WhatsApp">💬 WhatsApp</option>
+                        <option value="Website">🌐 Website</option>
+                        <option value="Referință">🤝 Referință</option>
+                        <option value="Facebook">📘 Facebook</option>
+                        <option value="Google">🔍 Google</option>
+                        <option value="Altele">📌 Altele</option>
+                    </select>
+                </div>
+                <div class="form-group"><label class="form-label">Valoare estimată (RON)</label><input type="number" class="form-input" name="valoare" placeholder="0"></div>
+            </div>
+            <div class="form-group"><label class="form-label">Locație</label><input type="text" class="form-input" name="locatie" placeholder="Brașov, Ghimbav, Poiana..."></div>
+            <div class="form-group"><label class="form-label">Observații</label><textarea class="form-textarea" name="note" placeholder="Detalii despre cerere, urgență, context..."></textarea></div>
+            <button type="submit" class="form-submit" id="submitBtn">➕ Adaugă Lead</button>
+        </form>
+    </div>
+</div>
+</div>
+
+<!-- CONFIRM CONVERT MODAL -->
+<div id="confirmModal" class="modal-overlay confirm-modal" onclick="if(event.target===this)closeConfirmModal()">
+<div class="modal">
+    <div class="modal-head"><div class="modal-title">📋 Transformă în Proiect</div><button class="modal-close" onclick="closeConfirmModal()">✕</button></div>
+    <div class="modal-body">
+        <div class="confirm-text">Ești sigur că vrei să transformi acest lead în proiect activ? Se va genera automat un <strong>Proiect ID</strong> și datele vor fi copiate în sheet-ul PROIECTE.</div>
+        <div class="confirm-highlight" id="confirmDetails"></div>
+        <div style="height:16px"></div>
+        <div class="confirm-btns">
+            <button class="btn-cancel" onclick="closeConfirmModal()">Anulează</button>
+            <button class="btn-confirm" id="btnDoConvert" onclick="doConvert()">✅ Transformă în Proiect</button>
+        </div>
+    </div>
+</div>
+</div>
+
+<!-- DETAIL/EDIT MODAL -->
+<div id="detailModal" class="modal-overlay" onclick="if(event.target===this)closeDetailModal()">
+<div class="modal">
+    <div class="modal-head"><div class="modal-title" id="detailTitle">📝 Detalii Lead</div><button class="modal-close" onclick="closeDetailModal()">✕</button></div>
+    <div class="modal-body" id="detailBody"></div>
+</div>
 </div>
 
 <script>
-(function(){
-    var role = sessionStorage.getItem("cssi-role");
-    if (role === "admin" || role === "sales") {
-        document.getElementById('authWall').style.display='none';
-        document.getElementById('main').style.display='block';
+// ═══════════════════════════════════════════════════
+// CONFIG — Setează API_URL după deploy Apps Script
+// ═══════════════════════════════════════════════════
+var API_URL = ''; // ← Pune URL-ul Apps Script Web App aici
+
+// ═══════ AUTH CHECK ═══════
+var role = sessionStorage.getItem('cssi-role');
+if (!role || !['admin','org','sales'].includes(role)) { window.location.href = '../admin.html'; }
+var canEdit = ['admin','org','sales'].includes(role);
+var canConvert = ['admin','org'].includes(role);
+
+// ═══════ CRM STATUSES ═══════
+var CRM_STATUSES = [
+    {id:'nou', name:'Nou', cls:'s-nou', icon:'🆕', color:'var(--blue)'},
+    {id:'contactat', name:'Contactat', cls:'s-contactat', icon:'📞', color:'var(--purple)'},
+    {id:'oferta', name:'Ofertă trimisă', cls:'s-oferta', icon:'📋', color:'var(--orange)'},
+    {id:'negociere', name:'Negociere', cls:'s-negociere', icon:'🤝', color:'var(--teal)'},
+    {id:'castigat', name:'Câștigat', cls:'s-castigat', icon:'✅', color:'var(--green)'},
+    {id:'pierdut', name:'Pierdut', cls:'s-pierdut', icon:'❌', color:'var(--gray)'}
+];
+var STATUS_MAP = {};
+CRM_STATUSES.forEach(function(s){ STATUS_MAP[s.name] = s; });
+
+var SERVICE_TAGS = {
+    'Detecție Incendiu': {cls:'incendiu',s:'🔥 Incendiu'},
+    'Alarmă Antiefracție': {cls:'alarm',s:'🚨 Alarmă'},
+    'Supraveghere Video': {cls:'camera',s:'📹 Camere'},
+    'Instalații Electrice': {cls:'electric',s:'⚡ Electric'},
+    'Instalații Sanitare': {cls:'install',s:'🔧 Sanitare'},
+    'Automatizări Porți': {cls:'auto',s:'🚪 Porți'},
+    'Proiect Complex': {cls:'complex',s:'🏗️ Complex'}
+};
+
+// ═══════ STATE ═══════
+var LEADS = [];
+var currentFilter = 'all';
+var currentView = 'cards';
+var convertingId = null;
+var isLive = false;
+
+// ═══════ DEMO DATA ═══════
+var DEMO_LEADS = [
+    {id:1, row:1, nume:'Ion Popescu', telefon:'0722 111 222', email:'ion@gmail.com', serviciu:'Supraveghere Video', sursa:'WhatsApp', status:'Nou', valoare:15000, locatie:'Ghimbav', note:'Vrea 8 camere exterioare, depozit Ghimbav', data:'2026-03-01', proiectId:''},
+    {id:2, row:2, nume:'Maria Ionescu', telefon:'0733 222 333', email:'maria@yahoo.com', serviciu:'Alarmă Antiefracție', sursa:'Website', status:'Contactat', valoare:8500, locatie:'Poiana Brașov', note:'Vilă Poiana Brașov, 3 etaje', data:'2026-02-28', proiectId:''},
+    {id:3, row:3, nume:'SC AutoTech SRL', telefon:'0268 444 555', email:'office@autotech.ro', serviciu:'Detecție Incendiu', sursa:'Referință', status:'Ofertă trimisă', valoare:45000, locatie:'Brașov', note:'Hală producție 2000mp, proiectare ISU necesară', data:'2026-02-25', proiectId:''},
+    {id:4, row:4, nume:'Hotel Cheile Râșnoavei', telefon:'0744 555 666', email:'hotel@cheile.ro', serviciu:'Proiect Complex', sursa:'Telefon', status:'Câștigat', valoare:120000, locatie:'Cheile Râșnoavei', note:'Contract semnat, include incendiu + CCTV + control acces', data:'2026-02-20', proiectId:'CSSI-2026-001'},
+    {id:5, row:5, nume:'Farmacia Catena', telefon:'0755 666 777', email:'', serviciu:'Alarmă Antiefracție', sursa:'Google', status:'Pierdut', valoare:5000, locatie:'Brașov', note:'A ales alt furnizor, preț mai mic', data:'2026-02-15', proiectId:''},
+    {id:6, row:6, nume:'Grădinița Piticot', telefon:'0766 777 888', email:'gradinita@piticot.ro', serviciu:'Supraveghere Video', sursa:'Facebook', status:'Negociere', valoare:22000, locatie:'Brașov', note:'16 camere interior + exterior, au buget limitat', data:'2026-02-22', proiectId:''},
+    {id:7, row:7, nume:'Depozit Logistics BV', telefon:'0277 888 999', email:'dep@logistics.ro', serviciu:'Automatizări Porți', sursa:'WhatsApp', status:'Nou', valoare:35000, locatie:'Brașov', note:'4 porți industriale culisante, acces TIR', data:'2026-03-02', proiectId:''},
+    {id:8, row:8, nume:'Primăria Cristian', telefon:'0268 111 000', email:'primaria@cristian.ro', serviciu:'Detecție Incendiu', sursa:'Telefon', status:'Ofertă trimisă', valoare:67000, locatie:'Cristian', note:'Sediu primărie + cămin cultural, avize ISU', data:'2026-02-18', proiectId:''},
+    {id:9, row:9, nume:'Restaurant La Ceaun', telefon:'0722 999 000', email:'', serviciu:'Instalații Electrice', sursa:'Referință', status:'Contactat', valoare:18000, locatie:'Brașov', note:'Refacere tablou electric + iluminat terasa', data:'2026-03-03', proiectId:''},
+    {id:10, row:10, nume:'Rezidențial Greenfield', telefon:'0744 000 111', email:'office@greenfield.ro', serviciu:'Proiect Complex', sursa:'Website', status:'Negociere', valoare:250000, locatie:'Brașov', note:'Complex 24 apartamente: incendiu, CCTV, interfon, porți auto', data:'2026-02-10', proiectId:''}
+];
+
+
+// ═══════════════════════════════════════════════════
+// API FUNCTIONS — Comunicare cu Google Sheets
+// ═══════════════════════════════════════════════════
+
+function apiGet(action) {
+    if (!API_URL) return Promise.reject('No API');
+    showLoading(true);
+    return fetch(API_URL + '?action=' + action)
+        .then(function(r) { return r.json(); })
+        .finally(function() { showLoading(false); });
+}
+
+function apiPost(data) {
+    if (!API_URL) return Promise.reject('No API');
+    showLoading(true);
+    return fetch(API_URL, {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify(data)
+    })
+    .then(function(r) { return r.json(); })
+    .finally(function() { showLoading(false); });
+}
+
+function refreshData() {
+    if (!API_URL) {
+        toast('⚠️ API URL nesetat. Folosesc date demo.', 'info');
+        LEADS = JSON.parse(JSON.stringify(DEMO_LEADS));
+        isLive = false;
+        updateSyncStatus();
+        render();
+        return;
     }
-})();
 
-function switchTab(btn){
-    document.querySelectorAll('.tab').forEach(function(t){t.classList.remove('active');t.style.background='';t.style.color='';});
-    document.querySelectorAll('.tab-panel').forEach(function(p){p.style.display='none';});
-    btn.classList.add('active');
-    btn.style.background=btn.dataset.color;
-    btn.style.color='#fff';
-    document.getElementById('panel_'+btn.dataset.tab).style.display='block';
+    updateSyncStatus('loading');
+    apiGet('getCRM')
+        .then(function(data) {
+            if (data.error) throw new Error(data.error);
+            if (Array.isArray(data)) {
+                LEADS = data.map(function(row, i) {
+                    return {
+                        id: i + 1,
+                        row: i + 1,
+                        nume: row.nume || '',
+                        telefon: row.telefon || '',
+                        email: row.email || '',
+                        serviciu: row.serviciu || '',
+                        sursa: row.sursa || '',
+                        status: row.status || 'Nou',
+                        valoare: Number(row.valoare) || 0,
+                        locatie: row.locatie || '',
+                        note: row.note || '',
+                        data: row.timestamp || '',
+                        proiectId: row.proiectId || ''
+                    };
+                });
+            }
+            isLive = true;
+            updateSyncStatus();
+            render();
+            toast('✅ Date sincronizate din Google Sheets', 'success');
+        })
+        .catch(function(err) {
+            isLive = false;
+            updateSyncStatus();
+            toast('❌ Eroare sync: ' + err, 'error');
+        });
 }
 
-function copyText(text){navigator.clipboard.writeText(text).then(function(){alert('Copiat! ✅');});}
-
-function submitCRM(){
-    var name = document.getElementById('crmName').value;
-    var phone = document.getElementById('crmPhone').value;
-    var service = document.getElementById('crmService').value;
-    if(!name||!phone||!service){alert('Completează câmpurile obligatorii!');return;}
-    // Open Sheet for manual add (until Apps Script is configured)
-    var sheetUrl = 'https://docs.google.com/spreadsheets/d/1DQlmxJWMQh9NpwzKNwti2YN47u2vKIRG2n9Q1h2rVHk/edit?usp=sharing';
-    window.open(sheetUrl,'_blank');
-    document.getElementById('crmForm').style.display='none';
-    document.getElementById('crmSuccess').style.display='block';
-}
-function resetCRMForm(){
-    document.getElementById('crmForm').style.display='block';
-    document.getElementById('crmSuccess').style.display='none';
-    document.querySelectorAll('#crmForm input, #crmForm textarea').forEach(function(el){el.value='';});
+function updateSyncStatus(state) {
+    var el = document.getElementById('syncStatus');
+    if (state === 'loading') {
+        el.innerHTML = '<span class="sync-indicator sync-loading"></span>Se sincronizează...';
+    } else if (isLive) {
+        el.innerHTML = '<span class="sync-indicator sync-ok"></span>Conectat la Google Sheets';
+    } else {
+        el.innerHTML = '<span class="sync-indicator sync-off"></span>Date locale (demo)';
+    }
 }
 
+
+// ═══════════════════════════════════════════════════
+// RENDER FUNCTIONS
+// ═══════════════════════════════════════════════════
+
+function render() {
+    renderSummary();
+    renderPipeline();
+    if (currentView === 'cards') {
+        renderCards();
+        document.getElementById('cardList').style.display = '';
+        document.getElementById('tableWrap').style.display = 'none';
+    } else {
+        renderTable();
+        document.getElementById('cardList').style.display = 'none';
+        document.getElementById('tableWrap').style.display = '';
+    }
+}
+
+function getFiltered() {
+    var q = document.getElementById('searchInput').value.toLowerCase();
+    var fServ = document.getElementById('filterServici').value;
+    var fSursa = document.getElementById('filterSursa').value;
+
+    var filtered = LEADS.filter(function(l) {
+        var matchStatus = currentFilter === 'all' || (STATUS_MAP[l.status] && STATUS_MAP[l.status].cls === currentFilter);
+        var matchSearch = !q || l.nume.toLowerCase().includes(q) || l.telefon.includes(q) || (l.email && l.email.toLowerCase().includes(q)) || (l.locatie && l.locatie.toLowerCase().includes(q)) || (l.note && l.note.toLowerCase().includes(q));
+        var matchServ = !fServ || l.serviciu === fServ;
+        var matchSursa = !fSursa || l.sursa === fSursa;
+        return matchStatus && matchSearch && matchServ && matchSursa;
+    });
+
+    // Sort: newest first, won at end if filtering all
+    filtered.sort(function(a, b) {
+        if (a.status === 'Pierdut' && b.status !== 'Pierdut') return 1;
+        if (b.status === 'Pierdut' && a.status !== 'Pierdut') return -1;
+        return (b.data || '').localeCompare(a.data || '');
+    });
+
+    document.getElementById('filterCount').textContent = filtered.length + ' din ' + LEADS.length + ' lead-uri';
+    return filtered;
+}
+
+function renderSummary() {
+    var total = LEADS.length;
+    var activi = LEADS.filter(function(l) { return l.status !== 'Pierdut' && l.status !== 'Câștigat'; }).length;
+    var valPipeline = LEADS.filter(function(l) { return l.status !== 'Pierdut'; }).reduce(function(s, l) { return s + (l.valoare || 0); }, 0);
+    var castigat = LEADS.filter(function(l) { return l.status === 'Câștigat'; });
+    var valCastigat = castigat.reduce(function(s, l) { return s + (l.valoare || 0); }, 0);
+    var rataConversie = total > 0 ? Math.round(castigat.length / total * 100) : 0;
+
+    document.getElementById('summary').innerHTML =
+        '<div class="summary-item"><div class="summary-val">' + total + '</div><div class="summary-label">Total lead-uri</div></div>' +
+        '<div class="summary-item"><div class="summary-val" style="color:var(--blue)">' + activi + '</div><div class="summary-label">Active în pipeline</div></div>' +
+        '<div class="summary-item"><div class="summary-val">' + formatRON(valPipeline) + '</div><div class="summary-label">Valoare pipeline</div></div>' +
+        '<div class="summary-item"><div class="summary-val" style="color:var(--green)">' + formatRON(valCastigat) + '</div><div class="summary-label">Câștigat</div></div>' +
+        '<div class="summary-item"><div class="summary-val" style="color:' + (rataConversie >= 20 ? 'var(--green)' : 'var(--orange)') + '">' + rataConversie + '%</div><div class="summary-label">Rată conversie</div></div>';
+}
+
+function renderPipeline() {
+    var html = '';
+    var isAll = currentFilter === 'all';
+    html += '<div class="pipe-stage' + (isAll ? ' active s-all' : '') + '" onclick="setFilter(\'all\')">';
+    html += '<div class="pipe-name">Toate</div><div class="pipe-count">' + LEADS.length + '</div></div>';
+
+    CRM_STATUSES.forEach(function(st) {
+        var count = LEADS.filter(function(l) { return STATUS_MAP[l.status] && STATUS_MAP[l.status].cls === st.cls; }).length;
+        var isActive = currentFilter === st.cls;
+        html += '<div class="pipe-stage' + (isActive ? ' active ' + st.cls : '') + '" onclick="setFilter(\'' + st.cls + '\')">';
+        html += '<div class="pipe-name">' + st.icon + ' ' + st.name + '</div><div class="pipe-count">' + count + '</div></div>';
+    });
+
+    document.getElementById('pipeline').innerHTML = html;
+}
+
+function renderCards() {
+    var filtered = getFiltered();
+    if (!filtered.length) {
+        document.getElementById('cardList').innerHTML = '<div class="empty-msg"><div class="empty-icon">📭</div>Niciun lead găsit</div>';
+        return;
+    }
+
+    var html = '';
+    filtered.forEach(function(l) {
+        var st = STATUS_MAP[l.status] || {cls: '', icon: '❓'};
+        var tag = SERVICE_TAGS[l.serviciu] || {cls: 'install', s: l.serviciu};
+        var statusOpts = CRM_STATUSES.map(function(s) {
+            return '<option value="' + s.name + '"' + (l.status === s.name ? ' selected' : '') + '>' + s.icon + ' ' + s.name + '</option>';
+        }).join('');
+
+        html += '<div class="card ' + st.cls + '" ondblclick="openDetailModal(' + l.id + ')">';
+        html += '<div class="card-top"><div class="card-name">' + esc(l.nume) + '</div><div class="card-date">' + l.data + '</div></div>';
+        html += '<div class="card-info">';
+        html += '<span>📞 ' + esc(l.telefon) + '</span>';
+        if (l.email) html += '<span>✉️ ' + esc(l.email) + '</span>';
+        if (l.locatie) html += '<span>📍 ' + esc(l.locatie) + '</span>';
+        html += '</div>';
+        html += '<div class="card-tags">';
+        html += '<span class="card-tag ' + tag.cls + '">' + tag.s + '</span>';
+        html += '<span class="card-sursa">' + getSursaIcon(l.sursa) + ' ' + l.sursa + '</span>';
+        if (l.valoare) html += '<span class="card-valoare">' + formatRON(l.valoare) + '</span>';
+        html += '</div>';
+        if (l.note) html += '<div class="card-note">' + esc(l.note) + '</div>';
+        if (l.proiectId) html += '<div class="card-pid">🔗 ' + l.proiectId + '</div>';
+
+        html += '<div class="card-actions">';
+        if (canEdit) {
+            html += '<select onchange="changeStatus(' + l.id + ',this.value)">' + statusOpts + '</select>';
+        }
+        // Transformă în Proiect button logic
+        if (canConvert && l.status === 'Câștigat' && !l.proiectId) {
+            html += '<button class="btn-convert ready" onclick="confirmConvert(' + l.id + ')">📋 → Proiect</button>';
+        } else if (l.proiectId) {
+            html += '<button class="btn-convert done">✅ ' + l.proiectId + '</button>';
+        } else if (l.status === 'Câștigat') {
+            html += '<button class="btn-convert disabled" title="Doar admin/org pot converti">🔒 Convertire</button>';
+        }
+        html += '</div></div>';
+    });
+
+    document.getElementById('cardList').innerHTML = html;
+}
+
+function renderTable() {
+    var filtered = getFiltered();
+    if (!filtered.length) {
+        document.getElementById('tableWrap').innerHTML = '<div class="empty-msg"><div class="empty-icon">📭</div>Niciun lead găsit</div>';
+        return;
+    }
+
+    var html = '<table><thead><tr><th>Data</th><th>Client</th><th>Telefon</th><th>Serviciu</th><th>Sursă</th><th>Valoare</th><th>Status</th><th>Proiect ID</th></tr></thead><tbody>';
+    filtered.forEach(function(l) {
+        var st = STATUS_MAP[l.status] || {color: 'var(--gray)'};
+        html += '<tr onclick="openDetailModal(' + l.id + ')" style="cursor:pointer">';
+        html += '<td>' + l.data + '</td>';
+        html += '<td><strong>' + esc(l.nume) + '</strong></td>';
+        html += '<td>' + esc(l.telefon) + '</td>';
+        html += '<td>' + esc(l.serviciu) + '</td>';
+        html += '<td>' + esc(l.sursa) + '</td>';
+        html += '<td style="font-weight:700">' + (l.valoare ? formatRON(l.valoare) : '—') + '</td>';
+        html += '<td class="td-status" style="color:' + st.color + '">' + (st.icon || '') + ' ' + l.status + '</td>';
+        html += '<td>' + (l.proiectId ? '<span style="color:var(--green);font-weight:700">' + l.proiectId + '</span>' : '—') + '</td>';
+        html += '</tr>';
+    });
+    html += '</tbody></table>';
+    document.getElementById('tableWrap').innerHTML = html;
+}
+
+
+// ═══════════════════════════════════════════════════
+// ACTIONS
+// ═══════════════════════════════════════════════════
+
+function setFilter(f) {
+    currentFilter = f;
+    render();
+}
+
+function setView(v) {
+    currentView = v;
+    document.getElementById('viewCards').classList.toggle('active', v === 'cards');
+    document.getElementById('viewTable').classList.toggle('active', v === 'table');
+    render();
+}
+
+function changeStatus(leadId, newStatus) {
+    var l = LEADS.find(function(x) { return x.id === leadId; });
+    if (!l) return;
+    var oldStatus = l.status;
+    l.status = newStatus;
+
+    // API sync
+    if (API_URL) {
+        apiPost({action: 'updateCRMStatus', row: l.row, status: newStatus})
+            .then(function(res) {
+                if (res.error) throw new Error(res.error);
+                toast('✅ Status actualizat: ' + newStatus, 'success');
+            })
+            .catch(function(err) {
+                toast('⚠️ Salvat local, sync eșuat', 'error');
+            });
+    }
+    render();
+
+    // Auto-suggest conversion when status changes to "Câștigat"
+    if (newStatus === 'Câștigat' && !l.proiectId && canConvert) {
+        setTimeout(function() {
+            toast('💡 Lead câștigat! Poți transforma în Proiect.', 'info');
+        }, 500);
+    }
+}
+
+function confirmConvert(leadId) {
+    var l = LEADS.find(function(x) { return x.id === leadId; });
+    if (!l) return;
+    convertingId = leadId;
+
+    document.getElementById('confirmDetails').innerHTML =
+        '<div class="ch-label">Client</div><div class="ch-value">' + esc(l.nume) + '</div>' +
+        '<div style="height:8px"></div>' +
+        '<div class="ch-label">Serviciu</div><div class="ch-value">' + esc(l.serviciu) + '</div>' +
+        '<div style="height:8px"></div>' +
+        '<div class="ch-label">Valoare</div><div class="ch-value">' + formatRON(l.valoare) + '</div>';
+
+    document.getElementById('confirmModal').classList.add('active');
+}
+
+function doConvert() {
+    var l = LEADS.find(function(x) { return x.id === convertingId; });
+    if (!l) return;
+
+    document.getElementById('btnDoConvert').disabled = true;
+    document.getElementById('btnDoConvert').textContent = '⏳ Se procesează...';
+
+    if (API_URL) {
+        // Real API call — convertește CRM row în PROIECT
+        apiPost({action: 'crmToProject', crmRow: l.row})
+            .then(function(res) {
+                if (res.error) throw new Error(res.error);
+                l.proiectId = res.id;
+                closeConfirmModal();
+                render();
+                toast('🎉 Proiect creat: ' + res.id, 'success');
+            })
+            .catch(function(err) {
+                // Fallback local
+                doConvertLocal(l);
+            })
+            .finally(function() {
+                resetConvertBtn();
+            });
+    } else {
+        // Demo mode — generare ID local
+        doConvertLocal(l);
+        resetConvertBtn();
+    }
+}
+
+function doConvertLocal(l) {
+    // Find max existing project number
+    var maxNum = 0;
+    LEADS.forEach(function(x) {
+        if (x.proiectId) {
+            var parts = x.proiectId.split('-');
+            var n = parseInt(parts[2]);
+            if (n > maxNum) maxNum = n;
+        }
+    });
+    var newId = 'CSSI-2026-' + String(maxNum + 1).padStart(3, '0');
+    l.proiectId = newId;
+    closeConfirmModal();
+    render();
+    toast('🎉 Proiect creat (local): ' + newId, 'success');
+}
+
+function resetConvertBtn() {
+    var btn = document.getElementById('btnDoConvert');
+    btn.disabled = false;
+    btn.textContent = '✅ Transformă în Proiect';
+}
+
+function closeConfirmModal() {
+    document.getElementById('confirmModal').classList.remove('active');
+    convertingId = null;
+}
+
+
+// ═══════ ADD LEAD ═══════
+
+function openAddModal() { document.getElementById('addModal').classList.add('active'); }
+function closeAddModal() { document.getElementById('addModal').classList.remove('active'); }
+
+function addLead(e) {
+    e.preventDefault();
+    var f = document.getElementById('addForm');
+    var d = new FormData(f);
+    var btn = document.getElementById('submitBtn');
+    btn.disabled = true;
+    btn.textContent = '⏳ Se salvează...';
+
+    var newLead = {
+        nume: d.get('nume'),
+        telefon: d.get('telefon'),
+        email: d.get('email') || '',
+        serviciu: d.get('serviciu'),
+        sursa: d.get('sursa'),
+        status: 'Nou',
+        valoare: parseInt(d.get('valoare')) || 0,
+        locatie: d.get('locatie') || '',
+        note: d.get('note') || '',
+        data: new Date().toISOString().split('T')[0],
+        proiectId: ''
+    };
+
+    if (API_URL) {
+        apiPost({action: 'addCRM', lead: newLead})
+            .then(function(res) {
+                if (res.error) throw new Error(res.error);
+                newLead.id = LEADS.length + 1;
+                newLead.row = res.row || newLead.id;
+                LEADS.unshift(newLead);
+                render();
+                closeAddModal();
+                f.reset();
+                toast('✅ Lead adăugat și sincronizat', 'success');
+            })
+            .catch(function(err) {
+                addLeadLocal(newLead);
+                closeAddModal();
+                f.reset();
+                toast('⚠️ Lead adăugat local, sync eșuat', 'error');
+            })
+            .finally(function() {
+                btn.disabled = false;
+                btn.textContent = '➕ Adaugă Lead';
+            });
+    } else {
+        addLeadLocal(newLead);
+        closeAddModal();
+        f.reset();
+        btn.disabled = false;
+        btn.textContent = '➕ Adaugă Lead';
+        toast('✅ Lead adăugat (local)', 'success');
+    }
+}
+
+function addLeadLocal(lead) {
+    var maxId = 0;
+    LEADS.forEach(function(l) { if (l.id > maxId) maxId = l.id; });
+    lead.id = maxId + 1;
+    lead.row = lead.id;
+    LEADS.unshift(lead);
+    render();
+}
+
+
+// ═══════ DETAIL MODAL ═══════
+
+function openDetailModal(leadId) {
+    var l = LEADS.find(function(x) { return x.id === leadId; });
+    if (!l) return;
+    var st = STATUS_MAP[l.status] || {};
+
+    document.getElementById('detailTitle').textContent = '📝 ' + l.nume;
+    var html = '<div style="display:grid;gap:16px;">';
+    html += infoRow('📞 Telefon', l.telefon);
+    html += infoRow('✉️ Email', l.email || '—');
+    html += infoRow('🏷️ Serviciu', l.serviciu);
+    html += infoRow('📍 Locație', l.locatie || '—');
+    html += infoRow('📊 Sursă', l.sursa);
+    html += infoRow('💰 Valoare', l.valoare ? formatRON(l.valoare) : '—');
+    html += infoRow('📅 Data lead', l.data);
+    html += infoRow('🔄 Status', '<span style="color:' + (st.color || 'inherit') + ';font-weight:700">' + (st.icon || '') + ' ' + l.status + '</span>');
+    if (l.proiectId) html += infoRow('🔗 Proiect ID', '<span style="color:var(--green);font-weight:700">' + l.proiectId + '</span>');
+    if (l.note) html += '<div style="background:var(--gray-bg);padding:12px;border-radius:10px;font-size:13px;color:var(--gray);line-height:1.5;font-style:italic">💬 ' + esc(l.note) + '</div>';
+    html += '</div>';
+
+    document.getElementById('detailBody').innerHTML = html;
+    document.getElementById('detailModal').classList.add('active');
+}
+function closeDetailModal() { document.getElementById('detailModal').classList.remove('active'); }
+
+function infoRow(label, value) {
+    return '<div style="display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px solid var(--gray-bg)"><span style="font-size:13px;color:var(--gray)">' + label + '</span><span style="font-size:14px;font-weight:600">' + value + '</span></div>';
+}
+
+
+// ═══════ HELPERS ═══════
+
+function formatRON(val) {
+    if (!val) return '0 RON';
+    return Number(val).toLocaleString('ro-RO') + ' RON';
+}
+
+function getSursaIcon(sursa) {
+    var icons = {'Telefon':'📞','WhatsApp':'💬','Website':'🌐','Referință':'🤝','Facebook':'📘','Google':'🔍','Altele':'📌'};
+    return icons[sursa] || '📌';
+}
+
+function esc(s) {
+    if (!s) return '';
+    var d = document.createElement('div');
+    d.textContent = s;
+    return d.innerHTML;
+}
+
+function showLoading(show) {
+    document.getElementById('loadBar').classList.toggle('active', show);
+}
+
+function toast(msg, type) {
+    var container = document.getElementById('toastContainer');
+    var t = document.createElement('div');
+    t.className = 'toast ' + (type || 'info');
+    t.textContent = msg;
+    container.appendChild(t);
+    setTimeout(function() { t.style.opacity = '0'; t.style.transform = 'translateX(100px)'; t.style.transition = 'all 0.3s'; }, 3000);
+    setTimeout(function() { t.remove(); }, 3500);
+}
+
+
+// ═══════ INIT ═══════
+LEADS = JSON.parse(JSON.stringify(DEMO_LEADS));
+render();
+
+// Try to load from API if configured
+if (API_URL) {
+    refreshData();
+}
 </script>
 </body>
 </html>

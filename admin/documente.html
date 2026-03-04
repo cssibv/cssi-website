@@ -3,267 +3,310 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Documente Firmă | Portal CSSI</title>
+<title>Documente & Resurse — Portal CSSI 3.0</title>
 <meta name="robots" content="noindex, nofollow">
-<link rel="icon" type="image/png" sizes="96x96" href="/images/favicon-96x96.png">
+<link rel="icon" type="image/x-icon" href="/images/favicon.ico">
+<meta name="theme-color" content="#dc2626">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 <style>
-
 *{margin:0;padding:0;box-sizing:border-box;}
-body{font-family:'Inter',sans-serif;color:#0f172a;background:#f1f5f9;overflow-x:hidden;}
-a{text-decoration:none;color:inherit;}
+:root{--red:#dc2626;--red-d:#991b1b;--dark:#0f172a;--dark2:#1e293b;--gray:#64748b;--gray-l:#94a3b8;--gray-xl:#cbd5e1;--gray-bg:#f1f5f9;--gray-b:#e2e8f0;--blue:#3b82f6;--green:#22c55e;--orange:#f97316;--purple:#8b5cf6;--teal:#14b8a6;--radius:16px;--radius-sm:12px;--shadow:0 1px 3px rgba(0,0,0,0.06);--shadow-md:0 4px 12px rgba(0,0,0,0.08);--font:'Inter',system-ui,sans-serif;}
+body{font-family:var(--font);color:var(--dark);background:var(--gray-bg);-webkit-font-smoothing:antialiased;}
+a{text-decoration:none;color:inherit;}button{font-family:inherit;cursor:pointer;}
+.page-header{background:linear-gradient(135deg,#0ea5e9,#0284c7);color:#fff;padding:20px 24px;border-radius:20px;margin-bottom:16px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;}
+.page-back{color:rgba(255,255,255,0.7);font-size:13px;font-weight:500;}.page-back:hover{color:#fff;}
+.page-title{font-size:22px;font-weight:800;letter-spacing:-0.5px;}
+.page-subtitle{font-size:12px;color:rgba(255,255,255,0.5);margin-top:2px;}
+.page-actions{display:flex;gap:8px;align-items:center;}
+.page-btn{padding:10px 18px;border-radius:12px;font-size:13px;font-weight:700;border:none;transition:all 0.2s;}
+.page-btn.primary{background:#fff;color:#0ea5e9;}.page-btn.primary:hover{transform:translateY(-1px);}
+.page-btn.secondary{background:rgba(255,255,255,0.15);color:#fff;border:1px solid rgba(255,255,255,0.3);}.page-btn.secondary:hover{background:rgba(255,255,255,0.25);}
+.sync-indicator{width:8px;height:8px;border-radius:50%;display:inline-block;margin-right:6px;}
+.sync-off{background:rgba(255,255,255,0.4);}
+.container{max-width:1400px;margin:0 auto;padding:16px;}@media(min-width:768px){.container{padding:24px;}}
 
-/* UTILITIES */
-.container{max-width:1200px;margin:0 auto;padding:16px;}
-@media(min-width:640px){.container{padding:24px;}}
-.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);}
+.tabs{display:flex;gap:4px;background:#fff;border-radius:var(--radius);padding:4px;box-shadow:var(--shadow);margin-bottom:16px;}
+.tab{flex:1;padding:12px;border-radius:var(--radius-sm);font-weight:700;font-size:13px;border:none;background:transparent;color:var(--gray);transition:all 0.2s;text-align:center;cursor:pointer;}.tab.active{background:var(--dark);color:#fff;box-shadow:var(--shadow-md);}
 
-/* AUTH */
-.auth-bg{min-height:100vh;background:linear-gradient(135deg,#0f172a 0%,#1e293b 50%,#0f172a 100%);display:flex;align-items:center;justify-content:center;padding:16px;}
-.auth-card{background:#fff;border-radius:20px;padding:40px 32px;width:100%;max-width:420px;box-shadow:0 25px 50px -12px rgba(0,0,0,0.4);}
-.auth-input{width:100%;padding:16px 20px;border:2px solid #e2e8f0;border-radius:14px;font-size:18px;text-align:center;outline:none;font-family:inherit;transition:all 0.2s;letter-spacing:2px;}
-.auth-input:focus{border-color:#dc2626;box-shadow:0 0 0 4px rgba(220,38,38,0.1);}
-.auth-btn{width:100%;padding:16px;background:linear-gradient(135deg,#dc2626,#991b1b);color:#fff;border:none;border-radius:14px;font-size:18px;font-weight:700;cursor:pointer;font-family:inherit;transition:all 0.3s;letter-spacing:0.5px;}
-.auth-btn:hover{transform:translateY(-1px);box-shadow:0 10px 25px -5px rgba(220,38,38,0.4);}
-.auth-error{color:#dc2626;text-align:center;font-size:14px;padding:8px;background:#fef2f2;border-radius:8px;display:none;}
-.auth-logo{width:80px;height:80px;border-radius:20px;object-fit:contain;margin:0 auto 16px;display:block;}
+.kpi-row{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:16px;}
+.kpi-card{background:#fff;border-radius:var(--radius-sm);padding:14px 18px;box-shadow:var(--shadow);flex:1;min-width:120px;}
+.kpi-val{font-size:22px;font-weight:900;}.kpi-label{font-size:11px;color:var(--gray);margin-top:1px;}
 
-/* DASHBOARD */
-.dash{min-height:100vh;background:#f1f5f9;}
-.hero{padding:24px;border-radius:20px;margin-bottom:20px;color:#fff;position:relative;overflow:hidden;}
-.hero::before{content:'';position:absolute;top:0;right:0;width:200px;height:200px;background:rgba(255,255,255,0.05);border-radius:50%;transform:translate(50%,-50%);}
-.hero.admin{background:linear-gradient(135deg,#0f172a,#1e293b);}
-.hero.org{background:linear-gradient(135deg,#1d4ed8,#1e40af);}
-.hero.mkt{background:linear-gradient(135deg,#7c3aed,#6d28d9);}
-.hero.sales{background:linear-gradient(135deg,#059669,#047857);}
-.hero.tech{background:linear-gradient(135deg,#ea580c,#c2410c);}
-.hero-title{font-size:clamp(18px,3vw,26px);font-weight:800;margin-bottom:4px;}
-.hero-sub{color:rgba(255,255,255,0.7);font-size:13px;}
-.role-pill{display:inline-flex;align-items:center;gap:6px;padding:6px 14px;background:rgba(255,255,255,0.15);backdrop-filter:blur(10px);border-radius:999px;font-size:13px;font-weight:600;}
+.filters{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:16px;align-items:center;}
+.filter-search{padding:10px 16px;border-radius:99px;font-size:13px;border:1px solid var(--gray-b);outline:none;font-family:inherit;min-width:200px;background:#fff;flex:1;max-width:300px;}.filter-search:focus{border-color:var(--blue);}
+.filter-select{padding:8px 14px;border-radius:99px;font-size:12px;font-weight:600;border:1px solid var(--gray-b);background:#fff;font-family:inherit;outline:none;cursor:pointer;}
 
-/* KPI CARDS */
-.kpi-row{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-bottom:20px;}
-@media(min-width:768px){.kpi-row{grid-template-columns:repeat(4,1fr);}}
-.kpi{background:#fff;border-radius:16px;padding:16px;position:relative;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,0.05);transition:all 0.3s;}
-.kpi:hover{transform:translateY(-2px);box-shadow:0 8px 25px -5px rgba(0,0,0,0.1);}
-.kpi-icon{font-size:28px;margin-bottom:8px;}
-.kpi-value{font-size:28px;font-weight:900;color:#0f172a;line-height:1;}
-.kpi-label{font-size:12px;color:#64748b;font-weight:500;margin-top:4px;}
-.kpi-bar{position:absolute;bottom:0;left:0;right:0;height:4px;}
+/* FOLDERS */
+.folders{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:14px;margin-bottom:16px;}
+.folder{background:#fff;border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden;transition:all 0.2s;}.folder:hover{box-shadow:var(--shadow-md);}
+.folder-head{padding:16px 18px;background:linear-gradient(135deg,var(--dark),var(--dark2));color:#fff;cursor:pointer;display:flex;justify-content:space-between;align-items:center;}
+.folder-name{font-size:15px;font-weight:700;display:flex;align-items:center;gap:8px;}
+.folder-count{background:rgba(255,255,255,0.15);padding:2px 10px;border-radius:6px;font-size:12px;font-weight:600;}
+.folder-pid{font-size:11px;color:rgba(255,255,255,0.6);margin-top:2px;}
+.folder-body{padding:8px;max-height:300px;overflow-y:auto;}
+.doc-item{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:var(--radius-sm);transition:background 0.15s;cursor:pointer;}.doc-item:hover{background:var(--gray-bg);}
+.doc-icon{font-size:24px;flex-shrink:0;}
+.doc-info{flex:1;min-width:0;}.doc-name{font-size:13px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}.doc-meta{font-size:11px;color:var(--gray-l);}
+.doc-tag{padding:2px 8px;border-radius:4px;font-size:10px;font-weight:600;flex-shrink:0;}
+.doc-tag.pdf{background:#fef2f2;color:var(--red);}.doc-tag.dwg{background:#eff6ff;color:var(--blue);}.doc-tag.doc{background:#f0fdf4;color:var(--green);}.doc-tag.img{background:#fff7ed;color:var(--orange);}.doc-tag.xls{background:#f0fdf4;color:#059669;}.doc-tag.mp4{background:#f5f3ff;color:var(--purple);}
 
-/* SECTION TITLE */
-.section-title{font-size:14px;font-weight:700;color:#64748b;text-transform:uppercase;letter-spacing:1.5px;margin-bottom:12px;display:flex;align-items:center;gap:8px;}
+/* GENERAL DOCS */
+.gen-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:10px;margin-bottom:16px;}
+.gen-card{background:#fff;border-radius:var(--radius-sm);padding:16px;box-shadow:var(--shadow);text-align:center;transition:all 0.2s;cursor:pointer;border-top:3px solid var(--gray-b);}
+.gen-card:hover{box-shadow:var(--shadow-md);transform:translateY(-2px);}
+.gen-icon{font-size:32px;margin-bottom:6px;}.gen-name{font-size:13px;font-weight:700;}.gen-desc{font-size:11px;color:var(--gray);margin-top:2px;}
+.gen-card.aut{border-top-color:var(--red);}.gen-card.con{border-top-color:var(--green);}.gen-card.proc{border-top-color:var(--blue);}.gen-card.ssm{border-top-color:var(--orange);}.gen-card.ofe{border-top-color:var(--purple);}.gen-card.fir{border-top-color:var(--teal);}
 
-/* MODULE GRID */
-.mod-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-bottom:20px;}
-@media(min-width:1024px){.mod-grid{grid-template-columns:repeat(4,1fr);}}
-.mod-card{background:#fff;border-radius:16px;padding:20px 16px;text-align:center;box-shadow:0 1px 3px rgba(0,0,0,0.05);transition:all 0.3s;display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:140px;border-top:4px solid transparent;cursor:pointer;position:relative;}
-.mod-card:hover{transform:translateY(-4px);box-shadow:0 15px 30px -5px rgba(0,0,0,0.12);}
-.mod-card.org{border-top-color:#3b82f6;}
-.mod-card.mkt{border-top-color:#8b5cf6;}
-.mod-card.sales{border-top-color:#10b981;}
-.mod-card.tech{border-top-color:#f97316;}
-.mod-card .m-icon{font-size:36px;margin-bottom:8px;}
-.mod-card .m-title{font-size:14px;font-weight:700;color:#0f172a;margin-bottom:2px;}
-.mod-card .m-desc{font-size:11px;color:#64748b;}
-.mod-card .m-badge{position:absolute;top:8px;right:8px;width:8px;height:8px;border-radius:50%;background:#22c55e;}
+/* MEDIA GALLERY */
+.media-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:12px;margin-bottom:16px;}
+.media-card{background:#fff;border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden;transition:all 0.2s;cursor:pointer;}.media-card:hover{box-shadow:var(--shadow-md);transform:translateY(-1px);}
+.media-thumb{height:140px;background:var(--gray-bg);display:flex;align-items:center;justify-content:center;font-size:48px;position:relative;}
+.media-thumb .overlay{position:absolute;bottom:0;left:0;right:0;padding:4px 10px;font-size:10px;font-weight:700;color:#fff;}
+.media-body{padding:12px;}.media-name{font-size:13px;font-weight:700;margin-bottom:2px;}.media-meta{font-size:11px;color:var(--gray);}
+.media-tags{display:flex;gap:4px;margin-top:6px;flex-wrap:wrap;}
+.media-tag{font-size:10px;font-weight:600;padding:2px 8px;border-radius:4px;background:var(--gray-bg);color:var(--gray);}
 
-/* QUICK ACTIONS */
-.quick-row{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px;padding-top:16px;border-top:1px solid rgba(255,255,255,0.15);}
-.quick-btn{display:inline-flex;align-items:center;gap:8px;padding:10px 16px;background:rgba(255,255,255,0.15);backdrop-filter:blur(10px);border-radius:12px;font-size:13px;font-weight:600;color:#fff;transition:all 0.2s;cursor:pointer;border:none;font-family:inherit;}
-.quick-btn:hover{background:rgba(255,255,255,0.25);transform:translateY(-1px);}
+/* TEMPLATE CARDS */
+.tpl-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px;margin-bottom:16px;}
+.tpl-card{background:#fff;border-radius:var(--radius);padding:20px;box-shadow:var(--shadow);transition:all 0.2s;cursor:pointer;border-left:4px solid var(--blue);}
+.tpl-card:hover{box-shadow:var(--shadow-md);}.tpl-name{font-size:15px;font-weight:800;margin-bottom:4px;}.tpl-desc{font-size:12px;color:var(--gray);line-height:1.5;margin-bottom:8px;}
+.tpl-meta{font-size:11px;color:var(--gray-l);}
 
-/* NOTIFICATIONS */
-.notif-card{background:#fff;border-radius:16px;padding:16px;margin-bottom:20px;box-shadow:0 1px 3px rgba(0,0,0,0.05);}
-.notif-item{display:flex;align-items:flex-start;gap:12px;padding:10px 0;border-bottom:1px solid #f1f5f9;}
-.notif-item:last-child{border-bottom:none;}
-.notif-dot{width:8px;height:8px;border-radius:50%;margin-top:6px;flex-shrink:0;}
-.notif-text{font-size:13px;color:#334155;line-height:1.5;}
-.notif-time{font-size:11px;color:#94a3b8;margin-top:2px;}
+.toast-container{position:fixed;top:20px;right:20px;z-index:300;display:flex;flex-direction:column;gap:8px;}
+.toast{padding:14px 20px;border-radius:12px;color:#fff;font-size:13px;font-weight:600;box-shadow:0 8px 24px rgba(0,0,0,0.15);animation:slideIn 0.3s ease;max-width:380px;}
+.toast.success{background:var(--green);}.toast.info{background:#0ea5e9;}
+@keyframes slideIn{from{transform:translateX(100%);opacity:0}to{transform:translateX(0);opacity:1}}
 
-/* LOGOUT */
-.logout{background:none;border:none;color:#94a3b8;font-size:13px;cursor:pointer;font-family:inherit;padding:8px 16px;transition:all 0.2s;border-radius:8px;}
-.logout:hover{color:#dc2626;background:#fef2f2;}
-.footer-text{text-align:center;color:#cbd5e1;font-size:11px;margin-top:16px;padding-bottom:80px;}
+.section-title{font-size:14px;font-weight:800;color:var(--gray);text-transform:uppercase;letter-spacing:1px;margin:20px 0 12px;display:flex;align-items:center;gap:8px;}
 
-/* BOTTOM NAV (ALL PAGES) */
-.bottom-nav{position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1px solid #e2e8f0;box-shadow:0 -4px 20px rgba(0,0,0,0.08);padding:6px 12px;z-index:100;display:flex;gap:4px;}
-@media(min-width:768px){.bottom-nav{display:none;}}
-.bn-item{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:8px 4px;border-radius:10px;font-size:10px;font-weight:600;color:#64748b;transition:all 0.2s;gap:2px;}
-.bn-item.active{color:#dc2626;background:#fef2f2;}
-.bn-item .bn-icon{font-size:20px;}
-
-/* MODULE PAGE SHARED */
-.page-header{background:linear-gradient(135deg,var(--h1),var(--h2));color:#fff;padding:16px 20px;border-radius:16px;margin-bottom:16px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;}
-.page-back{color:rgba(255,255,255,0.8);font-size:13px;font-weight:500;display:flex;align-items:center;gap:6px;}
-.page-back:hover{color:#fff;}
-.page-title{font-size:18px;font-weight:800;}
-.page-ext{padding:8px 14px;background:rgba(255,255,255,0.15);backdrop-filter:blur(10px);border-radius:10px;font-size:13px;font-weight:500;transition:all 0.2s;}
-.page-ext:hover{background:rgba(255,255,255,0.25);}
-
-/* TABS */
-.tabs{display:flex;gap:8px;margin-bottom:16px;}
-.tab{flex:1;padding:12px;border-radius:12px;font-weight:700;font-size:13px;border:none;cursor:pointer;font-family:inherit;transition:all 0.2s;background:#fff;color:#475569;box-shadow:0 1px 3px rgba(0,0,0,0.05);}
-.tab.active{color:#fff;box-shadow:0 4px 15px -3px rgba(0,0,0,0.2);}
-
-/* CARD */
-.card{background:#fff;border-radius:16px;box-shadow:0 1px 3px rgba(0,0,0,0.05);overflow:hidden;}
-.card-head{padding:14px;text-align:center;color:#fff;font-weight:700;font-size:15px;}
-.card-head small{display:block;font-size:11px;opacity:0.8;margin-top:2px;font-weight:500;}
-.card iframe{width:100%;border:0;min-height:500px;height:calc(100vh - 320px);}
-.card-body{padding:24px;text-align:center;}
-
-/* FORM NATIVE */
-.form-group{margin-bottom:16px;text-align:left;}
-.form-label{display:block;font-size:13px;font-weight:600;color:#334155;margin-bottom:6px;}
-.form-label .req{color:#dc2626;}
-.form-input,.form-select,.form-textarea{width:100%;padding:12px 16px;border:2px solid #e2e8f0;border-radius:12px;font-size:15px;font-family:inherit;outline:none;transition:all 0.2s;background:#fff;}
-.form-input:focus,.form-select:focus,.form-textarea:focus{border-color:#3b82f6;box-shadow:0 0 0 3px rgba(59,130,246,0.1);}
-.form-textarea{min-height:100px;resize:vertical;}
-.form-select{cursor:pointer;}
-.form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
-@media(max-width:480px){.form-row{grid-template-columns:1fr;}}
-.form-submit{width:100%;padding:14px;background:linear-gradient(135deg,#22c55e,#16a34a);color:#fff;border:none;border-radius:12px;font-size:16px;font-weight:700;cursor:pointer;font-family:inherit;transition:all 0.3s;}
-.form-submit:hover{transform:translateY(-1px);box-shadow:0 8px 25px -5px rgba(34,197,94,0.4);}
-.form-success{display:none;text-align:center;padding:32px;}
-
-/* LEGEND */
-.legend{margin-top:16px;background:#fff;border-radius:12px;padding:14px;box-shadow:0 1px 3px rgba(0,0,0,0.05);}
-.legend-title{font-size:12px;font-weight:700;color:#64748b;margin-bottom:8px;}
-.legend-items{display:flex;flex-wrap:wrap;gap:8px;}
-.legend-tag{padding:4px 10px;border-radius:6px;font-size:12px;font-weight:600;}
-
-/* TIPS */
-.tips{margin-top:16px;display:grid;grid-template-columns:repeat(3,1fr);gap:12px;}
-@media(max-width:640px){.tips{grid-template-columns:1fr;}}
-.tip{padding:14px;border-radius:12px;text-align:center;}
-.tip-icon{font-size:24px;margin-bottom:4px;}
-.tip-text{font-size:12px;font-weight:600;}
-
-:root{--h1:#1e40af;--h2:#1e3a8a;}
+.bottom-nav{position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1px solid var(--gray-b);box-shadow:0 -4px 20px rgba(0,0,0,0.06);padding:6px 12px;z-index:100;display:flex;gap:4px;}@media(min-width:768px){.bottom-nav{display:none;}}
+.bn-item{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:8px 4px;border-radius:10px;font-size:10px;font-weight:600;color:var(--gray);transition:all 0.2s;gap:2px;}.bn-item.active{color:#0ea5e9;background:#e0f2fe;}.bn-item .bn-icon{font-size:20px;}
+.empty-msg{text-align:center;padding:40px;color:var(--gray-l);font-size:14px;}
+.footer{text-align:center;color:var(--gray-xl);font-size:11px;padding:24px 0 100px;}
 </style>
 </head>
 <body>
-
-<div id="authWall" class="auth-bg">
-<div class="auth-card" style="text-align:center;">
-    <div style="font-size:48px;margin-bottom:16px;">🔐</div>
-    <h1 style="font-size:20px;font-weight:700;color:#0f172a;margin-bottom:16px;">Acces restricționat</h1>
-    <p style="color:#64748b;margin-bottom:24px;">Ai nevoie de acces Organizare.</p>
-    <a href="../admin.html" class="auth-btn" style="display:inline-block;width:auto;padding:12px 32px;">Mergi la Login</a>
-</div>
-</div>
-
-<div id="main" style="display:none;">
+<div class="toast-container" id="toastContainer"></div>
 <div class="container">
     <div class="page-header">
-        <div style="display:flex;align-items:center;gap:16px;">
-            <a href="../admin.html" class="page-back">← Înapoi</a>
-            <h1 class="page-title">📁 Documente Firmă</h1>
+        <div>
+            <a href="../admin.html" class="page-back">← Dashboard</a>
+            <div class="page-title">📁 Documente & Resurse</div>
+            <div class="page-subtitle"><span class="sync-indicator sync-off"></span>Bibliotecă digitală CSSI</div>
         </div>
-        <a href="https://drive.google.com" target="_blank" rel="noopener noreferrer" class="page-ext">🔗 Google Drive</a>
+        <div class="page-actions">
+            <button class="page-btn primary" onclick="toast('📁 Funcționalitate disponibilă cu Google Drive','info')">+ Încarcă Fișier</button>
+        </div>
     </div>
 
-    <div class="tabs"><button class="tab active" style="background:#3b82f6;" data-tab="contracts" data-color="#3b82f6" onclick="switchTab(this)">📋 Contracte</button>
-<button class="tab "  data-tab="pv" data-color="#22c55e" onclick="switchTab(this)">📝 PV-uri</button>
-<button class="tab "  data-tab="auth" data-color="#dc2626" onclick="switchTab(this)">🛡️ Autorizații</button>
-</div>
-<div class="tab-panel" id="panel_contracts" style="display:block;">
-<div class="card"><div class="card-head" style="background:#3b82f6;">📋 Modele Contracte</div>
-<div style="padding:20px;">
-    <div style="display:grid;gap:12px;">
-        <div style="display:flex;align-items:center;gap:12px;padding:14px;background:#f8fafc;border-radius:12px;border-left:4px solid #3b82f6;">
-            <span style="font-size:28px;">📄</span>
-            <div style="flex:1;"><div style="font-weight:700;font-size:14px;color:#0f172a;">Contract Prestări Servicii</div><div style="font-size:12px;color:#64748b;">Model standard CSSI</div></div>
-            <a href="#" style="padding:8px 14px;background:#3b82f6;color:#fff;border-radius:8px;font-size:12px;font-weight:600;">📥 Drive</a>
-        </div>
-        <div style="display:flex;align-items:center;gap:12px;padding:14px;background:#f8fafc;border-radius:12px;border-left:4px solid #22c55e;">
-            <span style="font-size:28px;">📄</span>
-            <div style="flex:1;"><div style="font-weight:700;font-size:14px;color:#0f172a;">Contract Mentenanță</div><div style="font-size:12px;color:#64748b;">Abonament anual</div></div>
-            <a href="#" style="padding:8px 14px;background:#22c55e;color:#fff;border-radius:8px;font-size:12px;font-weight:600;">📥 Drive</a>
-        </div>
-        <div style="display:flex;align-items:center;gap:12px;padding:14px;background:#f8fafc;border-radius:12px;border-left:4px solid #f97316;">
-            <span style="font-size:28px;">📄</span>
-            <div style="flex:1;"><div style="font-weight:700;font-size:14px;color:#0f172a;">Contract Monitorizare 24h</div><div style="font-size:12px;color:#64748b;">Dispecerat + intervenție</div></div>
-            <a href="#" style="padding:8px 14px;background:#f97316;color:#fff;border-radius:8px;font-size:12px;font-weight:600;">📥 Drive</a>
-        </div>
+    <div class="tabs">
+        <button class="tab active" onclick="setTab('proiecte',this)">📂 Dosare Proiecte</button>
+        <button class="tab" onclick="setTab('general',this)">📜 Documente Generale</button>
+        <button class="tab" onclick="setTab('media',this)">🎬 Resurse Media</button>
+        <button class="tab" onclick="setTab('templates',this)">📋 Template-uri</button>
     </div>
-    <p style="text-align:center;color:#94a3b8;font-size:12px;margin-top:16px;">⚠️ Link-urile se vor configura cu folderul Google Drive</p>
-</div></div></div>
-<div class="tab-panel" id="panel_pv" style="display:none;">
-<div class="card"><div class="card-head" style="background:#22c55e;">📝 Procese Verbale</div>
-<div style="padding:20px;">
-    <div style="display:grid;gap:12px;">
-        <div style="display:flex;align-items:center;gap:12px;padding:14px;background:#f8fafc;border-radius:12px;border-left:4px solid #22c55e;">
-            <span style="font-size:28px;">📝</span>
-            <div style="flex:1;"><div style="font-weight:700;font-size:14px;color:#0f172a;">PV Recepție Lucrare</div><div style="font-size:12px;color:#64748b;">Semnătură client la finalizare</div></div>
-            <a href="#" style="padding:8px 14px;background:#22c55e;color:#fff;border-radius:8px;font-size:12px;font-weight:600;">📥</a>
-        </div>
-        <div style="display:flex;align-items:center;gap:12px;padding:14px;background:#f8fafc;border-radius:12px;border-left:4px solid #8b5cf6;">
-            <span style="font-size:28px;">📝</span>
-            <div style="flex:1;"><div style="font-weight:700;font-size:14px;color:#0f172a;">PV Predare-Primire</div><div style="font-size:12px;color:#64748b;">Transfer echipamente</div></div>
-            <a href="#" style="padding:8px 14px;background:#8b5cf6;color:#fff;border-radius:8px;font-size:12px;font-weight:600;">📥</a>
-        </div>
-        <div style="display:flex;align-items:center;gap:12px;padding:14px;background:#f8fafc;border-radius:12px;border-left:4px solid #f97316;">
-            <span style="font-size:28px;">📝</span>
-            <div style="flex:1;"><div style="font-weight:700;font-size:14px;color:#0f172a;">PV Punere în Funcțiune</div><div style="font-size:12px;color:#64748b;">Testare sistem + parametri</div></div>
-            <a href="#" style="padding:8px 14px;background:#f97316;color:#fff;border-radius:8px;font-size:12px;font-weight:600;">📥</a>
-        </div>
-    </div>
-</div></div></div>
-<div class="tab-panel" id="panel_auth" style="display:none;">
-<div class="card"><div class="card-head" style="background:#dc2626;">🛡️ Autorizații & Licențe</div>
-<div style="padding:20px;">
-    <div style="display:grid;gap:12px;">
-        <div style="display:flex;align-items:center;gap:12px;padding:16px;background:#eff6ff;border-radius:12px;border:2px solid #3b82f6;">
-            <span style="font-size:32px;">🔵</span>
-            <div style="flex:1;"><div style="font-weight:800;font-size:15px;color:#1e40af;">Licență ANRE tip B</div><div style="font-size:12px;color:#3b82f6;">Instalații electrice</div></div>
-        </div>
-        <div style="display:flex;align-items:center;gap:12px;padding:16px;background:#fef2f2;border-radius:12px;border:2px solid #dc2626;">
-            <span style="font-size:32px;">🔴</span>
-            <div style="flex:1;"><div style="font-weight:800;font-size:15px;color:#991b1b;">Autorizație ISU</div><div style="font-size:12px;color:#dc2626;">Detecție & semnalizare incendiu</div></div>
-        </div>
-        <div style="display:flex;align-items:center;gap:12px;padding:16px;background:#f0fdf4;border-radius:12px;border:2px solid #16a34a;">
-            <span style="font-size:32px;">🟢</span>
-            <div style="flex:1;"><div style="font-weight:800;font-size:15px;color:#166534;">Autorizație IGPR</div><div style="font-size:12px;color:#16a34a;">Sisteme antiefracție & securitate</div></div>
-        </div>
-    </div>
-    <p style="text-align:center;color:#64748b;font-size:12px;margin-top:16px;">Documentele originale sunt în seiful firmei. Copii digitale în Drive.</p>
-</div></div></div>
 
+    <div id="tab-proiecte">
+        <div class="kpi-row">
+            <div class="kpi-card"><div class="kpi-val" id="kpiFolders">0</div><div class="kpi-label">Dosare proiecte</div></div>
+            <div class="kpi-card"><div class="kpi-val" id="kpiFiles" style="color:var(--blue)">0</div><div class="kpi-label">Total fișiere</div></div>
+            <div class="kpi-card"><div class="kpi-val" id="kpiPdf" style="color:var(--red)">0</div><div class="kpi-label">PDF-uri</div></div>
+            <div class="kpi-card"><div class="kpi-val" id="kpiDwg" style="color:var(--blue)">0</div><div class="kpi-label">Planuri DWG</div></div>
+        </div>
+        <div class="filters">
+            <input type="text" class="filter-search" id="searchInput" placeholder="🔍 Caută document, proiect..." oninput="renderFolders()">
+            <select class="filter-select" id="filterType" onchange="renderFolders()"><option value="">Toate tipurile</option><option>PDF</option><option>DWG</option><option>DOC</option><option>XLS</option><option>IMG</option></select>
+        </div>
+        <div class="folders" id="folderList"></div>
+    </div>
 
-    <div class="footer-text">CSSI · Portal Intern · Modificările se salvează automat</div>
-</div>
+    <div id="tab-general" style="display:none"></div>
+    <div id="tab-media" style="display:none"></div>
+    <div id="tab-templates" style="display:none"></div>
+
+    <div class="footer">Portal CSSI 3.0 · Documente & Resurse v3.0</div>
 </div>
 
 <div class="bottom-nav">
-  <a href="../admin.html" class="bn-item active"><span class="bn-icon">🏠</span>Acasă</a>
-  <a href="calendar-zilnic.html" class="bn-item"><span class="bn-icon">📅</span>Task-uri</a>
-  <a href="crm-clienti.html" class="bn-item"><span class="bn-icon">💰</span>CRM</a>
-  <a href="checklist-montaj.html" class="bn-item"><span class="bn-icon">✅</span>Raport</a>
-  <a href="necesar-materiale.html" class="bn-item"><span class="bn-icon">📦</span>Material</a>
+    <a href="../admin.html" class="bn-item"><span class="bn-icon">🏠</span>Acasă</a>
+    <a href="proiecte.html" class="bn-item"><span class="bn-icon">📋</span>Proiecte</a>
+    <a href="documente.html" class="bn-item active"><span class="bn-icon">📁</span>Docs</a>
+    <a href="executie.html" class="bn-item"><span class="bn-icon">🔧</span>Execuție</a>
+    <a href="financiar.html" class="bn-item"><span class="bn-icon">📄</span>Facturi</a>
 </div>
 
 <script>
-(function(){
-    var role = sessionStorage.getItem("cssi-role");
-    if (role === "admin" || role === "org") {
-        document.getElementById('authWall').style.display='none';
-        document.getElementById('main').style.display='block';
-    }
-})();
+var API_URL = '';
+var role=sessionStorage.getItem("cssi-role");
+if(!role||!["admin","org","tech","sales"].includes(role)){window.location.href="../admin.html";}
 
-function switchTab(btn){
-    document.querySelectorAll('.tab').forEach(function(t){t.classList.remove('active');t.style.background='';t.style.color='';});
-    document.querySelectorAll('.tab-panel').forEach(function(p){p.style.display='none';});
-    btn.classList.add('active');
-    btn.style.background=btn.dataset.color;
-    btn.style.color='#fff';
-    document.getElementById('panel_'+btn.dataset.tab).style.display='block';
+function toast(msg,type){var c=document.getElementById('toastContainer');var t=document.createElement('div');t.className='toast '+(type||'info');t.textContent=msg;c.appendChild(t);setTimeout(function(){t.style.opacity='0';t.style.transform='translateX(100px)';t.style.transition='all 0.3s'},3000);setTimeout(function(){t.remove()},3500);}
+
+var FILE_ICONS={"PDF":"📕","DWG":"📐","DOC":"📝","XLS":"📊","IMG":"🖼️","MP4":"🎬"};
+
+var PROJECT_DOCS=[
+    {pid:"CSSI-2026-001",client:"Hotel Cheile Râșnoavei",docs:[
+        {name:"Contract servicii securitate.pdf",type:"PDF",date:"2026-02-20",size:"2.4 MB"},
+        {name:"Proiect detecție incendiu.dwg",type:"DWG",date:"2026-02-25",size:"8.1 MB"},
+        {name:"Ofertă finală aprobată.pdf",type:"PDF",date:"2026-02-18",size:"1.2 MB"},
+        {name:"PV recepție parțială etaj 1.pdf",type:"PDF",date:"2026-03-02",size:"340 KB"},
+        {name:"Foto montaj detectoare.jpg",type:"IMG",date:"2026-03-03",size:"5.6 MB"},
+        {name:"Deviz estimativ detaliat.xlsx",type:"XLS",date:"2026-02-22",size:"280 KB"}
+    ]},
+    {pid:"CSSI-2026-004",client:"Birouri IT Hub",docs:[
+        {name:"Proiect instalație electrică.dwg",type:"DWG",date:"2026-02-10",size:"6.3 MB"},
+        {name:"Buletin verificare PRAM.pdf",type:"PDF",date:"2026-03-01",size:"890 KB"},
+        {name:"Contract mentenanță.docx",type:"DOC",date:"2026-02-28",size:"120 KB"},
+        {name:"Schema tablou electric.dwg",type:"DWG",date:"2026-02-12",size:"3.1 MB"}
+    ]},
+    {pid:"CSSI-2026-006",client:"Depozit Ghimbav",docs:[
+        {name:"Ofertă CCTV 8 camere.pdf",type:"PDF",date:"2026-02-22",size:"980 KB"},
+        {name:"Schema rețea camere.dwg",type:"DWG",date:"2026-02-26",size:"3.2 MB"},
+        {name:"Configurare NVR - manual.pdf",type:"PDF",date:"2026-03-04",size:"4.1 MB"},
+        {name:"Timelapse montaj.mp4",type:"MP4",date:"2026-03-03",size:"85 MB"}
+    ]},
+    {pid:"CSSI-2026-009",client:"Primăria Săcele",docs:[
+        {name:"Caiet sarcini licitație.pdf",type:"PDF",date:"2026-01-15",size:"3.8 MB"},
+        {name:"Ofertă tehnică.pdf",type:"PDF",date:"2026-01-20",size:"2.1 MB"},
+        {name:"Ofertă financiară.xlsx",type:"XLS",date:"2026-01-20",size:"450 KB"},
+        {name:"Scenarii securitate incendiu.pdf",type:"PDF",date:"2026-02-05",size:"5.2 MB"},
+        {name:"Aviz ISU - copie.pdf",type:"PDF",date:"2026-02-15",size:"1.1 MB"},
+        {name:"PV recepție finală.pdf",type:"PDF",date:"2026-03-01",size:"670 KB"}
+    ]},
+    {pid:"CSSI-2026-012",client:"Fabrica Autoliv",docs:[
+        {name:"Plan amplasare camere.dwg",type:"DWG",date:"2026-02-28",size:"7.4 MB"},
+        {name:"Contract cadru 2026.pdf",type:"PDF",date:"2026-02-01",size:"1.8 MB"},
+        {name:"Specificații tehnice sistem.pdf",type:"PDF",date:"2026-02-15",size:"2.3 MB"}
+    ]},
+    {pid:"CSSI-2026-013",client:"Rezidențial Avantgarden",docs:[
+        {name:"Proiect automatizare poartă.dwg",type:"DWG",date:"2026-02-20",size:"2.8 MB"},
+        {name:"Ofertă BFT + montaj.pdf",type:"PDF",date:"2026-02-18",size:"560 KB"}
+    ]}
+];
+
+var GENERAL_DOCS=[
+    {icon:"📜",name:"Autorizații & Licențe",desc:"IGSU, ANRE, Licența IGPR, certificări",cls:"aut",items:["Autorizație IGSU detectie incendiu","Autorizație ANRE electrician","Licența IGPR sisteme alarmă","Certificat ISO 9001","Asigurare profesională"]},
+    {icon:"📋",name:"Contracte Model",desc:"Template-uri contracte servicii",cls:"con",items:["Contract prestări servicii","Contract mentenanță","Acord GDPR","Proces verbal recepție","Proces verbal predare-primire"]},
+    {icon:"📐",name:"Proceduri Tehnice",desc:"Standarde montaj, configurare",cls:"proc",items:["Procedură montaj CCTV","Procedură montaj alarme","Procedură detecție incendiu","Procedură verificare PRAM","Procedură testare sisteme"]},
+    {icon:"🛡️",name:"SSM / PSI",desc:"Securitate muncă, PSI",cls:"ssm",items:["Instrucțiuni proprii SSM","Fișe individuale SSM","Plan de evacuare","Instrucțiuni PSI","Registru SSM"]},
+    {icon:"📊",name:"Ofertare",desc:"Template-uri oferte, devize",cls:"ofe",items:["Template ofertă CCTV","Template ofertă alarmă","Template ofertă incendiu","Template deviz general","Grile de prețuri 2026"]},
+    {icon:"🏢",name:"Documente Firmă",desc:"CUI, RC, certificate",cls:"fir",items:["Certificat înregistrare","Certificat constatator","Bilanț contabil","Extras ONRC","Certificat atestare fiscală"]}
+];
+
+var MEDIA_ITEMS=[
+    {name:"Logo CSSI principal",type:"PNG",cat:"Brand",tags:["logo","identitate"],size:"2.1 MB",emoji:"🎨"},
+    {name:"Logo CSSI alb (fundal închis)",type:"PNG",cat:"Brand",tags:["logo","dark"],size:"1.8 MB",emoji:"⬜"},
+    {name:"Timelapse montaj camere Ghimbav",type:"MP4",cat:"Video",tags:["CCTV","montaj","proiect"],size:"85 MB",emoji:"🎬"},
+    {name:"Galerie Hotel Cheile — detectoare",type:"IMG",cat:"Foto Proiect",tags:["detectie","hotel","montaj"],size:"45 MB",emoji:"📷"},
+    {name:"Behind the scenes — echipa",type:"MP4",cat:"Video",tags:["echipa","BTS"],size:"120 MB",emoji:"🎥"},
+    {name:"Template social media — ofertă",type:"PNG",cat:"Template Canva",tags:["social","template"],size:"3.2 MB",emoji:"📱"},
+    {name:"Template social media — proiect finalizat",type:"PNG",cat:"Template Canva",tags:["social","template"],size:"2.8 MB",emoji:"📱"},
+    {name:"Foto echipamente depozit",type:"IMG",cat:"Foto General",tags:["echipamente","stoc"],size:"28 MB",emoji:"📦"},
+    {name:"Video tutorial NVR Hikvision",type:"MP4",cat:"Video Tehnic",tags:["tutorial","NVR","Hikvision"],size:"250 MB",emoji:"🎓"},
+    {name:"Carousel Bosch FPA-5000",type:"IMG",cat:"Social Media",tags:["Bosch","centrala","carusel"],size:"8.5 MB",emoji:"🔥"}
+];
+
+var TEMPLATES=[
+    {name:"Ofertă Sistem CCTV",desc:"Template complet pentru ofertare sisteme de supraveghere video. Include echipamente, montaj, garanție.",tags:["CCTV","ofertă","vânzări"]},
+    {name:"Ofertă Sistem Alarmă",desc:"Template ofertă antiefracție cu variante de echipamente și servicii aferente.",tags:["alarmă","ofertă","vânzări"]},
+    {name:"Ofertă Detecție Incendiu",desc:"Include proiectare ISU, echipamente Bosch, montaj cablare E30.",tags:["incendiu","ISU","ofertă"]},
+    {name:"Contract Prestări Servicii",desc:"Contract cadru pentru proiecte de securitate. Clauze standard, GDPR, garanție.",tags:["contract","juridic"]},
+    {name:"Contract Mentenanță Anuală",desc:"Abonament mentenanță cu vizite periodice, timp de răspuns, SLA.",tags:["mentenanță","contract"]},
+    {name:"Proces Verbal Recepție",desc:"PV recepție cu checklist puncte de verificare per sistem instalat.",tags:["recepție","PV","finalizare"]},
+    {name:"Raport Tehnic Vizită",desc:"Template raport tehnic după vizita de evaluare/diagnoză la client.",tags:["raport","tehnic","vizită"]},
+    {name:"Deviz Estimativ General",desc:"Excel cu formulare automate pentru calculul devizelor pe categorii.",tags:["deviz","Excel","ofertare"]}
+];
+
+var currentTab='proiecte';
+
+function setTab(id,btn){
+    currentTab=id;
+    document.querySelectorAll('.tab').forEach(function(t){t.classList.remove('active')});
+    if(btn)btn.classList.add('active');
+    ['proiecte','general','media','templates'].forEach(function(t){document.getElementById('tab-'+t).style.display=t===id?'':'none';});
+    if(id==='general')renderGeneral();
+    if(id==='media')renderMedia();
+    if(id==='templates')renderTemplates();
 }
 
-function copyText(text){navigator.clipboard.writeText(text).then(function(){alert('Copiat! ✅');});}
+function renderFolders(){
+    var q=document.getElementById('searchInput').value.toLowerCase();
+    var ft=document.getElementById('filterType').value;
+    var totalFiles=0,totalPdf=0,totalDwg=0;
+    PROJECT_DOCS.forEach(function(p){p.docs.forEach(function(d){totalFiles++;if(d.type==='PDF')totalPdf++;if(d.type==='DWG')totalDwg++;});});
+    document.getElementById('kpiFolders').textContent=PROJECT_DOCS.length;
+    document.getElementById('kpiFiles').textContent=totalFiles;
+    document.getElementById('kpiPdf').textContent=totalPdf;
+    document.getElementById('kpiDwg').textContent=totalDwg;
 
+    var html='';
+    PROJECT_DOCS.forEach(function(p){
+        var filtered=p.docs.filter(function(d){
+            var mq=!q||d.name.toLowerCase().includes(q)||p.pid.toLowerCase().includes(q)||p.client.toLowerCase().includes(q);
+            var mt=!ft||d.type===ft;
+            return mq&&mt;
+        });
+        if(!filtered.length&&(q||ft))return;
+        var docs=filtered.length?filtered:p.docs;
+        html+='<div class="folder"><div class="folder-head"><div><div class="folder-name">📂 '+p.client+'</div><div class="folder-pid">'+p.pid+'</div></div><span class="folder-count">'+docs.length+' fișiere</span></div>';
+        html+='<div class="folder-body">';
+        docs.forEach(function(d){
+            html+='<div class="doc-item"><div class="doc-icon">'+(FILE_ICONS[d.type]||'📄')+'</div>';
+            html+='<div class="doc-info"><div class="doc-name">'+d.name+'</div><div class="doc-meta">'+d.date+' · '+d.size+'</div></div>';
+            html+='<span class="doc-tag '+d.type.toLowerCase()+'">'+d.type+'</span></div>';
+        });
+        html+='</div></div>';
+    });
+    document.getElementById('folderList').innerHTML=html||'<div class="empty-msg">Niciun document găsit</div>';
+}
+
+function renderGeneral(){
+    var html='<div class="gen-grid">';
+    GENERAL_DOCS.forEach(function(g){
+        html+='<div class="gen-card '+g.cls+'" onclick="showGenDetail(\''+g.name.replace(/'/g,"\\'")+'\')">';
+        html+='<div class="gen-icon">'+g.icon+'</div><div class="gen-name">'+g.name+'</div><div class="gen-desc">'+g.desc+'</div>';
+        html+='<div style="margin-top:8px;font-size:11px;color:var(--gray)">'+g.items.length+' documente</div></div>';
+    });
+    html+='</div>';
+    document.getElementById('tab-general').innerHTML=html;
+}
+
+function showGenDetail(name){
+    var g=GENERAL_DOCS.find(function(x){return x.name===name;});if(!g)return;
+    var list=g.items.map(function(i){return '📄 '+i;}).join('\n');
+    toast(g.name+': '+g.items.length+' documente','info');
+}
+
+function renderMedia(){
+    var cats={};MEDIA_ITEMS.forEach(function(m){if(!cats[m.cat])cats[m.cat]=[];cats[m.cat].push(m);});
+    var html='';
+    Object.keys(cats).forEach(function(cat){
+        html+='<div class="section-title">'+cat+' ('+cats[cat].length+')</div>';
+        html+='<div class="media-grid">';
+        cats[cat].forEach(function(m){
+            html+='<div class="media-card"><div class="media-thumb" style="background:linear-gradient(135deg,#f1f5f9,#e2e8f0)">'+m.emoji;
+            html+='<div class="overlay" style="background:rgba(0,0,0,0.6)">'+m.type+' · '+m.size+'</div></div>';
+            html+='<div class="media-body"><div class="media-name">'+m.name+'</div>';
+            html+='<div class="media-tags">';m.tags.forEach(function(t){html+='<span class="media-tag">'+t+'</span>';});
+            html+='</div></div></div>';
+        });
+        html+='</div>';
+    });
+    document.getElementById('tab-media').innerHTML=html;
+}
+
+function renderTemplates(){
+    var html='<div class="tpl-grid">';
+    TEMPLATES.forEach(function(t){
+        html+='<div class="tpl-card"><div class="tpl-name">📋 '+t.name+'</div><div class="tpl-desc">'+t.desc+'</div>';
+        html+='<div class="tpl-meta">';t.tags.forEach(function(tag){html+='<span class="media-tag">'+tag+'</span> ';});
+        html+='</div></div>';
+    });
+    html+='</div>';
+    document.getElementById('tab-templates').innerHTML=html;
+}
+
+renderFolders();
 </script>
 </body>
 </html>
