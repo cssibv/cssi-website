@@ -1,57 +1,57 @@
-# CSSI.ro - Configurare Server LiteSpeed
-# ==========================================
+# =============================================
+# CSSI.RO — .htaccess
+# Upload în rădăcina site-ului prin cPanel
+# =============================================
 
-# Activare RewriteEngine
+# --- Force HTTPS ---
 RewriteEngine On
-
-# Force HTTPS
 RewriteCond %{HTTPS} off
 RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
 
-# Redirect www → non-www (301 permanent)
-RewriteCond %{HTTP_HOST} ^www\.cssi\.ro$ [NC]
+# --- Force www or non-www (alege UNA, decomentează) ---
+# Varianta fără www (recomandat - coincide cu canonical-urile existente):
+RewriteCond %{HTTP_HOST} ^www\.cssi\.ro [NC]
 RewriteRule ^(.*)$ https://cssi.ro/$1 [L,R=301]
 
-# Redirect /index.html la / (elimina duplicate content)
-RewriteRule ^index\.html$ / [R=301,L]
+# --- Blog clean URLs (canonical fără .html) ---
+# /blog/sistem-integrat-securitate-brasov → blog/sistem-integrat-securitate-brasov.html
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^blog/([^/]+)$ blog/$1.html [L]
 
-# Pagina 404 custom
+# --- Trailing slash for blog index ---
+RewriteRule ^blog$ /blog/ [R=301,L]
+
+# --- Security Headers ---
+<IfModule mod_headers.c>
+    Header set X-Content-Type-Options "nosniff"
+    Header set X-Frame-Options "SAMEORIGIN"
+    Header set X-XSS-Protection "1; mode=block"
+    Header set Referrer-Policy "strict-origin-when-cross-origin"
+</IfModule>
+
+# --- Browser Caching ---
+<IfModule mod_expires.c>
+    ExpiresActive On
+    ExpiresByType text/html "access plus 1 hour"
+    ExpiresByType text/css "access plus 1 month"
+    ExpiresByType application/javascript "access plus 1 month"
+    ExpiresByType image/jpeg "access plus 1 year"
+    ExpiresByType image/png "access plus 1 year"
+    ExpiresByType image/webp "access plus 1 year"
+    ExpiresByType image/svg+xml "access plus 1 year"
+    ExpiresByType font/woff2 "access plus 1 year"
+    ExpiresByType application/font-woff2 "access plus 1 year"
+</IfModule>
+
+# --- GZIP Compression ---
+<IfModule mod_deflate.c>
+    AddOutputFilterByType DEFLATE text/html text/css application/javascript application/json image/svg+xml text/xml application/xml
+</IfModule>
+
+# --- Custom Error Pages (opțional) ---
 ErrorDocument 404 /404.html
 
-# Compresie GZIP (LiteSpeed)
-<IfModule mod_deflate.c>
-  AddOutputFilterByType DEFLATE text/html text/plain text/css text/javascript application/javascript application/json application/xml image/svg+xml
-</IfModule>
-
-# Cache Browser (performanta)
-<IfModule mod_expires.c>
-  ExpiresActive On
-  ExpiresByType text/html "access plus 1 hour"
-  ExpiresByType text/css "access plus 1 month"
-  ExpiresByType application/javascript "access plus 1 month"
-  ExpiresByType image/jpeg "access plus 1 year"
-  ExpiresByType image/png "access plus 1 year"
-  ExpiresByType image/webp "access plus 1 year"
-  ExpiresByType image/svg+xml "access plus 1 year"
-  ExpiresByType image/x-icon "access plus 1 year"
-  ExpiresByType font/woff2 "access plus 1 year"
-</IfModule>
-
-# Security Headers
-<IfModule mod_headers.c>
-  Header set X-Content-Type-Options "nosniff"
-  Header set X-Frame-Options "SAMEORIGIN"
-  Header set X-XSS-Protection "1; mode=block"
-  Header set Referrer-Policy "strict-origin-when-cross-origin"
-  Header set Permissions-Policy "geolocation=(), microphone=(), camera=()"
-  Header always set Strict-Transport-Security "max-age=31536000; includeSubDomains"
-</IfModule>
-
-# Prevent directory listing
-Options -Indexes
-
-# Block access to hidden files
-<FilesMatch "^\.">
-  Order allow,deny
-  Deny from all
-</FilesMatch>
+# --- Block bad bots ---
+RewriteCond %{HTTP_USER_AGENT} (AhrefsBot|SemrushBot|DotBot|MJ12bot) [NC]
+RewriteRule .* - [F,L]

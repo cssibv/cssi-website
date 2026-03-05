@@ -1,54 +1,42 @@
 <!DOCTYPE html>
 <html lang="ro">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pagina nu a fost găsită | CSSI Brașov</title>
-    <meta name="robots" content="noindex, follow">
-    <link rel="icon" type="image/png" sizes="96x96" href="/images/favicon-96x96.png">
-    <link rel="icon" type="image/x-icon" href="/images/favicon.ico">
-    <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
-    <link rel="manifest" href="/images/site.webmanifest">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <script src="/cookie-consent.js" defer></script>
-    <style>
-        *{margin:0;padding:0;box-sizing:border-box;}
-        body{font-family:'Inter',sans-serif;color:#111827;background:#fff;min-height:100vh;display:flex;flex-direction:column;}
-        .header{background:#0f172a;padding:16px 24px;text-align:center;}
-        .header a{color:#fff;text-decoration:none;font-weight:700;font-size:20px;}
-        .content{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:48px 24px;text-align:center;}
-        .error-code{font-size:120px;font-weight:800;background:linear-gradient(135deg,#dc2626,#ea580c,#f59e0b);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;line-height:1;}
-        h1{font-size:24px;font-weight:700;margin:16px 0 8px;color:#111827;}
-        p{color:#6b7280;font-size:16px;max-width:480px;line-height:1.6;margin-bottom:32px;}
-        .btn-home{display:inline-flex;align-items:center;gap:8px;padding:14px 28px;background:linear-gradient(135deg,#dc2626,#b91c1c);color:#fff;border-radius:12px;text-decoration:none;font-weight:600;font-size:15px;transition:all 0.3s;}
-        .btn-home:hover{transform:translateY(-2px);box-shadow:0 8px 20px rgba(220,38,38,0.3);}
-        .services{margin-top:48px;display:flex;flex-wrap:wrap;gap:10px;justify-content:center;max-width:600px;}
-        .services a{padding:8px 16px;background:#f1f5f9;border-radius:8px;color:#334155;text-decoration:none;font-size:13px;font-weight:500;transition:all 0.2s;}
-        .services a:hover{background:#fef2f2;color:#dc2626;}
-        .contact{margin-top:32px;color:#6b7280;font-size:14px;}
-        .contact a{color:#dc2626;text-decoration:none;font-weight:600;}
-        .contact a:hover{text-decoration:underline;}
-        @media(max-width:640px){.error-code{font-size:80px;}h1{font-size:20px;}}
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pagina nu a fost găsită | CSSI Brașov</title>
+  <meta name="robots" content="noindex">
+  <link rel="icon" href="https://eu.chat-img.sintra.ai/32c1b29c-0c86-4833-a031-e7c45e21a11e/983d52bb-2eb6-42f1-bed4-f94d769bb634/Logo_CSSI.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Inter', sans-serif; background: #f8fafc; color: #1e293b; min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 24px; }
+    .container { text-align: center; max-width: 520px; }
+    .code { font-size: 120px; font-weight: 800; color: #e2e8f0; line-height: 1; }
+    h1 { font-size: 24px; font-weight: 700; margin: 16px 0 8px; }
+    p { color: #64748b; font-size: 16px; line-height: 1.6; margin-bottom: 24px; }
+    .actions { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+    a { display: inline-flex; align-items: center; gap: 8px; padding: 12px 24px; border-radius: 10px; font-weight: 600; font-size: 14px; text-decoration: none; transition: all 0.2s; }
+    .btn-primary { background: linear-gradient(to right, #dc2626, #b91c1c); color: #fff; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); }
+    .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 15px -3px rgba(0,0,0,0.15); }
+    .btn-secondary { background: #fff; color: #334155; border: 1px solid #e2e8f0; }
+    .btn-secondary:hover { background: #f1f5f9; }
+    .contact { margin-top: 40px; padding-top: 24px; border-top: 1px solid #e2e8f0; color: #94a3b8; font-size: 13px; }
+    .contact a { display: inline; padding: 0; color: #dc2626; font-weight: 600; background: none; border: none; }
+  </style>
 </head>
 <body>
-    <div class="header">
-        <a href="/">🔒 CSSI</a>
+  <div class="container">
+    <div class="code">404</div>
+    <h1>Pagina nu a fost găsită</h1>
+    <p>Ne pare rău, pagina pe care o cauți nu există sau a fost mutată. Verifică adresa URL sau navighează înapoi la pagina principală.</p>
+    <div class="actions">
+      <a href="/" class="btn-primary">🏠 Pagina Principală</a>
+      <a href="/contact.html" class="btn-secondary">📞 Contactează-ne</a>
     </div>
-    <div class="content">
-        <div class="error-code">404</div>
-        <h1>Pagina nu a fost găsită</h1>
-        <p>Ne pare rău, pagina pe care o cauți nu există sau a fost mutată. Verifică adresa URL sau navighează către una din paginile de mai jos.</p>
-        <a href="/" class="btn-home">🏠 Înapoi la pagina principală</a>
-        <div class="services">
-            <a href="/detectie-incendiu-isu.html">🔥 Detecție Incendiu</a>
-            <a href="/camere-supraveghere.html">📹 Camere Supraveghere</a>
-            <a href="/alarma-antiefractie.html">🚨 Alarme Antiefracție</a>
-            <a href="/control-acces.html">🔑 Control Acces</a>
-            <a href="/automatizari-porti.html">🚧 Automatizări Porți</a>
-            <a href="/instalatii-electrice.html">⚡ Instalații Electrice</a>
-            <a href="/aer-conditionat.html">❄️ Aer Condiționat</a>
-            <a href="/contact.html">📞 Contact</a>
-        </div>
-        <div class="contact">
-            Ai nevoie de ajutor? Sună-ne: <a href="tel:+40752288400">0752 288 400</a> sau scrie-ne: <a href="/cdn-cgi/l/email-protection#48272e2e212b2d082b3b3b21663a27" style="color:#dc2626;"><span class="__cf_email
+    <div class="contact">
+      Ai nevoie de ajutor? Sună-ne la <a href="tel:0752288400">0752 288 400</a>
+    </div>
+  </div>
+</body>
+</html>
