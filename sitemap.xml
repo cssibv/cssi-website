@@ -2,134 +2,122 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://cssi.ro/</loc>
-    <lastmod>2026-03-02</lastmod>
+    <lastmod>2026-03-05</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
-    <loc>https://cssi.ro/servicii.html</loc>
-    <lastmod>2026-03-02</lastmod>
+    <loc>https://cssi.ro/detectie-incendiu-isu.html</loc>
+    <lastmod>2026-03-05</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://cssi.ro/detectie-incendiu-isu.html</loc>
-    <lastmod>2026-03-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
     <loc>https://cssi.ro/camere-supraveghere.html</loc>
-    <lastmod>2026-03-02</lastmod>
+    <lastmod>2026-03-05</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
+    <priority>0.9</priority>
   </url>
   <url>
     <loc>https://cssi.ro/alarma-antiefractie.html</loc>
-    <lastmod>2026-03-02</lastmod>
+    <lastmod>2026-03-05</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
+    <priority>0.9</priority>
   </url>
   <url>
     <loc>https://cssi.ro/control-acces.html</loc>
-    <lastmod>2026-03-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://cssi.ro/automatizari-porti.html</loc>
-    <lastmod>2026-03-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://cssi.ro/bariere-auto.html</loc>
-    <lastmod>2026-03-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://cssi.ro/interfoane-videointerfoane.html</loc>
-    <lastmod>2026-03-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://cssi.ro/sonorizare.html</loc>
-    <lastmod>2026-03-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://cssi.ro/usi-garaj.html</loc>
-    <lastmod>2026-03-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://cssi.ro/instalatii-electrice.html</loc>
-    <lastmod>2026-03-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://cssi.ro/instalatii-termice-sanitare.html</loc>
-    <lastmod>2026-03-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://cssi.ro/aer-conditionat.html</loc>
-    <lastmod>2026-03-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://cssi.ro/ventilatie.html</loc>
-    <lastmod>2026-03-02</lastmod>
+    <lastmod>2026-03-05</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://cssi.ro/pontaj-electronic.html</loc>
-    <lastmod>2026-03-02</lastmod>
+    <lastmod>2026-03-05</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://cssi.ro/bariere-auto.html</loc>
+    <lastmod>2026-03-05</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://cssi.ro/automatizari-porti.html</loc>
+    <lastmod>2026-03-05</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
+    <loc>https://cssi.ro/usi-garaj.html</loc>
+    <lastmod>2026-03-05</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://cssi.ro/interfoane-videointerfoane.html</loc>
+    <lastmod>2026-03-05</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://cssi.ro/sonorizare.html</loc>
+    <lastmod>2026-03-05</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://cssi.ro/aer-conditionat.html</loc>
+    <lastmod>2026-03-05</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://cssi.ro/ventilatie.html</loc>
+    <lastmod>2026-03-05</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://cssi.ro/instalatii-electrice.html</loc>
+    <lastmod>2026-03-05</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://cssi.ro/instalatii-termice-sanitare.html</loc>
+    <lastmod>2026-03-05</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
     <loc>https://cssi.ro/despre-noi.html</loc>
-    <lastmod>2026-03-02</lastmod>
+    <lastmod>2026-03-05</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://cssi.ro/portofoliu.html</loc>
-    <lastmod>2026-03-02</lastmod>
+    <lastmod>2026-03-05</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://cssi.ro/contact.html</loc>
-    <lastmod>2026-03-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://cssi.ro/alarma-antiefractie-brasov.html</loc>
-    <lastmod>2026-03-02</lastmod>
+    <lastmod>2026-03-05</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://cssi.ro/camere-supraveghere-ploiesti.html</loc>
-    <lastmod>2026-03-02</lastmod>
-    <changefreq>monthly</changefreq>
+    <loc>https://cssi.ro/blog/</loc>
+    <lastmod>2026-03-05</lastmod>
+    <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://cssi.ro/politica-cookies.html</loc>
-    <lastmod>2026-03-02</lastmod>
-    <changefreq>yearly</changefreq>
-    <priority>0.3</priority>
+    <loc>https://cssi.ro/blog/sistem-integrat-securitate-brasov.html</loc>
+    <lastmod>2026-03-05</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
   </url>
 </urlset>
