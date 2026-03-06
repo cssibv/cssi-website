@@ -46,10 +46,10 @@
     img{max-width:100%;height:auto;display:block}
     a{color:var(--brand-blue);text-decoration:none}
     a:hover{text-decoration:underline}
-    .breadcrumb{background:var(--brand-light);border-bottom:1px solid var(--border);padding:12px 0;padding-top:104px;font-family:var(--ff-head);font-size:13px;color:var(--text-muted)}
+    .breadcrumb{background:var(--brand-dark);border-bottom:none;padding:12px 0;padding-top:104px;font-family:var(--ff-head);font-size:13px;color:rgba(255,255,255,.55)}
     .breadcrumb .inner{max-width:900px;margin:0 auto;padding:0 0 12px 24px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
-    .breadcrumb a{color:var(--brand-blue)}
-    .breadcrumb .sep{color:var(--text-light)}
+    .breadcrumb a{color:rgba(255,255,255,.7)}
+    .breadcrumb .sep{color:rgba(255,255,255,.3)}
     .hero{background:var(--brand-dark);background-image:radial-gradient(ellipse 70% 60% at 80% 50%,rgba(26,75,140,.45) 0%,transparent 70%),radial-gradient(ellipse 40% 50% at 10% 80%,rgba(230,48,34,.15) 0%,transparent 60%);color:var(--white);padding:48px 24px 64px;position:relative;overflow:hidden}
     .hero::before{content:'';position:absolute;inset:0;background-image:url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23ffffff' fill-opacity='0.025'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/svg%3E")}
     .hero .inner{max-width:var(--max-w);margin:0 auto;position:relative;z-index:1}
@@ -393,7 +393,7 @@
         <div class="sidebar-card-body">
           <ul class="contact-info">
             <li><div class="ci-icon">📞</div><div><strong>0752 288 400</strong><span>Lun–Vin 08:00–18:00</span></div></li>
-            <li><div class="ci-icon">📧</div><div><strong>office@cssi.ro</strong><span>Răspuns în max 24h</span></div></li>
+            <li><div class="ci-icon">📧</div><div><strong><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="402f262629232500233333296e322f">[email&#160;protected]</a></strong><span>Răspuns în max 24h</span></div></li>
             <li><div class="ci-icon">📍</div><div><strong>Brașov</strong><span>și județele înconjurătoare</span></div></li>
           </ul>
           <a href="https://wa.me/40752288400" class="btn btn-primary" style="margin-top:12px">💬 Scrie pe WhatsApp</a>
@@ -407,7 +407,7 @@
     <p style="font-size:12px;color:#aaa;margin-top:8px">© 2026 CSSI — Confort, Securitate, Siguranță, Imobil | <a href="../index.html">cssi.ro</a></p>
   </footer>
 
-  <script>
+  <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
     function toggleFaq(btn) {
       const item = btn.closest('.faq-item');
       const isOpen = item.classList.contains('open');
@@ -474,11 +474,4 @@
         document.getElementById('mobileMenu').classList.remove('open');
         document.getElementById('menuIcon').style.display='';
         document.getElementById('closeIcon').style.display='none';
-    }
-    function toggleServicesSubmenu(){
-        const sub=document.getElementById('servicesSubmenu');
-        const arrow=document.getElementById('servicesArrow');
-        if(sub.classList.contains('open')){
-
-</body>
-</html>
+   
