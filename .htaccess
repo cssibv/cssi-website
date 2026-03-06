@@ -1,57 +1,155 @@
-# =============================================
-# CSSI.RO — .htaccess
-# Upload în rădăcina site-ului prin cPanel
-# =============================================
+# ============================================================
+# .htaccess pentru cssi.ro
+# CSSI - Confort, Securitate, Siguranță, Imobil
+# Data generare: 6 Martie 2026
+# ============================================================
 
-# --- Force HTTPS ---
+# --------------------------------------------------
+# 1. FORȚEAZĂ HTTPS + REDIRECT WWW → NON-WWW
+# --------------------------------------------------
 RewriteEngine On
-RewriteCond %{HTTPS} off
-RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
 
-# --- Force www or non-www (alege UNA, decomentează) ---
-# Varianta fără www (recomandat - coincide cu canonical-urile existente):
-RewriteCond %{HTTP_HOST} ^www\.cssi\.ro [NC]
-RewriteRule ^(.*)$ https://cssi.ro/$1 [L,R=301]
+# Redirect HTTP → HTTPS
+RewriteCond %{HTTPS} !=on
+RewriteRule ^(.*)$ https://cssi.ro/$1 [R=301,L]
 
-# --- Blog clean URLs (canonical fără .html) ---
-# /blog/sistem-integrat-securitate-brasov → blog/sistem-integrat-securitate-brasov.html
-RewriteCond %{REQUEST_FILENAME} !-f
-RewriteCond %{REQUEST_FILENAME} !-d
-RewriteRule ^blog/([^/]+)$ blog/$1.html [L]
+# Redirect www → non-www
+RewriteCond %{HTTP_HOST} ^www\.cssi\.ro$ [NC]
+RewriteRule ^(.*)$ https://cssi.ro/$1 [R=301,L]
 
-# --- Trailing slash for blog index ---
-RewriteRule ^blog$ /blog/ [R=301,L]
+# --------------------------------------------------
+# 2. REDIRECT /index.html → / (rezolvă duplicate)
+# --------------------------------------------------
+RewriteRule ^index\.html$ / [R=301,L]
 
-# --- Security Headers ---
-<IfModule mod_headers.c>
-    Header set X-Content-Type-Options "nosniff"
-    Header set X-Frame-Options "SAMEORIGIN"
-    Header set X-XSS-Protection "1; mode=block"
-    Header set Referrer-Policy "strict-origin-when-cross-origin"
+# --------------------------------------------------
+# 3. REDIRECT TRAILING SLASH PE FIȘIERE .HTML
+# Exemplu: /camere-supraveghere.html/ → /camere-supraveghere.html
+# --------------------------------------------------
+RewriteRule ^(.+)\.html/$ /$1.html [R=301,L]
+
+# --------------------------------------------------
+# 4. COMPRESIE GZIP
+# --------------------------------------------------
+<IfModule mod_deflate.c>
+    AddOutputFilterByType DEFLATE text/html
+    AddOutputFilterByType DEFLATE text/css
+    AddOutputFilterByType DEFLATE text/javascript
+    AddOutputFilterByType DEFLATE application/javascript
+    AddOutputFilterByType DEFLATE application/json
+    AddOutputFilterByType DEFLATE application/xml
+    AddOutputFilterByType DEFLATE text/xml
+    AddOutputFilterByType DEFLATE text/plain
+    AddOutputFilterByType DEFLATE image/svg+xml
+    AddOutputFilterByType DEFLATE application/font-woff
+    AddOutputFilterByType DEFLATE application/font-woff2
+    AddOutputFilterByType DEFLATE application/vnd.ms-fontobject
 </IfModule>
 
-# --- Browser Caching ---
+# --------------------------------------------------
+# 5. CACHE BROWSER (Expires Headers)
+# --------------------------------------------------
 <IfModule mod_expires.c>
     ExpiresActive On
-    ExpiresByType text/html "access plus 1 hour"
-    ExpiresByType text/css "access plus 1 month"
-    ExpiresByType application/javascript "access plus 1 month"
+
+    # Imagini - 1 an
     ExpiresByType image/jpeg "access plus 1 year"
     ExpiresByType image/png "access plus 1 year"
+    ExpiresByType image/gif "access plus 1 year"
     ExpiresByType image/webp "access plus 1 year"
     ExpiresByType image/svg+xml "access plus 1 year"
+    ExpiresByType image/x-icon "access plus 1 year"
+
+    # Fonturi - 1 an
+    ExpiresByType font/woff "access plus 1 year"
     ExpiresByType font/woff2 "access plus 1 year"
+    ExpiresByType application/font-woff "access plus 1 year"
     ExpiresByType application/font-woff2 "access plus 1 year"
+    ExpiresByType application/vnd.ms-fontobject "access plus 1 year"
+
+    # CSS & JavaScript - 1 lună
+    ExpiresByType text/css "access plus 1 month"
+    ExpiresByType application/javascript "access plus 1 month"
+    ExpiresByType text/javascript "access plus 1 month"
+
+    # HTML - 1 oră (pentru a reflecta actualizări rapide)
+    ExpiresByType text/html "access plus 1 hour"
+
+    # Default
+    ExpiresDefault "access plus 1 week"
 </IfModule>
 
-# --- GZIP Compression ---
-<IfModule mod_deflate.c>
-    AddOutputFilterByType DEFLATE text/html text/css application/javascript application/json image/svg+xml text/xml application/xml
+# Cache-Control headers
+<IfModule mod_headers.c>
+    # Imagini & fonturi - cache agresiv
+    <FilesMatch "\.(jpg|jpeg|png|gif|webp|svg|ico|woff|woff2|eot|ttf)$">
+        Header set Cache-Control "public, max-age=31536000, immutable"
+    </FilesMatch>
+
+    # CSS & JS - cache mediu
+    <FilesMatch "\.(css|js)$">
+        Header set Cache-Control "public, max-age=2592000"
+    </FilesMatch>
+
+    # HTML - cache scurt
+    <FilesMatch "\.(html|htm)$">
+        Header set Cache-Control "public, max-age=3600, must-revalidate"
+    </FilesMatch>
 </IfModule>
 
-# --- Custom Error Pages (opțional) ---
-ErrorDocument 404 /404.html
+# --------------------------------------------------
+# 6. SECURITY HEADERS
+# --------------------------------------------------
+<IfModule mod_headers.c>
+    # Previne clickjacking
+    Header always set X-Frame-Options "SAMEORIGIN"
 
-# --- Block bad bots ---
-RewriteCond %{HTTP_USER_AGENT} (AhrefsBot|SemrushBot|DotBot|MJ12bot) [NC]
-RewriteRule .* - [F,L]
+    # Previne MIME sniffing
+    Header always set X-Content-Type-Options "nosniff"
+
+    # XSS Protection
+    Header always set X-XSS-Protection "1; mode=block"
+
+    # Referrer Policy
+    Header always set Referrer-Policy "strict-origin-when-cross-origin"
+
+    # Permissions Policy (restricționează API-uri browser)
+    Header always set Permissions-Policy "geolocation=(self), microphone=(), camera=()"
+
+    # Strict Transport Security (HSTS) - 1 an
+    Header always set Strict-Transport-Security "max-age=31536000; includeSubDomains"
+</IfModule>
+
+# --------------------------------------------------
+# 7. PREVINE LISTAREA DIRECTOARELOR
+# --------------------------------------------------
+Options -Indexes
+
+# --------------------------------------------------
+# 8. PROTECȚIE FIȘIERE SENSIBILE
+# --------------------------------------------------
+<FilesMatch "^\.">
+    Order allow,deny
+    Deny from all
+</FilesMatch>
+
+# Blochează acces la fișiere backup
+<FilesMatch "\.(bak|backup|old|orig|save|sql|tar|gz|zip)$">
+    Order allow,deny
+    Deny from all
+</FilesMatch>
+
+# --------------------------------------------------
+# 9. CUSTOM ERROR PAGES (opțional - decomentează dacă ai pagini de eroare)
+# --------------------------------------------------
+# ErrorDocument 404 /404.html
+# ErrorDocument 500 /500.html
+
+# --------------------------------------------------
+# 10. PREVENIRE HOTLINKING IMAGINI (opțional)
+# --------------------------------------------------
+# RewriteCond %{HTTP_REFERER} !^$
+# RewriteCond %{HTTP_REFERER} !^https://cssi\.ro/ [NC]
+# RewriteCond %{HTTP_REFERER} !^https://www\.google\. [NC]
+# RewriteCond %{HTTP_REFERER} !^https://www\.facebook\. [NC]
+# RewriteRule \.(jpg|jpeg|png|gif|webp)$ - [F,NC]
