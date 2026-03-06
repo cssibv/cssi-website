@@ -29,6 +29,24 @@
     gtagScript.src = 'https://www.googletagmanager.com/gtag/js?id=' + GA_ID;
     document.head.appendChild(gtagScript);
 
+    // ── 2b. Meta (Facebook) Pixel ──
+    // ÎNLOCUIEȘTE ID-ul de mai jos cu cel real din Meta Business Manager
+    var META_PIXEL_ID = 'XXXXXXXXXXXXXXXXX';
+    !function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+    n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;
+    n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;
+    t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}
+    (window,document,'script','https://connect.facebook.net/en_US/fbevents.js');
+    fbq('consent', 'revoke');
+    fbq('init', META_PIXEL_ID);
+    fbq('track', 'PageView');
+
+    // ── 2c. Load tracking events (phone, WhatsApp, form, CTA) ──
+    var trackScript = document.createElement('script');
+    trackScript.src = '/tracking.js';
+    trackScript.defer = true;
+    document.head.appendChild(trackScript);
+
     // ── 3. Check saved consent ──
     var saved = getCookie('cssi_consent');
     if (saved === 'accepted') {
@@ -44,7 +62,7 @@
         }
     }
 
-    // ── Update Google Consent ──
+    // ── Update Google + Meta Consent ──
     function updateConsent(granted) {
         gtag('consent', 'update', {
             'analytics_storage': granted ? 'granted' : 'denied',
@@ -52,6 +70,10 @@
             'ad_user_data': granted ? 'granted' : 'denied',
             'ad_personalization': granted ? 'granted' : 'denied'
         });
+        // Meta Pixel consent
+        if (typeof fbq === 'function') {
+            fbq('consent', granted ? 'grant' : 'revoke');
+        }
     }
 
     // ── Cookie helpers (365 days) ──
