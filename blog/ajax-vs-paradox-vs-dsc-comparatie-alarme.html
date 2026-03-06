@@ -503,4 +503,18 @@
         document.getElementById('mobileMenu').classList.remove('open');
         document.getElementById('menuIcon').style.display='';
         document.getElementById('closeIcon').style.display='none';
-   
+    }
+    function toggleServicesSubmenu(){
+        const sub=document.getElementById('servicesSubmenu');
+        const arrow=document.getElementById('servicesArrow');
+        if(sub.classList.contains('open')){
+            sub.classList.remove('open');
+            arrow.style.transform='';
+        } else {
+            sub.classList.add('open');
+            arrow.style.transform='rotate(180deg)';
+        }
+    }
+  </script>
+</body>
+</html>
