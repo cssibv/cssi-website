@@ -1,451 +1,292 @@
 <!DOCTYPE html>
 <html lang="ro">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Blog Securitate &amp; Instalații | Ghiduri, Prețuri, Sfaturi | CSSI Brașov</title>
-  <meta name="description" content="Ghiduri practice despre sisteme de securitate, detecție incendiu, camere supraveghere și instalații în Brașov. Experți CSSI cu 20+ ani experiență." />
-  <link rel="canonical" href="https://cssi.ro/blog/" />
-  <meta property="og:title" content="Blog CSSI Brașov — Securitate &amp; Instalații" />
-  <meta property="og:description" content="Ghiduri practice, prețuri actualizate și sfaturi de la experți în securitate din Brașov." />
-  <meta property="og:type" content="website" />
-  <meta property="og:url" content="https://cssi.ro/blog/" />
-  <script type="application/ld+json">{"@context":"https://schema.org","@type":"Blog","name":"Blog CSSI Brașov","description":"Ghiduri practice despre sisteme de securitate, detecție incendiu și instalații","url":"https://cssi.ro/blog/","publisher":{"@type":"Organization","name":"CSSI — Confort, Securitate, Siguranță, Imobil","url":"https://cssi.ro"}}</script>
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;600;700;800&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&display=swap" rel="stylesheet" />
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.js"></script>
-  <style>
-    @keyframes subtle-pulse-n { 0%,100%{transform:scale(1)}50%{transform:scale(.92)} }
-    @keyframes badge-pulse-n { 0%,100%{box-shadow:0 0 0 0 rgba(34,197,94,.4)}50%{box-shadow:0 0 0 8px rgba(34,197,94,0)} }
-    .animate-subtle-pulse{animation:subtle-pulse-n 2.5s ease-in-out infinite}
-    .animate-badge-pulse{animation:badge-pulse-n 2s ease-in-out infinite}
-    .dropdown-menu{display:none!important}
-    .dropdown:hover .dropdown-menu{display:block!important}
-    #mobileMenu{display:none}
-    #mobileMenu.open{display:block}
-    #servicesSubmenu{display:none}
-    #servicesSubmenu.open{display:block}
-    .dropdown-scroll::-webkit-scrollbar{width:4px}
-    .dropdown-scroll::-webkit-scrollbar-track{background:#f1f1f1}
-    .dropdown-scroll::-webkit-scrollbar-thumb{background:#cbd5e1;border-radius:4px}
-    @media(min-width:640px){.sm\:block{display:block}.sm\:hidden{display:none}.sm\:px-6{padding-left:24px;padding-right:24px}}
-    @media(min-width:1024px){.lg\:flex{display:flex}.lg\:hidden{display:none}}
-    /* Fix font inheritance from blog body */
-    #mainHeader, #mainHeader a, #mainHeader button, #mainHeader span, #mainHeader div { font-family: 'Sora', sans-serif !important; }
-  </style>
-  <style>
-    :root {
-      --brand-dark:#0b1a2e; --brand-navy:#102a4c; --brand-blue:#1a4b8c;
-      --brand-accent:#e63022; --brand-gold:#f5a623; --brand-light:#f0f4f9;
-      --text-main:#1c2b3a; --text-muted:#5a6e82; --text-light:#8fa0b3;
-      --border:#dce6f0; --white:#ffffff;
-      --ff-head:'Sora',sans-serif; --ff-body:'Source Serif 4',Georgia,serif;
-      --radius:10px;
-      --shadow-sm:0 2px 8px rgba(11,26,46,.08); --shadow-md:0 8px 28px rgba(11,26,46,.13); --shadow-lg:0 16px 48px rgba(11,26,46,.18);
-    }
-    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-    html{scroll-behavior:smooth}
-    body{font-family:var(--ff-body);color:var(--text-main);background:var(--white);-webkit-font-smoothing:antialiased}
-    a{color:inherit;text-decoration:none}
-    .breadcrumb{background:var(--brand-light);border-bottom:1px solid var(--border);padding:12px 0;font-family:var(--ff-head);font-size:13px;color:var(--text-muted);padding-top:104px}
-    .breadcrumb .inner{max-width:1120px;margin:0 auto;padding:0 24px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
-    .breadcrumb a{color:var(--brand-blue)}
-    .breadcrumb .sep{color:var(--text-light)}
-    .hero{background:var(--brand-dark);background-image:radial-gradient(ellipse 65% 70% at 90% 40%,rgba(26,75,140,.4) 0%,transparent 65%),radial-gradient(ellipse 40% 40% at 5% 90%,rgba(230,48,34,.12) 0%,transparent 60%);color:var(--white);padding:48px 24px 56px;position:relative;overflow:hidden}
-    .hero::before{content:'';position:absolute;inset:0;background-image:url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23ffffff' fill-opacity='0.022'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/svg%3E")}
-    .hero .inner{max-width:1120px;margin:0 auto;position:relative;z-index:1;display:flex;align-items:flex-end;justify-content:space-between;gap:32px;flex-wrap:wrap}
-    .hero-left{max-width:600px}
-    .hero-badge{display:inline-flex;align-items:center;gap:6px;background:rgba(230,48,34,.2);border:1px solid rgba(230,48,34,.4);color:#ff8a80;font-family:var(--ff-head);font-size:12px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;padding:5px 12px;border-radius:100px;margin-bottom:18px}
-    .hero h1{font-family:var(--ff-head);font-size:clamp(28px,4vw,44px);font-weight:800;line-height:1.15;letter-spacing:-.02em;margin-bottom:16px}
-    .hero h1 em{font-style:normal;color:var(--brand-gold)}
-    .hero p{font-size:clamp(15px,1.8vw,17px);color:rgba(255,255,255,.75);line-height:1.65;margin-bottom:24px}
-    .hero-stats{display:flex;gap:28px;flex-wrap:wrap}
-    .stat{font-family:var(--ff-head)}
-    .stat-num{font-size:26px;font-weight:800;color:var(--brand-gold);display:block}
-    .stat-label{font-size:12px;color:rgba(255,255,255,.55);text-transform:uppercase;letter-spacing:.04em}
-    .filter-bar{background:var(--white);border-bottom:1px solid var(--border);position:sticky;top:92px;z-index:40;box-shadow:0 2px 12px rgba(11,26,46,.06)}
-    .filter-bar .inner{max-width:1120px;margin:0 auto;padding:0 24px;display:flex;align-items:center;gap:0;overflow-x:auto;scrollbar-width:none}
-    .filter-bar .inner::-webkit-scrollbar{display:none}
-    .filter-btn{display:flex;align-items:center;gap:6px;padding:14px 18px;font-family:var(--ff-head);font-size:13px;font-weight:600;color:var(--text-muted);white-space:nowrap;border:none;background:none;cursor:pointer;border-bottom:3px solid transparent;transition:color .15s,border-color .15s}
-    .filter-btn:hover{color:var(--brand-blue)}
-    .filter-btn.active{color:var(--brand-blue);border-bottom-color:var(--brand-blue)}
-    .filter-btn .count{background:var(--brand-light);color:var(--text-light);font-size:11px;font-weight:700;padding:2px 7px;border-radius:100px}
-    .filter-btn.active .count{background:rgba(26,75,140,.1);color:var(--brand-blue)}
-    .page-wrap{max-width:1120px;margin:0 auto;padding:48px 24px 64px;display:grid;grid-template-columns:1fr 300px;gap:48px;align-items:start}
-    .featured-card{display:grid;grid-template-columns:1fr 1fr;gap:0;border-radius:var(--radius);overflow:hidden;border:1px solid var(--border);box-shadow:var(--shadow-md);margin-bottom:40px;transition:box-shadow .2s,transform .2s;cursor:pointer}
-    .featured-card:hover{box-shadow:var(--shadow-lg);transform:translateY(-2px)}
-    .featured-img{background:linear-gradient(135deg,var(--brand-dark) 0%,var(--brand-navy) 60%,#1a4b8c 100%);min-height:280px;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden}
-    .featured-img .big-icon{font-size:96px;opacity:.25}
-    .featured-img .badge{position:absolute;top:16px;left:16px;background:var(--brand-accent);color:var(--white);font-family:var(--ff-head);font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;padding:4px 10px;border-radius:100px}
-    .featured-content{padding:32px 28px;background:var(--white);display:flex;flex-direction:column;justify-content:space-between}
-    .featured-content .cat-tag{display:inline-flex;align-items:center;gap:5px;font-family:var(--ff-head);font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--brand-blue);margin-bottom:10px}
-    .featured-content h2{font-family:var(--ff-head);font-size:clamp(17px,2vw,22px);font-weight:700;line-height:1.3;color:var(--brand-dark);margin-bottom:12px}
-    .featured-content .excerpt{font-size:15px;color:var(--text-muted);line-height:1.65;flex:1;margin-bottom:20px}
-    .featured-footer{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
-    .article-meta{font-family:var(--ff-head);font-size:12px;color:var(--text-light);display:flex;align-items:center;gap:10px}
-    .article-meta .dot{color:var(--border)}
-    .read-more{display:inline-flex;align-items:center;gap:6px;font-family:var(--ff-head);font-size:13px;font-weight:600;color:var(--brand-blue)}
-    .section-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:24px;gap:16px}
-    .section-header h2{font-family:var(--ff-head);font-size:18px;font-weight:700;color:var(--brand-dark)}
-    .articles-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:20px;margin-bottom:40px}
-    .article-card{border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;background:var(--white);box-shadow:var(--shadow-sm);display:flex;flex-direction:column}
-    .card-thumb{height:140px;display:flex;align-items:center;justify-content:center;font-size:52px;position:relative;overflow:hidden}
-    .card-thumb .thumb-icon{opacity:.6;position:relative;z-index:1}
-    .card-thumb .thumb-bg{position:absolute;inset:0;opacity:.9}
-    .card-body{padding:18px 18px 14px;flex:1;display:flex;flex-direction:column}
-    .card-cat{font-family:var(--ff-head);font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;margin-bottom:7px}
-    .card-body h3{font-family:var(--ff-head);font-size:15px;font-weight:700;color:var(--brand-dark);line-height:1.35;margin-bottom:8px;flex:1}
-    .card-excerpt{font-size:13.5px;color:var(--text-muted);line-height:1.6;margin-bottom:14px}
-    .card-footer{display:flex;align-items:center;justify-content:space-between;border-top:1px solid var(--border);padding-top:10px;margin-top:auto}
-    .card-footer .meta{font-family:var(--ff-head);font-size:11px;color:var(--text-light);display:flex;gap:6px;align-items:center}
-    .cat-securitate .card-thumb .thumb-bg{background:linear-gradient(135deg,#0b1a2e,#1a4b8c)}
-    .cat-securitate .card-cat{color:#2d6ec8}
-    .cat-incendiu .card-thumb .thumb-bg{background:linear-gradient(135deg,#7b1a0a,#c0392b)}
-    .cat-incendiu .card-cat{color:#c0392b}
-    .cat-camere .card-thumb .thumb-bg{background:linear-gradient(135deg,#0d3b2f,#1e7852)}
-    .cat-camere .card-cat{color:#1e7852}
-    .cat-instalatii .card-thumb .thumb-bg{background:linear-gradient(135deg,#2c1a6b,#5c35c8)}
-    .cat-instalatii .card-cat{color:#5c35c8}
-    .sidebar{position:sticky;top:104px}
-    .sidebar-card{background:var(--white);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;margin-bottom:20px;box-shadow:var(--shadow-sm)}
-    .sidebar-card-head{background:var(--brand-navy);color:var(--white);font-family:var(--ff-head);font-size:12px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;padding:12px 18px}
-    .sidebar-card-body{padding:16px 18px}
-    .popular-list{list-style:none;padding:0;counter-reset:pop}
-    .popular-list li{counter-increment:pop;display:flex;align-items:flex-start;gap:12px;padding:10px 0;border-bottom:1px solid var(--border)}
-    .popular-list li:last-child{border-bottom:none}
-    .popular-list li::before{content:counter(pop,decimal-leading-zero);font-family:var(--ff-head);font-size:18px;font-weight:800;color:var(--border);flex-shrink:0;line-height:1;margin-top:2px}
-    .pop-title{font-family:var(--ff-head);font-size:13px;font-weight:600;color:var(--brand-dark);line-height:1.35}
-    .pop-meta{font-size:11px;color:var(--text-light);margin-top:3px}
-    .cat-cloud{display:flex;flex-wrap:wrap;gap:8px}
-    .cat-chip{display:flex;align-items:center;gap:5px;background:var(--brand-light);border:1px solid var(--border);border-radius:100px;padding:5px 12px;font-family:var(--ff-head);font-size:12px;font-weight:600;color:var(--text-muted)}
-    .cat-chip .n{background:var(--white);border-radius:100px;padding:1px 6px;font-size:10px;color:var(--text-light)}
-    .contact-cta{background:linear-gradient(135deg,var(--brand-dark),var(--brand-navy));border-radius:var(--radius);padding:22px 18px;color:var(--white);text-align:center}
-    .contact-cta .cta-icon{font-size:36px;margin-bottom:10px}
-    .contact-cta h3{font-family:var(--ff-head);font-size:15px;font-weight:700;margin-bottom:8px}
-    .contact-cta p{font-size:13px;color:rgba(255,255,255,.7);line-height:1.55;margin-bottom:14px}
-    .btn{display:inline-flex;align-items:center;gap:7px;padding:10px 18px;border-radius:8px;font-family:var(--ff-head);font-size:13px;font-weight:600;cursor:pointer;border:none;transition:transform .15s;text-decoration:none}
-    .btn-primary{background:var(--brand-accent);color:var(--white);box-shadow:0 4px 14px rgba(230,48,34,.3);width:100%;justify-content:center;margin-bottom:8px}
-    .btn-secondary{background:rgba(255,255,255,.1);color:var(--white);border:1px solid rgba(255,255,255,.2);width:100%;justify-content:center}
-    .footer-strip{background:var(--brand-light);border-top:1px solid var(--border);padding:24px;text-align:center;font-family:var(--ff-head);font-size:13px;color:var(--text-muted)}
-    .footer-strip a{color:var(--brand-blue)}
-    @media(max-width:900px){.page-wrap{grid-template-columns:1fr}.sidebar{position:static}.featured-card{grid-template-columns:1fr}.featured-img{min-height:180px}}
-    @media(max-width:600px){.articles-grid{grid-template-columns:1fr}.breadcrumb{padding-top:96px}.filter-bar{top:80px}}
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blog CSSI — Ghiduri Securitate, Instalații și Automatizări 2026</title>
+    <meta name="description" content="Blog CSSI: ghiduri complete despre detecție incendiu, camere supraveghere, sisteme de alarmă, automatizări porți. Sfaturi de la specialiști cu 20+ ani experiență.">
+    <meta name="keywords" content="blog securitate, ghid camere supraveghere, detectie incendiu pret, alarma casa, automatizare poarta, CSSI brasov">
+    <link rel="canonical" href="https://cssi.ro/blog/">
+
+    <meta property="og:title" content="Blog CSSI — Ghiduri Securitate și Instalații">
+    <meta property="og:description" content="Ghiduri complete, comparații și sfaturi de la specialiștii CSSI. Peste 20 de ani de experiență în securitate și instalații.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://cssi.ro/blog/">
+    <meta property="og:image" content="https://cssi.ro/images/og-cssi.jpg">
+    <meta property="og:site_name" content="CSSI">
+    <meta property="og:locale" content="ro_RO">
+
+    <style>
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.7;
+            color: #333;
+            background: #f8f9fa;
+        }
+
+        /* Header */
+        .blog-header {
+            background: linear-gradient(135deg, #1a1a2e 0%, #2c3e50 100%);
+            color: white;
+            padding: 48px 20px;
+            text-align: center;
+        }
+        .blog-header h1 {
+            font-size: 2.2rem;
+            margin-bottom: 12px;
+        }
+        .blog-header p {
+            color: #b0bec5;
+            font-size: 1.1rem;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        .blog-header nav {
+            margin-bottom: 16px;
+            font-size: 0.9rem;
+        }
+        .blog-header nav a {
+            color: #e74c3c;
+            text-decoration: none;
+        }
+        .blog-header nav a:hover { text-decoration: underline; }
+        .blog-header nav span { color: #78909c; }
+
+        /* Container */
+        .blog-container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        /* Article Cards */
+        .article-card {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            margin-bottom: 28px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+            transition: transform 0.2s, box-shadow 0.2s;
+            display: flex;
+            flex-direction: row;
+        }
+        .article-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+        }
+
+        .card-accent {
+            width: 6px;
+            flex-shrink: 0;
+        }
+        .accent-red { background: #e74c3c; }
+        .accent-blue { background: #2980b9; }
+        .accent-green { background: #27ae60; }
+        .accent-orange { background: #e67e22; }
+
+        .card-content {
+            padding: 28px 32px;
+            flex: 1;
+        }
+
+        .card-tag {
+            display: inline-block;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            padding: 4px 10px;
+            border-radius: 4px;
+            margin-bottom: 12px;
+        }
+        .tag-incendiu { background: #fde8e8; color: #c0392b; }
+        .tag-supraveghere { background: #dbeafe; color: #1e40af; }
+        .tag-alarme { background: #d1fae5; color: #065f46; }
+        .tag-automatizari { background: #fef3c7; color: #92400e; }
+
+        .card-content h2 {
+            font-size: 1.35rem;
+            color: #1a1a2e;
+            margin-bottom: 10px;
+            line-height: 1.4;
+        }
+        .card-content h2 a {
+            color: inherit;
+            text-decoration: none;
+        }
+        .card-content h2 a:hover {
+            color: #c0392b;
+        }
+
+        .card-excerpt {
+            color: #555;
+            font-size: 0.95rem;
+            margin-bottom: 16px;
+            line-height: 1.6;
+        }
+
+        .card-meta {
+            display: flex;
+            gap: 20px;
+            font-size: 0.85rem;
+            color: #888;
+        }
+
+        .card-link {
+            display: inline-block;
+            color: #c0392b;
+            font-weight: 600;
+            font-size: 0.95rem;
+            text-decoration: none;
+            margin-top: 12px;
+        }
+        .card-link:hover { text-decoration: underline; }
+        .card-link::after { content: " →"; }
+
+        /* CTA Banner */
+        .cta-banner {
+            background: linear-gradient(135deg, #1a1a2e, #34495e);
+            color: white;
+            padding: 36px;
+            border-radius: 12px;
+            text-align: center;
+            margin-top: 20px;
+        }
+        .cta-banner h3 {
+            font-size: 1.3rem;
+            margin-bottom: 8px;
+        }
+        .cta-banner p { color: #b0bec5; margin-bottom: 16px; }
+        .cta-btn {
+            display: inline-block;
+            background: #e74c3c;
+            color: white;
+            padding: 12px 32px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: background 0.3s;
+        }
+        .cta-btn:hover { background: #c0392b; }
+
+        /* Footer nav */
+        .blog-footer-nav {
+            text-align: center;
+            margin-top: 40px;
+            padding-top: 24px;
+            border-top: 1px solid #ddd;
+            font-size: 0.95rem;
+        }
+        .blog-footer-nav a {
+            color: #c0392b;
+            text-decoration: none;
+            margin: 0 12px;
+        }
+        .blog-footer-nav a:hover { text-decoration: underline; }
+
+        @media (max-width: 768px) {
+            .blog-header h1 { font-size: 1.6rem; }
+            .blog-header { padding: 32px 16px; }
+            .blog-container { padding: 24px 16px; }
+            .card-content { padding: 20px; }
+            .card-content h2 { font-size: 1.15rem; }
+            .card-meta { flex-wrap: wrap; gap: 10px; }
+        }
+    </style>
 </head>
 <body>
 
-<header id="mainHeader" style="position:fixed;top:0;left:0;right:0;z-index:50;transition:all 0.3s;">
-    <div class="hidden sm:block" style="background:#0f172a;color:#fff;font-size:12px;padding:6px 0;">
-        <div style="max-width:1280px;margin:0 auto;padding:0 24px;display:flex;justify-content:space-between;align-items:center;">
-            <span>⭐ <span style="color:#4ade80;font-weight:600;">Peste 20 ani de experiență</span></span>
-            <div style="display:flex;align-items:center;gap:16px;">
-                <span class="animate-badge-pulse" style="display:inline-flex;align-items:center;gap:6px;padding:2px 8px;background:rgba(34,197,94,0.2);border-radius:999px;">
-                    <span style="color:#facc15;">⭐</span><span style="font-weight:600;">4.9/5</span><span style="color:#94a3b8;">•</span><span>127 recenzii</span>
-                </span>
-                <span>⭐ <span style="font-weight:600;">8.700+ proiecte</span></span>
-            </div>
-        </div>
-    </div>
-    <div class="sm:hidden" style="background:#0f172a;color:#fff;font-size:12px;padding:6px 0;">
-        <div style="max-width:1280px;margin:0 auto;padding:0 12px;display:flex;justify-content:space-between;align-items:center;">
-            <span>⭐ <span style="color:#4ade80;font-weight:600;">Peste 20 ani de experiență</span></span>
-            <a href="../tel:0752288400" style="display:flex;align-items:center;gap:4px;font-weight:600;color:#4ade80;">📞 Sună acum</a>
-        </div>
-    </div>
-    <div id="navBg" style="transition:all 0.3s;">
-        <div style="max-width:1280px;margin:0 auto;padding:0 12px;display:flex;justify-content:space-between;align-items:center;height:64px;" class="sm:px-6">
-            <a href="../index.html">
-                <img src="https://eu.chat-img.sintra.ai/32c1b29c-0c86-4833-a031-e7c45e21a11e/983d52bb-2eb6-42f1-bed4-f94d769bb634/Logo_CSSI.png" alt="CSSI Logo" id="logoImg" style="height:56px;width:auto;transition:all 0.3s;filter:brightness(0) invert(1) drop-shadow(0 0 1px rgba(255,255,255,0.8));">
-            </a>
-            <nav class="hidden lg:flex" style="align-items:center;gap:4px;">
-                <a href="../index.html" id="navLink1" style="padding:6px 12px;font-size:14px;font-weight:500;color:#fff;transition:all 0.2s;border-radius:8px;" onmouseover="this.style.color='#f87171'" onmouseout="this.style.color=navTextColor">🏠 Acasă</a>
-                <div class="dropdown" style="position:relative;">
-                    <button id="navLink2" style="padding:6px 12px;font-size:14px;font-weight:500;color:#fff;transition:all 0.2s;border-radius:8px;background:none;border:none;cursor:pointer;display:flex;align-items:center;font-family:inherit;">
-                        🛠️ Servicii
-                        <svg style="margin-left:4px;width:16px;height:16px;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
-                    </button>
-                    <div class="dropdown-menu dropdown-scroll" style="position:absolute;top:100%;left:0;width:280px;background:#fff;box-shadow:0 10px 15px -3px rgba(0,0,0,0.1);border-radius:12px;padding:8px;border:1px solid #f1f5f9;max-height:384px;overflow-y:auto;z-index:100;">
-                        <a href="../detectie-incendiu-isu.html" style="display:block;padding:10px 16px;font-size:13px;color:#334155;border-radius:8px;" onmouseover="this.style.background='#fef2f2';this.style.color='#dc2626'" onmouseout="this.style.background='';this.style.color='#334155'">🔥 Detecție Incendiu ISU</a>
-                        <a href="../camere-supraveghere.html" style="display:block;padding:10px 16px;font-size:13px;color:#334155;border-radius:8px;" onmouseover="this.style.background='#fef2f2';this.style.color='#dc2626'" onmouseout="this.style.background='';this.style.color='#334155'">📹 Camere Supraveghere</a>
-                        <a href="../alarma-antiefractie.html" style="display:block;padding:10px 16px;font-size:13px;color:#334155;border-radius:8px;" onmouseover="this.style.background='#fef2f2';this.style.color='#dc2626'" onmouseout="this.style.background='';this.style.color='#334155'">🚨 Alarmă Antiefracție</a>
-                        <a href="../control-acces.html" style="display:block;padding:10px 16px;font-size:13px;color:#334155;border-radius:8px;" onmouseover="this.style.background='#fef2f2';this.style.color='#dc2626'" onmouseout="this.style.background='';this.style.color='#334155'">🚪 Control Acces</a>
-                        <a href="../pontaj-electronic.html" style="display:block;padding:10px 16px;font-size:13px;color:#334155;border-radius:8px;" onmouseover="this.style.background='#fef2f2';this.style.color='#dc2626'" onmouseout="this.style.background='';this.style.color='#334155'">⏱️ Pontaj Electronic</a>
-                        <a href="../bariere-auto.html" style="display:block;padding:10px 16px;font-size:13px;color:#334155;border-radius:8px;" onmouseover="this.style.background='#fef2f2';this.style.color='#dc2626'" onmouseout="this.style.background='';this.style.color='#334155'">🚧 Bariere Auto</a>
-                        <a href="../interfoane-videointerfoane.html" style="display:block;padding:10px 16px;font-size:13px;color:#334155;border-radius:8px;" onmouseover="this.style.background='#fef2f2';this.style.color='#dc2626'" onmouseout="this.style.background='';this.style.color='#334155'">🔔 Interfoane &amp; Videointerfoane</a>
-                        <a href="../sonorizare.html" style="display:block;padding:10px 16px;font-size:13px;color:#334155;border-radius:8px;" onmouseover="this.style.background='#fef2f2';this.style.color='#dc2626'" onmouseout="this.style.background='';this.style.color='#334155'">🔊 Sonorizare</a>
-                        <a href="../automatizari-porti.html" style="display:block;padding:10px 16px;font-size:13px;color:#334155;border-radius:8px;" onmouseover="this.style.background='#fef2f2';this.style.color='#dc2626'" onmouseout="this.style.background='';this.style.color='#334155'">🚗 Automatizări Porți</a>
-                        <a href="../usi-garaj.html" style="display:block;padding:10px 16px;font-size:13px;color:#334155;border-radius:8px;" onmouseover="this.style.background='#fef2f2';this.style.color='#dc2626'" onmouseout="this.style.background='';this.style.color='#334155'">🏠 Uși Garaj</a>
-                        <a href="../aer-conditionat.html" style="display:block;padding:10px 16px;font-size:13px;color:#334155;border-radius:8px;" onmouseover="this.style.background='#fef2f2';this.style.color='#dc2626'" onmouseout="this.style.background='';this.style.color='#334155'">❄️ Aer Condiționat</a>
-                        <a href="../ventilatie.html" style="display:block;padding:10px 16px;font-size:13px;color:#334155;border-radius:8px;" onmouseover="this.style.background='#fef2f2';this.style.color='#dc2626'" onmouseout="this.style.background='';this.style.color='#334155'">💨 Ventilație</a>
-                        <a href="../instalatii-electrice.html" style="display:block;padding:10px 16px;font-size:13px;color:#334155;border-radius:8px;" onmouseover="this.style.background='#fef2f2';this.style.color='#dc2626'" onmouseout="this.style.background='';this.style.color='#334155'">⚡ Instalații Electrice</a>
-                        <a href="../instalatii-termice-sanitare.html" style="display:block;padding:10px 16px;font-size:13px;color:#334155;border-radius:8px;" onmouseover="this.style.background='#fef2f2';this.style.color='#dc2626'" onmouseout="this.style.background='';this.style.color='#334155'">🔧 Instalații Termice &amp; Sanitare</a>
-                    </div>
-                </div>
-                <a href="../despre-noi.html" id="navLink3" style="padding:6px 12px;font-size:14px;font-weight:500;color:#fff;transition:all 0.2s;border-radius:8px;" onmouseover="this.style.color='#f87171'" onmouseout="this.style.color=navTextColor">ℹ️ Despre Noi</a>
-                <a href="../portofoliu.html" id="navLink4" style="padding:6px 12px;font-size:14px;font-weight:500;color:#fff;transition:all 0.2s;border-radius:8px;" onmouseover="this.style.color='#f87171'" onmouseout="this.style.color=navTextColor">📁 Portofoliu</a>
-                <a href="index.html" style="padding:6px 12px;font-size:14px;font-weight:600;color:#16a34a;border-radius:8px;">📝 Blog</a>
-                <a href="../contact.html" id="navLink5" style="padding:6px 12px;font-size:14px;font-weight:500;color:#fff;transition:all 0.2s;border-radius:8px;" onmouseover="this.style.color='#f87171'" onmouseout="this.style.color=navTextColor">📍 Contact</a>
-            </nav>
-            <div class="hidden lg:flex" style="align-items:center;gap:12px;">
-                <a href="../tel:0752288400" id="phoneLink" style="display:flex;align-items:center;font-size:14px;font-weight:500;color:#fff;transition:all 0.2s;">
-                    <svg style="width:16px;height:16px;margin-right:6px;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/></svg>
-                    0752 288 400
-                </a>
-                <a href="../contact.html" style="background:linear-gradient(to right,#dc2626,#b91c1c);color:#fff;padding:8px 20px;border-radius:8px;font-size:14px;font-weight:600;box-shadow:0 4px 6px -1px rgba(0,0,0,0.1);transition:all 0.2s;" onmouseover="this.style.background='linear-gradient(to right,#b91c1c,#991b1b)'" onmouseout="this.style.background='linear-gradient(to right,#dc2626,#b91c1c)'">Cere Ofertă</a>
-            </div>
-            <div class="lg:hidden" style="display:flex;align-items:center;gap:8px;">
-                <span class="animate-badge-pulse" style="display:inline-flex;align-items:center;gap:4px;padding:2px 6px;border-radius:999px;font-size:10px;background:rgba(255,255,255,0.2);color:#fff;">
-                    <span style="color:#facc15;font-size:9px;">⭐</span><span style="font-weight:600;">4.9</span>
-                </span>
-                <button onclick="toggleMobileMenu()" id="menuBtn" class="animate-subtle-pulse" style="padding:4px;border-radius:6px;border:none;cursor:pointer;background:linear-gradient(to right,#ef4444,#dc2626);color:#fff;">
-                    <svg id="menuIcon" style="width:20px;height:20px;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
-                    <svg id="closeIcon" style="width:20px;height:20px;display:none;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
-                </button>
-            </div>
-        </div>
-        <div id="mobileMenu" style="background:#fff;border-radius:16px;box-shadow:0 20px 25px -5px rgba(0,0,0,0.1);margin:8px 12px;padding:8px;max-height:80vh;overflow-y:auto;">
-            <nav style="display:flex;flex-direction:column;gap:4px;">
-                <a href="../index.html" style="padding:10px 16px;font-size:16px;font-weight:500;color:#334155;border-radius:8px;">🏠 Acasă</a>
-                <button onclick="toggleServicesSubmenu()" style="padding:10px 16px;font-size:16px;font-weight:500;color:#334155;border-radius:8px;background:none;border:none;cursor:pointer;display:flex;justify-content:space-between;align-items:center;width:100%;font-family:inherit;text-align:left;">
-                    🛠️ Servicii
-                    <svg id="servicesArrow" style="width:16px;height:16px;transition:transform 0.2s;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
-                </button>
-                <div id="servicesSubmenu" style="padding-left:16px;overflow-y:auto;">
-                    <a href="../detectie-incendiu-isu.html" onclick="closeMobile()" style="display:block;padding:8px 16px;font-size:14px;color:#475569;border-radius:8px;">🔥 Detecție Incendiu ISU</a>
-                    <a href="../camere-supraveghere.html" onclick="closeMobile()" style="display:block;padding:8px 16px;font-size:14px;color:#475569;border-radius:8px;">📹 Camere Supraveghere</a>
-                    <a href="../alarma-antiefractie.html" onclick="closeMobile()" style="display:block;padding:8px 16px;font-size:14px;color:#475569;border-radius:8px;">🚨 Alarmă Antiefracție</a>
-                    <a href="../control-acces.html" onclick="closeMobile()" style="display:block;padding:8px 16px;font-size:14px;color:#475569;border-radius:8px;">🚪 Control Acces</a>
-                    <a href="../pontaj-electronic.html" onclick="closeMobile()" style="display:block;padding:8px 16px;font-size:14px;color:#475569;border-radius:8px;">⏱️ Pontaj Electronic</a>
-                    <a href="../bariere-auto.html" onclick="closeMobile()" style="display:block;padding:8px 16px;font-size:14px;color:#475569;border-radius:8px;">🚧 Bariere Auto</a>
-                    <a href="../interfoane-videointerfoane.html" onclick="closeMobile()" style="display:block;padding:8px 16px;font-size:14px;color:#475569;border-radius:8px;">🔔 Interfoane &amp; Videointerfoane</a>
-                    <a href="../sonorizare.html" onclick="closeMobile()" style="display:block;padding:8px 16px;font-size:14px;color:#475569;border-radius:8px;">🔊 Sonorizare</a>
-                    <a href="../automatizari-porti.html" onclick="closeMobile()" style="display:block;padding:8px 16px;font-size:14px;color:#475569;border-radius:8px;">🚗 Automatizări Porți</a>
-                    <a href="../usi-garaj.html" onclick="closeMobile()" style="display:block;padding:8px 16px;font-size:14px;color:#475569;border-radius:8px;">🏠 Uși Garaj</a>
-                    <a href="../aer-conditionat.html" onclick="closeMobile()" style="display:block;padding:8px 16px;font-size:14px;color:#475569;border-radius:8px;">❄️ Aer Condiționat</a>
-                    <a href="../ventilatie.html" onclick="closeMobile()" style="display:block;padding:8px 16px;font-size:14px;color:#475569;border-radius:8px;">💨 Ventilație</a>
-                    <a href="../instalatii-electrice.html" onclick="closeMobile()" style="display:block;padding:8px 16px;font-size:14px;color:#475569;border-radius:8px;">⚡ Instalații Electrice</a>
-                    <a href="../instalatii-termice-sanitare.html" onclick="closeMobile()" style="display:block;padding:8px 16px;font-size:14px;color:#475569;border-radius:8px;">🔧 Instalații Termice &amp; Sanitare</a>
-                </div>
-                <a href="../despre-noi.html" onclick="closeMobile()" style="padding:10px 16px;font-size:16px;font-weight:500;color:#334155;border-radius:8px;">ℹ️ Despre Noi</a>
-                <a href="../portofoliu.html" onclick="closeMobile()" style="padding:10px 16px;font-size:16px;font-weight:500;color:#334155;border-radius:8px;">📁 Portofoliu</a>
-                <a href="index.html" onclick="closeMobile()" style="padding:10px 16px;font-size:16px;font-weight:600;color:#16a34a;border-radius:8px;">📝 Blog</a>
-                <a href="../contact.html" onclick="closeMobile()" style="padding:10px 16px;font-size:16px;font-weight:500;color:#334155;border-radius:8px;">📍 Contact</a>
-                <div style="padding:12px 8px;">
-                    <a href="../contact.html" onclick="closeMobile()" style="display:block;text-align:center;background:linear-gradient(to right,#dc2626,#b91c1c);color:#fff;padding:10px 16px;border-radius:12px;font-weight:600;">Cere Ofertă</a>
-                </div>
-            </nav>
-        </div>
-    </div>
+<header class="blog-header">
+    <nav>
+        <a href="https://cssi.ro/">Acasă</a> <span>&rsaquo;</span> <span>Blog</span>
+    </nav>
+    <h1>Blog CSSI</h1>
+    <p>Ghiduri complete, comparații și sfaturi practice de la specialiștii cu peste 20 de ani experiență în securitate și instalații.</p>
 </header>
 
-  <nav class="breadcrumb">
-    <div class="inner">
-      <a href="../index.html">Acasă</a>
-      <span class="sep">›</span>
-      <span>Blog</span>
-    </div>
-  </nav>
+<main class="blog-container">
 
-  <header class="hero">
-    <div class="inner">
-      <div class="hero-left">
-        <div class="hero-badge">📚 Resurse gratuite</div>
-        <h1>Blog <em>Securitate</em><br/>&amp; Instalații Brașov</h1>
-        <p>Ghiduri practice și sfaturi de la specialiști cu 20+ ani experiență. Tot ce trebuie să știi înainte să investești în securitatea imobilului tău.</p>
-        <div class="hero-stats">
-          <div class="stat"><span class="stat-num">1</span><span class="stat-label">Articol publicat</span></div>
-          <div class="stat"><span class="stat-num">20+</span><span class="stat-label">Ani experiență</span></div>
-          <div class="stat"><span class="stat-num">8.700+</span><span class="stat-label">Proiecte</span></div>
-        </div>
-      </div>
-    </div>
-  </header>
-
-  <nav class="filter-bar">
-    <div class="inner">
-      <button class="filter-btn active">📰 Toate <span class="count">1</span></button>
-      <button class="filter-btn" style="opacity:.45;cursor:default;">🛡 Securitate <span class="count">1</span></button>
-      <button class="filter-btn" style="opacity:.45;cursor:default;">🔥 Incendiu &amp; ISU <span class="count">0</span></button>
-      <button class="filter-btn" style="opacity:.45;cursor:default;">📹 Camere <span class="count">0</span></button>
-      <button class="filter-btn" style="opacity:.45;cursor:default;">⚡ Instalații <span class="count">0</span></button>
-    </div>
-  </nav>
-
-  <div class="page-wrap">
-    <main>
-
-      <a href="sistem-integrat-securitate-brasov.html" style="display:contents">
-        <article class="featured-card">
-          <div class="featured-img">
-            <div class="badge">⭐ Articol recomandat</div>
-            <div class="big-icon">🛡</div>
-          </div>
-          <div class="featured-content">
-            <div>
-              <div class="cat-tag">🛡 Securitate integrată</div>
-              <h2>Securitatea imobilului tău printr-un Sistem Integrat — Efracție, Incendiu, Inundație</h2>
-              <p class="excerpt">Un singur sistem inteligent care detectează trei tipuri de pericole și acționează automat: contactează firma de pază, oprește gazul sau închide alimentarea cu apă — fără nicio intervenție din partea ta.</p>
+    <!-- Articol 1: Detectie Incendiu -->
+    <article class="article-card">
+        <div class="card-accent accent-red"></div>
+        <div class="card-content">
+            <span class="card-tag tag-incendiu">🔥 Detecție Incendiu</span>
+            <h2><a href="detectie-incendiu-pret-ghid-complet.html">Cât Costă un Sistem de Detecție Incendiu în 2026? Ghid Complet Prețuri și Aviz ISU</a></h2>
+            <p class="card-excerpt">Componente, factori de preț, tabel cu prețuri orientative pe tipuri de clădiri, procesul de obținere a avizului ISU pas cu pas și de ce contează să alegi o firmă autorizată.</p>
+            <div class="card-meta">
+                <span>📅 6 Martie 2026</span>
+                <span>⏱️ 10 min citire</span>
+                <span>💰 Ghid Prețuri</span>
             </div>
-            <div class="featured-footer">
-              <div class="article-meta">
-                <span>CSSI Brașov</span>
-                <span class="dot">·</span>
-                <span>5 Martie 2026</span>
-                <span class="dot">·</span>
-                <span>8 min</span>
-              </div>
-              <span class="read-more">Citește →</span>
+            <a href="detectie-incendiu-pret-ghid-complet.html" class="card-link">Citește articolul</a>
+        </div>
+    </article>
+
+    <!-- Articol 2: Camere Supraveghere -->
+    <article class="article-card">
+        <div class="card-accent accent-blue"></div>
+        <div class="card-content">
+            <span class="card-tag tag-supraveghere">📹 Camere Supraveghere</span>
+            <h2><a href="camere-supraveghere-firma-ghid-complet.html">Ghid Complet: Camere de Supraveghere pentru Firmă în 2026 — Ce Să Alegi?</a></h2>
+            <p class="card-excerpt">IP vs analog, rezoluții 2MP/4MP/8MP, stocare NVR vs cloud, vizualizare pe telefon, forme constructive (dome, bullet, turret) și prețuri orientative pentru sisteme complete.</p>
+            <div class="card-meta">
+                <span>📅 6 Martie 2026</span>
+                <span>⏱️ 12 min citire</span>
+                <span>📊 Comparație</span>
             </div>
-          </div>
-        </article>
-      </a>
-
-      <div class="section-header" style="margin-top:48px;">
-        <h2>🗓 Articole în pregătire</h2>
-        <span style="font-family:var(--ff-head);font-size:13px;color:var(--text-light);">Publicate în curând</span>
-      </div>
-
-      <div class="articles-grid">
-        <article class="article-card cat-incendiu" style="opacity:.65;pointer-events:none;">
-          <div class="card-thumb"><div class="thumb-bg"></div><div class="thumb-icon">🔥</div></div>
-          <div class="card-body">
-            <div class="card-cat">Incendiu &amp; ISU</div>
-            <h3>Ce este avizul ISU și cine are nevoie de el?</h3>
-            <p class="card-excerpt">Obligativitate, documente și pașii pentru obținerea avizului ISU în Brașov.</p>
-            <div class="card-footer"><span class="meta" style="background:#f1f5f9;padding:3px 10px;border-radius:20px;font-weight:600;">⏳ În curând</span></div>
-          </div>
-        </article>
-        <article class="article-card cat-securitate" style="opacity:.65;pointer-events:none;">
-          <div class="card-thumb"><div class="thumb-bg"></div><div class="thumb-icon">🚨</div></div>
-          <div class="card-body">
-            <div class="card-cat">Securitate</div>
-            <h3>Cât costă un sistem de alarmare în Brașov?</h3>
-            <p class="card-excerpt">Prețuri reale pentru apartament, casă și spații comerciale.</p>
-            <div class="card-footer"><span class="meta" style="background:#f1f5f9;padding:3px 10px;border-radius:20px;font-weight:600;">⏳ În curând</span></div>
-          </div>
-        </article>
-        <article class="article-card cat-camere" style="opacity:.65;pointer-events:none;">
-          <div class="card-thumb"><div class="thumb-bg"></div><div class="thumb-icon">📹</div></div>
-          <div class="card-body">
-            <div class="card-cat">Camere Supraveghere</div>
-            <h3>Câte camere de supraveghere am nevoie pentru casă?</h3>
-            <p class="card-excerpt">Calculul corect în funcție de suprafață, puncte vulnerabile și buget.</p>
-            <div class="card-footer"><span class="meta" style="background:#f1f5f9;padding:3px 10px;border-radius:20px;font-weight:600;">⏳ În curând</span></div>
-          </div>
-        </article>
-        <article class="article-card cat-instalatii" style="opacity:.65;pointer-events:none;">
-          <div class="card-thumb"><div class="thumb-bg"></div><div class="thumb-icon">⚡</div></div>
-          <div class="card-body">
-            <div class="card-cat">Instalații Electrice</div>
-            <h3>Cât costă refacerea instalației electrice într-un apartament?</h3>
-            <p class="card-excerpt">Prețuri pe metru pătrat și când e obligatorie înlocuirea.</p>
-            <div class="card-footer"><span class="meta" style="background:#f1f5f9;padding:3px 10px;border-radius:20px;font-weight:600;">⏳ În curând</span></div>
-          </div>
-        </article>
-      </div>
-
-    </main>
-
-    <aside class="sidebar">
-      <div class="sidebar-card">
-        <div class="sidebar-card-head">📌 Articole publicate</div>
-        <div class="sidebar-card-body" style="padding:8px 18px">
-          <ul class="popular-list">
-            <li onclick="location.href='sistem-integrat-securitate-brasov.html'" style="cursor:pointer;">
-              <div>
-                <div class="pop-title">Sistem integrat: Efracție + Incendiu + Inundație</div>
-                <div class="pop-meta">5 Mar 2026 · 8 min lectură</div>
-              </div>
-            </li>
-          </ul>
+            <a href="camere-supraveghere-firma-ghid-complet.html" class="card-link">Citește articolul</a>
         </div>
-      </div>
-      <div class="sidebar-card">
-        <div class="sidebar-card-head">📂 Categorii</div>
-        <div class="sidebar-card-body">
-          <div class="cat-cloud">
-            <div class="cat-chip">🛡 Securitate <span class="n">1</span></div>
-            <div class="cat-chip" style="opacity:.5;">🔥 ISU &amp; Incendiu <span class="n">0</span></div>
-            <div class="cat-chip" style="opacity:.5;">📹 Camere <span class="n">0</span></div>
-            <div class="cat-chip" style="opacity:.5;">⚡ Instalații <span class="n">0</span></div>
-          </div>
+    </article>
+
+    <!-- Articol 3: Ajax vs Paradox vs DSC -->
+    <article class="article-card">
+        <div class="card-accent accent-green"></div>
+        <div class="card-content">
+            <span class="card-tag tag-alarme">🔔 Sisteme Alarmă</span>
+            <h2><a href="ajax-vs-paradox-vs-dsc-comparatie-alarme.html">Ajax vs Paradox vs DSC: Comparație Sisteme de Alarmă 2026 — Care E Mai Bun?</a></h2>
+            <p class="card-excerpt">Comparație obiectivă între cele mai populare 3 branduri de alarme din România. Avantaje, dezavantaje, tabel comparativ, prețuri și verdictul nostru bazat pe 20+ ani de instalări.</p>
+            <div class="card-meta">
+                <span>📅 6 Martie 2026</span>
+                <span>⏱️ 14 min citire</span>
+                <span>🏆 Verdict</span>
+            </div>
+            <a href="ajax-vs-paradox-vs-dsc-comparatie-alarme.html" class="card-link">Citește articolul</a>
         </div>
-      </div>
-      <div class="contact-cta">
-        <div class="cta-icon">🛡</div>
-        <h3>Ai nevoie de o ofertă?</h3>
-        <p>Specialiștii CSSI vin la tine și evaluează imobilul gratuit, fără obligații.</p>
-        <a href="tel:0752288400" class="btn btn-primary">📞 0752 288 400</a>
-        <a href="https://wa.me/40752288400" class="btn btn-secondary">💬 WhatsApp</a>
-      </div>
-    </aside>
+    </article>
 
-  </div>
+    <!-- Articol 4: Automatizare Poarta -->
+    <article class="article-card">
+        <div class="card-accent accent-orange"></div>
+        <div class="card-content">
+            <span class="card-tag tag-automatizari">⚙️ Automatizări</span>
+            <h2><a href="automatizare-poarta-ghid-complet-preturi.html">Automatizare Poartă — Ghid Complet: Prețuri, Tipuri și Ce Trebuie Să Știi în 2026</a></h2>
+            <p class="card-excerpt">Culisantă vs batantă, branduri (BFT, CAME, Nice, FAAC), prețuri orientative, ce să verifici înainte, deschidere de pe telefon și sfaturi practice de la instalatorii CSSI.</p>
+            <div class="card-meta">
+                <span>📅 6 Martie 2026</span>
+                <span>⏱️ 11 min citire</span>
+                <span>💰 Ghid Prețuri</span>
+            </div>
+            <a href="automatizare-poarta-ghid-complet-preturi.html" class="card-link">Citește articolul</a>
+        </div>
+    </article>
 
-  <footer class="footer-strip">
-    <p>© 2026 <a href="https://cssi.ro">CSSI Brașov</a> — Confort, Securitate, Siguranță, Imobil | Autorizat IGPR &amp; ISU</p>
-  </footer>
+    <!-- CTA Banner -->
+    <div class="cta-banner">
+        <h3>Ai nevoie de o soluție personalizată?</h3>
+        <p>Consultanță gratuită de la specialiștii CSSI — evaluare, proiect și ofertă fără obligații.</p>
+        <a href="https://cssi.ro/contact.html" class="cta-btn">Contactează-ne →</a>
+    </div>
 
-  <script>
-    let navTextColor = '#fff';
-    window.addEventListener('scroll', function() {
-        const navBg = document.getElementById('navBg');
-        const logo = document.getElementById('logoImg');
-        const scrolled = window.scrollY > 50;
-        if (scrolled) {
-            navBg.style.background = '#ffffff';
-            navBg.style.backdropFilter = 'blur(12px)';
-            navBg.style.boxShadow = '0 1px 2px rgba(0,0,0,0.05)';
-            if (logo) logo.style.filter = '';
-            navTextColor = '#334155';
-        } else {
-            navBg.style.background = 'transparent';
-            navBg.style.backdropFilter = '';
-            navBg.style.boxShadow = '';
-            if (logo) logo.style.filter = 'brightness(0) invert(1) drop-shadow(0 0 1px rgba(255,255,255,0.8))';
-            navTextColor = '#fff';
-        }
-        ['navLink1','navLink2','navLink3','navLink4','navLink5','phoneLink'].forEach(id=>{
-            const el=document.getElementById(id);
-            if(el) el.style.color=navTextColor;
-        });
-    });
-    function toggleMobileMenu(){
-        const menu=document.getElementById('mobileMenu');
-        const menuIcon=document.getElementById('menuIcon');
-        const closeIcon=document.getElementById('closeIcon');
-        const btn=document.getElementById('menuBtn');
-        if(menu.classList.contains('open')){
-            menu.classList.remove('open');
-            menuIcon.style.display='';
-            closeIcon.style.display='none';
-            btn.style.background='linear-gradient(to right,#ef4444,#dc2626)';
-            btn.classList.add('animate-subtle-pulse');
-        } else {
-            menu.classList.add('open');
-            menuIcon.style.display='none';
-            closeIcon.style.display='';
-            btn.style.background='#6b7280';
-            btn.classList.remove('animate-subtle-pulse');
-        }
-    }
-    function closeMobile(){
-        document.getElementById('mobileMenu').classList.remove('open');
-        document.getElementById('menuIcon').style.display='';
-        document.getElementById('closeIcon').style.display='none';
-    }
-    function toggleServicesSubmenu(){
-        const sub=document.getElementById('servicesSubmenu');
-        const arrow=document.getElementById('servicesArrow');
-        if(sub.classList.contains('open')){
-            sub.classList.remove('open');
-            arrow.style.transform='';
-        } else {
-            sub.classList.add('open');
-            arrow.style.transform='rotate(180deg)';
-        }
-    }
-  </script>
+    <!-- Footer Nav -->
+    <nav class="blog-footer-nav">
+        <a href="https://cssi.ro/">Acasă</a>
+        <a href="https://cssi.ro/despre-noi.html">Despre Noi</a>
+        <a href="https://cssi.ro/portofoliu.html">Portofoliu</a>
+        <a href="https://cssi.ro/contact.html">Contact</a>
+    </nav>
+
+</main>
+
 </body>
 </html>
