@@ -23,10 +23,21 @@ RewriteRule ^(.*)$ https://cssi.ro/$1 [R=301,L]
 RewriteRule ^index\.html$ / [R=301,L]
 
 # --------------------------------------------------
-# 3. REDIRECT TRAILING SLASH PE FIȘIERE .HTML
-# Exemplu: /camere-supraveghere.html/ → /camere-supraveghere.html
+# 3. URL-URI CURATE (fără .html)
+# Exemplu: cssi.ro/camere-supraveghere în loc de cssi.ro/camere-supraveghere.html
 # --------------------------------------------------
-RewriteRule ^(.+)\.html/$ /$1.html [R=301,L]
+
+# 3a. Redirect 301: dacă cineva accesează cu .html → trimite la versiunea fără
+#     (inclusiv link-uri vechi, Google cache, etc.)
+RewriteCond %{THE_REQUEST} \s/+(.+?)\.html[\s?] [NC]
+RewriteRule ^ /%1 [R=301,L]
+
+# 3b. Rewrite intern: servește fișierul .html când se accesează URL-ul curat
+#     Nu se aplică la directoare existente sau fișiere existente (imagini, css, js)
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME}.html -f
+RewriteRule ^(.+)$ $1.html [L]
 
 # --------------------------------------------------
 # 4. COMPRESIE GZIP
