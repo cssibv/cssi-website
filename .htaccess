@@ -23,6 +23,12 @@ RewriteRule ^(.*)$ https://cssi.ro/$1 [R=301,L]
 RewriteRule ^index\.html$ / [R=301,L]
 
 # --------------------------------------------------
+# 2b. PORTAL ADMIN — rezolvă conflictul /admin (director) vs admin.html
+# Fără această regulă, /admin → 403 (director fără index)
+# --------------------------------------------------
+RewriteRule ^admin/?$ /admin.html [L]
+
+# --------------------------------------------------
 # 3. URL-URI CURATE (fără .html)
 # Exemplu: cssi.ro/camere-supraveghere în loc de cssi.ro/camere-supraveghere.html
 # --------------------------------------------------
