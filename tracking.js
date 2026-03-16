@@ -59,8 +59,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 /* FIX: Eveniment form_submit pentru Google Ads Conversion */
                 gtag('event', 'form_submit', {
                     event_category: 'conversion',
-                    event_label: 'formular_contact',
-                    send_to: 'AW-17987940313',
+                    event_label: 'form_whatsapp',
                     value: 1
                 });
             }
