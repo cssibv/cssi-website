@@ -222,7 +222,7 @@ a{text-decoration:none;color:inherit;}button{font-family:inherit;cursor:pointer;
     <div id="kanbanSection" class="hidden">
         <div class="section-head">
             <div class="section-title">📌 Board Proiecte</div>
-            <div><button class="section-action" onclick="openModal()">+ Proiect Nou</button><a href="admin/proiecte.html" class="section-action">Vezi toate →</a></div>
+            <div><button class="section-action" onclick="openModal()">+ Proiect Nou</button><a href="/admin/proiecte.html" class="section-action">Vezi toate →</a></div>
         </div>
         <div class="kanban-wrap fade-up"><div class="kanban" id="kanbanBoard"></div></div>
     </div>
@@ -242,11 +242,11 @@ a{text-decoration:none;color:inherit;}button{font-family:inherit;cursor:pointer;
 </div>
 
 <div class="bottom-nav">
-    <a href="admin.html" class="bn-item active"><span class="bn-icon">🏠</span>Acasă</a>
-    <a href="admin/proiecte.html" class="bn-item"><span class="bn-icon">📋</span>Proiecte</a>
-    <a href="admin/crm-clienti.html" class="bn-item"><span class="bn-icon">💰</span>CRM</a>
-    <a href="admin/executie.html" class="bn-item"><span class="bn-icon">🔧</span>Execuție</a>
-    <a href="admin/financiar.html" class="bn-item"><span class="bn-icon">📄</span>Facturi</a>
+    <a href="/admin.html" class="bn-item active"><span class="bn-icon">🏠</span>Acasă</a>
+    <a href="/admin/proiecte.html" class="bn-item"><span class="bn-icon">📋</span>Proiecte</a>
+    <a href="/admin/crm-clienti.html" class="bn-item"><span class="bn-icon">💰</span>CRM</a>
+    <a href="/admin/executie.html" class="bn-item"><span class="bn-icon">🔧</span>Execuție</a>
+    <a href="/admin/financiar.html" class="bn-item"><span class="bn-icon">📄</span>Facturi</a>
 </div>
 
 <!-- ADD PROJECT MODAL -->
@@ -297,19 +297,19 @@ var PW={"8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918":"admi
 // ═══════ ROLE CONFIG ═══════
 var ROLES={
     admin:{name:"Administrator",greeting:"👋 Salut, Mihai!",sub:"Acces total — toate modulele portalului",pill:"🔑 Admin",gradient:"admin",
-        actions:[{l:"+ Proiect Nou",h:"javascript:openModal()",i:"📋"},{l:"Board Proiecte",h:"admin/proiecte.html",i:"📌"},{l:"CRM Clienți",h:"admin/crm-clienti.html",i:"💰"},{l:"Financiar",h:"admin/financiar.html",i:"💳"},{l:"Mentenanță",h:"admin/mentenanta.html",i:"🔄"}],
+        actions:[{l:"+ Proiect Nou",h:"javascript:openModal()",i:"📋"},{l:"Board Proiecte",h:"/admin/proiecte.html",i:"📌"},{l:"CRM Clienți",h:"/admin/crm-clienti.html",i:"💰"},{l:"Financiar",h:"/admin/financiar.html",i:"💳"},{l:"Mentenanță",h:"/admin/mentenanta.html",i:"🔄"}],
         showKanban:true,showKpi:true,showQuick:true,showAlerts:true},
     org:{name:"Organizare",greeting:"👋 Salut!",sub:"Planificări, echipe, agenda zilnică",pill:"📅 Organizare",gradient:"org",
-        actions:[{l:"Planificare",h:"admin/planificare.html",i:"📅"},{l:"Proiecte",h:"admin/proiecte.html",i:"📋"},{l:"Materiale",h:"admin/necesar-materiale.html",i:"📦"}],
+        actions:[{l:"Planificare",h:"/admin/planificare.html",i:"📅"},{l:"Proiecte",h:"/admin/proiecte.html",i:"📋"},{l:"Materiale",h:"/admin/necesar-materiale.html",i:"📦"}],
         showKanban:true,showKpi:false,showQuick:true,showAlerts:true},
     mkt:{name:"Marketing",greeting:"🎨 Salut, Echipa Marketing!",sub:"Calendar social, campanii, resurse",pill:"🚀 Marketing",gradient:"mkt",
-        actions:[{l:"Calendar Social",h:"admin/calendar-social.html",i:"📅"},{l:"Marketing Hub",h:"admin/marketing.html",i:"📊"},{l:"Resurse Media",h:"admin/documente.html",i:"🎨"}],
+        actions:[{l:"Calendar Social",h:"/admin/calendar-social.html",i:"📅"},{l:"Marketing Hub",h:"/admin/marketing.html",i:"📊"},{l:"Resurse Media",h:"/admin/documente.html",i:"🎨"}],
         showKanban:false,showKpi:false,showQuick:false,showAlerts:false},
     sales:{name:"Vânzări",greeting:"💼 Salut, Echipa Vânzări!",sub:"Lead-uri, oferte, contracte",pill:"💰 Vânzări",gradient:"sales",
-        actions:[{l:"CRM Clienți",h:"admin/crm-clienti.html",i:"💰"},{l:"Calculator Preț",h:"admin/calculator-pret.html",i:"🧮"},{l:"+ Proiect Nou",h:"javascript:openModal()",i:"📋"}],
+        actions:[{l:"CRM Clienți",h:"/admin/crm-clienti.html",i:"💰"},{l:"Calculator Preț",h:"/admin/calculator-pret.html",i:"🧮"},{l:"+ Proiect Nou",h:"javascript:openModal()",i:"📋"}],
         showKanban:true,showKpi:false,showQuick:true,showAlerts:true},
     tech:{name:"Tehnic",greeting:"🔧 Salut, Echipa Tehnică!",sub:"Execuție, materiale, proiectare",pill:"🔧 Tehnic",gradient:"tech",
-        actions:[{l:"Raport Lucrare",h:"admin/executie.html",i:"✅"},{l:"Inventar",h:"admin/materiale.html",i:"📦"},{l:"Necesar Materiale",h:"admin/necesar-materiale.html",i:"🛒"},{l:"Proiectare",h:"admin/proiectare.html",i:"📐"}],
+        actions:[{l:"Raport Lucrare",h:"/admin/executie.html",i:"✅"},{l:"Inventar",h:"/admin/materiale.html",i:"📦"},{l:"Necesar Materiale",h:"/admin/necesar-materiale.html",i:"🛒"},{l:"Proiectare",h:"/admin/proiectare.html",i:"📐"}],
         showKanban:true,showKpi:false,showQuick:true,showAlerts:true}
 };
 
@@ -324,19 +324,19 @@ var SERVICE_TAGS={"Detecție Incendiu":{cls:"incendiu",s:"Incendiu"},"Alarmă An
 
 // ═══════ ALL 14 MODULES ═══════
 var MODULES=[
-    {id:"proiecte",h:"admin/proiecte.html",i:"📋",t:"Proiecte",d:"Board Kanban + Listă",cat:"proiecte",v3:true,roles:["admin","org","sales","tech"]},
-    {id:"crm",h:"admin/crm-clienti.html",i:"💰",t:"CRM Clienți",d:"Lead-uri & Pipeline",cat:"sales",v3:true,roles:["admin","sales"]},
-    {id:"planificare",h:"admin/planificare.html",i:"📅",t:"Planificare",d:"Calendar · Agenda · Liste",cat:"org",v3:true,roles:["admin","org","tech"]},
-    {id:"executie",h:"admin/executie.html",i:"✅",t:"Execuție",d:"Rapoarte de lucrare",cat:"tech",v3:true,roles:["admin","org","tech"]},
-    {id:"proiectare",h:"admin/proiectare.html",i:"📐",t:"Proiectare",d:"Avize ISU, scheme, dosare",cat:"tech",v3:true,roles:["admin","tech"]},
-    {id:"mentenanta",h:"admin/mentenanta.html",i:"🔄",t:"Mentenanță",d:"Contracte & verificări",cat:"maint",v3:true,roles:["admin","org","tech"]},
-    {id:"financiar",h:"admin/financiar.html",i:"💳",t:"Financiar",d:"Facturi · Încasări · Restanțe",cat:"finance",v3:true,roles:["admin"]},
-    {id:"materiale",h:"admin/materiale.html",i:"📦",t:"Inventar & Stocuri",d:"Produse, stoc, mișcări",cat:"tech",v3:true,roles:["admin","org","tech"]},
-    {id:"necesar",h:"admin/necesar-materiale.html",i:"🛒",t:"Necesar Materiale",d:"Solicitări & Aprovizionare",cat:"tech",v3:true,roles:["admin","org","tech"]},
-    {id:"calculator",h:"admin/calculator-pret.html",i:"🧮",t:"Calculator Preț",d:"Estimări rapide",cat:"sales",v3:true,roles:["admin","sales"]},
-    {id:"social",h:"admin/calendar-social.html",i:"📅",t:"Calendar Social",d:"Postări · Calendar · Kanban",cat:"mkt",v3:true,roles:["admin","mkt"]},
-    {id:"marketing",h:"admin/marketing.html",i:"📊",t:"Marketing Hub",d:"Campanii · Resurse · Idei",cat:"mkt",v3:true,roles:["admin","mkt"]},
-    {id:"documente",h:"admin/documente.html",i:"📁",t:"Documente & Resurse",d:"Dosare · Template-uri · Media",cat:"docs",v3:true,roles:["admin","org","sales","tech"]}
+    {id:"proiecte",h:"/admin/proiecte.html",i:"📋",t:"Proiecte",d:"Board Kanban + Listă",cat:"proiecte",v3:true,roles:["admin","org","sales","tech"]},
+    {id:"crm",h:"/admin/crm-clienti.html",i:"💰",t:"CRM Clienți",d:"Lead-uri & Pipeline",cat:"sales",v3:true,roles:["admin","sales"]},
+    {id:"planificare",h:"/admin/planificare.html",i:"📅",t:"Planificare",d:"Calendar · Agenda · Liste",cat:"org",v3:true,roles:["admin","org","tech"]},
+    {id:"executie",h:"/admin/executie.html",i:"✅",t:"Execuție",d:"Rapoarte de lucrare",cat:"tech",v3:true,roles:["admin","org","tech"]},
+    {id:"proiectare",h:"/admin/proiectare.html",i:"📐",t:"Proiectare",d:"Avize ISU, scheme, dosare",cat:"tech",v3:true,roles:["admin","tech"]},
+    {id:"mentenanta",h:"/admin/mentenanta.html",i:"🔄",t:"Mentenanță",d:"Contracte & verificări",cat:"maint",v3:true,roles:["admin","org","tech"]},
+    {id:"financiar",h:"/admin/financiar.html",i:"💳",t:"Financiar",d:"Facturi · Încasări · Restanțe",cat:"finance",v3:true,roles:["admin"]},
+    {id:"materiale",h:"/admin/materiale.html",i:"📦",t:"Inventar & Stocuri",d:"Produse, stoc, mișcări",cat:"tech",v3:true,roles:["admin","org","tech"]},
+    {id:"necesar",h:"/admin/necesar-materiale.html",i:"🛒",t:"Necesar Materiale",d:"Solicitări & Aprovizionare",cat:"tech",v3:true,roles:["admin","org","tech"]},
+    {id:"calculator",h:"/admin/calculator-pret.html",i:"🧮",t:"Calculator Preț",d:"Estimări rapide",cat:"sales",v3:true,roles:["admin","sales"]},
+    {id:"social",h:"/admin/calendar-social.html",i:"📅",t:"Calendar Social",d:"Postări · Calendar · Kanban",cat:"mkt",v3:true,roles:["admin","mkt"]},
+    {id:"marketing",h:"/admin/marketing.html",i:"📊",t:"Marketing Hub",d:"Campanii · Resurse · Idei",cat:"mkt",v3:true,roles:["admin","mkt"]},
+    {id:"documente",h:"/admin/documente.html",i:"📁",t:"Documente & Resurse",d:"Dosare · Template-uri · Media",cat:"docs",v3:true,roles:["admin","org","sales","tech"]}
 ];
 
 // ═══════ DEMO DATA ═══════
@@ -423,19 +423,19 @@ function kpiCard(icon,bg,val,label,color){
 function renderQuick(){
     var html='';
     if(role==='admin'||role==='sales'){
-        html+='<a href="admin/crm-clienti.html" class="quick-card" style="border-left-color:var(--green)"><div class="quick-title">💰 CRM Pipeline</div><div class="quick-items"><strong>4</strong> lead-uri noi luna asta<br><strong>2</strong> oferte în așteptare<br><strong>627K</strong> RON valoare pipeline</div></a>';
+        html+='<a href="/admin/crm-clienti.html" class="quick-card" style="border-left-color:var(--green)"><div class="quick-title">💰 CRM Pipeline</div><div class="quick-items"><strong>4</strong> lead-uri noi luna asta<br><strong>2</strong> oferte în așteptare<br><strong>627K</strong> RON valoare pipeline</div></a>';
     }
     if(role==='admin'||role==='org'||role==='tech'){
-        html+='<a href="admin/planificare.html" class="quick-card" style="border-left-color:var(--blue)"><div class="quick-title">📅 Planificare Azi</div><div class="quick-items"><strong>3</strong> echipe pe teren<br><strong>Hotel Cheile</strong> — montaj etaj 2<br><strong>Autoliv</strong> — cablare electrică</div></a>';
+        html+='<a href="/admin/planificare.html" class="quick-card" style="border-left-color:var(--blue)"><div class="quick-title">📅 Planificare Azi</div><div class="quick-items"><strong>3</strong> echipe pe teren<br><strong>Hotel Cheile</strong> — montaj etaj 2<br><strong>Autoliv</strong> — cablare electrică</div></a>';
     }
     if(role==='admin'){
-        html+='<a href="admin/financiar.html" class="quick-card" style="border-left-color:var(--pink)"><div class="quick-title">💳 Financiar Luna</div><div class="quick-items"><strong>12</strong> facturi emise<br><strong>45K</strong> RON restant > 30 zile<br><strong>78%</strong> rată încasare</div></a>';
+        html+='<a href="/admin/financiar.html" class="quick-card" style="border-left-color:var(--pink)"><div class="quick-title">💳 Financiar Luna</div><div class="quick-items"><strong>12</strong> facturi emise<br><strong>45K</strong> RON restant > 30 zile<br><strong>78%</strong> rată încasare</div></a>';
     }
     if(role==='admin'||role==='tech'){
-        html+='<a href="admin/materiale.html" class="quick-card" style="border-left-color:var(--orange)"><div class="quick-title">📦 Inventar</div><div class="quick-items"><strong>3</strong> produse sub stoc minim<br><strong>5</strong> cereri materiale noi<br><strong>2</strong> livrări în așteptare</div></a>';
+        html+='<a href="/admin/materiale.html" class="quick-card" style="border-left-color:var(--orange)"><div class="quick-title">📦 Inventar</div><div class="quick-items"><strong>3</strong> produse sub stoc minim<br><strong>5</strong> cereri materiale noi<br><strong>2</strong> livrări în așteptare</div></a>';
     }
     if(role==='admin'||role==='mkt'){
-        html+='<a href="admin/calendar-social.html" class="quick-card" style="border-left-color:var(--purple)"><div class="quick-title">📅 Social Media</div><div class="quick-items"><strong>2</strong> postări programate<br><strong>3</strong> drafturi de finalizat<br><strong>7</strong> postări publicate luna asta</div></a>';
+        html+='<a href="/admin/calendar-social.html" class="quick-card" style="border-left-color:var(--purple)"><div class="quick-title">📅 Social Media</div><div class="quick-items"><strong>2</strong> postări programate<br><strong>3</strong> drafturi de finalizat<br><strong>7</strong> postări publicate luna asta</div></a>';
     }
     document.getElementById('quickRow').innerHTML=html;
 }
