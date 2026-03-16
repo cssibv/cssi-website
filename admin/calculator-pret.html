@@ -89,7 +89,7 @@ h+='.cond{margin-top:10px;font-size:7pt;color:#64748b}.cond h4{color:#dc2626;fon
 h+='.sig{display:flex;justify-content:space-between;margin-top:14px;font-size:8pt}.sig .s{min-width:200px}.sig .s strong{display:block;margin-bottom:20px}';
 h+='.foot{text-align:center;font-size:6.5pt;color:#94a3b8;margin-top:10px;border-top:1px solid #e2e8f0;padding-top:4px}';
 h+='@media print{body{margin:0}}</style></head><body>';
-h+='<div class="hdr"><img src="'+IMG_LOGO+'" alt="Break Sistems"><img src="'+IMG_CSSI+'" alt="CSSI"></div>';
+h+='<div class="hdr"><div style="flex:1"><img src="'+IMG_LOGO+'" alt="Break Sistems" style="height:60px;max-width:300px"></div><div><img src="'+IMG_CSSI+'" alt="CSSI" style="height:55px"></div></div>';
 h+='<div class="bar">BREAK SISTEMS SRL | CUI: 23576950 | J08/843/2008 | Str. Busuiocului Nr. 6, Brașov | Tel: 0752 288 400 | office@breaksistems.ro</div>';
 h+='<h1>OFERTĂ DE PREȚ</h1>';
 h+='<div class="info"><div class="col"><div><span class="lab">Nr. ofertă:</span> <span class="val">'+esc(nr)+'</span></div><div><span class="lab">Data emitere:</span> <span class="val">'+dataFmt+'</span></div><div><span class="lab">Valabilitate:</span> <span class="val">'+esc(valab)+'</span></div><div><span class="lab">Obiectiv:</span> <span class="val">'+esc(data.obiectiv||'')+'</span></div></div><div class="col" style="text-align:right"><div><span class="lab">Beneficiar:</span> <span class="val">'+esc(data.client)+'</span></div><div><span class="lab">CUI / CNP:</span> <span class="val">'+esc(data.cui||'')+'</span></div><div><span class="lab">Adresa:</span> <span class="val">'+esc(data.adresa||'')+'</span></div><div><span class="lab">Pers. contact:</span> <span class="val">'+esc(data.contact||'')+'</span></div></div></div>';
@@ -111,7 +111,7 @@ h+='<li>Transport: inclus în raza de 10 km de Brașov; peste se tarifează sepa
 h+='<li>Condiții de plată: 50% avans la confirmare, 50% la punerea în funcțiune.</li>';
 h+='<li>Cablare date: cantitatea se calculează la fața locului, se facturează separat.</li>';
 h+='</ul></div>';
-h+='<div class="sig"><div class="s"><strong>FURNIZOR: Break Sistems SRL</strong><div style="display:flex;align-items:center;gap:10px;margin-top:6px"><span>Semnătura / Ștampila:</span><img src="'+IMG_STAMP+'" style="height:50px;opacity:0.7"><img src="'+IMG_CSSI+'" style="height:30px"></div></div><div class="s" style="text-align:right"><strong>BENEFICIAR:</strong><div style="margin-top:26px">/ Ștampila: ___________________</div></div></div>';
+h+='<div class="sig"><div class="s"><strong>FURNIZOR: Break Sistems SRL</strong><div style="display:flex;align-items:center;gap:8px;margin-top:8px"><span>Semnătura / Ștampila:</span><img src="'+IMG_STAMP+'" style="height:55px;opacity:0.8" alt="Stampila"><img src="'+IMG_CSSI+'" style="height:35px" alt="CSSI"></div></div><div class="s" style="text-align:right"><strong>BENEFICIAR:</strong><div style="margin-top:30px">Ștampila: ___________________</div></div></div>';
 h+='<div class="foot">Break Sistems SRL • brand CSSI • Str. Bisericii Romane 42, Brașov • www.cssi.ro • www.breaksistems.ro • 0752 288 400</div>';
 h+='<script>window.onload=function(){window.print()}</'+'script></body></html>';
 return h;}
