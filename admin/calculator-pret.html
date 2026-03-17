@@ -78,7 +78,7 @@ labor.forEach(function(l){var c=parseFloat(l.cant)||0;var p=parseFloat(l.price)|
 labRows+='<tr class="'+(labIdx%2===0?'alt':'')+'"><td class="c">'+labIdx+'</td><td>'+esc(l.name)+'</td><td class="c">'+l.um+'</td><td class="c">'+c+'</td><td class="r">'+fmt(p)+'</td><td class="r">'+fmt(c*p)+'</td></tr>';labIdx++;});
 var eT=data.subtotalEchip||0;var mT=data.subtotalManop||0;var net=data.totalNet||0;var tva=net*0.21;var total=net+tva;
 var h='<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Deviz '+esc(data.client)+' Nr. '+nr+'</title>';
-h+='<style>@page{size:A4;margin:12mm 10mm 10mm 10mm}*{margin:0;padding:0;box-sizing:border-box}body{font-family:Arial,Helvetica,sans-serif;font-size:9pt;color:#0f172a;-webkit-print-color-adjust:exact;print-color-adjust:exact}';
+h+='<style>@page{size:A4;margin:0}*{margin:0;padding:0;box-sizing:border-box}body{font-family:Arial,Helvetica,sans-serif;font-size:9pt;color:#0f172a;padding:12mm 10mm 8mm 10mm;-webkit-print-color-adjust:exact;print-color-adjust:exact}';
 h+='.hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:4px}.hdr img{height:55px}';
 h+='.bar{background:#dc2626;color:#fff;font-size:7pt;text-align:center;padding:3px 8px;margin-bottom:6px}';
 h+='h1{text-align:center;font-size:14pt;color:#dc2626;margin:8px 0 10px}';
@@ -91,7 +91,7 @@ h+='.cond{margin-top:10px;font-size:7pt;color:#64748b}.cond h4{color:#dc2626;fon
 h+='.sig{display:flex;justify-content:space-between;margin-top:14px;font-size:8pt}.sig .s{min-width:200px}.sig .s strong{display:block;margin-bottom:6px}';
 h+='.foot{text-align:center;font-size:6.5pt;color:#94a3b8;margin-top:10px;border-top:1px solid #e2e8f0;padding-top:4px}';
 h+='@media print{body{margin:0}}</style></head><body>';
-h+='<div class="hdr"><div style="flex:1"><img src="'+IMG_LOGO+'" alt="Break Sistems" style="height:65px;max-width:320px"></div><div><img src="'+IMG_CSSI+'" alt="CSSI" style="height:60px"></div></div>';
+h+='<div style="display:flex;justify-content:flex-end;font-size:7pt;color:#94a3b8;margin-bottom:4px">Deviz '+esc(data.client)+' Nr. '+nr+' \u2022 '+dataFmt+'</div><div class="hdr"><div style="flex:1"><img src="'+IMG_LOGO+'" alt="Break Sistems" style="height:65px;max-width:320px"></div><div><img src="'+IMG_CSSI+'" alt="CSSI" style="height:60px"></div></div>';
 h+='<div class="bar">BREAK SISTEMS SRL | CUI: 23576950 | J08/843/2008 | Str. Busuiocului Nr. 6 , Bra\u0219ov | Tel: 0752 288 400 | office@breaksistems.ro</div>';
 h+='<h1>OFERT\u0102 DE PRE\u021a</h1>';
 h+='<div class="info"><div class="col"><div class="sec-title">DATE OFERT\u0102</div><div><span class="lab">Nr. ofert\u0103:</span> <span class="val">'+esc(nr)+'</span></div><div><span class="lab">Data emitere:</span> <span class="val">'+dataFmt+'</span></div><div><span class="lab">Valabilitate:</span> <span class="val">'+esc(valab)+'</span></div><div><span class="lab">Obiectiv:</span> <span class="val">'+esc(data.obiectiv||'')+'</span></div></div><div class="col" style="text-align:right"><div class="sec-title">DATE BENEFICIAR</div><div><span class="lab">Beneficiar:</span> <span class="val">'+esc(data.client)+'</span></div><div><span class="lab">CUI / CNP:</span> <span class="val">'+esc(data.cui||'')+'</span></div><div><span class="lab">Adresa:</span> <span class="val">'+esc(data.adresa||'')+'</span></div><div><span class="lab">Pers. contact:</span> <span class="val">'+esc(data.contact||'')+'</span></div></div></div>';
