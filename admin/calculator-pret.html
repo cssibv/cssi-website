@@ -73,7 +73,7 @@ var nr=data.nr||'';var valab=data.valab||'4 zile';
 var eqRows='';var idx=1;
 lines.forEach(function(l){if(!l.name)return;var pv=l.pAchiz*(1+(l.adaos||0)/100);var val=l.cant*pv;
 eqRows+='<tr class="'+(idx%2===0?'alt':'')+'"><td class="c">'+idx+'</td><td>'+esc(l.name)+'</td><td class="c">'+l.um+'</td><td class="c">'+l.cant+'</td><td class="r">'+fmt(pv)+'</td><td class="r">'+fmt(val)+'</td></tr>';idx++;});
-var labRows='';var labIdx=21;
+var labRows='';var labIdx=idx;
 labor.forEach(function(l){var c=parseFloat(l.cant)||0;var p=parseFloat(l.price)||0;if(!c||!l.name)return;
 labRows+='<tr class="'+(labIdx%2===0?'alt':'')+'"><td class="c">'+labIdx+'</td><td>'+esc(l.name)+'</td><td class="c">'+l.um+'</td><td class="c">'+c+'</td><td class="r">'+fmt(p)+'</td><td class="r">'+fmt(c*p)+'</td></tr>';labIdx++;});
 var eT=data.subtotalEchip||0;var mT=data.subtotalManop||0;var net=data.totalNet||0;var tva=net*0.21;var total=net+tva;
