@@ -122,9 +122,23 @@ a{text-decoration:none;color:inherit;}button{font-family:inherit;cursor:pointer;
 
 .hidden{display:none!important;}
 .footer{text-align:center;color:var(--gray-xl);font-size:11px;padding:24px 0 100px;}
+
+/* Loading Bar */
+.loading-bar{position:fixed;top:0;left:0;right:0;height:3px;z-index:400;display:none;}
+.loading-bar.active{display:block;}
+.loading-bar::after{content:'';display:block;width:30%;height:100%;background:var(--red);border-radius:2px;animation:loadSlide 1.2s infinite ease-in-out;}
+@keyframes loadSlide{0%{margin-left:-30%}100%{margin-left:100%}}
+
+/* Toast */
+.toast-container{position:fixed;top:20px;right:20px;z-index:500;display:flex;flex-direction:column;gap:8px;}
+.toast{padding:12px 18px;border-radius:12px;color:#fff;font-size:12px;font-weight:600;box-shadow:0 8px 24px rgba(0,0,0,0.15);animation:slideIn 0.3s ease;max-width:360px;}
+.toast.success{background:var(--green);}.toast.error{background:var(--red);}.toast.info{background:var(--blue);}
+@keyframes slideIn{from{transform:translateX(100%);opacity:0}to{transform:translateX(0);opacity:1}}
 </style>
 </head>
 <body>
+<div class="loading-bar" id="loadBar"></div>
+<div class="toast-container" id="toastContainer"></div>
 
 <div class="container">
     <!-- Header -->
@@ -134,6 +148,8 @@ a{text-decoration:none;color:inherit;}button{font-family:inherit;cursor:pointer;
             <div class="page-title">📋 Proiecte</div>
         </div>
         <div class="page-actions">
+            <button class="page-btn ghost" onclick="refreshProjects()">🔄 Refresh</button>
+            <a href="https://docs.google.com/spreadsheets/d/1_2VtCkUU07fNLWI-gUqFY_guDj29xeTWRWGaDzjU0Rc/edit" target="_blank" class="page-btn ghost">📊 Sheet</a>
             <button class="page-btn primary" onclick="openModal()">+ Proiect Nou</button>
         </div>
     </div>
@@ -190,17 +206,18 @@ a{text-decoration:none;color:inherit;}button{font-family:inherit;cursor:pointer;
     <div class="modal-head"><div class="modal-title">➕ Proiect Nou</div><button class="modal-close" onclick="closeModal()">✕</button></div>
     <div class="modal-body">
         <form id="addProjectForm" onsubmit="addProject(event)">
-            <div class="form-group"><label class="form-label">Client <span class="req">*</span></label><input type="text" class="form-input" name="client" required placeholder="Numele clientului"></div>
+            <div class="form-group"><label class="form-label">Client / Beneficiar <span class="req">*</span></label><input type="text" class="form-input" name="client" required placeholder="Denumire client / firmă"></div>
             <div class="form-row">
+                <div class="form-group"><label class="form-label">CUI / CNP</label><input type="text" class="form-input" name="cui" placeholder="RO12345678"></div>
                 <div class="form-group"><label class="form-label">Telefon</label><input type="tel" class="form-input" name="telefon" placeholder="07xx xxx xxx"></div>
-                <div class="form-group"><label class="form-label">Email</label><input type="email" class="form-input" name="email" placeholder="email@client.ro"></div>
             </div>
+            <div class="form-group"><label class="form-label">Persoană contact</label><input type="text" class="form-input" name="contact" placeholder="Nume + telefon contact"></div>
             <div class="form-group"><label class="form-label">Serviciu <span class="req">*</span></label>
                 <select class="form-select" name="serviciu" required>
                     <option value="">— Alege —</option>
                     <option>Detecție Incendiu</option><option>Alarmă Antiefracție</option>
                     <option>Supraveghere Video</option><option>Instalații Electrice</option>
-                    <option>Instalații Sanitare</option><option>Automatizări Porți</option>
+                    <option>Automatizări Porți</option><option>Control Acces</option>
                     <option>Proiect Complex</option>
                 </select>
             </div>
@@ -216,6 +233,8 @@ a{text-decoration:none;color:inherit;}button{font-family:inherit;cursor:pointer;
                     <option value="Facturat">💳 Facturat</option><option value="Mentenanță">🔄 Mentenanță</option>
                 </select>
             </div>
+            <div class="form-group"><label class="form-label">Obiectiv / Descriere lucrare</label><input type="text" class="form-input" name="obiectiv" placeholder="Ex: Sistem supraveghere depozit"></div>
+            <div class="form-group"><label class="form-label">Responsabil</label><input type="text" class="form-input" name="responsabil" placeholder="Numele tehnicianului"></div>
             <div class="form-group"><label class="form-label">Observații</label><textarea class="form-textarea" name="note" placeholder="Detalii..."></textarea></div>
             <button type="submit" class="form-submit">Creează Proiect</button>
         </form>
@@ -224,41 +243,96 @@ a{text-decoration:none;color:inherit;}button{font-family:inherit;cursor:pointer;
 </div>
 
 <script>
+// ═══════ CONFIG ═══════
+var API_URL='https://script.google.com/macros/s/AKfycbzdM_e5DY5nmd57TmB24sXz8dML93gKIolkmlqKxE7_d-_o3jHMVYuQ06YiQ5zJgZiB/exec';
+// PIPELINE_API — URL-ul deployment-ului Pipeline Engine (din Sheet-ul Proiecte CSSI)
+// După deploy, înlocuiește acest URL cu cel real:
+var PIPELINE_API='https://script.google.com/macros/s/AKfycbxDQtTdbQbwAj-OKg32whQnsxh428j97JtogdC8qveCKjEn1904EkSkMXDviorUdxMfbA/exec';
+var SHEET_PROIECTE='1_2VtCkUU07fNLWI-gUqFY_guDj29xeTWRWGaDzjU0Rc';
+
 // ═══════ AUTH CHECK ═══════
-var API_URL = 'https://script.google.com/macros/s/AKfycbzdM_e5DY5nmd57TmB24sXz8dML93gKIolkmlqKxE7_d-_o3jHMVYuQ06YiQ5zJgZiB/exec';
-var role=sessionStorage.getItem("cssi-role");
-if(!role||!["admin","org","sales","tech"].includes(role)){window.location.href="../admin.html";}
+var role=sessionStorage.getItem('cssi-role');
+if(!role||!['admin','org','sales','tech'].includes(role)){window.location.href='../admin.html';}
 
-// ═══════ DATA ═══════
-var STATUSES=[{id:"lead",name:"Lead",cls:"lead"},{id:"oferta",name:"Ofertă",cls:"oferta"},{id:"contract",name:"Contract",cls:"contract"},{id:"proiectare",name:"Proiectare",cls:"proiectare"},{id:"executie",name:"Execuție",cls:"executie"},{id:"receptie",name:"Recepție",cls:"receptie"},{id:"facturat",name:"Facturat",cls:"facturat"},{id:"mentenanta",name:"Mentenanță",cls:"mentenanta"}];
-var STATUS_MAP={"Lead":"lead","Ofertă":"oferta","Contract":"contract","Proiectare":"proiectare","Execuție":"executie","Recepție":"receptie","Facturat":"facturat","Mentenanță":"mentenanta"};
-var SERVICE_TAGS={"Detecție Incendiu":{cls:"incendiu",s:"Incendiu"},"Alarmă Antiefracție":{cls:"alarm",s:"Alarmă"},"Supraveghere Video":{cls:"camera",s:"Camere"},"Instalații Electrice":{cls:"electric",s:"Electric"},"Instalații Sanitare":{cls:"install",s:"Sanitare"},"Automatizări Porți":{cls:"auto",s:"Porți"},"Proiect Complex":{cls:"incendiu",s:"Complex"}};
-var STATUS_ICONS={"Lead":"📞","Ofertă":"📋","Contract":"✅","Proiectare":"📐","Execuție":"🔧","Recepție":"📸","Facturat":"💳","Mentenanță":"🔄"};
+// ═══════ CONSTANTS ═══════
+var STATUSES=[{id:'lead',name:'Lead',cls:'lead'},{id:'oferta',name:'Ofertă',cls:'oferta'},{id:'contract',name:'Contract',cls:'contract'},{id:'proiectare',name:'Proiectare',cls:'proiectare'},{id:'executie',name:'Execuție',cls:'executie'},{id:'receptie',name:'Recepție',cls:'receptie'},{id:'facturat',name:'Facturat',cls:'facturat'},{id:'mentenanta',name:'Mentenanță',cls:'mentenanta'}];
+var STATUS_MAP={'Lead':'lead','Ofertă':'oferta','Contract':'contract','Proiectare':'proiectare','Execuție':'executie','Recepție':'receptie','Facturat':'facturat','Mentenanță':'mentenanta'};
+var SERVICE_TAGS={'Detecție Incendiu':{cls:'incendiu',s:'Incendiu'},'Alarmă Antiefracție':{cls:'alarm',s:'Alarmă'},'Supraveghere Video':{cls:'camera',s:'Camere'},'Instalații Electrice':{cls:'electric',s:'Electric'},'Instalații Sanitare':{cls:'install',s:'Sanitare'},'Automatizări Porți':{cls:'auto',s:'Porți'},'Control Acces':{cls:'install',s:'Acces'},'Proiect Complex':{cls:'incendiu',s:'Complex'}};
+var STATUS_ICONS={'Lead':'📞','Ofertă':'📋','Contract':'✅','Proiectare':'📐','Execuție':'🔧','Recepție':'📸','Facturat':'💳','Mentenanță':'🔄'};
 
-var PROJECTS=[
-    {id:"CSSI-2026-001",client:"Hotel Cheile Râșnoavei",serviciu:"Detecție Incendiu",status:"Execuție",valoare:45000,loc:"Râșnov"},
-    {id:"CSSI-2026-002",client:"Magazin Coresi",serviciu:"Supraveghere Video",status:"Lead",valoare:12000,loc:"Brașov"},
-    {id:"CSSI-2026-003",client:"Vila Poiana",serviciu:"Alarmă Antiefracție",status:"Ofertă",valoare:8500,loc:"Poiana Brașov"},
-    {id:"CSSI-2026-004",client:"Birouri IT Hub",serviciu:"Instalații Electrice",status:"Contract",valoare:67000,loc:"Brașov"},
-    {id:"CSSI-2026-005",client:"Restaurant Central",serviciu:"Detecție Incendiu",status:"Proiectare",valoare:23000,loc:"Brașov"},
-    {id:"CSSI-2026-006",client:"Depozit Ghimbav",serviciu:"Supraveghere Video",status:"Execuție",valoare:35000,loc:"Ghimbav"},
-    {id:"CSSI-2026-007",client:"Școala Nr. 5",serviciu:"Detecție Incendiu",status:"Recepție",valoare:52000,loc:"Brașov"},
-    {id:"CSSI-2026-008",client:"Pensiune Bran",serviciu:"Alarmă Antiefracție",status:"Facturat",valoare:6200,loc:"Bran"},
-    {id:"CSSI-2026-009",client:"Primăria Săcele",serviciu:"Detecție Incendiu",status:"Mentenanță",valoare:89000,loc:"Săcele"},
-    {id:"CSSI-2026-010",client:"Mall Brașov Center",serviciu:"Proiect Complex",status:"Lead",valoare:120000,loc:"Brașov"},
-    {id:"CSSI-2026-011",client:"Clinica MedLife",serviciu:"Supraveghere Video",status:"Ofertă",valoare:15000,loc:"Brașov"},
-    {id:"CSSI-2026-012",client:"Fabrica Autoliv",serviciu:"Instalații Electrice",status:"Execuție",valoare:95000,loc:"Brașov"},
-    {id:"CSSI-2026-013",client:"Rezidențial Avantgarden",serviciu:"Automatizări Porți",status:"Contract",valoare:18000,loc:"Brașov"},
-    {id:"CSSI-2026-014",client:"ANAF Brașov",serviciu:"Detecție Incendiu",status:"Mentenanță",valoare:42000,loc:"Brașov"}
-];
-
-var currentView="board";
-var currentFilter="all";
+// ═══════ DATA (live din Google Sheets) ═══════
+var PROJECTS=[];
+var currentView='board';
+var currentFilter='all';
+var isLoading=false;
 
 // ═══════ INIT ═══════
-renderSummary();
-renderKanban();
-renderTable();
+loadProjects();
+
+// ═══════ LOAD PROJECTS FROM API ═══════
+function loadProjects(){
+    isLoading=true;
+    showLoading(true);
+    fetch(PIPELINE_API+'?action=getProjects')
+    .then(function(r){return r.json()})
+    .then(function(res){
+        if(res.success && res.data){
+            PROJECTS=res.data.map(function(p){
+                return {
+                    id:p.id||'',
+                    client:p.client||'',
+                    cui:p.cui||'',
+                    adresa:p.adresa||'',
+                    contact:p.contact||'',
+                    telefon:p.telefon||'',
+                    serviciu:p.serviciu||'',
+                    obiectiv:p.obiectiv||'',
+                    status:p.status||'Lead',
+                    valoare:parseFloat(p.valoare)||0,
+                    valoareContract:parseFloat(p.valoareContract)||0,
+                    responsabil:p.responsabil||'',
+                    folderId:p.folderId||'',
+                    loc:p.adresa?(p.adresa.split(',').pop()||'Brașov').trim():'Brașov',
+                    note:p.note||'',
+                    dataCreare:p.dataCreare||''
+                };
+            });
+        } else {
+            PROJECTS=[];
+        }
+        isLoading=false;
+        showLoading(false);
+        renderAll();
+    })
+    .catch(function(err){
+        console.error('Pipeline API error:',err);
+        isLoading=false;
+        showLoading(false);
+        // Fallback: afișează mesaj
+        PROJECTS=[];
+        renderAll();
+        showToast('⚠️ Nu s-au putut încărca proiectele. Verifică conexiunea.','error');
+    });
+}
+
+function showLoading(on){
+    var el=document.getElementById('loadBar');
+    if(el) el.classList.toggle('active',on);
+}
+
+function showToast(msg,type){
+    var c=document.getElementById('toastContainer');
+    if(!c){c=document.createElement('div');c.id='toastContainer';c.className='toast-container';document.body.appendChild(c);}
+    var t=document.createElement('div');
+    t.className='toast '+(type||'info');
+    t.textContent=msg;
+    c.appendChild(t);
+    setTimeout(function(){t.remove()},4000);
+}
+
+function renderAll(){
+    renderSummary();renderKanban();renderTable();
+}
 
 // ═══════ VIEW SWITCHING ═══════
 function switchView(v,btn){
@@ -274,18 +348,14 @@ function setFilter(f,btn){
     currentFilter=f;
     document.querySelectorAll('.filter-chip').forEach(function(c){c.classList.remove('active')});
     btn.classList.add('active');
-    applyFilters();
-}
-
-function applyFilters(){
-    renderKanban();renderTable();renderSummary();
+    renderAll();
 }
 
 function getFiltered(){
-    var q=document.getElementById('searchInput').value.toLowerCase();
+    var q=(document.getElementById('searchInput')?document.getElementById('searchInput').value:'').toLowerCase();
     return PROJECTS.filter(function(p){
         var matchStatus=currentFilter==='all'||p.status===currentFilter;
-        var matchSearch=!q||p.client.toLowerCase().includes(q)||p.id.toLowerCase().includes(q)||p.serviciu.toLowerCase().includes(q)||p.loc.toLowerCase().includes(q);
+        var matchSearch=!q||p.client.toLowerCase().includes(q)||p.id.toLowerCase().includes(q)||p.serviciu.toLowerCase().includes(q)||(p.loc||'').toLowerCase().includes(q)||(p.obiectiv||'').toLowerCase().includes(q);
         return matchStatus&&matchSearch;
     });
 }
@@ -294,8 +364,8 @@ function getFiltered(){
 function renderSummary(){
     var f=getFiltered();
     var total=f.length;
-    var val=f.reduce(function(s,p){return s+p.valoare},0);
-    var active=f.filter(function(p){return["Lead","Ofertă","Contract","Proiectare","Execuție","Recepție"].includes(p.status)}).length;
+    var val=f.reduce(function(s,p){return s+(p.valoare||0)},0);
+    var active=f.filter(function(p){return['Lead','Ofertă','Contract','Proiectare','Execuție','Recepție'].includes(p.status)}).length;
     document.getElementById('summary').innerHTML=
         '<div class="summary-item"><div><div class="summary-val">'+total+'</div><div class="summary-label">Total proiecte</div></div></div>'+
         '<div class="summary-item"><div><div class="summary-val">'+active+'</div><div class="summary-label">Active</div></div></div>'+
@@ -306,19 +376,23 @@ function renderSummary(){
 function renderKanban(){
     var b=document.getElementById('kanbanBoard');b.innerHTML='';
     var filtered=getFiltered();
-
     STATUSES.forEach(function(st){
         var prj=filtered.filter(function(p){return STATUS_MAP[p.status]===st.id});
         var col=document.createElement('div');col.className='kanban-col';
         col.innerHTML='<div class="kcol-head '+st.cls+'"><span class="kcol-name">'+(STATUS_ICONS[st.name]||'')+' '+st.name+'</span><span class="kcol-count">'+prj.length+'</span></div>';
         var body=document.createElement('div');body.className='kcol-body';
-        if(!prj.length){body.innerHTML='<div class="kanban-empty">—</div>'}
+        if(!prj.length){body.innerHTML='<div class="kanban-empty">—</div>';}
         else{prj.forEach(function(p){
-            var t=SERVICE_TAGS[p.serviciu]||{cls:"install",s:p.serviciu};
+            var t=SERVICE_TAGS[p.serviciu]||{cls:'install',s:p.serviciu||'—'};
+            var folderLink=p.folderId?'<a href="https://drive.google.com/drive/folders/'+p.folderId+'" target="_blank" title="Deschide folder Drive" style="font-size:11px;color:var(--blue);text-decoration:none">📁 Drive</a>':'';
             var c=document.createElement('div');c.className='kcard';
-            c.innerHTML='<div class="kcard-id">'+p.id+'</div><div class="kcard-title">'+p.client+'</div><div class="kcard-meta"><span class="kcard-tag '+t.cls+'">'+t.s+'</span><span>📍 '+p.loc+'</span></div><div class="kcard-val">'+p.valoare.toLocaleString('ro-RO')+' RON</div>';
+            c.onclick=function(){openProjectDetail(p.id);};
+            c.innerHTML='<div class="kcard-id">'+p.id+'</div>'+
+                '<div class="kcard-title">'+p.client+'</div>'+
+                '<div class="kcard-meta"><span class="kcard-tag '+t.cls+'">'+t.s+'</span><span>📍 '+(p.loc||'Brașov')+'</span>'+folderLink+'</div>'+
+                '<div class="kcard-val">'+(p.valoare||0).toLocaleString('ro-RO')+' RON</div>';
             body.appendChild(c);
-        })}
+        });}
         col.appendChild(body);b.appendChild(col);
     });
 }
@@ -327,42 +401,159 @@ function renderKanban(){
 function renderTable(){
     var tb=document.getElementById('tableBody');tb.innerHTML='';
     var filtered=getFiltered();
-
-    filtered.forEach(function(p,idx){
-        var t=SERVICE_TAGS[p.serviciu]||{cls:"install",s:p.serviciu};
-        var opts=Object.keys(STATUS_MAP).map(function(s){return '<option value="'+s+'"'+(p.status===s?' selected':'')+'>'+STATUS_ICONS[s]+' '+s+'</option>'}).join('');
+    if(!filtered.length){
+        tb.innerHTML='<tr><td colspan="6" style="text-align:center;color:var(--gray-l);padding:24px">'+
+            (isLoading?'Se încarcă proiectele...':'Niciun proiect găsit')+'</td></tr>';
+        return;
+    }
+    filtered.forEach(function(p){
+        var t=SERVICE_TAGS[p.serviciu]||{cls:'install',s:p.serviciu||'—'};
+        var opts=Object.keys(STATUS_MAP).map(function(s){return '<option value="'+s+'"'+(p.status===s?' selected':'')+'>'+STATUS_ICONS[s]+' '+s+'</option>';}).join('');
+        var folderBtn=p.folderId?'<a href="https://drive.google.com/drive/folders/'+p.folderId+'" target="_blank" class="kcard-tag camera" style="text-decoration:none;font-size:10px">📁</a>':'';
         var tr=document.createElement('tr');
         tr.innerHTML=
-            '<td><strong>'+p.id+'</strong></td>'+
+            '<td><strong>'+p.id+'</strong> '+folderBtn+'</td>'+
             '<td>'+p.client+'</td>'+
             '<td><span class="kcard-tag '+t.cls+'">'+t.s+'</span></td>'+
-            '<td class="loc">📍 '+p.loc+'</td>'+
-            '<td class="val">'+p.valoare.toLocaleString('ro-RO')+' RON</td>'+
+            '<td class="loc">📍 '+(p.loc||'Brașov')+'</td>'+
+            '<td class="val">'+(p.valoare||0).toLocaleString('ro-RO')+' RON</td>'+
             '<td><select class="status-select" onchange="changeStatus(\''+p.id+'\',this.value)">'+opts+'</select></td>';
         tb.appendChild(tr);
     });
 }
 
-// ═══════ STATUS CHANGE (manual — key feature!) ═══════
+// ═══════ STATUS CHANGE (live sync to Google Sheets) ═══════
 function changeStatus(projectId,newStatus){
     var p=PROJECTS.find(function(x){return x.id===projectId});
-    if(p){
-        p.status=newStatus;
+    if(!p) return;
+    var oldStatus=p.status;
+    p.status=newStatus;
+    renderKanban();renderSummary();
+    showToast('🔄 Actualizare status: '+projectId+' → '+newStatus,'info');
+    // Sync to Pipeline API
+    fetch(PIPELINE_API,{
+        method:'POST',
+        headers:{'Content-Type':'text/plain'},
+        body:JSON.stringify({action:'updateStatus',id:projectId,status:newStatus,user:role||'Admin'})
+    })
+    .then(function(r){return r.json();})
+    .then(function(res){
+        if(res.success){
+            showToast('✅ Status actualizat: '+projectId+' → '+newStatus,'success');
+        } else {
+            showToast('❌ Eroare: '+(res.error||'necunoscută'),'error');
+            p.status=oldStatus;
+            renderKanban();renderSummary();
+        }
+    })
+    .catch(function(err){
+        showToast('❌ Eroare rețea: '+err.message,'error');
+        p.status=oldStatus;
         renderKanban();renderSummary();
-        // TODO: Sync to Google Sheets via Apps Script
-        if(API_URL) fetch(API_URL+'?action=updateStatus&id='+projectId+'&status='+encodeURIComponent(newStatus));
-    }
+    });
 }
 
-// ═══════ ADD PROJECT ═══════
-function openModal(){document.getElementById('addProjectModal').classList.add('active')}
-function closeModal(){document.getElementById('addProjectModal').classList.remove('active')}
+// ═══════ ADD PROJECT (live — creează în Sheet + Drive) ═══════
+function openModal(){document.getElementById('addProjectModal').classList.add('active');}
+function closeModal(){document.getElementById('addProjectModal').classList.remove('active');}
 
 function addProject(e){
-    e.preventDefault();var f=document.getElementById('addProjectForm');var d=new FormData(f);
-    var mx=0;PROJECTS.forEach(function(p){var n=parseInt(p.id.split('-')[2]);if(n>mx)mx=n});
-    PROJECTS.push({id:"CSSI-2026-"+String(mx+1).padStart(3,'0'),client:d.get('client'),serviciu:d.get('serviciu'),status:d.get('status'),valoare:parseInt(d.get('valoare'))||0,loc:d.get('locatie')||'Brașov'});
-    renderKanban();renderTable();renderSummary();closeModal();f.reset();
+    e.preventDefault();
+    var f=document.getElementById('addProjectForm');
+    var d=new FormData(f);
+    var btn=f.querySelector('button[type=submit]');
+    btn.disabled=true;
+    btn.textContent='⏳ Se creează...';
+    showLoading(true);
+    var projectData={
+        client:d.get('client')||'',
+        cui:d.get('cui')||'',
+        adresa:d.get('locatie')||'Brașov',
+        contact:d.get('contact')||'',
+        telefon:d.get('telefon')||'',
+        serviciu:d.get('serviciu')||'',
+        obiectiv:d.get('obiectiv')||'',
+        status:d.get('status')||'Lead',
+        valoare:parseInt(d.get('valoare'))||0,
+        responsabil:d.get('responsabil')||'',
+        note:d.get('note')||''
+    };
+    fetch(PIPELINE_API,{
+        method:'POST',
+        headers:{'Content-Type':'text/plain'},
+        body:JSON.stringify({action:'createProject',data:projectData})
+    })
+    .then(function(r){return r.json();})
+    .then(function(res){
+        showLoading(false);
+        btn.disabled=false;
+        btn.textContent='Creează Proiect';
+        if(res.success){
+            showToast('✅ Proiect creat: '+res.id+' — Folder Drive creat automat!','success');
+            closeModal();
+            f.reset();
+            // Adaugă local + re-fetch
+            loadProjects();
+        } else {
+            showToast('❌ Eroare creare: '+(res.error||'necunoscută'),'error');
+        }
+    })
+    .catch(function(err){
+        showLoading(false);
+        btn.disabled=false;
+        btn.textContent='Creează Proiect';
+        showToast('❌ Eroare rețea: '+err.message,'error');
+    });
+}
+
+// ═══════ PROJECT DETAIL (click pe card) ═══════
+function openProjectDetail(projectId){
+    var p=PROJECTS.find(function(x){return x.id===projectId});
+    if(!p) return;
+    var driveLink=p.folderId?'https://drive.google.com/drive/folders/'+p.folderId:'';
+    var html='<div style="padding:4px">'+
+        '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">'+
+        '<span style="font-size:12px;font-weight:700;color:var(--blue)">'+p.id+'</span>'+
+        '<span class="kcard-tag '+(STATUS_MAP[p.status]||'lead')+'" style="padding:4px 10px">'+
+        (STATUS_ICONS[p.status]||'')+' '+p.status+'</span></div>'+
+        '<div style="font-size:18px;font-weight:800;margin-bottom:8px">'+p.client+'</div>'+
+        (p.obiectiv?'<div style="font-size:12px;color:var(--gray);margin-bottom:8px">📋 '+p.obiectiv+'</div>':'')+
+        '<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;font-size:12px;margin-bottom:12px">'+
+        '<div><strong>Serviciu:</strong> '+(p.serviciu||'—')+'</div>'+
+        '<div><strong>Valoare:</strong> '+(p.valoare||0).toLocaleString('ro-RO')+' RON</div>'+
+        '<div><strong>Locație:</strong> '+(p.loc||'—')+'</div>'+
+        '<div><strong>Telefon:</strong> '+(p.telefon||'—')+'</div>'+
+        '<div><strong>CUI:</strong> '+(p.cui||'—')+'</div>'+
+        '<div><strong>Contact:</strong> '+(p.contact||'—')+'</div>'+
+        '<div><strong>Creat:</strong> '+(p.dataCreare||'—')+'</div>'+
+        '<div><strong>Responsabil:</strong> '+(p.responsabil||'—')+'</div>'+
+        '</div>'+
+        (p.note?'<div style="font-size:11px;color:var(--gray);padding:8px;background:var(--gray-bg);border-radius:8px;margin-bottom:12px">📝 '+p.note+'</div>':'')+
+        '<div style="display:flex;gap:8px;flex-wrap:wrap">'+
+        (driveLink?'<a href="'+driveLink+'" target="_blank" class="btn btn-sm btn-blue" style="text-decoration:none">📁 Deschide Drive</a>':'')+
+        '<a href="calculator-pret.html" class="btn btn-sm btn-green" style="text-decoration:none">📄 Generează ofertă</a>'+
+        '<button class="btn btn-sm btn-outline" onclick="closeDetailModal()">Închide</button>'+
+        '</div></div>';
+    // Show in modal
+    var overlay=document.getElementById('detailModal');
+    if(!overlay){
+        overlay=document.createElement('div');
+        overlay.id='detailModal';
+        overlay.className='modal-overlay';
+        overlay.onclick=function(ev){if(ev.target===overlay)closeDetailModal();};
+        overlay.innerHTML='<div class="modal"><div class="modal-head"><div class="modal-title" id="detailTitle"></div><button class="modal-close" onclick="closeDetailModal()">✕</button></div><div class="modal-body" id="detailBody"></div></div>';
+        document.body.appendChild(overlay);
+    }
+    document.getElementById('detailTitle').textContent='📋 '+p.id+' — '+p.client;
+    document.getElementById('detailBody').innerHTML=html;
+    overlay.classList.add('active');
+}
+function closeDetailModal(){var m=document.getElementById('detailModal');if(m)m.classList.remove('active');}
+
+// ═══════ REFRESH BUTTON ═══════
+function refreshProjects(){
+    showToast('🔄 Se reîncarcă proiectele...','info');
+    loadProjects();
 }
 </script>
 <script>
