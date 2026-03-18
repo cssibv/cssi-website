@@ -8,7 +8,7 @@
 
 $installPassword = 'cssi-install-2026';
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['pass'] ?? '') === $installPassword) {
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && ((isset($_POST['pass']) ? $_POST['pass'] : '')) === $installPassword) {
     require_once __DIR__ . '/db.php';
     
     $results = [];

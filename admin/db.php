@@ -71,7 +71,7 @@ function jsonResponse($data, $code = 200) {
 
 // Helper: get POST body as array
 function getPostData() {
-    $contentType = $_SERVER['CONTENT_TYPE'] ?? '';
+    $contentType = (isset($_SERVER['CONTENT_TYPE']) ? $_SERVER['CONTENT_TYPE'] : '');
     if (strpos($contentType, 'application/json') !== false) {
         return json_decode(file_get_contents('php://input'), true) ?: [];
     }

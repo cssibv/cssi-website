@@ -14,7 +14,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') { exit; }
 
 require_once __DIR__ . '/db.php';
 
-$action = $_GET['action'] ?? ($_POST['action'] ?? '');
+$action = (isset($_GET['action']) ? $_GET['action'] : ((isset($_POST['action']) ? $_POST['action'] : '')));
 $data = getPostData();
 
 try {
@@ -25,7 +25,7 @@ try {
         // CLIENTI
         // ══════════════════════════════════════
         case 'getClienti':
-            $search = $_GET['search'] ?? '';
+            $search = (isset($_GET['search']) ? $_GET['search'] : '');
             $sql = "SELECT * FROM clienti";
             $params = [];
             if ($search) {
@@ -40,7 +40,7 @@ try {
             break;
 
         case 'getClient':
-            $id = $_GET['id'] ?? 0;
+            $id = (isset($_GET['id']) ? $_GET['id'] : 0);
             $stmt = $db->prepare("SELECT * FROM clienti WHERE id = ? OR client_id = ?");
             $stmt->execute([$id, $id]);
             $row = $stmt->fetch();
@@ -52,23 +52,22 @@ try {
             $stmt = $db->prepare("INSERT INTO clienti (client_id, nume, cui_cnp, telefon, email, adresa, oras, judet, persoana_contact, tip, note) VALUES (?,?,?,?,?,?,?,?,?,?,?)");
             $stmt->execute([
                 $clientId,
-                $data['nume'] ?? '',
-                $data['cui_cnp'] ?? '',
-                $data['telefon'] ?? '',
-                $data['email'] ?? '',
-                $data['adresa'] ?? '',
-                $data['oras'] ?? 'Brașov',
-                $data['judet'] ?? 'Brașov',
-                $data['persoana_contact'] ?? '',
-                $data['tip'] ?? 'Firma',
-                $data['note'] ?? ''
-            ]);
+                (isset($data['nume']) ? $data['nume'] : ''),
+                (isset($data['cui_cnp']) ? $data['cui_cnp'] : ''),
+                (isset($data['telefon']) ? $data['telefon'] : ''),
+                (isset($data['email']) ? $data['email'] : ''),
+                (isset($data['adresa']) ? $data['adresa'] : ''),
+                (isset($data['oras']) ? $data['oras'] : 'Brașov'),
+                (isset($data['judet']) ? $data['judet'] : 'Brașov'),
+                (isset($data['persoana_contact']) ? $data['persoana_contact'] : ''),
+                (isset($data['tip']) ? $data['tip'] : 'Firma'),
+                (isset($data['note']) ? $data['note'] : '')]);
             $insertId = $db->lastInsertId();
             jsonResponse(['success' => true, 'id' => $insertId, 'client_id' => $clientId]);
             break;
 
         case 'updateClient':
-            $id = $data['id'] ?? 0;
+            $id = (isset($data['id']) ? $data['id'] : 0);
             $fields = [];
             $values = [];
             foreach (['nume','cui_cnp','telefon','email','adresa','oras','judet','persoana_contact','tip','note'] as $f) {
@@ -87,7 +86,7 @@ try {
             break;
 
         case 'deleteClient':
-            $id = $data['id'] ?? 0;
+            $id = (isset($data['id']) ? $data['id'] : 0);
             $db->prepare("DELETE FROM clienti WHERE id = ?")->execute([$id]);
             jsonResponse(['success' => true]);
             break;
@@ -96,8 +95,8 @@ try {
         // PROIECTE
         // ══════════════════════════════════════
         case 'getProiecte':
-            $status = $_GET['status'] ?? '';
-            $search = $_GET['search'] ?? '';
+            $status = (isset($_GET['status']) ? $_GET['status'] : '');
+            $search = (isset($_GET['search']) ? $_GET['search'] : '');
             $sql = "SELECT * FROM v_proiecte_complete WHERE 1=1";
             $params = [];
             if ($status) { $sql .= " AND status = ?"; $params[] = $status; }
@@ -108,31 +107,31 @@ try {
             break;
 
         case 'getProiect':
-            $id = $_GET['id'] ?? 0;
+            $id = (isset($_GET['id']) ? $_GET['id'] : 0);
             $stmt = $db->prepare("SELECT * FROM v_proiecte_complete WHERE id = ? OR proiect_id = ?");
             $stmt->execute([$id, $id]);
             jsonResponse(['success' => true, 'data' => $stmt->fetch()]);
             break;
 
         case 'createProiect':
-            $clientId = $data['client_id'] ?? 0;
+            $clientId = (isset($data['client_id']) ? $data['client_id'] : 0);
             if (!$clientId) { jsonResponse(['success' => false, 'error' => 'client_id obligatoriu'], 400); break; }
             
             $year = date('Y');
             $proiectId = nextId('proiect_seq', "CSSI-$year-", 4);
-            $istoric = json_encode([['status' => 'Lead', 'data' => date('Y-m-d H:i:s'), 'user' => $data['responsabil'] ?? 'Admin']]);
+            $istoric = json_encode([['status' => 'Lead', 'data' => date('Y-m-d H:i:s'), 'user' => (isset($data['responsabil']) ? $data['responsabil'] : 'Admin')]]);
             
             $stmt = $db->prepare("INSERT INTO proiecte (proiect_id, client_id, serviciu, obiectiv, status, valoare_estimata, responsabil, adresa_obiectiv, note, istoric_status) VALUES (?,?,?,?,?,?,?,?,?,?)");
             $stmt->execute([
                 $proiectId,
                 $clientId,
-                $data['serviciu'] ?? 'Supraveghere Video',
-                $data['obiectiv'] ?? '',
-                $data['status'] ?? 'Lead',
-                $data['valoare_estimata'] ?? 0,
-                $data['responsabil'] ?? '',
-                $data['adresa_obiectiv'] ?? '',
-                $data['note'] ?? '',
+                (isset($data['serviciu']) ? $data['serviciu'] : 'Supraveghere Video'),
+                (isset($data['obiectiv']) ? $data['obiectiv'] : ''),
+                (isset($data['status']) ? $data['status'] : 'Lead'),
+                (isset($data['valoare_estimata']) ? $data['valoare_estimata'] : 0),
+                (isset($data['responsabil']) ? $data['responsabil'] : ''),
+                (isset($data['adresa_obiectiv']) ? $data['adresa_obiectiv'] : ''),
+                (isset($data['note']) ? $data['note'] : ''),
                 $istoric
             ]);
             
@@ -146,7 +145,7 @@ try {
             break;
 
         case 'updateProiect':
-            $id = $data['id'] ?? 0;
+            $id = (isset($data['id']) ? $data['id'] : 0);
             $fields = [];
             $values = [];
             foreach (['serviciu','obiectiv','status','valoare_estimata','valoare_contract','responsabil','adresa_obiectiv','note'] as $f) {
@@ -165,9 +164,9 @@ try {
             break;
 
         case 'updateStatus':
-            $id = $data['id'] ?? $_GET['id'] ?? '';
-            $newStatus = $data['status'] ?? $_GET['status'] ?? '';
-            $user = $data['user'] ?? 'Admin';
+            $id = (isset($data['id']) ? $data['id'] : (isset($_GET['id']) ? $_GET['id'] : ''));
+            $newStatus = (isset($data['status']) ? $data['status'] : (isset($_GET['status']) ? $_GET['status'] : ''));
+            $user = (isset($data['user']) ? $data['user'] : 'Admin');
             if (!$id || !$newStatus) { jsonResponse(['success' => false, 'error' => 'id si status obligatorii'], 400); break; }
             
             // Citeste istoricul curent
@@ -186,7 +185,7 @@ try {
         // OFERTE
         // ══════════════════════════════════════
         case 'getOferte':
-            $search = $_GET['search'] ?? '';
+            $search = (isset($_GET['search']) ? $_GET['search'] : '');
             $sql = "SELECT * FROM v_oferte_complete";
             $params = [];
             if ($search) {
@@ -203,8 +202,8 @@ try {
                 $stmtL = $db->prepare("SELECT * FROM oferta_linii WHERE oferta_id = ? ORDER BY tip, ordine");
                 $stmtL->execute([$o['id']]);
                 $linii = $stmtL->fetchAll();
-                $o['lines'] = array_filter($linii, fn($l) => $l['tip'] === 'echipament');
-                $o['labor'] = array_filter($linii, fn($l) => $l['tip'] === 'manopera');
+                $o['lines'] = array_filter($linii, function($l) { return $l['tip'] === 'echipament'; });
+                $o['labor'] = array_filter($linii, function($l) { return $l['tip'] === 'manopera'; });
                 $o['lines'] = array_values($o['lines']);
                 $o['labor'] = array_values($o['labor']);
             }
@@ -213,7 +212,7 @@ try {
             break;
 
         case 'getOferta':
-            $id = $_GET['id'] ?? 0;
+            $id = (isset($_GET['id']) ? $_GET['id'] : 0);
             $stmt = $db->prepare("SELECT * FROM v_oferte_complete WHERE id = ? OR oferta_id = ?");
             $stmt->execute([$id, $id]);
             $o = $stmt->fetch();
@@ -221,8 +220,8 @@ try {
                 $stmtL = $db->prepare("SELECT * FROM oferta_linii WHERE oferta_id = ? ORDER BY tip, ordine");
                 $stmtL->execute([$o['id']]);
                 $linii = $stmtL->fetchAll();
-                $o['lines'] = array_values(array_filter($linii, fn($l) => $l['tip'] === 'echipament'));
-                $o['labor'] = array_values(array_filter($linii, fn($l) => $l['tip'] === 'manopera'));
+                $o['lines'] = array_values(array_filter($linii, function($l) { return $l['tip'] === 'echipament'; }));
+                $o['labor'] = array_values(array_filter($linii, function($l) { return $l['tip'] === 'manopera'; }));
             }
             jsonResponse(['success' => true, 'data' => $o]);
             break;
@@ -237,74 +236,73 @@ try {
                     $ofertaDbId = $data['oferta_db_id'];
                     $db->prepare("UPDATE oferte SET titlu=?, data_oferta=?, valabilitate=?, obiectiv=?, client_id=?, proiect_id=?, subtotal_echip=?, subtotal_manop=?, total_fara_tva=?, tva=?, total_cu_tva=?, client_nume=?, client_cui=?, client_adresa=?, client_contact=?, status=? WHERE id=?")
                        ->execute([
-                           $data['titlu'] ?? '',
-                           $data['data'] ?? date('Y-m-d'),
-                           $data['valab'] ?? '4 zile',
-                           $data['obiectiv'] ?? '',
+                           (isset($data['titlu']) ? $data['titlu'] : ''),
+                           (isset($data['data']) ? $data['data'] : date('Y-m-d')),
+                           (isset($data['valab']) ? $data['valab'] : '4 zile'),
+                           (isset($data['obiectiv']) ? $data['obiectiv'] : ''),
                            $data['client_db_id'] ?: null,
                            $data['proiect_db_id'] ?: null,
-                           $data['subtotalEchip'] ?? 0,
-                           $data['subtotalManop'] ?? 0,
-                           $data['totalNet'] ?? 0,
-                           $data['tva'] ?? 0,
-                           $data['totalBrut'] ?? 0,
-                           $data['client'] ?? '',
-                           $data['cui'] ?? '',
-                           $data['adresa'] ?? '',
-                           $data['contact'] ?? '',
-                           $data['oferta_status'] ?? 'Draft',
+                           (isset($data['subtotalEchip']) ? $data['subtotalEchip'] : 0),
+                           (isset($data['subtotalManop']) ? $data['subtotalManop'] : 0),
+                           (isset($data['totalNet']) ? $data['totalNet'] : 0),
+                           (isset($data['tva']) ? $data['tva'] : 0),
+                           (isset($data['totalBrut']) ? $data['totalBrut'] : 0),
+                           (isset($data['client']) ? $data['client'] : ''),
+                           (isset($data['cui']) ? $data['cui'] : ''),
+                           (isset($data['adresa']) ? $data['adresa'] : ''),
+                           (isset($data['contact']) ? $data['contact'] : ''),
+                           (isset($data['oferta_status']) ? $data['oferta_status'] : 'Draft'),
                            $ofertaDbId
                        ]);
                     // Sterge linii vechi
                     $db->prepare("DELETE FROM oferta_linii WHERE oferta_id = ?")->execute([$ofertaDbId]);
                 } else {
                     // Insert new
-                    $ofertaId = $data['nr'] ?? nextId('oferta_seq', 'OF-', 6);
+                    $ofertaId = (isset($data['nr']) ? $data['nr'] : nextId('oferta_seq', 'OF-', 6));
                     $stmt = $db->prepare("INSERT INTO oferte (oferta_id, titlu, data_oferta, valabilitate, obiectiv, client_id, proiect_id, subtotal_echip, subtotal_manop, total_fara_tva, tva, total_cu_tva, client_nume, client_cui, client_adresa, client_contact, status) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
                     $stmt->execute([
                         $ofertaId,
-                        $data['titlu'] ?? '',
-                        $data['data'] ?? date('Y-m-d'),
-                        $data['valab'] ?? '4 zile',
-                        $data['obiectiv'] ?? '',
+                        (isset($data['titlu']) ? $data['titlu'] : ''),
+                        (isset($data['data']) ? $data['data'] : date('Y-m-d')),
+                        (isset($data['valab']) ? $data['valab'] : '4 zile'),
+                        (isset($data['obiectiv']) ? $data['obiectiv'] : ''),
                         $data['client_db_id'] ?: null,
                         $data['proiect_db_id'] ?: null,
-                        $data['subtotalEchip'] ?? 0,
-                        $data['subtotalManop'] ?? 0,
-                        $data['totalNet'] ?? 0,
-                        $data['tva'] ?? 0,
-                        $data['totalBrut'] ?? 0,
-                        $data['client'] ?? '',
-                        $data['cui'] ?? '',
-                        $data['adresa'] ?? '',
-                        $data['contact'] ?? '',
-                        $data['oferta_status'] ?? 'Draft'
-                    ]);
+                        (isset($data['subtotalEchip']) ? $data['subtotalEchip'] : 0),
+                        (isset($data['subtotalManop']) ? $data['subtotalManop'] : 0),
+                        (isset($data['totalNet']) ? $data['totalNet'] : 0),
+                        (isset($data['tva']) ? $data['tva'] : 0),
+                        (isset($data['totalBrut']) ? $data['totalBrut'] : 0),
+                        (isset($data['client']) ? $data['client'] : ''),
+                        (isset($data['cui']) ? $data['cui'] : ''),
+                        (isset($data['adresa']) ? $data['adresa'] : ''),
+                        (isset($data['contact']) ? $data['contact'] : ''),
+                        (isset($data['oferta_status']) ? $data['oferta_status'] : 'Draft')]);
                     $ofertaDbId = $db->lastInsertId();
                 }
                 
                 // Insert linii echipamente
                 $stmtLine = $db->prepare("INSERT INTO oferta_linii (oferta_id, tip, denumire, cod, um, cantitate, pret_achizitie, adaos_procent, pret_vanzare, valoare, ordine) VALUES (?,?,?,?,?,?,?,?,?,?,?)");
                 
-                $lines = $data['lines'] ?? [];
+                $lines = (isset($data['lines']) ? $data['lines'] : []);
                 foreach ($lines as $i => $l) {
                     if (empty($l['name'])) continue;
-                    $pv = ($l['pAchiz'] ?? 0) * (1 + ($l['adaos'] ?? 40) / 100);
-                    $val = ($l['cant'] ?? 0) * $pv;
+                    $pv = ((isset($l['pAchiz']) ? $l['pAchiz'] : 0)) * (1 + ((isset($l['adaos']) ? $l['adaos'] : 40)) / 100);
+                    $val = ((isset($l['cant']) ? $l['cant'] : 0)) * $pv;
                     $stmtLine->execute([
-                        $ofertaDbId, 'echipament', $l['name'], $l['code'] ?? '', $l['um'] ?? 'buc.',
-                        $l['cant'] ?? 0, $l['pAchiz'] ?? 0, $l['adaos'] ?? 40, round($pv, 2), round($val, 2), $i
+                        $ofertaDbId, 'echipament', $l['name'], (isset($l['code']) ? $l['code'] : ''), (isset($l['um']) ? $l['um'] : 'buc.'),
+                        (isset($l['cant']) ? $l['cant'] : 0), (isset($l['pAchiz']) ? $l['pAchiz'] : 0), (isset($l['adaos']) ? $l['adaos'] : 40), round($pv, 2), round($val, 2), $i
                     ]);
                 }
                 
                 // Insert linii manopera
-                $labor = $data['labor'] ?? [];
+                $labor = (isset($data['labor']) ? $data['labor'] : []);
                 foreach ($labor as $i => $l) {
-                    $c = floatval($l['cant'] ?? 0);
-                    $p = floatval($l['price'] ?? 0);
+                    $c = floatval((isset($l['cant']) ? $l['cant'] : 0));
+                    $p = floatval((isset($l['price']) ? $l['price'] : 0));
                     if (!$c || empty($l['name'])) continue;
                     $stmtLine->execute([
-                        $ofertaDbId, 'manopera', $l['name'], '', $l['um'] ?? 'ore',
+                        $ofertaDbId, 'manopera', $l['name'], '', (isset($l['um']) ? $l['um'] : 'ore'),
                         $c, $p, 0, $p, round($c * $p, 2), 100 + $i
                     ]);
                 }
@@ -324,14 +322,14 @@ try {
             break;
 
         case 'deleteOferta':
-            $id = $data['id'] ?? 0;
+            $id = (isset($data['id']) ? $data['id'] : 0);
             $db->prepare("DELETE FROM oferte WHERE id = ? OR oferta_id = ?")->execute([$id, $id]);
             jsonResponse(['success' => true]);
             break;
 
         case 'updateOfertaStatus':
-            $id = $data['id'] ?? 0;
-            $status = $data['status'] ?? '';
+            $id = (isset($data['id']) ? $data['id'] : 0);
+            $status = (isset($data['status']) ? $data['status'] : '');
             $db->prepare("UPDATE oferte SET status = ? WHERE id = ?")->execute([$status, $id]);
             jsonResponse(['success' => true]);
             break;
