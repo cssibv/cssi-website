@@ -1,90 +1,83 @@
 <?php
-// CSSI Patch - repara api.php si calculator-pret.html pe server
-// STERGE DUPA UTILIZARE!
 header('Content-Type: text/html; charset=utf-8');
 $p = isset($_GET['go']) ? $_GET['go'] : '';
-if ($p !== 'cssi2026') {
-    die('Usage: patch.php?go=cssi2026');
-}
-
+if ($p !== 'cssi2026') { die('Usage: patch.php?go=cssi2026'); }
 $dir = __DIR__;
 $log = array();
 
-// ========== FIX 1: api.php - transaction bug ==========
+// === FIX api.php ===
 $api = file_get_contents($dir . '/api.php');
-$fixed = 0;
+$fx = 0;
 
-// Fix: move nextId BEFORE beginTransaction in saveOferta
+// Fix transaction bug
 $old1 = "case 'saveOferta':\n            \$db->beginTransaction();\n            try {\n                \$isUpdate = !empty(\$data['oferta_db_id']);";
-$new1 = "case 'saveOferta':\n            // ID generated BEFORE transaction (nextId has own transaction)\n            \$isUpdate = !empty(\$data['oferta_db_id']);\n            \$preGeneratedId = null;\n            if (!\$isUpdate) { \$preGeneratedId = (isset(\$data['nr']) ? \$data['nr'] : nextId('oferta_seq', 'OF-', 6)); }\n            \$db->beginTransaction();\n            try {";
-
 if (strpos($api, $old1) !== false) {
-    $api = str_replace($old1, $new1, $api);
-    $fixed++;
-    $log[] = 'FIX1a: Transaction bug - moved nextId before beginTransaction';
+    $api = str_replace($old1, "case 'saveOferta':\n            \$isUpdate = !empty(\$data['oferta_db_id']);\n            \$preGeneratedId = null;\n            if (!\$isUpdate) { \$preGeneratedId = (isset(\$data['nr']) ? \$data['nr'] : nextId('oferta_seq', 'OF-', 6)); }\n            \$db->beginTransaction();\n            try {", $api);
+    $fx++;
+    $log[] = 'FIX: api.php transaction bug';
 }
-
-// Fix: replace nextId call inside transaction with preGeneratedId
 $old2 = "\$ofertaId = (isset(\$data['nr']) ? \$data['nr'] : nextId('oferta_seq', 'OF-', 6));";
-$new2 = "\$ofertaId = \$preGeneratedId;";
 if (strpos($api, $old2) !== false) {
-    $api = str_replace($old2, $new2, $api);
-    $fixed++;
-    $log[] = 'FIX1b: Replaced nextId inside transaction with preGeneratedId';
+    $api = str_replace($old2, "\$ofertaId = \$preGeneratedId;", $api);
+    $fx++;
+    $log[] = 'FIX: api.php nextId inside transaction';
 }
-
-// Fix: client_db_id ?: null warnings
+// Fix undefined key warnings
 $old3 = "\$data['client_db_id'] ?: null";
 $new3 = "(isset(\$data['client_db_id']) && \$data['client_db_id']) ? \$data['client_db_id'] : null";
-$count3 = substr_count($api, $old3);
-if ($count3 > 0) {
+if (strpos($api, $old3) !== false) {
     $api = str_replace($old3, $new3, $api);
-    $fixed += $count3;
-    $log[] = 'FIX1c: Fixed client_db_id warnings (' . $count3 . ' occurrences)';
+    $fx++;
+    $log[] = 'FIX: api.php client_db_id warning';
 }
-
 $old4 = "\$data['proiect_db_id'] ?: null";
 $new4 = "(isset(\$data['proiect_db_id']) && \$data['proiect_db_id']) ? \$data['proiect_db_id'] : null";
-$count4 = substr_count($api, $old4);
-if ($count4 > 0) {
+if (strpos($api, $old4) !== false) {
     $api = str_replace($old4, $new4, $api);
-    $fixed += $count4;
-    $log[] = 'FIX1d: Fixed proiect_db_id warnings (' . $count4 . ' occurrences)';
+    $fx++;
+    $log[] = 'FIX: api.php proiect_db_id warning';
 }
-
-if ($fixed > 0) {
+if ($fx > 0) {
     file_put_contents($dir . '/api.php', $api);
-    $log[] = 'api.php SAVED (' . $fixed . ' fixes)';
+    $log[] = 'api.php SAVED (' . $fx . ' fixes)';
 } else {
-    $log[] = 'api.php - no changes needed or already fixed';
+    $log[] = 'api.php - already fixed';
 }
 
-// ========== FIX 2: calculator-pret.html - commented variables ==========
+// === FIX calculator-pret.html ===
 $calc = file_get_contents($dir . '/calculator-pret.html');
-$fixedCalc = 0;
+$fc = 0;
 
-$oldCalc = '// Google API removed';
-if (strpos($calc, $oldCalc) !== false) {
-    // Remove the comment that breaks the variables
+// Fix commented variables
+if (strpos($calc, '// Google API removed') !== false) {
     $calc = str_replace('// Google API removed — using MySQL localvar', 'var', $calc);
-    $fixedCalc++;
-    $log[] = 'FIX2: Removed comment breaking DEFAULT_ADAOS and OFFER_START_NR';
+    $fc++;
+    $log[] = 'FIX: calculator variables uncommented';
 }
 
-if ($fixedCalc > 0) {
+// Fix field mapping - API returns total_cu_tva but renderSaved expects totalBrut
+$oldMap = 'if(res.success&&res.data){offers=res.data;';
+$newMap = 'if(res.success&&res.data){offers=res.data.map(function(o){o.totalBrut=parseFloat(o.total_cu_tva||o.totalBrut)||0;o.totalNet=parseFloat(o.total_fara_tva||o.totalNet)||0;o.subtotalEchip=parseFloat(o.subtotal_echip||o.subtotalEchip)||0;o.subtotalManop=parseFloat(o.subtotal_manop||o.subtotalManop)||0;o.tva=parseFloat(o.tva)||0;o.nr=o.oferta_id||o.nr||"";o.client=o.client_nume||o.client||"";o.cui=o.client_cui||o.cui||"";o.adresa=o.client_adresa||o.adresa||"";o.contact=o.client_contact||o.contact||"";o.obiectiv=o.obiectiv||"";o.data=o.data_oferta||o.data||"";o.valab=o.valabilitate||o.valab||"4 zile";o.createdAt=o.created_at||"";o.lines=(o.lines||[]).map(function(l){return{id:l.id,name:l.denumire||l.name||"",code:l.cod||l.code||"",um:l.um||"buc.",cant:parseFloat(l.cantitate||l.cant)||0,pAchiz:parseFloat(l.pret_achizitie||l.pAchiz)||0,adaos:parseFloat(l.adaos_procent||l.adaos)||40}});o.labor=(o.labor||[]).map(function(l){return{id:l.id,name:l.denumire||l.name||"",um:l.um||"ore",cant:parseFloat(l.cantitate||l.cant)||0,price:parseFloat(l.pret_achizitie||l.pret_unitar||l.price)||0}});return o});';
+if (strpos($calc, $oldMap) !== false) {
+    $calc = str_replace($oldMap, $newMap, $calc);
+    $fc++;
+    $log[] = 'FIX: calculator field mapping (totalBrut, client, lines, labor)';
+}
+
+if ($fc > 0) {
     file_put_contents($dir . '/calculator-pret.html', $calc);
-    $log[] = 'calculator-pret.html SAVED';
+    $log[] = 'calculator-pret.html SAVED (' . $fc . ' fixes)';
 } else {
-    $log[] = 'calculator-pret.html - no changes needed or already fixed';
+    $log[] = 'calculator-pret.html - already fixed';
 }
 
-// ========== OUTPUT ==========
-echo '<h2 style="font-family:system-ui;color:green">CSSI Patch Results</h2>';
+// === OUTPUT ===
+echo '<h2 style="font-family:system-ui;color:green">CSSI Patch v2</h2>';
 echo '<ul style="font-family:monospace;font-size:13px">';
 foreach ($log as $l) {
-    $color = strpos($l, 'SAVED') !== false ? 'green' : (strpos($l, 'no changes') !== false ? 'blue' : '#333');
-    echo '<li style="color:' . $color . '">' . htmlspecialchars($l) . '</li>';
+    $c = strpos($l, 'SAVED') !== false ? 'green' : (strpos($l, 'already') !== false ? 'blue' : '#333');
+    echo '<li style="color:' . $c . '">' . htmlspecialchars($l) . '</li>';
 }
 echo '</ul>';
 echo '<p><a href="/admin/api.php?action=ping">Test API</a> | <a href="/admin/calculator-pret">Test Generator</a></p>';
-echo '<p style="color:red;font-weight:bold">STERGE patch.php dupa utilizare!</p>';
+echo '<p style="color:red;font-weight:bold">STERGE patch.php dupa!</p>';
