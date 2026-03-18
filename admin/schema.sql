@@ -3,11 +3,8 @@
 -- Ruleaza acest script in phpMyAdmin pe cPanel
 -- ============================================================
 
-CREATE DATABASE IF NOT EXISTS cssi_portal 
-  CHARACTER SET utf8mb4 
-  COLLATE utf8mb4_romanian_ci;
-
-USE cssi_portal;
+-- DB already exists as r101042brea_cssi (created in cPanel)
+-- Connection handled by db.php
 
 -- ============================================================
 -- 1. CLIENTI — tabela centrala de clienti
@@ -47,7 +44,7 @@ CREATE TABLE IF NOT EXISTS proiecte (
   responsabil VARCHAR(100) DEFAULT '',
   adresa_obiectiv VARCHAR(500) DEFAULT '',
   note TEXT,
-  istoric_status JSON,
+  istoric_status TEXT,
   created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
   updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   FOREIGN KEY (client_id) REFERENCES clienti(id) ON DELETE RESTRICT,
@@ -153,7 +150,7 @@ CREATE TABLE IF NOT EXISTS executie (
   echipa VARCHAR(300) DEFAULT '',
   status ENUM('Planificat','In lucru','Finalizat') DEFAULT 'Planificat',
   raport TEXT,
-  poze_json JSON,
+  poze_json TEXT,
   updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   FOREIGN KEY (proiect_id) REFERENCES proiecte(id) ON DELETE CASCADE
 ) ENGINE=InnoDB;
@@ -204,7 +201,7 @@ CREATE TABLE IF NOT EXISTS mentenanta (
   data_expirare DATE,
   valoare_anuala DECIMAL(12,2) DEFAULT 0,
   status ENUM('Activ','Expirat','Anulat') DEFAULT 'Activ',
-  interventii_json JSON,
+  interventii_json TEXT,
   updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   FOREIGN KEY (proiect_id) REFERENCES proiecte(id) ON DELETE CASCADE,
   INDEX idx_expirare (data_expirare)
