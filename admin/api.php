@@ -227,10 +227,14 @@ try {
             break;
 
         case 'saveOferta':
+            // Genereaza ID INAINTE de tranzactie (nextId foloseste propria tranzactie)
+            $isUpdate = !empty($data['oferta_db_id']);
+            $preGeneratedId = null;
+            if (!$isUpdate) {
+                $preGeneratedId = (isset($data['nr']) ? $data['nr'] : nextId('oferta_seq', 'OF-', 6));
+            }
             $db->beginTransaction();
             try {
-                $isUpdate = !empty($data['oferta_db_id']);
-                
                 if ($isUpdate) {
                     // Update existing
                     $ofertaDbId = $data['oferta_db_id'];
@@ -240,8 +244,8 @@ try {
                            (isset($data['data']) ? $data['data'] : date('Y-m-d')),
                            (isset($data['valab']) ? $data['valab'] : '4 zile'),
                            (isset($data['obiectiv']) ? $data['obiectiv'] : ''),
-                           $data['client_db_id'] ?: null,
-                           $data['proiect_db_id'] ?: null,
+                           (isset($data['client_db_id']) && $data['client_db_id']) ? $data['client_db_id'] : null,
+                           (isset($data['proiect_db_id']) && $data['proiect_db_id']) ? $data['proiect_db_id'] : null,
                            (isset($data['subtotalEchip']) ? $data['subtotalEchip'] : 0),
                            (isset($data['subtotalManop']) ? $data['subtotalManop'] : 0),
                            (isset($data['totalNet']) ? $data['totalNet'] : 0),
@@ -258,7 +262,7 @@ try {
                     $db->prepare("DELETE FROM oferta_linii WHERE oferta_id = ?")->execute([$ofertaDbId]);
                 } else {
                     // Insert new
-                    $ofertaId = (isset($data['nr']) ? $data['nr'] : nextId('oferta_seq', 'OF-', 6));
+                    $ofertaId = $preGeneratedId;
                     $stmt = $db->prepare("INSERT INTO oferte (oferta_id, titlu, data_oferta, valabilitate, obiectiv, client_id, proiect_id, subtotal_echip, subtotal_manop, total_fara_tva, tva, total_cu_tva, client_nume, client_cui, client_adresa, client_contact, status) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
                     $stmt->execute([
                         $ofertaId,
@@ -266,8 +270,8 @@ try {
                         (isset($data['data']) ? $data['data'] : date('Y-m-d')),
                         (isset($data['valab']) ? $data['valab'] : '4 zile'),
                         (isset($data['obiectiv']) ? $data['obiectiv'] : ''),
-                        $data['client_db_id'] ?: null,
-                        $data['proiect_db_id'] ?: null,
+                        (isset($data['client_db_id']) && $data['client_db_id']) ? $data['client_db_id'] : null,
+                        (isset($data['proiect_db_id']) && $data['proiect_db_id']) ? $data['proiect_db_id'] : null,
                         (isset($data['subtotalEchip']) ? $data['subtotalEchip'] : 0),
                         (isset($data['subtotalManop']) ? $data['subtotalManop'] : 0),
                         (isset($data['totalNet']) ? $data['totalNet'] : 0),
