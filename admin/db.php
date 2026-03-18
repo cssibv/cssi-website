@@ -9,7 +9,7 @@
 define('DB_HOST', 'localhost');
 define('DB_NAME', 'r101042brea_cssi');  // cPanel prefix + db name
 define('DB_USER', 'r101042brea_cssi');  // cPanel prefix + user
-define('DB_PASS', 'CSSi_Portal_2026!'); // Seteaza parola reala din cPanel
+define('DB_PASS', 'cssi-install-2026'); // Parola reala din cPanel
 define('DB_CHARSET', 'utf8mb4');
 
 // Upload paths
