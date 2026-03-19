@@ -112,6 +112,11 @@ RewriteRule ^(.+)$ $1.html [L]
     <FilesMatch "\.(html|htm)$">
         Header set Cache-Control "public, max-age=3600, must-revalidate"
     </FilesMatch>
+     # Admin & PHP - fără cache (date dinamice)
+    <FilesMatch "\.(php)$">
+        Header set Cache-Control "no-store, no-cache, must-revalidate, max-age=0"
+        Header set Pragma "no-cache"
+    </FilesMatch>
 </IfModule>
 
 # --------------------------------------------------

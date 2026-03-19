@@ -175,6 +175,28 @@ tr:hover td{background:rgba(59,130,246,0.03);}
 .bn-item.active{color:var(--red);background:#fef2f2;}
 .bn-item .bn-icon{font-size:20px;}
 
+
+/* Offer buttons */
+.btn-offer{padding:6px 12px;border-radius:8px;border:none;font-size:11px;font-weight:700;cursor:pointer;transition:all 0.2s;display:inline-flex;align-items:center;gap:4px;}
+.btn-offer.new{background:var(--red);color:#fff;}
+.btn-offer.new:hover{background:var(--red-d);transform:translateY(-1px);}
+.btn-offer.list{background:#eff6ff;color:var(--blue);border:1px solid rgba(59,130,246,0.2);}
+.btn-offer.list:hover{background:#dbeafe;}
+.offer-row{padding:14px;border-bottom:1px solid var(--gray-bg);transition:background 0.2s;}
+.offer-row:last-child{border-bottom:none;}
+.offer-row:hover{background:var(--gray-bg);}
+.offer-row-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:6px;}
+.offer-row-title{font-size:13px;font-weight:700;color:var(--dark);}
+.offer-row-meta{font-size:11px;color:var(--gray);margin-top:2px;}
+.offer-row-total{font-size:16px;font-weight:900;color:var(--green);}
+.offer-row-actions{display:flex;gap:6px;margin-top:8px;}
+.offer-row-actions button{padding:6px 12px;border-radius:8px;border:none;font-size:11px;font-weight:700;cursor:pointer;transition:all 0.2s;display:inline-flex;align-items:center;gap:4px;}
+.btn-offer-view{background:#eff6ff;color:var(--blue);}
+.btn-offer-view:hover{background:#dbeafe;}
+.btn-offer-edit{background:#fff7ed;color:var(--orange);}
+.btn-offer-edit:hover{background:#fed7aa;}
+.btn-offer-pdf{background:#f0fdf4;color:var(--green);}
+.btn-offer-pdf:hover{background:#bbf7d0;}
 .empty-msg{text-align:center;padding:60px 20px;color:var(--gray-l);font-size:14px;}
 .empty-msg .empty-icon{font-size:48px;margin-bottom:12px;}
 .footer{text-align:center;color:var(--gray-xl);font-size:11px;padding:24px 0 100px;}
@@ -199,7 +221,7 @@ tr:hover td{background:rgba(59,130,246,0.03);}
             <div class="page-subtitle" id="syncStatus"><span class="sync-indicator sync-off"></span>Date locale (demo)</div>
         </div>
         <div class="page-actions">
-            <button class="page-btn secondary" onclick="refreshData()" title="Sincronizează cu Google Sheets">🔄 Sync</button>
+            <button class="page-btn secondary" onclick="refreshData()" title="Sincronizează cu MySQL">🔄 Sync</button>
             <button class="page-btn primary" onclick="openAddModal()">+ Lead Nou</button>
         </div>
     </div>
@@ -302,6 +324,15 @@ tr:hover td{background:rgba(59,130,246,0.03);}
 </div>
 </div>
 
+
+<!-- OFFERS MODAL -->
+<div id="offersModal" class="modal-overlay" onclick="if(event.target===this)closeOffersModal()">
+<div class="modal" style="max-width:600px">
+    <div class="modal-head"><div class="modal-title" id="offersModalTitle">📋 Oferte</div><button class="modal-close" onclick="closeOffersModal()">✕</button></div>
+    <div class="modal-body" id="offersModalBody"><div class="empty-msg">Se încarcă...</div></div>
+</div>
+</div>
+
 <!-- DETAIL/EDIT MODAL -->
 <div id="detailModal" class="modal-overlay" onclick="if(event.target===this)closeDetailModal()">
 <div class="modal">
@@ -314,7 +345,8 @@ tr:hover td{background:rgba(59,130,246,0.03);}
 // ═══════════════════════════════════════════════════
 // CONFIG — Setează API_URL după deploy Apps Script
 // ═══════════════════════════════════════════════════
-var API_URL = 'https://script.google.com/macros/s/AKfycbzdM_e5DY5nmd57TmB24sXz8dML93gKIolkmlqKxE7_d-_o3jHMVYuQ06YiQ5zJgZiB/exec'; // ← Pune URL-ul Apps Script Web App aici
+var API_URL = null;
+var API_DB = '/admin/api.php'; // ← Pune URL-ul Apps Script Web App aici
 
 // ═══════ AUTH CHECK ═══════
 var role = sessionStorage.getItem('cssi-role');
@@ -324,13 +356,17 @@ var canConvert = ['admin','org'].includes(role);
 
 // ═══════ CRM STATUSES ═══════
 var CRM_STATUSES = [
-    {id:'nou', name:'Nou', cls:'s-nou', icon:'🆕', color:'var(--blue)'},
-    {id:'contactat', name:'Contactat', cls:'s-contactat', icon:'📞', color:'var(--purple)'},
-    {id:'oferta', name:'Ofertă trimisă', cls:'s-oferta', icon:'📋', color:'var(--orange)'},
-    {id:'negociere', name:'Negociere', cls:'s-negociere', icon:'🤝', color:'var(--teal)'},
-    {id:'castigat', name:'Câștigat', cls:'s-castigat', icon:'✅', color:'var(--green)'},
-    {id:'pierdut', name:'Pierdut', cls:'s-pierdut', icon:'❌', color:'var(--gray)'}
+    {id:'lead', name:'Lead', cls:'s-nou', icon:'📞', color:'var(--blue)'},
+    {id:'oferta', name:'Ofertă', cls:'s-oferta', icon:'📋', color:'var(--orange)'},
+    {id:'contract', name:'Contract', cls:'s-castigat', icon:'✅', color:'var(--green)'},
+    {id:'executie', name:'Execuție', cls:'s-negociere', icon:'🔧', color:'var(--teal)'},
+    {id:'facturat', name:'Facturat', cls:'s-contactat', icon:'💳', color:'var(--purple)'},
+    {id:'anulat', name:'Anulat', cls:'s-pierdut', icon:'❌', color:'var(--gray)'}
 ];
+var SERV_DB_TO_UI={'Detectie Incendiu':'Detecție Incendiu','Alarma':'Alarmă Antiefracție','Supraveghere Video':'Supraveghere Video','Electric':'Instalații Electrice','Automatizari':'Automatizări Porți','Complex':'Proiect Complex','Control Acces':'Control Acces'};
+var SERV_UI_TO_DB={'Detecție Incendiu':'Detectie Incendiu','Alarmă Antiefracție':'Alarma','Supraveghere Video':'Supraveghere Video','Instalații Electrice':'Electric','Automatizări Porți':'Automatizari','Proiect Complex':'Complex'};
+var STAT_DB_TO_UI={'Lead':'Lead','Oferta':'Ofertă','Contract':'Contract','Proiectare':'Proiectare','Executie':'Execuție','Receptie':'Recepție','Facturat':'Facturat','Mentenanta':'Mentenanță','Finalizat':'Finalizat','Anulat':'Anulat'};
+var STAT_UI_TO_DB={'Lead':'Lead','Ofertă':'Oferta','Contract':'Contract','Proiectare':'Proiectare','Execuție':'Executie','Recepție':'Receptie','Facturat':'Facturat','Mentenanță':'Mentenanta','Anulat':'Anulat'};
 var STATUS_MAP = {};
 CRM_STATUSES.forEach(function(s){ STATUS_MAP[s.name] = s; });
 
@@ -351,103 +387,62 @@ var currentView = 'cards';
 var convertingId = null;
 var isLive = false;
 
-// ═══════ DEMO DATA ═══════
-var DEMO_LEADS = [
-    {id:1, row:1, nume:'Ion Popescu', telefon:'0722 111 222', email:'ion@gmail.com', serviciu:'Supraveghere Video', sursa:'WhatsApp', status:'Nou', valoare:15000, locatie:'Ghimbav', note:'Vrea 8 camere exterioare, depozit Ghimbav', data:'2026-03-01', proiectId:''},
-    {id:2, row:2, nume:'Maria Ionescu', telefon:'0733 222 333', email:'maria@yahoo.com', serviciu:'Alarmă Antiefracție', sursa:'Website', status:'Contactat', valoare:8500, locatie:'Poiana Brașov', note:'Vilă Poiana Brașov, 3 etaje', data:'2026-02-28', proiectId:''},
-    {id:3, row:3, nume:'SC AutoTech SRL', telefon:'0268 444 555', email:'office@autotech.ro', serviciu:'Detecție Incendiu', sursa:'Referință', status:'Ofertă trimisă', valoare:45000, locatie:'Brașov', note:'Hală producție 2000mp, proiectare ISU necesară', data:'2026-02-25', proiectId:''},
-    {id:4, row:4, nume:'Hotel Cheile Râșnoavei', telefon:'0744 555 666', email:'hotel@cheile.ro', serviciu:'Proiect Complex', sursa:'Telefon', status:'Câștigat', valoare:120000, locatie:'Cheile Râșnoavei', note:'Contract semnat, include incendiu + CCTV + control acces', data:'2026-02-20', proiectId:'CSSI-2026-001'},
-    {id:5, row:5, nume:'Farmacia Catena', telefon:'0755 666 777', email:'', serviciu:'Alarmă Antiefracție', sursa:'Google', status:'Pierdut', valoare:5000, locatie:'Brașov', note:'A ales alt furnizor, preț mai mic', data:'2026-02-15', proiectId:''},
-    {id:6, row:6, nume:'Grădinița Piticot', telefon:'0766 777 888', email:'gradinita@piticot.ro', serviciu:'Supraveghere Video', sursa:'Facebook', status:'Negociere', valoare:22000, locatie:'Brașov', note:'16 camere interior + exterior, au buget limitat', data:'2026-02-22', proiectId:''},
-    {id:7, row:7, nume:'Depozit Logistics BV', telefon:'0277 888 999', email:'dep@logistics.ro', serviciu:'Automatizări Porți', sursa:'WhatsApp', status:'Nou', valoare:35000, locatie:'Brașov', note:'4 porți industriale culisante, acces TIR', data:'2026-03-02', proiectId:''},
-    {id:8, row:8, nume:'Primăria Cristian', telefon:'0268 111 000', email:'primaria@cristian.ro', serviciu:'Detecție Incendiu', sursa:'Telefon', status:'Ofertă trimisă', valoare:67000, locatie:'Cristian', note:'Sediu primărie + cămin cultural, avize ISU', data:'2026-02-18', proiectId:''},
-    {id:9, row:9, nume:'Restaurant La Ceaun', telefon:'0722 999 000', email:'', serviciu:'Instalații Electrice', sursa:'Referință', status:'Contactat', valoare:18000, locatie:'Brașov', note:'Refacere tablou electric + iluminat terasa', data:'2026-03-03', proiectId:''},
-    {id:10, row:10, nume:'Rezidențial Greenfield', telefon:'0744 000 111', email:'office@greenfield.ro', serviciu:'Proiect Complex', sursa:'Website', status:'Negociere', valoare:250000, locatie:'Brașov', note:'Complex 24 apartamente: incendiu, CCTV, interfon, porți auto', data:'2026-02-10', proiectId:''}
-];
+// Date din MySQL
+
 
 
 // ═══════════════════════════════════════════════════
-// API FUNCTIONS — Comunicare cu Google Sheets
-// ═══════════════════════════════════════════════════
-
-function apiGet(action) {
-    if (!API_URL) return Promise.reject('No API');
-    showLoading(true);
-    return fetch(API_URL + '?action=' + action)
-        .then(function(r) { return r.json(); })
-        .finally(function() { showLoading(false); });
-}
-
-function apiPost(data) {
-    if (!API_URL) return Promise.reject('No API');
-    showLoading(true);
-    return fetch(API_URL, {
-        method: 'POST',
-        headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify(data)
-    })
-    .then(function(r) { return r.json(); })
-    .finally(function() { showLoading(false); });
-}
+// ═════ MySQL API ═════
 
 function refreshData() {
-    if (!API_URL) {
-        toast('⚠️ API URL nesetat. Folosesc date demo.', 'info');
-        LEADS = JSON.parse(JSON.stringify(DEMO_LEADS));
-        isLive = false;
-        updateSyncStatus();
-        render();
-        return;
-    }
-
-    updateSyncStatus('loading');
-    apiGet('getCRM')
-        .then(function(data) {
-            if (data.error) throw new Error(data.error);
-            if (Array.isArray(data)) {
-                LEADS = data.map(function(row, i) {
-                    return {
-                        id: i + 1,
-                        row: i + 1,
-                        nume: row.nume || '',
-                        telefon: row.telefon || '',
-                        email: row.email || '',
-                        serviciu: row.serviciu || '',
-                        sursa: row.sursa || '',
-                        status: row.status || 'Nou',
-                        valoare: Number(row.valoare) || 0,
-                        locatie: row.locatie || '',
-                        note: row.note || '',
-                        data: row.timestamp || '',
-                        proiectId: row.proiectId || ''
-                    };
-                });
-            }
-            isLive = true;
+    showLoading(true);
+    fetch(API_DB+'?action=getProiecte&_t='+Date.now())
+    .then(function(r){return r.json()})
+    .then(function(res){
+        showLoading(false);
+        if(res.success && res.data){
+            LEADS=res.data.map(function(p){
+                return {
+                    id:p.id,
+                    row:p.id,
+                    clientDbId:p.client_db_id||p.client_id||'',
+                    nume:p.client_nume||'',
+                    cui:p.cui_cnp||'',
+                    telefon:p.telefon||'',
+                    email:p.email||'',
+                    serviciu:SERV_DB_TO_UI[p.serviciu]||p.serviciu||'',
+                    sursa:'',
+                    status:STAT_DB_TO_UI[p.status]||p.status||'Lead',
+                    valoare:parseFloat(p.valoare_estimata)||0,
+                    locatie:p.oras||p.adresa_obiectiv||'',
+                    note:p.obiectiv||p.note||'',
+                    data:p.created_at?p.created_at.split(' ')[0]:'',
+                    proiectId:p.proiect_id||''
+                };
+            });
+            isLive=true;
             updateSyncStatus();
             render();
-            toast('✅ Date sincronizate din Google Sheets', 'success');
-        })
-        .catch(function(err) {
-            isLive = false;
-            updateSyncStatus();
-            toast('❌ Eroare sync: ' + err, 'error');
-        });
+        }
+    })
+    .catch(function(err){
+        showLoading(false);
+        isLive=false;
+        updateSyncStatus();
+        toast('⚠️ Eroare încarcare din MySQL','error');
+    });
 }
 
-function updateSyncStatus(state) {
+function updateSyncStatus() {
     var el = document.getElementById('syncStatus');
-    if (state === 'loading') {
-        el.innerHTML = '<span class="sync-indicator sync-loading"></span>Se sincronizează...';
-    } else if (isLive) {
-        el.innerHTML = '<span class="sync-indicator sync-ok"></span>Conectat la Google Sheets';
+    if (!el) return;
+    if (isLive) {
+        el.innerHTML = '<span class="sync-indicator sync-ok"></span>MySQL · ' + LEADS.length + ' lead-uri';
     } else {
-        el.innerHTML = '<span class="sync-indicator sync-off"></span>Date locale (demo)';
+        el.innerHTML = '<span class="sync-indicator sync-off"></span>Offline';
     }
 }
 
-
-// ═══════════════════════════════════════════════════
 // RENDER FUNCTIONS
 // ═══════════════════════════════════════════════════
 
@@ -493,7 +488,7 @@ function renderSummary() {
     var total = LEADS.length;
     var activi = LEADS.filter(function(l) { return l.status !== 'Pierdut' && l.status !== 'Câștigat'; }).length;
     var valPipeline = LEADS.filter(function(l) { return l.status !== 'Pierdut'; }).reduce(function(s, l) { return s + (l.valoare || 0); }, 0);
-    var castigat = LEADS.filter(function(l) { return l.status === 'Câștigat'; });
+    var castigat = LEADS.filter(function(l) { return l.status === 'Contract'; });
     var valCastigat = castigat.reduce(function(s, l) { return s + (l.valoare || 0); }, 0);
     var rataConversie = total > 0 ? Math.round(castigat.length / total * 100) : 0;
 
@@ -556,14 +551,20 @@ function renderCards() {
             html += '<select onchange="changeStatus(' + l.id + ',this.value)">' + statusOpts + '</select>';
         }
         // Transformă în Proiect button logic
-        if (canConvert && l.status === 'Câștigat' && !l.proiectId) {
+        if (canConvert && l.status === 'Contract' && !l.proiectId) {
             html += '<button class="btn-convert ready" onclick="confirmConvert(' + l.id + ')">📋 → Proiect</button>';
         } else if (l.proiectId) {
             html += '<button class="btn-convert done">✅ ' + l.proiectId + '</button>';
-        } else if (l.status === 'Câștigat') {
+        } else if (l.status === 'Contract') {
             html += '<button class="btn-convert disabled" title="Doar admin/org pot converti">🔒 Convertire</button>';
         }
-        html += '</div></div>';
+        // Ofertare buttons
+        html += '</div>';
+        html += '<div style="display:flex;gap:6px;margin-top:8px">';
+        html += '<button class="btn-offer new" onclick="goOfertare('+l.id+')">📄 Ofertă nouă</button>';
+        html += '<button class="btn-offer list" onclick="showOferte('+l.id+')">📋 Oferte</button>';
+        html += '</div>';
+        html += '</div>';
     });
 
     document.getElementById('cardList').innerHTML = html;
@@ -617,21 +618,23 @@ function changeStatus(leadId, newStatus) {
     var oldStatus = l.status;
     l.status = newStatus;
 
-    // API sync
-    if (API_URL) {
-        apiPost({action: 'updateCRMStatus', row: l.row, status: newStatus})
-            .then(function(res) {
-                if (res.error) throw new Error(res.error);
-                toast('✅ Status actualizat: ' + newStatus, 'success');
-            })
-            .catch(function(err) {
-                toast('⚠️ Salvat local, sync eșuat', 'error');
-            });
-    }
+    // MySQL sync
+    var statusDB=STAT_UI_TO_DB[newStatus]||newStatus;
+    fetch(API_DB+'?action=updateStatus',{
+        method:'POST',
+        headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({action:'updateStatus',id:l.row,status:statusDB,user:'Admin'})
+    })
+    .then(function(r){return r.json()})
+    .then(function(res){
+        if(res.success) toast('✅ Status actualizat: '+newStatus,'success');
+        else toast('⚠️ Eroare: '+(res.error||''),'error');
+    })
+    .catch(function(err){toast('⚠️ Eroare rețea','error');});
     render();
 
     // Auto-suggest conversion when status changes to "Câștigat"
-    if (newStatus === 'Câștigat' && !l.proiectId && canConvert) {
+    if (newStatus === 'Contract' && !l.proiectId && canConvert) {
         setTimeout(function() {
             toast('💡 Lead câștigat! Poți transforma în Proiect.', 'info');
         }, 500);
@@ -660,28 +663,23 @@ function doConvert() {
     document.getElementById('btnDoConvert').disabled = true;
     document.getElementById('btnDoConvert').textContent = '⏳ Se procesează...';
 
-    if (API_URL) {
-        // Real API call — convertește CRM row în PROIECT
-        apiPost({action: 'crmToProject', crmRow: l.row})
-            .then(function(res) {
-                if (res.error) throw new Error(res.error);
-                l.proiectId = res.id;
-                closeConfirmModal();
-                render();
-                toast('🎉 Proiect creat: ' + res.id, 'success');
-            })
-            .catch(function(err) {
-                // Fallback local
-                doConvertLocal(l);
-            })
-            .finally(function() {
-                resetConvertBtn();
-            });
-    } else {
-        // Demo mode — generare ID local
-        doConvertLocal(l);
-        resetConvertBtn();
-    }
+    // MySQL: schimbă status în Contract
+    var statusDB=STAT_UI_TO_DB['Contract']||'Contract';
+    fetch(API_DB+'?action=updateStatus',{
+        method:'POST',
+        headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({action:'updateStatus',id:l.row,status:statusDB,user:'Admin'})
+    })
+    .then(function(r){return r.json()})
+    .then(function(res){
+        if(res.success){
+            l.status='Contract';l.proiectId=l.proiectId||('P-'+l.id);
+            closeConfirmModal();render();
+            toast('🎉 Transformat în proiect!','success');
+        } else toast('⚠️ '+(res.error||''),'error');
+    })
+    .catch(function(err){toast('⚠️ Eroare','error');})
+    .finally(function(){resetConvertBtn();});
 }
 
 function doConvertLocal(l) {
@@ -740,36 +738,34 @@ function addLead(e) {
         proiectId: ''
     };
 
-    if (API_URL) {
-        apiPost({action: 'addCRM', lead: newLead})
-            .then(function(res) {
-                if (res.error) throw new Error(res.error);
-                newLead.id = LEADS.length + 1;
-                newLead.row = res.row || newLead.id;
-                LEADS.unshift(newLead);
-                render();
-                closeAddModal();
-                f.reset();
-                toast('✅ Lead adăugat și sincronizat', 'success');
-            })
-            .catch(function(err) {
-                addLeadLocal(newLead);
-                closeAddModal();
-                f.reset();
-                toast('⚠️ Lead adăugat local, sync eșuat', 'error');
-            })
-            .finally(function() {
-                btn.disabled = false;
-                btn.textContent = '➕ Adaugă Lead';
-            });
-    } else {
-        addLeadLocal(newLead);
-        closeAddModal();
-        f.reset();
-        btn.disabled = false;
-        btn.textContent = '➕ Adaugă Lead';
-        toast('✅ Lead adăugat (local)', 'success');
-    }
+    // MySQL: client + proiect
+    var servDB=SERV_UI_TO_DB[newLead.serviciu]||newLead.serviciu;
+    fetch(API_DB+'?action=createClient',{
+        method:'POST',
+        headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({action:'createClient',nume:newLead.nume,telefon:newLead.telefon,email:newLead.email,oras:newLead.locatie||'Brașov'})
+    })
+    .then(function(r){return r.json()})
+    .then(function(cRes){
+        if(!cRes.success) throw new Error(cRes.error||'Eroare');
+        return fetch(API_DB+'?action=createProiect',{
+            method:'POST',
+            headers:{'Content-Type':'application/json'},
+            body:JSON.stringify({action:'createProiect',client_id:cRes.id,serviciu:servDB,obiectiv:newLead.note,status:'Lead',valoare_estimata:newLead.valoare,adresa_obiectiv:newLead.locatie,responsabil:'Admin',note:newLead.note})
+        });
+    })
+    .then(function(r){return r.json()})
+    .then(function(pRes){
+        if(!pRes.success) throw new Error(pRes.error||'Eroare');
+        btn.disabled=false;btn.textContent='➕ Adaugă Lead';
+        closeAddModal();f.reset();
+        toast('✅ Lead '+pRes.proiect_id+' creat!','success');
+        refreshData();
+    })
+    .catch(function(err){
+        btn.disabled=false;btn.textContent='➕ Adaugă Lead';
+        toast('⚠️ '+err.message,'error');
+    });
 }
 
 function addLeadLocal(lead) {
@@ -813,6 +809,86 @@ function infoRow(label, value) {
 }
 
 
+
+// ═══════ OFERTARE FUNCTIONS ═══════
+
+function goOfertare(leadId) {
+    var l = LEADS.find(function(x) { return x.id === leadId; });
+    if (!l) return;
+    // Navigate to calculator-pret with client data as URL params
+    var params = new URLSearchParams();
+    params.set('client', l.nume);
+    if (l.cui) params.set('cui', l.cui);
+    params.set('obiectiv', l.note || '');
+    params.set('adresa', l.locatie || '');
+    if (l.telefon) params.set('contact', l.telefon);
+    if (l.clientDbId) params.set('client_db_id', l.clientDbId);
+    params.set('proiect_db_id', l.id);
+    window.location.href = 'calculator-pret.html?' + params.toString();
+}
+
+function showOferte(leadId) {
+    var l = LEADS.find(function(x) { return x.id === leadId; });
+    if (!l) return;
+    document.getElementById('offersModalTitle').textContent = '📋 Oferte — ' + l.nume;
+    document.getElementById('offersModalBody').innerHTML = '<div style="text-align:center;padding:30px;color:var(--gray)">⏳ Se încarcă ofertele...</div>';
+    document.getElementById('offersModal').classList.add('active');
+
+    // Fetch offers for this client
+    var url = API_DB + '?action=getOferte&_t=' + Date.now();
+    if (l.clientDbId) url += '&client_id=' + l.clientDbId;
+    
+    fetch(url)
+    .then(function(r) { return r.json(); })
+    .then(function(res) {
+        if (!res.success || !res.data || !res.data.length) {
+            document.getElementById('offersModalBody').innerHTML = 
+                '<div class="empty-msg"><div class="empty-icon">📭</div>Nicio ofertă pentru acest client</div>' +
+                '<div style="text-align:center;margin-top:12px"><button class="btn-offer new" onclick="closeOffersModal();goOfertare(' + leadId + ')">📄 Creează prima ofertă</button></div>';
+            return;
+        }
+        var html = '<div style="margin-bottom:12px;font-size:12px;color:var(--gray)">' + res.data.length + ' ofert' + (res.data.length === 1 ? 'ă' : 'e') + ' găsit' + (res.data.length === 1 ? 'ă' : 'e') + '</div>';
+        res.data.forEach(function(o) {
+            var total = parseFloat(o.total_cu_tva) || 0;
+            var linesCount = (o.lines ? o.lines.length : 0);
+            var laborCount = (o.labor ? o.labor.length : 0);
+            var statusCls = o.oferta_status === 'Acceptata' ? 'color:var(--green)' : (o.oferta_status === 'Refuzata' ? 'color:var(--red)' : 'color:var(--gray)');
+            html += '<div class="offer-row">';
+            html += '<div class="offer-row-top"><div><div class="offer-row-title">' + (o.oferta_id || 'OF-???') + ' — ' + (o.titlu || 'Fără titlu') + '</div>';
+            html += '<div class="offer-row-meta">' + (o.data_oferta || '') + ' · ' + linesCount + ' produse, ' + laborCount + ' servicii · <span style="' + statusCls + ';font-weight:700">' + (o.oferta_status || 'Draft') + '</span></div></div>';
+            html += '<div class="offer-row-total">' + Number(total).toLocaleString("ro-RO", {minimumFractionDigits: 0}) + ' RON</div></div>';
+            html += '<div class="offer-row-actions">';
+            html += '<button class="btn-offer-view" onclick="viewOferta('+o.id+')">👁️ Vizualizează</button>';
+            html += '<button class="btn-offer-edit" onclick="editOferta('+o.id+')">✏️ Editează</button>';
+            html += '<button class="btn-offer-pdf" onclick="pdfOferta('+o.id+')">📄 PDF</button>';
+            html += '</div>';
+            html += '</div>';
+        });
+        html += '<div style="text-align:center;margin-top:16px;padding-top:12px;border-top:1px solid var(--gray-bg)"><button class="btn-offer new" onclick="closeOffersModal();goOfertare(' + leadId + ')">📄 Ofertă nouă</button></div>';
+        document.getElementById('offersModalBody').innerHTML = html;
+    })
+    .catch(function(err) {
+        document.getElementById('offersModalBody').innerHTML = '<div class="empty-msg"><div class="empty-icon">❌</div>Eroare la încărcarea ofertelor</div>';
+    });
+}
+
+function closeOffersModal() {
+    document.getElementById('offersModal').classList.remove('active');
+}
+
+function viewOferta(ofertaId) {
+    window.open('calculator-pret.html?view_offer=' + ofertaId, '_blank');
+}
+
+function editOferta(ofertaId) {
+    closeOffersModal();
+    window.location.href = 'calculator-pret.html?edit_offer=' + ofertaId;
+}
+
+function pdfOferta(ofertaId) {
+    window.open('calculator-pret.html?pdf_offer=' + ofertaId, '_blank');
+}
+
 // ═══════ HELPERS ═══════
 
 function formatRON(val) {
@@ -848,13 +924,9 @@ function toast(msg, type) {
 
 
 // ═══════ INIT ═══════
-LEADS = JSON.parse(JSON.stringify(DEMO_LEADS));
+LEADS = [];
 render();
-
-// Try to load from API if configured
-if (API_URL) {
-    refreshData();
-}
+refreshData();
 </script>
 <script>
 if('serviceWorker' in navigator){navigator.serviceWorker.register('../sw.js').then(function(r){console.log('[PWA] SW registered, scope:',r.scope)}).catch(function(e){console.log('[PWA] SW failed:',e)})}

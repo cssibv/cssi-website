@@ -244,11 +244,15 @@ a{text-decoration:none;color:inherit;}button{font-family:inherit;cursor:pointer;
 
 <script>
 // ═══════ CONFIG ═══════
-var API_URL='https://script.google.com/macros/s/AKfycbzdM_e5DY5nmd57TmB24sXz8dML93gKIolkmlqKxE7_d-_o3jHMVYuQ06YiQ5zJgZiB/exec';
+var API_URL=null;
 // PIPELINE_API — URL-ul deployment-ului Pipeline Engine (din Sheet-ul Proiecte CSSI)
 // După deploy, înlocuiește acest URL cu cel real:
-var PIPELINE_API='https://script.google.com/macros/s/AKfycbxDQtTdbQbwAj-OKg32whQnsxh428j97JtogdC8qveCKjEn1904EkSkMXDviorUdxMfbA/exec';
-var SHEET_PROIECTE='1_2VtCkUU07fNLWI-gUqFY_guDj29xeTWRWGaDzjU0Rc';
+var PIPELINE_API=null;
+var API_DB='/admin/api.php';
+var SERV_DB_TO_UI={'Detectie Incendiu':'Detecție Incendiu','Alarma':'Alarmă Antiefracție','Supraveghere Video':'Supraveghere Video','Electric':'Instalații Electrice','Automatizari':'Automatizări Porți','Complex':'Proiect Complex','Control Acces':'Control Acces'};
+var SERV_UI_TO_DB={'Detecție Incendiu':'Detectie Incendiu','Alarmă Antiefracție':'Alarma','Supraveghere Video':'Supraveghere Video','Instalații Electrice':'Electric','Instalații Sanitare':'Electric','Automatizări Porți':'Automatizari','Proiect Complex':'Complex','Control Acces':'Control Acces'};
+var STAT_DB_TO_UI={'Lead':'Lead','Oferta':'Ofertă','Contract':'Contract','Proiectare':'Proiectare','Executie':'Execuție','Receptie':'Recepție','Facturat':'Facturat','Mentenanta':'Mentenanță','Finalizat':'Finalizat','Anulat':'Anulat'};
+var STAT_UI_TO_DB={'Lead':'Lead','Ofertă':'Oferta','Contract':'Contract','Proiectare':'Proiectare','Execuție':'Executie','Recepție':'Receptie','Facturat':'Facturat','Mentenanță':'Mentenanta','Finalizat':'Finalizat','Anulat':'Anulat'};
 
 // ═══════ AUTH CHECK ═══════
 var role=sessionStorage.getItem('cssi-role');
@@ -273,28 +277,29 @@ loadProjects();
 function loadProjects(){
     isLoading=true;
     showLoading(true);
-    fetch(PIPELINE_API+'?action=getProjects')
+    fetch(API_DB+'?action=getProiecte&_t='+Date.now())
     .then(function(r){return r.json()})
     .then(function(res){
         if(res.success && res.data){
             PROJECTS=res.data.map(function(p){
                 return {
-                    id:p.id||'',
-                    client:p.client||'',
-                    cui:p.cui||'',
-                    adresa:p.adresa||'',
-                    contact:p.contact||'',
+                    id:p.proiect_id||p.id||'',
+                    dbId:p.id,
+                    client:p.client_nume||'',
+                    cui:p.cui_cnp||'',
+                    adresa:p.client_adresa||p.adresa_obiectiv||'',
+                    contact:p.persoana_contact||'',
                     telefon:p.telefon||'',
-                    serviciu:p.serviciu||'',
+                    serviciu:SERV_DB_TO_UI[p.serviciu]||p.serviciu||'',
                     obiectiv:p.obiectiv||'',
-                    status:p.status||'Lead',
-                    valoare:parseFloat(p.valoare)||0,
-                    valoareContract:parseFloat(p.valoareContract)||0,
+                    status:STAT_DB_TO_UI[p.status]||p.status||'Lead',
+                    valoare:parseFloat(p.valoare_estimata)||0,
+                    valoareContract:parseFloat(p.valoare_contract)||0,
                     responsabil:p.responsabil||'',
-                    folderId:p.folderId||'',
-                    loc:p.adresa?(p.adresa.split(',').pop()||'Brașov').trim():'Brașov',
+                    folderId:'',
+                    loc:p.oras||'Brașov',
                     note:p.note||'',
-                    dataCreare:p.dataCreare||''
+                    dataCreare:p.created_at||''
                 };
             });
         } else {
@@ -305,13 +310,13 @@ function loadProjects(){
         renderAll();
     })
     .catch(function(err){
-        console.error('Pipeline API error:',err);
+        console.error('MySQL API error:',err);
         isLoading=false;
         showLoading(false);
         // Fallback: afișează mesaj
         PROJECTS=[];
         renderAll();
-        showToast('⚠️ Nu s-au putut încărca proiectele. Verifică conexiunea.','error');
+        showToast('⚠️ Nu s-au putut încărca proiectele din MySQL.','error');
     });
 }
 
@@ -430,11 +435,12 @@ function changeStatus(projectId,newStatus){
     p.status=newStatus;
     renderKanban();renderSummary();
     showToast('🔄 Actualizare status: '+projectId+' → '+newStatus,'info');
-    // Sync to Pipeline API
-    fetch(PIPELINE_API,{
+    // Sync to MySQL
+    var statusDB=STAT_UI_TO_DB[newStatus]||newStatus;
+    fetch(API_DB+'?action=updateStatus',{
         method:'POST',
-        headers:{'Content-Type':'text/plain'},
-        body:JSON.stringify({action:'updateStatus',id:projectId,status:newStatus,user:role||'Admin'})
+        headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({action:'updateStatus',id:p.dbId||projectId,status:statusDB,user:role||'Admin'})
     })
     .then(function(r){return r.json();})
     .then(function(res){
@@ -478,10 +484,22 @@ function addProject(e){
         responsabil:d.get('responsabil')||'',
         note:d.get('note')||''
     };
-    fetch(PIPELINE_API,{
+    // Pas 1: Creează client
+    fetch(API_DB+'?action=createClient',{
         method:'POST',
-        headers:{'Content-Type':'text/plain'},
-        body:JSON.stringify({action:'createProject',data:projectData})
+        headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({action:'createClient',nume:projectData.client,cui_cnp:projectData.cui,telefon:projectData.telefon,adresa:projectData.adresa,oras:projectData.adresa||'Brașov',persoana_contact:projectData.contact})
+    })
+    .then(function(r){return r.json();})
+    .then(function(cRes){
+        if(!cRes.success) throw new Error(cRes.error||'Eroare creare client');
+        var servDB=SERV_UI_TO_DB[projectData.serviciu]||projectData.serviciu;
+        var statDB=STAT_UI_TO_DB[projectData.status]||projectData.status;
+        return fetch(API_DB+'?action=createProiect',{
+            method:'POST',
+            headers:{'Content-Type':'application/json'},
+            body:JSON.stringify({action:'createProiect',client_id:cRes.id,serviciu:servDB,obiectiv:projectData.obiectiv,status:statDB,valoare_estimata:projectData.valoare,adresa_obiectiv:projectData.adresa,responsabil:projectData.responsabil||'Admin',note:projectData.note})
+        });
     })
     .then(function(r){return r.json();})
     .then(function(res){
@@ -489,7 +507,7 @@ function addProject(e){
         btn.disabled=false;
         btn.textContent='Creează Proiect';
         if(res.success){
-            showToast('✅ Proiect creat: '+res.id+' — Folder Drive creat automat!','success');
+            showToast('✅ Proiect creat: '+(res.proiect_id||res.id)+' în MySQL!','success');
             closeModal();
             f.reset();
             // Adaugă local + re-fetch

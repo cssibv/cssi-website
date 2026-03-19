@@ -339,23 +339,19 @@ var MODULES=[
     {id:"documente",h:"/admin/documente.html",i:"📁",t:"Documente & Resurse",d:"Dosare · Template-uri · Media",cat:"docs",v3:true,roles:["admin","org","sales","tech"]}
 ];
 
-// ═══════ DEMO DATA ═══════
-var PROJECTS=[
-    {id:"CSSI-2026-001",client:"Hotel Cheile Râșnoavei",serviciu:"Detecție Incendiu",status:"Execuție",valoare:45000,loc:"Râșnov"},
-    {id:"CSSI-2026-002",client:"Magazin Coresi",serviciu:"Supraveghere Video",status:"Lead",valoare:12000,loc:"Brașov"},
-    {id:"CSSI-2026-003",client:"Vila Poiana",serviciu:"Alarmă Antiefracție",status:"Ofertă",valoare:8500,loc:"Poiana Brașov"},
-    {id:"CSSI-2026-004",client:"Birouri IT Hub",serviciu:"Instalații Electrice",status:"Contract",valoare:67000,loc:"Brașov"},
-    {id:"CSSI-2026-005",client:"Restaurant Central",serviciu:"Detecție Incendiu",status:"Proiectare",valoare:23000,loc:"Brașov"},
-    {id:"CSSI-2026-006",client:"Depozit Ghimbav",serviciu:"Supraveghere Video",status:"Execuție",valoare:35000,loc:"Ghimbav"},
-    {id:"CSSI-2026-007",client:"Școala Nr. 5",serviciu:"Detecție Incendiu",status:"Recepție",valoare:52000,loc:"Brașov"},
-    {id:"CSSI-2026-008",client:"Pensiune Bran",serviciu:"Alarmă Antiefracție",status:"Facturat",valoare:6200,loc:"Bran"},
-    {id:"CSSI-2026-009",client:"Primăria Săcele",serviciu:"Detecție Incendiu",status:"Mentenanță",valoare:89000,loc:"Săcele"},
-    {id:"CSSI-2026-010",client:"Mall Brașov Center",serviciu:"Proiect Complex",status:"Lead",valoare:120000,loc:"Brașov"},
-    {id:"CSSI-2026-011",client:"Clinica MedLife",serviciu:"Supraveghere Video",status:"Ofertă",valoare:15000,loc:"Brașov"},
-    {id:"CSSI-2026-012",client:"Fabrica Autoliv",serviciu:"Instalații Electrice",status:"Execuție",valoare:95000,loc:"Brașov"},
-    {id:"CSSI-2026-013",client:"Rezidențial Avantgarden",serviciu:"Automatizări Porți",status:"Contract",valoare:18000,loc:"Brașov"},
-    {id:"CSSI-2026-014",client:"ANAF Brașov",serviciu:"Detecție Incendiu",status:"Mentenanță",valoare:42000,loc:"Brașov"}
-];
+// ═══════ MySQL API ═══════
+var API_DB='/admin/api.php';
+
+// Mapping UI (diacritice) → DB (ENUM fără diacritice)
+var SERV_UI_TO_DB={"Detecție Incendiu":"Detectie Incendiu","Alarmă Antiefracție":"Alarma","Supraveghere Video":"Supraveghere Video","Instalații Electrice":"Electric","Instalații Sanitare":"Electric","Automatizări Porți":"Automatizari","Proiect Complex":"Complex","Control Acces":"Control Acces","Rețelistică":"Retelistică"};
+var SERV_DB_TO_UI={"Detectie Incendiu":"Detecție Incendiu","Alarma":"Alarmă Antiefracție","Supraveghere Video":"Supraveghere Video","Electric":"Instalații Electrice","Automatizari":"Automatizări Porți","Complex":"Proiect Complex","Control Acces":"Control Acces","Retelistică":"Rețelistică"};
+var STAT_UI_TO_DB={"Lead":"Lead","Ofertă":"Oferta","Contract":"Contract","Proiectare":"Proiectare","Execuție":"Executie","Recepție":"Receptie","Facturat":"Facturat","Mentenanță":"Mentenanta","Finalizat":"Finalizat","Anulat":"Anulat"};
+var STAT_DB_TO_UI={"Lead":"Lead","Oferta":"Ofertă","Contract":"Contract","Proiectare":"Proiectare","Executie":"Execuție","Receptie":"Recepție","Facturat":"Facturat","Mentenanta":"Mentenanță","Finalizat":"Finalizat","Anulat":"Anulat"};
+
+// ═══════ DATE PROIECTE (se încarcă din MySQL) ═══════
+var PROJECTS=[];
+var projectsLoaded=false;
+
 
 var ALERTS=[
     {text:"🔧 Proiect CSSI-2026-012 (Fabrica Autoliv) — echipa a început montajul electric",color:"var(--green)",time:"Acum 2h"},
@@ -482,23 +478,70 @@ function openModal(){document.getElementById('addProjectModal').classList.add('a
 function closeModal(){document.getElementById('addProjectModal').classList.remove('active')}
 function addProject(e){
     e.preventDefault();var f=document.getElementById('addProjectForm');var d=new FormData(f);
-    var mx=0;PROJECTS.forEach(function(p){var n=parseInt(p.id.split('-')[2]);if(n>mx)mx=n});
-    var np={id:"CSSI-2026-"+String(mx+1).padStart(3,'0'),client:d.get('client'),serviciu:d.get('serviciu'),status:d.get('status'),valoare:parseInt(d.get('valoare'))||0,loc:d.get('locatie')||'Brașov'};
-    PROJECTS.push(np);renderKanban();renderKPI();closeModal();f.reset();
+    var btn=f.querySelector('button[type=submit]');btn.disabled=true;btn.textContent='⏳ Se creează...';
+    var clientName=d.get('client');var telefon=d.get('telefon')||'';var email=d.get('email')||'';
+    var servUI=d.get('serviciu');var statusUI=d.get('status');
+    var servDB=SERV_UI_TO_DB[servUI]||servUI;var statusDB=STAT_UI_TO_DB[statusUI]||statusUI;
+    var locatie=d.get('locatie')||'Brașov';var valoare=parseInt(d.get('valoare'))||0;var note=d.get('note')||'';
+    // 1. Creează client
+    fetch(API_DB+'?action=createClient',{method:'POST',headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({action:'createClient',nume:clientName,telefon:telefon,email:email,oras:locatie})
+    }).then(function(r){return r.json()}).then(function(cRes){
+        if(!cRes.success){throw new Error(cRes.error||'Eroare creare client');}
+        // 2. Creează proiect cu client_id
+        return fetch(API_DB+'?action=createProiect',{method:'POST',headers:{'Content-Type':'application/json'},
+            body:JSON.stringify({action:'createProiect',client_id:cRes.id,serviciu:servDB,obiectiv:note,
+                status:statusDB,valoare_estimata:valoare,adresa_obiectiv:locatie,responsabil:'Admin',note:note})
+        });
+    }).then(function(r){return r.json()}).then(function(pRes){
+        if(!pRes.success){throw new Error(pRes.error||'Eroare creare proiect');}
+        btn.disabled=false;btn.textContent='Creează Proiect';closeModal();f.reset();
+        toast('✅ Proiect '+pRes.proiect_id+' creat cu succes!','success');
+        loadProjectsFromDB();
+    }).catch(function(err){
+        btn.disabled=false;btn.textContent='Creează Proiect';
+        toast('⚠️ '+err.message,'error');
+    });
 }
 
-// ═══════ APPS SCRIPT API ═══════
-var API_URL='https://script.google.com/macros/s/AKfycbzdM_e5DY5nmd57TmB24sXz8dML93gKIolkmlqKxE7_d-_o3jHMVYuQ06YiQ5zJgZiB/exec';
-function loadLive(){
-    if(!API_URL)return;
+// ═══════ ÎNCĂRCARE PROIECTE DIN MySQL ═══════
+function loadProjectsFromDB(){
     document.getElementById('syncBadge').innerHTML='<span class="sync-dot" style="background:var(--orange);animation:pulse 1s infinite"></span>Sync...';
-    fetch(API_URL+'?action=getAll').then(function(r){return r.json()}).then(function(d){
-        if(d.projects){PROJECTS=d.projects;renderKanban();renderKPI()}
-        if(d.alerts){ALERTS=d.alerts;renderAlerts()}
-        document.getElementById('syncBadge').innerHTML='<span class="sync-dot ok"></span>Live';
-    }).catch(function(){document.getElementById('syncBadge').innerHTML='<span class="sync-dot off"></span>Offline'})
+    fetch(API_DB+'?action=getProiecte&_t='+Date.now()).then(function(r){return r.json()}).then(function(res){
+        if(res.success&&res.data){
+            PROJECTS=res.data.map(function(p){
+                return {
+                    id:p.proiect_id||p.id,
+                    dbId:p.id,
+                    client:p.client_nume||'',
+                    serviciu:SERV_DB_TO_UI[p.serviciu]||p.serviciu||'',
+                    status:STAT_DB_TO_UI[p.status]||p.status||'Lead',
+                    valoare:parseFloat(p.valoare_estimata)||parseFloat(p.valoare_contract)||0,
+                    loc:p.oras||p.adresa_obiectiv||'Brașov',
+                    obiectiv:p.obiectiv||'',
+                    note:p.note||''
+                };
+            });
+            projectsLoaded=true;
+            renderKanban();renderKPI();
+            document.getElementById('syncBadge').innerHTML='<span class="sync-dot ok"></span>MySQL · '+PROJECTS.length+' proiecte';
+        }
+    }).catch(function(e){
+        console.log('DB load failed:',e);
+        document.getElementById('syncBadge').innerHTML='<span class="sync-dot off"></span>Offline';
+    });
 }
-if(API_URL) setTimeout(loadLive,500);
+
+function toast(msg,type){
+    var c=document.createElement('div');
+    c.style.cssText='position:fixed;top:20px;right:20px;z-index:400;padding:12px 18px;border-radius:12px;color:#fff;font-size:12px;font-weight:600;box-shadow:0 8px 24px rgba(0,0,0,0.15);max-width:360px;animation:slideIn 0.3s ease';
+    c.style.background=type==='success'?'#22c55e':type==='error'?'#dc2626':'#3b82f6';
+    c.textContent=msg;document.body.appendChild(c);
+    setTimeout(function(){c.style.opacity='0';c.style.transition='opacity 0.3s'},3000);
+    setTimeout(function(){c.remove()},3500);
+}
+
+setTimeout(loadProjectsFromDB,300);
 </script>
 <script>
 if('serviceWorker' in navigator){navigator.serviceWorker.register('/sw.js').then(function(r){console.log('[PWA] SW registered, scope:',r.scope)}).catch(function(e){console.log('[PWA] SW failed:',e)})}

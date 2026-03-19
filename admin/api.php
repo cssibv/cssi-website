@@ -10,6 +10,8 @@
 header('Access-Control-Allow-Origin: *');
 header('Access-Control-Allow-Methods: GET, POST, OPTIONS');
 header('Access-Control-Allow-Headers: Content-Type');
+header('Cache-Control: no-store, no-cache, must-revalidate, max-age=0');
+header('Pragma: no-cache');
 if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') { exit; }
 
 require_once __DIR__ . '/db.php';
@@ -48,22 +50,54 @@ try {
             break;
 
         case 'createClient':
-            $clientId = nextId('client_seq', 'CLI-', 4);
-            $stmt = $db->prepare("INSERT INTO clienti (client_id, nume, cui_cnp, telefon, email, adresa, oras, judet, persoana_contact, tip, note) VALUES (?,?,?,?,?,?,?,?,?,?,?)");
-            $stmt->execute([
-                $clientId,
-                (isset($data['nume']) ? $data['nume'] : ''),
-                (isset($data['cui_cnp']) ? $data['cui_cnp'] : ''),
-                (isset($data['telefon']) ? $data['telefon'] : ''),
-                (isset($data['email']) ? $data['email'] : ''),
-                (isset($data['adresa']) ? $data['adresa'] : ''),
-                (isset($data['oras']) ? $data['oras'] : 'Brașov'),
-                (isset($data['judet']) ? $data['judet'] : 'Brașov'),
-                (isset($data['persoana_contact']) ? $data['persoana_contact'] : ''),
-                (isset($data['tip']) ? $data['tip'] : 'Firma'),
-                (isset($data['note']) ? $data['note'] : '')]);
-            $insertId = $db->lastInsertId();
-            jsonResponse(['success' => true, 'id' => $insertId, 'client_id' => $clientId]);
+            $nume = isset($data['nume']) ? trim($data['nume']) : '';
+            $cui = isset($data['cui_cnp']) ? trim($data['cui_cnp']) : '';
+            
+            // Verifică dacă clientul există deja (după CUI sau nume exact)
+            $existing = null;
+            if ($cui) {
+                $stmt = $db->prepare("SELECT id, client_id FROM clienti WHERE cui_cnp = ? LIMIT 1");
+                $stmt->execute([$cui]);
+                $existing = $stmt->fetch();
+            }
+            if (!$existing && $nume) {
+                $stmt = $db->prepare("SELECT id, client_id FROM clienti WHERE LOWER(TRIM(nume)) = LOWER(?) LIMIT 1");
+                $stmt->execute([$nume]);
+                $existing = $stmt->fetch();
+            }
+            
+            if ($existing) {
+                // Client existent — actualizează datele dacă sunt noi
+                $updates = [];
+                $vals = [];
+                foreach (['telefon','email','adresa','oras','persoana_contact'] as $f) {
+                    if (!empty($data[$f])) {
+                        $updates[] = "$f = CASE WHEN $f = '' OR $f IS NULL THEN ? ELSE $f END";
+                        $vals[] = $data[$f];
+                    }
+                }
+                if ($updates) {
+                    $vals[] = $existing['id'];
+                    $db->prepare("UPDATE clienti SET " . implode(', ', $updates) . " WHERE id = ?")->execute($vals);
+                }
+                jsonResponse(['success' => true, 'id' => $existing['id'], 'client_id' => $existing['client_id'], 'existing' => true]);
+            } else {
+                // Client nou
+                $clientId = nextId('client_seq', 'CLI-', 4);
+                $stmt = $db->prepare("INSERT INTO clienti (client_id, nume, cui_cnp, telefon, email, adresa, oras, judet, persoana_contact, tip, note) VALUES (?,?,?,?,?,?,?,?,?,?,?)");
+                $stmt->execute([
+                    $clientId, $nume, $cui,
+                    (isset($data['telefon']) ? $data['telefon'] : ''),
+                    (isset($data['email']) ? $data['email'] : ''),
+                    (isset($data['adresa']) ? $data['adresa'] : ''),
+                    (isset($data['oras']) ? $data['oras'] : 'Brașov'),
+                    (isset($data['judet']) ? $data['judet'] : 'Brașov'),
+                    (isset($data['persoana_contact']) ? $data['persoana_contact'] : ''),
+                    (isset($data['tip']) ? $data['tip'] : 'Firma'),
+                    (isset($data['note']) ? $data['note'] : '')]);
+                $insertId = $db->lastInsertId();
+                jsonResponse(['success' => true, 'id' => $insertId, 'client_id' => $clientId, 'existing' => false]);
+            }
             break;
 
         case 'updateClient':
@@ -97,7 +131,7 @@ try {
         case 'getProiecte':
             $status = (isset($_GET['status']) ? $_GET['status'] : '');
             $search = (isset($_GET['search']) ? $_GET['search'] : '');
-            $sql = "SELECT * FROM v_proiecte_complete WHERE 1=1";
+            $sql = "SELECT v.*, (SELECT client_id FROM proiecte WHERE id = v.id) AS client_db_id FROM v_proiecte_complete v WHERE 1=1";
             $params = [];
             if ($status) { $sql .= " AND status = ?"; $params[] = $status; }
             if ($search) { $sql .= " AND (client_nume LIKE ? OR proiect_id LIKE ? OR obiectiv LIKE ?)"; $s = "%$search%"; $params = array_merge($params, [$s,$s,$s]); }
@@ -186,12 +220,22 @@ try {
         // ══════════════════════════════════════
         case 'getOferte':
             $search = (isset($_GET['search']) ? $_GET['search'] : '');
-            $sql = "SELECT * FROM v_oferte_complete";
+            $clientId = (isset($_GET['client_id']) ? $_GET['client_id'] : '');
+            $proiectId = (isset($_GET['proiect_id']) ? $_GET['proiect_id'] : '');
+            $sql = "SELECT vc.*, o2.client_id AS client_db_id, o2.proiect_id AS proiect_db_id FROM v_oferte_complete vc JOIN oferte o2 ON vc.id = o2.id WHERE 1=1";
             $params = [];
+            if ($clientId) {
+                $sql .= " AND o2.client_id = ?";
+                $params[] = $clientId;
+            }
+            if ($proiectId) {
+                $sql .= " AND o2.proiect_id = ?";
+                $params[] = $proiectId;
+            }
             if ($search) {
-                $sql .= " WHERE client_nume LIKE ? OR oferta_id LIKE ? OR obiectiv LIKE ?";
+                $sql .= " AND (vc.client_nume LIKE ? OR vc.oferta_id LIKE ? OR vc.obiectiv LIKE ?)";
                 $s = "%$search%";
-                $params = [$s, $s, $s];
+                $params = array_merge($params, [$s, $s, $s]);
             }
             $stmt = $db->prepare($sql);
             $stmt->execute($params);
@@ -227,25 +271,48 @@ try {
             break;
 
         case 'saveOferta':
-            // Genereaza ID INAINTE de tranzactie (nextId foloseste propria tranzactie)
+            // Detectează update: prin oferta_db_id SAU prin nr existent
             $isUpdate = !empty($data['oferta_db_id']);
+            if (!$isUpdate && !empty($data['nr'])) {
+                // Verifică dacă există deja o ofertă cu acest nr (oferta_id)
+                $chk = $db->prepare("SELECT id FROM oferte WHERE oferta_id = ? LIMIT 1");
+                $chk->execute([$data['nr']]);
+                $existing = $chk->fetch();
+                if ($existing) {
+                    $isUpdate = true;
+                    $data['oferta_db_id'] = $existing['id'];
+                }
+            }
             $preGeneratedId = null;
             if (!$isUpdate) {
-                $preGeneratedId = (isset($data['nr']) ? $data['nr'] : nextId('oferta_seq', 'OF-', 6));
+                $preGeneratedId = (!empty($data['nr']) ? $data['nr'] : nextId('oferta_seq', '', 0));
             }
             $db->beginTransaction();
             try {
                 if ($isUpdate) {
                     // Update existing
                     $ofertaDbId = $data['oferta_db_id'];
+                    // Validare FK: client_id si proiect_id trebuie sa existe sau sa fie NULL
+                    $clientIdVal = null;
+                    if (!empty($data['client_db_id'])) {
+                        $chkC = $db->prepare("SELECT id FROM clienti WHERE id = ? LIMIT 1");
+                        $chkC->execute([$data['client_db_id']]);
+                        if ($chkC->fetch()) $clientIdVal = $data['client_db_id'];
+                    }
+                    $proiectIdVal = null;
+                    if (!empty($data['proiect_db_id'])) {
+                        $chkP = $db->prepare("SELECT id FROM proiecte WHERE id = ? LIMIT 1");
+                        $chkP->execute([$data['proiect_db_id']]);
+                        if ($chkP->fetch()) $proiectIdVal = $data['proiect_db_id'];
+                    }
                     $db->prepare("UPDATE oferte SET titlu=?, data_oferta=?, valabilitate=?, obiectiv=?, client_id=?, proiect_id=?, subtotal_echip=?, subtotal_manop=?, total_fara_tva=?, tva=?, total_cu_tva=?, client_nume=?, client_cui=?, client_adresa=?, client_contact=?, status=? WHERE id=?")
                        ->execute([
                            (isset($data['titlu']) ? $data['titlu'] : ''),
                            (isset($data['data']) ? $data['data'] : date('Y-m-d')),
                            (isset($data['valab']) ? $data['valab'] : '4 zile'),
                            (isset($data['obiectiv']) ? $data['obiectiv'] : ''),
-                           (isset($data['client_db_id']) && $data['client_db_id']) ? $data['client_db_id'] : null,
-                           (isset($data['proiect_db_id']) && $data['proiect_db_id']) ? $data['proiect_db_id'] : null,
+                           $clientIdVal,
+                           $proiectIdVal,
                            (isset($data['subtotalEchip']) ? $data['subtotalEchip'] : 0),
                            (isset($data['subtotalManop']) ? $data['subtotalManop'] : 0),
                            (isset($data['totalNet']) ? $data['totalNet'] : 0),
@@ -263,15 +330,35 @@ try {
                 } else {
                     // Insert new
                     $ofertaId = $preGeneratedId;
+                    // Regenerează titlul cu nr-ul corect
+                    $client = (isset($data['client']) ? $data['client'] : '');
+                    $obiectiv = (isset($data['obiectiv']) ? $data['obiectiv'] : '');
+                    $dataOf = (isset($data['data']) ? $data['data'] : date('Y-m-d'));
+                    $dataParts = explode('-', $dataOf);
+                    $dataFmt = (isset($dataParts[2]) ? $dataParts[2].'.'.$dataParts[1].'.'.$dataParts[0] : $dataOf);
+                    $titlu = 'Deviz ' . $client . ($obiectiv ? ' ' . $obiectiv : '') . ' ser.BV Nr. ' . $ofertaId . ' din ' . $dataFmt;
                     $stmt = $db->prepare("INSERT INTO oferte (oferta_id, titlu, data_oferta, valabilitate, obiectiv, client_id, proiect_id, subtotal_echip, subtotal_manop, total_fara_tva, tva, total_cu_tva, client_nume, client_cui, client_adresa, client_contact, status) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
+                    // Validare FK pt INSERT
+                    $clientIdValI = null;
+                    if (!empty($data['client_db_id'])) {
+                        $chkCI = $db->prepare("SELECT id FROM clienti WHERE id = ? LIMIT 1");
+                        $chkCI->execute([$data['client_db_id']]);
+                        if ($chkCI->fetch()) $clientIdValI = $data['client_db_id'];
+                    }
+                    $proiectIdValI = null;
+                    if (!empty($data['proiect_db_id'])) {
+                        $chkPI = $db->prepare("SELECT id FROM proiecte WHERE id = ? LIMIT 1");
+                        $chkPI->execute([$data['proiect_db_id']]);
+                        if ($chkPI->fetch()) $proiectIdValI = $data['proiect_db_id'];
+                    }
                     $stmt->execute([
                         $ofertaId,
-                        (isset($data['titlu']) ? $data['titlu'] : ''),
+                        $titlu,
                         (isset($data['data']) ? $data['data'] : date('Y-m-d')),
                         (isset($data['valab']) ? $data['valab'] : '4 zile'),
                         (isset($data['obiectiv']) ? $data['obiectiv'] : ''),
-                        (isset($data['client_db_id']) && $data['client_db_id']) ? $data['client_db_id'] : null,
-                        (isset($data['proiect_db_id']) && $data['proiect_db_id']) ? $data['proiect_db_id'] : null,
+                        $clientIdValI,
+                        $proiectIdValI,
                         (isset($data['subtotalEchip']) ? $data['subtotalEchip'] : 0),
                         (isset($data['subtotalManop']) ? $data['subtotalManop'] : 0),
                         (isset($data['totalNet']) ? $data['totalNet'] : 0),
