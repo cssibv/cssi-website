@@ -62,6 +62,11 @@ document.addEventListener('DOMContentLoaded', function() {
                     event_label: 'form_whatsapp',
                     value: 1
                 });
+
+                /* Google Ads Conversion — "Solicitați o ofertă" */
+                gtag('event', 'conversion', {
+                    'send_to': 'AW-17987940313/WVuaCJnH1YEcENnfqIFD'
+                });
             }
 
             if (typeof fbq === 'function') {

@@ -23,6 +23,10 @@
     gtag('js', new Date());
     gtag('config', GA_ID, { 'anonymize_ip': true });
 
+    // ── Google Ads Conversion Tracking ──
+    var AW_ID = 'AW-17987940313';
+    gtag('config', AW_ID);
+
     // ── 2. Load gtag.js ──
     var gtagScript = document.createElement('script');
     gtagScript.async = true;
