@@ -7,6 +7,11 @@
    - Meta Pixel: se incarcă inline din <head> (vezi fiecare pagină)
    - GA4 gtag: se incarcă inline din <head>
    - Acest fișier: adaugă evenimentele de conversie
+   
+   ACTUALIZARE 31.03.2026:
+   - Adăugat Enhanced Conversions for Leads
+   - Trimite user_data (email, telefon, nume) hash-uit automat
+     de gtag la Google Ads pentru conversii optimizate
    ============================================================ */
 
 document.addEventListener('DOMContentLoaded', function() {
@@ -44,19 +49,64 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     /* --- 3. Track trimitere formular (window.open spre wa.me) --- */
+    /* --- Enhanced Conversions for Leads: trimite date utilizator cu conversia --- */
     var originalOpen = window.open;
     window.open = function(url) {
         if (url && url.indexOf('wa.me') !== -1) {
 
             if (typeof gtag === 'function') {
-                /* Eveniment GA4 existent — generate_lead */
+
+                /* ═══ Enhanced Conversions for Leads ═══
+                   Captează datele din formularul de contact și le trimite
+                   hash-uite (automat de gtag) pentru conversii optimizate.
+                   Google Ads folosește aceste date pentru a potrivi conversiile
+                   cu utilizatorii autentificați Google. */
+                var contactForm = document.getElementById('contactForm');
+                if (contactForm) {
+                    var emailField = contactForm.querySelector('input[name="email"]');
+                    var phoneField = contactForm.querySelector('input[name="phone"]');
+                    var nameField = contactForm.querySelector('input[name="name"]');
+
+                    var userData = {};
+                    if (emailField && emailField.value) {
+                        userData.email = emailField.value.trim().toLowerCase();
+                    }
+                    if (phoneField && phoneField.value) {
+                        /* Normalizare telefon: +40 prefix, fără spații */
+                        var phone = phoneField.value.trim().replace(/[\s\-\.\(\)]/g, '');
+                        if (phone.indexOf('0') === 0) {
+                            phone = '+4' + phone;
+                        } else if (phone.indexOf('4') === 0 && phone.indexOf('+') !== 0) {
+                            phone = '+' + phone;
+                        }
+                        userData.phone_number = phone;
+                    }
+                    if (nameField && nameField.value) {
+                        var nameParts = nameField.value.trim().split(/\s+/);
+                        if (nameParts.length >= 2) {
+                            userData.address = {
+                                first_name: nameParts[0],
+                                last_name: nameParts.slice(1).join(' ')
+                            };
+                        } else if (nameParts.length === 1) {
+                            userData.address = { first_name: nameParts[0] };
+                        }
+                    }
+
+                    /* Setează user_data ÎNAINTE de evenimentul de conversie */
+                    if (Object.keys(userData).length > 0) {
+                        gtag('set', 'user_data', userData);
+                    }
+                }
+
+                /* Eveniment GA4 — generate_lead */
                 gtag('event', 'generate_lead', {
                     event_category: 'conversion',
                     event_label: 'form_whatsapp',
                     value: 1
                 });
 
-                /* FIX: Eveniment form_submit pentru Google Ads Conversion */
+                /* Eveniment form_submit pentru Google Ads Conversion */
                 gtag('event', 'form_submit', {
                     event_category: 'conversion',
                     event_label: 'form_whatsapp',
