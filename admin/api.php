@@ -203,16 +203,26 @@ try {
             $user = (isset($data['user']) ? $data['user'] : 'Admin');
             if (!$id || !$newStatus) { jsonResponse(['success' => false, 'error' => 'id si status obligatorii'], 400); break; }
             
-            // Citeste istoricul curent
-            $stmt = $db->prepare("SELECT istoric_status FROM proiecte WHERE id = ? OR proiect_id = ?");
+            // Citeste proiectul curent
+            $stmt = $db->prepare("SELECT p.id, p.proiect_id, p.status, p.istoric_status, c.nume AS client_nume FROM proiecte p JOIN clienti c ON p.client_id = c.id WHERE p.id = ? OR p.proiect_id = ?");
             $stmt->execute([$id, $id]);
             $row = $stmt->fetch();
-            $istoric = $row ? json_decode($row['istoric_status'] ?: '[]', true) : [];
+            if (!$row) { jsonResponse(['success' => false, 'error' => 'Proiect negăsit'], 404); break; }
+            
+            $oldStatus = $row['status'];
+            $istoric = json_decode($row['istoric_status'] ?: '[]', true);
             $istoric[] = ['status' => $newStatus, 'data' => date('Y-m-d H:i:s'), 'user' => $user];
             
-            $db->prepare("UPDATE proiecte SET status = ?, istoric_status = ? WHERE id = ? OR proiect_id = ?")
+            // Update proiect — resetează preluat_de la schimbarea statusului
+            $db->prepare("UPDATE proiecte SET status = ?, istoric_status = ?, preluat_de = NULL, preluat_la = NULL WHERE id = ? OR proiect_id = ?")
                ->execute([$newStatus, json_encode($istoric), $id, $id]);
-            jsonResponse(['success' => true]);
+            
+            // Creează notificare pentru toți utilizatorii
+            $mesaj = '📌 ' . $row['proiect_id'] . ' (' . $row['client_nume'] . ') — ' . $oldStatus . ' → ' . $newStatus . ' (de ' . $user . ')';
+            $db->prepare("INSERT INTO notificari (proiect_id, mesaj, tip, de_la, etapa_noua) VALUES (?,?,?,?,?)")
+               ->execute([$row['id'], $mesaj, 'status_change', $user, $newStatus]);
+            
+            jsonResponse(['success' => true, 'notificare' => $mesaj]);
             break;
 
         // ══════════════════════════════════════
@@ -521,6 +531,84 @@ try {
             unset($a);
 
             jsonResponse(['success' => true, 'data' => $activitate]);
+            break;
+
+        // ══════════════════════════════════════
+        // NOTIFICĂRI
+        // ══════════════════════════════════════
+        case 'getNotificari':
+            $user = isset($_GET['user']) ? strtolower($_GET['user']) : '';
+            $limit = isset($_GET['limit']) ? intval($_GET['limit']) : 20;
+            $cititCol = '';
+            if (in_array($user, ['mihai','roxana','valentin','cristina'])) {
+                $cititCol = 'citit_' . $user;
+            }
+            
+            $stmt = $db->prepare("SELECT n.*, p.proiect_id AS cod_proiect, p.status AS status_proiect, p.preluat_de 
+                FROM notificari n 
+                LEFT JOIN proiecte p ON n.proiect_id = p.id 
+                ORDER BY n.created_at DESC LIMIT ?");
+            $stmt->bindValue(1, $limit, PDO::PARAM_INT);
+            $stmt->execute();
+            $notifs = $stmt->fetchAll();
+            
+            $unread = 0;
+            foreach ($notifs as &$n) {
+                $n['citit'] = ($cititCol && isset($n[$cititCol])) ? (bool)$n[$cititCol] : false;
+                if (!$n['citit']) $unread++;
+            }
+            unset($n);
+            
+            jsonResponse(['success' => true, 'data' => $notifs, 'unread' => $unread]);
+            break;
+
+        case 'markNotificareRead':
+            $nid = isset($data['id']) ? $data['id'] : '';
+            $user = isset($data['user']) ? strtolower($data['user']) : '';
+            if (!$nid || !in_array($user, ['mihai','roxana','valentin','cristina'])) {
+                jsonResponse(['success' => false, 'error' => 'Parametri lipsă'], 400); break;
+            }
+            $col = 'citit_' . $user;
+            $db->prepare("UPDATE notificari SET $col = 1 WHERE id = ?")->execute([$nid]);
+            jsonResponse(['success' => true]);
+            break;
+
+        case 'markAllRead':
+            $user = isset($data['user']) ? strtolower($data['user']) : '';
+            if (!in_array($user, ['mihai','roxana','valentin','cristina'])) {
+                jsonResponse(['success' => false, 'error' => 'User invalid'], 400); break;
+            }
+            $col = 'citit_' . $user;
+            $db->exec("UPDATE notificari SET $col = 1 WHERE $col = 0");
+            jsonResponse(['success' => true]);
+            break;
+
+        case 'preiaProiect':
+            $pid = isset($data['proiect_id']) ? $data['proiect_id'] : '';
+            $user = isset($data['user']) ? $data['user'] : '';
+            if (!$pid || !$user) { jsonResponse(['success' => false, 'error' => 'Parametri lipsă'], 400); break; }
+            
+            $db->prepare("UPDATE proiecte SET preluat_de = ?, preluat_la = NOW() WHERE id = ? OR proiect_id = ?")
+               ->execute([$user, $pid, $pid]);
+            
+            // Notificare
+            $stmt = $db->prepare("SELECT p.proiect_id, p.status, c.nume FROM proiecte p JOIN clienti c ON p.client_id = c.id WHERE p.id = ? OR p.proiect_id = ?");
+            $stmt->execute([$pid, $pid]);
+            $p = $stmt->fetch();
+            if ($p) {
+                $mesaj = '✅ ' . $user . ' a preluat proiectul ' . $p['proiect_id'] . ' (' . $p['nume'] . ') — etapa: ' . $p['status'];
+                $db->prepare("INSERT INTO notificari (proiect_id, mesaj, tip, de_la, etapa_noua, preluat_de, preluat_la) VALUES (?,?,?,?,?,?,NOW())")
+                   ->execute([$p['proiect_id'], $mesaj, 'assignment', $user, $p['status'], $user]);
+            }
+            jsonResponse(['success' => true]);
+            break;
+
+        case 'getProiecteNeprelate':
+            $stmt = $db->query("SELECT p.id, p.proiect_id, p.status, p.preluat_de, p.updated_at, c.nume AS client_nume 
+                FROM proiecte p JOIN clienti c ON p.client_id = c.id 
+                WHERE p.preluat_de IS NULL AND p.status NOT IN ('Finalizat','Anulat','Lead') 
+                ORDER BY p.updated_at DESC");
+            jsonResponse(['success' => true, 'data' => $stmt->fetchAll()]);
             break;
 
         // ══════════════════════════════════════

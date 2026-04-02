@@ -165,6 +165,27 @@ a{text-decoration:none;color:inherit;}button{font-family:inherit;cursor:pointer;
 
 .footer{text-align:center;color:var(--gray-xl);font-size:11px;padding:24px 0 100px;}
 .hidden{display:none!important;}
+
+/* Notification Panel */
+.notif-panel{display:none;position:fixed;top:56px;right:16px;width:380px;max-height:70vh;background:#fff;border-radius:16px;box-shadow:0 12px 40px rgba(0,0,0,0.18);z-index:250;overflow:hidden;}
+.notif-panel.active{display:block;}
+.notif-header{padding:14px 18px;background:var(--dark);color:#fff;font-weight:800;font-size:14px;display:flex;justify-content:space-between;align-items:center;}
+.notif-header button{background:rgba(255,255,255,0.15);border:none;color:#fff;padding:4px 10px;border-radius:6px;font-size:11px;font-weight:700;cursor:pointer;}
+.notif-body{max-height:calc(70vh - 50px);overflow-y:auto;padding:8px;}
+.notif-item{display:flex;gap:10px;padding:10px 12px;border-radius:10px;margin-bottom:4px;cursor:pointer;transition:background 0.15s;font-size:12px;line-height:1.4;}
+.notif-item:hover{background:var(--gray-bg);}
+.notif-item.unread{background:#fef2f2;border-left:3px solid var(--red);}
+.notif-item .notif-time{font-size:10px;color:var(--gray-l);margin-top:2px;}
+.notif-item .notif-btn{padding:4px 10px;border-radius:6px;border:none;font-size:10px;font-weight:700;cursor:pointer;margin-top:4px;}
+
+/* Kanban card red glow for unpicked */
+.kcard.nepreluat{border:2px solid var(--red);animation:redPulse 2s infinite;}
+@keyframes redPulse{0%,100%{box-shadow:0 0 0 0 rgba(220,38,38,0.2)}50%{box-shadow:0 0 12px 4px rgba(220,38,38,0.3)}}
+.kcard .preluat-badge{font-size:9px;font-weight:700;padding:2px 6px;border-radius:4px;display:inline-block;margin-top:4px;}
+.kcard .preluat-badge.rosu{background:#fef2f2;color:var(--red);}
+.kcard .preluat-badge.verde{background:#f0fdf4;color:var(--green);}
+
+@media(max-width:500px){.notif-panel{width:calc(100vw - 32px);right:16px;}}
 @keyframes fadeUp{from{opacity:0;transform:translateY(12px);}to{opacity:1;transform:translateY(0);}}.fade-up{animation:fadeUp 0.4s ease both;}
 </style>
 </head>
@@ -194,9 +215,24 @@ a{text-decoration:none;color:inherit;}button{font-family:inherit;cursor:pointer;
             <div class="topbar-brand">CSSI <span>Portal</span></div>
         </div>
         <div class="topbar-right">
+            <div id="notifBell" style="position:relative;cursor:pointer;margin-right:8px" onclick="toggleNotifPanel()">
+                <span style="font-size:20px">🔔</span>
+                <span id="notifBadge" style="display:none;position:absolute;top:-4px;right:-6px;background:var(--red);color:#fff;font-size:9px;font-weight:800;min-width:16px;height:16px;border-radius:8px;text-align:center;line-height:16px;padding:0 4px">0</span>
+            </div>
             <span id="syncBadge" style="font-size:11px;color:var(--gray);display:flex;align-items:center"><span class="sync-dot off"></span>Demo</span>
             <span id="rolePill" class="topbar-pill"></span>
             <button onclick="doLogout()" class="topbar-logout">Ieși</button>
+        </div>
+    </div>
+
+    <!-- NOTIFICATION PANEL -->
+    <div id="notifPanel" class="notif-panel">
+        <div class="notif-header">
+            <span>🔔 Notificări</span>
+            <button onclick="markAllNotifRead()">Marchează citite</button>
+        </div>
+        <div class="notif-body" id="notifBody">
+            <div style="text-align:center;padding:20px;color:var(--gray-l);font-size:13px">Se încarcă...</div>
         </div>
     </div>
 
@@ -292,25 +328,31 @@ a{text-decoration:none;color:inherit;}button{font-family:inherit;cursor:pointer;
 
 <script>
 // ═══════ PASSWORD HASHES ═══════
-var PW={"8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918":"admin","e87cb45c05ad389d58904ea398345c24b50f46c15d412d0f671e66b766247d39":"org","aceea3feef0902bbab40e8832bf7b92c2e058348d53602e7652fc571b3b9d3ff":"mkt","e04eb29020eaa961e99d3162635e9fe9585c5a1121bd88784c1378aa8837195c":"sales","fe9bbd400bb6cb314531e3462507661401959afc69aae96bc6aec2c213b83bc1":"tech"};
+var PW={
+"8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918":"admin",
+"bb84ec45d72a12da066c86de536eeb88aa4c29d9622eb5d6aaeb501f9acb5a75":"mihai",
+"8589f985d87ab442f842621a8f9b86e78f67d955d79d1c8c3dd94928ee6c48b9":"roxana",
+"ec2d7be6fc8659569fc9a8f5385b9ae4d4a733f7b6f1c8cb55acb9ed977d3f4e":"valentin",
+"d9f325f6038f9c5109278ead8bc2d310292a37e856e3de350e81da702e4a9eae":"cristina"
+};
 
 // ═══════ ROLE CONFIG ═══════
 var ROLES={
-    admin:{name:"Administrator",greeting:"👋 Salut, Mihai!",sub:"Acces total — toate modulele portalului",pill:"🔑 Admin",gradient:"admin",
+    admin:{name:"Administrator",greeting:"👋 Salut, Admin!",sub:"Acces total — toate modulele portalului",pill:"🔑 Admin",gradient:"admin",
         actions:[{l:"+ Proiect Nou",h:"javascript:openModal()",i:"📋"},{l:"Board Proiecte",h:"/admin/proiecte.html",i:"📌"},{l:"CRM Clienți",h:"/admin/crm-clienti.html",i:"💰"},{l:"Financiar",h:"/admin/financiar.html",i:"💳"},{l:"Mentenanță",h:"/admin/mentenanta.html",i:"🔄"}],
         showKanban:true,showKpi:true,showQuick:true,showAlerts:true},
-    org:{name:"Organizare",greeting:"👋 Salut!",sub:"Planificări, echipe, agenda zilnică",pill:"📅 Organizare",gradient:"org",
-        actions:[{l:"Planificare",h:"/admin/planificare.html",i:"📅"},{l:"Proiecte",h:"/admin/proiecte.html",i:"📋"},{l:"Materiale",h:"/admin/necesar-materiale.html",i:"📦"}],
-        showKanban:true,showKpi:false,showQuick:true,showAlerts:true},
-    mkt:{name:"Marketing",greeting:"🎨 Salut, Echipa Marketing!",sub:"Calendar social, campanii, resurse",pill:"🚀 Marketing",gradient:"mkt",
-        actions:[{l:"Calendar Social",h:"/admin/calendar-social.html",i:"📅"},{l:"Marketing Hub",h:"/admin/marketing.html",i:"📊"},{l:"Resurse Media",h:"/admin/documente.html",i:"🎨"}],
-        showKanban:false,showKpi:false,showQuick:false,showAlerts:false},
-    sales:{name:"Vânzări",greeting:"💼 Salut, Echipa Vânzări!",sub:"Lead-uri, oferte, contracte",pill:"💰 Vânzări",gradient:"sales",
-        actions:[{l:"CRM Clienți",h:"/admin/crm-clienti.html",i:"💰"},{l:"Calculator Preț",h:"/admin/calculator-pret.html",i:"🧮"},{l:"+ Proiect Nou",h:"javascript:openModal()",i:"📋"}],
-        showKanban:true,showKpi:false,showQuick:true,showAlerts:true},
-    tech:{name:"Tehnic",greeting:"🔧 Salut, Echipa Tehnică!",sub:"Execuție, materiale, proiectare",pill:"🔧 Tehnic",gradient:"tech",
-        actions:[{l:"Raport Lucrare",h:"/admin/executie.html",i:"✅"},{l:"Inventar",h:"/admin/materiale.html",i:"📦"},{l:"Necesar Materiale",h:"/admin/necesar-materiale.html",i:"🛒"},{l:"Proiectare",h:"/admin/proiectare.html",i:"📐"}],
-        showKanban:true,showKpi:false,showQuick:true,showAlerts:true}
+    mihai:{name:"Mihai",greeting:"👋 Salut, Mihai!",sub:"Ofertare · Vânzări · Acces complet",pill:"💰 Mihai — Ofertare",gradient:"admin",
+        actions:[{l:"Calculator Preț",h:"/admin/calculator-pret.html",i:"🧮"},{l:"CRM Clienți",h:"/admin/crm-clienti.html",i:"💰"},{l:"+ Proiect Nou",h:"javascript:openModal()",i:"📋"},{l:"Board Proiecte",h:"/admin/proiecte.html",i:"📌"},{l:"Financiar",h:"/admin/financiar.html",i:"💳"}],
+        showKanban:true,showKpi:true,showQuick:true,showAlerts:true},
+    roxana:{name:"Roxana",greeting:"👋 Salut, Roxana!",sub:"Contractare · Facturare · Acces complet",pill:"📋 Roxana — Contracte",gradient:"admin",
+        actions:[{l:"Board Proiecte",h:"/admin/proiecte.html",i:"📌"},{l:"Financiar",h:"/admin/financiar.html",i:"💳"},{l:"CRM Clienți",h:"/admin/crm-clienti.html",i:"💰"},{l:"Documente",h:"/admin/documente.html",i:"📁"},{l:"Mentenanță",h:"/admin/mentenanta.html",i:"🔄"}],
+        showKanban:true,showKpi:true,showQuick:true,showAlerts:true},
+    valentin:{name:"Valentin",greeting:"👋 Salut, Valentin!",sub:"Proiectare · Execuție · Acces complet",pill:"📐 Valentin — Proiectare",gradient:"admin",
+        actions:[{l:"Proiectare",h:"/admin/proiectare.html",i:"📐"},{l:"Board Proiecte",h:"/admin/proiecte.html",i:"📌"},{l:"Execuție",h:"/admin/executie.html",i:"🔧"},{l:"Materiale",h:"/admin/materiale.html",i:"📦"},{l:"Necesar",h:"/admin/necesar-materiale.html",i:"🛒"}],
+        showKanban:true,showKpi:true,showQuick:true,showAlerts:true},
+    cristina:{name:"Cristina",greeting:"👋 Salut, Cristina!",sub:"Lead-uri · Prospectare · Acces complet",pill:"📞 Cristina — Lead-uri",gradient:"admin",
+        actions:[{l:"+ Lead Nou",h:"javascript:openModal()",i:"📞"},{l:"CRM Clienți",h:"/admin/crm-clienti.html",i:"💰"},{l:"Board Proiecte",h:"/admin/proiecte.html",i:"📌"},{l:"Calculator Preț",h:"/admin/calculator-pret.html",i:"🧮"},{l:"Marketing",h:"/admin/marketing.html",i:"📊"}],
+        showKanban:true,showKpi:true,showQuick:true,showAlerts:true}
 };
 
 // ═══════ KANBAN STATUSES ═══════
@@ -357,8 +399,8 @@ var projectsLoaded=false;
 // ═══════ AUTH ═══════
 var role="";
 function sha256(m){return crypto.subtle.digest('SHA-256',new TextEncoder().encode(m)).then(function(b){return Array.from(new Uint8Array(b)).map(function(x){return x.toString(16).padStart(2,'0')}).join('')})}
-function doLogin(e){e.preventDefault();var p=document.getElementById('pw').value;sha256(p).then(function(h){if(PW[h]){role=PW[h];sessionStorage.setItem("cssi-role",role);showDash()}else{var err=document.getElementById('err');err.textContent="Parolă incorectă!";err.style.display="block";document.getElementById('pw').value='';document.getElementById('pw').focus()}})}
-function doLogout(){sessionStorage.removeItem("cssi-role");role="";document.getElementById('dash').style.display='none';document.getElementById('login').style.display='';document.getElementById('pw').value=''}
+function doLogin(e){e.preventDefault();var p=document.getElementById('pw').value;sha256(p).then(function(h){if(PW[h]){role=PW[h];sessionStorage.setItem("cssi-role",role);sessionStorage.setItem("cssi-user",ROLES[role]?ROLES[role].name:role);showDash()}else{var err=document.getElementById('err');err.textContent="Parolă incorectă!";err.style.display="block";document.getElementById('pw').value='';document.getElementById('pw').focus()}})}
+function doLogout(){sessionStorage.removeItem("cssi-role");sessionStorage.removeItem("cssi-user");role="";document.getElementById('dash').style.display='none';document.getElementById('login').style.display='';document.getElementById('pw').value=''}
 (function(){var s=sessionStorage.getItem("cssi-role");if(s&&ROLES[s]){role=s;showDash()}})();
 
 // ═══════ DASHBOARD ═══════
@@ -420,8 +462,14 @@ function renderKanban(){
         if(!prj.length){body.innerHTML='<div class="kanban-empty">—</div>'}
         else{prj.forEach(function(p){
             var t=SERVICE_TAGS[p.serviciu]||{cls:"install",s:p.serviciu};
-            var c=document.createElement('div');c.className='kcard';
-            c.innerHTML='<div class="kcard-id">'+p.id+'</div><div class="kcard-title">'+p.client+'</div><div class="kcard-meta"><span class="kcard-tag '+t.cls+'">'+t.s+'</span><span>📍 '+p.loc+'</span></div><div class="kcard-val">'+p.valoare.toLocaleString('ro-RO')+' RON</div>';
+            var isNepreluat=!p.preluat_de&&p.status!=='Lead';
+            var c=document.createElement('div');c.className='kcard'+(isNepreluat?' nepreluat':'');
+            var preluatHtml='';
+            if(p.status!=='Lead'){
+                if(p.preluat_de){preluatHtml='<div class="preluat-badge verde">✅ Preluat: '+p.preluat_de+'</div>';}
+                else{preluatHtml='<div class="preluat-badge rosu">⚠️ Nepreluat</div><button class="preluat-badge" style="background:var(--blue);color:#fff;border:none;cursor:pointer;margin-left:4px" onclick="event.stopPropagation();preiaProiect(\''+p.id+'\')">🤚 Preia</button>';}
+            }
+            c.innerHTML='<div class="kcard-id">'+p.id+'</div><div class="kcard-title">'+p.client+'</div><div class="kcard-meta"><span class="kcard-tag '+t.cls+'">'+t.s+'</span><span>📍 '+p.loc+'</span></div><div class="kcard-val">'+p.valoare.toLocaleString('ro-RO')+' RON</div>'+preluatHtml;
             body.appendChild(c);
         })}
         col.appendChild(body);b.appendChild(col);
@@ -506,7 +554,8 @@ function loadProjectsFromDB(){
                     valoare:parseFloat(p.valoare_estimata)||parseFloat(p.valoare_contract)||0,
                     loc:p.oras||p.adresa_obiectiv||'Brașov',
                     obiectiv:p.obiectiv||'',
-                    note:p.note||''
+                    note:p.note||'',
+                    preluat_de:p.preluat_de||null
                 };
             });
             projectsLoaded=true;
@@ -528,7 +577,52 @@ function toast(msg,type){
     setTimeout(function(){c.remove()},3500);
 }
 
+// ═══════ NOTIFICĂRI ═══════
+function getUsername(){return ROLES[role]?ROLES[role].name:role;}
+function toggleNotifPanel(){var p=document.getElementById('notifPanel');if(p.classList.contains('active')){p.classList.remove('active');}else{p.classList.add('active');loadNotifications();}}
+function loadNotifications(){
+var user=getUsername().toLowerCase();
+fetch(API_DB+'?action=getNotificari&user='+user+'&limit=15&_t='+Date.now())
+.then(function(r){return r.json()}).then(function(res){
+if(!res.success){return;}
+var badge=document.getElementById('notifBadge');
+if(res.unread>0){badge.style.display='';badge.textContent=res.unread;}else{badge.style.display='none';}
+var body=document.getElementById('notifBody');
+if(!res.data||!res.data.length){body.innerHTML='<div style="text-align:center;padding:30px;color:var(--gray-l)">Nicio notificare</div>';return;}
+var html='';
+res.data.forEach(function(n){
+var cls=n.citit?'':'unread';
+var ago='';var diff=(Date.now()/1000)-new Date(n.created_at).getTime()/1000;
+if(diff<60)ago='Acum';else if(diff<3600)ago=Math.floor(diff/60)+'m';else if(diff<86400)ago=Math.floor(diff/3600)+'h';else if(diff<172800)ago='Ieri';else ago=Math.floor(diff/86400)+'z';
+html+='<div class="notif-item '+cls+'" onclick="markNotifRead('+n.id+',this)"><div style="flex:1"><div>'+n.mesaj+'</div><div class="notif-time">'+ago;
+if(n.preluat_de){html+=' · ✅ Preluat: '+n.preluat_de;}
+else if(n.etapa_noua&&n.tip==='status_change'){html+=' · <button class="notif-btn" style="background:var(--blue);color:#fff" onclick="event.stopPropagation();preiaProiect(\''+n.proiect_id+'\')">🤚 Preia</button>';}
+html+='</div></div></div>';
+});
+body.innerHTML=html;
+}).catch(function(){});}
+function markNotifRead(nid,el){
+var user=getUsername().toLowerCase();
+fetch(API_DB+'?action=markNotificareRead',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'markNotificareRead',id:nid,user:user})})
+.then(function(){if(el)el.classList.remove('unread');loadNotifications();});
+}
+function markAllNotifRead(){
+var user=getUsername().toLowerCase();
+fetch(API_DB+'?action=markAllRead',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'markAllRead',user:user})})
+.then(function(){loadNotifications();toast('✅ Toate notificările marcate ca citite','success');});
+}
+function preiaProiect(pid){
+var user=getUsername();
+fetch(API_DB+'?action=preiaProiect',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'preiaProiect',proiect_id:pid,user:user})})
+.then(function(r){return r.json()}).then(function(res){
+if(res.success){toast('✅ Proiect preluat de '+user,'success');loadProjectsFromDB();loadNotifications();}
+}).catch(function(){toast('⚠️ Eroare preluare','error');});
+}
+// Polling notificări la fiecare 30 secunde
+setInterval(function(){if(role&&ROLES[role])loadNotifications();},30000);
+
 setTimeout(loadProjectsFromDB,300);
+setTimeout(function(){if(role)loadNotifications();},500);
 </script>
 <script>
 if('serviceWorker' in navigator){navigator.serviceWorker.register('/sw.js').then(function(r){console.log('[PWA] SW registered, scope:',r.scope)}).catch(function(e){console.log('[PWA] SW failed:',e)})}
