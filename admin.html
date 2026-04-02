@@ -353,16 +353,7 @@ var PROJECTS=[];
 var projectsLoaded=false;
 
 
-var ALERTS=[
-    {text:"🔧 Proiect CSSI-2026-012 (Fabrica Autoliv) — echipa a început montajul electric",color:"var(--green)",time:"Acum 2h"},
-    {text:"⏰ Mentenanță scadentă: Primăria Săcele — verificare trimestrială pe 15 martie",color:"var(--orange)",time:"Mâine"},
-    {text:"🔴 Factură restantă: Hotel Cheile Râșnoavei — 45.000 RON, scadentă de 5 zile",color:"var(--red)",time:"Urgent"},
-    {text:"📞 Lead nou: Mall Brașov Center — proiect complex CCTV + incendiu, 120.000 RON",color:"var(--blue)",time:"Azi"},
-    {text:"✅ Proiectare completă: Restaurant Central — dosar ISU aprobat, gata de execuție",color:"var(--teal)",time:"Ieri"},
-    {text:"📦 Stoc scăzut: Cablu FTP Cat6 — 8 role rămase (minim: 10)",color:"var(--orange)",time:"Ieri"},
-    {text:"📅 Post programat: Facebook — Sistem detecție Hotel Cheile Râșnoavei (5 martie)",color:"var(--purple)",time:"Mâine"},
-    {text:"🛒 Cerere materiale aprobată: Detectoare Bosch × 24 buc — proiect CSSI-2026-001",color:"var(--green)",time:"Acum 4h"}
-];
+var ALERTS=[];
 
 // ═══════ AUTH ═══════
 var role="";
@@ -383,9 +374,9 @@ function showDash(){
     var ha=document.getElementById('heroActions');ha.innerHTML='';
     if(r.actions&&r.actions.length){ha.style.display='flex';r.actions.forEach(function(a){ha.innerHTML+='<a href="'+a.h+'" class="hero-action"><span>'+a.i+'</span> '+a.l+'</a>'})}
     tog('kpiSection',r.showKpi);if(r.showKpi)renderKPI();
-    tog('quickSection',r.showQuick);if(r.showQuick)renderQuick();
+    tog('quickSection',false);
     tog('kanbanSection',r.showKanban);if(r.showKanban)renderKanban();
-    tog('alertSection',r.showAlerts);if(r.showAlerts)renderAlerts();
+    tog('alertSection',false);
     renderModules();
 }
 function tog(id,s){document.getElementById(id).classList.toggle('hidden',!s)}
@@ -407,8 +398,6 @@ function renderKPI(){
     html+=kpiCard('📞','#eff6ff',leads,'Lead-uri & Oferte','var(--blue)');
     html+=kpiCard('📄','#fef2f2',rest,'Facturi emise','var(--red)');
     html+=kpiCard('🔄','#f0fdfa',mnt,'Mentenanțe','var(--teal)');
-    html+=kpiCard('📦','#f5f3ff','3','Stoc scăzut','var(--purple)');
-    html+=kpiCard('📅','#fdf2f8','2','Postări programate','var(--pink)');
     document.getElementById('kpiGrid').innerHTML=html;
 }
 function kpiCard(icon,bg,val,label,color){
@@ -417,23 +406,7 @@ function kpiCard(icon,bg,val,label,color){
 
 // ═══════ QUICK STATS ═══════
 function renderQuick(){
-    var html='';
-    if(role==='admin'||role==='sales'){
-        html+='<a href="/admin/crm-clienti.html" class="quick-card" style="border-left-color:var(--green)"><div class="quick-title">💰 CRM Pipeline</div><div class="quick-items"><strong>4</strong> lead-uri noi luna asta<br><strong>2</strong> oferte în așteptare<br><strong>627K</strong> RON valoare pipeline</div></a>';
-    }
-    if(role==='admin'||role==='org'||role==='tech'){
-        html+='<a href="/admin/planificare.html" class="quick-card" style="border-left-color:var(--blue)"><div class="quick-title">📅 Planificare Azi</div><div class="quick-items"><strong>3</strong> echipe pe teren<br><strong>Hotel Cheile</strong> — montaj etaj 2<br><strong>Autoliv</strong> — cablare electrică</div></a>';
-    }
-    if(role==='admin'){
-        html+='<a href="/admin/financiar.html" class="quick-card" style="border-left-color:var(--pink)"><div class="quick-title">💳 Financiar Luna</div><div class="quick-items"><strong>12</strong> facturi emise<br><strong>45K</strong> RON restant > 30 zile<br><strong>78%</strong> rată încasare</div></a>';
-    }
-    if(role==='admin'||role==='tech'){
-        html+='<a href="/admin/materiale.html" class="quick-card" style="border-left-color:var(--orange)"><div class="quick-title">📦 Inventar</div><div class="quick-items"><strong>3</strong> produse sub stoc minim<br><strong>5</strong> cereri materiale noi<br><strong>2</strong> livrări în așteptare</div></a>';
-    }
-    if(role==='admin'||role==='mkt'){
-        html+='<a href="/admin/calendar-social.html" class="quick-card" style="border-left-color:var(--purple)"><div class="quick-title">📅 Social Media</div><div class="quick-items"><strong>2</strong> postări programate<br><strong>3</strong> drafturi de finalizat<br><strong>7</strong> postări publicate luna asta</div></a>';
-    }
-    document.getElementById('quickRow').innerHTML=html;
+    document.getElementById('quickRow').innerHTML='';
 }
 
 // ═══════ KANBAN ═══════
