@@ -366,6 +366,7 @@ var PROJECTS=[];
 var currentView='board';
 var currentFilter='all';
 var isLoading=false;
+var Q=String.fromCharCode(39); // single quote helper
 
 // ═══════ INIT ═══════
 loadProjects();
@@ -483,7 +484,7 @@ function renderKanban(){
             }
             var preiaHtml='';
             if(isNepreluat){
-                preiaHtml='<div style="margin-top:6px"><span class="kcard-nepreluat-badge">⚠️ Nepreluat</span> <button class="btn-preia" onclick="event.stopPropagation();preiaProiect(''+p.id+'')">🤚 Preia</button></div>';
+                preiaHtml='<div style="margin-top:6px"><span class="kcard-nepreluat-badge">⚠️ Nepreluat</span> <button class="btn-preia" onclick="event.stopPropagation();preiaProiect('+Q+p.id+Q+')">🤚 Preia</button></div>';
             }
             var valHtml=(p.valoare||0).toLocaleString('ro-RO')+' RON';
             if(p.valoareContract){valHtml='<span style="color:var(--green);font-weight:900">'+(p.valoareContract).toLocaleString('ro-RO')+'</span> <span style="font-size:9px;color:var(--gray)">(est. '+(p.valoare||0).toLocaleString('ro-RO')+')</span>';}
@@ -522,8 +523,8 @@ function renderTable(){
             '<td class="loc">📍 '+(p.loc||'Brașov')+'</td>'+
             '<td class="val">'+(p.valoare||0).toLocaleString('ro-RO')+' RON</td>'+
             '<td style="font-size:12px">'+(respIcon?respIcon+' ':'')+esc(respName)+'</td>'+
-            '<td><select class="status-select" onchange="changeStatus(''+p.id+'',this.value)">'+opts+'</select></td>'+
-            '<td><button onclick="openEditModal(''+p.id+'')" style="padding:5px 10px;border-radius:6px;border:none;background:var(--blue);color:#fff;font-size:11px;font-weight:700;cursor:pointer" title="Editare">✏️</button></td>';
+            '<td><select class="status-select" onchange="changeStatus('+Q+p.id+Q+',this.value)">'+opts+'</select></td>'+
+            '<td><button onclick="openEditModal('+Q+p.id+Q+')" style="padding:5px 10px;border-radius:6px;border:none;background:var(--blue);color:#fff;font-size:11px;font-weight:700;cursor:pointer" title="Editare">✏️</button></td>';
         tb.appendChild(tr);
     });
 }
@@ -688,7 +689,7 @@ function openProjectDetail(projectId){
     if(p.preluat_de){
         preluatHtml='<div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:8px;padding:8px 12px;margin-bottom:8px;font-size:12px"><strong style="color:var(--green)">✅ Preluat de:</strong> '+(RESP_ICONS[p.preluat_de]||'')+' '+esc(p.preluat_de)+(p.preluat_la?' · '+p.preluat_la:'')+'</div>';
     } else if(p.status!=='Lead'&&p.status!=='Finalizat'&&p.status!=='Anulat'){
-        preluatHtml='<div style="background:#fef2f2;border:1px solid #fecaca;border-radius:8px;padding:8px 12px;margin-bottom:8px;font-size:12px;display:flex;justify-content:space-between;align-items:center"><span style="color:var(--red);font-weight:700">⚠️ Nepreluat</span><button class="btn-preia" onclick="event.stopPropagation();closeDetailModal();preiaProiect(''+p.id+'')">🤚 Preia proiectul</button></div>';
+        preluatHtml='<div style="background:#fef2f2;border:1px solid #fecaca;border-radius:8px;padding:8px 12px;margin-bottom:8px;font-size:12px;display:flex;justify-content:space-between;align-items:center"><span style="color:var(--red);font-weight:700">⚠️ Nepreluat</span><button class="btn-preia" onclick="event.stopPropagation();closeDetailModal();preiaProiect('+Q+p.id+Q+')">🤚 Preia proiectul</button></div>';
     }
 
     var valHtml='<div><strong>Val. estimată:</strong> '+(p.valoare||0).toLocaleString('ro-RO')+' RON</div>';
@@ -714,7 +715,7 @@ function openProjectDetail(projectId){
         (p.note?'<div style="font-size:11px;color:var(--gray);padding:8px;background:var(--gray-bg);border-radius:8px;margin-bottom:12px">📝 '+esc(p.note)+'</div>':'')+
         timelineHtml+
         '<div style="display:flex;gap:8px;flex-wrap:wrap">'+
-        '<button onclick="openEditModal(''+p.id+'')" style="flex:1;padding:10px;border-radius:10px;border:none;background:var(--blue);color:#fff;font-weight:700;font-size:13px;cursor:pointer">✏️ Editează</button>'+
+        '<button onclick="openEditModal('+Q+p.id+Q+')" style="flex:1;padding:10px;border-radius:10px;border:none;background:var(--blue);color:#fff;font-weight:700;font-size:13px;cursor:pointer">✏️ Editează</button>'+
         '<a href="calculator-pret.html?client='+encodeURIComponent(p.client)+'&client_db_id='+p.clientDbId+'&proiect_db_id='+p.dbId+'&obiectiv='+encodeURIComponent(p.obiectiv||'')+'&adresa='+encodeURIComponent(p.adresa||'')+'" style="flex:1;padding:10px;border-radius:10px;border:none;background:var(--green);color:#fff;font-weight:700;font-size:13px;cursor:pointer;text-decoration:none;text-align:center;display:block">📄 Ofertă</a>'+
         '<button onclick="closeDetailModal()" style="padding:10px 16px;border-radius:10px;border:1px solid var(--gray-b);background:#fff;color:var(--gray);font-weight:600;font-size:13px;cursor:pointer">Închide</button>'+
         '</div></div>';
