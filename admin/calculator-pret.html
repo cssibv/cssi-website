@@ -106,6 +106,7 @@ lines:JSON.parse(JSON.stringify(offerLines)),
 labor:JSON.parse(JSON.stringify(laborLines.filter(function(l){return parseFloat(l.cant)>0;}))),
 subtotalEchip:eT,subtotalManop:mT,totalNet:net,tva:Math.round(net*21)/100,totalBrut:Math.round(net*121)/100};}
 function saveOffer(){
+document.getElementById('oData').value=todayStr();
 var p=buildOfferPayload();if(!p)return;
 p.client_db_id=window._prefillClientDbId||'';
 p.proiect_db_id=window._prefillProiectDbId||'';
@@ -118,6 +119,7 @@ else{toast('💾 Ofertă nouă salvată!','success');}
 window._editingOfertaDbId='';updateEditUI();fetchNextOfertaNr();
 setTimeout(function(){loadOffersFromDB();setTab('saved');},500);}
 function saveAsNew(){
+document.getElementById('oData').value=todayStr();
 var p=buildOfferPayload();if(!p)return;
 p.nr='';p.oferta_db_id='';p.client_db_id=window._prefillClientDbId||'';p.proiect_db_id=window._prefillProiectDbId||'';
 saveOfertaToDB(p);
