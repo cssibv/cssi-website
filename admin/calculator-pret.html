@@ -96,12 +96,13 @@ var btn=evt.currentTarget;var rect=btn.getBoundingClientRect();
 var menu=document.createElement('div');menu.id='lineActionMenu';
 menu.style.cssText='position:fixed;z-index:250;background:#fff;border-radius:12px;box-shadow:0 8px 30px rgba(0,0,0,0.18);padding:6px;min-width:160px;animation:slideIn 0.15s ease';
 menu.style.top=(rect.bottom+4)+'px';menu.style.right=(window.innerWidth-rect.right)+'px';
-menu.innerHTML='<div style="padding:8px 12px;font-size:12px;font-weight:700;color:var(--gray);border-bottom:1px solid var(--gray-bg);margin-bottom:4px">Acțiuni poziție</div>'
-+'<button onclick="removeOfferLine(\''+lid+'\')" style="display:flex;align-items:center;gap:8px;width:100%;padding:10px 12px;border:none;background:none;border-radius:8px;font-size:13px;font-weight:600;color:var(--red);cursor:pointer;font-family:inherit;text-align:left" onmouseover="this.style.background=\'#fef2f2\'" onmouseout="this.style.background=\'none\'">🗑️ Elimină poziția</button>'
-+'<button onclick="startReplaceLine(\''+lid+'\')" style="display:flex;align-items:center;gap:8px;width:100%;padding:10px 12px;border:none;background:none;border-radius:8px;font-size:13px;font-weight:600;color:var(--blue);cursor:pointer;font-family:inherit;text-align:left" onmouseover="this.style.background=\'#eff6ff\'" onmouseout="this.style.background=\'none\'">🔍 Înlocuiește cu cod produs</button>'
-+'<button onclick="startReplaceLineManual(\''+lid+'\')" style="display:flex;align-items:center;gap:8px;width:100%;padding:10px 12px;border:none;background:none;border-radius:8px;font-size:13px;font-weight:600;color:var(--orange);cursor:pointer;font-family:inherit;text-align:left" onmouseover="this.style.background=\'#fff7ed\'" onmouseout="this.style.background=\'none\'">✏️ Înlocuiește manual</button>';
+var hdr=document.createElement('div');hdr.style.cssText='padding:8px 12px;font-size:12px;font-weight:700;color:var(--gray);border-bottom:1px solid var(--gray-bg);margin-bottom:4px';hdr.textContent='Acțiuni poziție';menu.appendChild(hdr);
+function mkBtn(icon,label,color,bgHover,fn){var b=document.createElement('button');b.style.cssText='display:flex;align-items:center;gap:8px;width:100%;padding:10px 12px;border:none;background:none;border-radius:8px;font-size:13px;font-weight:600;color:'+color+';cursor:pointer;font-family:inherit;text-align:left';b.textContent=icon+' '+label;b.onmouseover=function(){b.style.background=bgHover};b.onmouseout=function(){b.style.background='none'};b.addEventListener('click',function(e){e.stopPropagation();fn()});menu.appendChild(b);}
+mkBtn('🗑️','Elimină poziția','var(--red)','#fef2f2',function(){removeOfferLine(lid)});
+mkBtn('🔍','Înlocuiește cu cod produs','var(--blue)','#eff6ff',function(){startReplaceLine(lid)});
+mkBtn('✏️','Înlocuiește manual','var(--orange)','#fff7ed',function(){startReplaceLineManual(lid)});
 document.body.appendChild(menu);
-setTimeout(function(){document.addEventListener('click',closeLineAction,{once:true})},10);
+setTimeout(function(){document.addEventListener('click',closeLineAction,{once:true})},50);
 }
 function closeLineAction(){var m=document.getElementById('lineActionMenu');if(m)m.remove();_lineActionTarget=null;}
 function removeOfferLine(lid){closeLineAction();offerLines=offerLines.filter(function(l){return String(l.id)!==String(lid);});renderOfferLines();recalcOffer();toast('🗑️ Poziție eliminată','info');}
