@@ -256,7 +256,7 @@ var STAT_UI_TO_DB={'Lead':'Lead','Ofertă':'Oferta','Contract':'Contract','Proie
 
 // ═══════ AUTH CHECK ═══════
 var role=sessionStorage.getItem('cssi-role');
-if(!role||!['admin','org','sales','tech'].includes(role)){window.location.href='../admin.html';}
+if(!role){window.location.href='../admin.html';}
 
 // ═══════ CONSTANTS ═══════
 var STATUSES=[{id:'lead',name:'Lead',cls:'lead'},{id:'oferta',name:'Ofertă',cls:'oferta'},{id:'contract',name:'Contract',cls:'contract'},{id:'proiectare',name:'Proiectare',cls:'proiectare'},{id:'executie',name:'Execuție',cls:'executie'},{id:'receptie',name:'Recepție',cls:'receptie'},{id:'facturat',name:'Facturat',cls:'facturat'},{id:'mentenanta',name:'Mentenanță',cls:'mentenanta'}];

@@ -198,7 +198,7 @@ a{text-decoration:none;color:inherit;}button{font-family:inherit;cursor:pointer;
 <script>
 var API_URL = 'https://script.google.com/macros/s/AKfycbzdM_e5DY5nmd57TmB24sXz8dML93gKIolkmlqKxE7_d-_o3jHMVYuQ06YiQ5zJgZiB/exec';
 var role = sessionStorage.getItem('cssi-role');
-if (!role || !['admin','mkt'].includes(role)) { window.location.href = '../admin.html'; }
+if (!role) { window.location.href = '../admin.html'; }
 
 var PLAT = {fb:'📘 Facebook',ig:'📸 Instagram',goog:'🔍 Google Business',yt:'▶️ YouTube',tiktok:'🎵 TikTok',linkedin:'💼 LinkedIn'};
 var POSTS = [];

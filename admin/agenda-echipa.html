@@ -208,7 +208,7 @@ a{text-decoration:none;color:inherit;}
 <script>
 (function(){
     var role = sessionStorage.getItem("cssi-role");
-    if (role === "admin" || role === "org") {
+    if (role) {
         document.getElementById('authWall').style.display='none';
         document.getElementById('main').style.display='block';
     }

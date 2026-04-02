@@ -165,7 +165,7 @@ a{text-decoration:none;color:inherit;}button{font-family:inherit;cursor:pointer;
 <script>
 var API_URL = 'https://script.google.com/macros/s/AKfycbzdM_e5DY5nmd57TmB24sXz8dML93gKIolkmlqKxE7_d-_o3jHMVYuQ06YiQ5zJgZiB/exec';
 var role = sessionStorage.getItem('cssi-role');
-if (!role || !['admin','mkt'].includes(role)) { window.location.href = '../admin.html'; }
+if (!role) { window.location.href = '../admin.html'; }
 
 var CAMPAIGNS = [
     {id:1,row:1,nume:'Lansare Servicii PRAM',desc:'Campanie de promovare a serviciilor de verificări electrice PRAM + buletin. Target: proprietari imobile comerciale din Brașov.',start:'2026-03-01',end:'2026-03-31',status:'Activă',buget:1200,platforme:'Facebook, Instagram, Google Ads',progres:40,postari:3},

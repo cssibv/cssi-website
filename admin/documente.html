@@ -144,7 +144,7 @@ a{text-decoration:none;color:inherit;}button{font-family:inherit;cursor:pointer;
 <script>
 var API_URL = 'https://script.google.com/macros/s/AKfycbzdM_e5DY5nmd57TmB24sXz8dML93gKIolkmlqKxE7_d-_o3jHMVYuQ06YiQ5zJgZiB/exec';
 var role=sessionStorage.getItem("cssi-role");
-if(!role||!["admin","org","tech","sales"].includes(role)){window.location.href="../admin.html";}
+if(!role){window.location.href="../admin.html";}
 
 function toast(msg,type){var c=document.getElementById('toastContainer');var t=document.createElement('div');t.className='toast '+(type||'info');t.textContent=msg;c.appendChild(t);setTimeout(function(){t.style.opacity='0';t.style.transform='translateX(100px)';t.style.transition='all 0.3s'},3000);setTimeout(function(){t.remove()},3500);}
 

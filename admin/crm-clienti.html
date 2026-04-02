@@ -350,9 +350,9 @@ var API_DB = '/admin/api.php'; // ← Pune URL-ul Apps Script Web App aici
 
 // ═══════ AUTH CHECK ═══════
 var role = sessionStorage.getItem('cssi-role');
-if (!role || !['admin','org','sales'].includes(role)) { window.location.href = '../admin.html'; }
-var canEdit = ['admin','org','sales'].includes(role);
-var canConvert = ['admin','org'].includes(role);
+if (!role) { window.location.href = '../admin.html'; }
+var canEdit = true;
+var canConvert = true;
 
 // ═══════ CRM STATUSES ═══════
 var CRM_STATUSES = [

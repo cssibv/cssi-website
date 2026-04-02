@@ -181,9 +181,9 @@ tr:hover td{background:rgba(59,130,246,0.03);}
 <script>
 var API_URL = 'https://script.google.com/macros/s/AKfycbzdM_e5DY5nmd57TmB24sXz8dML93gKIolkmlqKxE7_d-_o3jHMVYuQ06YiQ5zJgZiB/exec';
 var role = sessionStorage.getItem('cssi-role');
-if (!role || !['admin','org','tech'].includes(role)) { window.location.href = '../admin.html'; }
-var canEdit = ['admin','org','tech'].includes(role);
-var canApprove = ['admin','org'].includes(role);
+if (!role) { window.location.href = '../admin.html'; }
+var canEdit = true;
+var canApprove = true;
 
 var PROJECTS = [
     {id:'CSSI-2026-001', client:'Hotel Cheile Râșnoavei'},{id:'CSSI-2026-004', client:'Birouri IT Hub'},

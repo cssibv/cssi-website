@@ -245,8 +245,8 @@ var API_URL = 'https://script.google.com/macros/s/AKfycbzdM_e5DY5nmd57TmB24sXz8d
 
 // ═══════ AUTH ═══════
 var role = sessionStorage.getItem('cssi-role');
-if (!role || !['admin','org','tech'].includes(role)) { window.location.href = '../admin.html'; }
-var canEdit = ['admin','org','tech'].includes(role);
+if (!role) { window.location.href = '../admin.html'; }
+var canEdit = true;
 
 // ═══════ CONSTANTS ═══════
 var PROJECTS = [

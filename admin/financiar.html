@@ -232,7 +232,7 @@ var API_URL = 'https://script.google.com/macros/s/AKfycbzdM_e5DY5nmd57TmB24sXz8d
 
 // ═══════ AUTH ═══════
 var role = sessionStorage.getItem('cssi-role');
-if (!role || !['admin'].includes(role)) { window.location.href = '../admin.html'; }
+if (!role) { window.location.href = '../admin.html'; }
 
 // ═══════ STATE ═══════
 var PROJECTS = [
