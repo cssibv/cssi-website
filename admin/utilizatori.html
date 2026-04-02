@@ -4,287 +4,129 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Utilizatori & Drepturi — CSSI Portal</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 <style>
 *{margin:0;padding:0;box-sizing:border-box;}
 :root{--red:#dc2626;--dark:#0f172a;--dark2:#1e293b;--gray:#64748b;--gray-l:#94a3b8;--gray-xl:#cbd5e1;--gray-bg:#f1f5f9;--gray-b:#e2e8f0;--blue:#3b82f6;--green:#22c55e;--orange:#f97316;--purple:#8b5cf6;--teal:#14b8a6;--radius:16px;--radius-sm:12px;--shadow:0 1px 3px rgba(0,0,0,0.06);--shadow-md:0 4px 12px rgba(0,0,0,0.08);--font:'Inter',system-ui,sans-serif;}
 body{font-family:var(--font);color:var(--dark);background:var(--gray-bg);-webkit-font-smoothing:antialiased;}
-a{text-decoration:none;color:inherit;}
-.container{max-width:1200px;margin:0 auto;padding:16px;}
-@media(min-width:768px){.container{padding:24px;}}
-
+a{text-decoration:none;color:inherit;}.container{max-width:1200px;margin:0 auto;padding:16px;}@media(min-width:768px){.container{padding:24px;}}
 .page-header{background:linear-gradient(135deg,var(--dark),var(--dark2));color:#fff;padding:20px 24px;border-radius:20px;margin-bottom:20px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;}
-.page-back{color:rgba(255,255,255,0.7);font-size:13px;font-weight:500;cursor:pointer;}
-.page-back:hover{color:#fff;}
-.page-title{font-size:22px;font-weight:800;letter-spacing:-0.5px;}
-.page-subtitle{font-size:12px;color:rgba(255,255,255,0.5);margin-top:2px;}
-
+.page-back{color:rgba(255,255,255,0.7);font-size:13px;font-weight:500;cursor:pointer;}.page-back:hover{color:#fff;}
+.page-title{font-size:22px;font-weight:800;letter-spacing:-0.5px;}.page-subtitle{font-size:12px;color:rgba(255,255,255,0.5);margin-top:2px;}
 .section-title{font-size:16px;font-weight:800;color:var(--dark);margin-bottom:16px;display:flex;align-items:center;gap:8px;}
-
-/* USER CARDS */
 .users-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:16px;margin-bottom:28px;}
-.user-card{background:#fff;border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden;transition:all 0.2s;}
-.user-card:hover{box-shadow:var(--shadow-md);transform:translateY(-2px);}
+.user-card{background:#fff;border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden;transition:all 0.2s;}.user-card:hover{box-shadow:var(--shadow-md);transform:translateY(-2px);}
 .user-head{padding:18px 20px;display:flex;align-items:center;gap:14px;}
 .user-avatar{width:48px;height:48px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:900;color:#fff;}
-.user-avatar.c-mihai{background:linear-gradient(135deg,#3b82f6,#1d4ed8);}
-.user-avatar.c-roxana{background:linear-gradient(135deg,#f97316,#ea580c);}
-.user-avatar.c-valentin{background:linear-gradient(135deg,#8b5cf6,#7c3aed);}
-.user-avatar.c-cristina{background:linear-gradient(135deg,#14b8a6,#0d9488);}
+.user-avatar.c-mihai{background:linear-gradient(135deg,#3b82f6,#1d4ed8);}.user-avatar.c-roxana{background:linear-gradient(135deg,#f97316,#ea580c);}
+.user-avatar.c-valentin{background:linear-gradient(135deg,#8b5cf6,#7c3aed);}.user-avatar.c-cristina{background:linear-gradient(135deg,#14b8a6,#0d9488);}
 .user-avatar.c-admin{background:linear-gradient(135deg,#0f172a,#334155);}
-.user-name{font-size:17px;font-weight:800;}
-.user-focus{font-size:12px;color:var(--gray);margin-top:2px;}
+.user-name{font-size:17px;font-weight:800;}.user-focus{font-size:12px;color:var(--gray);margin-top:2px;}
 .user-pill{font-size:10px;font-weight:700;padding:3px 10px;border-radius:20px;display:inline-block;margin-top:4px;}
-
-.user-body{padding:0 20px 18px;}
-.user-section{margin-bottom:14px;}
+.user-body{padding:0 20px 18px;}.user-section{margin-bottom:14px;}
 .user-section-title{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;color:var(--gray-l);margin-bottom:8px;}
-
-/* Credentials */
-.cred-row{display:flex;gap:8px;align-items:center;margin-bottom:6px;}
-.cred-label{font-size:11px;color:var(--gray);width:55px;font-weight:600;}
-.cred-value{font-size:12px;font-weight:700;font-family:'Courier New',monospace;background:var(--gray-bg);padding:4px 10px;border-radius:6px;flex:1;}
-.cred-value.masked{color:var(--gray-l);}
-.eye-btn{background:none;border:none;cursor:pointer;font-size:14px;padding:2px 6px;border-radius:4px;}
-.eye-btn:hover{background:var(--gray-bg);}
-
-/* Module toggles */
+.cred-row{display:flex;gap:8px;align-items:center;margin-bottom:6px;}.cred-label{font-size:11px;color:var(--gray);width:55px;font-weight:600;}
+.cred-value{font-size:12px;font-weight:700;font-family:'Courier New',monospace;background:var(--gray-bg);padding:4px 10px;border-radius:6px;flex:1;}.cred-value.masked{color:var(--gray-l);}
+.eye-btn{background:none;border:none;cursor:pointer;font-size:14px;padding:2px 6px;border-radius:4px;}.eye-btn:hover{background:var(--gray-bg);}
 .module-grid{display:flex;flex-wrap:wrap;gap:6px;}
 .module-chip{display:flex;align-items:center;gap:5px;padding:5px 10px;border-radius:8px;font-size:11px;font-weight:600;border:1px solid var(--gray-b);background:#fff;cursor:pointer;transition:all 0.15s;user-select:none;}
-.module-chip.active{background:var(--dark);color:#fff;border-color:var(--dark);}
-.module-chip.active .m-check{display:inline;}
-.module-chip .m-check{display:none;font-size:10px;}
-.module-chip:hover{border-color:var(--blue);}
-
-/* Workflow stages */
+.module-chip.active{background:var(--dark);color:#fff;border-color:var(--dark);}.module-chip.active .m-check{display:inline;}.module-chip .m-check{display:none;font-size:10px;}.module-chip:hover{border-color:var(--blue);}
 .workflow{display:flex;flex-wrap:wrap;gap:4px;margin-top:6px;}
-.wf-stage{padding:4px 10px;border-radius:6px;font-size:10px;font-weight:700;border:1px solid var(--gray-b);color:var(--gray);}
+.wf-stage{padding:5px 12px;border-radius:6px;font-size:11px;font-weight:700;border:1px solid var(--gray-b);color:var(--gray);cursor:pointer;transition:all 0.15s;user-select:none;}
+.wf-stage:hover{border-color:var(--blue);transform:translateY(-1px);box-shadow:0 2px 6px rgba(0,0,0,0.08);}
 .wf-stage.active{border-color:var(--green);background:#f0fdf4;color:var(--green);}
-.wf-stage.primary{border-color:var(--blue);background:#eff6ff;color:var(--blue);}
-
-/* Actions */
-.action-row{display:flex;flex-wrap:wrap;gap:6px;}
-.action-chip{padding:5px 10px;border-radius:8px;font-size:11px;font-weight:600;background:var(--gray-bg);color:var(--dark);}
-
-/* Save bar */
-.save-bar{position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:2px solid var(--green);padding:12px 24px;display:none;align-items:center;justify-content:center;gap:12px;z-index:100;box-shadow:0 -8px 24px rgba(0,0,0,0.1);}
-.save-bar.active{display:flex;}
-.save-bar .info{font-size:13px;color:var(--gray);font-weight:600;}
-.btn{padding:10px 20px;border-radius:var(--radius-sm);font-size:13px;font-weight:700;border:none;cursor:pointer;transition:all 0.2s;display:inline-flex;align-items:center;gap:6px;}
-.btn-green{background:var(--green);color:#fff;}
-.btn-green:hover{background:#16a34a;}
-.btn-outline{background:#fff;color:var(--gray);border:1px solid var(--gray-b);}
-
-/* Permission matrix */
+.wf-stage.primary{border-color:var(--blue);background:#eff6ff;color:var(--blue);font-weight:800;box-shadow:0 0 0 2px rgba(59,130,246,0.2);}
 .matrix{width:100%;border-collapse:collapse;background:#fff;border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow);}
 .matrix th{padding:12px 14px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;text-align:left;background:var(--dark);color:#fff;}
-.matrix td{padding:10px 14px;font-size:12px;font-weight:600;border-bottom:1px solid var(--gray-bg);}
-.matrix tr:last-child td{border-bottom:none;}
-.matrix tr:hover td{background:#f8fafc;}
-.matrix .user-col{font-weight:800;color:var(--dark);}
-.matrix .check{text-align:center;font-size:16px;}
+.matrix td{padding:10px 14px;font-size:12px;font-weight:600;border-bottom:1px solid var(--gray-bg);}.matrix tr:last-child td{border-bottom:none;}.matrix tr:hover td{background:#f8fafc;}.matrix .user-col{font-weight:800;color:var(--dark);}
 .toggle{width:36px;height:20px;border-radius:10px;background:var(--gray-b);position:relative;cursor:pointer;transition:background 0.2s;display:inline-block;}
-.toggle.on{background:var(--green);}
-.toggle::after{content:'';position:absolute;top:2px;left:2px;width:16px;height:16px;border-radius:8px;background:#fff;transition:transform 0.2s;box-shadow:0 1px 3px rgba(0,0,0,0.15);}
-.toggle.on::after{transform:translateX(16px);}
-
-.toast{position:fixed;top:20px;right:20px;z-index:300;padding:12px 20px;border-radius:12px;color:#fff;font-size:13px;font-weight:700;box-shadow:0 8px 24px rgba(0,0,0,0.15);background:var(--green);animation:slideIn 0.3s ease;display:none;}
+.toggle.on{background:var(--green);}.toggle::after{content:'';position:absolute;top:2px;left:2px;width:16px;height:16px;border-radius:8px;background:#fff;transition:transform 0.2s;box-shadow:0 1px 3px rgba(0,0,0,0.15);}.toggle.on::after{transform:translateX(16px);}
+.save-bar{position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:2px solid var(--green);padding:12px 24px;display:none;align-items:center;justify-content:center;gap:12px;z-index:100;box-shadow:0 -8px 24px rgba(0,0,0,0.1);}.save-bar.active{display:flex;}
+.btn{padding:10px 20px;border-radius:var(--radius-sm);font-size:13px;font-weight:700;border:none;cursor:pointer;transition:all 0.2s;display:inline-flex;align-items:center;gap:6px;}
+.btn-green{background:var(--green);color:#fff;}.btn-outline{background:#fff;color:var(--gray);border:1px solid var(--gray-b);}
+.toast{position:fixed;top:20px;right:20px;z-index:300;padding:12px 20px;border-radius:12px;color:#fff;font-size:13px;font-weight:700;box-shadow:0 8px 24px rgba(0,0,0,0.15);display:none;animation:slideIn 0.3s ease;}
 @keyframes slideIn{from{transform:translateX(100%);opacity:0}to{transform:translateX(0);opacity:1}}
+@media(max-width:500px){.users-grid{grid-template-columns:1fr;}}
 </style>
 </head>
 <body>
-
 <div class="container">
-    <div class="page-header">
-        <div>
-            <a href="/admin.html" class="page-back">← Înapoi la Portal</a>
-            <div class="page-title">👥 Utilizatori & Drepturi</div>
-            <div class="page-subtitle">Administrare conturi, roluri și permisiuni</div>
-        </div>
-    </div>
-
-    <!-- USER CARDS -->
-    <div class="section-title">👤 Conturi Active</div>
-    <div class="users-grid" id="usersGrid"></div>
-
-    <!-- PERMISSION MATRIX -->
-    <div class="section-title">🔐 Matrice Permisiuni Module</div>
-    <div style="overflow-x:auto;margin-bottom:28px;">
-        <table class="matrix" id="permMatrix"></table>
-    </div>
-
-    <!-- WORKFLOW -->
-    <div class="section-title">🔄 Pipeline Workflow</div>
-    <div style="background:#fff;border-radius:var(--radius);box-shadow:var(--shadow);padding:20px;margin-bottom:80px;">
-        <p style="font-size:12px;color:var(--gray);margin-bottom:14px">Fluxul unui proiect prin toate etapele. Fiecare schimbare de status notifică toți utilizatorii.</p>
-        <div id="workflowViz"></div>
-    </div>
+    <div class="page-header"><div><a href="/admin.html" class="page-back">← Înapoi la Portal</a><div class="page-title">👥 Utilizatori & Drepturi</div><div class="page-subtitle">Administrare conturi, roluri și permisiuni — salvate în MySQL</div></div>
+    <div style="display:flex;align-items:center;gap:8px"><span style="font-size:10px;color:rgba(255,255,255,0.5)">💾 MySQL</span><span id="dbStatus" style="width:8px;height:8px;border-radius:50%;background:var(--orange)"></span></div></div>
+    <div id="mainContent"><div style="text-align:center;padding:40px;color:var(--gray-l)">⏳ Se încarcă din baza de date...</div></div>
 </div>
-
-<div class="save-bar" id="saveBar">
-    <span class="info">⚠️ Ai modificări nesalvate</span>
-    <button class="btn btn-green" onclick="savePermissions()">💾 Salvează Permisiunile</button>
-    <button class="btn btn-outline" onclick="resetPermissions()">Anulează</button>
-</div>
-
+<div class="save-bar" id="saveBar"><span style="font-size:13px;color:var(--gray);font-weight:600">⚠️ Ai modificări nesalvate</span><button class="btn btn-green" id="saveBtn" onclick="saveAllToDB()">💾 Salvează în MySQL</button><button class="btn btn-outline" onclick="resetPerms()">Anulează</button></div>
 <div class="toast" id="toast"></div>
-
 <script>
-// ═══════ USER DATA ═══════
+var API='/admin/api.php';
 var USERS=[
-    {id:'admin',name:'Admin',pass:'admin',focus:'Acces generic complet',color:'c-admin',icon:'🔑',pill:'Admin',pillBg:'#0f172a',pillColor:'#fff',
-     stages:['Lead','Ofertă','Contract','Facturare','Proiectare','Execuție','Recepție','Mentenanță'],primary:[]},
-    {id:'mihai',name:'Mihai',pass:'mihai2026',focus:'Ofertare · Vânzări',color:'c-mihai',icon:'💰',pill:'Ofertare',pillBg:'#eff6ff',pillColor:'#3b82f6',
-     stages:['Lead','Ofertă','Contract'],primary:['Ofertă']},
-    {id:'roxana',name:'Roxana',pass:'roxana2026',focus:'Contractare · Facturare',color:'c-roxana',icon:'📋',pill:'Contracte',pillBg:'#fff7ed',pillColor:'#f97316',
-     stages:['Contract','Facturare','Recepție'],primary:['Contract','Facturare']},
-    {id:'valentin',name:'Valentin',pass:'valentin2026',focus:'Proiectare · Execuție',color:'c-valentin',icon:'📐',pill:'Proiectare',pillBg:'#f5f3ff',pillColor:'#8b5cf6',
-     stages:['Proiectare','Execuție','Recepție'],primary:['Proiectare','Execuție']},
-    {id:'cristina',name:'Cristina',pass:'cristina2026',focus:'Lead-uri · Prospectare',color:'c-cristina',icon:'📞',pill:'Lead-uri',pillBg:'#f0fdfa',pillColor:'#14b8a6',
-     stages:['Lead','Ofertă'],primary:['Lead']}
+{id:'admin',name:'Admin',pass:'admin',color:'c-admin',icon:'🔑',pill:'Admin',pillBg:'#0f172a',pillColor:'#fff'},
+{id:'mihai',name:'Mihai',pass:'mihai2026',color:'c-mihai',icon:'💰',pill:'Ofertare',pillBg:'#eff6ff',pillColor:'#3b82f6'},
+{id:'roxana',name:'Roxana',pass:'roxana2026',color:'c-roxana',icon:'📋',pill:'Contracte',pillBg:'#fff7ed',pillColor:'#f97316'},
+{id:'valentin',name:'Valentin',pass:'valentin2026',color:'c-valentin',icon:'📐',pill:'Proiectare',pillBg:'#f5f3ff',pillColor:'#8b5cf6'},
+{id:'cristina',name:'Cristina',pass:'cristina2026',color:'c-cristina',icon:'📞',pill:'Lead-uri',pillBg:'#f0fdfa',pillColor:'#14b8a6'}
 ];
+var MODS=[{id:'proiecte',icon:'📋',name:'Proiecte'},{id:'crm',icon:'💰',name:'CRM Clienți'},{id:'calculator',icon:'🧮',name:'Calculator Preț'},{id:'financiar',icon:'💳',name:'Financiar'},{id:'planificare',icon:'📅',name:'Planificare'},{id:'executie',icon:'✅',name:'Execuție'},{id:'proiectare',icon:'📐',name:'Proiectare'},{id:'mentenanta',icon:'🔄',name:'Mentenanță'},{id:'materiale',icon:'📦',name:'Inventar'},{id:'necesar',icon:'🛒',name:'Necesar'},{id:'social',icon:'📅',name:'Calendar Social'},{id:'marketing',icon:'📊',name:'Marketing'},{id:'documente',icon:'📁',name:'Documente'}];
+var STAGES=['Lead','Ofertă','Contract','Facturare','Proiectare','Execuție','Recepție','Facturare 2','Mentenanță'];
+var perms={},originalPerms='{}';
 
-var MODULES=[
-    {id:'proiecte',icon:'📋',name:'Proiecte'},
-    {id:'crm',icon:'💰',name:'CRM Clienți'},
-    {id:'calculator',icon:'🧮',name:'Calculator Preț'},
-    {id:'financiar',icon:'💳',name:'Financiar'},
-    {id:'planificare',icon:'📅',name:'Planificare'},
-    {id:'executie',icon:'✅',name:'Execuție'},
-    {id:'proiectare',icon:'📐',name:'Proiectare'},
-    {id:'mentenanta',icon:'🔄',name:'Mentenanță'},
-    {id:'materiale',icon:'📦',name:'Inventar'},
-    {id:'necesar',icon:'🛒',name:'Necesar'},
-    {id:'social',icon:'📅',name:'Calendar Social'},
-    {id:'marketing',icon:'📊',name:'Marketing'},
-    {id:'documente',icon:'📁',name:'Documente'}
-];
+function loadFromDB(){
+fetch(API+'?action=getUserConfig&_t='+Date.now()).then(function(r){return r.json()}).then(function(res){
+if(res.success&&res.data&&res.data.length){res.data.forEach(function(c){perms[c.user_id]={modules:c.modules||[],stages:c.stages||[],primary:c.primary_stages||[],focus:c.focus||''};});}
+USERS.forEach(function(u){if(!perms[u.id])perms[u.id]={modules:MODS.map(function(m){return m.id}),stages:[],primary:[],focus:''};});
+originalPerms=JSON.stringify(perms);document.getElementById('dbStatus').style.background='var(--green)';renderAll();
+}).catch(function(){
+USERS.forEach(function(u){perms[u.id]={modules:MODS.map(function(m){return m.id}),stages:[],primary:[],focus:''};});
+originalPerms=JSON.stringify(perms);document.getElementById('dbStatus').style.background='var(--red)';renderAll();showToast('⚠️ Eroare DB','error');
+});}
 
-var ALL_STAGES=['Lead','Ofertă','Contract','Facturare','Proiectare','Execuție','Recepție','Facturare 2','Mentenanță'];
+function saveAllToDB(){
+var btn=document.getElementById('saveBtn');btn.textContent='⏳ Se salvează...';btn.disabled=true;
+var ps=[];USERS.forEach(function(u){var up=perms[u.id];if(!up)return;
+ps.push(fetch(API+'?action=saveUserConfig',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'saveUserConfig',user_id:u.id,modules:up.modules,stages:up.stages,primary_stages:up.primary,focus:up.focus})}).then(function(r){return r.json()}));});
+Promise.all(ps).then(function(rs){btn.textContent='💾 Salvează în MySQL';btn.disabled=false;
+if(rs.every(function(r){return r.success})){originalPerms=JSON.stringify(perms);checkChanges();showToast('✅ Salvat în MySQL!','ok');}
+else showToast('⚠️ Eroare parțială','error');}).catch(function(){btn.textContent='💾 Salvează în MySQL';btn.disabled=false;showToast('❌ Eroare','error');});}
 
-// Load saved permissions or defaults
-var perms=JSON.parse(localStorage.getItem('cssi-user-perms')||'null');
-if(!perms){
-    perms={};
-    USERS.forEach(function(u){
-        perms[u.id]={modules:MODULES.map(function(m){return m.id;})};
-    });
-}
-var originalPerms=JSON.stringify(perms);
+function renderAll(){
+var h='<div class="section-title">👤 Conturi Active</div><div class="users-grid">';
+USERS.forEach(function(u){var up=perms[u.id]||{stages:[],primary:[],modules:[],focus:''};
+h+='<div class="user-card"><div class="user-head"><div class="user-avatar '+u.color+'">'+u.name[0]+'</div><div><div class="user-name">'+u.icon+' '+u.name+'</div><div class="user-focus">'+(up.focus||'—')+'</div><span class="user-pill" style="background:'+u.pillBg+';color:'+u.pillColor+'">'+u.pill+'</span></div></div><div class="user-body">';
+h+='<div class="user-section"><div class="user-section-title">🔐 Credențiale</div><div class="cred-row"><span class="cred-label">User:</span><span class="cred-value">'+u.id+'</span></div><div class="cred-row"><span class="cred-label">Parolă:</span><span class="cred-value masked" id="pass-'+u.id+'">••••••••</span><button class="eye-btn" onclick="togglePass(\''+u.id+'\',\''+u.pass+'\')">👁</button></div></div>';
+h+='<div class="user-section"><div class="user-section-title">🔄 Etape responsabil <span style="font-weight:400;text-transform:none;letter-spacing:0;color:var(--gray-l)">(click = toggle · dublu-click = responsabil principal)</span></div><div class="workflow">';
+STAGES.forEach(function(s){var isP=up.primary.indexOf(s)>=0;var isA=up.stages.indexOf(s)>=0;h+='<div class="wf-stage '+(isP?'primary':(isA?'active':''))+'" onclick="tgStage(\''+u.id+'\',\''+s+'\')" ondblclick="tgPrimary(\''+u.id+'\',\''+s+'\')">'+s+'</div>';});
+h+='</div></div>';
+h+='<div class="user-section"><div class="user-section-title">📱 Module accesibile</div><div class="module-grid">';
+MODS.forEach(function(m){var on=up.modules.indexOf(m.id)>=0;h+='<div class="module-chip'+(on?' active':'')+'" onclick="tgMod(\''+u.id+'\',\''+m.id+'\')"><span class="m-check">✓</span>'+m.icon+' '+m.name+'</div>';});
+h+='</div></div></div></div>';});
+h+='</div>';
 
-// ═══════ RENDER ═══════
-function renderUsers(){
-    var html='';
-    USERS.forEach(function(u){
-        html+='<div class="user-card">';
-        html+='<div class="user-head"><div class="user-avatar '+u.color+'">'+u.name[0]+'</div><div><div class="user-name">'+u.icon+' '+u.name+'</div><div class="user-focus">'+u.focus+'</div><span class="user-pill" style="background:'+u.pillBg+';color:'+u.pillColor+'">'+u.pill+'</span></div></div>';
-        html+='<div class="user-body">';
-        
-        // Credentials
-        html+='<div class="user-section"><div class="user-section-title">🔐 Credențiale</div>';
-        html+='<div class="cred-row"><span class="cred-label">User:</span><span class="cred-value">'+u.id+'</span></div>';
-        html+='<div class="cred-row"><span class="cred-label">Parolă:</span><span class="cred-value masked" id="pass-'+u.id+'">••••••••</span><button class="eye-btn" onclick="togglePass(\''+u.id+'\',\''+u.pass+'\')">👁</button></div>';
-        html+='</div>';
+// Matrix
+h+='<div class="section-title">🔐 Matrice Permisiuni</div><div style="overflow-x:auto;margin-bottom:28px"><table class="matrix"><thead><tr><th>Modul</th>';
+USERS.forEach(function(u){h+='<th style="text-align:center">'+u.icon+' '+u.name+'</th>';});h+='</tr></thead><tbody>';
+MODS.forEach(function(m){h+='<tr><td class="user-col">'+m.icon+' '+m.name+'</td>';USERS.forEach(function(u){var on=perms[u.id]&&perms[u.id].modules.indexOf(m.id)>=0;h+='<td style="text-align:center"><span class="toggle'+(on?' on':'')+'" onclick="tgMod(\''+u.id+'\',\''+m.id+'\')"></span></td>';});h+='</tr>';});
+h+='</tbody></table></div>';
 
-        // Workflow stages
-        html+='<div class="user-section"><div class="user-section-title">🔄 Etape responsabil</div>';
-        html+='<div class="workflow">';
-        ALL_STAGES.forEach(function(s){
-            var cls=u.primary.indexOf(s)>=0?'primary':(u.stages.indexOf(s)>=0?'active':'');
-            html+='<div class="wf-stage '+cls+'">'+s+'</div>';
-        });
-        html+='</div></div>';
+// Workflow
+var stC={'Lead':'#3b82f6','Ofertă':'#8b5cf6','Contract':'#f97316','Facturare':'#dc2626','Proiectare':'#8b5cf6','Execuție':'#22c55e','Recepție':'#14b8a6','Facturare 2':'#dc2626','Mentenanță':'#0ea5e9'};
+h+='<div class="section-title">🔄 Pipeline Workflow</div><div style="background:#fff;border-radius:var(--radius);box-shadow:var(--shadow);padding:20px;margin-bottom:80px"><div style="display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin-bottom:16px">';
+STAGES.forEach(function(s,i){h+='<div style="padding:8px 16px;border-radius:10px;font-size:12px;font-weight:700;background:'+(stC[s]||'#64748b')+';color:#fff">'+s+'</div>';if(i<STAGES.length-1)h+='<div style="font-size:16px;color:var(--gray-l)">→</div>';});
+h+='</div><div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:10px">';
+STAGES.forEach(function(s){var pri=[],sec=[];USERS.forEach(function(u){var up=perms[u.id]||{stages:[],primary:[]};if(up.primary.indexOf(s)>=0)pri.push(u.icon+' '+u.name);else if(up.stages.indexOf(s)>=0)sec.push(u.icon+' '+u.name);});
+var resp=pri.length?pri.join(', '):(sec.length?sec.join(', '):'<em style="color:var(--red)">Neatribuit</em>');
+h+='<div style="background:var(--gray-bg);padding:10px 14px;border-radius:10px;font-size:12px"><strong>'+s+'</strong><br><span style="color:var(--gray)">'+(pri.length?'🔵 ':'🟢 ')+resp+'</span></div>';});
+h+='</div></div>';
+document.getElementById('mainContent').innerHTML=h;}
 
-        // Module access
-        html+='<div class="user-section"><div class="user-section-title">📱 Module accesibile</div>';
-        html+='<div class="module-grid">';
-        MODULES.forEach(function(m){
-            var active=(perms[u.id]&&perms[u.id].modules.indexOf(m.id)>=0);
-            html+='<div class="module-chip'+(active?' active':'')+'" onclick="toggleModule(\''+u.id+'\',\''+m.id+'\',this)"><span class="m-check">✓</span>'+m.icon+' '+m.name+'</div>';
-        });
-        html+='</div></div>';
+function togglePass(uid,pass){var el=document.getElementById('pass-'+uid);if(el.classList.contains('masked')){el.textContent=pass;el.classList.remove('masked')}else{el.textContent='••••••••';el.classList.add('masked')}}
+function tgStage(uid,s){var up=perms[uid];if(!up)return;var i=up.stages.indexOf(s);if(i>=0){up.stages.splice(i,1);var pi=up.primary.indexOf(s);if(pi>=0)up.primary.splice(pi,1);}else up.stages.push(s);checkChanges();renderAll();}
+function tgPrimary(uid,s){var up=perms[uid];if(!up)return;if(up.stages.indexOf(s)<0)up.stages.push(s);var pi=up.primary.indexOf(s);if(pi>=0)up.primary.splice(pi,1);else up.primary.push(s);checkChanges();renderAll();}
+function tgMod(uid,mid){var up=perms[uid];if(!up)return;var i=up.modules.indexOf(mid);if(i>=0)up.modules.splice(i,1);else up.modules.push(mid);checkChanges();renderAll();}
+function checkChanges(){document.getElementById('saveBar').classList.toggle('active',JSON.stringify(perms)!==originalPerms);}
+function resetPerms(){perms=JSON.parse(originalPerms);checkChanges();renderAll();}
+function showToast(msg,type){var t=document.getElementById('toast');t.textContent=msg;t.style.background=type==='error'?'var(--red)':'var(--green)';t.style.display='block';setTimeout(function(){t.style.display='none'},3000);}
 
-        html+='</div></div>';
-    });
-    document.getElementById('usersGrid').innerHTML=html;
-}
-
-function renderMatrix(){
-    var html='<thead><tr><th>Modul</th>';
-    USERS.forEach(function(u){html+='<th style="text-align:center">'+u.icon+' '+u.name+'</th>';});
-    html+='</tr></thead><tbody>';
-    MODULES.forEach(function(m){
-        html+='<tr><td class="user-col">'+m.icon+' '+m.name+'</td>';
-        USERS.forEach(function(u){
-            var on=(perms[u.id]&&perms[u.id].modules.indexOf(m.id)>=0);
-            html+='<td class="check"><span class="toggle'+(on?' on':'')+'" onclick="toggleModule(\''+u.id+'\',\''+m.id+'\',null);renderAll()"></span></td>';
-        });
-        html+='</tr>';
-    });
-    html+='</tbody>';
-    document.getElementById('permMatrix').innerHTML=html;
-}
-
-function renderWorkflow(){
-    var html='<div style="display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin-bottom:16px">';
-    ALL_STAGES.forEach(function(s,i){
-        var colors={'Lead':'#3b82f6','Ofertă':'#8b5cf6','Contract':'#f97316','Facturare':'#dc2626','Proiectare':'#8b5cf6','Execuție':'#22c55e','Recepție':'#14b8a6','Facturare 2':'#dc2626','Mentenanță':'#0ea5e9'};
-        html+='<div style="padding:8px 16px;border-radius:10px;font-size:12px;font-weight:700;background:'+(colors[s]||'#64748b')+';color:#fff">'+s+'</div>';
-        if(i<ALL_STAGES.length-1)html+='<div style="font-size:16px;color:var(--gray-l)">→</div>';
-    });
-    html+='</div>';
-    html+='<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:10px">';
-    var stageOwners={'Lead':'📞 Cristina','Ofertă':'💰 Mihai','Contract':'📋 Roxana','Facturare':'📋 Roxana','Proiectare':'📐 Valentin','Execuție':'📐 Valentin','Recepție':'👥 Toți','Facturare 2':'📋 Roxana','Mentenanță':'🔄 Toți'};
-    ALL_STAGES.forEach(function(s){
-        html+='<div style="background:var(--gray-bg);padding:10px 14px;border-radius:10px;font-size:12px"><strong>'+s+'</strong><br><span style="color:var(--gray)">Responsabil: '+(stageOwners[s]||'—')+'</span></div>';
-    });
-    html+='</div>';
-    document.getElementById('workflowViz').innerHTML=html;
-}
-
-// ═══════ ACTIONS ═══════
-function togglePass(uid,pass){
-    var el=document.getElementById('pass-'+uid);
-    if(el.classList.contains('masked')){el.textContent=pass;el.classList.remove('masked');}
-    else{el.textContent='••••••••';el.classList.add('masked');}
-}
-
-function toggleModule(uid,mid,chipEl){
-    if(!perms[uid])perms[uid]={modules:[]};
-    var idx=perms[uid].modules.indexOf(mid);
-    if(idx>=0){perms[uid].modules.splice(idx,1);}
-    else{perms[uid].modules.push(mid);}
-    if(chipEl)chipEl.classList.toggle('active');
-    checkChanges();
-    renderMatrix();
-}
-
-function checkChanges(){
-    var changed=JSON.stringify(perms)!==originalPerms;
-    document.getElementById('saveBar').classList.toggle('active',changed);
-}
-
-function savePermissions(){
-    localStorage.setItem('cssi-user-perms',JSON.stringify(perms));
-    originalPerms=JSON.stringify(perms);
-    checkChanges();
-    showToast('✅ Permisiuni salvate!');
-}
-
-function resetPermissions(){
-    perms=JSON.parse(originalPerms);
-    renderAll();
-    checkChanges();
-}
-
-function showToast(msg){
-    var t=document.getElementById('toast');t.textContent=msg;t.style.display='block';
-    setTimeout(function(){t.style.display='none'},2500);
-}
-
-function renderAll(){renderUsers();renderMatrix();renderWorkflow();}
-renderAll();
+loadFromDB();
 </script>
 </body>
 </html>
