@@ -439,11 +439,27 @@ try {
             
             // Dacă oferta e Acceptată → schimbă proiectul în Contract automat
             if ($status === 'Acceptata') {
-                $stmt = $db->prepare("SELECT proiect_id, total_cu_tva FROM oferte WHERE id = ?");
+                $stmt = $db->prepare("SELECT proiect_id, client_id, total_cu_tva FROM oferte WHERE id = ?");
                 $stmt->execute([$id]);
                 $oferta = $stmt->fetch();
+                
+                // Determină proiect_id: direct din ofertă sau fallback prin client_id
+                $pId = null;
                 if ($oferta && $oferta['proiect_id']) {
                     $pId = $oferta['proiect_id'];
+                } elseif ($oferta && $oferta['client_id']) {
+                    // Fallback: caută proiectul prin client_id
+                    $stmtF = $db->prepare("SELECT id FROM proiecte WHERE client_id = ? ORDER BY created_at DESC LIMIT 1");
+                    $stmtF->execute([$oferta['client_id']]);
+                    $projRow = $stmtF->fetch();
+                    if ($projRow) {
+                        $pId = $projRow['id'];
+                        // Linkează oferta la proiect pentru viitor
+                        $db->prepare("UPDATE oferte SET proiect_id = ? WHERE id = ?")->execute([$pId, $id]);
+                    }
+                }
+                
+                if ($pId) {
                     // Update proiect status + valoare contract
                     $db->prepare("UPDATE proiecte SET status = 'Contract', valoare_contract = ? WHERE id = ?")->execute([
                         $oferta['total_cu_tva'], $pId
@@ -471,9 +487,16 @@ try {
             
             // Dacă oferta e Refuzată → notificare
             if ($status === 'Refuzata') {
-                $stmt = $db->prepare("SELECT o.proiect_id, p.proiect_id AS cod FROM oferte o LEFT JOIN proiecte p ON o.proiect_id = p.id WHERE o.id = ?");
+                $stmt = $db->prepare("SELECT o.proiect_id, o.client_id, p.proiect_id AS cod FROM oferte o LEFT JOIN proiecte p ON o.proiect_id = p.id WHERE o.id = ?");
                 $stmt->execute([$id]);
                 $row = $stmt->fetch();
+                // Fallback prin client_id dacă proiect_id e NULL
+                if ($row && !$row['cod'] && $row['client_id']) {
+                    $stmtF = $db->prepare("SELECT proiect_id FROM proiecte WHERE client_id = ? ORDER BY created_at DESC LIMIT 1");
+                    $stmtF->execute([$row['client_id']]);
+                    $projF = $stmtF->fetch();
+                    if ($projF) $row['cod'] = $projF['proiect_id'];
+                }
                 if ($row && $row['cod']) {
                     $db->prepare("INSERT INTO notificari (proiect_id, mesaj, tip, de_la) VALUES (?,?,?,?)")->execute([
                         $row['cod'],
