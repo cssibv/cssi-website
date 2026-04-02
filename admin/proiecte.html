@@ -714,10 +714,9 @@ function openProjectDetail(projectId){
         '</div>'+
         (p.note?'<div style="font-size:11px;color:var(--gray);padding:8px;background:var(--gray-bg);border-radius:8px;margin-bottom:12px">📝 '+esc(p.note)+'</div>':'')+
         timelineHtml+
-        '<div id="oferteSection" style="margin-bottom:12px"><div style="text-align:center;padding:12px;color:var(--gray-l);font-size:12px">⏳ Se încarcă ofertele...</div></div>'+
         '<div style="display:flex;gap:8px;flex-wrap:wrap">'+
         '<button onclick="openEditModal('+Q+p.id+Q+')" style="flex:1;padding:10px;border-radius:10px;border:none;background:var(--blue);color:#fff;font-weight:700;font-size:13px;cursor:pointer">✏️ Editează</button>'+
-        '<a href="calculator-pret.html?client='+encodeURIComponent(p.client)+'&client_db_id='+p.clientDbId+'&proiect_db_id='+p.dbId+'&obiectiv='+encodeURIComponent(p.obiectiv||'')+'&adresa='+encodeURIComponent(p.adresa||'')+'" style="flex:1;padding:10px;border-radius:10px;border:none;background:var(--green);color:#fff;font-weight:700;font-size:13px;cursor:pointer;text-decoration:none;text-align:center;display:block">📄 Ofertă</a>'+
+        '<button onclick="document.getElementById('+Q+'oferteSection'+Q+').scrollIntoView({behavior:'+Q+'smooth'+Q+',block:'+Q+'start'+Q+'})" style="flex:1;padding:10px;border-radius:10px;border:none;background:var(--green);color:#fff;font-weight:700;font-size:13px;cursor:pointer">📄 Vezi Oferte</button>'+
         '<button onclick="closeDetailModal()" style="padding:10px 16px;border-radius:10px;border:1px solid var(--gray-b);background:#fff;color:var(--gray);font-weight:600;font-size:13px;cursor:pointer">Închide</button>'+
         '</div></div>';
 
@@ -731,105 +730,6 @@ function openProjectDetail(projectId){
     document.getElementById('detailTitle').textContent='📋 '+p.id+' — '+esc(p.client);
     document.getElementById('detailBody').innerHTML=html;
     overlay.classList.add('active');
-    
-    // Încarcă ofertele pentru acest proiect
-    loadProjectOferte(p.dbId, p.clientDbId);
-}
-
-// ═══════ OFERTE ÎN DETALII PROIECT ═══════
-function loadProjectOferte(dbId, clientDbId){
-    var url=API_DB+'?action=getOferte&_t='+Date.now();
-    if(dbId) url+='&proiect_id='+dbId;
-    else if(clientDbId) url+='&client_id='+clientDbId;
-    else { document.getElementById('oferteSection').innerHTML=''; return; }
-    
-    fetch(url)
-    .then(function(r){return r.json()})
-    .then(function(res){
-        var sec=document.getElementById('oferteSection');
-        if(!sec) return;
-        if(!res.success||!res.data||!res.data.length){
-            // Try with client_id if proiect_id returned nothing
-            if(dbId && clientDbId){
-                var url2=API_DB+'?action=getOferte&client_id='+clientDbId+'&_t='+Date.now();
-                fetch(url2).then(function(r2){return r2.json()}).then(function(res2){
-                    if(!res2.success||!res2.data||!res2.data.length){
-                        sec.innerHTML='<div style="font-size:12px;color:var(--gray-l);text-align:center;padding:8px">Nicio ofertă asociată</div>';
-                    } else { renderOferteSection(sec, res2.data); }
-                });
-            } else {
-                sec.innerHTML='<div style="font-size:12px;color:var(--gray-l);text-align:center;padding:8px">Nicio ofertă asociată</div>';
-            }
-            return;
-        }
-        renderOferteSection(sec, res.data);
-    })
-    .catch(function(e){ 
-        var sec=document.getElementById('oferteSection');
-        if(sec) sec.innerHTML='';
-    });
-}
-
-function renderOferteSection(container, oferte){
-    var acceptate=oferte.filter(function(o){return o.oferta_status==='Acceptata'});
-    var trimise=oferte.filter(function(o){return o.oferta_status==='Trimisa'});
-    var drafts=oferte.filter(function(o){return o.oferta_status==='Draft'});
-    var refuzate=oferte.filter(function(o){return o.oferta_status==='Refuzata'});
-    
-    var html='<div style="font-size:13px;font-weight:700;margin-bottom:8px">📄 Oferte ('+oferte.length+')</div>';
-    
-    // Acceptate - afișate prominent
-    if(acceptate.length){
-        var totalAcc=acceptate.reduce(function(s,o){return s+(parseFloat(o.total_cu_tva)||0)},0);
-        html+='<div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:10px;padding:12px;margin-bottom:8px">';
-        html+='<div style="font-size:11px;font-weight:700;color:var(--green);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:8px">✅ Oferte Acceptate ('+acceptate.length+')</div>';
-        acceptate.forEach(function(o){
-            var total=parseFloat(o.total_cu_tva)||0;
-            var titlu=(o.titlu||o.oferta_id||'').replace(/Deviz.*?ser\.BV/,'').replace(/Nr\.\s*\d+\s*din\s*[\d.]+/,'').trim();
-            if(!titlu) titlu=o.oferta_id;
-            html+='<div style="display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px solid #dcfce7;font-size:12px">';
-            html+='<div><strong>'+esc(o.oferta_id)+'</strong> — '+esc(titlu)+'<div style="font-size:10px;color:var(--gray)">'+(o.data_oferta||'')+'</div></div>';
-            html+='<div style="font-weight:900;color:var(--green);white-space:nowrap">'+total.toLocaleString("ro-RO")+ ' RON</div>';
-            html+='</div>';
-        });
-        html+='<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0 0;font-size:14px;font-weight:900;border-top:2px solid #bbf7d0;margin-top:4px">';
-        html+='<span>TOTAL CONTRACT</span><span style="color:var(--green)">'+totalAcc.toLocaleString("ro-RO")+' RON</span></div>';
-        html+='</div>';
-    }
-    
-    // Trimise
-    if(trimise.length){
-        html+='<div style="background:#eff6ff;border:1px solid #bfdbfe;border-radius:10px;padding:10px;margin-bottom:8px">';
-        html+='<div style="font-size:11px;font-weight:700;color:var(--blue);margin-bottom:6px">📤 Trimise ('+trimise.length+')</div>';
-        trimise.forEach(function(o){
-            html+='<div style="font-size:12px;padding:3px 0"><strong>'+esc(o.oferta_id)+'</strong> — '+(parseFloat(o.total_cu_tva)||0).toLocaleString("ro-RO")+' RON</div>';
-        });
-        html+='</div>';
-    }
-    
-    // Drafts
-    if(drafts.length){
-        html+='<div style="background:var(--gray-bg);border:1px solid var(--gray-b);border-radius:10px;padding:10px;margin-bottom:8px">';
-        html+='<div style="font-size:11px;font-weight:700;color:var(--gray);margin-bottom:6px">📝 Draft ('+drafts.length+')</div>';
-        drafts.forEach(function(o){
-            html+='<div style="font-size:12px;padding:3px 0"><strong>'+esc(o.oferta_id)+'</strong> — '+(parseFloat(o.total_cu_tva)||0).toLocaleString("ro-RO")+' RON</div>';
-        });
-        html+='</div>';
-    }
-    
-    // Refuzate (compact)
-    if(refuzate.length){
-        html+='<div style="background:#fef2f2;border:1px solid #fecaca;border-radius:10px;padding:10px;margin-bottom:8px">';
-        html+='<div style="font-size:11px;font-weight:700;color:var(--red);margin-bottom:6px">❌ Refuzate ('+refuzate.length+')</div>';
-        refuzate.forEach(function(o){
-            html+='<div style="font-size:12px;padding:3px 0"><strong>'+esc(o.oferta_id)+'</strong> — '+(parseFloat(o.total_cu_tva)||0).toLocaleString("ro-RO")+' RON';
-            if(o.motiv_respingere) html+=' <span style="font-size:10px;color:var(--red)">('+esc(o.motiv_respingere)+')</span>';
-            html+='</div>';
-        });
-        html+='</div>';
-    }
-    
-    container.innerHTML=html;
 }
 function closeDetailModal(){var m=document.getElementById('detailModal');if(m)m.classList.remove('active');}
 
