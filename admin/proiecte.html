@@ -134,6 +134,37 @@ a{text-decoration:none;color:inherit;}button{font-family:inherit;cursor:pointer;
 .toast{padding:12px 18px;border-radius:12px;color:#fff;font-size:12px;font-weight:600;box-shadow:0 8px 24px rgba(0,0,0,0.15);animation:slideIn 0.3s ease;max-width:360px;}
 .toast.success{background:var(--green);}.toast.error{background:var(--red);}.toast.info{background:var(--blue);}
 @keyframes slideIn{from{transform:translateX(100%);opacity:0}to{transform:translateX(0);opacity:1}}
+
+/* Nepreluat card animation */
+.kcard.nepreluat{border:2px solid var(--red);animation:pulseRed 2s infinite;}
+@keyframes pulseRed{0%,100%{border-color:var(--red);box-shadow:0 0 0 0 rgba(220,38,38,0.3)}50%{border-color:#f87171;box-shadow:0 0 8px 2px rgba(220,38,38,0.15)}}
+.kcard-resp{font-size:10px;font-weight:700;padding:2px 8px;border-radius:6px;display:inline-block;margin-top:4px;}
+.kcard-resp.assigned{background:#eff6ff;color:var(--blue);}
+.kcard-resp.unassigned{background:#fef2f2;color:var(--red);}
+.btn-preia{padding:4px 10px;border-radius:6px;border:none;background:var(--red);color:#fff;font-size:10px;font-weight:700;cursor:pointer;transition:all 0.2s;display:inline-flex;align-items:center;gap:3px;}
+.btn-preia:hover{background:var(--red-d);transform:translateY(-1px);}
+.kcard-nepreluat-badge{font-size:9px;font-weight:700;color:var(--red);background:#fef2f2;padding:2px 6px;border-radius:4px;display:inline-block;}
+
+/* Timeline */
+.timeline{padding:0;margin:0;list-style:none;}
+.tl-item{display:flex;gap:12px;padding:8px 0;position:relative;}
+.tl-dot{width:12px;height:12px;border-radius:50%;flex-shrink:0;margin-top:3px;border:2px solid #fff;box-shadow:0 0 0 2px var(--gray-b);}
+.tl-dot.active{box-shadow:0 0 0 2px var(--blue);}
+.tl-line{position:absolute;left:5px;top:20px;bottom:0;width:2px;background:var(--gray-b);}
+.tl-item:last-child .tl-line{display:none;}
+.tl-content{flex:1;font-size:12px;}
+.tl-status{font-weight:700;color:var(--dark);}
+.tl-date{color:var(--gray);font-size:11px;}
+.tl-user{color:var(--blue);font-size:11px;font-weight:600;}
+
+/* Edit modal wider */
+.modal.wide{max-width:600px;}
+.form-row-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;}
+@media(max-width:600px){.form-row-3{grid-template-columns:1fr;}}
+.form-hint{font-size:11px;color:var(--gray);margin-top:4px;}
+
+/* Oferte badge pe card */
+.kcard-oferte{font-size:10px;font-weight:600;color:var(--green);margin-top:4px;}
 </style>
 </head>
 <body>
@@ -182,13 +213,72 @@ a{text-decoration:none;color:inherit;}button{font-family:inherit;cursor:pointer;
     <div id="tableView" class="table-wrap hidden">
         <table class="tbl">
             <thead><tr>
-                <th>ID</th><th>Client</th><th>Serviciu</th><th>Locație</th><th>Valoare</th><th>Status</th>
+                <th>ID</th><th>Client</th><th>Serviciu</th><th>Locație</th><th>Valoare</th><th>Responsabil</th><th>Status</th><th></th>
             </tr></thead>
             <tbody id="tableBody"></tbody>
         </table>
     </div>
 
     <div class="footer">Portal CSSI 3.0 · Modul Proiecte</div>
+</div>
+
+
+<!-- EDIT PROJECT MODAL -->
+<div id="editProjectModal" class="modal-overlay" onclick="if(event.target===this)closeEditModal()">
+<div class="modal wide">
+    <div class="modal-head"><div class="modal-title" id="editModalTitle">✏️ Editare Proiect</div><button class="modal-close" onclick="closeEditModal()">✕</button></div>
+    <div class="modal-body">
+        <form id="editProjectForm" onsubmit="saveEditProject(event)">
+            <input type="hidden" name="editDbId" id="eDbId">
+            <input type="hidden" name="editPid" id="ePid">
+            <div class="form-row">
+                <div class="form-group"><label class="form-label">Client</label><input type="text" class="form-input" name="client" id="eClient"></div>
+                <div class="form-group"><label class="form-label">CUI / CNP</label><input type="text" class="form-input" name="cui" id="eCui"></div>
+            </div>
+            <div class="form-row">
+                <div class="form-group"><label class="form-label">Telefon</label><input type="tel" class="form-input" name="telefon" id="eTelefon"></div>
+                <div class="form-group"><label class="form-label">Persoană contact</label><input type="text" class="form-input" name="contact" id="eContact"></div>
+            </div>
+            <div class="form-row-3">
+                <div class="form-group"><label class="form-label">Serviciu</label>
+                    <select class="form-select" name="serviciu" id="eServiciu">
+                        <option>Detecție Incendiu</option><option>Alarmă Antiefracție</option>
+                        <option>Supraveghere Video</option><option>Instalații Electrice</option>
+                        <option>Automatizări Porți</option><option>Control Acces</option>
+                        <option>Proiect Complex</option>
+                    </select>
+                </div>
+                <div class="form-group"><label class="form-label">Valoare estimată</label><input type="number" class="form-input" name="valoare_estimata" id="eValoare" min="0"></div>
+                <div class="form-group"><label class="form-label">Valoare contract</label><input type="number" class="form-input" name="valoare_contract" id="eValContract" min="0"></div>
+            </div>
+            <div class="form-row">
+                <div class="form-group"><label class="form-label">Responsabil</label>
+                    <select class="form-select" name="responsabil" id="eResponsabil">
+                        <option value="">— Neselectat —</option>
+                        <option value="Mihai">💰 Mihai — Ofertare</option>
+                        <option value="Roxana">📋 Roxana — Contracte</option>
+                        <option value="Valentin">📐 Valentin — Proiectare</option>
+                        <option value="Cristina">📞 Cristina — Lead-uri</option>
+                        <option value="Admin">🔑 Admin</option>
+                    </select>
+                </div>
+                <div class="form-group"><label class="form-label">Status</label>
+                    <select class="form-select" name="status" id="eStatus">
+                        <option value="Lead">📞 Lead</option><option value="Ofertă">📋 Ofertă</option>
+                        <option value="Contract">✅ Contract</option><option value="Proiectare">📐 Proiectare</option>
+                        <option value="Execuție">🔧 Execuție</option><option value="Recepție">📸 Recepție</option>
+                        <option value="Facturat">💳 Facturat</option><option value="Mentenanță">🔄 Mentenanță</option>
+                        <option value="Finalizat">✅ Finalizat</option><option value="Anulat">❌ Anulat</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group"><label class="form-label">Adresă obiectiv</label><input type="text" class="form-input" name="adresa_obiectiv" id="eAdresa"></div>
+            <div class="form-group"><label class="form-label">Obiectiv / Descriere</label><input type="text" class="form-input" name="obiectiv" id="eObiectiv"></div>
+            <div class="form-group"><label class="form-label">Observații</label><textarea class="form-textarea" name="note" id="eNote"></textarea></div>
+            <button type="submit" class="form-submit" id="editSubmitBtn">💾 Salvează Modificările</button>
+        </form>
+    </div>
+</div>
 </div>
 
 <!-- Bottom Nav -->
@@ -234,7 +324,15 @@ a{text-decoration:none;color:inherit;}button{font-family:inherit;cursor:pointer;
                 </select>
             </div>
             <div class="form-group"><label class="form-label">Obiectiv / Descriere lucrare</label><input type="text" class="form-input" name="obiectiv" placeholder="Ex: Sistem supraveghere depozit"></div>
-            <div class="form-group"><label class="form-label">Responsabil</label><input type="text" class="form-input" name="responsabil" placeholder="Numele tehnicianului"></div>
+            <div class="form-group"><label class="form-label">Responsabil</label>
+                    <select class="form-select" name="responsabil">
+                        <option value="">— Neselectat —</option>
+                        <option value="Mihai">💰 Mihai</option>
+                        <option value="Roxana">📋 Roxana</option>
+                        <option value="Valentin">📐 Valentin</option>
+                        <option value="Cristina">📞 Cristina</option>
+                        <option value="Admin">🔑 Admin</option>
+                    </select></div>
             <div class="form-group"><label class="form-label">Observații</label><textarea class="form-textarea" name="note" placeholder="Detalii..."></textarea></div>
             <button type="submit" class="form-submit">Creează Proiect</button>
         </form>
@@ -245,18 +343,17 @@ a{text-decoration:none;color:inherit;}button{font-family:inherit;cursor:pointer;
 <script>
 // ═══════ CONFIG ═══════
 var API_URL=null;
-// PIPELINE_API — URL-ul deployment-ului Pipeline Engine (din Sheet-ul Proiecte CSSI)
-// După deploy, înlocuiește acest URL cu cel real:
-var PIPELINE_API=null;
 var API_DB='/admin/api.php';
 var SERV_DB_TO_UI={'Detectie Incendiu':'Detecție Incendiu','Alarma':'Alarmă Antiefracție','Supraveghere Video':'Supraveghere Video','Electric':'Instalații Electrice','Automatizari':'Automatizări Porți','Complex':'Proiect Complex','Control Acces':'Control Acces'};
 var SERV_UI_TO_DB={'Detecție Incendiu':'Detectie Incendiu','Alarmă Antiefracție':'Alarma','Supraveghere Video':'Supraveghere Video','Instalații Electrice':'Electric','Instalații Sanitare':'Electric','Automatizări Porți':'Automatizari','Proiect Complex':'Complex','Control Acces':'Control Acces'};
 var STAT_DB_TO_UI={'Lead':'Lead','Oferta':'Ofertă','Contract':'Contract','Proiectare':'Proiectare','Executie':'Execuție','Receptie':'Recepție','Facturat':'Facturat','Mentenanta':'Mentenanță','Finalizat':'Finalizat','Anulat':'Anulat'};
 var STAT_UI_TO_DB={'Lead':'Lead','Ofertă':'Oferta','Contract':'Contract','Proiectare':'Proiectare','Execuție':'Executie','Recepție':'Receptie','Facturat':'Facturat','Mentenanță':'Mentenanta','Finalizat':'Finalizat','Anulat':'Anulat'};
+var RESP_ICONS={'Mihai':'💰','Roxana':'📋','Valentin':'📐','Cristina':'📞','Admin':'🔑'};
 
 // ═══════ AUTH CHECK ═══════
 var role=sessionStorage.getItem('cssi-role');
 if(!role){window.location.href='../admin.html';}
+var userName=sessionStorage.getItem('cssi-user')||role;
 
 // ═══════ CONSTANTS ═══════
 var STATUSES=[{id:'lead',name:'Lead',cls:'lead'},{id:'oferta',name:'Ofertă',cls:'oferta'},{id:'contract',name:'Contract',cls:'contract'},{id:'proiectare',name:'Proiectare',cls:'proiectare'},{id:'executie',name:'Execuție',cls:'executie'},{id:'receptie',name:'Recepție',cls:'receptie'},{id:'facturat',name:'Facturat',cls:'facturat'},{id:'mentenanta',name:'Mentenanță',cls:'mentenanta'}];
@@ -264,7 +361,7 @@ var STATUS_MAP={'Lead':'lead','Ofertă':'oferta','Contract':'contract','Proiecta
 var SERVICE_TAGS={'Detecție Incendiu':{cls:'incendiu',s:'Incendiu'},'Alarmă Antiefracție':{cls:'alarm',s:'Alarmă'},'Supraveghere Video':{cls:'camera',s:'Camere'},'Instalații Electrice':{cls:'electric',s:'Electric'},'Instalații Sanitare':{cls:'install',s:'Sanitare'},'Automatizări Porți':{cls:'auto',s:'Porți'},'Control Acces':{cls:'install',s:'Acces'},'Proiect Complex':{cls:'incendiu',s:'Complex'}};
 var STATUS_ICONS={'Lead':'📞','Ofertă':'📋','Contract':'✅','Proiectare':'📐','Execuție':'🔧','Recepție':'📸','Facturat':'💳','Mentenanță':'🔄'};
 
-// ═══════ DATA (live din Google Sheets) ═══════
+// ═══════ STATE ═══════
 var PROJECTS=[];
 var currentView='board';
 var currentFilter='all';
@@ -273,10 +370,9 @@ var isLoading=false;
 // ═══════ INIT ═══════
 loadProjects();
 
-// ═══════ LOAD PROJECTS FROM API ═══════
+// ═══════ LOAD PROJECTS ═══════
 function loadProjects(){
-    isLoading=true;
-    showLoading(true);
+    isLoading=true;showLoading(true);
     fetch(API_DB+'?action=getProiecte&_t='+Date.now())
     .then(function(r){return r.json()})
     .then(function(res){
@@ -285,59 +381,45 @@ function loadProjects(){
                 return {
                     id:p.proiect_id||p.id||'',
                     dbId:p.id,
+                    clientDbId:p.client_db_id||p.client_id||'',
                     client:p.client_nume||'',
                     cui:p.cui_cnp||'',
                     adresa:p.client_adresa||p.adresa_obiectiv||'',
                     contact:p.persoana_contact||'',
                     telefon:p.telefon||'',
+                    email:p.email||'',
                     serviciu:SERV_DB_TO_UI[p.serviciu]||p.serviciu||'',
+                    serviciuDb:p.serviciu||'',
                     obiectiv:p.obiectiv||'',
                     status:STAT_DB_TO_UI[p.status]||p.status||'Lead',
                     valoare:parseFloat(p.valoare_estimata)||0,
                     valoareContract:parseFloat(p.valoare_contract)||0,
                     responsabil:p.responsabil||'',
+                    preluat_de:p.preluat_de||'',
+                    preluat_la:p.preluat_la||'',
+                    istoric:p.istoric_status||'[]',
                     folderId:'',
                     loc:p.oras||'Brașov',
                     note:p.note||'',
-                    dataCreare:p.created_at||''
+                    dataCreare:p.created_at||'',
+                    updatedAt:p.updated_at||''
                 };
             });
-        } else {
-            PROJECTS=[];
-        }
-        isLoading=false;
-        showLoading(false);
-        renderAll();
+        } else { PROJECTS=[]; }
+        isLoading=false;showLoading(false);renderAll();
     })
     .catch(function(err){
-        console.error('MySQL API error:',err);
-        isLoading=false;
-        showLoading(false);
-        // Fallback: afișează mesaj
-        PROJECTS=[];
-        renderAll();
-        showToast('⚠️ Nu s-au putut încărca proiectele din MySQL.','error');
+        console.error('API error:',err);
+        isLoading=false;showLoading(false);PROJECTS=[];renderAll();
+        showToast('⚠️ Eroare încărcare proiecte','error');
     });
 }
 
-function showLoading(on){
-    var el=document.getElementById('loadBar');
-    if(el) el.classList.toggle('active',on);
-}
-
-function showToast(msg,type){
-    var c=document.getElementById('toastContainer');
-    if(!c){c=document.createElement('div');c.id='toastContainer';c.className='toast-container';document.body.appendChild(c);}
-    var t=document.createElement('div');
-    t.className='toast '+(type||'info');
-    t.textContent=msg;
-    c.appendChild(t);
-    setTimeout(function(){t.remove()},4000);
-}
-
-function renderAll(){
-    renderSummary();renderKanban();renderTable();
-}
+function esc(s){if(!s)return'';var d=document.createElement('div');d.textContent=s;return d.innerHTML;}
+function showLoading(on){var el=document.getElementById('loadBar');if(el)el.classList.toggle('active',on);}
+function showToast(msg,type){var c=document.getElementById('toastContainer');if(!c){c=document.createElement('div');c.id='toastContainer';c.className='toast-container';document.body.appendChild(c);}var t=document.createElement('div');t.className='toast '+(type||'info');t.textContent=msg;c.appendChild(t);setTimeout(function(){t.remove()},4000);}
+function renderAll(){renderSummary();renderKanban();renderTable();}
+function applyFilters(){renderAll();}
 
 // ═══════ VIEW SWITCHING ═══════
 function switchView(v,btn){
@@ -355,12 +437,11 @@ function setFilter(f,btn){
     btn.classList.add('active');
     renderAll();
 }
-
 function getFiltered(){
     var q=(document.getElementById('searchInput')?document.getElementById('searchInput').value:'').toLowerCase();
     return PROJECTS.filter(function(p){
         var matchStatus=currentFilter==='all'||p.status===currentFilter;
-        var matchSearch=!q||p.client.toLowerCase().includes(q)||p.id.toLowerCase().includes(q)||p.serviciu.toLowerCase().includes(q)||(p.loc||'').toLowerCase().includes(q)||(p.obiectiv||'').toLowerCase().includes(q);
+        var matchSearch=!q||p.client.toLowerCase().includes(q)||p.id.toLowerCase().includes(q)||p.serviciu.toLowerCase().includes(q)||(p.loc||'').toLowerCase().includes(q)||(p.obiectiv||'').toLowerCase().includes(q)||(p.responsabil||'').toLowerCase().includes(q);
         return matchStatus&&matchSearch;
     });
 }
@@ -370,11 +451,15 @@ function renderSummary(){
     var f=getFiltered();
     var total=f.length;
     var val=f.reduce(function(s,p){return s+(p.valoare||0)},0);
+    var valContract=f.reduce(function(s,p){return s+(p.valoareContract||0)},0);
     var active=f.filter(function(p){return['Lead','Ofertă','Contract','Proiectare','Execuție','Recepție'].includes(p.status)}).length;
+    var neprelate=f.filter(function(p){return!p.preluat_de&&p.status!=='Lead'&&p.status!=='Finalizat'&&p.status!=='Anulat'}).length;
     document.getElementById('summary').innerHTML=
         '<div class="summary-item"><div><div class="summary-val">'+total+'</div><div class="summary-label">Total proiecte</div></div></div>'+
         '<div class="summary-item"><div><div class="summary-val">'+active+'</div><div class="summary-label">Active</div></div></div>'+
-        '<div class="summary-item"><div><div class="summary-val">'+val.toLocaleString('ro-RO')+'</div><div class="summary-label">Valoare totală (RON)</div></div></div>';
+        '<div class="summary-item"><div><div class="summary-val">'+val.toLocaleString('ro-RO')+'</div><div class="summary-label">Val. estimată (RON)</div></div></div>'+
+        (valContract?'<div class="summary-item"><div><div class="summary-val" style="color:var(--green)">'+valContract.toLocaleString('ro-RO')+'</div><div class="summary-label">Val. contracte (RON)</div></div></div>':'')+
+        (neprelate?'<div class="summary-item"><div><div class="summary-val" style="color:var(--red)">'+neprelate+'</div><div class="summary-label">⚠️ Neprelate</div></div></div>':'');
 }
 
 // ═══════ KANBAN ═══════
@@ -389,13 +474,27 @@ function renderKanban(){
         if(!prj.length){body.innerHTML='<div class="kanban-empty">—</div>';}
         else{prj.forEach(function(p){
             var t=SERVICE_TAGS[p.serviciu]||{cls:'install',s:p.serviciu||'—'};
-            var folderLink=p.folderId?'<a href="https://drive.google.com/drive/folders/'+p.folderId+'" target="_blank" title="Deschide folder Drive" style="font-size:11px;color:var(--blue);text-decoration:none">📁 Drive</a>':'';
-            var c=document.createElement('div');c.className='kcard';
+            var isNepreluat=!p.preluat_de&&st.id!=='lead'&&st.id!=='facturat'&&st.id!=='mentenanta';
+            var respHtml='';
+            if(p.preluat_de){
+                respHtml='<div class="kcard-resp assigned">'+(RESP_ICONS[p.preluat_de]||'👤')+' '+esc(p.preluat_de)+'</div>';
+            } else if(p.responsabil){
+                respHtml='<div class="kcard-resp assigned">'+(RESP_ICONS[p.responsabil]||'👤')+' '+esc(p.responsabil)+'</div>';
+            }
+            var preiaHtml='';
+            if(isNepreluat){
+                preiaHtml='<div style="margin-top:6px"><span class="kcard-nepreluat-badge">⚠️ Nepreluat</span> <button class="btn-preia" onclick="event.stopPropagation();preiaProiect(''+p.id+'')">🤚 Preia</button></div>';
+            }
+            var valHtml=(p.valoare||0).toLocaleString('ro-RO')+' RON';
+            if(p.valoareContract){valHtml='<span style="color:var(--green);font-weight:900">'+(p.valoareContract).toLocaleString('ro-RO')+'</span> <span style="font-size:9px;color:var(--gray)">(est. '+(p.valoare||0).toLocaleString('ro-RO')+')</span>';}
+
+            var c=document.createElement('div');c.className='kcard'+(isNepreluat?' nepreluat':'');
             c.onclick=function(){openProjectDetail(p.id);};
             c.innerHTML='<div class="kcard-id">'+p.id+'</div>'+
-                '<div class="kcard-title">'+p.client+'</div>'+
-                '<div class="kcard-meta"><span class="kcard-tag '+t.cls+'">'+t.s+'</span><span>📍 '+(p.loc||'Brașov')+'</span>'+folderLink+'</div>'+
-                '<div class="kcard-val">'+(p.valoare||0).toLocaleString('ro-RO')+' RON</div>';
+                '<div class="kcard-title">'+esc(p.client)+'</div>'+
+                '<div class="kcard-meta"><span class="kcard-tag '+t.cls+'">'+t.s+'</span><span>📍 '+(p.loc||'Brașov')+'</span></div>'+
+                '<div class="kcard-val">'+valHtml+'</div>'+
+                respHtml+preiaHtml;
             body.appendChild(c);
         });}
         col.appendChild(body);b.appendChild(col);
@@ -407,172 +506,234 @@ function renderTable(){
     var tb=document.getElementById('tableBody');tb.innerHTML='';
     var filtered=getFiltered();
     if(!filtered.length){
-        tb.innerHTML='<tr><td colspan="6" style="text-align:center;color:var(--gray-l);padding:24px">'+
-            (isLoading?'Se încarcă proiectele...':'Niciun proiect găsit')+'</td></tr>';
+        tb.innerHTML='<tr><td colspan="8" style="text-align:center;color:var(--gray-l);padding:24px">'+(isLoading?'Se încarcă...':'Niciun proiect')+'</td></tr>';
         return;
     }
     filtered.forEach(function(p){
         var t=SERVICE_TAGS[p.serviciu]||{cls:'install',s:p.serviciu||'—'};
         var opts=Object.keys(STATUS_MAP).map(function(s){return '<option value="'+s+'"'+(p.status===s?' selected':'')+'>'+STATUS_ICONS[s]+' '+s+'</option>';}).join('');
-        var folderBtn=p.folderId?'<a href="https://drive.google.com/drive/folders/'+p.folderId+'" target="_blank" class="kcard-tag camera" style="text-decoration:none;font-size:10px">📁</a>':'';
+        var respName=p.preluat_de||p.responsabil||'—';
+        var respIcon=RESP_ICONS[respName]||'';
         var tr=document.createElement('tr');
         tr.innerHTML=
-            '<td><strong>'+p.id+'</strong> '+folderBtn+'</td>'+
-            '<td>'+p.client+'</td>'+
+            '<td><strong>'+p.id+'</strong></td>'+
+            '<td>'+esc(p.client)+'</td>'+
             '<td><span class="kcard-tag '+t.cls+'">'+t.s+'</span></td>'+
             '<td class="loc">📍 '+(p.loc||'Brașov')+'</td>'+
             '<td class="val">'+(p.valoare||0).toLocaleString('ro-RO')+' RON</td>'+
-            '<td><select class="status-select" onchange="changeStatus(\''+p.id+'\',this.value)">'+opts+'</select></td>';
+            '<td style="font-size:12px">'+(respIcon?respIcon+' ':'')+esc(respName)+'</td>'+
+            '<td><select class="status-select" onchange="changeStatus(''+p.id+'',this.value)">'+opts+'</select></td>'+
+            '<td><button onclick="openEditModal(''+p.id+'')" style="padding:5px 10px;border-radius:6px;border:none;background:var(--blue);color:#fff;font-size:11px;font-weight:700;cursor:pointer" title="Editare">✏️</button></td>';
         tb.appendChild(tr);
     });
 }
 
-// ═══════ STATUS CHANGE (live sync to Google Sheets) ═══════
+// ═══════ STATUS CHANGE ═══════
 function changeStatus(projectId,newStatus){
     var p=PROJECTS.find(function(x){return x.id===projectId});
     if(!p) return;
     var oldStatus=p.status;
     p.status=newStatus;
-    renderKanban();renderSummary();
-    showToast('🔄 Actualizare status: '+projectId+' → '+newStatus,'info');
-    // Sync to MySQL
+    renderAll();
+    showToast('🔄 '+projectId+' → '+newStatus,'info');
     var statusDB=STAT_UI_TO_DB[newStatus]||newStatus;
     fetch(API_DB+'?action=updateStatus',{
         method:'POST',
         headers:{'Content-Type':'application/json'},
-        body:JSON.stringify({action:'updateStatus',id:p.dbId||projectId,status:statusDB,user:role||'Admin'})
+        body:JSON.stringify({action:'updateStatus',id:p.dbId||projectId,status:statusDB,user:userName||'Admin'})
     })
-    .then(function(r){return r.json();})
+    .then(function(r){return r.json()})
     .then(function(res){
-        if(res.success){
-            showToast('✅ Status actualizat: '+projectId+' → '+newStatus,'success');
-        } else {
-            showToast('❌ Eroare: '+(res.error||'necunoscută'),'error');
-            p.status=oldStatus;
-            renderKanban();renderSummary();
-        }
+        if(res.success){showToast('✅ Status actualizat','success');loadProjects();}
+        else{showToast('❌ '+(res.error||'Eroare'),'error');p.status=oldStatus;renderAll();}
     })
-    .catch(function(err){
-        showToast('❌ Eroare rețea: '+err.message,'error');
-        p.status=oldStatus;
-        renderKanban();renderSummary();
-    });
+    .catch(function(err){showToast('❌ Eroare rețea','error');p.status=oldStatus;renderAll();});
 }
 
-// ═══════ ADD PROJECT (live — creează în Sheet + Drive) ═══════
+// ═══════ PREIA PROIECT ═══════
+function preiaProiect(projectId){
+    var p=PROJECTS.find(function(x){return x.id===projectId});
+    if(!p) return;
+    if(!confirm('Preiei proiectul '+p.id+' ('+p.client+')?')) return;
+    fetch(API_DB+'?action=preiaProiect',{
+        method:'POST',
+        headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({action:'preiaProiect',id:p.dbId||projectId,user:userName})
+    })
+    .then(function(r){return r.json()})
+    .then(function(res){
+        if(res.success){
+            showToast('🤚 Ai preluat '+p.id+'!','success');
+            p.preluat_de=userName;
+            renderAll();
+            setTimeout(loadProjects,500);
+        } else {showToast('❌ '+(res.error||'Eroare'),'error');}
+    })
+    .catch(function(err){showToast('❌ Eroare rețea','error');});
+}
+
+// ═══════ ADD PROJECT ═══════
 function openModal(){document.getElementById('addProjectModal').classList.add('active');}
 function closeModal(){document.getElementById('addProjectModal').classList.remove('active');}
-
 function addProject(e){
     e.preventDefault();
     var f=document.getElementById('addProjectForm');
     var d=new FormData(f);
     var btn=f.querySelector('button[type=submit]');
-    btn.disabled=true;
-    btn.textContent='⏳ Se creează...';
-    showLoading(true);
-    var projectData={
-        client:d.get('client')||'',
-        cui:d.get('cui')||'',
-        adresa:d.get('locatie')||'Brașov',
-        contact:d.get('contact')||'',
-        telefon:d.get('telefon')||'',
-        serviciu:d.get('serviciu')||'',
-        obiectiv:d.get('obiectiv')||'',
-        status:d.get('status')||'Lead',
-        valoare:parseInt(d.get('valoare'))||0,
-        responsabil:d.get('responsabil')||'',
-        note:d.get('note')||''
-    };
-    // Pas 1: Creează client
+    btn.disabled=true;btn.textContent='⏳ Se creează...';showLoading(true);
+    var pd={client:d.get('client')||'',cui:d.get('cui')||'',adresa:d.get('locatie')||'Brașov',contact:d.get('contact')||'',telefon:d.get('telefon')||'',serviciu:d.get('serviciu')||'',obiectiv:d.get('obiectiv')||'',status:d.get('status')||'Lead',valoare:parseInt(d.get('valoare'))||0,responsabil:d.get('responsabil')||'',note:d.get('note')||''};
     fetch(API_DB+'?action=createClient',{
-        method:'POST',
-        headers:{'Content-Type':'application/json'},
-        body:JSON.stringify({action:'createClient',nume:projectData.client,cui_cnp:projectData.cui,telefon:projectData.telefon,adresa:projectData.adresa,oras:projectData.adresa||'Brașov',persoana_contact:projectData.contact})
+        method:'POST',headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({action:'createClient',nume:pd.client,cui_cnp:pd.cui,telefon:pd.telefon,adresa:pd.adresa,oras:pd.adresa||'Brașov',persoana_contact:pd.contact})
     })
-    .then(function(r){return r.json();})
+    .then(function(r){return r.json()})
     .then(function(cRes){
-        if(!cRes.success) throw new Error(cRes.error||'Eroare creare client');
-        var servDB=SERV_UI_TO_DB[projectData.serviciu]||projectData.serviciu;
-        var statDB=STAT_UI_TO_DB[projectData.status]||projectData.status;
+        if(!cRes.success) throw new Error(cRes.error||'Eroare client');
+        var servDB=SERV_UI_TO_DB[pd.serviciu]||pd.serviciu;
+        var statDB=STAT_UI_TO_DB[pd.status]||pd.status;
         return fetch(API_DB+'?action=createProiect',{
-            method:'POST',
-            headers:{'Content-Type':'application/json'},
-            body:JSON.stringify({action:'createProiect',client_id:cRes.id,serviciu:servDB,obiectiv:projectData.obiectiv,status:statDB,valoare_estimata:projectData.valoare,adresa_obiectiv:projectData.adresa,responsabil:projectData.responsabil||'Admin',note:projectData.note})
+            method:'POST',headers:{'Content-Type':'application/json'},
+            body:JSON.stringify({action:'createProiect',client_id:cRes.id,serviciu:servDB,obiectiv:pd.obiectiv,status:statDB,valoare_estimata:pd.valoare,adresa_obiectiv:pd.adresa,responsabil:pd.responsabil||'Admin',note:pd.note})
         });
     })
-    .then(function(r){return r.json();})
+    .then(function(r){return r.json()})
     .then(function(res){
-        showLoading(false);
-        btn.disabled=false;
-        btn.textContent='Creează Proiect';
-        if(res.success){
-            showToast('✅ Proiect creat: '+(res.proiect_id||res.id)+' în MySQL!','success');
-            closeModal();
-            f.reset();
-            // Adaugă local + re-fetch
-            loadProjects();
-        } else {
-            showToast('❌ Eroare creare: '+(res.error||'necunoscută'),'error');
-        }
+        showLoading(false);btn.disabled=false;btn.textContent='Creează Proiect';
+        if(res.success){showToast('✅ Proiect '+(res.proiect_id||'')+' creat!','success');closeModal();f.reset();loadProjects();}
+        else{showToast('❌ '+(res.error||'Eroare'),'error');}
     })
-    .catch(function(err){
-        showLoading(false);
-        btn.disabled=false;
-        btn.textContent='Creează Proiect';
-        showToast('❌ Eroare rețea: '+err.message,'error');
-    });
+    .catch(function(err){showLoading(false);btn.disabled=false;btn.textContent='Creează Proiect';showToast('❌ '+err.message,'error');});
 }
 
-// ═══════ PROJECT DETAIL (click pe card) ═══════
+// ═══════ EDIT PROJECT ═══════
+function openEditModal(projectId){
+    var p=PROJECTS.find(function(x){return x.id===projectId});
+    if(!p) return;
+    closeDetailModal();
+    document.getElementById('editModalTitle').textContent='✏️ Editare '+p.id;
+    document.getElementById('eDbId').value=p.dbId;
+    document.getElementById('ePid').value=p.id;
+    document.getElementById('eClient').value=p.client;
+    document.getElementById('eCui').value=p.cui;
+    document.getElementById('eTelefon').value=p.telefon;
+    document.getElementById('eContact').value=p.contact;
+    document.getElementById('eServiciu').value=p.serviciu;
+    document.getElementById('eValoare').value=p.valoare||'';
+    document.getElementById('eValContract').value=p.valoareContract||'';
+    document.getElementById('eResponsabil').value=p.responsabil;
+    document.getElementById('eStatus').value=p.status;
+    document.getElementById('eAdresa').value=p.adresa;
+    document.getElementById('eObiectiv').value=p.obiectiv;
+    document.getElementById('eNote').value=p.note;
+    document.getElementById('editProjectModal').classList.add('active');
+}
+function closeEditModal(){document.getElementById('editProjectModal').classList.remove('active');}
+
+function saveEditProject(e){
+    e.preventDefault();
+    var btn=document.getElementById('editSubmitBtn');
+    btn.disabled=true;btn.textContent='⏳ Se salvează...';
+    var dbId=document.getElementById('eDbId').value;
+    var pid=document.getElementById('ePid').value;
+    var servDB=SERV_UI_TO_DB[document.getElementById('eServiciu').value]||document.getElementById('eServiciu').value;
+    var statDB=STAT_UI_TO_DB[document.getElementById('eStatus').value]||document.getElementById('eStatus').value;
+    var payload={
+        action:'updateProiect',
+        id:dbId,
+        serviciu:servDB,
+        obiectiv:document.getElementById('eObiectiv').value,
+        status:statDB,
+        valoare_estimata:parseFloat(document.getElementById('eValoare').value)||0,
+        valoare_contract:parseFloat(document.getElementById('eValContract').value)||0,
+        responsabil:document.getElementById('eResponsabil').value,
+        adresa_obiectiv:document.getElementById('eAdresa').value,
+        note:document.getElementById('eNote').value
+    };
+    fetch(API_DB+'?action=updateProiect',{
+        method:'POST',headers:{'Content-Type':'application/json'},
+        body:JSON.stringify(payload)
+    })
+    .then(function(r){return r.json()})
+    .then(function(res){
+        btn.disabled=false;btn.textContent='💾 Salvează Modificările';
+        if(res.success){showToast('✅ '+pid+' actualizat!','success');closeEditModal();loadProjects();}
+        else{showToast('❌ '+(res.error||'Eroare'),'error');}
+    })
+    .catch(function(err){btn.disabled=false;btn.textContent='💾 Salvează Modificările';showToast('❌ '+err.message,'error');});
+}
+
+// ═══════ PROJECT DETAIL ═══════
 function openProjectDetail(projectId){
     var p=PROJECTS.find(function(x){return x.id===projectId});
     if(!p) return;
-    var driveLink=p.folderId?'https://drive.google.com/drive/folders/'+p.folderId:'';
+
+    // Parse istoric
+    var istoric=[];
+    try{istoric=JSON.parse(p.istoric||'[]');}catch(e){}
+
+    var timelineHtml='';
+    if(istoric.length){
+        timelineHtml='<div style="margin-top:12px;margin-bottom:12px"><div style="font-size:13px;font-weight:700;margin-bottom:8px">📅 Istoric Statusuri</div><ul class="timeline">';
+        istoric.forEach(function(h,i){
+            var isLast=i===istoric.length-1;
+            var statusName=STAT_DB_TO_UI[h.status]||h.status||'?';
+            var icon=STATUS_ICONS[statusName]||'📌';
+            var dotColor=isLast?'var(--blue)':'var(--gray-b)';
+            timelineHtml+='<li class="tl-item"><div class="tl-dot'+(isLast?' active':'')+'" style="background:'+dotColor+'"></div><div class="tl-line"></div><div class="tl-content"><span class="tl-status">'+icon+' '+statusName+'</span><div class="tl-date">'+(h.data||'—')+'</div>'+(h.user?'<div class="tl-user">👤 '+esc(h.user)+'</div>':'')+'</div></li>';
+        });
+        timelineHtml+='</ul></div>';
+    }
+
+    var preluatHtml='';
+    if(p.preluat_de){
+        preluatHtml='<div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:8px;padding:8px 12px;margin-bottom:8px;font-size:12px"><strong style="color:var(--green)">✅ Preluat de:</strong> '+(RESP_ICONS[p.preluat_de]||'')+' '+esc(p.preluat_de)+(p.preluat_la?' · '+p.preluat_la:'')+'</div>';
+    } else if(p.status!=='Lead'&&p.status!=='Finalizat'&&p.status!=='Anulat'){
+        preluatHtml='<div style="background:#fef2f2;border:1px solid #fecaca;border-radius:8px;padding:8px 12px;margin-bottom:8px;font-size:12px;display:flex;justify-content:space-between;align-items:center"><span style="color:var(--red);font-weight:700">⚠️ Nepreluat</span><button class="btn-preia" onclick="event.stopPropagation();closeDetailModal();preiaProiect(''+p.id+'')">🤚 Preia proiectul</button></div>';
+    }
+
+    var valHtml='<div><strong>Val. estimată:</strong> '+(p.valoare||0).toLocaleString('ro-RO')+' RON</div>';
+    if(p.valoareContract) valHtml+='<div><strong>Val. contract:</strong> <span style="color:var(--green);font-weight:800">'+(p.valoareContract).toLocaleString('ro-RO')+' RON</span></div>';
+
     var html='<div style="padding:4px">'+
         '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">'+
         '<span style="font-size:12px;font-weight:700;color:var(--blue)">'+p.id+'</span>'+
-        '<span class="kcard-tag '+(STATUS_MAP[p.status]||'lead')+'" style="padding:4px 10px">'+
-        (STATUS_ICONS[p.status]||'')+' '+p.status+'</span></div>'+
-        '<div style="font-size:18px;font-weight:800;margin-bottom:8px">'+p.client+'</div>'+
-        (p.obiectiv?'<div style="font-size:12px;color:var(--gray);margin-bottom:8px">📋 '+p.obiectiv+'</div>':'')+
+        '<span class="kcard-tag '+(STATUS_MAP[p.status]||'lead')+'" style="padding:4px 10px">'+(STATUS_ICONS[p.status]||'')+' '+p.status+'</span></div>'+
+        '<div style="font-size:18px;font-weight:800;margin-bottom:8px">'+esc(p.client)+'</div>'+
+        (p.obiectiv?'<div style="font-size:12px;color:var(--gray);margin-bottom:8px">📋 '+esc(p.obiectiv)+'</div>':'')+
+        preluatHtml+
         '<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;font-size:12px;margin-bottom:12px">'+
         '<div><strong>Serviciu:</strong> '+(p.serviciu||'—')+'</div>'+
-        '<div><strong>Valoare:</strong> '+(p.valoare||0).toLocaleString('ro-RO')+' RON</div>'+
+        valHtml+
         '<div><strong>Locație:</strong> '+(p.loc||'—')+'</div>'+
         '<div><strong>Telefon:</strong> '+(p.telefon||'—')+'</div>'+
         '<div><strong>CUI:</strong> '+(p.cui||'—')+'</div>'+
         '<div><strong>Contact:</strong> '+(p.contact||'—')+'</div>'+
         '<div><strong>Creat:</strong> '+(p.dataCreare||'—')+'</div>'+
-        '<div><strong>Responsabil:</strong> '+(p.responsabil||'—')+'</div>'+
+        '<div><strong>Responsabil:</strong> '+(RESP_ICONS[p.responsabil]||'')+' '+(p.responsabil||'—')+'</div>'+
         '</div>'+
-        (p.note?'<div style="font-size:11px;color:var(--gray);padding:8px;background:var(--gray-bg);border-radius:8px;margin-bottom:12px">📝 '+p.note+'</div>':'')+
+        (p.note?'<div style="font-size:11px;color:var(--gray);padding:8px;background:var(--gray-bg);border-radius:8px;margin-bottom:12px">📝 '+esc(p.note)+'</div>':'')+
+        timelineHtml+
         '<div style="display:flex;gap:8px;flex-wrap:wrap">'+
-        (driveLink?'<a href="'+driveLink+'" target="_blank" class="btn btn-sm btn-blue" style="text-decoration:none">📁 Deschide Drive</a>':'')+
-        '<a href="calculator-pret.html" class="btn btn-sm btn-green" style="text-decoration:none">📄 Generează ofertă</a>'+
-        '<button class="btn btn-sm btn-outline" onclick="closeDetailModal()">Închide</button>'+
+        '<button onclick="openEditModal(''+p.id+'')" style="flex:1;padding:10px;border-radius:10px;border:none;background:var(--blue);color:#fff;font-weight:700;font-size:13px;cursor:pointer">✏️ Editează</button>'+
+        '<a href="calculator-pret.html?client='+encodeURIComponent(p.client)+'&client_db_id='+p.clientDbId+'&proiect_db_id='+p.dbId+'&obiectiv='+encodeURIComponent(p.obiectiv||'')+'&adresa='+encodeURIComponent(p.adresa||'')+'" style="flex:1;padding:10px;border-radius:10px;border:none;background:var(--green);color:#fff;font-weight:700;font-size:13px;cursor:pointer;text-decoration:none;text-align:center;display:block">📄 Ofertă</a>'+
+        '<button onclick="closeDetailModal()" style="padding:10px 16px;border-radius:10px;border:1px solid var(--gray-b);background:#fff;color:var(--gray);font-weight:600;font-size:13px;cursor:pointer">Închide</button>'+
         '</div></div>';
-    // Show in modal
+
     var overlay=document.getElementById('detailModal');
     if(!overlay){
-        overlay=document.createElement('div');
-        overlay.id='detailModal';
-        overlay.className='modal-overlay';
+        overlay=document.createElement('div');overlay.id='detailModal';overlay.className='modal-overlay';
         overlay.onclick=function(ev){if(ev.target===overlay)closeDetailModal();};
-        overlay.innerHTML='<div class="modal"><div class="modal-head"><div class="modal-title" id="detailTitle"></div><button class="modal-close" onclick="closeDetailModal()">✕</button></div><div class="modal-body" id="detailBody"></div></div>';
+        overlay.innerHTML='<div class="modal wide"><div class="modal-head"><div class="modal-title" id="detailTitle"></div><button class="modal-close" onclick="closeDetailModal()">✕</button></div><div class="modal-body" id="detailBody"></div></div>';
         document.body.appendChild(overlay);
     }
-    document.getElementById('detailTitle').textContent='📋 '+p.id+' — '+p.client;
+    document.getElementById('detailTitle').textContent='📋 '+p.id+' — '+esc(p.client);
     document.getElementById('detailBody').innerHTML=html;
     overlay.classList.add('active');
 }
 function closeDetailModal(){var m=document.getElementById('detailModal');if(m)m.classList.remove('active');}
 
-// ═══════ REFRESH BUTTON ═══════
-function refreshProjects(){
-    showToast('🔄 Se reîncarcă proiectele...','info');
-    loadProjects();
-}
+// ═══════ REFRESH ═══════
+function refreshProjects(){showToast('🔄 Se reîncarcă...','info');loadProjects();}
 </script>
 <script>
 if('serviceWorker' in navigator){navigator.serviceWorker.register('../sw.js').then(function(r){console.log('[PWA] SW registered, scope:',r.scope)}).catch(function(e){console.log('[PWA] SW failed:',e)})}
