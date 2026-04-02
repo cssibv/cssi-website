@@ -456,6 +456,74 @@ try {
             break;
 
         // ══════════════════════════════════════
+        // ACTIVITATE RECENTA — feed unificat
+        // ══════════════════════════════════════
+        case 'getActivitateRecenta':
+            $limit = isset($_GET['limit']) ? intval($_GET['limit']) : 15;
+            $activitate = [];
+
+            // Oferte recente
+            $stmt = $db->query("SELECT o.id, o.oferta_id, o.client_nume, o.total_cu_tva, o.obiectiv, o.status, o.created_at FROM oferte o ORDER BY o.created_at DESC LIMIT 20");
+            foreach ($stmt->fetchAll() as $r) {
+                $val = number_format($r['total_cu_tva'], 0, ',', '.');
+                $activitate[] = [
+                    'text' => '📋 Ofertă ' . $r['oferta_id'] . ' — ' . $r['client_nume'] . ($r['obiectiv'] ? ' (' . $r['obiectiv'] . ')' : '') . ', ' . $val . ' RON',
+                    'color' => $r['status'] === 'Acceptata' ? 'var(--green)' : ($r['status'] === 'Refuzata' ? 'var(--red)' : 'var(--blue)'),
+                    'time' => $r['created_at'],
+                    'type' => 'oferta'
+                ];
+            }
+
+            // Proiecte recente (create sau cu status schimbat)
+            $stmt = $db->query("SELECT p.proiect_id, p.status, p.serviciu, p.obiectiv, p.updated_at, p.created_at, c.nume AS client_nume FROM proiecte p JOIN clienti c ON p.client_id = c.id ORDER BY p.updated_at DESC LIMIT 20");
+            foreach ($stmt->fetchAll() as $r) {
+                $isNew = (strtotime($r['updated_at']) - strtotime($r['created_at'])) < 60;
+                if ($isNew) {
+                    $txt = '🆕 Proiect nou: ' . $r['proiect_id'] . ' — ' . $r['client_nume'] . ' (' . $r['serviciu'] . ')';
+                } else {
+                    $txt = '🔄 ' . $r['proiect_id'] . ' — ' . $r['client_nume'] . ' → status: ' . $r['status'];
+                }
+                $statusColors = ['Lead'=>'var(--blue)','Oferta'=>'var(--purple)','Contract'=>'var(--teal)','Proiectare'=>'var(--orange)','Executie'=>'var(--green)','Receptie'=>'var(--green)','Facturat'=>'var(--red)','Mentenanta'=>'var(--teal)','Finalizat'=>'var(--green)','Anulat'=>'var(--gray)'];
+                $activitate[] = [
+                    'text' => $txt,
+                    'color' => isset($statusColors[$r['status']]) ? $statusColors[$r['status']] : 'var(--gray)',
+                    'time' => $r['updated_at'],
+                    'type' => 'proiect'
+                ];
+            }
+
+            // Clienti noi
+            $stmt = $db->query("SELECT c.client_id, c.nume, c.tip, c.oras, c.created_at FROM clienti c ORDER BY c.created_at DESC LIMIT 10");
+            foreach ($stmt->fetchAll() as $r) {
+                $activitate[] = [
+                    'text' => '👤 Client nou: ' . $r['nume'] . ($r['oras'] ? ' — ' . $r['oras'] : '') . ' (' . $r['tip'] . ')',
+                    'color' => 'var(--teal)',
+                    'time' => $r['created_at'],
+                    'type' => 'client'
+                ];
+            }
+
+            // Sortare descrescator dupa timp
+            usort($activitate, function($a, $b) { return strtotime($b['time']) - strtotime($a['time']); });
+            $activitate = array_slice($activitate, 0, $limit);
+
+            // Formatare timp relativ
+            $now = time();
+            foreach ($activitate as &$a) {
+                $diff = $now - strtotime($a['time']);
+                if ($diff < 60) $a['timeLabel'] = 'Acum';
+                elseif ($diff < 3600) $a['timeLabel'] = floor($diff/60) . ' min';
+                elseif ($diff < 86400) $a['timeLabel'] = floor($diff/3600) . 'h';
+                elseif ($diff < 172800) $a['timeLabel'] = 'Ieri';
+                elseif ($diff < 604800) $a['timeLabel'] = floor($diff/86400) . ' zile';
+                else $a['timeLabel'] = date('d.m.Y', strtotime($a['time']));
+            }
+            unset($a);
+
+            jsonResponse(['success' => true, 'data' => $activitate]);
+            break;
+
+        // ══════════════════════════════════════
         // HEALTH CHECK
         // ══════════════════════════════════════
         case 'ping':

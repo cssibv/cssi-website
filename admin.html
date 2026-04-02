@@ -132,6 +132,14 @@ a{text-decoration:none;color:inherit;}button{font-family:inherit;cursor:pointer;
 .mod-card[data-cat="maint"]{border-left-color:var(--teal);}
 .mod-card[data-cat="docs"]{border-left-color:#0ea5e9;}
 
+/* Alerts */
+.alerts{background:#fff;border-radius:var(--radius);box-shadow:var(--shadow);padding:14px;margin-bottom:24px;}
+.alert-item{display:flex;align-items:flex-start;gap:10px;padding:10px 0;border-bottom:1px solid var(--gray-bg);}
+.alert-item:last-child{border-bottom:none;}
+.alert-dot{width:8px;height:8px;border-radius:50%;margin-top:5px;flex-shrink:0;}
+.alert-text{font-size:12px;color:var(--dark);line-height:1.5;}
+.alert-time{font-size:10px;color:var(--gray-l);margin-top:2px;}
+
 /* Bottom Nav */
 .bottom-nav{position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1px solid var(--gray-b);box-shadow:0 -4px 20px rgba(0,0,0,0.06);padding:6px 12px;z-index:100;display:flex;gap:4px;}
 @media(min-width:768px){.bottom-nav{display:none;}}
@@ -217,6 +225,12 @@ a{text-decoration:none;color:inherit;}button{font-family:inherit;cursor:pointer;
             <div><button class="section-action" onclick="openModal()">+ Proiect Nou</button><a href="/admin/proiecte.html" class="section-action">Vezi toate →</a></div>
         </div>
         <div class="kanban-wrap fade-up"><div class="kanban" id="kanbanBoard"></div></div>
+    </div>
+
+    <!-- ACTIVITATE RECENTA (din baza de date) -->
+    <div id="alertSection" class="hidden">
+        <div class="section-head"><div class="section-title">🔔 Activitate Recentă</div></div>
+        <div class="alerts fade-up" id="alertList"><div style="text-align:center;padding:20px;color:#94a3b8;font-size:13px">Se încarcă...</div></div>
     </div>
 
     <!-- MODULES -->
@@ -361,6 +375,7 @@ function showDash(){
     tog('kpiSection',r.showKpi);if(r.showKpi)renderKPI();
     tog('quickSection',false);
     tog('kanbanSection',r.showKanban);if(r.showKanban)renderKanban();
+    tog('alertSection',r.showAlerts!==false);if(r.showAlerts!==false)renderAlerts();
     renderModules();
 }
 function tog(id,s){document.getElementById(id).classList.toggle('hidden',!s)}
@@ -410,6 +425,27 @@ function renderKanban(){
             body.appendChild(c);
         })}
         col.appendChild(body);b.appendChild(col);
+    });
+}
+
+// ═══════ ACTIVITATE RECENTA (din MySQL) ═══════
+function renderAlerts(){
+    var l=document.getElementById('alertList');
+    l.innerHTML='<div style="text-align:center;padding:20px;color:#94a3b8;font-size:13px">⏳ Se încarcă activitatea...</div>';
+    fetch('/admin/api.php?action=getActivitateRecenta&limit=10&_t='+Date.now())
+    .then(function(r){return r.json()})
+    .then(function(res){
+        if(!res.success||!res.data||!res.data.length){
+            l.innerHTML='<div style="text-align:center;padding:20px;color:#94a3b8;font-size:13px">Nicio activitate recentă</div>';
+            return;
+        }
+        l.innerHTML='';
+        res.data.forEach(function(a){
+            l.innerHTML+='<div class="alert-item"><div class="alert-dot" style="background:'+a.color+'"></div><div><div class="alert-text">'+a.text+'</div><div class="alert-time">'+a.timeLabel+'</div></div></div>';
+        });
+    })
+    .catch(function(){
+        l.innerHTML='<div style="text-align:center;padding:20px;color:#94a3b8;font-size:13px">⚠️ Eroare încărcare activitate</div>';
     });
 }
 
