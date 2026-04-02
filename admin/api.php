@@ -614,6 +614,38 @@ try {
         // ══════════════════════════════════════
         // HEALTH CHECK
         // ══════════════════════════════════════
+        // ══════════════════════════════════════
+        // CONFIGURARE UTILIZATORI (din MySQL)
+        // ══════════════════════════════════════
+        case 'getUserConfig':
+            $uid = isset($_GET['user_id']) ? $_GET['user_id'] : '';
+            if ($uid) {
+                $stmt = $db->prepare("SELECT * FROM user_config WHERE user_id = ?");
+                $stmt->execute([$uid]);
+                $row = $stmt->fetch();
+                if ($row) { $row['modules'] = json_decode($row['modules'] ?: '[]'); $row['stages'] = json_decode($row['stages'] ?: '[]'); $row['primary_stages'] = json_decode($row['primary_stages'] ?: '[]'); }
+                jsonResponse(['success' => true, 'data' => $row ?: null]);
+            } else {
+                $stmt = $db->query("SELECT * FROM user_config ORDER BY FIELD(user_id,'admin','mihai','roxana','valentin','cristina')");
+                $rows = $stmt->fetchAll();
+                foreach ($rows as &$r) { $r['modules'] = json_decode($r['modules'] ?: '[]'); $r['stages'] = json_decode($r['stages'] ?: '[]'); $r['primary_stages'] = json_decode($r['primary_stages'] ?: '[]'); }
+                unset($r);
+                jsonResponse(['success' => true, 'data' => $rows]);
+            }
+            break;
+
+        case 'saveUserConfig':
+            $uid = isset($data['user_id']) ? $data['user_id'] : '';
+            if (!$uid) { jsonResponse(['success' => false, 'error' => 'user_id obligatoriu'], 400); break; }
+            $modules = isset($data['modules']) ? json_encode($data['modules']) : '[]';
+            $stages = isset($data['stages']) ? json_encode($data['stages']) : '[]';
+            $primary = isset($data['primary_stages']) ? json_encode($data['primary_stages']) : '[]';
+            $focus = isset($data['focus']) ? $data['focus'] : '';
+            $stmt = $db->prepare("INSERT INTO user_config (user_id, modules, stages, primary_stages, focus) VALUES (?,?,?,?,?) ON DUPLICATE KEY UPDATE modules=VALUES(modules), stages=VALUES(stages), primary_stages=VALUES(primary_stages), focus=VALUES(focus)");
+            $stmt->execute([$uid, $modules, $stages, $primary, $focus]);
+            jsonResponse(['success' => true]);
+            break;
+
         case 'ping':
             jsonResponse(['success' => true, 'message' => 'CSSI Portal API v4.0', 'time' => date('Y-m-d H:i:s'), 'db' => 'MySQL OK']);
             break;
