@@ -232,7 +232,7 @@ try {
             $search = (isset($_GET['search']) ? $_GET['search'] : '');
             $clientId = (isset($_GET['client_id']) ? $_GET['client_id'] : '');
             $proiectId = (isset($_GET['proiect_id']) ? $_GET['proiect_id'] : '');
-            $sql = "SELECT vc.*, o2.client_id AS client_db_id, o2.proiect_id AS proiect_db_id FROM v_oferte_complete vc JOIN oferte o2 ON vc.id = o2.id WHERE 1=1";
+            $sql = "SELECT vc.*, o2.client_id AS client_db_id, o2.proiect_id AS proiect_db_id, o2.motiv_respingere, o2.data_decizie, o2.decis_de FROM v_oferte_complete vc JOIN oferte o2 ON vc.id = o2.id WHERE 1=1";
             $params = [];
             if ($clientId) {
                 $sql .= " AND o2.client_id = ?";
@@ -431,7 +431,59 @@ try {
         case 'updateOfertaStatus':
             $id = (isset($data['id']) ? $data['id'] : 0);
             $status = (isset($data['status']) ? $data['status'] : '');
-            $db->prepare("UPDATE oferte SET status = ? WHERE id = ?")->execute([$status, $id]);
+            $motiv = (isset($data['motiv_respingere']) ? $data['motiv_respingere'] : '');
+            $user = (isset($data['user']) ? $data['user'] : 'Admin');
+            
+            // Update oferta status + motiv + data decizie
+            $db->prepare("UPDATE oferte SET status = ?, motiv_respingere = ?, data_decizie = NOW(), decis_de = ? WHERE id = ?")->execute([$status, $motiv, $user, $id]);
+            
+            // Dacă oferta e Acceptată → schimbă proiectul în Contract automat
+            if ($status === 'Acceptata') {
+                $stmt = $db->prepare("SELECT proiect_id, total_cu_tva FROM oferte WHERE id = ?");
+                $stmt->execute([$id]);
+                $oferta = $stmt->fetch();
+                if ($oferta && $oferta['proiect_id']) {
+                    $pId = $oferta['proiect_id'];
+                    // Update proiect status + valoare contract
+                    $db->prepare("UPDATE proiecte SET status = 'Contract', valoare_contract = ? WHERE id = ?")->execute([
+                        $oferta['total_cu_tva'], $pId
+                    ]);
+                    // Adaugă în istoric
+                    $stmtP = $db->prepare("SELECT proiect_id, istoric_status FROM proiecte WHERE id = ?");
+                    $stmtP->execute([$pId]);
+                    $proj = $stmtP->fetch();
+                    if ($proj) {
+                        $istoric = json_decode($proj['istoric_status'] ?: '[]', true);
+                        $istoric[] = ['status' => 'Contract', 'data' => date('Y-m-d H:i:s'), 'user' => $user, 'nota' => 'Ofertă acceptată'];
+                        $db->prepare("UPDATE proiecte SET istoric_status = ? WHERE id = ?")->execute([json_encode($istoric), $pId]);
+                        
+                        // Notificare
+                        $db->prepare("INSERT INTO notificari (proiect_id, mesaj, tip, de_la, etapa_noua) VALUES (?,?,?,?,?)")->execute([
+                            $proj['proiect_id'],
+                            '✅ Ofertă acceptată → Proiect ' . $proj['proiect_id'] . ' trecut în Contract',
+                            'status',
+                            $user,
+                            'Contract'
+                        ]);
+                    }
+                }
+            }
+            
+            // Dacă oferta e Refuzată → notificare
+            if ($status === 'Refuzata') {
+                $stmt = $db->prepare("SELECT o.proiect_id, p.proiect_id AS cod FROM oferte o LEFT JOIN proiecte p ON o.proiect_id = p.id WHERE o.id = ?");
+                $stmt->execute([$id]);
+                $row = $stmt->fetch();
+                if ($row && $row['cod']) {
+                    $db->prepare("INSERT INTO notificari (proiect_id, mesaj, tip, de_la) VALUES (?,?,?,?)")->execute([
+                        $row['cod'],
+                        '❌ Ofertă refuzată — Motiv: ' . ($motiv ?: 'nespecificat'),
+                        'alerta',
+                        $user
+                    ]);
+                }
+            }
+            
             jsonResponse(['success' => true]);
             break;
 

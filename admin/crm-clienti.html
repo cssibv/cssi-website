@@ -350,9 +350,9 @@ var API_DB = '/admin/api.php'; // ← Pune URL-ul Apps Script Web App aici
 
 // ═══════ AUTH CHECK ═══════
 var role = sessionStorage.getItem('cssi-role');
-if (!role) { window.location.href = '../admin.html'; }
-var canEdit = true;
-var canConvert = true;
+if (!role || !['admin','org','sales'].includes(role)) { window.location.href = '../admin.html'; }
+var canEdit = ['admin','org','sales'].includes(role);
+var canConvert = ['admin','org'].includes(role);
 
 // ═══════ CRM STATUSES ═══════
 var CRM_STATUSES = [
@@ -830,11 +830,11 @@ function goOfertare(leadId) {
 function showOferte(leadId) {
     var l = LEADS.find(function(x) { return x.id === leadId; });
     if (!l) return;
+    window._currentOferteLead = leadId;
     document.getElementById('offersModalTitle').textContent = '📋 Oferte — ' + l.nume;
     document.getElementById('offersModalBody').innerHTML = '<div style="text-align:center;padding:30px;color:var(--gray)">⏳ Se încarcă ofertele...</div>';
     document.getElementById('offersModal').classList.add('active');
 
-    // Fetch offers for this client
     var url = API_DB + '?action=getOferte&_t=' + Date.now();
     if (l.clientDbId) url += '&client_id=' + l.clientDbId;
     
@@ -847,20 +847,48 @@ function showOferte(leadId) {
                 '<div style="text-align:center;margin-top:12px"><button class="btn-offer new" onclick="closeOffersModal();goOfertare(' + leadId + ')">📄 Creează prima ofertă</button></div>';
             return;
         }
-        var html = '<div style="margin-bottom:12px;font-size:12px;color:var(--gray)">' + res.data.length + ' ofert' + (res.data.length === 1 ? 'ă' : 'e') + ' găsit' + (res.data.length === 1 ? 'ă' : 'e') + '</div>';
+        var html = '<div style="margin-bottom:12px;font-size:12px;color:var(--gray)">' + res.data.length + ' ofert' + (res.data.length === 1 ? 'ă' : 'e') + '</div>';
         res.data.forEach(function(o) {
             var total = parseFloat(o.total_cu_tva) || 0;
             var linesCount = (o.lines ? o.lines.length : 0);
             var laborCount = (o.labor ? o.labor.length : 0);
-            var statusCls = o.oferta_status === 'Acceptata' ? 'color:var(--green)' : (o.oferta_status === 'Refuzata' ? 'color:var(--red)' : 'color:var(--gray)');
-            html += '<div class="offer-row">';
+            var st = o.oferta_status || 'Draft';
+            
+            // Status badge styling
+            var badgeStyle = 'display:inline-block;padding:3px 10px;border-radius:6px;font-size:11px;font-weight:700;';
+            if(st==='Acceptata') badgeStyle += 'background:#f0fdf4;color:var(--green);';
+            else if(st==='Refuzata') badgeStyle += 'background:#fef2f2;color:var(--red);';
+            else if(st==='Trimisa') badgeStyle += 'background:#eff6ff;color:var(--blue);';
+            else badgeStyle += 'background:var(--gray-bg);color:var(--gray);';
+            var statusBadge = '<span style="'+badgeStyle+'">'+(st==='Acceptata'?'✅ Acceptată':st==='Refuzata'?'❌ Refuzată':st==='Trimisa'?'📤 Trimisă':'📝 '+st)+'</span>';
+            
+            html += '<div class="offer-row" style="border-left:3px solid '+(st==='Acceptata'?'var(--green)':st==='Refuzata'?'var(--red)':st==='Trimisa'?'var(--blue)':'var(--gray-b)')+'">';
             html += '<div class="offer-row-top"><div><div class="offer-row-title">' + (o.oferta_id || 'OF-???') + ' — ' + (o.titlu || 'Fără titlu') + '</div>';
-            html += '<div class="offer-row-meta">' + (o.data_oferta || '') + ' · ' + linesCount + ' produse, ' + laborCount + ' servicii · <span style="' + statusCls + ';font-weight:700">' + (o.oferta_status || 'Draft') + '</span></div></div>';
+            html += '<div class="offer-row-meta">' + (o.data_oferta || '') + ' · ' + linesCount + ' produse, ' + laborCount + ' servicii · '+statusBadge+'</div></div>';
             html += '<div class="offer-row-total">' + Number(total).toLocaleString("ro-RO", {minimumFractionDigits: 0}) + ' RON</div></div>';
-            html += '<div class="offer-row-actions">';
+            
+            // Motiv respingere (dacă există)
+            if(st==='Refuzata' && o.motiv_respingere){
+                html += '<div style="background:#fef2f2;border:1px solid #fecaca;border-radius:8px;padding:8px 12px;margin:8px 0;font-size:12px;color:var(--red)"><strong>Motiv respingere:</strong> '+esc(o.motiv_respingere)+'</div>';
+            }
+            if(o.decis_de && (st==='Acceptata'||st==='Refuzata')){
+                html += '<div style="font-size:10px;color:var(--gray);margin-bottom:6px">Decis de: '+esc(o.decis_de)+(o.data_decizie?' · '+o.data_decizie:'')+'</div>';
+            }
+            
+            // Action buttons
+            html += '<div class="offer-row-actions" style="flex-wrap:wrap">';
             html += '<button class="btn-offer-view" onclick="viewOferta('+o.id+')">👁️ Vizualizează</button>';
             html += '<button class="btn-offer-edit" onclick="editOferta('+o.id+')">✏️ Editează</button>';
             html += '<button class="btn-offer-pdf" onclick="pdfOferta('+o.id+')">📄 PDF</button>';
+            
+            // Butoane status ofertă
+            if(st==='Draft'){
+                html += '<button style="padding:6px 12px;border-radius:8px;border:none;font-size:11px;font-weight:700;cursor:pointer;background:var(--blue);color:#fff" onclick="trimiteOferta('+o.id+')">📤 Marchează Trimisă</button>';
+            }
+            if(st==='Draft' || st==='Trimisa'){
+                html += '<button style="padding:6px 12px;border-radius:8px;border:none;font-size:11px;font-weight:700;cursor:pointer;background:var(--green);color:#fff" onclick="acceptaOferta('+o.id+','+leadId+')">✅ Acceptată</button>';
+                html += '<button style="padding:6px 12px;border-radius:8px;border:none;font-size:11px;font-weight:700;cursor:pointer;background:var(--red);color:#fff" onclick="openRespingeModal('+o.id+','+leadId+')">❌ Refuzată</button>';
+            }
             html += '</div>';
             html += '</div>';
         });
@@ -870,6 +898,65 @@ function showOferte(leadId) {
     .catch(function(err) {
         document.getElementById('offersModalBody').innerHTML = '<div class="empty-msg"><div class="empty-icon">❌</div>Eroare la încărcarea ofertelor</div>';
     });
+}
+
+// ═══════ OFERTA STATUS ACTIONS ═══════
+function trimiteOferta(ofertaId){
+    if(!confirm('Marchezi oferta ca trimisă clientului?')) return;
+    updateOfertaStatus(ofertaId, 'Trimisa', '', null);
+}
+
+function acceptaOferta(ofertaId, leadId){
+    if(!confirm('Confirmi că clientul a ACCEPTAT oferta?\nProiectul va fi trecut automat în status Contract.')) return;
+    updateOfertaStatus(ofertaId, 'Acceptata', '', leadId);
+}
+
+function openRespingeModal(ofertaId, leadId){
+    window._respingeOfertaId = ofertaId;
+    window._respingeLeadId = leadId;
+    document.getElementById('respingeModal').classList.add('active');
+    document.getElementById('motivRespingere').value = '';
+    document.getElementById('motivRespingere').focus();
+}
+function closeRespingeModal(){
+    document.getElementById('respingeModal').classList.remove('active');
+    window._respingeOfertaId = null;
+}
+function confirmRespingere(){
+    var motiv = document.getElementById('motivRespingere').value.trim();
+    if(!motiv){toast('⚠️ Introdu motivul respingerii','error');return;}
+    var ofertaId = window._respingeOfertaId;
+    var leadId = window._respingeLeadId;
+    closeRespingeModal();
+    updateOfertaStatus(ofertaId, 'Refuzata', motiv, leadId);
+}
+
+function updateOfertaStatus(ofertaId, newStatus, motiv, leadId){
+    var userName = sessionStorage.getItem('cssi-user') || role || 'Admin';
+    fetch(API_DB+'?action=updateOfertaStatus',{
+        method:'POST',
+        headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({action:'updateOfertaStatus', id:ofertaId, status:newStatus, motiv_respingere:motiv||'', user:userName})
+    })
+    .then(function(r){return r.json()})
+    .then(function(res){
+        if(res.success){
+            if(newStatus==='Acceptata'){
+                toast('✅ Ofertă acceptată! Proiect → Contract','success');
+                // Refresh lead data to reflect new status
+                refreshData();
+            } else if(newStatus==='Refuzata'){
+                toast('❌ Ofertă refuzată — motiv înregistrat','info');
+            } else {
+                toast('📤 Ofertă marcată ca trimisă','success');
+            }
+            // Refresh offers modal
+            if(leadId) showOferte(leadId);
+        } else {
+            toast('⚠️ Eroare: '+(res.error||'necunoscută'),'error');
+        }
+    })
+    .catch(function(err){toast('⚠️ Eroare rețea','error');});
 }
 
 function closeOffersModal() {
@@ -931,5 +1018,24 @@ refreshData();
 <script>
 if('serviceWorker' in navigator){navigator.serviceWorker.register('../sw.js').then(function(r){console.log('[PWA] SW registered, scope:',r.scope)}).catch(function(e){console.log('[PWA] SW failed:',e)})}
 </script>
+
+<!-- REJECTION REASON MODAL -->
+<div id="respingeModal" class="modal-overlay" onclick="if(event.target===this)closeRespingeModal()">
+<div class="modal" style="max-width:420px">
+    <div class="modal-head"><div class="modal-title">❌ Motiv Respingere Ofertă</div><button class="modal-close" onclick="closeRespingeModal()">✕</button></div>
+    <div class="modal-body">
+        <div style="font-size:13px;color:var(--gray);margin-bottom:16px">Introdu motivul pentru care clientul a refuzat oferta. Această informație va fi salvată și vizibilă echipei.</div>
+        <div class="form-group">
+            <label class="form-label">Motiv respingere <span class="req">*</span></label>
+            <textarea class="form-textarea" id="motivRespingere" placeholder="Ex: Preț prea mare, a ales alt furnizor, a renunțat la proiect..." rows="4"></textarea>
+        </div>
+        <div style="display:flex;gap:8px">
+            <button style="flex:1;padding:12px;border-radius:12px;border:none;background:var(--gray-bg);color:var(--gray);font-weight:700;cursor:pointer" onclick="closeRespingeModal()">Anulează</button>
+            <button style="flex:1;padding:12px;border-radius:12px;border:none;background:var(--red);color:#fff;font-weight:700;cursor:pointer" onclick="confirmRespingere()">❌ Confirmă Respingerea</button>
+        </div>
+    </div>
+</div>
+</div>
+
 </body>
 </html>
