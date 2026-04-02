@@ -460,9 +460,14 @@ try {
                 }
                 
                 if ($pId) {
-                    // Update proiect status + valoare contract
+                    // Suma TUTUROR ofertelor acceptate pentru acest proiect (contract inglobat)
+                    $stmtSum = $db->prepare("SELECT COALESCE(SUM(total_cu_tva), 0) AS total FROM oferte WHERE (proiect_id = ? OR (client_id = ? AND proiect_id IS NULL)) AND status = 'Acceptata'");
+                    $stmtSum->execute([$pId, $oferta['client_id']]);
+                    $sumRow = $stmtSum->fetch();
+                    $totalContract = $sumRow ? $sumRow['total'] : $oferta['total_cu_tva'];
+                    
                     $db->prepare("UPDATE proiecte SET status = 'Contract', valoare_contract = ? WHERE id = ?")->execute([
-                        $oferta['total_cu_tva'], $pId
+                        $totalContract, $pId
                     ]);
                     // Adaugă în istoric
                     $stmtP = $db->prepare("SELECT proiect_id, istoric_status FROM proiecte WHERE id = ?");
