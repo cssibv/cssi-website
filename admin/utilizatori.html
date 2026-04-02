@@ -58,6 +58,8 @@ a{text-decoration:none;color:inherit;}.container{max-width:1200px;margin:0 auto;
 <div class="save-bar" id="saveBar"><span style="font-size:13px;color:var(--gray);font-weight:600">⚠️ Ai modificări nesalvate</span><button class="btn btn-green" id="saveBtn" onclick="saveAllToDB()">💾 Salvează în MySQL</button><button class="btn btn-outline" onclick="resetPerms()">Anulează</button></div>
 <div class="toast" id="toast"></div>
 <script>
+var role=sessionStorage.getItem('cssi-role');
+if(role!=='admin'){window.location.href='../admin.html';}
 var API='/admin/api.php';
 var USERS=[
 {id:'admin',name:'Admin',pass:'admin',color:'c-admin',icon:'🔑',pill:'Admin',pillBg:'#0f172a',pillColor:'#fff'},

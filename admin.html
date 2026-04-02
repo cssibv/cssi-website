@@ -503,6 +503,7 @@ function renderModules(){
     var g=document.getElementById('modGrid');g.innerHTML='';
     var fullAccess=['admin','mihai','roxana','valentin','cristina'];
     MODULES.forEach(function(m){
+        if(m.id==='utilizatori'&&role!=='admin')return;
         if(fullAccess.indexOf(role)<0&&m.roles.indexOf(role)<0)return;
         var c=document.createElement('a');c.href=m.h;c.className='mod-card'+(m.v3?' new':'');c.setAttribute('data-cat',m.cat);
         c.innerHTML='<div class="m-icon">'+m.i+'</div><div class="m-title">'+m.t+'</div><div class="m-desc">'+m.d+'</div>';
