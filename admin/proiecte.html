@@ -757,6 +757,8 @@ function openProjectDetail(projectId){
         (p.status==='Contract'?'<div style="background:linear-gradient(135deg,#f0fdfa,#eff6ff);border:2px solid var(--teal);border-radius:12px;padding:16px;margin-bottom:12px"><div style="font-size:13px;font-weight:800;margin-bottom:10px;color:var(--dark)">➡️ Următorul pas:</div><div style="display:flex;gap:8px"><button onclick="sendToStatus('+Q+p.id+Q+','+Q+'Proiectare'+Q+')" style="flex:1;padding:12px;border-radius:10px;border:none;background:var(--teal);color:#fff;font-weight:700;font-size:13px;cursor:pointer">📐 Trimite la Proiectare</button><button onclick="sendToStatus('+Q+p.id+Q+','+Q+'Execu\u021bie'+Q+')" style="flex:1;padding:12px;border-radius:10px;border:none;background:var(--orange);color:#fff;font-weight:700;font-size:13px;cursor:pointer">🔧 Execuție directă</button></div><div style="font-size:10px;color:var(--gray);margin-top:8px">📐 Proiectare = necesită scheme, avize IGPR/ISU · 🔧 Execuție = montaj direct</div></div>':'')+
         '<div style="display:flex;gap:8px;flex-wrap:wrap">'+
         '<button onclick="openEditModal('+Q+p.id+Q+')" style="flex:1;padding:10px;border-radius:10px;border:none;background:var(--blue);color:#fff;font-weight:700;font-size:13px;cursor:pointer">✏️ Editează</button>'+
+        '<button onclick="cancelProject('+Q+p.id+Q+')" style="padding:10px 14px;border-radius:10px;border:none;background:#fef2f2;color:var(--red);font-weight:700;font-size:13px;cursor:pointer" title="Anulează proiectul">❌ Anulează</button>'+
+        '<button onclick="deleteProject('+Q+p.id+Q+','+p.dbId+')" style="padding:10px 14px;border-radius:10px;border:none;background:var(--gray-bg);color:var(--gray);font-weight:600;font-size:12px;cursor:pointer" title="Șterge definitiv">🗑️ Șterge</button>'+
         '<button onclick="closeDetailModal()" style="padding:10px 16px;border-radius:10px;border:1px solid var(--gray-b);background:#fff;color:var(--gray);font-weight:600;font-size:13px;cursor:pointer">Închide</button>'+
         '</div></div>';
 
@@ -866,6 +868,30 @@ function sendToStatus(projectId, newStatus){
     if(!confirm('Trimiți proiectul '+projectId+' la '+newStatus+'?')) return;
     closeDetailModal();
     changeStatus(projectId, newStatus);
+}
+
+function cancelProject(projectId){
+    if(!confirm('Anulezi proiectul '+projectId+'? Va trece în status Anulat.')) return;
+    closeDetailModal();
+    changeStatus(projectId, 'Anulat');
+}
+
+function deleteProject(projectId, dbId){
+    if(!confirm('⚠️ Ștergi DEFINITIV proiectul '+projectId+'?\n\nAceastă acțiune NU poate fi anulată!')) return;
+    if(!confirm('Ești ABSOLUT sigur? Toate datele vor fi pierdute.')) return;
+    closeDetailModal();
+    showLoading(true);
+    fetch(API_DB+'?action=deleteProiect',{
+        method:'POST',headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({action:'deleteProiect',id:dbId})
+    })
+    .then(function(r){return r.json()})
+    .then(function(res){
+        showLoading(false);
+        if(res.success){showToast('🗑️ Proiect șters definitiv','success');loadProjects();}
+        else{showToast('❌ '+(res.error||'Eroare'),'error');}
+    })
+    .catch(function(e){showLoading(false);showToast('❌ Eroare rețea','error');});
 }
 
 function refreshProjects(){showToast('🔄 Se reîncarcă...','info');loadProjects();}

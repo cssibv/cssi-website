@@ -178,6 +178,23 @@ try {
             jsonResponse(['success' => true, 'id' => $db->lastInsertId(), 'proiect_id' => $proiectId]);
             break;
 
+        case 'deleteProiect':
+            $id = (isset($data['id']) ? $data['id'] : 0);
+            if (!$id) { jsonResponse(['success' => false, 'error' => 'ID obligatoriu'], 400); break; }
+            // Șterge proiectarea asociată
+            $db->prepare("DELETE FROM proiectare WHERE proiect_id = ?")->execute([$id]);
+            // Șterge notificările
+            $stmtPid = $db->prepare("SELECT proiect_id FROM proiecte WHERE id = ?");
+            $stmtPid->execute([$id]);
+            $pidRow = $stmtPid->fetch();
+            if ($pidRow) {
+                $db->prepare("DELETE FROM notificari WHERE proiect_id = ?")->execute([$pidRow['proiect_id']]);
+            }
+            // Șterge proiectul
+            $db->prepare("DELETE FROM proiecte WHERE id = ?")->execute([$id]);
+            jsonResponse(['success' => true]);
+            break;
+
         case 'updateProiect':
             $id = (isset($data['id']) ? $data['id'] : 0);
             $fields = [];
