@@ -191,7 +191,6 @@ a{text-decoration:none;color:inherit;}button{font-family:inherit;cursor:pointer;
         </div>
         <div class="page-actions">
             <button class="page-btn ghost" onclick="refreshProjects()">🔄 Refresh</button>
-            <a href="https://docs.google.com/spreadsheets/d/1_2VtCkUU07fNLWI-gUqFY_guDj29xeTWRWGaDzjU0Rc/edit" target="_blank" class="page-btn ghost">📊 Sheet</a>
             <button class="page-btn primary" onclick="openModal()">+ Proiect Nou</button>
         </div>
     </div>
@@ -215,7 +214,7 @@ a{text-decoration:none;color:inherit;}button{font-family:inherit;cursor:pointer;
         <button class="filter-chip" data-filter="Execuție" onclick="setFilter('Execuție',this)">🔧 Execuție</button>
         <button class="filter-chip" data-filter="Facturat" onclick="setFilter('Facturat',this)">💳 Facturat</button>
         <button class="filter-chip" data-filter="Mentenanță" onclick="setFilter('Mentenanță',this)">🔄 Mentenanță</button>
-        <button class="filter-chip" data-filter="Anulat" onclick="setFilter('Anulat',this)" style="border-color:#fecaca;color:var(--red)">❌ Anulate</button>
+        <button class="filter-chip" data-filter="Anulat" onclick="setFilter('Anulat',this);switchView('table',document.querySelectorAll('.tab')[1])" style="border-color:#fecaca;color:var(--red)">❌ Anulate</button>
     </div>
 
     <!-- Board View -->
@@ -543,6 +542,8 @@ function renderTable(){
     filtered.forEach(function(p){
         var t=SERVICE_TAGS[p.serviciu]||{cls:'install',s:p.serviciu||'—'};
         var opts=Object.keys(STATUS_MAP).map(function(s){return '<option value="'+s+'"'+(p.status===s?' selected':'')+'>'+STATUS_ICONS[s]+' '+s+'</option>';}).join('');
+        opts+='<option value="Finalizat"'+(p.status==='Finalizat'?' selected':'')+'>✅ Finalizat</option>';
+        opts+='<option value="Anulat"'+(p.status==='Anulat'?' selected':'')+'>❌ Anulat</option>';
         var respName=p.preluat_de||p.responsabil||'—';
         var respIcon=RESP_ICONS[respName]||'';
         var valDisplay=p.valoareContract?(p.valoareContract).toLocaleString('ro-RO'):(p.oferteTotal?(p.oferteTotal).toLocaleString('ro-RO'):(p.valoare||0).toLocaleString('ro-RO'));
