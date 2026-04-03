@@ -761,7 +761,7 @@ function renderOferteSection(container, oferte){
             var total=parseFloat(o.total_cu_tva)||0;
             html+='<div style="display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px solid #dcfce7;font-size:12px">';
             html+='<div><strong>'+esc(o.oferta_id)+'</strong> — '+esc(o.titlu||o.oferta_id)+'<div style="font-size:10px;color:var(--gray)">'+(o.data_oferta||'')+'</div></div>';
-            html+='<div style="display:flex;align-items:center;gap:6px"><a href="calculator-pret.html?pdf_offer='+o.id+'" target="_blank" style="padding:3px 8px;border-radius:6px;background:#f0fdf4;color:var(--green);font-size:10px;font-weight:700;text-decoration:none;border:1px solid #bbf7d0">📄 PDF</a><span style="font-weight:900;color:var(--green);white-space:nowrap">'+total.toLocaleString("ro-RO")+' RON</span></div></div>';
+            html+='<div style="display:flex;align-items:center;gap:6px"><button onclick="window.open('+Q+'calculator-pret.html?pdf_offer='+o.id+Q+')" style="padding:3px 8px;border-radius:6px;background:#f0fdf4;color:var(--green);font-size:10px;font-weight:700;cursor:pointer;border:1px solid #bbf7d0">📄 PDF</button><span style="font-weight:900;color:var(--green);white-space:nowrap">'+total.toLocaleString("ro-RO")+' RON</span></div></div>';
         });
         html+='<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0 0;font-size:14px;font-weight:900;border-top:2px solid #bbf7d0;margin-top:4px">';
         html+='<span>TOTAL CONTRACT</span><span style="color:var(--green)">'+totalAcc.toLocaleString("ro-RO")+' RON</span></div></div>';
