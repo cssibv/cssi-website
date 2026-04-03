@@ -224,7 +224,7 @@ a{text-decoration:none;color:inherit;}button{font-family:inherit;cursor:pointer;
     <div id="tableView" class="table-wrap hidden">
         <table class="tbl">
             <thead><tr>
-                <th>ID</th><th>Client</th><th>Serviciu</th><th>Locație</th><th>Valoare</th><th>Responsabil</th><th>Status</th><th></th>
+                <th>ID</th><th>Client</th><th>Serviciu</th><th>Locație</th><th>Valoare</th><th>Oferte</th><th>Vechime</th><th>Responsabil</th><th>Status</th><th></th>
             </tr></thead>
             <tbody id="tableBody"></tbody>
         </table>
@@ -464,14 +464,14 @@ function getFiltered(){
 function renderSummary(){
     var f=getFiltered();
     var total=f.length;
-    var val=f.reduce(function(s,p){return s+(p.valoare||0)},0);
+    var val=f.reduce(function(s,p){return s+(p.oferteTotal||p.valoare||0)},0);
     var valContract=f.reduce(function(s,p){return s+(p.valoareContract||0)},0);
     var active=f.filter(function(p){return['Lead','Ofertă','Contract','Proiectare','Execuție','Recepție'].includes(p.status)}).length;
     var neprelate=f.filter(function(p){return!p.preluat_de&&p.status!=='Lead'&&p.status!=='Contract'&&p.status!=='Finalizat'&&p.status!=='Anulat'}).length;
     document.getElementById('summary').innerHTML=
         '<div class="summary-item"><div><div class="summary-val">'+total+'</div><div class="summary-label">Total proiecte</div></div></div>'+
         '<div class="summary-item"><div><div class="summary-val">'+active+'</div><div class="summary-label">Active</div></div></div>'+
-        '<div class="summary-item"><div><div class="summary-val">'+val.toLocaleString('ro-RO')+'</div><div class="summary-label">Val. estimată (RON)</div></div></div>'+
+        '<div class="summary-item"><div><div class="summary-val">'+val.toLocaleString('ro-RO')+'</div><div class="summary-label">Val. pipeline (RON)</div></div></div>'+
         (valContract?'<div class="summary-item"><div><div class="summary-val" style="color:var(--green)">'+valContract.toLocaleString('ro-RO')+'</div><div class="summary-label">Val. contracte (RON)</div></div></div>':'')+
         (neprelate?'<div class="summary-item"><div><div class="summary-val" style="color:var(--red)">'+neprelate+'</div><div class="summary-label">⚠️ Neprelate</div></div></div>':'');
 }
@@ -535,7 +535,7 @@ function renderTable(){
     var tb=document.getElementById('tableBody');tb.innerHTML='';
     var filtered=getFiltered();
     if(!filtered.length){
-        tb.innerHTML='<tr><td colspan="8" style="text-align:center;color:var(--gray-l);padding:24px">'+(isLoading?'Se încarcă...':'Niciun proiect')+'</td></tr>';
+        tb.innerHTML='<tr><td colspan="10" style="text-align:center;color:var(--gray-l);padding:24px">'+(isLoading?'Se încarcă...':'Niciun proiect')+'</td></tr>';
         return;
     }
     filtered.forEach(function(p){
@@ -543,16 +543,26 @@ function renderTable(){
         var opts=Object.keys(STATUS_MAP).map(function(s){return '<option value="'+s+'"'+(p.status===s?' selected':'')+'>'+STATUS_ICONS[s]+' '+s+'</option>';}).join('');
         var respName=p.preluat_de||p.responsabil||'—';
         var respIcon=RESP_ICONS[respName]||'';
+        var valDisplay=p.valoareContract?(p.valoareContract).toLocaleString('ro-RO'):(p.oferteTotal?(p.oferteTotal).toLocaleString('ro-RO'):(p.valoare||0).toLocaleString('ro-RO'));
+        var valColor=p.valoareContract?'var(--green)':(p.oferteTotal?'var(--orange)':'var(--dark)');
+        var valLabel=p.valoareContract?' contract':(p.oferteTotal?' oferte':'');
+        var oferteDisplay=p.oferteCount?(p.oferteCount+' of.'+(p.oferteAcceptate?' / '+p.oferteAcceptate+' acc.':'')):'—';
+        var age=timeAgo(p.dataCreare);
+        var ageHtml=age?'<span class="kcard-age '+age.cls+'">'+age.text+'</span>':'—';
         var tr=document.createElement('tr');
+        tr.style.cursor='pointer';
+        tr.onclick=function(){openProjectDetail(p.id);};
         tr.innerHTML=
             '<td><strong>'+p.id+'</strong></td>'+
             '<td>'+esc(p.client)+'</td>'+
             '<td><span class="kcard-tag '+t.cls+'">'+t.s+'</span></td>'+
             '<td class="loc">📍 '+(p.loc||'Brașov')+'</td>'+
-            '<td class="val">'+(p.valoare||0).toLocaleString('ro-RO')+' RON</td>'+
+            '<td class="val" style="color:'+valColor+'">'+valDisplay+' <span style="font-size:10px;color:var(--gray);font-weight:400">'+valLabel+'</span></td>'+
+            '<td style="font-size:12px;color:var(--blue)">'+oferteDisplay+'</td>'+
+            '<td>'+ageHtml+'</td>'+
             '<td style="font-size:12px">'+(respIcon?respIcon+' ':'')+esc(respName)+'</td>'+
-            '<td><select class="status-select" onchange="changeStatus('+Q+p.id+Q+',this.value)">'+opts+'</select></td>'+
-            '<td><button onclick="openEditModal('+Q+p.id+Q+')" style="padding:5px 10px;border-radius:6px;border:none;background:var(--blue);color:#fff;font-size:11px;font-weight:700;cursor:pointer" title="Editare">✏️</button></td>';
+            '<td><select class="status-select" onclick="event.stopPropagation()" onchange="changeStatus('+Q+p.id+Q+',this.value)">'+opts+'</select></td>'+
+            '<td><button onclick="event.stopPropagation();openEditModal('+Q+p.id+Q+')" style="padding:5px 10px;border-radius:6px;border:none;background:var(--blue);color:#fff;font-size:11px;font-weight:700;cursor:pointer" title="Editare">✏️</button></td>';
         tb.appendChild(tr);
     });
 }
@@ -587,7 +597,7 @@ function preiaProiect(projectId){
     fetch(API_DB+'?action=preiaProiect',{
         method:'POST',
         headers:{'Content-Type':'application/json'},
-        body:JSON.stringify({action:'preiaProiect',id:p.dbId||projectId,user:userName})
+        body:JSON.stringify({action:'preiaProiect',proiect_id:p.dbId||projectId,user:userName})
     })
     .then(function(r){return r.json()})
     .then(function(res){
