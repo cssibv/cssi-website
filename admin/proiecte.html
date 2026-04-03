@@ -753,6 +753,7 @@ function openProjectDetail(projectId){
         (p.note?'<div style="font-size:11px;color:var(--gray);padding:8px;background:var(--gray-bg);border-radius:8px;margin-bottom:12px">📝 '+esc(p.note)+'</div>':'')+
         timelineHtml+
         '<div id="oferteSection" style="margin-bottom:12px"><div style="text-align:center;padding:12px;color:var(--gray-l);font-size:12px">⏳ Se încarcă ofertele...</div></div>'+
+        (p.status==='Contract'?'<div style="background:linear-gradient(135deg,#f0fdfa,#eff6ff);border:2px solid var(--teal);border-radius:12px;padding:16px;margin-bottom:12px"><div style="font-size:13px;font-weight:800;margin-bottom:10px;color:var(--dark)">➡️ Următorul pas:</div><div style="display:flex;gap:8px"><button onclick="sendToStatus('+Q+p.id+Q+','+Q+'Proiectare'+Q+')" style="flex:1;padding:12px;border-radius:10px;border:none;background:var(--teal);color:#fff;font-weight:700;font-size:13px;cursor:pointer">📐 Trimite la Proiectare</button><button onclick="sendToStatus('+Q+p.id+Q+','+Q+'Execu\u021bie'+Q+')" style="flex:1;padding:12px;border-radius:10px;border:none;background:var(--orange);color:#fff;font-weight:700;font-size:13px;cursor:pointer">🔧 Execuție directă</button></div><div style="font-size:10px;color:var(--gray);margin-top:8px">📐 Proiectare = necesită scheme, avize IGPR/ISU · 🔧 Execuție = montaj direct</div></div>':'')+
         '<div style="display:flex;gap:8px;flex-wrap:wrap">'+
         '<button onclick="openEditModal('+Q+p.id+Q+')" style="flex:1;padding:10px;border-radius:10px;border:none;background:var(--blue);color:#fff;font-weight:700;font-size:13px;cursor:pointer">✏️ Editează</button>'+
         '<button onclick="closeDetailModal()" style="padding:10px 16px;border-radius:10px;border:1px solid var(--gray-b);background:#fff;color:var(--gray);font-weight:600;font-size:13px;cursor:pointer">Închide</button>'+
@@ -860,6 +861,12 @@ function loadOferteSummary(){
 }
 
 // ═══════ REFRESH ═══════
+function sendToStatus(projectId, newStatus){
+    if(!confirm('Trimiți proiectul '+projectId+' la '+newStatus+'?')) return;
+    closeDetailModal();
+    changeStatus(projectId, newStatus);
+}
+
 function refreshProjects(){showToast('🔄 Se reîncarcă...','info');loadProjects();}
 </script>
 <script>
