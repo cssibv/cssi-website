@@ -518,6 +518,7 @@ function renderKanban(){
             c.ondragstart=function(ev){ev.dataTransfer.setData('text/plain',p.id);c.classList.add('dragging');document.getElementById('kanbanBoard').classList.add('dragging-active');};
             c.ondragend=function(){c.classList.remove('dragging');document.getElementById('kanbanBoard').classList.remove('dragging-active');};
             c.onclick=function(){openProjectDetail(p.id);};
+            var phoneHtml=p.telefon?'<a href="tel:'+esc(p.telefon)+'" onclick="event.stopPropagation()" style="display:inline-flex;align-items:center;gap:3px;padding:2px 8px;border-radius:6px;background:#eff6ff;color:var(--blue);font-size:10px;font-weight:700;margin-top:4px;text-decoration:none" title="'+esc(p.telefon)+'">📞 Sună</a>':'';
             c.innerHTML='<div class="kcard-id">'+p.id+' '+ageBadge+'</div>'+
                 '<div class="kcard-title">'+esc(p.client)+'</div>'+
                 '<div class="kcard-meta"><span class="kcard-tag '+t.cls+'">'+t.s+'</span><span>📍 '+(p.loc||'Brașov')+'</span></div>'+
