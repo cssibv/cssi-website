@@ -537,16 +537,39 @@ try {
                     $numericId = $r ? $r['id'] : 0;
                 }
                 if ($numericId) {
-                    $defaultChecklist = json_encode([
+                    // Determină serviciul pentru checklist dinamic
+                    $srvStmt = $db->prepare("SELECT serviciu FROM proiecte WHERE id = ?");
+                    $srvStmt->execute([$numericId]);
+                    $srvRow = $srvStmt->fetch();
+                    $serviciu = $srvRow ? $srvRow['serviciu'] : '';
+                    
+                    // Checklist de bază (pentru toate proiectele)
+                    $checklist = [
                         ['id'=>'vizita_teren','label'=>'Vizită teren efectuată','done'=>false,'date'=>null,'user'=>null],
                         ['id'=>'schema_electrica','label'=>'Schemă electrică creată','done'=>false,'date'=>null,'user'=>null],
                         ['id'=>'plan_amplasare','label'=>'Plan amplasare echipamente','done'=>false,'date'=>null,'user'=>null],
                         ['id'=>'trasee_cabluri','label'=>'Trasee cabluri proiectate','done'=>false,'date'=>null,'user'=>null],
                         ['id'=>'necesar_materiale','label'=>'Necesar materiale verificat','done'=>false,'date'=>null,'user'=>null],
-                        ['id'=>'aviz_isu_depus','label'=>'Aviz ISU depus','done'=>false,'date'=>null,'user'=>null],
-                        ['id'=>'aviz_isu_obtinut','label'=>'Aviz ISU obținut','done'=>false,'date'=>null,'user'=>null],
-                        ['id'=>'dosar_complet','label'=>'Dosar proiect complet','done'=>false,'date'=>null,'user'=>null]
-                    ]);
+                    ];
+                    
+                    // IGPR: Supraveghere Video, Alarmă/Efracție, Complex
+                    $needsIGPR = in_array($serviciu, ['Supraveghere Video','Alarma','Complex']);
+                    if ($needsIGPR) {
+                        $checklist[] = ['id'=>'aviz_igpr_depus','label'=>'👮 Aviz IGPR depus','done'=>false,'date'=>null,'user'=>null];
+                        $checklist[] = ['id'=>'aviz_igpr_obtinut','label'=>'👮 Aviz IGPR obținut','done'=>false,'date'=>null,'user'=>null];
+                    }
+                    
+                    // ISU: Detecție Incendiu, Complex
+                    $needsISU = in_array($serviciu, ['Detectie Incendiu','Complex']);
+                    if ($needsISU) {
+                        $checklist[] = ['id'=>'aviz_isu_depus','label'=>'🛡️ Aviz ISU depus','done'=>false,'date'=>null,'user'=>null];
+                        $checklist[] = ['id'=>'aviz_isu_obtinut','label'=>'🛡️ Aviz ISU obținut','done'=>false,'date'=>null,'user'=>null];
+                    }
+                    
+                    // Final
+                    $checklist[] = ['id'=>'dosar_complet','label'=>'Dosar proiect complet','done'=>false,'date'=>null,'user'=>null];
+                    
+                    $defaultChecklist = json_encode($checklist);
                     $db->prepare("INSERT IGNORE INTO proiectare (proiect_id, checklist_json) VALUES (?, ?)")->execute([$numericId, $defaultChecklist]);
                     // Re-fetch
                     $stmt->execute([$numericId, $pid]);
@@ -576,7 +599,7 @@ try {
             if (!$pid) { jsonResponse(['success' => false, 'error' => 'proiect_id obligatoriu'], 400); break; }
             $fields = [];
             $values = [];
-            foreach (['aviz_isu','termen','status','note','proiectant','data_start','checklist_json','progres'] as $f) {
+            foreach (['aviz_isu','aviz_igpr','termen','status','note','proiectant','data_start','checklist_json','progres'] as $f) {
                 if (isset($data[$f])) { $fields[] = "$f = ?"; $values[] = $data[$f]; }
             }
             if ($fields && $pid) {
