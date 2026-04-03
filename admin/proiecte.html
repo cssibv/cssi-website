@@ -717,7 +717,6 @@ function openProjectDetail(projectId){
         '<div id="oferteSection" style="margin-bottom:12px"><div style="text-align:center;padding:12px;color:var(--gray-l);font-size:12px">⏳ Se încarcă ofertele...</div></div>'+
         '<div style="display:flex;gap:8px;flex-wrap:wrap">'+
         '<button onclick="openEditModal('+Q+p.id+Q+')" style="flex:1;padding:10px;border-radius:10px;border:none;background:var(--blue);color:#fff;font-weight:700;font-size:13px;cursor:pointer">✏️ Editează</button>'+
-        '<button onclick="document.getElementById('+Q+'oferteSection'+Q+').scrollIntoView({behavior:'+Q+'smooth'+Q+',block:'+Q+'start'+Q+'})" style="flex:1;padding:10px;border-radius:10px;border:none;background:var(--green);color:#fff;font-weight:700;font-size:13px;cursor:pointer">📄 Vezi Oferte</button>'+
         '<button onclick="closeDetailModal()" style="padding:10px 16px;border-radius:10px;border:1px solid var(--gray-b);background:#fff;color:var(--gray);font-weight:600;font-size:13px;cursor:pointer">Închide</button>'+
         '</div></div>';
 
@@ -731,7 +730,6 @@ function openProjectDetail(projectId){
     document.getElementById('detailTitle').textContent='📋 '+p.id+' — '+esc(p.client);
     document.getElementById('detailBody').innerHTML=html;
     overlay.classList.add('active');
-    loadProjectOferte(p.dbId, p.clientDbId);
     loadProjectOferte(p.dbId, p.clientDbId);
 }
 function closeDetailModal(){var m=document.getElementById('detailModal');if(m)m.classList.remove('active');}
@@ -763,7 +761,7 @@ function renderOferteSection(container, oferte){
             var total=parseFloat(o.total_cu_tva)||0;
             html+='<div style="display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px solid #dcfce7;font-size:12px">';
             html+='<div><strong>'+esc(o.oferta_id)+'</strong> — '+esc(o.titlu||o.oferta_id)+'<div style="font-size:10px;color:var(--gray)">'+(o.data_oferta||'')+'</div></div>';
-            html+='<div style="font-weight:900;color:var(--green);white-space:nowrap">'+total.toLocaleString("ro-RO")+' RON</div></div>';
+            html+='<div style="display:flex;align-items:center;gap:6px"><a href="calculator-pret.html?pdf_offer='+o.id+'" target="_blank" style="padding:3px 8px;border-radius:6px;background:#f0fdf4;color:var(--green);font-size:10px;font-weight:700;text-decoration:none;border:1px solid #bbf7d0">📄 PDF</a><span style="font-weight:900;color:var(--green);white-space:nowrap">'+total.toLocaleString("ro-RO")+' RON</span></div></div>';
         });
         html+='<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0 0;font-size:14px;font-weight:900;border-top:2px solid #bbf7d0;margin-top:4px">';
         html+='<span>TOTAL CONTRACT</span><span style="color:var(--green)">'+totalAcc.toLocaleString("ro-RO")+' RON</span></div></div>';
@@ -793,9 +791,6 @@ function renderOferteSection(container, oferte){
     container.innerHTML=html;
 }
 
-// ═══════ OFERTE ÎN DETALII PROIECT ═══════
-function loadProjectOferte(dbId,clientDbId){var sec=document.getElementById('oferteSection');if(!sec)return;var url=API_DB+'?action=getOferte&_t='+Date.now();if(clientDbId)url+='&client_id='+clientDbId;else if(dbId)url+='&proiect_id='+dbId;else{sec.innerHTML='';return;}fetch(url).then(function(r){return r.json()}).then(function(res){if(!res.success||!res.data||!res.data.length){sec.innerHTML='<div style="font-size:12px;color:var(--gray-l);text-align:center;padding:8px">Nicio oferta</div>';return;}renderOferteSection(sec,res.data);}).catch(function(e){sec.innerHTML='';});}
-function renderOferteSection(c,oferte){var acc=oferte.filter(function(o){return o.oferta_status==='Acceptata'});var ref=oferte.filter(function(o){return o.oferta_status==='Refuzata'});var drf=oferte.filter(function(o){return o.oferta_status==='Draft'});var h='<div style="font-size:13px;font-weight:700;margin-bottom:8px">📄 Oferte ('+oferte.length+')</div>';if(acc.length){var t=acc.reduce(function(s,o){return s+(parseFloat(o.total_cu_tva)||0)},0);h+='<div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:10px;padding:12px;margin-bottom:8px"><div style="font-size:11px;font-weight:700;color:var(--green);text-transform:uppercase;margin-bottom:8px">✅ Oferte Acceptate ('+acc.length+')</div>';acc.forEach(function(o){var v=parseFloat(o.total_cu_tva)||0;h+='<div style="display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px solid #dcfce7;font-size:12px"><div><strong>'+esc(o.oferta_id)+'</strong> — '+esc(o.titlu||o.oferta_id)+'<div style="font-size:10px;color:var(--gray)">'+(o.data_oferta||'')+'</div></div><div style="font-weight:900;color:var(--green);white-space:nowrap">'+v.toLocaleString("ro-RO")+' RON</div></div>';});h+='<div style="display:flex;justify-content:space-between;padding:8px 0 0;font-size:14px;font-weight:900;border-top:2px solid #bbf7d0;margin-top:4px"><span>TOTAL CONTRACT</span><span style="color:var(--green)">'+t.toLocaleString("ro-RO")+' RON</span></div></div>';}if(ref.length){h+='<div style="background:#fef2f2;border:1px solid #fecaca;border-radius:10px;padding:10px;margin-bottom:8px"><div style="font-size:11px;font-weight:700;color:var(--red);margin-bottom:6px">❌ Refuzate ('+ref.length+')</div>';ref.forEach(function(o){h+='<div style="font-size:12px;padding:3px 0"><strong>'+esc(o.oferta_id)+'</strong> — '+(parseFloat(o.total_cu_tva)||0).toLocaleString("ro-RO")+' RON';if(o.motiv_respingere)h+=' <span style="font-size:10px;color:var(--red)">('+esc(o.motiv_respingere)+')</span>';h+='</div>';});h+='</div>';}if(drf.length){h+='<div style="background:var(--gray-bg);border:1px solid var(--gray-b);border-radius:10px;padding:10px;margin-bottom:8px"><div style="font-size:11px;font-weight:700;color:var(--gray);margin-bottom:6px">📝 Draft ('+drf.length+')</div>';drf.forEach(function(o){h+='<div style="font-size:12px;padding:3px 0"><strong>'+esc(o.oferta_id)+'</strong> — '+(parseFloat(o.total_cu_tva)||0).toLocaleString("ro-RO")+' RON</div>';});h+='</div>';}c.innerHTML=h;}
 // ═══════ REFRESH ═══════
 function refreshProjects(){showToast('🔄 Se reîncarcă...','info');loadProjects();}
 </script>
