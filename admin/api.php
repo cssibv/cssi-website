@@ -516,6 +516,133 @@ try {
             break;
 
         // ══════════════════════════════════════
+        // PROIECTARE
+        // ══════════════════════════════════════
+        case 'getProiectare':
+            $pid = (isset($_GET['proiect_id']) ? $_GET['proiect_id'] : 0);
+            if (!$pid) { jsonResponse(['success' => false, 'error' => 'proiect_id obligatoriu'], 400); break; }
+            
+            // Caută sau creează automat
+            $stmt = $db->prepare("SELECT pr.*, p.proiect_id AS cod, p.serviciu, p.status AS proiect_status, p.valoare_contract, p.responsabil, p.adresa_obiectiv, p.obiectiv, p.note AS proiect_note, c.nume AS client_nume, c.telefon, c.email, c.persoana_contact, c.adresa AS client_adresa FROM proiectare pr JOIN proiecte p ON pr.proiect_id = p.id JOIN clienti c ON p.client_id = c.id WHERE pr.proiect_id = ? OR p.proiect_id = ?");
+            $stmt->execute([$pid, $pid]);
+            $row = $stmt->fetch();
+            
+            if (!$row) {
+                // Auto-creează record proiectare
+                $numericId = $pid;
+                if (!is_numeric($pid)) {
+                    $s = $db->prepare("SELECT id FROM proiecte WHERE proiect_id = ?");
+                    $s->execute([$pid]);
+                    $r = $s->fetch();
+                    $numericId = $r ? $r['id'] : 0;
+                }
+                if ($numericId) {
+                    $defaultChecklist = json_encode([
+                        ['id'=>'vizita_teren','label'=>'Vizită teren efectuată','done'=>false,'date'=>null,'user'=>null],
+                        ['id'=>'schema_electrica','label'=>'Schemă electrică creată','done'=>false,'date'=>null,'user'=>null],
+                        ['id'=>'plan_amplasare','label'=>'Plan amplasare echipamente','done'=>false,'date'=>null,'user'=>null],
+                        ['id'=>'trasee_cabluri','label'=>'Trasee cabluri proiectate','done'=>false,'date'=>null,'user'=>null],
+                        ['id'=>'necesar_materiale','label'=>'Necesar materiale verificat','done'=>false,'date'=>null,'user'=>null],
+                        ['id'=>'aviz_isu_depus','label'=>'Aviz ISU depus','done'=>false,'date'=>null,'user'=>null],
+                        ['id'=>'aviz_isu_obtinut','label'=>'Aviz ISU obținut','done'=>false,'date'=>null,'user'=>null],
+                        ['id'=>'dosar_complet','label'=>'Dosar proiect complet','done'=>false,'date'=>null,'user'=>null]
+                    ]);
+                    $db->prepare("INSERT IGNORE INTO proiectare (proiect_id, checklist_json) VALUES (?, ?)")->execute([$numericId, $defaultChecklist]);
+                    // Re-fetch
+                    $stmt->execute([$numericId, $pid]);
+                    $row = $stmt->fetch();
+                }
+            }
+            
+            // Adaugă ofertele acceptate
+            $oferte = [];
+            if ($row) {
+                $stmtO = $db->prepare("SELECT o.id, o.oferta_id, o.titlu, o.total_cu_tva, o.status FROM oferte o WHERE (o.proiect_id = ? OR o.client_id = (SELECT client_id FROM proiecte WHERE id = ?)) AND o.status = 'Acceptata' ORDER BY o.created_at");
+                $stmtO->execute([$row['proiect_id'], $row['proiect_id']]);
+                $oferteRaw = $stmtO->fetchAll();
+                foreach ($oferteRaw as &$of) {
+                    $stmtL = $db->prepare("SELECT denumire, cod, um, cantitate, pret_vanzare, valoare FROM oferta_linii WHERE oferta_id = ? AND tip = 'echipament' ORDER BY ordine");
+                    $stmtL->execute([$of['id']]);
+                    $of['echipamente'] = $stmtL->fetchAll();
+                }
+                $oferte = $oferteRaw;
+            }
+            
+            jsonResponse(['success' => true, 'data' => $row, 'oferte' => $oferte]);
+            break;
+
+        case 'updateProiectare':
+            $pid = (isset($data['proiect_id']) ? $data['proiect_id'] : 0);
+            if (!$pid) { jsonResponse(['success' => false, 'error' => 'proiect_id obligatoriu'], 400); break; }
+            $fields = [];
+            $values = [];
+            foreach (['aviz_isu','termen','status','note','proiectant','data_start','checklist_json','progres'] as $f) {
+                if (isset($data[$f])) { $fields[] = "$f = ?"; $values[] = $data[$f]; }
+            }
+            if ($fields && $pid) {
+                $values[] = $pid;
+                $db->prepare("UPDATE proiectare SET " . implode(', ', $fields) . " WHERE proiect_id = ?")->execute($values);
+                jsonResponse(['success' => true]);
+            } else {
+                jsonResponse(['success' => false, 'error' => 'Lipsesc date'], 400);
+            }
+            break;
+
+        case 'toggleChecklist':
+            $pid = (isset($data['proiect_id']) ? $data['proiect_id'] : 0);
+            $itemId = (isset($data['item_id']) ? $data['item_id'] : '');
+            $done = isset($data['done']) ? $data['done'] : false;
+            $user = (isset($data['user']) ? $data['user'] : 'Admin');
+            if (!$pid || !$itemId) { jsonResponse(['success' => false, 'error' => 'Parametri lipsă'], 400); break; }
+            
+            $stmt = $db->prepare("SELECT checklist_json FROM proiectare WHERE proiect_id = ?");
+            $stmt->execute([$pid]);
+            $row = $stmt->fetch();
+            if ($row) {
+                $checklist = json_decode($row['checklist_json'] ?: '[]', true);
+                $totalDone = 0;
+                foreach ($checklist as &$item) {
+                    if ($item['id'] === $itemId) {
+                        $item['done'] = $done;
+                        $item['date'] = $done ? date('Y-m-d H:i:s') : null;
+                        $item['user'] = $done ? $user : null;
+                    }
+                    if ($item['done']) $totalDone++;
+                }
+                unset($item);
+                $progres = count($checklist) > 0 ? round(($totalDone / count($checklist)) * 100) : 0;
+                $db->prepare("UPDATE proiectare SET checklist_json = ?, progres = ? WHERE proiect_id = ?")->execute([json_encode($checklist), $progres, $pid]);
+                jsonResponse(['success' => true, 'progres' => $progres, 'checklist' => $checklist]);
+            } else {
+                jsonResponse(['success' => false, 'error' => 'Record negăsit'], 404);
+            }
+            break;
+
+        case 'addJurnalEntry':
+            $pid = (isset($data['proiect_id']) ? $data['proiect_id'] : 0);
+            $text = (isset($data['text']) ? $data['text'] : '');
+            $user = (isset($data['user']) ? $data['user'] : 'Admin');
+            if (!$pid || !$text) { jsonResponse(['success' => false, 'error' => 'Parametri lipsă'], 400); break; }
+            
+            $stmt = $db->prepare("SELECT jurnal_json FROM proiectare WHERE proiect_id = ?");
+            $stmt->execute([$pid]);
+            $row = $stmt->fetch();
+            if ($row) {
+                $jurnal = json_decode($row['jurnal_json'] ?: '[]', true);
+                array_unshift($jurnal, ['date' => date('Y-m-d H:i:s'), 'user' => $user, 'text' => $text]);
+                $db->prepare("UPDATE proiectare SET jurnal_json = ? WHERE proiect_id = ?")->execute([json_encode($jurnal), $pid]);
+                jsonResponse(['success' => true, 'jurnal' => $jurnal]);
+            } else {
+                jsonResponse(['success' => false, 'error' => 'Record negăsit'], 404);
+            }
+            break;
+
+        case 'getProiecteProiectare':
+            $stmt = $db->query("SELECT p.id, p.proiect_id, p.status, p.valoare_contract, p.responsabil, p.serviciu, c.nume AS client_nume, c.telefon, pr.status AS pr_status, pr.progres, pr.termen, pr.proiectant FROM proiecte p JOIN clienti c ON p.client_id = c.id LEFT JOIN proiectare pr ON p.id = pr.proiect_id WHERE p.status IN ('Contract','Proiectare') ORDER BY FIELD(p.status,'Proiectare','Contract'), p.updated_at DESC");
+            jsonResponse(['success' => true, 'data' => $stmt->fetchAll()]);
+            break;
+
+        // ══════════════════════════════════════
         // DASHBOARD / STATS
         // ══════════════════════════════════════
         case 'getDashboard':
