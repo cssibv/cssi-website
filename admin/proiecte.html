@@ -53,9 +53,9 @@ a{text-decoration:none;color:inherit;}button{font-family:inherit;cursor:pointer;
 /* Kanban (same as admin.html) */
 .kanban-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch;padding-bottom:8px;}
 .kanban-wrap::-webkit-scrollbar{height:6px;}.kanban-wrap::-webkit-scrollbar-thumb{background:var(--gray-b);border-radius:3px;}
-.kanban{display:flex;gap:12px;min-width:max-content;padding:2px;}
-.kanban-col{width:200px;flex-shrink:0;background:#fff;border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden;}
-@media(min-width:1200px){.kanban-col{width:calc((100% - 84px)/8);min-width:160px;}}
+.kanban{display:flex;gap:12px;padding:2px;}
+.kanban-col{width:200px;flex-shrink:0;flex-grow:1;background:#fff;border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden;}
+@media(min-width:1200px){.kanban-col{width:auto;min-width:200px;max-width:500px;}}
 .kcol-head{padding:12px 14px;display:flex;align-items:center;justify-content:space-between;border-bottom:2px solid transparent;}
 .kcol-head.lead{border-color:var(--blue);background:#eff6ff;}.kcol-head.oferta{border-color:var(--purple);background:#f5f3ff;}
 .kcol-head.contract{border-color:var(--green);background:#f0fdf4;}.kcol-head.proiectare{border-color:var(--teal);background:#f0fdfa;}
@@ -165,11 +165,9 @@ a{text-decoration:none;color:inherit;}button{font-family:inherit;cursor:pointer;
 
 /* Oferte badge pe card */
 .kcard-oferte{font-size:10px;font-weight:600;color:var(--green);margin-top:4px;}
-.kanban-col.empty .kcol-body{display:none;}
-.kanban-col.empty{width:50px!important;min-width:50px!important;}
-.kanban-col.empty .kcol-head{writing-mode:vertical-rl;text-orientation:mixed;padding:14px 6px;justify-content:center;}
-.kanban-col.empty .kcol-name{font-size:10px;}
-.kanban-col.empty .kcol-count{display:none;}
+.kanban-col.empty{display:none;}
+.kanban.dragging-active .kanban-col.empty{display:block;width:120px!important;min-width:120px!important;opacity:0.5;border:2px dashed var(--gray-b);}
+.kanban.dragging-active .kanban-col.empty .kcol-body{min-height:60px;}
 .kcard-age{font-size:9px;font-weight:600;padding:2px 6px;border-radius:4px;display:inline-block;margin-top:4px;}
 .kcard-age.fresh{background:#f0fdf4;color:var(--green);}
 .kcard-age.medium{background:#fff7ed;color:var(--orange);}
@@ -515,8 +513,8 @@ function renderKanban(){
             var c=document.createElement('div');c.className='kcard'+(isNepreluat?' nepreluat':'');
             c.setAttribute('draggable','true');
             c.setAttribute('data-pid',p.id);
-            c.ondragstart=function(ev){ev.dataTransfer.setData('text/plain',p.id);c.classList.add('dragging');};
-            c.ondragend=function(){c.classList.remove('dragging');};
+            c.ondragstart=function(ev){ev.dataTransfer.setData('text/plain',p.id);c.classList.add('dragging');document.getElementById('kanbanBoard').classList.add('dragging-active');};
+            c.ondragend=function(){c.classList.remove('dragging');document.getElementById('kanbanBoard').classList.remove('dragging-active');};
             c.onclick=function(){openProjectDetail(p.id);};
             c.innerHTML='<div class="kcard-id">'+p.id+' '+ageBadge+'</div>'+
                 '<div class="kcard-title">'+esc(p.client)+'</div>'+
