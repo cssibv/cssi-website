@@ -394,6 +394,7 @@ var STAT_DB_TO_UI={"Lead":"Lead","Oferta":"Ofertă","Contract":"Contract","Proie
 // ═══════ DATE PROIECTE (se încarcă din MySQL) ═══════
 var PROJECTS=[];
 var projectsLoaded=false;
+var OFERTE_STATS={total:0,acceptate:0,pipeline:0,contracte:0};
 
 
 
@@ -425,7 +426,6 @@ function tog(id,s){document.getElementById(id).classList.toggle('hidden',!s)}
 function fmtRON(n){if(n>=1e6)return(n/1e6).toFixed(1)+'M';if(n>=1e3)return(n/1e3).toFixed(0)+'K';return n+''}
 
 // ═══════ KPI — 8 cards real data ═══════
-var OFERTE_STATS={total:0,acceptate:0,pipeline:0,contracte:0};
 
 function renderKPI(){
     var active=PROJECTS.filter(function(p){return['Lead','Ofertă','Contract','Proiectare','Execuție','Recepție'].indexOf(p.status)>=0}).length;
