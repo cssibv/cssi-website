@@ -165,6 +165,17 @@ a{text-decoration:none;color:inherit;}button{font-family:inherit;cursor:pointer;
 
 /* Oferte badge pe card */
 .kcard-oferte{font-size:10px;font-weight:600;color:var(--green);margin-top:4px;}
+.kanban-col.empty .kcol-body{display:none;}
+.kanban-col.empty{width:50px!important;min-width:50px!important;}
+.kanban-col.empty .kcol-head{writing-mode:vertical-rl;text-orientation:mixed;padding:14px 6px;justify-content:center;}
+.kanban-col.empty .kcol-name{font-size:10px;}
+.kanban-col.empty .kcol-count{display:none;}
+.kcard-age{font-size:9px;font-weight:600;padding:2px 6px;border-radius:4px;display:inline-block;margin-top:4px;}
+.kcard-age.fresh{background:#f0fdf4;color:var(--green);}
+.kcard-age.medium{background:#fff7ed;color:var(--orange);}
+.kcard-age.old{background:#fef2f2;color:var(--red);}
+.kcard.drag-over{border-top:3px solid var(--blue);padding-top:9px;}
+.kcard.dragging{opacity:0.4;}
 </style>
 </head>
 <body>
@@ -418,6 +429,7 @@ function loadProjects(){
 }
 
 function esc(s){if(!s)return'';var d=document.createElement('div');d.textContent=s;return d.innerHTML;}
+function timeAgo(dateStr){if(!dateStr)return'';var d=new Date(dateStr);var now=Date.now();var days=Math.floor((now-d.getTime())/86400000);if(days===0)return{text:'azi',cls:'fresh'};if(days===1)return{text:'ieri',cls:'fresh'};if(days<7)return{text:days+' zile',cls:'fresh'};if(days<14)return{text:days+' zile',cls:'medium'};return{text:days+' zile',cls:'old'};}
 function showLoading(on){var el=document.getElementById('loadBar');if(el)el.classList.toggle('active',on);}
 function showToast(msg,type){var c=document.getElementById('toastContainer');if(!c){c=document.createElement('div');c.id='toastContainer';c.className='toast-container';document.body.appendChild(c);}var t=document.createElement('div');t.className='toast '+(type||'info');t.textContent=msg;c.appendChild(t);setTimeout(function(){t.remove()},4000);}
 function renderAll(){renderSummary();renderKanban();renderTable();}
@@ -470,7 +482,11 @@ function renderKanban(){
     var filtered=getFiltered();
     STATUSES.forEach(function(st){
         var prj=filtered.filter(function(p){return STATUS_MAP[p.status]===st.id});
-        var col=document.createElement('div');col.className='kanban-col';
+        var col=document.createElement('div');col.className='kanban-col'+(prj.length===0?' empty':'');
+        col.setAttribute('data-status',st.name);
+        col.ondragover=function(ev){ev.preventDefault();col.style.background='rgba(59,130,246,0.05)';};
+        col.ondragleave=function(){col.style.background='';};
+        col.ondrop=function(ev){ev.preventDefault();col.style.background='';var pid=ev.dataTransfer.getData('text/plain');if(pid)changeStatus(pid,st.name);};
         col.innerHTML='<div class="kcol-head '+st.cls+'"><span class="kcol-name">'+(STATUS_ICONS[st.name]||'')+' '+st.name+'</span><span class="kcol-count">'+prj.length+'</span></div>';
         var body=document.createElement('div');body.className='kcol-body';
         if(!prj.length){body.innerHTML='<div class="kanban-empty">—</div>';}
@@ -493,9 +509,16 @@ function renderKanban(){
             var oferteBadge='';
             if(p.oferteCount){oferteBadge='<div style="font-size:10px;margin-top:4px;color:var(--blue);font-weight:600">📄 '+p.oferteCount+' ofert'+(p.oferteCount===1?'ă':'e')+(p.oferteAcceptate?' · <span style="color:var(--green)">'+p.oferteAcceptate+' acc.</span>':'')+'</div>';}
 
+            var age=timeAgo(p.dataCreare);
+            var ageBadge=age?'<span class="kcard-age '+age.cls+'">🕐 '+age.text+'</span>':'';
+
             var c=document.createElement('div');c.className='kcard'+(isNepreluat?' nepreluat':'');
+            c.setAttribute('draggable','true');
+            c.setAttribute('data-pid',p.id);
+            c.ondragstart=function(ev){ev.dataTransfer.setData('text/plain',p.id);c.classList.add('dragging');};
+            c.ondragend=function(){c.classList.remove('dragging');};
             c.onclick=function(){openProjectDetail(p.id);};
-            c.innerHTML='<div class="kcard-id">'+p.id+'</div>'+
+            c.innerHTML='<div class="kcard-id">'+p.id+' '+ageBadge+'</div>'+
                 '<div class="kcard-title">'+esc(p.client)+'</div>'+
                 '<div class="kcard-meta"><span class="kcard-tag '+t.cls+'">'+t.s+'</span><span>📍 '+(p.loc||'Brașov')+'</span></div>'+
                 '<div class="kcard-val">'+valHtml+'</div>'+
