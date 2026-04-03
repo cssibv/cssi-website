@@ -416,7 +416,7 @@ function showDash(){
     var ha=document.getElementById('heroActions');ha.innerHTML='';
     if(r.actions&&r.actions.length){ha.style.display='flex';r.actions.forEach(function(a){ha.innerHTML+='<a href="'+a.h+'" class="hero-action"><span>'+a.i+'</span> '+a.l+'</a>'})}
     tog('kpiSection',r.showKpi);if(r.showKpi)renderKPI();
-    tog('quickSection',false);
+    tog('quickSection',r.showKpi);
     tog('kanbanSection',r.showKanban);if(r.showKanban)renderKanban();
     tog('alertSection',r.showAlerts!==false);if(r.showAlerts!==false)renderAlerts();
     renderModules();
@@ -424,23 +424,38 @@ function showDash(){
 function tog(id,s){document.getElementById(id).classList.toggle('hidden',!s)}
 function fmtRON(n){if(n>=1e6)return(n/1e6).toFixed(1)+'M';if(n>=1e3)return(n/1e3).toFixed(0)+'K';return n+''}
 
-// ═══════ KPI — 8 cards for Admin ═══════
-function renderKPI(){
-    var active=PROJECTS.filter(function(p){return["Lead","Ofertă","Contract","Proiectare","Execuție","Recepție"].indexOf(p.status)>=0}).length;
-    var val=PROJECTS.reduce(function(s,p){return s+p.valoare},0);
-    var exec=PROJECTS.filter(function(p){return p.status==="Execuție"}).length;
-    var leads=PROJECTS.filter(function(p){return p.status==="Lead"||p.status==="Ofertă"}).length;
-    var rest=PROJECTS.filter(function(p){return p.status==="Facturat"}).length;
-    var mnt=PROJECTS.filter(function(p){return p.status==="Mentenanță"}).length;
+// ═══════ KPI — 8 cards real data ═══════
+var OFERTE_STATS={total:0,acceptate:0,pipeline:0,contracte:0};
 
+function renderKPI(){
+    var active=PROJECTS.filter(function(p){return['Lead','Ofertă','Contract','Proiectare','Execuție','Recepție'].indexOf(p.status)>=0}).length;
+    var valContract=PROJECTS.reduce(function(s,p){return s+(p.valoareContract||0)},0);
+    var neprelate=PROJECTS.filter(function(p){return!p.preluat_de&&p.status!=='Lead'&&p.status!=='Contract'&&p.status!=='Finalizat'&&p.status!=='Anulat'}).length;
+    var proiectare=PROJECTS.filter(function(p){return p.status==='Proiectare'}).length;
+    var executie=PROJECTS.filter(function(p){return p.status==='Execuție'}).length;
+    
+    // Proiecte blocate >14 zile fără mișcare
+    var now=Date.now();
+    var blocate=PROJECTS.filter(function(p){
+        if(!p.dataCreare||['Finalizat','Anulat','Facturat','Mentenanță'].indexOf(p.status)>=0) return false;
+        var days=Math.floor((now-new Date(p.dataCreare).getTime())/86400000);
+        return days>14;
+    }).length;
+    
     var html='';
     html+=kpiCard('📋','#eff6ff',active,'Proiecte active','var(--blue)');
-    html+=kpiCard('💰','#f0fdf4',fmtRON(val),'Pipeline total','var(--green)');
-    html+=kpiCard('🔧','#fff7ed',exec,'În execuție','var(--orange)');
-    html+=kpiCard('📞','#eff6ff',leads,'Lead-uri & Oferte','var(--blue)');
-    html+=kpiCard('📄','#fef2f2',rest,'Facturi emise','var(--red)');
-    html+=kpiCard('🔄','#f0fdfa',mnt,'Mentenanțe','var(--teal)');
+    html+=kpiCard('💰','#f0fdf4',fmtRON(OFERTE_STATS.pipeline||0),'Pipeline oferte','var(--orange)');
+    html+=kpiCard('✅','#f0fdf4',fmtRON(valContract),'Contracte semnate','var(--green)');
+    html+=kpiCard('📄','#f5f3ff',OFERTE_STATS.total,'Oferte trimise','var(--purple)');
+    html+=kpiCard('🎯','#f0fdf4',OFERTE_STATS.acceptate,'Oferte acceptate','var(--green)');
+    html+=kpiCard('📐','#f0fdfa',proiectare,'La proiectare','var(--teal)');
+    html+=kpiCard('🔧','#fff7ed',executie,'În execuție','var(--orange)');
+    if(blocate>0) html+=kpiCard('⚠️','#fef2f2',blocate,'Blocate >14 zile','var(--red)');
+    if(neprelate>0) html+=kpiCard('🚨','#fef2f2',neprelate,'Neprelate','var(--red)');
     document.getElementById('kpiGrid').innerHTML=html;
+    
+    // Render De Făcut section
+    renderDeFacut();
 }
 function kpiCard(icon,bg,val,label,color){
     return '<div class="kpi"><div class="kpi-top"><div class="kpi-icon" style="background:'+bg+'">'+icon+'</div></div><div class="kpi-value">'+val+'</div><div class="kpi-label">'+label+'</div><div class="kpi-bar" style="background:'+color+'"></div></div>';
@@ -449,6 +464,60 @@ function kpiCard(icon,bg,val,label,color){
 // ═══════ QUICK STATS ═══════
 function renderQuick(){
     document.getElementById('quickRow').innerHTML='';
+}
+
+// ═══════ LOAD OFERTE SUMMARY (Dashboard) ═══════
+function loadOferteSummaryDash(){
+    fetch(API_DB+'?action=getOferte&_t='+Date.now())
+    .then(function(r){return r.json()})
+    .then(function(res){
+        if(!res.success||!res.data) return;
+        var total=0,acceptate=0,pipeline=0;
+        res.data.forEach(function(o){
+            total++;
+            var val=parseFloat(o.total_cu_tva)||0;
+            if(o.oferta_status==='Acceptata') acceptate++;
+            if(o.oferta_status!=='Refuzata') pipeline+=val;
+        });
+        OFERTE_STATS={total:total,acceptate:acceptate,pipeline:pipeline};
+        renderKPI();
+    })
+    .catch(function(e){console.log('Oferte dash error:',e);});
+}
+
+// ═══════ DE FĂCUT AZI ═══════
+function renderDeFacut(){
+    var qs=document.getElementById('quickSection');
+    var qr=document.getElementById('quickRow');
+    if(!qs||!qr) return;
+    
+    var items=[];
+    var now=Date.now();
+    
+    // Proiecte neprelate
+    PROJECTS.forEach(function(p){
+        if(!p.preluat_de&&p.status!=='Lead'&&p.status!=='Contract'&&p.status!=='Finalizat'&&p.status!=='Anulat'){
+            items.push({icon:'⚠️',text:p.id+' ('+p.client+') — nepreluat',color:'var(--red)',link:'/admin/proiecte.html'});
+        }
+    });
+    
+    // Proiecte blocate >14 zile
+    PROJECTS.forEach(function(p){
+        if(!p.dataCreare) return;
+        var days=Math.floor((now-new Date(p.dataCreare).getTime())/86400000);
+        if(days>14&&['Lead','Ofertă','Contract'].indexOf(p.status)>=0){
+            items.push({icon:'⏰',text:p.id+' ('+p.client+') — '+days+' zile pe '+p.status,color:'var(--orange)',link:'/admin/proiecte.html'});
+        }
+    });
+    
+    if(!items.length){qs.classList.add('hidden');return;}
+    qs.classList.remove('hidden');
+    var html='<div style="font-size:13px;font-weight:800;margin-bottom:8px;color:var(--dark)">📌 De făcut</div>';
+    items.forEach(function(it){
+        html+='<a href="'+it.link+'" style="display:flex;align-items:center;gap:8px;padding:8px 12px;background:#fff;border-radius:10px;margin-bottom:4px;font-size:12px;border-left:3px solid '+it.color+';box-shadow:var(--shadow);transition:all 0.2s">';
+        html+='<span>'+it.icon+'</span><span style="flex:1">'+it.text+'</span><span style="color:var(--gray-l);font-size:10px">→</span></a>';
+    });
+    qr.innerHTML=html;
 }
 
 // ═══════ KANBAN ═══════
@@ -554,15 +623,18 @@ function loadProjectsFromDB(){
                     client:p.client_nume||'',
                     serviciu:SERV_DB_TO_UI[p.serviciu]||p.serviciu||'',
                     status:STAT_DB_TO_UI[p.status]||p.status||'Lead',
-                    valoare:parseFloat(p.valoare_estimata)||parseFloat(p.valoare_contract)||0,
+                    valoare:parseFloat(p.valoare_estimata)||0,
+                    valoareContract:parseFloat(p.valoare_contract)||0,
                     loc:p.oras||p.adresa_obiectiv||'Brașov',
                     obiectiv:p.obiectiv||'',
                     note:p.note||'',
-                    preluat_de:p.preluat_de||null
+                    preluat_de:p.preluat_de||null,
+                    dataCreare:p.created_at||''
                 };
             });
             projectsLoaded=true;
             renderKanban();renderKPI();
+            loadOferteSummaryDash();
             document.getElementById('syncBadge').innerHTML='<span class="sync-dot ok"></span>MySQL · '+PROJECTS.length+' proiecte';
         }
     }).catch(function(e){
