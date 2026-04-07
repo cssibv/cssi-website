@@ -23,7 +23,12 @@ RewriteRule ^(.*)$ https://cssi.ro/$1 [R=301,L]
 RewriteRule ^index\.html$ / [R=301,L]
 
 # --------------------------------------------------
-# 2b. PORTAL ADMIN — rezolvă conflictul /admin (director) vs admin.html
+# 2b. REDIRECT DUPLICAT BLOG → BLOG FOLDER
+# --------------------------------------------------
+RewriteRule ^sistem-integrat-securitate-brasov$ /blog/sistem-integrat-securitate-brasov [R=301,L]
+
+# --------------------------------------------------
+# 2c. PORTAL ADMIN — rezolvă conflictul /admin (director) vs admin.html
 # Fără această regulă, /admin → 403 (director fără index)
 # --------------------------------------------------
 RewriteRule ^admin/?$ /admin.html [L]
@@ -164,7 +169,7 @@ Options -Indexes
 # --------------------------------------------------
 # 9. CUSTOM ERROR PAGES (opțional - decomentează dacă ai pagini de eroare)
 # --------------------------------------------------
-# ErrorDocument 404 /404.html
+ErrorDocument 404 /404.html
 # ErrorDocument 500 /500.html
 
 # --------------------------------------------------
