@@ -3,3 +3,4 @@ deployment:
   tasks:
     - export DEPLOYPATH=/home/r101042brea/cssi.ro/
     - /bin/cp -R * $DEPLOYPATH
+    - cd $DEPLOYPATH && php generate-localized.php
