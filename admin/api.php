@@ -954,6 +954,87 @@ try {
             jsonResponse(['success' => true, 'data' => $rows]);
             break;
 
+        case 'generateSocialText':
+            $prompt = isset($data['prompt']) ? trim($data['prompt']) : '';
+            $brand = isset($data['brand']) ? $data['brand'] : 'cssi';
+            $platforme = isset($data['platforme']) ? $data['platforme'] : [];
+            if (!$prompt) { jsonResponse(['success' => false, 'error' => 'Descrie ce vrei s\u0103 genereze AI-ul'], 400); break; }
+            
+            $anthropicKey = 'ANTHROPIC_API_KEY_HERE'; // TODO: inlocuieste cu cheia ta
+            $brandInfo = $brand === 'cssi' 
+                ? 'CSSI (Confort, Securitate, Siguranță, Imobil) - companie din Brașov specializată în: sisteme supraveghere video, alarme antiefracție, detecție incendiu, control acces, instalații electrice, automatizări porți. Telefon: 0752 288 400.'
+                : 'Conca Verde - servicii de amenajare peisagistică și grădinărit în Brașov: design grădini, plantare, sisteme irigații, amenajări piatră naturală.';
+            $platNames = array_map(function($p){
+                $m=['fb'=>'Facebook','ig'=>'Instagram','linkedin'=>'LinkedIn','yt'=>'YouTube','tiktok'=>'TikTok'];
+                return isset($m[$p])?$m[$p]:$p;
+            }, $platforme);
+            
+            $sysPrompt = "Ești un copywriter social media expert. Scrii postări în limba română pentru brand-ul: {$brandInfo}. Platforme țintă: " . implode(', ', $platNames) . ". Folosește emoji-uri, call-to-action puternice, și hashtag-uri relevante. Răspunde DOAR cu textul postării, fără explicații.";
+            
+            $ch = curl_init('https://api.anthropic.com/v1/messages');
+            curl_setopt_array($ch, [
+                CURLOPT_POST => true,
+                CURLOPT_HTTPHEADER => [
+                    'x-api-key: ' . $anthropicKey,
+                    'anthropic-version: 2023-06-01',
+                    'Content-Type: application/json'
+                ],
+                CURLOPT_POSTFIELDS => json_encode([
+                    'model' => 'claude-sonnet-4-20250514',
+                    'max_tokens' => 500,
+                    'system' => $sysPrompt,
+                    'messages' => [['role' => 'user', 'content' => $prompt]]
+                ]),
+                CURLOPT_RETURNTRANSFER => true,
+                CURLOPT_TIMEOUT => 30
+            ]);
+            $response = curl_exec($ch);
+            $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+            curl_close($ch);
+            $result = json_decode($response, true);
+            if ($httpCode >= 200 && $httpCode < 300 && !empty($result['content'][0]['text'])) {
+                jsonResponse(['success' => true, 'text' => $result['content'][0]['text']]);
+            } else {
+                jsonResponse(['success' => false, 'error' => 'AI error: ' . ($result['error']['message'] ?? 'unknown')], 500);
+            }
+            break;
+
+        case 'generateSocialImage':
+            $prompt = isset($data['prompt']) ? trim($data['prompt']) : '';
+            if (!$prompt) { jsonResponse(['success' => false, 'error' => 'Descrie imaginea dorită'], 400); break; }
+            $uploadDir = __DIR__ . '/uploads/social/';
+            if (!is_dir($uploadDir)) mkdir($uploadDir, 0755, true);
+            
+            $imgPrompt = urlencode($prompt . ', professional photography, high quality, social media post');
+            $imgUrl = "https://image.pollinations.ai/prompt/{$imgPrompt}?width=1080&height=1080&seed=" . rand(1,999999) . '&nologo=true';
+            
+            $ch = curl_init($imgUrl);
+            curl_setopt_array($ch, [
+                CURLOPT_RETURNTRANSFER => true,
+                CURLOPT_FOLLOWLOCATION => true,
+                CURLOPT_TIMEOUT => 60
+            ]);
+            $imgData = curl_exec($ch);
+            $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+            $contentType = curl_getinfo($ch, CURLINFO_CONTENT_TYPE);
+            curl_close($ch);
+            
+            if ($httpCode >= 200 && $httpCode < 300 && strlen($imgData) > 1000) {
+                $ext = (strpos($contentType, 'png') !== false) ? 'png' : 'jpg';
+                $newName = 'ai_' . date('Ymd_His') . '_' . uniqid() . '.' . $ext;
+                file_put_contents($uploadDir . $newName, $imgData);
+                jsonResponse(['success' => true, 'file' => [
+                    'url' => '/admin/uploads/social/' . $newName,
+                    'name' => 'AI Generated - ' . substr($prompt, 0, 30),
+                    'size' => strlen($imgData),
+                    'type' => 'image',
+                    'ext' => $ext
+                ]]);
+            } else {
+                jsonResponse(['success' => false, 'error' => 'Nu s-a putut genera imaginea'], 500);
+            }
+            break;
+
         case 'uploadSocialMedia':
             // Upload fișiere media pentru social posts
             if (empty($_FILES['files'])) { jsonResponse(['success' => false, 'error' => 'Niciun fișier trimis'], 400); break; }

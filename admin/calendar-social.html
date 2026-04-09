@@ -146,6 +146,21 @@ a{text-decoration:none;color:inherit;}button{font-family:inherit;cursor:pointer;
 .upload-progress{height:3px;background:var(--gray-b);border-radius:2px;margin-top:8px;overflow:hidden;display:none;}
 .upload-progress.active{display:block;}
 .upload-progress-bar{height:100%;background:var(--purple);border-radius:2px;transition:width 0.3s;}
+
+/* AI Generation */
+.ai-bar{display:flex;gap:6px;margin-top:8px;}
+.ai-btn{padding:8px 14px;border-radius:10px;font-size:12px;font-weight:700;border:1px solid;cursor:pointer;transition:all 0.2s;display:flex;align-items:center;gap:4px;}
+.ai-btn-text{background:linear-gradient(135deg,#f5f3ff,#ede9fe);color:var(--purple);border-color:var(--purple);}.ai-btn-text:hover{background:var(--purple);color:#fff;}
+.ai-btn-img{background:linear-gradient(135deg,#fef3c7,#fde68a);color:#92400e;border-color:#f59e0b;}.ai-btn-img:hover{background:#f59e0b;color:#fff;}
+.ai-btn:disabled{opacity:0.5;cursor:wait;}
+.ai-prompt-box{background:linear-gradient(135deg,#f5f3ff,#ede9fe);border:2px solid var(--purple);border-radius:var(--radius-sm);padding:14px;margin-top:8px;display:none;}
+.ai-prompt-box.active{display:block;}
+.ai-prompt-box input{width:100%;padding:10px 14px;border:2px solid var(--gray-b);border-radius:10px;font-size:13px;font-family:inherit;outline:none;margin-bottom:8px;}.ai-prompt-box input:focus{border-color:var(--purple);}
+.ai-prompt-actions{display:flex;gap:6px;}
+.ai-prompt-go{padding:8px 18px;border-radius:10px;border:none;background:var(--purple);color:#fff;font-weight:700;font-size:12px;cursor:pointer;}.ai-prompt-go:hover{background:#6d28d9;}
+.ai-prompt-cancel{padding:8px 14px;border-radius:10px;border:1px solid var(--gray-b);background:#fff;color:var(--gray);font-weight:600;font-size:12px;cursor:pointer;}
+.ai-loading{display:inline-block;width:14px;height:14px;border:2px solid rgba(255,255,255,0.3);border-top-color:#fff;border-radius:50%;animation:spin 0.6s linear infinite;}
+@keyframes spin{to{transform:rotate(360deg)}}
 .footer{text-align:center;color:var(--gray-xl);font-size:11px;padding:24px 0 100px;}
 .loading-bar{position:fixed;top:0;left:0;right:0;height:3px;z-index:400;display:none;}.loading-bar.active{display:block;}.loading-bar::after{content:'';display:block;width:30%;height:100%;background:var(--purple);border-radius:2px;animation:loadSlide 1.2s infinite ease-in-out;}
 @keyframes loadSlide{0%{margin-left:-30%}100%{margin-left:100%}}
@@ -229,7 +244,15 @@ a{text-decoration:none;color:inherit;}button{font-family:inherit;cursor:pointer;
                 </div>
             </div>
 
-            <div class="form-group"><label class="form-label">Conținut <span class="req">*</span></label><textarea class="form-textarea" id="fContent" required placeholder="Textul postării, hashtag-uri..." oninput="updateCharCount()"></textarea><div class="char-count" id="charCount">0 caractere</div></div>
+            <div class="form-group"><label class="form-label">Conținut <span class="req">*</span></label><textarea class="form-textarea" id="fContent" required placeholder="Textul postării, hashtag-uri..." oninput="updateCharCount()"></textarea><div style="display:flex;justify-content:space-between;align-items:center"><div class="char-count" id="charCount">0 caractere</div><div class="ai-bar"><button type="button" class="ai-btn ai-btn-text" id="aiTextBtn" onclick="toggleAiText()">✨ Generează text AI</button></div></div>
+                <div class="ai-prompt-box" id="aiTextBox">
+                    <input type="text" id="aiTextPrompt" placeholder="Descrie ce vrei (ex: postare despre camere supraveghere, ton profesional)" onkeydown="if(event.key==='Enter'){event.preventDefault();generateAiText()}">
+                    <div class="ai-prompt-actions">
+                        <button type="button" class="ai-prompt-go" id="aiTextGo" onclick="generateAiText()">✨ Generează</button>
+                        <button type="button" class="ai-prompt-cancel" onclick="toggleAiText()">Anulează</button>
+                    </div>
+                </div>
+            </div>
 
             <div class="form-group">
                 <label class="form-label">Media (imagini / video)</label>
@@ -240,6 +263,16 @@ a{text-decoration:none;color:inherit;}button{font-family:inherit;cursor:pointer;
                     <div class="upload-zone-sub">JPG, PNG, GIF, WEBP, MP4, MOV · Max 50MB per fișier</div>
                 </div>
                 <div class="upload-progress" id="uploadProgress"><div class="upload-progress-bar" id="uploadProgressBar"></div></div>
+                <div class="ai-bar" style="margin-top:10px">
+                    <button type="button" class="ai-btn ai-btn-img" id="aiImgBtn" onclick="toggleAiImg()">🎨 Generează imagine AI</button>
+                </div>
+                <div class="ai-prompt-box" id="aiImgBox" style="border-color:#f59e0b;background:linear-gradient(135deg,#fffbeb,#fef3c7)">
+                    <input type="text" id="aiImgPrompt" placeholder="Descrie imaginea (ex: cameră supraveghere montată pe clădire, stil profesional)" onkeydown="if(event.key==='Enter'){event.preventDefault();generateAiImage()}">
+                    <div class="ai-prompt-actions">
+                        <button type="button" class="ai-prompt-go" style="background:#f59e0b" id="aiImgGo" onclick="generateAiImage()">🎨 Generează</button>
+                        <button type="button" class="ai-prompt-cancel" onclick="toggleAiImg()">Anulează</button>
+                    </div>
+                </div>
                 <div class="upload-preview" id="uploadPreview"></div>
             </div>
 
@@ -345,6 +378,57 @@ function renderUploadPreview(){
 function removeMedia(idx){
     uploadedMedia.splice(idx,1);
     renderUploadPreview();
+}
+
+// AI GENERATION
+function toggleAiText(){
+    var box=document.getElementById('aiTextBox');
+    box.classList.toggle('active');
+    if(box.classList.contains('active')) document.getElementById('aiTextPrompt').focus();
+}
+function toggleAiImg(){
+    var box=document.getElementById('aiImgBox');
+    box.classList.toggle('active');
+    if(box.classList.contains('active')) document.getElementById('aiImgPrompt').focus();
+}
+function generateAiText(){
+    var prompt=document.getElementById('aiTextPrompt').value.trim();
+    if(!prompt){toast('\u274c Descrie ce vrei s\u0103 genereze AI-ul','error');return;}
+    var brand=document.getElementById('fBrand').value;
+    var plats=getCheckedPlatforms();
+    var btn=document.getElementById('aiTextGo');
+    btn.disabled=true;btn.innerHTML='<span class="ai-loading"></span> Se genereaz\u0103...';
+    apiPost('generateSocialText',{prompt:prompt,brand:brand,platforme:plats})
+    .then(function(res){
+        btn.disabled=false;btn.textContent='\u2728 Genereaz\u0103';
+        if(res.success&&res.text){
+            document.getElementById('fContent').value=res.text;
+            updateCharCount();
+            toggleAiText();
+            toast('\u2728 Text generat cu AI!','success');
+        } else {
+            toast('\u274c '+(res.error||'Eroare generare'),'error');
+        }
+    }).catch(function(){btn.disabled=false;btn.textContent='\u2728 Genereaz\u0103';toast('\u274c Eroare conexiune','error');});
+}
+function generateAiImage(){
+    var prompt=document.getElementById('aiImgPrompt').value.trim();
+    if(!prompt){toast('\u274c Descrie imaginea dorit\u0103','error');return;}
+    var btn=document.getElementById('aiImgGo');
+    btn.disabled=true;btn.innerHTML='<span class="ai-loading"></span> Se genereaz\u0103...';
+    toast('\ud83c\udfa8 Se genereaz\u0103 imaginea... (10-20s)','info');
+    apiPost('generateSocialImage',{prompt:prompt})
+    .then(function(res){
+        btn.disabled=false;btn.textContent='\ud83c\udfa8 Genereaz\u0103';
+        if(res.success&&res.file){
+            uploadedMedia.push(res.file);
+            renderUploadPreview();
+            toggleAiImg();
+            toast('\ud83c\udfa8 Imagine generat\u0103 cu AI!','success');
+        } else {
+            toast('\u274c '+(res.error||'Eroare generare imagine'),'error');
+        }
+    }).catch(function(){btn.disabled=false;btn.textContent='\ud83c\udfa8 Genereaz\u0103';toast('\u274c Eroare conexiune','error');});
 }
 
 function loadPosts(){
@@ -634,7 +718,7 @@ function savePost(e,action){
         if(res.success){
             toast('✅ Postare salvată','success');
             closeAddModal();
-            if(action==='PublicaNow'){
+            if(action==='PublicaNow'||action==='Programat'){
                 publishPost(res.id);
             }
             loadPosts();
