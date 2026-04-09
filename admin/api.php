@@ -15,6 +15,7 @@ header('Pragma: no-cache');
 if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') { exit; }
 
 require_once __DIR__ . '/db.php';
+date_default_timezone_set('Europe/Bucharest');
 
 $action = (isset($_GET['action']) ? $_GET['action'] : ((isset($_POST['action']) ? $_POST['action'] : '')));
 $data = getPostData();
@@ -1090,6 +1091,7 @@ try {
             // Schedule or publish now
             if ($post['data_programare'] && strtotime($post['data_programare']) > time()) {
                 $zernioPayload['scheduledFor'] = date('c', strtotime($post['data_programare']));
+                $zernioPayload['timezone'] = 'Europe/Bucharest';
             } else {
                 $zernioPayload['publishNow'] = true;
             }

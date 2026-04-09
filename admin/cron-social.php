@@ -6,6 +6,7 @@
 // ============================================================
 
 require_once __DIR__ . '/db.php';
+date_default_timezone_set('Europe/Bucharest');
 
 $db = getDB();
 $now = date('Y-m-d H:i:s');
