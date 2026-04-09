@@ -930,6 +930,120 @@ try {
             jsonResponse(['success' => true]);
             break;
 
+        // ══════════════════════════════════════
+        // SOCIAL MEDIA
+        // ══════════════════════════════════════
+        case 'getSocialPosts':
+            $brand = isset($_GET['brand']) ? $_GET['brand'] : '';
+            $status = isset($_GET['status']) ? $_GET['status'] : '';
+            $sql = "SELECT * FROM social_posts WHERE 1=1";
+            $params = [];
+            if ($brand) { $sql .= " AND brand = ?"; $params[] = $brand; }
+            if ($status) { $sql .= " AND status = ?"; $params[] = $status; }
+            $sql .= " ORDER BY data_programare DESC, created_at DESC";
+            $stmt = $db->prepare($sql);
+            $stmt->execute($params);
+            $rows = $stmt->fetchAll();
+            foreach ($rows as &$r) {
+                $r['platforme'] = json_decode($r['platforme'] ?: '[]');
+                $r['external_ids'] = json_decode($r['external_ids'] ?: '{}');
+                $r['analytics'] = json_decode($r['analytics'] ?: '{}');
+            }
+            unset($r);
+            jsonResponse(['success' => true, 'data' => $rows]);
+            break;
+
+        case 'saveSocialPost':
+            $id = isset($data['id']) ? (int)$data['id'] : 0;
+            $brand = isset($data['brand']) ? $data['brand'] : 'cssi';
+            $continut = isset($data['continut']) ? trim($data['continut']) : '';
+            $platforme = isset($data['platforme']) ? json_encode($data['platforme']) : '[]';
+            $tip = isset($data['tip_continut']) ? $data['tip_continut'] : 'Foto';
+            $status = isset($data['status']) ? $data['status'] : 'Draft';
+            $data_prog = !empty($data['data_programare']) ? $data['data_programare'] : null;
+            $imagine = isset($data['imagine_url']) ? $data['imagine_url'] : '';
+            $note = isset($data['note']) ? $data['note'] : '';
+            $creat_de = isset($data['creat_de']) ? $data['creat_de'] : '';
+            if (!$continut) { jsonResponse(['success' => false, 'error' => 'Conținutul e obligatoriu'], 400); break; }
+            if ($id) {
+                $stmt = $db->prepare("UPDATE social_posts SET brand=?, continut=?, platforme=?, tip_continut=?, status=?, data_programare=?, imagine_url=?, note=? WHERE id=?");
+                $stmt->execute([$brand, $continut, $platforme, $tip, $status, $data_prog, $imagine, $note, $id]);
+            } else {
+                $stmt = $db->prepare("INSERT INTO social_posts (brand, continut, platforme, tip_continut, status, data_programare, imagine_url, note, creat_de) VALUES (?,?,?,?,?,?,?,?,?)");
+                $stmt->execute([$brand, $continut, $platforme, $tip, $status, $data_prog, $imagine, $note, $creat_de]);
+                $id = $db->lastInsertId();
+            }
+            jsonResponse(['success' => true, 'id' => $id]);
+            break;
+
+        case 'deleteSocialPost':
+            $id = isset($data['id']) ? (int)$data['id'] : 0;
+            if (!$id) { jsonResponse(['success' => false, 'error' => 'ID obligatoriu'], 400); break; }
+            $db->prepare("DELETE FROM social_posts WHERE id = ?")->execute([$id]);
+            jsonResponse(['success' => true]);
+            break;
+
+        case 'updateSocialStatus':
+            $id = isset($data['id']) ? (int)$data['id'] : 0;
+            $status = isset($data['status']) ? $data['status'] : '';
+            if (!$id || !$status) { jsonResponse(['success' => false, 'error' => 'ID și status obligatorii'], 400); break; }
+            $db->prepare("UPDATE social_posts SET status = ? WHERE id = ?")->execute([$status, $id]);
+            jsonResponse(['success' => true]);
+            break;
+
+        case 'publishSocialPost':
+            // Publică via Zernio API
+            $id = isset($data['id']) ? (int)$data['id'] : 0;
+            if (!$id) { jsonResponse(['success' => false, 'error' => 'ID obligatoriu'], 400); break; }
+            $stmt = $db->prepare("SELECT * FROM social_posts WHERE id = ?");
+            $stmt->execute([$id]);
+            $post = $stmt->fetch();
+            if (!$post) { jsonResponse(['success' => false, 'error' => 'Post negăsit'], 404); break; }
+
+            $platforme = json_decode($post['platforme'] ?: '[]', true);
+            $zernioKey = 'sk_c7b7a4f08d5bab22497ab169e58313a02d6ef47ead1d2bfa39b5bd7237fd76c0';
+
+            $zernioPayload = [
+                'content' => $post['continut'],
+                'platforms' => array_map(function($p) {
+                    $map = ['fb'=>'facebook','ig'=>'instagram','linkedin'=>'linkedin','yt'=>'youtube','tiktok'=>'tiktok','x'=>'twitter'];
+                    return isset($map[$p]) ? $map[$p] : $p;
+                }, $platforme)
+            ];
+            if ($post['imagine_url']) {
+                $zernioPayload['mediaUrls'] = [$post['imagine_url']];
+            }
+            if ($post['data_programare'] && strtotime($post['data_programare']) > time()) {
+                $zernioPayload['scheduledFor'] = date('c', strtotime($post['data_programare']));
+            }
+
+            $ch = curl_init('https://zernio.com/api/v1/posts');
+            curl_setopt_array($ch, [
+                CURLOPT_POST => true,
+                CURLOPT_HTTPHEADER => [
+                    'Authorization: Bearer ' . $zernioKey,
+                    'Content-Type: application/json'
+                ],
+                CURLOPT_POSTFIELDS => json_encode($zernioPayload),
+                CURLOPT_RETURNTRANSFER => true,
+                CURLOPT_TIMEOUT => 30
+            ]);
+            $response = curl_exec($ch);
+            $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+            curl_close($ch);
+
+            $result = json_decode($response, true);
+            if ($httpCode >= 200 && $httpCode < 300) {
+                $newStatus = (!empty($zernioPayload['scheduledFor'])) ? 'Programat' : 'Publicat';
+                $db->prepare("UPDATE social_posts SET status = ?, external_ids = ? WHERE id = ?")
+                   ->execute([$newStatus, $response, $id]);
+                jsonResponse(['success' => true, 'status' => $newStatus, 'zernio' => $result]);
+            } else {
+                $db->prepare("UPDATE social_posts SET status = 'Eroare' WHERE id = ?")->execute([$id]);
+                jsonResponse(['success' => false, 'error' => 'Zernio error: ' . ($response ?: 'timeout'), 'httpCode' => $httpCode], 500);
+            }
+            break;
+
         case 'ping':
             jsonResponse(['success' => true, 'message' => 'CSSI Portal API v4.0', 'time' => date('Y-m-d H:i:s'), 'db' => 'MySQL OK']);
             break;

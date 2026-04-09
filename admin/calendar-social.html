@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Calendar Social Media — Portal CSSI 3.0</title>
+<title>Social Media Manager — Portal CSSI</title>
 <meta name="robots" content="noindex, nofollow">
 <link rel="icon" type="image/x-icon" href="/images/favicon.ico">
 <meta name="theme-color" content="#dc2626">
@@ -19,6 +19,7 @@
 :root{--red:#dc2626;--red-d:#991b1b;--dark:#0f172a;--dark2:#1e293b;--gray:#64748b;--gray-l:#94a3b8;--gray-xl:#cbd5e1;--gray-bg:#f1f5f9;--gray-b:#e2e8f0;--blue:#3b82f6;--green:#22c55e;--orange:#f97316;--purple:#8b5cf6;--yellow:#eab308;--teal:#14b8a6;--pink:#ec4899;--radius:16px;--radius-sm:12px;--shadow:0 1px 3px rgba(0,0,0,0.06);--shadow-md:0 4px 12px rgba(0,0,0,0.08);--font:'Inter',system-ui,sans-serif;}
 body{font-family:var(--font);color:var(--dark);background:var(--gray-bg);-webkit-font-smoothing:antialiased;}
 a{text-decoration:none;color:inherit;}button{font-family:inherit;cursor:pointer;}
+
 .page-header{background:linear-gradient(135deg,#7c3aed,#6d28d9);color:#fff;padding:20px 24px;border-radius:20px;margin-bottom:16px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;}
 .page-back{color:rgba(255,255,255,0.7);font-size:13px;font-weight:500;}.page-back:hover{color:#fff;}
 .page-title{font-size:22px;font-weight:800;letter-spacing:-0.5px;}
@@ -38,29 +39,34 @@ a{text-decoration:none;color:inherit;}button{font-family:inherit;cursor:pointer;
 .kpi-val{font-size:22px;font-weight:900;}.kpi-label{font-size:11px;color:var(--gray);margin-top:1px;}
 
 .filters{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:16px;align-items:center;}
-.filter-search{padding:10px 16px;border-radius:99px;font-size:13px;border:1px solid var(--gray-b);outline:none;font-family:inherit;min-width:180px;background:#fff;flex:1;max-width:280px;}.filter-search:focus{border-color:var(--purple);box-shadow:0 0 0 3px rgba(124,58,237,0.08);}
+.filter-search{padding:10px 16px;border-radius:99px;font-size:13px;border:1px solid var(--gray-b);outline:none;font-family:inherit;min-width:160px;background:#fff;flex:1;max-width:240px;}.filter-search:focus{border-color:var(--purple);box-shadow:0 0 0 3px rgba(124,58,237,0.08);}
 .filter-select{padding:8px 14px;border-radius:99px;font-size:12px;font-weight:600;border:1px solid var(--gray-b);background:#fff;font-family:inherit;outline:none;cursor:pointer;}
 .view-toggle{display:flex;background:#fff;border-radius:10px;padding:3px;box-shadow:var(--shadow);border:1px solid var(--gray-b);margin-left:auto;}
 .view-btn{padding:7px 14px;border-radius:8px;font-size:12px;font-weight:600;border:none;background:none;color:var(--gray);cursor:pointer;transition:all 0.2s;}.view-btn.active{background:var(--dark);color:#fff;}
 .filter-count{font-size:12px;color:var(--gray);font-weight:500;}
 
 /* Platform colors */
-.plat-fb{color:#1877F2;}.plat-ig{color:#E4405F;}.plat-goog{color:#4285F4;}.plat-yt{color:#FF0000;}.plat-tiktok{color:#000;}.plat-linkedin{color:#0A66C2;}
-.bg-fb{background:#1877F215;}.bg-ig{background:#E4405F15;}.bg-goog{background:#4285F415;}.bg-yt{background:#FF000015;}.bg-tiktok{background:#00000010;}.bg-linkedin{background:#0A66C215;}
+.plat-fb{color:#1877F2;}.plat-ig{color:#E4405F;}.plat-linkedin{color:#0A66C2;}.plat-yt{color:#FF0000;}.plat-tiktok{color:#000;}.plat-x{color:#000;}
+.bg-fb{background:#1877F215;}.bg-ig{background:#E4405F15;}.bg-linkedin{background:#0A66C215;}.bg-yt{background:#FF000015;}.bg-tiktok{background:#00000010;}.bg-x{background:#00000010;}
+
+/* Brand badges */
+.brand-cssi{background:#dc262615;color:var(--red);font-weight:700;padding:3px 10px;border-radius:6px;font-size:10px;}
+.brand-conca{background:#14b8a615;color:var(--teal);font-weight:700;padding:3px 10px;border-radius:6px;font-size:10px;}
 
 /* POST CARDS */
 .posts{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:12px;margin-bottom:16px;}
-.pcard{background:#fff;border-radius:var(--radius);padding:18px;box-shadow:var(--shadow);border-top:3px solid var(--gray-b);transition:all 0.2s;cursor:pointer;}
+.pcard{background:#fff;border-radius:var(--radius);padding:18px;box-shadow:var(--shadow);border-left:4px solid var(--gray-b);transition:all 0.2s;cursor:pointer;}
 .pcard:hover{box-shadow:var(--shadow-md);transform:translateY(-1px);}
-.pcard.fb{border-top-color:#1877F2;}.pcard.ig{border-top-color:#E4405F;}.pcard.goog{border-top-color:#4285F4;}.pcard.yt{border-top-color:#FF0000;}.pcard.tiktok{border-top-color:#000;}.pcard.linkedin{border-top-color:#0A66C2;}
 .pcard-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;}
-.pcard-plat{font-size:12px;font-weight:800;display:flex;align-items:center;gap:4px;}
+.pcard-plats{display:flex;gap:6px;align-items:center;}
+.pcard-plat-icon{width:22px;height:22px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:12px;}
 .pcard-date{font-size:11px;color:var(--gray);font-weight:600;}
 .pcard-content{font-size:13px;line-height:1.6;color:var(--dark2);margin-bottom:10px;max-height:80px;overflow:hidden;}
 .pcard-tags{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px;}
 .pcard-badge{padding:3px 10px;border-radius:6px;font-size:10px;font-weight:700;}
-.badge-idee{background:#f5f3ff;color:var(--purple);}.badge-draft{background:var(--gray-bg);color:var(--gray);}.badge-programat{background:#fff7ed;color:var(--orange);}.badge-publicat{background:#f0fdf4;color:var(--green);}
+.badge-idee{background:#f5f3ff;color:var(--purple);}.badge-draft{background:var(--gray-bg);color:var(--gray);}.badge-programat{background:#fff7ed;color:var(--orange);}.badge-publicat{background:#f0fdf4;color:var(--green);}.badge-eroare{background:#fef2f2;color:var(--red);}
 .pcard-footer{display:flex;justify-content:space-between;align-items:center;padding-top:8px;border-top:1px solid var(--gray-bg);}
+.pcard-img{width:100%;height:120px;object-fit:cover;border-radius:10px;margin-bottom:10px;}
 
 /* CALENDAR VIEW */
 .cal-nav{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;background:#fff;border-radius:var(--radius);padding:12px 20px;box-shadow:var(--shadow);}
@@ -68,12 +74,12 @@ a{text-decoration:none;color:inherit;}button{font-family:inherit;cursor:pointer;
 .cal-month{font-size:18px;font-weight:800;}
 .cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:2px;margin-bottom:16px;}
 .cal-head{padding:8px;text-align:center;font-size:11px;font-weight:700;color:var(--gray);text-transform:uppercase;}
-.cal-day{background:#fff;min-height:90px;padding:6px;border-radius:8px;font-size:11px;position:relative;cursor:pointer;transition:all 0.15s;}
+.cal-day{background:#fff;min-height:100px;padding:6px;border-radius:8px;font-size:11px;position:relative;cursor:pointer;transition:all 0.15s;}
 .cal-day:hover{box-shadow:var(--shadow-md);}
 .cal-day.other{opacity:0.3;}.cal-day.today{border:2px solid var(--purple);}
 .cal-day-num{font-weight:800;font-size:12px;margin-bottom:4px;}
-.cal-post{padding:3px 5px;border-radius:4px;font-size:9px;font-weight:700;margin-bottom:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;cursor:pointer;}
-.cal-post.fb{background:#1877F215;color:#1877F2;}.cal-post.ig{background:#E4405F15;color:#E4405F;}.cal-post.goog{background:#4285F415;color:#4285F4;}.cal-post.yt{background:#FF000015;color:#FF0000;}.cal-post.tiktok{background:#00000010;color:#000;}.cal-post.linkedin{background:#0A66C215;color:#0A66C2;}
+.cal-post{padding:3px 5px;border-radius:4px;font-size:9px;font-weight:700;margin-bottom:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;cursor:pointer;display:flex;align-items:center;gap:3px;}
+.cal-post.fb{background:#1877F215;color:#1877F2;}.cal-post.ig{background:#E4405F15;color:#E4405F;}.cal-post.linkedin{background:#0A66C215;color:#0A66C2;}.cal-post.yt{background:#FF000015;color:#FF0000;}.cal-post.tiktok{background:#00000010;color:#000;}.cal-post.x{background:#00000010;color:#000;}
 
 /* KANBAN */
 .kanban{display:flex;gap:12px;overflow-x:auto;padding-bottom:12px;margin-bottom:16px;}
@@ -83,8 +89,8 @@ a{text-decoration:none;color:inherit;}button{font-family:inherit;cursor:pointer;
 .kanban-body{padding:8px;min-height:100px;max-height:500px;overflow-y:auto;}
 .k-card{background:var(--gray-bg);border-radius:10px;padding:10px 12px;margin-bottom:8px;cursor:pointer;transition:all 0.2s;border-left:3px solid transparent;}
 .k-card:hover{transform:translateX(2px);box-shadow:0 2px 8px rgba(0,0,0,0.08);}
-.k-card.fb{border-left-color:#1877F2;}.k-card.ig{border-left-color:#E4405F;}.k-card.goog{border-left-color:#4285F4;}.k-card.yt{border-left-color:#FF0000;}.k-card.tiktok{border-left-color:#000;}
-.k-card-title{font-size:12px;font-weight:700;margin-bottom:4px;}.k-card-sub{font-size:11px;color:var(--gray);}
+.k-card-title{font-size:12px;font-weight:700;margin-bottom:4px;display:flex;gap:4px;align-items:center;}
+.k-card-sub{font-size:11px;color:var(--gray);}
 
 .toast-container{position:fixed;top:20px;right:20px;z-index:300;display:flex;flex-direction:column;gap:8px;}
 .toast{padding:14px 20px;border-radius:12px;color:#fff;font-size:13px;font-weight:600;box-shadow:0 8px 24px rgba(0,0,0,0.15);animation:slideIn 0.3s ease;max-width:380px;}
@@ -92,17 +98,31 @@ a{text-decoration:none;color:inherit;}button{font-family:inherit;cursor:pointer;
 @keyframes slideIn{from{transform:translateX(100%);opacity:0}to{transform:translateX(0);opacity:1}}
 
 .modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);backdrop-filter:blur(4px);z-index:200;align-items:center;justify-content:center;padding:16px;}.modal-overlay.active{display:flex;}
-.modal{background:#fff;border-radius:20px;width:100%;max-width:520px;max-height:90vh;overflow-y:auto;box-shadow:0 25px 60px rgba(0,0,0,0.3);}
+.modal{background:#fff;border-radius:20px;width:100%;max-width:580px;max-height:90vh;overflow-y:auto;box-shadow:0 25px 60px rgba(0,0,0,0.3);}
 .modal-head{padding:20px 24px;border-bottom:1px solid var(--gray-b);display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;background:#fff;border-radius:20px 20px 0 0;z-index:1;}
 .modal-title{font-size:18px;font-weight:800;}
 .modal-close{width:32px;height:32px;border-radius:8px;border:none;background:var(--gray-bg);color:var(--gray);font-size:18px;display:flex;align-items:center;justify-content:center;}.modal-close:hover{background:#fef2f2;color:var(--red);}
 .modal-body{padding:24px;}
 .form-group{margin-bottom:16px;}.form-label{display:block;font-size:13px;font-weight:600;color:var(--dark);margin-bottom:6px;}.form-label .req{color:var(--red);}
 .form-input,.form-select,.form-textarea{width:100%;padding:12px 16px;border:2px solid var(--gray-b);border-radius:var(--radius-sm);font-size:14px;font-family:inherit;outline:none;transition:all 0.2s;background:#fff;}.form-input:focus,.form-select:focus,.form-textarea:focus{border-color:var(--purple);box-shadow:0 0 0 3px rgba(124,58,237,0.08);}
-.form-textarea{min-height:80px;resize:vertical;}
+.form-textarea{min-height:100px;resize:vertical;}
 .form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;}@media(max-width:480px){.form-row{grid-template-columns:1fr;}}
 .form-submit{width:100%;padding:14px;background:linear-gradient(135deg,#7c3aed,#6d28d9);color:#fff;border:none;border-radius:var(--radius-sm);font-size:15px;font-weight:700;cursor:pointer;transition:all 0.3s;}.form-submit:hover{transform:translateY(-1px);}
 .char-count{font-size:11px;color:var(--gray);text-align:right;margin-top:4px;}
+
+/* Platform checkboxes */
+.plat-checks{display:flex;flex-wrap:wrap;gap:8px;}
+.plat-check{display:flex;align-items:center;gap:6px;padding:8px 14px;border-radius:10px;border:2px solid var(--gray-b);cursor:pointer;transition:all 0.2s;font-size:13px;font-weight:600;}
+.plat-check:hover{border-color:var(--purple);}
+.plat-check.checked{border-color:var(--purple);background:#f5f3ff;}
+.plat-check input{display:none;}
+
+/* Publish bar */
+.publish-bar{display:flex;gap:8px;margin-top:16px;}
+.btn-publish{flex:1;padding:14px;border-radius:var(--radius-sm);font-size:14px;font-weight:700;border:none;cursor:pointer;transition:all 0.2s;}
+.btn-save{background:var(--gray-bg);color:var(--dark);}.btn-save:hover{background:var(--gray-b);}
+.btn-schedule{background:linear-gradient(135deg,var(--orange),#ea580c);color:#fff;}.btn-schedule:hover{transform:translateY(-1px);}
+.btn-now{background:linear-gradient(135deg,var(--green),#16a34a);color:#fff;}.btn-now:hover{transform:translateY(-1px);}
 
 .bottom-nav{position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1px solid var(--gray-b);box-shadow:0 -4px 20px rgba(0,0,0,0.06);padding:6px 12px;z-index:100;display:flex;gap:4px;}@media(min-width:768px){.bottom-nav{display:none;}}
 .bn-item{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:8px 4px;border-radius:10px;font-size:10px;font-weight:600;color:var(--gray);transition:all 0.2s;gap:2px;}.bn-item.active{color:var(--purple);background:#f5f3ff;}.bn-item .bn-icon{font-size:20px;}
@@ -120,12 +140,12 @@ a{text-decoration:none;color:inherit;}button{font-family:inherit;cursor:pointer;
     <div class="page-header">
         <div>
             <a href="../admin.html" class="page-back">← Dashboard</a>
-            <div class="page-title">📅 Calendar Social Media</div>
-            <div class="page-subtitle" id="syncStatus"><span class="sync-indicator sync-off"></span>Date locale (demo)</div>
+            <div class="page-title">📱 Social Media Manager</div>
+            <div class="page-subtitle" id="syncStatus"><span class="sync-indicator sync-off"></span>Se conectează...</div>
         </div>
         <div class="page-actions">
             <a href="marketing.html" class="page-btn secondary">📊 Marketing</a>
-            <button class="page-btn secondary" onclick="refreshData()">🔄 Sync</button>
+            <button class="page-btn secondary" onclick="loadPosts()">🔄 Refresh</button>
             <button class="page-btn primary" onclick="openAddModal()">+ Postare Nouă</button>
         </div>
     </div>
@@ -133,9 +153,10 @@ a{text-decoration:none;color:inherit;}button{font-family:inherit;cursor:pointer;
     <div class="kpi-row" id="kpiRow"></div>
 
     <div class="filters">
-        <input type="text" class="filter-search" id="searchInput" placeholder="🔍 Caută conținut..." oninput="render()">
-        <select class="filter-select" id="filterStatus" onchange="render()"><option value="">Toate statusurile</option><option>Idee</option><option>Draft</option><option>Programat</option><option>Publicat</option></select>
-        <select class="filter-select" id="filterPlatform" onchange="render()"><option value="">Toate platformele</option><option value="fb">📘 Facebook</option><option value="ig">📸 Instagram</option><option value="goog">🔍 Google</option><option value="yt">▶️ YouTube</option><option value="tiktok">🎵 TikTok</option><option value="linkedin">💼 LinkedIn</option></select>
+        <input type="text" class="filter-search" id="searchInput" placeholder="🔍 Caută..." oninput="render()">
+        <select class="filter-select" id="filterBrand" onchange="render()"><option value="">Toate brandurile</option><option value="cssi">🔴 CSSI</option><option value="conca-verde">🟢 Conca-Verde</option></select>
+        <select class="filter-select" id="filterStatus" onchange="render()"><option value="">Toate statusurile</option><option>Idee</option><option>Draft</option><option>Programat</option><option>Publicat</option><option>Eroare</option></select>
+        <select class="filter-select" id="filterPlatform" onchange="render()"><option value="">Toate platformele</option><option value="fb">📘 Facebook</option><option value="ig">📸 Instagram</option><option value="linkedin">💼 LinkedIn</option><option value="yt">▶️ YouTube</option><option value="tiktok">🎵 TikTok</option></select>
         <div class="view-toggle">
             <button class="view-btn active" id="vList" onclick="setView('list')">📋 Lista</button>
             <button class="view-btn" id="vCal" onclick="setView('calendar')">📅 Calendar</button>
@@ -147,14 +168,14 @@ a{text-decoration:none;color:inherit;}button{font-family:inherit;cursor:pointer;
     <div id="listView" class="posts"></div>
     <div id="calView" style="display:none"><div class="cal-nav"><button class="cal-nav-btn" onclick="navMonth(-1)">← Luna anterioară</button><div class="cal-month" id="calMonth"></div><button class="cal-nav-btn" onclick="navMonth(1)">Luna următoare →</button></div><div class="cal-grid" id="calGrid"></div></div>
     <div id="kanbanView" style="display:none"></div>
-    <div class="footer">Portal CSSI 3.0 · Calendar Social Media v3.0</div>
+    <div class="footer">Portal CSSI · Social Media Manager v2.0 · Powered by Zernio API</div>
 </div>
 
 <div class="bottom-nav">
     <a href="../admin.html" class="bn-item"><span class="bn-icon">🏠</span>Acasă</a>
     <a href="proiecte.html" class="bn-item"><span class="bn-icon">📋</span>Proiecte</a>
     <a href="crm-clienti.html" class="bn-item"><span class="bn-icon">💰</span>CRM</a>
-    <a href="executie.html" class="bn-item"><span class="bn-icon">🔧</span>Execuție</a>
+    <a href="calendar-social.html" class="bn-item active"><span class="bn-icon">📱</span>Social</a>
     <a href="financiar.html" class="bn-item"><span class="bn-icon">📄</span>Facturi</a>
 </div>
 
@@ -164,24 +185,47 @@ a{text-decoration:none;color:inherit;}button{font-family:inherit;cursor:pointer;
     <div class="modal-head"><div class="modal-title" id="modalTitle">📝 Postare Nouă</div><button class="modal-close" onclick="closeAddModal()">✕</button></div>
     <div class="modal-body">
         <form id="addForm" onsubmit="savePost(event)">
-            <input type="hidden" name="editId" id="editId" value="">
+            <input type="hidden" id="editId" value="">
+
             <div class="form-row">
-                <div class="form-group"><label class="form-label">Platformă <span class="req">*</span></label>
-                    <select class="form-select" name="platforma" id="fPlat" required><option value="fb">📘 Facebook</option><option value="ig">📸 Instagram</option><option value="goog">🔍 Google Business</option><option value="yt">▶️ YouTube</option><option value="tiktok">🎵 TikTok</option><option value="linkedin">💼 LinkedIn</option></select>
-                </div>
-                <div class="form-group"><label class="form-label">Data publicare</label><input type="date" class="form-input" name="data" id="fData"></div>
-            </div>
-            <div class="form-group"><label class="form-label">Conținut <span class="req">*</span></label><textarea class="form-textarea" name="continut" id="fContent" required placeholder="Textul postării, hashtag-uri..." oninput="updateCharCount()"></textarea><div class="char-count" id="charCount">0 caractere</div></div>
-            <div class="form-row">
-                <div class="form-group"><label class="form-label">Status</label>
-                    <select class="form-select" name="status" id="fStatus"><option>Idee</option><option selected>Draft</option><option>Programat</option><option>Publicat</option></select>
+                <div class="form-group"><label class="form-label">Brand <span class="req">*</span></label>
+                    <select class="form-select" id="fBrand">
+                        <option value="cssi">🔴 CSSI</option>
+                        <option value="conca-verde">🟢 Conca-Verde</option>
+                    </select>
                 </div>
                 <div class="form-group"><label class="form-label">Tip conținut</label>
-                    <select class="form-select" name="tip" id="fTip"><option>Foto</option><option>Video</option><option>Carusel</option><option>Story</option><option>Reel</option><option>Text</option></select>
+                    <select class="form-select" id="fTip"><option>Foto</option><option>Video</option><option>Carusel</option><option>Story</option><option>Reel</option><option>Text</option></select>
                 </div>
             </div>
-            <div class="form-group"><label class="form-label">Observații</label><input type="text" class="form-input" name="note" id="fNote" placeholder="Link imagine, notițe echipă..."></div>
-            <button type="submit" class="form-submit" id="submitBtn">📝 Salvează Postare</button>
+
+            <div class="form-group">
+                <label class="form-label">Platforme <span class="req">*</span></label>
+                <div class="plat-checks" id="platChecks">
+                    <label class="plat-check" onclick="toggleCheck(this)"><input type="checkbox" value="fb"><span class="plat-fb">📘</span> Facebook</label>
+                    <label class="plat-check" onclick="toggleCheck(this)"><input type="checkbox" value="ig"><span class="plat-ig">📸</span> Instagram</label>
+                    <label class="plat-check" onclick="toggleCheck(this)"><input type="checkbox" value="linkedin"><span class="plat-linkedin">💼</span> LinkedIn</label>
+                    <label class="plat-check" onclick="toggleCheck(this)"><input type="checkbox" value="yt"><span class="plat-yt">▶️</span> YouTube</label>
+                    <label class="plat-check" onclick="toggleCheck(this)"><input type="checkbox" value="tiktok"><span class="plat-tiktok">🎵</span> TikTok</label>
+                </div>
+            </div>
+
+            <div class="form-group"><label class="form-label">Conținut <span class="req">*</span></label><textarea class="form-textarea" id="fContent" required placeholder="Textul postării, hashtag-uri..." oninput="updateCharCount()"></textarea><div class="char-count" id="charCount">0 caractere</div></div>
+
+            <div class="form-group"><label class="form-label">URL Imagine / Media</label><input type="url" class="form-input" id="fImagine" placeholder="https://..."></div>
+
+            <div class="form-row">
+                <div class="form-group"><label class="form-label">Data publicare</label><input type="date" class="form-input" id="fData"></div>
+                <div class="form-group"><label class="form-label">Ora</label><input type="time" class="form-input" id="fOra" value="10:00"></div>
+            </div>
+
+            <div class="form-group"><label class="form-label">Observații interne</label><input type="text" class="form-input" id="fNote" placeholder="Note echipă, linkuri..."></div>
+
+            <div class="publish-bar">
+                <button type="button" class="btn-publish btn-save" onclick="savePost(event,'Draft')">💾 Salvează Draft</button>
+                <button type="button" class="btn-publish btn-schedule" onclick="savePost(event,'Programat')">⏰ Programează</button>
+                <button type="button" class="btn-publish btn-now" onclick="savePost(event,'PublicaNow')">🚀 Publică Acum</button>
+            </div>
         </form>
     </div>
 </div>
@@ -196,55 +240,68 @@ a{text-decoration:none;color:inherit;}button{font-family:inherit;cursor:pointer;
 </div>
 
 <script>
-var API_URL = 'https://script.google.com/macros/s/AKfycbzdM_e5DY5nmd57TmB24sXz8dML93gKIolkmlqKxE7_d-_o3jHMVYuQ06YiQ5zJgZiB/exec';
-var role = sessionStorage.getItem('cssi-role');
-if (!role) { window.location.href = '../admin.html'; }
-
-var PLAT = {fb:'📘 Facebook',ig:'📸 Instagram',goog:'🔍 Google Business',yt:'▶️ YouTube',tiktok:'🎵 TikTok',linkedin:'💼 LinkedIn'};
+var API = 'api.php';
 var POSTS = [];
 var currentView = 'list';
-var isLive = false;
 var kpiFilter = '';
-var calYear, calMonth;
+var calYear = 0, calMonthIdx = 0;
 
-var DEMO = [
-    {id:1,row:1,plat:'fb',content:'🔥 Sistem detecție incendiu nou instalat la Hotel Cheile Râșnoavei! Protecție completă cu detectoare adresabile Bosch. #detectieincendiu #securitate #CSSI',data:'2026-03-05',status:'Programat',tip:'Foto',note:'Fotografii de la recepție'},
-    {id:2,row:2,plat:'ig',content:'🎥 Timelapse montaj camere de supraveghere — depozit Ghimbav. 8 camere, NVR 4K, vizualizare remote. Contactează-ne! 📞\n#CCTV #supraveghere #Brasov',data:'2026-03-04',status:'Publicat',tip:'Reel',note:'Video editat de Alex'},
-    {id:3,row:3,plat:'goog',content:'CSSI Brașov — Soluții complete de securitate: alarme, CCTV, detecție incendiu, automatizări porți. Peste 15 ani experiență!',data:'2026-03-03',status:'Publicat',tip:'Text',note:'Update profil GMB'},
-    {id:4,row:4,plat:'fb',content:'⚡ Știai că verificarea periodică a instalațiilor electrice este obligatorie? CSSI oferă servicii complete de verificare PRAM + buletin. #PRAM #verificari',data:'2026-03-07',status:'Draft',tip:'Foto',note:'Trebuie creată imaginea'},
-    {id:5,row:5,plat:'ig',content:'🏗️ Proiect în desfășurare: Fabrica Autoliv — sistem complet CCTV perimetral. Stay tuned! #workinprogress #CCTV',data:'2026-03-10',status:'Idee',tip:'Carusel',note:'3-4 poze progres'},
-    {id:6,row:6,plat:'fb',content:'✅ Recepție finalizată cu succes! Sistem complet alarmă + CCTV la Pensiune Bran. Client mulțumit, proiect livrat la timp! #clientfericit',data:'2026-03-01',status:'Publicat',tip:'Foto',note:''},
-    {id:7,row:7,plat:'tiktok',content:'🎬 Behind the scenes: Cum montăm un sistem de detecție incendiu de la zero. De la proiectare la recepție!',data:'2026-03-12',status:'Idee',tip:'Video',note:'Filmări necesare pe teren'},
-    {id:8,row:8,plat:'yt',content:'Tutorial: Cum funcționează un sistem de detecție incendiu adresabil Bosch FPA-5000. Configurare, testare, mentenanță.',data:'2026-03-15',status:'Idee',tip:'Video',note:'Video lung, 5-10 min'},
-    {id:9,row:9,plat:'linkedin',content:'🏆 CSSI Brașov — 15 ani de excelență în securitate! De la primele sisteme de alarmă la proiecte complexe pentru clienți industriali. Mulțumim partenerilor noștri!',data:'2026-03-08',status:'Draft',tip:'Foto',note:'Post aniversar'},
-    {id:10,row:10,plat:'fb',content:'📷 CCTV pentru siguranța ta! Sisteme de supraveghere video de la Hikvision, montaj profesional de echipa CSSI. Solicită ofertă!',data:'2026-03-14',status:'Programat',tip:'Foto',note:'Programat cu Buffer'}
-];
+var PLAT = {fb:'📘 Facebook',ig:'📸 Instagram',linkedin:'💼 LinkedIn',yt:'▶️ YouTube',tiktok:'🎵 TikTok',x:'𝕏 Twitter'};
+var PLAT_COLOR = {fb:'#1877F2',ig:'#E4405F',linkedin:'#0A66C2',yt:'#FF0000',tiktok:'#000',x:'#000'};
 
-function esc(s){if(!s)return '';var d=document.createElement('div');d.textContent=s;return d.innerHTML;}
-function showLoading(s){document.getElementById('loadBar').classList.toggle('active',s);}
-function toast(msg,type){var c=document.getElementById('toastContainer');var t=document.createElement('div');t.className='toast '+(type||'info');t.textContent=msg;c.appendChild(t);setTimeout(function(){t.style.opacity='0';t.style.transform='translateX(100px)';t.style.transition='all 0.3s'},3000);setTimeout(function(){t.remove()},3500);}
-function todayStr(){return new Date().toISOString().split('T')[0];}
+function esc(s){var d=document.createElement('div');d.textContent=s||'';return d.innerHTML;}
+function todayStr(){var d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');}
 
-function apiGet(a){if(!API_URL)return Promise.reject('No API');showLoading(true);return fetch(API_URL+'?action='+a).then(function(r){return r.json()}).finally(function(){showLoading(false)});}
-function apiPost(d){if(!API_URL)return Promise.reject('No API');showLoading(true);return fetch(API_URL,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(d)}).then(function(r){return r.json()}).finally(function(){showLoading(false)});}
-
-function refreshData(){
-    if(!API_URL){toast('⚠️ API nesetat. Date demo.','info');POSTS=JSON.parse(JSON.stringify(DEMO));isLive=false;updateSync();render();return;}
-    updateSync('loading');
-    apiGet('getSocial').then(function(res){
-        if(Array.isArray(res)){POSTS=res.map(function(r,i){return {id:i+1,row:r.row||i+1,plat:r.platforma||'fb',content:r.continut||'',data:r.data||'',status:r.status||'Idee',tip:r.tip||'Foto',note:r.note||''};});}
-        isLive=true;updateSync();render();toast('✅ Sincronizat','success');
-    }).catch(function(){isLive=false;updateSync();toast('❌ Sync eșuat','error');});
+function toast(msg,type){
+    var c=document.getElementById('toastContainer');var t=document.createElement('div');
+    t.className='toast '+(type||'info');t.textContent=msg;c.appendChild(t);
+    setTimeout(function(){t.remove()},3500);
 }
-function updateSync(s){var el=document.getElementById('syncStatus');if(s==='loading')el.innerHTML='<span class="sync-indicator sync-loading"></span>Se sincronizează...';else if(isLive)el.innerHTML='<span class="sync-indicator sync-ok"></span>Conectat la Google Sheets';else el.innerHTML='<span class="sync-indicator sync-off"></span>Date locale (demo)';}
+function loading(on){document.getElementById('loadBar').classList.toggle('active',on);}
 
+// ═══ API CALLS ═══
+function apiGet(action,params){
+    var url=API+'?action='+action;if(params)url+='&'+params;
+    loading(true);
+    return fetch(url).then(function(r){return r.json()}).finally(function(){loading(false)});
+}
+function apiPost(action,body){
+    loading(true);
+    return fetch(API+'?action='+action,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)}).then(function(r){return r.json()}).finally(function(){loading(false)});
+}
+
+// ═══ LOAD DATA ═══
+function loadPosts(){
+    document.getElementById('syncStatus').innerHTML='<span class="sync-indicator sync-loading"></span>Se sincronizează...';
+    apiGet('getSocialPosts').then(function(res){
+        if(res.success){
+            POSTS=res.data.map(function(r){
+                var plats=Array.isArray(r.platforme)?r.platforme:[];
+                var dp=r.data_programare||'';
+                return {id:r.id,brand:r.brand||'cssi',content:r.continut||'',platforme:plats,data:dp?dp.substring(0,10):'',ora:dp?dp.substring(11,16):'',status:r.status||'Draft',tip:r.tip_continut||'Foto',imagine:r.imagine_url||'',note:r.note||'',external_ids:r.external_ids||{},created_at:r.created_at};
+            });
+            document.getElementById('syncStatus').innerHTML='<span class="sync-indicator sync-ok"></span>Conectat · '+POSTS.length+' postări';
+            render();
+        } else {
+            document.getElementById('syncStatus').innerHTML='<span class="sync-indicator sync-off"></span>Eroare: '+res.error;
+            toast('❌ '+res.error,'error');
+        }
+    }).catch(function(e){
+        document.getElementById('syncStatus').innerHTML='<span class="sync-indicator sync-off"></span>Offline';
+        toast('❌ Eroare conexiune','error');
+    });
+}
+
+// ═══ FILTERS ═══
 function getFiltered(){
     var q=document.getElementById('searchInput').value.toLowerCase();
+    var fb=document.getElementById('filterBrand').value;
     var fs=document.getElementById('filterStatus').value;
     var fp=document.getElementById('filterPlatform').value;
     return POSTS.filter(function(p){
+        if(fb&&p.brand!==fb)return false;
         if(fs&&p.status!==fs)return false;
-        if(fp&&p.plat!==fp)return false;
+        if(fp&&p.platforme.indexOf(fp)===-1)return false;
         if(kpiFilter&&p.status!==kpiFilter)return false;
         if(q&&!p.content.toLowerCase().includes(q))return false;
         return true;
@@ -252,6 +309,7 @@ function getFiltered(){
 }
 function toggleKpiFilter(f){kpiFilter=kpiFilter===f?'':f;render();}
 
+// ═══ RENDER ═══
 function render(){
     renderKPI();
     var f=getFiltered();
@@ -263,56 +321,72 @@ function render(){
 function show(id){document.getElementById(id).style.display='';}function hide(id){document.getElementById(id).style.display='none';}
 
 function renderKPI(){
-    var idei=POSTS.filter(function(p){return p.status==='Idee'}).length;
-    var drafts=POSTS.filter(function(p){return p.status==='Draft'}).length;
-    var prog=POSTS.filter(function(p){return p.status==='Programat'}).length;
-    var pub=POSTS.filter(function(p){return p.status==='Publicat'}).length;
+    var counts={};['Idee','Draft','Programat','Publicat','Eroare'].forEach(function(s){counts[s]=POSTS.filter(function(p){return p.status===s}).length});
     document.getElementById('kpiRow').innerHTML=
         '<div class="kpi-card" onclick="toggleKpiFilter(\'\')"><div class="kpi-val">'+POSTS.length+'</div><div class="kpi-label">Total postări</div></div>'+
-        '<div class="kpi-card'+(kpiFilter==='Idee'?' active-filter':'')+'" onclick="toggleKpiFilter(\'Idee\')"><div class="kpi-val" style="color:var(--purple)">'+idei+'</div><div class="kpi-label">💡 Idei</div></div>'+
-        '<div class="kpi-card'+(kpiFilter==='Draft'?' active-filter':'')+'" onclick="toggleKpiFilter(\'Draft\')"><div class="kpi-val" style="color:var(--gray)">'+drafts+'</div><div class="kpi-label">📝 Drafturi</div></div>'+
-        '<div class="kpi-card'+(kpiFilter==='Programat'?' active-filter':'')+'" onclick="toggleKpiFilter(\'Programat\')"><div class="kpi-val" style="color:var(--orange)">'+prog+'</div><div class="kpi-label">⏰ Programate</div></div>'+
-        '<div class="kpi-card'+(kpiFilter==='Publicat'?' active-filter':'')+'" onclick="toggleKpiFilter(\'Publicat\')"><div class="kpi-val" style="color:var(--green)">'+pub+'</div><div class="kpi-label">✅ Publicate</div></div>';
+        '<div class="kpi-card'+(kpiFilter==='Idee'?' active-filter':'')+'" onclick="toggleKpiFilter(\'Idee\')"><div class="kpi-val" style="color:var(--purple)">'+counts.Idee+'</div><div class="kpi-label">💡 Idei</div></div>'+
+        '<div class="kpi-card'+(kpiFilter==='Draft'?' active-filter':'')+'" onclick="toggleKpiFilter(\'Draft\')"><div class="kpi-val" style="color:var(--gray)">'+counts.Draft+'</div><div class="kpi-label">📝 Drafturi</div></div>'+
+        '<div class="kpi-card'+(kpiFilter==='Programat'?' active-filter':'')+'" onclick="toggleKpiFilter(\'Programat\')"><div class="kpi-val" style="color:var(--orange)">'+counts.Programat+'</div><div class="kpi-label">⏰ Programate</div></div>'+
+        '<div class="kpi-card'+(kpiFilter==='Publicat'?' active-filter':'')+'" onclick="toggleKpiFilter(\'Publicat\')"><div class="kpi-val" style="color:var(--green)">'+counts.Publicat+'</div><div class="kpi-label">✅ Publicate</div></div>'+
+        '<div class="kpi-card'+(kpiFilter==='Eroare'?' active-filter':'')+'" onclick="toggleKpiFilter(\'Eroare\')"><div class="kpi-val" style="color:var(--red)">'+counts.Eroare+'</div><div class="kpi-label">❌ Erori</div></div>';
+}
+
+function platIcons(plats){
+    return (plats||[]).map(function(p){return '<span title="'+(PLAT[p]||p)+'" style="font-size:14px">'+(PLAT[p]||p).split(' ')[0]+'</span>'}).join(' ');
+}
+function brandBadge(b){
+    return b==='conca-verde'?'<span class="brand-conca">Conca-Verde</span>':'<span class="brand-cssi">CSSI</span>';
+}
+function statusBadge(s){
+    var cls='badge-'+(s==='Publicat'?'publicat':s==='Programat'?'programat':s==='Draft'?'draft':s==='Eroare'?'eroare':'idee');
+    return '<span class="pcard-badge '+cls+'">'+s+'</span>';
 }
 
 function renderList(filtered){
-    if(!filtered.length){document.getElementById('listView').innerHTML='<div class="empty-msg">Nicio postare găsită</div>';return;}
-    var sorted=filtered.slice().sort(function(a,b){return b.data.localeCompare(a.data);});
+    if(!filtered.length){document.getElementById('listView').innerHTML='<div class="empty-msg">Nicio postare găsită. Apasă "+ Postare Nouă" pentru a adăuga.</div>';return;}
+    var sorted=filtered.slice().sort(function(a,b){return (b.data||'0').localeCompare(a.data||'0')});
     var html='';
     sorted.forEach(function(p){
-        var badgeCls='badge-'+(p.status==='Publicat'?'publicat':p.status==='Programat'?'programat':p.status==='Draft'?'draft':'idee');
-        html+='<div class="pcard '+p.plat+'" onclick="openDetailModal('+p.id+')">';
-        html+='<div class="pcard-top"><div class="pcard-plat plat-'+p.plat+'">'+(PLAT[p.plat]||p.plat)+'</div><div class="pcard-date">📅 '+p.data+'</div></div>';
+        var borderColor=p.platforme.length?PLAT_COLOR[p.platforme[0]]||'#cbd5e1':'#cbd5e1';
+        html+='<div class="pcard" style="border-left-color:'+borderColor+'" onclick="openDetailModal('+p.id+')">';
+        html+='<div class="pcard-top"><div class="pcard-plats">'+platIcons(p.platforme)+'</div><div class="pcard-date">'+(p.data||'Fără dată')+(p.ora?' · '+p.ora:'')+'</div></div>';
+        if(p.imagine) html+='<img class="pcard-img" src="'+esc(p.imagine)+'" onerror="this.style.display=\'none\'">';
         html+='<div class="pcard-content">'+esc(p.content)+'</div>';
-        html+='<div class="pcard-tags"><span class="pcard-badge '+badgeCls+'">'+p.status+'</span>';
+        html+='<div class="pcard-tags">'+brandBadge(p.brand)+statusBadge(p.status);
         if(p.tip) html+='<span class="pcard-badge" style="background:var(--gray-bg);color:var(--gray)">'+p.tip+'</span>';
         html+='</div>';
         html+='<div class="pcard-footer"><select onclick="event.stopPropagation()" onchange="changeStatus('+p.id+',this.value)" style="padding:6px 10px;border-radius:8px;border:1px solid var(--gray-b);font-size:11px;font-weight:600;font-family:inherit;cursor:pointer">';
         ['Idee','Draft','Programat','Publicat'].forEach(function(s){html+='<option'+(p.status===s?' selected':'')+'>'+s+'</option>';});
         html+='</select>';
-        html+='<button onclick="event.stopPropagation();openEditModal('+p.id+')" style="padding:5px 12px;border-radius:8px;border:none;background:var(--gray-bg);color:var(--gray);font-size:11px;font-weight:700;cursor:pointer">✏️</button></div></div>';
+        html+='<div style="display:flex;gap:4px">';
+        if(p.status==='Draft'||p.status==='Idee') html+='<button onclick="event.stopPropagation();publishPost('+p.id+')" style="padding:5px 12px;border-radius:8px;border:none;background:#f0fdf4;color:var(--green);font-size:11px;font-weight:700;cursor:pointer" title="Publică via Zernio">🚀</button>';
+        html+='<button onclick="event.stopPropagation();openEditModal('+p.id+')" style="padding:5px 12px;border-radius:8px;border:none;background:var(--gray-bg);color:var(--gray);font-size:11px;font-weight:700;cursor:pointer">✏️</button>';
+        html+='</div></div></div>';
     });
     document.getElementById('listView').innerHTML=html;
 }
 
 function renderCal(){
-    var now=new Date();if(!calYear){calYear=now.getFullYear();calMonth=now.getMonth();}
+    var now=new Date();if(!calYear){calYear=now.getFullYear();calMonthIdx=now.getMonth();}
     var months=['Ianuarie','Februarie','Martie','Aprilie','Mai','Iunie','Iulie','August','Septembrie','Octombrie','Noiembrie','Decembrie'];
-    document.getElementById('calMonth').textContent=months[calMonth]+' '+calYear;
-    var first=new Date(calYear,calMonth,1);var lastDay=new Date(calYear,calMonth+1,0).getDate();
+    document.getElementById('calMonth').textContent=months[calMonthIdx]+' '+calYear;
+    var first=new Date(calYear,calMonthIdx,1);var lastDay=new Date(calYear,calMonthIdx+1,0).getDate();
     var startDay=(first.getDay()+6)%7;
     var html='';['Lun','Mar','Mie','Joi','Vin','Sâm','Dum'].forEach(function(d){html+='<div class="cal-head">'+d+'</div>';});
-    var prevLast=new Date(calYear,calMonth,0).getDate();
+    var prevLast=new Date(calYear,calMonthIdx,0).getDate();
     for(var i=startDay-1;i>=0;i--) html+='<div class="cal-day other"><div class="cal-day-num">'+(prevLast-i)+'</div></div>';
     var todayD=now.getDate(),todayM=now.getMonth(),todayY=now.getFullYear();
+    var fb=document.getElementById('filterBrand').value;
     for(var d=1;d<=lastDay;d++){
-        var isToday=d===todayD&&calMonth===todayM&&calYear===todayY;
-        var dateStr=calYear+'-'+(calMonth+1<10?'0':'')+(calMonth+1)+'-'+(d<10?'0':'')+d;
-        var dayPosts=POSTS.filter(function(p){return p.data===dateStr;});
+        var isToday=d===todayD&&calMonthIdx===todayM&&calYear===todayY;
+        var dateStr=calYear+'-'+String(calMonthIdx+1).padStart(2,'0')+'-'+String(d).padStart(2,'0');
+        var dayPosts=POSTS.filter(function(p){return p.data===dateStr&&(!fb||p.brand===fb)});
         html+='<div class="cal-day'+(isToday?' today':'')+'" onclick="addForDate(\''+dateStr+'\')">';
         html+='<div class="cal-day-num">'+d+'</div>';
         dayPosts.forEach(function(p){
-            html+='<div class="cal-post '+p.plat+'" onclick="event.stopPropagation();openDetailModal('+p.id+')" title="'+esc(p.content.substring(0,80))+'">'+esc(p.content.substring(0,30))+'</div>';
+            var cls=p.platforme.length?p.platforme[0]:'';
+            var icon=p.brand==='conca-verde'?'🟢':'🔴';
+            html+='<div class="cal-post '+cls+'" onclick="event.stopPropagation();openDetailModal('+p.id+')" title="'+esc(p.content.substring(0,80))+'">'+icon+' '+esc(p.content.substring(0,25))+'</div>';
         });
         html+='</div>';
     }
@@ -320,48 +394,67 @@ function renderCal(){
     for(var i=1;i<=rem;i++) html+='<div class="cal-day other"><div class="cal-day-num">'+i+'</div></div>';
     document.getElementById('calGrid').innerHTML=html;
 }
-function navMonth(d){calMonth+=d;if(calMonth<0){calMonth=11;calYear--;}if(calMonth>11){calMonth=0;calYear++;}renderCal();}
+function navMonth(d){calMonthIdx+=d;if(calMonthIdx<0){calMonthIdx=11;calYear--;}if(calMonthIdx>11){calMonthIdx=0;calYear++;}renderCal();}
 function addForDate(d){document.getElementById('fData').value=d;openAddModal();}
 
-function renderKanban(){
-    var statuses=[{name:'Idee',color:'#8b5cf6'},{name:'Draft',color:'#64748b'},{name:'Programat',color:'#f97316'},{name:'Publicat',color:'#22c55e'}];
+function renderKanban(filtered){
+    var statuses=[{name:'Idee',color:'#8b5cf6'},{name:'Draft',color:'#64748b'},{name:'Programat',color:'#f97316'},{name:'Publicat',color:'#22c55e'},{name:'Eroare',color:'#dc2626'}];
     var html='';
     statuses.forEach(function(s){
-        var items=POSTS.filter(function(p){return p.status===s.name;});
+        var items=(filtered||POSTS).filter(function(p){return p.status===s.name});
         html+='<div class="kanban-col"><div class="kanban-head" style="background:'+s.color+'">'+s.name+' <span class="count">'+items.length+'</span></div><div class="kanban-body">';
         if(!items.length) html+='<div style="text-align:center;color:var(--gray-l);font-size:12px;padding:20px">Gol</div>';
         items.forEach(function(p){
-            html+='<div class="k-card '+p.plat+'" onclick="openDetailModal('+p.id+')">';
-            html+='<div class="k-card-title">'+(PLAT[p.plat]||'')+' · '+p.data+'</div>';
-            html+='<div class="k-card-sub">'+esc(p.content.substring(0,60))+(p.content.length>60?'...':'')+'</div></div>';
+            html+='<div class="k-card" onclick="openDetailModal('+p.id+')">';
+            html+='<div class="k-card-title">'+brandBadge(p.brand)+' '+platIcons(p.platforme)+'</div>';
+            html+='<div class="k-card-sub">'+esc(p.content.substring(0,60))+(p.content.length>60?'...':'')+'</div>';
+            if(p.data) html+='<div style="font-size:10px;color:var(--gray);margin-top:4px">📅 '+p.data+(p.ora?' · '+p.ora:'')+'</div>';
+            html+='</div>';
         });
         html+='</div></div>';
     });
     document.getElementById('kanbanView').innerHTML='<div class="kanban">'+html+'</div>';
 }
 
+// ═══ STATUS CHANGE ═══
 function changeStatus(id,val){
-    var p=POSTS.find(function(x){return x.id===id});if(!p)return;
-    p.status=val;
-    if(API_URL) apiPost({action:'updateSocialStatus',row:p.row,status:val}).catch(function(){});
-    render();toast('✅ '+val,'success');
+    apiPost('updateSocialStatus',{id:id,status:val}).then(function(res){
+        if(res.success){var p=POSTS.find(function(x){return x.id===id});if(p)p.status=val;render();toast('✅ Status: '+val,'success');}
+        else toast('❌ '+res.error,'error');
+    });
 }
 
+// ═══ PUBLISH VIA ZERNIO ═══
+function publishPost(id){
+    var p=POSTS.find(function(x){return x.id===id});if(!p)return;
+    if(!p.platforme.length){toast('❌ Selectează cel puțin o platformă','error');return;}
+    if(!confirm('Publici postarea pe '+p.platforme.map(function(x){return PLAT[x]||x}).join(', ')+'?'))return;
+    toast('📤 Se publică...','info');
+    apiPost('publishSocialPost',{id:id}).then(function(res){
+        if(res.success){p.status=res.status;render();toast('✅ '+res.status+' cu succes!','success');}
+        else{p.status='Eroare';render();toast('❌ '+res.error,'error');}
+    }).catch(function(){toast('❌ Eroare conexiune','error')});
+}
+
+// ═══ DETAIL MODAL ═══
 function openDetailModal(id){
     var p=POSTS.find(function(x){return x.id===id});if(!p)return;
-    var badgeCls='badge-'+(p.status==='Publicat'?'publicat':p.status==='Programat'?'programat':p.status==='Draft'?'draft':'idee');
-    document.getElementById('detailTitle').textContent=(PLAT[p.plat]||'')+'  Postare';
+    document.getElementById('detailTitle').textContent='📋 Detalii Postare #'+p.id;
     var html='<div style="display:grid;gap:14px">';
-    html+='<div style="text-align:center"><span class="pcard-badge '+badgeCls+'" style="font-size:14px;padding:8px 20px">'+p.status+'</span></div>';
+    html+='<div style="display:flex;gap:8px;align-items:center;justify-content:center">'+brandBadge(p.brand)+statusBadge(p.status)+'</div>';
+    if(p.imagine) html+='<img src="'+esc(p.imagine)+'" style="width:100%;max-height:200px;object-fit:cover;border-radius:12px" onerror="this.style.display=\'none\'">';
     html+='<div style="background:var(--gray-bg);padding:16px;border-radius:12px;font-size:14px;line-height:1.7;white-space:pre-wrap">'+esc(p.content)+'</div>';
+    html+='<div style="display:flex;flex-wrap:wrap;gap:6px;font-size:13px">'+platIcons(p.platforme)+'</div>';
     html+='<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;font-size:13px">';
-    html+='<div style="padding:10px;background:#fff;border-radius:8px;border:1px solid var(--gray-b)"><strong>Platformă</strong><br><span class="plat-'+p.plat+'" style="font-weight:700">'+(PLAT[p.plat]||p.plat)+'</span></div>';
-    html+='<div style="padding:10px;background:#fff;border-radius:8px;border:1px solid var(--gray-b)"><strong>Data</strong><br>'+p.data+'</div>';
+    html+='<div style="padding:10px;background:#fff;border-radius:8px;border:1px solid var(--gray-b)"><strong>Data</strong><br>'+(p.data||'—')+(p.ora?' · '+p.ora:'')+'</div>';
     html+='<div style="padding:10px;background:#fff;border-radius:8px;border:1px solid var(--gray-b)"><strong>Tip</strong><br>'+(p.tip||'—')+'</div>';
     html+='<div style="padding:10px;background:#fff;border-radius:8px;border:1px solid var(--gray-b)"><strong>Caractere</strong><br>'+p.content.length+'</div>';
+    html+='<div style="padding:10px;background:#fff;border-radius:8px;border:1px solid var(--gray-b)"><strong>Creat</strong><br>'+(p.created_at||'—').substring(0,10)+'</div>';
     html+='</div>';
     if(p.note) html+='<div style="font-size:13px;color:var(--gray);font-style:italic;padding:10px 14px;background:var(--gray-bg);border-radius:8px">📝 '+esc(p.note)+'</div>';
-    html+='<div style="display:flex;gap:8px"><button onclick="closeDetailModal();openEditModal('+p.id+')" style="flex:1;padding:12px;border-radius:12px;border:none;background:var(--purple);color:#fff;font-weight:700;cursor:pointer">✏️ Editează</button>';
+    html+='<div style="display:flex;gap:8px;flex-wrap:wrap">';
+    if(p.status!=='Publicat') html+='<button onclick="closeDetailModal();publishPost('+p.id+')" style="flex:1;padding:12px;border-radius:12px;border:none;background:linear-gradient(135deg,var(--green),#16a34a);color:#fff;font-weight:700;cursor:pointer">🚀 Publică</button>';
+    html+='<button onclick="closeDetailModal();openEditModal('+p.id+')" style="flex:1;padding:12px;border-radius:12px;border:none;background:var(--purple);color:#fff;font-weight:700;cursor:pointer">✏️ Editează</button>';
     html+='<button onclick="deletePost('+p.id+')" style="padding:12px 16px;border-radius:12px;border:none;background:#fef2f2;color:var(--red);font-weight:700;cursor:pointer">🗑️</button></div></div>';
     document.getElementById('detailBody').innerHTML=html;
     document.getElementById('detailModal').classList.add('active');
@@ -370,63 +463,105 @@ function closeDetailModal(){document.getElementById('detailModal').classList.rem
 
 function deletePost(id){
     if(!confirm('Ștergi această postare?'))return;
-    POSTS=POSTS.filter(function(p){return p.id!==id});
-    closeDetailModal();render();toast('🗑️ Postare ștearsă','info');
+    apiPost('deleteSocialPost',{id:id}).then(function(res){
+        if(res.success){POSTS=POSTS.filter(function(p){return p.id!==id});closeDetailModal();render();toast('🗑️ Postare ștearsă','info');}
+        else toast('❌ '+res.error,'error');
+    });
 }
 
-function setView(v){currentView=v;document.getElementById('vList').classList.toggle('active',v==='list');document.getElementById('vCal').classList.toggle('active',v==='calendar');document.getElementById('vKanban').classList.toggle('active',v==='kanban');render();}
+// ═══ ADD/EDIT MODAL ═══
+function toggleCheck(el){
+    setTimeout(function(){
+        var cb=el.querySelector('input');
+        el.classList.toggle('checked',cb.checked);
+    },10);
+}
+function getCheckedPlatforms(){
+    var checks=document.querySelectorAll('#platChecks input:checked');
+    return Array.prototype.map.call(checks,function(c){return c.value});
+}
+function setCheckedPlatforms(plats){
+    var checks=document.querySelectorAll('#platChecks input');
+    Array.prototype.forEach.call(checks,function(c){
+        c.checked=plats.indexOf(c.value)!==-1;
+        c.parentElement.classList.toggle('checked',c.checked);
+    });
+}
 
 function openAddModal(){
     document.getElementById('editId').value='';
     document.getElementById('modalTitle').textContent='📝 Postare Nouă';
-    document.getElementById('submitBtn').textContent='📝 Salvează Postare';
-    document.getElementById('addForm').reset();
-    if(!document.getElementById('fData').value)document.getElementById('fData').value=todayStr();
+    document.getElementById('fBrand').value='cssi';
+    document.getElementById('fContent').value='';
+    document.getElementById('fImagine').value='';
+    if(!document.getElementById('fData').value) document.getElementById('fData').value=todayStr();
+    document.getElementById('fOra').value='10:00';
+    document.getElementById('fTip').value='Foto';
+    document.getElementById('fNote').value='';
+    setCheckedPlatforms(['fb','ig']);
     updateCharCount();
     document.getElementById('addModal').classList.add('active');
 }
 function openEditModal(id){
     var p=POSTS.find(function(x){return x.id===id});if(!p)return;
     document.getElementById('editId').value=p.id;
-    document.getElementById('modalTitle').textContent='✏️ Editare Postare';
-    document.getElementById('submitBtn').textContent='💾 Salvează';
-    document.getElementById('fPlat').value=p.plat;
-    document.getElementById('fData').value=p.data;
+    document.getElementById('modalTitle').textContent='✏️ Editare Postare #'+p.id;
+    document.getElementById('fBrand').value=p.brand;
     document.getElementById('fContent').value=p.content;
-    document.getElementById('fStatus').value=p.status;
+    document.getElementById('fImagine').value=p.imagine||'';
+    document.getElementById('fData').value=p.data||'';
+    document.getElementById('fOra').value=p.ora||'10:00';
     document.getElementById('fTip').value=p.tip||'Foto';
     document.getElementById('fNote').value=p.note||'';
+    setCheckedPlatforms(p.platforme||[]);
     updateCharCount();
     document.getElementById('addModal').classList.add('active');
 }
 function closeAddModal(){document.getElementById('addModal').classList.remove('active');}
 function updateCharCount(){document.getElementById('charCount').textContent=(document.getElementById('fContent').value||'').length+' caractere';}
 
-function savePost(e){
-    e.preventDefault();var fd=new FormData(document.getElementById('addForm'));
-    var editId=parseInt(fd.get('editId'));
-    var postData={plat:fd.get('platforma'),content:fd.get('continut'),data:fd.get('data')||todayStr(),status:fd.get('status'),tip:fd.get('tip')||'Foto',note:fd.get('note')||''};
-    if(editId){
-        var p=POSTS.find(function(x){return x.id===editId});
-        if(p) Object.assign(p,postData);
-        if(API_URL) apiPost({action:'updateSocial',row:p.row,post:postData}).catch(function(){});
-        toast('✅ Postare actualizată','success');
-    } else {
-        var maxId=0;POSTS.forEach(function(x){if(x.id>maxId)maxId=x.id});
-        var newP=Object.assign({id:maxId+1,row:maxId+1},postData);
-        if(API_URL) apiPost({action:'addSocial',post:postData}).then(function(res){newP.row=res.row||newP.row}).catch(function(){});
-        POSTS.push(newP);
-        toast('✅ Postare adăugată','success');
-    }
-    render();closeAddModal();document.getElementById('addForm').reset();
+function savePost(e,action){
+    if(e&&e.preventDefault) e.preventDefault();
+    var content=document.getElementById('fContent').value.trim();
+    if(!content){toast('❌ Conținutul e obligatoriu','error');return;}
+    var plats=getCheckedPlatforms();
+    if(!plats.length){toast('❌ Selectează cel puțin o platformă','error');return;}
+    var editId=parseInt(document.getElementById('editId').value)||0;
+    var dataVal=document.getElementById('fData').value;
+    var oraVal=document.getElementById('fOra').value||'10:00';
+    var dataProgramare=dataVal?(dataVal+' '+oraVal+':00'):null;
+    var status=action==='Programat'?'Programat':action==='PublicaNow'?'Draft':'Draft';
+
+    var postData={
+        id:editId||undefined,
+        brand:document.getElementById('fBrand').value,
+        continut:content,
+        platforme:plats,
+        tip_continut:document.getElementById('fTip').value,
+        status:status,
+        data_programare:dataProgramare,
+        imagine_url:document.getElementById('fImagine').value,
+        note:document.getElementById('fNote').value
+    };
+
+    apiPost('saveSocialPost',postData).then(function(res){
+        if(res.success){
+            toast('✅ Postare salvată','success');
+            closeAddModal();
+            if(action==='PublicaNow'){
+                publishPost(res.id);
+            }
+            loadPosts();
+        } else {
+            toast('❌ '+res.error,'error');
+        }
+    }).catch(function(){toast('❌ Eroare conexiune','error')});
 }
 
-POSTS=JSON.parse(JSON.stringify(DEMO));
-render();
-if(API_URL) refreshData();
-</script>
-<script>
-if('serviceWorker' in navigator){navigator.serviceWorker.register('../sw.js').then(function(r){console.log('[PWA] SW registered, scope:',r.scope)}).catch(function(e){console.log('[PWA] SW failed:',e)})}
+function setView(v){currentView=v;document.getElementById('vList').classList.toggle('active',v==='list');document.getElementById('vCal').classList.toggle('active',v==='calendar');document.getElementById('vKanban').classList.toggle('active',v==='kanban');render();}
+
+// ═══ INIT ═══
+loadPosts();
 </script>
 </body>
 </html>
