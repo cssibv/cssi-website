@@ -60,19 +60,22 @@ foreach ($posts as $post) {
 
     $payload = [
         'content' => $post['continut'],
-        'platforms' => $zernioPlats
+        'platforms' => $zernioPlats,
+        'publishNow' => true
     ];
 
-    // Media din media_json sau imagine_url
+    // Media as mediaItems [{type, url}]
     if (!empty($post['media_json'])) {
         $mediaFiles = json_decode($post['media_json'], true);
         if (is_array($mediaFiles) && count($mediaFiles)) {
-            $payload['mediaUrls'] = array_map(function($f) use ($baseUrl) {
-                return $baseUrl . $f['url'];
+            $payload['mediaItems'] = array_map(function($f) use ($baseUrl) {
+                return ['type' => $f['type'] ?: 'image', 'url' => $baseUrl . $f['url']];
             }, $mediaFiles);
         }
     } elseif (!empty($post['imagine_url'])) {
-        $payload['mediaUrls'] = [$post['imagine_url']];
+        $imgUrl = $post['imagine_url'];
+        if (strpos($imgUrl, 'http') !== 0) $imgUrl = $baseUrl . $imgUrl;
+        $payload['mediaItems'] = [['type' => 'image', 'url' => $imgUrl]];
     }
 
     // Trimite la Zernio

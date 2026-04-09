@@ -1073,21 +1073,25 @@ try {
                 'content' => $post['continut'],
                 'platforms' => $zernioPlats
             ];
-            if ($post['imagine_url']) {
-                $zernioPayload['mediaUrls'] = [$post['imagine_url']];
-            }
-            // Include all media from media_json
+            // Media as mediaItems [{type, url}]
             if (!empty($post['media_json'])) {
                 $mediaFiles = json_decode($post['media_json'], true);
                 if (is_array($mediaFiles) && count($mediaFiles)) {
                     $baseUrl = 'https://cssi.ro';
-                    $zernioPayload['mediaUrls'] = array_map(function($f) use ($baseUrl) {
-                        return $baseUrl . $f['url'];
+                    $zernioPayload['mediaItems'] = array_map(function($f) use ($baseUrl) {
+                        return ['type' => $f['type'] ?: 'image', 'url' => $baseUrl . $f['url']];
                     }, $mediaFiles);
                 }
+            } elseif (!empty($post['imagine_url'])) {
+                $imgUrl = $post['imagine_url'];
+                if (strpos($imgUrl, 'http') !== 0) $imgUrl = 'https://cssi.ro' . $imgUrl;
+                $zernioPayload['mediaItems'] = [['type' => 'image', 'url' => $imgUrl]];
             }
+            // Schedule or publish now
             if ($post['data_programare'] && strtotime($post['data_programare']) > time()) {
                 $zernioPayload['scheduledFor'] = date('c', strtotime($post['data_programare']));
+            } else {
+                $zernioPayload['publishNow'] = true;
             }
 
             $ch = curl_init('https://zernio.com/api/v1/posts');
