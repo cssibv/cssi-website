@@ -1040,12 +1040,38 @@ try {
             $platforme = json_decode($post['platforme'] ?: '[]', true);
             $zernioKey = 'sk_c7b7a4f08d5bab22497ab169e58313a02d6ef47ead1d2bfa39b5bd7237fd76c0';
 
+            // Fetch connected accounts from Zernio
+            $chAccounts = curl_init('https://zernio.com/api/v1/accounts');
+            curl_setopt_array($chAccounts, [
+                CURLOPT_HTTPHEADER => ['Authorization: Bearer ' . $zernioKey],
+                CURLOPT_RETURNTRANSFER => true,
+                CURLOPT_TIMEOUT => 15
+            ]);
+            $accountsResp = json_decode(curl_exec($chAccounts), true);
+            curl_close($chAccounts);
+            $accountMap = [];
+            if (!empty($accountsResp['accounts'])) {
+                foreach ($accountsResp['accounts'] as $acc) {
+                    if ($acc['isActive']) $accountMap[$acc['platform']] = $acc['_id'];
+                }
+            }
+
+            $platMap = ['fb'=>'facebook','ig'=>'instagram','linkedin'=>'linkedin','yt'=>'youtube','tiktok'=>'tiktok','x'=>'twitter'];
+            $zernioPlats = [];
+            foreach ($platforme as $p) {
+                $platName = isset($platMap[$p]) ? $platMap[$p] : $p;
+                if (isset($accountMap[$platName])) {
+                    $zernioPlats[] = ['platform' => $platName, 'accountId' => $accountMap[$platName]];
+                }
+            }
+            if (empty($zernioPlats)) {
+                jsonResponse(['success' => false, 'error' => 'Niciun cont Zernio conectat pentru platformele selectate. Conectate: ' . implode(', ', array_keys($accountMap))], 400);
+                break;
+            }
+
             $zernioPayload = [
                 'content' => $post['continut'],
-                'platforms' => array_map(function($p) {
-                    $map = ['fb'=>'facebook','ig'=>'instagram','linkedin'=>'linkedin','yt'=>'youtube','tiktok'=>'tiktok','x'=>'twitter'];
-                    return isset($map[$p]) ? $map[$p] : $p;
-                }, $platforme)
+                'platforms' => $zernioPlats
             ];
             if ($post['imagine_url']) {
                 $zernioPayload['mediaUrls'] = [$post['imagine_url']];

@@ -26,14 +26,41 @@ echo "[" . $now . "] " . count($posts) . " postări de publicat.\n";
 
 $platMap = ['fb'=>'facebook','ig'=>'instagram','linkedin'=>'linkedin','yt'=>'youtube','tiktok'=>'tiktok','x'=>'twitter'];
 
+// Fetch connected Zernio accounts
+$chAccounts = curl_init('https://zernio.com/api/v1/accounts');
+curl_setopt_array($chAccounts, [
+    CURLOPT_HTTPHEADER => ['Authorization: Bearer ' . $zernioKey],
+    CURLOPT_RETURNTRANSFER => true,
+    CURLOPT_TIMEOUT => 15
+]);
+$accountsResp = json_decode(curl_exec($chAccounts), true);
+curl_close($chAccounts);
+$accountMap = [];
+if (!empty($accountsResp['accounts'])) {
+    foreach ($accountsResp['accounts'] as $acc) {
+        if ($acc['isActive']) $accountMap[$acc['platform']] = $acc['_id'];
+    }
+}
+echo "Conturi Zernio conectate: " . implode(', ', array_keys($accountMap)) . "\n";
+
 foreach ($posts as $post) {
     $platforme = json_decode($post['platforme'] ?: '[]', true);
     
+    $zernioPlats = [];
+    foreach ($platforme as $p) {
+        $platName = isset($platMap[$p]) ? $platMap[$p] : $p;
+        if (isset($accountMap[$platName])) {
+            $zernioPlats[] = ['platform' => $platName, 'accountId' => $accountMap[$platName]];
+        }
+    }
+    if (empty($zernioPlats)) {
+        echo "  ⏭️ Post #{$post['id']} - niciun cont conectat pentru platformele selectate, skip.\n";
+        continue;
+    }
+
     $payload = [
         'content' => $post['continut'],
-        'platforms' => array_map(function($p) use ($platMap) {
-            return isset($platMap[$p]) ? $platMap[$p] : $p;
-        }, $platforme)
+        'platforms' => $zernioPlats
     ];
 
     // Media din media_json sau imagine_url
