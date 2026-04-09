@@ -158,8 +158,8 @@ a{text-decoration:none;color:inherit;}button{font-family:inherit;cursor:pointer;
         <select class="filter-select" id="filterStatus" onchange="render()"><option value="">Toate statusurile</option><option>Idee</option><option>Draft</option><option>Programat</option><option>Publicat</option><option>Eroare</option></select>
         <select class="filter-select" id="filterPlatform" onchange="render()"><option value="">Toate platformele</option><option value="fb">📘 Facebook</option><option value="ig">📸 Instagram</option><option value="linkedin">💼 LinkedIn</option><option value="yt">▶️ YouTube</option><option value="tiktok">🎵 TikTok</option></select>
         <div class="view-toggle">
-            <button class="view-btn active" id="vList" onclick="setView('list')">📋 Lista</button>
-            <button class="view-btn" id="vCal" onclick="setView('calendar')">📅 Calendar</button>
+            <button class="view-btn" id="vList" onclick="setView('list')">📋 Lista</button>
+            <button class="view-btn active" id="vCal" onclick="setView('calendar')">📅 Calendar</button>
             <button class="view-btn" id="vKanban" onclick="setView('kanban')">◫ Kanban</button>
         </div>
         <div class="filter-count" id="filterCount"></div>
@@ -242,7 +242,7 @@ a{text-decoration:none;color:inherit;}button{font-family:inherit;cursor:pointer;
 <script>
 var API = 'api.php';
 var POSTS = [];
-var currentView = 'list';
+var currentView = 'calendar';
 var kpiFilter = '';
 var calYear = 0, calMonthIdx = 0;
 
