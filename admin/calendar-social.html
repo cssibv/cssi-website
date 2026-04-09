@@ -127,6 +127,25 @@ a{text-decoration:none;color:inherit;}button{font-family:inherit;cursor:pointer;
 .bottom-nav{position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1px solid var(--gray-b);box-shadow:0 -4px 20px rgba(0,0,0,0.06);padding:6px 12px;z-index:100;display:flex;gap:4px;}@media(min-width:768px){.bottom-nav{display:none;}}
 .bn-item{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:8px 4px;border-radius:10px;font-size:10px;font-weight:600;color:var(--gray);transition:all 0.2s;gap:2px;}.bn-item.active{color:var(--purple);background:#f5f3ff;}.bn-item .bn-icon{font-size:20px;}
 .empty-msg{text-align:center;padding:40px;color:var(--gray-l);font-size:14px;}
+
+/* Media Upload Zone */
+.upload-zone{border:2px dashed var(--gray-b);border-radius:var(--radius);padding:24px;text-align:center;cursor:pointer;transition:all 0.2s;background:#fafbfc;position:relative;}
+.upload-zone:hover,.upload-zone.drag-over{border-color:var(--purple);background:#f5f3ff;}
+.upload-zone.drag-over{box-shadow:0 0 0 4px rgba(124,58,237,0.1);}
+.upload-zone-icon{font-size:32px;margin-bottom:8px;}
+.upload-zone-text{font-size:13px;color:var(--gray);font-weight:600;}
+.upload-zone-sub{font-size:11px;color:var(--gray-l);margin-top:4px;}
+.upload-zone input[type=file]{display:none;}
+.upload-preview{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px;}
+.upload-thumb{position:relative;width:90px;height:90px;border-radius:10px;overflow:hidden;border:2px solid var(--gray-b);background:var(--gray-bg);}
+.upload-thumb img,.upload-thumb video{width:100%;height:100%;object-fit:cover;}
+.upload-thumb-remove{position:absolute;top:2px;right:2px;width:22px;height:22px;border-radius:50%;background:rgba(0,0,0,0.6);color:#fff;border:none;font-size:12px;display:flex;align-items:center;justify-content:center;cursor:pointer;line-height:1;}
+.upload-thumb-remove:hover{background:var(--red);}
+.upload-thumb-name{position:absolute;bottom:0;left:0;right:0;background:rgba(0,0,0,0.6);color:#fff;font-size:8px;padding:2px 4px;text-overflow:ellipsis;overflow:hidden;white-space:nowrap;}
+.upload-thumb-video::after{content:'▶';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-size:20px;color:#fff;text-shadow:0 2px 6px rgba(0,0,0,0.5);pointer-events:none;}
+.upload-progress{height:3px;background:var(--gray-b);border-radius:2px;margin-top:8px;overflow:hidden;display:none;}
+.upload-progress.active{display:block;}
+.upload-progress-bar{height:100%;background:var(--purple);border-radius:2px;transition:width 0.3s;}
 .footer{text-align:center;color:var(--gray-xl);font-size:11px;padding:24px 0 100px;}
 .loading-bar{position:fixed;top:0;left:0;right:0;height:3px;z-index:400;display:none;}.loading-bar.active{display:block;}.loading-bar::after{content:'';display:block;width:30%;height:100%;background:var(--purple);border-radius:2px;animation:loadSlide 1.2s infinite ease-in-out;}
 @keyframes loadSlide{0%{margin-left:-30%}100%{margin-left:100%}}
@@ -212,7 +231,17 @@ a{text-decoration:none;color:inherit;}button{font-family:inherit;cursor:pointer;
 
             <div class="form-group"><label class="form-label">Conținut <span class="req">*</span></label><textarea class="form-textarea" id="fContent" required placeholder="Textul postării, hashtag-uri..." oninput="updateCharCount()"></textarea><div class="char-count" id="charCount">0 caractere</div></div>
 
-            <div class="form-group"><label class="form-label">URL Imagine / Media</label><input type="url" class="form-input" id="fImagine" placeholder="https://..."></div>
+            <div class="form-group">
+                <label class="form-label">Media (imagini / video)</label>
+                <div class="upload-zone" id="uploadZone" onclick="document.getElementById('fileInput').click()" ondragover="event.preventDefault();this.classList.add('drag-over')" ondragleave="this.classList.remove('drag-over')" ondrop="event.preventDefault();this.classList.remove('drag-over');handleFiles(event.dataTransfer.files)">
+                    <input type="file" id="fileInput" multiple accept="image/*,video/*" onchange="handleFiles(this.files)">
+                    <div class="upload-zone-icon">📁</div>
+                    <div class="upload-zone-text">Click sau drag & drop fișiere aici</div>
+                    <div class="upload-zone-sub">JPG, PNG, GIF, WEBP, MP4, MOV · Max 50MB per fișier</div>
+                </div>
+                <div class="upload-progress" id="uploadProgress"><div class="upload-progress-bar" id="uploadProgressBar"></div></div>
+                <div class="upload-preview" id="uploadPreview"></div>
+            </div>
 
             <div class="form-row">
                 <div class="form-group"><label class="form-label">Data publicare</label><input type="date" class="form-input" id="fData"></div>
@@ -247,6 +276,7 @@ var kpiFilter = '';
 var calYear = 0, calMonthIdx = 0;
 
 var PLAT = {fb:'📘 Facebook',ig:'📸 Instagram',linkedin:'💼 LinkedIn',yt:'▶️ YouTube',tiktok:'🎵 TikTok',x:'𝕏 Twitter'};
+var uploadedMedia = [];
 var PLAT_COLOR = {fb:'#1877F2',ig:'#E4405F',linkedin:'#0A66C2',yt:'#FF0000',tiktok:'#000',x:'#000'};
 
 function esc(s){var d=document.createElement('div');d.textContent=s||'';return d.innerHTML;}
@@ -271,6 +301,52 @@ function apiPost(action,body){
 }
 
 // ═══ LOAD DATA ═══
+// MEDIA UPLOAD
+function handleFiles(fileList){
+    if(!fileList||!fileList.length)return;
+    var formData=new FormData();
+    for(var i=0;i<fileList.length;i++) formData.append('files[]',fileList[i]);
+    var prog=document.getElementById('uploadProgress');
+    var bar=document.getElementById('uploadProgressBar');
+    prog.classList.add('active');bar.style.width='10%';
+    var xhr=new XMLHttpRequest();
+    xhr.open('POST','api.php?action=uploadSocialMedia');
+    xhr.upload.onprogress=function(e){if(e.lengthComputable) bar.style.width=Math.round(e.loaded/e.total*90)+'%';};
+    xhr.onload=function(){
+        bar.style.width='100%';
+        setTimeout(function(){prog.classList.remove('active');bar.style.width='0';},500);
+        try{
+            var res=JSON.parse(xhr.responseText);
+            if(res.success&&res.files){
+                res.files.forEach(function(f){uploadedMedia.push(f);});
+                renderUploadPreview();
+                toast('\u2705 '+res.files.length+' fisier(e) incarcat(e)','success');
+            } else {
+                toast('\u274c '+(res.error||'Eroare upload'),'error');
+            }
+        }catch(e){toast('\u274c Eroare upload','error');}
+    };
+    xhr.onerror=function(){prog.classList.remove('active');toast('\u274c Eroare conexiune','error');};
+    xhr.send(formData);
+    document.getElementById('fileInput').value='';
+}
+function renderUploadPreview(){
+    var html='';
+    uploadedMedia.forEach(function(f,i){
+        var isVideo=f.type==='video';
+        html+='<div class="upload-thumb'+(isVideo?' upload-thumb-video':'')+'">';
+        if(isVideo) html+='<video src="'+esc(f.url)+'" muted></video>';
+        else html+='<img src="'+esc(f.url)+'">';
+        html+='<button type="button" class="upload-thumb-remove" onclick="removeMedia('+i+')">\u00d7</button>';
+        html+='<div class="upload-thumb-name">'+esc(f.name)+'</div></div>';
+    });
+    document.getElementById('uploadPreview').innerHTML=html;
+}
+function removeMedia(idx){
+    uploadedMedia.splice(idx,1);
+    renderUploadPreview();
+}
+
 function loadPosts(){
     document.getElementById('syncStatus').innerHTML='<span class="sync-indicator sync-loading"></span>Se sincronizează...';
     apiGet('getSocialPosts').then(function(res){
@@ -278,7 +354,7 @@ function loadPosts(){
             POSTS=res.data.map(function(r){
                 var plats=Array.isArray(r.platforme)?r.platforme:[];
                 var dp=r.data_programare||'';
-                return {id:r.id,brand:r.brand||'cssi',content:r.continut||'',platforme:plats,data:dp?dp.substring(0,10):'',ora:dp?dp.substring(11,16):'',status:r.status||'Draft',tip:r.tip_continut||'Foto',imagine:r.imagine_url||'',note:r.note||'',external_ids:r.external_ids||{},created_at:r.created_at};
+                return {id:r.id,brand:r.brand||'cssi',content:r.continut||'',platforme:plats,data:dp?dp.substring(0,10):'',ora:dp?dp.substring(11,16):'',status:r.status||'Draft',tip:r.tip_continut||'Foto',imagine:r.imagine_url||'',media:r.media_json?JSON.parse(r.media_json):[],note:r.note||'',external_ids:r.external_ids||{},created_at:r.created_at};
             });
             document.getElementById('syncStatus').innerHTML='<span class="sync-indicator sync-ok"></span>Conectat · '+POSTS.length+' postări';
             render();
@@ -442,7 +518,14 @@ function openDetailModal(id){
     document.getElementById('detailTitle').textContent='📋 Detalii Postare #'+p.id;
     var html='<div style="display:grid;gap:14px">';
     html+='<div style="display:flex;gap:8px;align-items:center;justify-content:center">'+brandBadge(p.brand)+statusBadge(p.status)+'</div>';
-    if(p.imagine) html+='<img src="'+esc(p.imagine)+'" style="width:100%;max-height:200px;object-fit:cover;border-radius:12px" onerror="this.style.display=\'none\'">';
+    if(p.media&&p.media.length){
+        html+='<div style="display:flex;flex-wrap:wrap;gap:6px">';
+        p.media.forEach(function(m){
+            if(m.type==='video') html+='<video src="'+esc(m.url)+'" controls style="max-width:100%;max-height:200px;border-radius:12px"></video>';
+            else html+='<img src="'+esc(m.url)+'" style="max-height:200px;border-radius:12px;object-fit:cover" onerror="this.style.display=\'none\'">';
+        });
+        html+='</div>';
+    } else if(p.imagine) html+='<img src="'+esc(p.imagine)+'" style="width:100%;max-height:200px;object-fit:cover;border-radius:12px" onerror="this.style.display=\'none\'">';
     html+='<div style="background:var(--gray-bg);padding:16px;border-radius:12px;font-size:14px;line-height:1.7;white-space:pre-wrap">'+esc(p.content)+'</div>';
     html+='<div style="display:flex;flex-wrap:wrap;gap:6px;font-size:13px">'+platIcons(p.platforme)+'</div>';
     html+='<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;font-size:13px">';
@@ -493,7 +576,8 @@ function openAddModal(){
     document.getElementById('modalTitle').textContent='📝 Postare Nouă';
     document.getElementById('fBrand').value='cssi';
     document.getElementById('fContent').value='';
-    document.getElementById('fImagine').value='';
+    uploadedMedia=[];
+    renderUploadPreview();
     if(!document.getElementById('fData').value) document.getElementById('fData').value=todayStr();
     document.getElementById('fOra').value='10:00';
     document.getElementById('fTip').value='Foto';
@@ -508,7 +592,8 @@ function openEditModal(id){
     document.getElementById('modalTitle').textContent='✏️ Editare Postare #'+p.id;
     document.getElementById('fBrand').value=p.brand;
     document.getElementById('fContent').value=p.content;
-    document.getElementById('fImagine').value=p.imagine||'';
+    uploadedMedia=p.media&&p.media.length?p.media.slice():[];
+    renderUploadPreview();
     document.getElementById('fData').value=p.data||'';
     document.getElementById('fOra').value=p.ora||'10:00';
     document.getElementById('fTip').value=p.tip||'Foto';
@@ -540,7 +625,8 @@ function savePost(e,action){
         tip_continut:document.getElementById('fTip').value,
         status:status,
         data_programare:dataProgramare,
-        imagine_url:document.getElementById('fImagine').value,
+        imagine_url:uploadedMedia.length?uploadedMedia[0].url:'',
+        media_json:uploadedMedia,
         note:document.getElementById('fNote').value
     };
 

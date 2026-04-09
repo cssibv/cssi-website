@@ -953,6 +953,42 @@ try {
             jsonResponse(['success' => true, 'data' => $rows]);
             break;
 
+        case 'uploadSocialMedia':
+            // Upload fișiere media pentru social posts
+            if (empty($_FILES['files'])) { jsonResponse(['success' => false, 'error' => 'Niciun fișier trimis'], 400); break; }
+            $uploadDir = __DIR__ . '/uploads/social/';
+            if (!is_dir($uploadDir)) mkdir($uploadDir, 0755, true);
+            $allowed = ['jpg','jpeg','png','gif','webp','mp4','mov','avi','mkv'];
+            $maxSize = 50 * 1024 * 1024; // 50MB
+            $uploaded = [];
+            $files = $_FILES['files'];
+            $count = is_array($files['name']) ? count($files['name']) : 1;
+            for ($i = 0; $i < $count; $i++) {
+                $name = is_array($files['name']) ? $files['name'][$i] : $files['name'];
+                $tmp = is_array($files['tmp_name']) ? $files['tmp_name'][$i] : $files['tmp_name'];
+                $size = is_array($files['size']) ? $files['size'][$i] : $files['size'];
+                $error = is_array($files['error']) ? $files['error'][$i] : $files['error'];
+                if ($error !== UPLOAD_ERR_OK) { continue; }
+                if ($size > $maxSize) { continue; }
+                $ext = strtolower(pathinfo($name, PATHINFO_EXTENSION));
+                if (!in_array($ext, $allowed)) { continue; }
+                $isVideo = in_array($ext, ['mp4','mov','avi','mkv']);
+                $newName = date('Ymd_His') . '_' . uniqid() . '.' . $ext;
+                $dest = $uploadDir . $newName;
+                if (move_uploaded_file($tmp, $dest)) {
+                    $uploaded[] = [
+                        'url' => '/admin/uploads/social/' . $newName,
+                        'name' => $name,
+                        'size' => $size,
+                        'type' => $isVideo ? 'video' : 'image',
+                        'ext' => $ext
+                    ];
+                }
+            }
+            if (empty($uploaded)) { jsonResponse(['success' => false, 'error' => 'Niciun fișier valid uploadat'], 400); break; }
+            jsonResponse(['success' => true, 'files' => $uploaded]);
+            break;
+
         case 'saveSocialPost':
             $id = isset($data['id']) ? (int)$data['id'] : 0;
             $brand = isset($data['brand']) ? $data['brand'] : 'cssi';
@@ -964,13 +1000,14 @@ try {
             $imagine = isset($data['imagine_url']) ? $data['imagine_url'] : '';
             $note = isset($data['note']) ? $data['note'] : '';
             $creat_de = isset($data['creat_de']) ? $data['creat_de'] : '';
+            $media_json = isset($data['media_json']) ? json_encode($data['media_json']) : null;
             if (!$continut) { jsonResponse(['success' => false, 'error' => 'Conținutul e obligatoriu'], 400); break; }
             if ($id) {
-                $stmt = $db->prepare("UPDATE social_posts SET brand=?, continut=?, platforme=?, tip_continut=?, status=?, data_programare=?, imagine_url=?, note=? WHERE id=?");
-                $stmt->execute([$brand, $continut, $platforme, $tip, $status, $data_prog, $imagine, $note, $id]);
+                $stmt = $db->prepare("UPDATE social_posts SET brand=?, continut=?, platforme=?, tip_continut=?, status=?, data_programare=?, imagine_url=?, media_json=?, note=? WHERE id=?");
+                $stmt->execute([$brand, $continut, $platforme, $tip, $status, $data_prog, $imagine, $media_json, $note, $id]);
             } else {
-                $stmt = $db->prepare("INSERT INTO social_posts (brand, continut, platforme, tip_continut, status, data_programare, imagine_url, note, creat_de) VALUES (?,?,?,?,?,?,?,?,?)");
-                $stmt->execute([$brand, $continut, $platforme, $tip, $status, $data_prog, $imagine, $note, $creat_de]);
+                $stmt = $db->prepare("INSERT INTO social_posts (brand, continut, platforme, tip_continut, status, data_programare, imagine_url, media_json, note, creat_de) VALUES (?,?,?,?,?,?,?,?,?,?)");
+                $stmt->execute([$brand, $continut, $platforme, $tip, $status, $data_prog, $imagine, $media_json, $note, $creat_de]);
                 $id = $db->lastInsertId();
             }
             jsonResponse(['success' => true, 'id' => $id]);
@@ -1012,6 +1049,16 @@ try {
             ];
             if ($post['imagine_url']) {
                 $zernioPayload['mediaUrls'] = [$post['imagine_url']];
+            }
+            // Include all media from media_json
+            if (!empty($post['media_json'])) {
+                $mediaFiles = json_decode($post['media_json'], true);
+                if (is_array($mediaFiles) && count($mediaFiles)) {
+                    $baseUrl = 'https://cssi.ro';
+                    $zernioPayload['mediaUrls'] = array_map(function($f) use ($baseUrl) {
+                        return $baseUrl . $f['url'];
+                    }, $mediaFiles);
+                }
             }
             if ($post['data_programare'] && strtotime($post['data_programare']) > time()) {
                 $zernioPayload['scheduledFor'] = date('c', strtotime($post['data_programare']));
