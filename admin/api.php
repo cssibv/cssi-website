@@ -954,51 +954,6 @@ try {
             jsonResponse(['success' => true, 'data' => $rows]);
             break;
 
-        case 'generateSocialText':
-            $prompt = isset($data['prompt']) ? trim($data['prompt']) : '';
-            $brand = isset($data['brand']) ? $data['brand'] : 'cssi';
-            $platforme = isset($data['platforme']) ? $data['platforme'] : [];
-            if (!$prompt) { jsonResponse(['success' => false, 'error' => 'Descrie ce vrei s\u0103 genereze AI-ul'], 400); break; }
-            
-            $anthropicKey = 'ANTHROPIC_API_KEY_HERE'; // TODO: inlocuieste cu cheia ta
-            $brandInfo = $brand === 'cssi' 
-                ? 'CSSI (Confort, Securitate, Siguranță, Imobil) - companie din Brașov specializată în: sisteme supraveghere video, alarme antiefracție, detecție incendiu, control acces, instalații electrice, automatizări porți. Telefon: 0752 288 400.'
-                : 'Conca Verde - servicii de amenajare peisagistică și grădinărit în Brașov: design grădini, plantare, sisteme irigații, amenajări piatră naturală.';
-            $platNames = array_map(function($p){
-                $m=['fb'=>'Facebook','ig'=>'Instagram','linkedin'=>'LinkedIn','yt'=>'YouTube','tiktok'=>'TikTok'];
-                return isset($m[$p])?$m[$p]:$p;
-            }, $platforme);
-            
-            $sysPrompt = "Ești un copywriter social media expert. Scrii postări în limba română pentru brand-ul: {$brandInfo}. Platforme țintă: " . implode(', ', $platNames) . ". Folosește emoji-uri, call-to-action puternice, și hashtag-uri relevante. Răspunde DOAR cu textul postării, fără explicații.";
-            
-            $ch = curl_init('https://api.anthropic.com/v1/messages');
-            curl_setopt_array($ch, [
-                CURLOPT_POST => true,
-                CURLOPT_HTTPHEADER => [
-                    'x-api-key: ' . $anthropicKey,
-                    'anthropic-version: 2023-06-01',
-                    'Content-Type: application/json'
-                ],
-                CURLOPT_POSTFIELDS => json_encode([
-                    'model' => 'claude-sonnet-4-20250514',
-                    'max_tokens' => 500,
-                    'system' => $sysPrompt,
-                    'messages' => [['role' => 'user', 'content' => $prompt]]
-                ]),
-                CURLOPT_RETURNTRANSFER => true,
-                CURLOPT_TIMEOUT => 30
-            ]);
-            $response = curl_exec($ch);
-            $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-            curl_close($ch);
-            $result = json_decode($response, true);
-            if ($httpCode >= 200 && $httpCode < 300 && !empty($result['content'][0]['text'])) {
-                jsonResponse(['success' => true, 'text' => $result['content'][0]['text']]);
-            } else {
-                jsonResponse(['success' => false, 'error' => 'AI error: ' . ($result['error']['message'] ?? 'unknown')], 500);
-            }
-            break;
-
         case 'generateSocialImage':
             $prompt = isset($data['prompt']) ? trim($data['prompt']) : '';
             if (!$prompt) { jsonResponse(['success' => false, 'error' => 'Descrie imaginea dorită'], 400); break; }

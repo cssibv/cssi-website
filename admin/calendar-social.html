@@ -244,14 +244,7 @@ a{text-decoration:none;color:inherit;}button{font-family:inherit;cursor:pointer;
                 </div>
             </div>
 
-            <div class="form-group"><label class="form-label">Conținut <span class="req">*</span></label><textarea class="form-textarea" id="fContent" required placeholder="Textul postării, hashtag-uri..." oninput="updateCharCount()"></textarea><div style="display:flex;justify-content:space-between;align-items:center"><div class="char-count" id="charCount">0 caractere</div><div class="ai-bar"><button type="button" class="ai-btn ai-btn-text" id="aiTextBtn" onclick="toggleAiText()">✨ Generează text AI</button></div></div>
-                <div class="ai-prompt-box" id="aiTextBox">
-                    <input type="text" id="aiTextPrompt" placeholder="Descrie ce vrei (ex: postare despre camere supraveghere, ton profesional)" onkeydown="if(event.key==='Enter'){event.preventDefault();generateAiText()}">
-                    <div class="ai-prompt-actions">
-                        <button type="button" class="ai-prompt-go" id="aiTextGo" onclick="generateAiText()">✨ Generează</button>
-                        <button type="button" class="ai-prompt-cancel" onclick="toggleAiText()">Anulează</button>
-                    </div>
-                </div>
+            <div class="form-group"><label class="form-label">Conținut <span class="req">*</span></label><textarea class="form-textarea" id="fContent" required placeholder="Textul postării, hashtag-uri..." oninput="updateCharCount()"></textarea><div class="char-count" id="charCount">0 caractere</div>
             </div>
 
             <div class="form-group">
@@ -380,36 +373,11 @@ function removeMedia(idx){
     renderUploadPreview();
 }
 
-// AI GENERATION
-function toggleAiText(){
-    var box=document.getElementById('aiTextBox');
-    box.classList.toggle('active');
-    if(box.classList.contains('active')) document.getElementById('aiTextPrompt').focus();
-}
+// AI IMAGE GENERATION
 function toggleAiImg(){
     var box=document.getElementById('aiImgBox');
     box.classList.toggle('active');
     if(box.classList.contains('active')) document.getElementById('aiImgPrompt').focus();
-}
-function generateAiText(){
-    var prompt=document.getElementById('aiTextPrompt').value.trim();
-    if(!prompt){toast('\u274c Descrie ce vrei s\u0103 genereze AI-ul','error');return;}
-    var brand=document.getElementById('fBrand').value;
-    var plats=getCheckedPlatforms();
-    var btn=document.getElementById('aiTextGo');
-    btn.disabled=true;btn.innerHTML='<span class="ai-loading"></span> Se genereaz\u0103...';
-    apiPost('generateSocialText',{prompt:prompt,brand:brand,platforme:plats})
-    .then(function(res){
-        btn.disabled=false;btn.textContent='\u2728 Genereaz\u0103';
-        if(res.success&&res.text){
-            document.getElementById('fContent').value=res.text;
-            updateCharCount();
-            toggleAiText();
-            toast('\u2728 Text generat cu AI!','success');
-        } else {
-            toast('\u274c '+(res.error||'Eroare generare'),'error');
-        }
-    }).catch(function(){btn.disabled=false;btn.textContent='\u2728 Genereaz\u0103';toast('\u274c Eroare conexiune','error');});
 }
 function generateAiImage(){
     var prompt=document.getElementById('aiImgPrompt').value.trim();
