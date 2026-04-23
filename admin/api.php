@@ -1,6 +1,6 @@
 <?php
 // ============================================================
-// CSSI Portal v4.0 — REST API
+// CSSI Portal v4.0 — REST API -
 // ============================================================
 // Endpoint unic: /admin/api.php?action=...
 // GET  = citire date
