@@ -121,6 +121,11 @@ a{text-decoration:none;color:inherit;}button{font-family:inherit;cursor:pointer;
 .btn-edit:hover{background:#eff6ff;color:var(--blue);transform:scale(1.1);}
 .form-section-title{font-size:11px;color:var(--gray);font-weight:700;text-transform:uppercase;letter-spacing:0.5px;margin:0 0 12px;padding-bottom:6px;border-bottom:2px solid var(--gray-bg);}
 .form-section-title.mt{margin-top:20px;}
+.input-with-btn{display:flex;gap:6px;align-items:stretch;}
+.input-with-btn .form-input{flex:1;min-width:0;}
+.btn-cui-lookup{padding:0 14px;border-radius:var(--radius-sm);border:2px solid var(--blue);background:#eff6ff;color:var(--blue);font-size:12px;font-weight:700;font-family:inherit;cursor:pointer;white-space:nowrap;transition:all 0.2s;display:inline-flex;align-items:center;gap:4px;}
+.btn-cui-lookup:hover:not(:disabled){background:var(--blue);color:#fff;transform:translateY(-1px);}
+.btn-cui-lookup:disabled{opacity:0.6;cursor:wait;}
 
 /* Table View */
 .table-wrap{overflow-x:auto;background:#fff;border-radius:var(--radius);box-shadow:var(--shadow);}
@@ -277,6 +282,12 @@ tr:hover td{background:rgba(59,130,246,0.03);}
     <div class="modal-body">
         <form id="addForm" onsubmit="addLead(event)">
             <div class="form-group"><label class="form-label">Nume Client <span class="req">*</span></label><input type="text" class="form-input" name="nume" required placeholder="Numele complet sau firma"></div>
+            <div class="form-group"><label class="form-label">CUI <span style="font-weight:400;color:var(--gray);font-size:11px">(opt. — pentru firme)</span></label>
+                <div class="input-with-btn">
+                    <input type="text" class="form-input" name="cui_cnp" placeholder="RO12345678" onblur="autoLookupCUI('addForm')">
+                    <button type="button" class="btn-cui-lookup" onclick="lookupCUI('addForm')" title="Preia datele firmei din ANAF">🔍 ANAF</button>
+                </div>
+            </div>
             <div class="form-row">
                 <div class="form-group"><label class="form-label">Telefon <span class="req">*</span></label><input type="tel" class="form-input" name="telefon" required placeholder="07xx xxx xxx"></div>
                 <div class="form-group"><label class="form-label">Email</label><input type="email" class="form-input" name="email" placeholder="email@client.ro"></div>
@@ -360,7 +371,12 @@ tr:hover td{background:rgba(59,130,246,0.03);}
                         <option value="PF">👤 Persoană Fizică</option>
                     </select>
                 </div>
-                <div class="form-group"><label class="form-label">CUI / CNP</label><input type="text" class="form-input" name="cui_cnp" placeholder="RO12345678 / CNP"></div>
+                <div class="form-group"><label class="form-label">CUI / CNP</label>
+                    <div class="input-with-btn">
+                        <input type="text" class="form-input" name="cui_cnp" placeholder="RO12345678 / CNP" onblur="autoLookupCUI('editForm')">
+                        <button type="button" class="btn-cui-lookup" onclick="lookupCUI('editForm')" title="Preia datele firmei din ANAF">🔍 ANAF</button>
+                    </div>
+                </div>
             </div>
             <div class="form-row">
                 <div class="form-group"><label class="form-label">Telefon</label><input type="tel" class="form-input" name="telefon" placeholder="07xx xxx xxx"></div>
@@ -785,6 +801,7 @@ function addLead(e) {
 
     var newLead = {
         nume: d.get('nume'),
+        cui_cnp: d.get('cui_cnp') || '',
         telefon: d.get('telefon'),
         email: d.get('email') || '',
         serviciu: d.get('serviciu'),
@@ -802,7 +819,7 @@ function addLead(e) {
     fetch(API_DB+'?action=createClient',{
         method:'POST',
         headers:{'Content-Type':'application/json'},
-        body:JSON.stringify({action:'createClient',nume:newLead.nume,telefon:newLead.telefon,email:newLead.email,oras:newLead.locatie||'Brașov'})
+        body:JSON.stringify({action:'createClient',nume:newLead.nume,cui_cnp:newLead.cui_cnp,telefon:newLead.telefon,email:newLead.email,oras:newLead.locatie||'Brașov',tip:newLead.cui_cnp?'Firma':'PF'})
     })
     .then(function(r){return r.json()})
     .then(function(cRes){
@@ -1070,6 +1087,89 @@ function toast(msg, type) {
     container.appendChild(t);
     setTimeout(function() { t.style.opacity = '0'; t.style.transform = 'translateX(100px)'; t.style.transition = 'all 0.3s'; }, 3000);
     setTimeout(function() { t.remove(); }, 3500);
+}
+
+
+// ═══════ ANAF CUI LOOKUP ═══════
+
+// Track last looked-up CUI per form ca să nu repetăm auto-lookup
+window._lastCUILookup = {};
+
+function lookupCUI(formId) {
+    var f = document.getElementById(formId);
+    if (!f) return;
+    var cuiInput = f.querySelector('[name="cui_cnp"]');
+    if (!cuiInput) return;
+    var raw = (cuiInput.value || '').trim();
+    var cui = raw.replace(/[^0-9]/g, '');
+    if (!cui) { toast('⚠️ Introdu un CUI','error'); cuiInput.focus(); return; }
+    if (cui.length > 10) { toast('⚠️ Prea multe cifre — pentru CNP (persoană fizică) nu folosim ANAF','info'); return; }
+
+    var btn = f.querySelector('.btn-cui-lookup');
+    var origText = btn ? btn.innerHTML : '';
+    if (btn) { btn.innerHTML = '⏳...'; btn.disabled = true; }
+    window._lastCUILookup[formId] = cui;
+
+    fetch(API_DB + '?action=lookupCUI&cui=' + encodeURIComponent(cui) + '&_t=' + Date.now())
+    .then(function(r) { return r.json(); })
+    .then(function(res) {
+        if (btn) { btn.innerHTML = origText; btn.disabled = false; }
+        if (!res.success) {
+            toast('⚠️ ' + (res.error || 'CUI negăsit'),'error');
+            return;
+        }
+        var d = res.data;
+        if (d.radiat) {
+            toast('⚠️ ATENȚIE: Firma este RADIATĂ — ' + d.stare_inregistrare, 'error');
+        }
+        // Populează câmpurile disponibile în form
+        var fields = {
+            nume: d.denumire,
+            cui_cnp: d.cui ? ('RO' + d.cui) : cui,
+            adresa: d.adresa || d.adresa_completa || '',
+            oras: d.oras || '',
+            tip: 'Firma'
+        };
+        // Dacă formul e addForm, setează și locatie pe oraș (nu există câmp separat oras în addForm)
+        if (formId === 'addForm' && d.oras) {
+            var locEl = f.querySelector('[name="locatie"]');
+            if (locEl && !locEl.value) locEl.value = d.oras;
+        }
+        Object.keys(fields).forEach(function(k) {
+            var el = f.querySelector('[name="' + k + '"]');
+            if (!el || !fields[k]) return;
+            // Pentru nume și adresa, suprascrie întotdeauna; pentru tip, idem
+            if (k === 'nume' || k === 'cui_cnp' || k === 'tip') {
+                el.value = fields[k];
+            } else if (!el.value) {
+                // Nu suprascrie dacă utilizatorul a completat deja
+                el.value = fields[k];
+            }
+        });
+        var parts = [];
+        parts.push(d.denumire);
+        if (d.nrRegCom) parts.push(d.nrRegCom);
+        parts.push(d.platitor_tva ? 'Plătitor TVA' : 'Neplătitor TVA');
+        toast('✅ ' + parts.join(' · '), 'success');
+    })
+    .catch(function() {
+        if (btn) { btn.innerHTML = origText; btn.disabled = false; }
+        toast('⚠️ Eroare conexiune la ANAF','error');
+    });
+}
+
+// Auto-lookup la blur (când utilizatorul iese din câmpul CUI)
+function autoLookupCUI(formId) {
+    var f = document.getElementById(formId);
+    if (!f) return;
+    var el = f.querySelector('[name="cui_cnp"]');
+    if (!el) return;
+    var cui = (el.value || '').trim().replace(/[^0-9]/g, '');
+    // Doar CUI-uri plauzibile (6-10 cifre) — nu CNP-uri (13 cifre)
+    if (cui.length < 6 || cui.length > 10) return;
+    // Nu repeta lookup pentru același CUI
+    if (window._lastCUILookup[formId] === cui) return;
+    lookupCUI(formId);
 }
 
 
