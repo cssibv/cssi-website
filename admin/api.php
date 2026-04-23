@@ -126,6 +126,103 @@ try {
             jsonResponse(['success' => true]);
             break;
 
+        // ════════════════════════════════════
+        // ANAF CUI LOOKUP (proxy către registrul ANAF v9)
+        // ════════════════════════════════════
+        case 'lookupCUI':
+            $cuiRaw = isset($_GET['cui']) ? $_GET['cui'] : (isset($data['cui']) ? $data['cui'] : '');
+            $cui = preg_replace('/[^0-9]/', '', $cuiRaw);
+            if (!$cui || strlen($cui) < 2 || strlen($cui) > 10) {
+                jsonResponse(['success' => false, 'error' => 'CUI invalid (2-10 cifre)'], 400);
+                break;
+            }
+
+            $postData = json_encode([['cui' => intval($cui), 'data' => date('Y-m-d')]]);
+            // URL corect v9 (format nou: /api/PlatitorTvaRest/v9/tva)
+            $ch = curl_init('https://webservicesp.anaf.ro/api/PlatitorTvaRest/v9/tva');
+            curl_setopt_array($ch, [
+                CURLOPT_POST => true,
+                CURLOPT_POSTFIELDS => $postData,
+                CURLOPT_HTTPHEADER => ['Content-Type: application/json', 'Accept: application/json'],
+                CURLOPT_RETURNTRANSFER => true,
+                CURLOPT_TIMEOUT => 15,
+                CURLOPT_CONNECTTIMEOUT => 10,
+                CURLOPT_FOLLOWLOCATION => true
+            ]);
+            $response = curl_exec($ch);
+            $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+            $errMsg = curl_error($ch);
+            curl_close($ch);
+
+            if ($httpCode !== 200) {
+                jsonResponse(['success' => false, 'error' => 'ANAF indisponibil (HTTP ' . $httpCode . ')' . ($errMsg ? ': ' . $errMsg : '')], 502);
+                break;
+            }
+
+            $result = json_decode($response, true);
+            if (!$result || !isset($result['found'])) {
+                jsonResponse(['success' => false, 'error' => 'Răspuns invalid de la ANAF']);
+                break;
+            }
+            if (empty($result['found'])) {
+                jsonResponse(['success' => false, 'error' => 'CUI ' . $cui . ' nu a fost găsit în registrul ANAF']);
+                break;
+            }
+
+            $firma = $result['found'][0];
+            $dg = isset($firma['date_generale']) ? $firma['date_generale'] : [];
+            $tva = isset($firma['inregistrare_scop_Tva']) ? $firma['inregistrare_scop_Tva'] : [];
+            $adrSed = isset($firma['adresa_sediu_social']) ? $firma['adresa_sediu_social'] : [];
+            $adrDom = isset($firma['adresa_domiciliu_fiscal']) ? $firma['adresa_domiciliu_fiscal'] : [];
+
+            $fullAddr = isset($dg['adresa']) ? trim($dg['adresa']) : '';
+            $oras = ''; $judet = ''; $stradaEtc = $fullAddr;
+
+            // Date structurate v9 din adresa_sediu_social (prioritar) sau adresa_domiciliu_fiscal
+            $src = !empty($adrSed) ? $adrSed : $adrDom;
+            if (!empty($src)) {
+                if (!empty($src['sdenumire_Localitate'])) $oras = trim($src['sdenumire_Localitate']);
+                if (!empty($src['sdenumire_Judet'])) $judet = trim($src['sdenumire_Judet']);
+                // Fallback pentru adresa_domiciliu_fiscal (prefix d)
+                if (!$oras && !empty($src['ddenumire_Localitate'])) $oras = trim($src['ddenumire_Localitate']);
+                if (!$judet && !empty($src['ddenumire_Judet'])) $judet = trim($src['ddenumire_Judet']);
+                $strada = !empty($src['sdenumire_Strada']) ? trim($src['sdenumire_Strada']) : (!empty($src['ddenumire_Strada']) ? trim($src['ddenumire_Strada']) : '');
+                $nr = !empty($src['snumar_Strada']) ? trim($src['snumar_Strada']) : (!empty($src['dnumar_Strada']) ? trim($src['dnumar_Strada']) : '');
+                if ($strada) {
+                    $stradaEtc = $strada . ($nr ? ' nr. ' . $nr : '');
+                }
+            }
+
+            // Fallback final: parse textul brut dacă structuratele-s goale
+            if (!$oras && $fullAddr) {
+                if (preg_match('/(?:MUN\.?|ORA[SȘ]\.?|COM\.?|SAT)\s+([^,]+)/u', $fullAddr, $m)) {
+                    $oras = trim($m[1]);
+                }
+            }
+            if (!$judet && $fullAddr) {
+                if (preg_match('/JUD\.?\s+([^,]+)/u', $fullAddr, $m)) {
+                    $judet = trim($m[1]);
+                }
+            }
+
+            $stareInreg = isset($dg['stare_inregistrare']) ? $dg['stare_inregistrare'] : '';
+            jsonResponse(['success' => true, 'data' => [
+                'cui' => isset($dg['cui']) ? (string)$dg['cui'] : $cui,
+                'denumire' => isset($dg['denumire']) ? trim($dg['denumire']) : '',
+                'nrRegCom' => isset($dg['nrRegCom']) ? trim($dg['nrRegCom']) : '',
+                'adresa_completa' => $fullAddr,
+                'adresa' => $stradaEtc,
+                'oras' => $oras,
+                'judet' => $judet,
+                'cod_postal' => isset($dg['codPostal']) ? $dg['codPostal'] : (isset($dg['cod_postal']) ? $dg['cod_postal'] : ''),
+                'telefon' => isset($dg['telefon']) ? $dg['telefon'] : '',
+                'stare_inregistrare' => $stareInreg,
+                'platitor_tva' => !empty($tva['scpTVA']),
+                'data_inceput_tva' => isset($tva['data_inceput_ScpTVA']) ? $tva['data_inceput_ScpTVA'] : '',
+                'radiat' => (stripos($stareInreg, 'RADIAT') !== false)
+            ]]);
+            break;
+
         // ══════════════════════════════════════
         // PROIECTE
         // ══════════════════════════════════════
