@@ -230,12 +230,22 @@ Niciuna nu afectează site-ul live — sunt documentație internă. Când vreți
 
 ## 🧾 Status final 22 apr 2026
 
-**Task-uri completate astăzi:** #28, #29
+**Task-uri completate astăzi:** #28, #29, **#18 round 2** (5 negative keywords noi)
 **Task-uri completate în total pe proiect:** #1-14, #18-29 (27 task-uri)
 **Task-uri pending:** #15, #16, #17 (toate blocate de volum <15 conv/lună)
 
 **Acțiuni Google Ads azi:**
 1. `Solicitați oferte` (TAG, 0 date) marcată Secundară → nu mai influențează Smart Bidding
 2. Obiectivul asociat dezactivat ca default pe cont → nicio campanie nu-l mai folosește ca referință
+3. **Negative keywords — round 2:** 5 termeni noi adăugați după analiza Search Terms Report în Daily Brief 10:35:
+   - `dedeman` (broad) — retailer DIY, irelevant
+   - `[security]` (exact) — termen single-word prea generic, blochează doar literal „security"
+   - `atu tech` (broad) — concurent direct
+   - `"general security"` (phrase) — concurent
+   - `"protection security"` (phrase) — concurent
+
+   **Rezultat:** total negative keywords **31 → 36**. Listele round 1 (shop security, spy shop, rovision, taggo, atutech, visuron, ultra security, secpral) deja funcționează — acești termeni NU mai apar în top search terms azi. Impact estimat: ~10-15 RON/săpt economisite suplimentar + CTR în creștere.
 
 **Rezultat optimizare:** Smart Bidding pentru campania Search e acum condus exclusiv de `form_submit` (GA4 import, date reale) + acțiunile GA4 importate (`phone_call`, `whatsapp_click`, 50 RON fiecare). Configurarea e curată și pregătită pentru scaling când volumul depășește 15 conv/lună.
+
+**Observație performanță azi:** Campania arată **3 conversii** (nu 0 cum indica Daily Brief automat — briefingul număra doar „Solicitați oferte" care e acum Secundară). Cost/conv: 47,13 RON. Conv rate: 7,5%. Primele rezultate ale modificărilor de ieri (conversii GA4 importate + extensii + setări bid) încep să se vadă.
