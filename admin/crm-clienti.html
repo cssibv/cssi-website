@@ -117,6 +117,10 @@ a{text-decoration:none;color:inherit;}button{font-family:inherit;cursor:pointer;
 .btn-convert.disabled{background:var(--gray-bg);color:var(--gray-l);cursor:not-allowed;}
 .btn-delete{padding:8px;border-radius:10px;border:none;background:none;color:var(--gray-l);font-size:14px;transition:all 0.2s;}
 .btn-delete:hover{background:#fef2f2;color:var(--red);}
+.btn-edit{padding:6px 10px;border-radius:8px;border:none;background:none;color:var(--gray-l);font-size:13px;transition:all 0.2s;cursor:pointer;line-height:1;}
+.btn-edit:hover{background:#eff6ff;color:var(--blue);transform:scale(1.1);}
+.form-section-title{font-size:11px;color:var(--gray);font-weight:700;text-transform:uppercase;letter-spacing:0.5px;margin:0 0 12px;padding-bottom:6px;border-bottom:2px solid var(--gray-bg);}
+.form-section-title.mt{margin-top:20px;}
 
 /* Table View */
 .table-wrap{overflow-x:auto;background:#fff;border-radius:var(--radius);box-shadow:var(--shadow);}
@@ -341,6 +345,59 @@ tr:hover td{background:rgba(59,130,246,0.03);}
 </div>
 </div>
 
+<!-- EDIT CLIENT & PROIECT MODAL -->
+<div id="editModal" class="modal-overlay" onclick="if(event.target===this)closeEditModal()">
+<div class="modal" style="max-width:600px">
+    <div class="modal-head"><div class="modal-title">✏️ Editează Client & Proiect</div><button class="modal-close" onclick="closeEditModal()">✕</button></div>
+    <div class="modal-body">
+        <form id="editForm" onsubmit="saveEdit(event)">
+            <div class="form-section-title">👤 Date Client</div>
+            <div class="form-group"><label class="form-label">Nume Client <span class="req">*</span></label><input type="text" class="form-input" name="nume" required placeholder="Numele complet sau firma"></div>
+            <div class="form-row">
+                <div class="form-group"><label class="form-label">Tip client</label>
+                    <select class="form-select" name="tip">
+                        <option value="Firma">🏢 Firmă</option>
+                        <option value="PF">👤 Persoană Fizică</option>
+                    </select>
+                </div>
+                <div class="form-group"><label class="form-label">CUI / CNP</label><input type="text" class="form-input" name="cui_cnp" placeholder="RO12345678 / CNP"></div>
+            </div>
+            <div class="form-row">
+                <div class="form-group"><label class="form-label">Telefon</label><input type="tel" class="form-input" name="telefon" placeholder="07xx xxx xxx"></div>
+                <div class="form-group"><label class="form-label">Email</label><input type="email" class="form-input" name="email" placeholder="email@client.ro"></div>
+            </div>
+            <div class="form-group"><label class="form-label">Persoană contact</label><input type="text" class="form-input" name="persoana_contact" placeholder="Ex: Ion Popescu"></div>
+            <div class="form-row">
+                <div class="form-group"><label class="form-label">Adresă</label><input type="text" class="form-input" name="adresa" placeholder="Strada, nr..."></div>
+                <div class="form-group"><label class="form-label">Oraș</label><input type="text" class="form-input" name="oras" placeholder="Brașov"></div>
+            </div>
+
+            <div class="form-section-title mt">📁 Date Proiect</div>
+            <div class="form-group"><label class="form-label">Serviciu</label>
+                <select class="form-select" name="serviciu">
+                    <option>Detecție Incendiu</option>
+                    <option>Alarmă Antiefracție</option>
+                    <option>Supraveghere Video</option>
+                    <option>Instalații Electrice</option>
+                    <option>Instalații Sanitare</option>
+                    <option>Automatizări Porți</option>
+                    <option>Control Acces</option>
+                    <option>Proiect Complex</option>
+                </select>
+            </div>
+            <div class="form-group"><label class="form-label">Adresă obiectiv</label><input type="text" class="form-input" name="adresa_obiectiv" placeholder="Unde se va executa proiectul"></div>
+            <div class="form-group"><label class="form-label">Valoare estimată (RON)</label><input type="number" class="form-input" name="valoare_estimata" min="0" step="1" placeholder="0"></div>
+            <div class="form-group"><label class="form-label">Obiectiv / Observații</label><textarea class="form-textarea" name="obiectiv" placeholder="Detalii despre cerere, context..."></textarea></div>
+
+            <div style="display:flex;gap:8px;margin-top:20px">
+                <button type="button" style="flex:1;padding:14px;border-radius:12px;border:none;background:var(--gray-bg);color:var(--gray);font-weight:700;cursor:pointer;font-family:inherit;font-size:14px" onclick="closeEditModal()">Anulează</button>
+                <button type="submit" class="form-submit" style="flex:2" id="editSubmitBtn">💾 Salvează modificările</button>
+            </div>
+        </form>
+    </div>
+</div>
+</div>
+
 <script>
 // ═══════════════════════════════════════════════════
 // CONFIG — Setează API_URL după deploy Apps Script
@@ -532,7 +589,9 @@ function renderCards() {
         }).join('');
 
         html += '<div class="card ' + st.cls + '" ondblclick="openDetailModal(' + l.id + ')">';
-        html += '<div class="card-top"><div class="card-name">' + esc(l.nume) + '</div><div class="card-date">' + l.data + '</div></div>';
+        html += '<div class="card-top"><div class="card-name">' + esc(l.nume) + '</div><div style="display:flex;align-items:center;gap:4px"><span class="card-date">' + l.data + '</span>';
+        if (canEdit) html += '<button class="btn-edit" title="Editează client & proiect" onclick="event.stopPropagation();openEditModal(' + l.id + ')">✏️</button>';
+        html += '</div></div>';
         html += '<div class="card-info">';
         html += '<span>📞 ' + esc(l.telefon) + '</span>';
         if (l.email) html += '<span>✉️ ' + esc(l.email) + '</span>';
@@ -799,6 +858,10 @@ function openDetailModal(leadId) {
     if (l.note) html += '<div style="background:var(--gray-bg);padding:12px;border-radius:10px;font-size:13px;color:var(--gray);line-height:1.5;font-style:italic">💬 ' + esc(l.note) + '</div>';
     html += '</div>';
 
+    if (canEdit) {
+        html += '<button type="button" class="form-submit" onclick="openEditModal(' + leadId + ')" style="margin-top:20px">✏️ Editează date client & proiect</button>';
+    }
+
     document.getElementById('detailBody').innerHTML = html;
     document.getElementById('detailModal').classList.add('active');
 }
@@ -1007,6 +1070,141 @@ function toast(msg, type) {
     container.appendChild(t);
     setTimeout(function() { t.style.opacity = '0'; t.style.transform = 'translateX(100px)'; t.style.transition = 'all 0.3s'; }, 3000);
     setTimeout(function() { t.remove(); }, 3500);
+}
+
+
+// ═══════ EDIT CLIENT & PROIECT ═══════
+
+function openEditModal(leadId) {
+    var l = LEADS.find(function(x) { return x.id === leadId; });
+    if (!l) { toast('⚠️ Lead negăsit','error'); return; }
+
+    // Închide modalul de detalii dacă e deschis
+    closeDetailModal();
+
+    window._editingLeadId = leadId;
+
+    // Populează formularul cu datele din LEADS (cât avem deja)
+    var f = document.getElementById('editForm');
+    f.nume.value = l.nume || '';
+    f.cui_cnp.value = l.cui || '';
+    f.telefon.value = l.telefon || '';
+    f.email.value = l.email || '';
+    f.serviciu.value = l.serviciu || 'Supraveghere Video';
+    f.adresa_obiectiv.value = l.locatie || '';
+    f.valoare_estimata.value = l.valoare || '';
+    f.obiectiv.value = l.note || '';
+    // Default pentru câmpuri care nu-s în LEADS
+    f.tip.value = 'Firma';
+    f.persoana_contact.value = '';
+    f.adresa.value = '';
+    f.oras.value = '';
+
+    // Afișează modalul imediat, apoi completează câmpurile client din MySQL
+    document.getElementById('editModal').classList.add('active');
+
+    if (l.clientDbId) {
+        fetch(API_DB + '?action=getClient&id=' + encodeURIComponent(l.clientDbId) + '&_t=' + Date.now())
+        .then(function(r) { return r.json(); })
+        .then(function(res) {
+            if (res.success && res.data && window._editingLeadId === leadId) {
+                var c = res.data;
+                // Nu suprascrie numele dacă utilizatorul a început deja să modifice
+                if (!document.activeElement || document.activeElement.name !== 'nume') {
+                    f.nume.value = c.nume || l.nume || '';
+                }
+                f.tip.value = c.tip || 'Firma';
+                f.cui_cnp.value = c.cui_cnp || '';
+                if (!document.activeElement || document.activeElement.name !== 'telefon') f.telefon.value = c.telefon || '';
+                if (!document.activeElement || document.activeElement.name !== 'email') f.email.value = c.email || '';
+                f.persoana_contact.value = c.persoana_contact || '';
+                f.adresa.value = c.adresa || '';
+                f.oras.value = c.oras || '';
+            }
+        })
+        .catch(function(){ /* silent — formularul rămâne cu datele din LEADS */ });
+    }
+
+    // Focus pe nume
+    setTimeout(function(){ f.nume.focus(); f.nume.select(); }, 100);
+}
+
+function closeEditModal() {
+    document.getElementById('editModal').classList.remove('active');
+    window._editingLeadId = null;
+}
+
+function saveEdit(e) {
+    e.preventDefault();
+    var leadId = window._editingLeadId;
+    var l = LEADS.find(function(x) { return x.id === leadId; });
+    if (!l) { toast('⚠️ Lead negăsit','error'); return; }
+
+    var f = document.getElementById('editForm');
+    var btn = document.getElementById('editSubmitBtn');
+
+    var nume = (f.nume.value || '').trim();
+    if (!nume) { toast('⚠️ Numele clientului e obligatoriu','error'); f.nume.focus(); return; }
+
+    btn.disabled = true;
+    btn.textContent = '⏳ Se salvează...';
+
+    var clientPayload = {
+        action: 'updateClient',
+        id: l.clientDbId,
+        nume: nume,
+        tip: f.tip.value,
+        cui_cnp: (f.cui_cnp.value || '').trim(),
+        telefon: (f.telefon.value || '').trim(),
+        email: (f.email.value || '').trim(),
+        persoana_contact: (f.persoana_contact.value || '').trim(),
+        adresa: (f.adresa.value || '').trim(),
+        oras: (f.oras.value || '').trim()
+    };
+
+    var servUI = f.serviciu.value;
+    var servDB = SERV_UI_TO_DB[servUI] || servUI;
+    var proiectPayload = {
+        action: 'updateProiect',
+        id: l.row,
+        serviciu: servDB,
+        adresa_obiectiv: (f.adresa_obiectiv.value || '').trim(),
+        valoare_estimata: parseFloat(f.valoare_estimata.value) || 0,
+        obiectiv: (f.obiectiv.value || '').trim()
+    };
+
+    // 1) Update client (dacă avem clientDbId)
+    var clientStep = l.clientDbId
+        ? fetch(API_DB + '?action=updateClient', {
+              method: 'POST',
+              headers: {'Content-Type': 'application/json'},
+              body: JSON.stringify(clientPayload)
+          }).then(function(r){ return r.json(); })
+        : Promise.resolve({success: true, skipped: true});
+
+    clientStep
+    .then(function(cRes) {
+        if (!cRes.success) throw new Error(cRes.error || 'Eroare la actualizare client');
+        // 2) Update proiect
+        return fetch(API_DB + '?action=updateProiect', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify(proiectPayload)
+        }).then(function(r){ return r.json(); });
+    })
+    .then(function(pRes) {
+        if (!pRes.success) throw new Error(pRes.error || 'Eroare la actualizare proiect');
+        btn.disabled = false;
+        btn.textContent = '💾 Salvează modificările';
+        closeEditModal();
+        toast('✅ Modificări salvate!','success');
+        refreshData();
+    })
+    .catch(function(err) {
+        btn.disabled = false;
+        btn.textContent = '💾 Salvează modificările';
+        toast('⚠️ ' + (err.message || 'Eroare rețea'),'error');
+    });
 }
 
 
