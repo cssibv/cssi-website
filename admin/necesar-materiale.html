@@ -124,9 +124,8 @@ a{text-decoration:none;color:inherit;}button{font-family:inherit;cursor:pointer;
 .oferta-total{font-size:13px;font-weight:800;color:var(--dark);flex-shrink:0;font-variant-numeric:tabular-nums;}
 .oferta-total small{color:var(--gray);font-size:10px;font-weight:600;}
 
-.oferta-chevron{width:28px;height:28px;border-radius:50%;background:var(--gray-bg);color:var(--gray);font-size:16px;font-weight:800;display:flex;align-items:center;justify-content:center;transition:all 0.25s;flex-shrink:0;}
-.oferta-card.open .oferta-chevron{transform:rotate(180deg);background:#dbeafe;color:var(--blue);}
 .oferta-body{display:none;padding:8px;background:linear-gradient(180deg,#f8fafc,#fff);}
+.oferta-foot{padding:10px 4px 4px;display:flex;justify-content:flex-end;}
 .oferta-card.open .oferta-body{display:block;}
 .oferta-obiectiv-detail{padding:8px 14px;background:#fff;border-radius:8px;margin-bottom:8px;font-size:12px;color:var(--gray);}
 .oferta-obiectiv-detail strong{color:var(--dark);font-weight:700;}
@@ -503,10 +502,8 @@ function render(){
                 html += '</span></span>';
                 html += '<button type="button" class="ci-undo" onclick="event.stopPropagation();unmarkOferta('+o.oferta_db_id+')" title="Anulează marcaj comandă" aria-label="Anulează marcaj">×</button>';
                 html += '</span>';
-            } else {
-                html += '<button type="button" class="btn-mark" onclick="event.stopPropagation();markOferta('+o.oferta_db_id+')" title="Marchează această ofertă ca fiind comandată">✓ Marchează comandat</button>';
             }
-            html += '<div class="oferta-chevron" aria-hidden="true">▾</div></button>';
+            html += '</button>';
             html += '<div class="oferta-body" id="'+ofBodyId+'">';
             if(o.adresa) html += '<div class="oferta-obiectiv-detail"><strong>📍 Adresă:</strong> '+esc(o.adresa)+(o.data_oferta?' &nbsp;·&nbsp; <strong>📅 Data:</strong> '+esc(o.data_oferta):'')+'</div>';
             if(o.linii.length){
@@ -525,6 +522,9 @@ function render(){
                 html += '</tbody></table></div>';
             } else {
                 html += '<div class="empty-msg" style="padding:20px;text-align:center">Nicio linie de echipament</div>';
+            }
+            if(!o.comandat_at){
+                html += '<div class="oferta-foot"><button type="button" class="btn-mark" onclick="markOferta('+o.oferta_db_id+')" title="Marchează această ofertă ca fiind comandată la distribuitor">✓ Marchează ca comandat</button></div>';
             }
             html += '</div></div>';
         });
