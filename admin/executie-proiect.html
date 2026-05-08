@@ -80,7 +80,7 @@ a{text-decoration:none;color:inherit;}button{font-family:inherit;cursor:pointer;
 .j-entry-del:hover{background:#fef2f2;color:var(--red);border-color:var(--red);}
 
 /* Files (PV + Poze) */
-.upload-zone{border:2px dashed var(--gray-b);border-radius:var(--radius-sm);padding:24px;text-align:center;background:#fafbfc;cursor:pointer;transition:all 0.15s;margin-bottom:14px;}
+.upload-zone{display:block;border:2px dashed var(--gray-b);border-radius:var(--radius-sm);padding:24px;text-align:center;background:#fafbfc;cursor:pointer;transition:all 0.15s;margin-bottom:14px;}
 .upload-zone:hover,.upload-zone.dragover{border-color:var(--orange);background:#fff7ed;}
 .upload-zone .uz-icon{font-size:32px;margin-bottom:6px;color:var(--gray-l);}
 .upload-zone .uz-text{font-size:13px;font-weight:700;color:var(--dark);margin-bottom:2px;}
@@ -99,6 +99,53 @@ a{text-decoration:none;color:inherit;}button{font-family:inherit;cursor:pointer;
 .file-del{position:absolute;top:6px;right:6px;width:26px;height:26px;border-radius:50%;background:rgba(0,0,0,0.5);color:#fff;border:none;font-size:13px;cursor:pointer;display:none;align-items:center;justify-content:center;backdrop-filter:blur(4px);}
 .file-card:hover .file-del{display:flex;}
 .file-del:hover{background:var(--red);}
+
+/* Materiale (cuantificare montaj) */
+.mat-oferta-block{margin-bottom:18px;}
+.mat-oferta-head{font-size:11px;font-weight:800;color:var(--purple);text-transform:uppercase;letter-spacing:0.8px;margin-bottom:8px;display:flex;align-items:center;gap:8px;}
+.mat-oferta-head .of-cod{background:#f5f3ff;padding:2px 8px;border-radius:99px;font-family:'Courier New',monospace;}
+.mat-row{background:var(--gray-bg);border-radius:var(--radius-sm);padding:10px 14px;margin-bottom:6px;border-left:4px solid var(--gray-l);transition:all 0.15s;}
+.mat-row.partial{border-left-color:var(--orange);}
+.mat-row.complete{border-left-color:var(--green);background:#f0fdf4;}
+.mat-row-head{display:flex;align-items:center;gap:10px;cursor:pointer;}
+.mat-row-info{flex:1;min-width:0;}
+.mat-row-cod{font-family:'Courier New',monospace;font-size:11px;font-weight:700;color:var(--dark);background:#fef9c3;padding:2px 7px;border-radius:5px;display:inline-block;margin-right:6px;}
+.mat-row-cod.empty{background:var(--gray-b);color:var(--gray-l);font-style:italic;}
+.mat-row-name{font-size:13px;font-weight:700;color:var(--dark);margin-top:3px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;line-height:1.3;}
+.mat-row-progress{flex-shrink:0;display:flex;flex-direction:column;align-items:flex-end;gap:4px;min-width:140px;}
+.mat-row-stat{font-size:13px;font-weight:800;color:var(--dark);font-variant-numeric:tabular-nums;}
+.mat-row-stat .total{color:var(--gray);font-weight:600;font-size:11px;}
+.mat-row-stat.complete{color:var(--green);}
+.mat-row-stat.partial{color:var(--orange);}
+.mat-row-bar{width:130px;height:6px;background:#fff;border-radius:3px;overflow:hidden;border:1px solid var(--gray-b);}
+.mat-row-bar-fill{height:100%;background:var(--orange);border-radius:3px;transition:width 0.3s;}
+.mat-row-bar-fill.complete{background:var(--green);}
+.mat-row-chevron{color:var(--gray-l);font-size:14px;font-weight:800;transition:transform 0.2s;flex-shrink:0;}
+.mat-row.open .mat-row-chevron{transform:rotate(180deg);color:var(--orange);}
+.mat-row-actions{display:none;padding:12px;background:#fff;border-radius:8px;margin-top:10px;border:1px solid var(--gray-b);}
+.mat-row.open .mat-row-actions{display:block;animation:fadeIn 0.2s ease;}
+@keyframes fadeIn{from{opacity:0;transform:translateY(-4px);}to{opacity:1;transform:translateY(0);}}
+.mat-quick{display:flex;gap:6px;flex-wrap:wrap;align-items:center;margin-bottom:10px;}
+.mat-quick-btn{padding:6px 12px;border-radius:8px;border:1px solid var(--orange);background:#fff7ed;color:var(--orange);font-size:12px;font-weight:700;cursor:pointer;transition:all 0.15s;font-family:inherit;}
+.mat-quick-btn:hover{background:var(--orange);color:#fff;}
+.mat-quick-btn.green{border-color:var(--green);background:#f0fdf4;color:var(--green);}
+.mat-quick-btn.green:hover{background:var(--green);color:#fff;}
+.mat-quick-btn.red{border-color:var(--red);background:#fef2f2;color:var(--red);}
+.mat-quick-btn.red:hover{background:var(--red);color:#fff;}
+.mat-custom{display:flex;gap:6px;align-items:center;flex-wrap:wrap;}
+.mat-custom input[type=number]{width:80px;padding:6px 10px;border:1px solid var(--gray-b);border-radius:8px;font-size:13px;font-family:inherit;}
+.mat-custom input[type=text]{flex:1;min-width:140px;padding:6px 10px;border:1px solid var(--gray-b);border-radius:8px;font-size:12px;font-family:inherit;}
+.mat-custom .add-btn{padding:6px 12px;border-radius:8px;border:none;background:var(--orange);color:#fff;font-size:12px;font-weight:700;cursor:pointer;}
+.mat-custom .add-btn:hover{background:#ea580c;}
+.mat-history{margin-top:10px;border-top:1px dashed var(--gray-b);padding-top:8px;}
+.mat-history-title{font-size:10px;font-weight:700;color:var(--gray);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:6px;}
+.mat-event{display:flex;align-items:center;gap:8px;padding:5px 0;font-size:11px;color:var(--gray);}
+.mat-event-cant{font-weight:800;color:var(--orange);font-variant-numeric:tabular-nums;min-width:46px;}
+.mat-event-cant.neg{color:var(--red);}
+.mat-event-meta{flex:1;}
+.mat-event-meta .av{width:14px;height:14px;font-size:8px;display:inline-flex;align-items:center;justify-content:center;border-radius:50%;background:linear-gradient(135deg,#f97316,#9a3412);color:#fff;margin-right:4px;vertical-align:middle;}
+.mat-event-del{background:none;border:none;color:var(--gray-l);font-size:13px;cursor:pointer;padding:0 4px;border-radius:4px;}
+.mat-event-del:hover{background:#fef2f2;color:var(--red);}
 
 /* Lightbox */
 .lightbox{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.92);z-index:500;align-items:center;justify-content:center;padding:20px;cursor:zoom-out;}
@@ -130,6 +177,7 @@ a{text-decoration:none;color:inherit;}button{font-family:inherit;cursor:pointer;
 
     <div class="tabs">
         <button class="tab active" data-tab="jurnal" onclick="setTab('jurnal')">📝 Jurnal <span class="badge" id="bdgJurnal">0</span></button>
+        <button class="tab" data-tab="materiale" onclick="setTab('materiale')">📦 Materiale <span class="badge" id="bdgMat">0/0</span></button>
         <button class="tab" data-tab="pv" onclick="setTab('pv')">📄 Procese verbale <span class="badge" id="bdgPv">0</span></button>
         <button class="tab" data-tab="poze" onclick="setTab('poze')">📷 Poze lucrare <span class="badge" id="bdgPoze">0</span></button>
     </div>
@@ -148,6 +196,14 @@ a{text-decoration:none;color:inherit;}button{font-family:inherit;cursor:pointer;
             </div>
             <div class="section-title">📚 <span>Istoric jurnal</span></div>
             <div class="jurnal-list" id="jurnalList"><div class="empty-state"><div class="ei">📭</div>Niciun pontaj încă</div></div>
+        </div>
+    </div>
+
+    <!-- TAB MATERIALE -->
+    <div class="tab-panel" id="tabMateriale">
+        <div class="section">
+            <div class="section-title">📦 <span>Cuantificare montaj</span> <span style="color:var(--gray-l);font-weight:600;text-transform:none;letter-spacing:0;font-size:11px;margin-left:8px">— bifează ce ai montat din ofertă</span></div>
+            <div id="materialeList"><div class="empty-state"><div class="ei">⏳</div>Se încarcă...</div></div>
         </div>
     </div>
 
@@ -203,7 +259,8 @@ function techName(id){var t=TECHNICIANS.find(function(x){return x.id===id;});ret
 function techInit(id){return (techName(id)||'?').charAt(0).toUpperCase();}
 
 // ═══ STATE ═══
-var STATE = { id:0, proiect:null, programari:[], jurnal:[], fisiere:[], tab:'jurnal' };
+var STATE = { id:0, proiect:null, programari:[], jurnal:[], fisiere:[], tab:'jurnal',
+              materiale:{oferte:[], evenimente:[]}, materialeOpen:{} };
 
 function getProjId(){
     var qs = new URLSearchParams(window.location.search);
@@ -227,18 +284,20 @@ function isImage(filename){return /\.(jpg|jpeg|png|gif|webp|heic)$/i.test(filena
 function refreshData(){
     if(!STATE.id){ document.getElementById('pageTitle').textContent = '⚠️ ID lipsă'; return; }
     showLoading(true);
-    fetch(API_DB+'?action=getProiectExecutie&id='+STATE.id+'&_t='+Date.now())
-        .then(function(r){return r.json()})
-        .then(function(res){
-            if(!res.success){ document.getElementById('pageTitle').textContent='⚠️ '+res.error; return; }
-            STATE.proiect = res.data.proiect;
-            STATE.programari = res.data.programari||[];
-            STATE.jurnal = res.data.jurnal||[];
-            STATE.fisiere = res.data.fisiere||[];
-            renderHeader(); renderProgramari(); renderJurnal(); renderFiles();
-        })
-        .catch(function(e){ toast('❌ '+(e.message||e),'error'); })
-        .finally(function(){ showLoading(false); });
+    Promise.all([
+        fetch(API_DB+'?action=getProiectExecutie&id='+STATE.id+'&_t='+Date.now()).then(function(r){return r.json()}),
+        fetch(API_DB+'?action=getProiectMateriale&id='+STATE.id+'&_t='+Date.now()).then(function(r){return r.json()})
+    ]).then(function(results){
+        var resE = results[0], resM = results[1];
+        if(!resE.success){ document.getElementById('pageTitle').textContent='⚠️ '+resE.error; return; }
+        STATE.proiect = resE.data.proiect;
+        STATE.programari = resE.data.programari||[];
+        STATE.jurnal = resE.data.jurnal||[];
+        STATE.fisiere = resE.data.fisiere||[];
+        if(resM.success){ STATE.materiale = resM.data || {oferte:[],evenimente:[]}; }
+        renderHeader(); renderProgramari(); renderJurnal(); renderFiles(); renderMateriale();
+    }).catch(function(e){ toast('❌ '+(e.message||e),'error'); })
+      .finally(function(){ showLoading(false); });
 }
 
 // ═══ RENDER ═══
@@ -316,6 +375,109 @@ function renderFileGrid(files){
 function openLightbox(url){
     document.getElementById('lbImg').src = url;
     document.getElementById('lightbox').classList.add('active');
+}
+
+// ═══ MATERIALE ═══
+function renderMateriale(){
+    var totalLinii = 0, completeLinii = 0;
+    STATE.materiale.oferte.forEach(function(o){
+        totalLinii += o.linii.length;
+        o.linii.forEach(function(l){ if(l.cant_montata >= l.cant_planificata && l.cant_planificata > 0) completeLinii++; });
+    });
+    document.getElementById('bdgMat').textContent = completeLinii+'/'+totalLinii;
+
+    var c = document.getElementById('materialeList');
+    if(!STATE.materiale.oferte.length){
+        c.innerHTML = '<div class="empty-state"><div class="ei">📭</div>Nicio ofertă acceptată cu materiale pentru acest proiect.</div>';
+        return;
+    }
+    var html = '';
+    STATE.materiale.oferte.forEach(function(o){
+        html += '<div class="mat-oferta-block">';
+        html += '<div class="mat-oferta-head">📋 <span class="of-cod">'+esc(o.oferta_id)+'</span>';
+        if(o.obiectiv) html += '<span style="color:var(--gray);font-weight:600;text-transform:none;letter-spacing:0">· '+esc(o.obiectiv)+'</span>';
+        html += '</div>';
+        o.linii.forEach(function(l){
+            var pct = l.cant_planificata > 0 ? Math.min(100, Math.round((l.cant_montata / l.cant_planificata) * 100)) : 0;
+            var rowCls = l.cant_montata >= l.cant_planificata && l.cant_planificata > 0 ? 'complete' : (l.cant_montata > 0 ? 'partial' : '');
+            var statCls = l.cant_montata >= l.cant_planificata && l.cant_planificata > 0 ? 'complete' : (l.cant_montata > 0 ? 'partial' : '');
+            var open = !!STATE.materialeOpen[l.linie_id];
+            html += '<div class="mat-row '+rowCls+(open?' open':'')+'" id="mat-'+l.linie_id+'">';
+            html += '<div class="mat-row-head" onclick="toggleMaterial('+l.linie_id+')">';
+            html += '<div class="mat-row-info">';
+            html += l.cod ? '<span class="mat-row-cod">'+esc(l.cod)+'</span>' : '<span class="mat-row-cod empty">— fără cod —</span>';
+            html += '<div class="mat-row-name" title="'+esc(l.denumire||'')+'">'+esc(l.denumire||'')+'</div>';
+            html += '</div>';
+            html += '<div class="mat-row-progress">';
+            html += '<div class="mat-row-stat '+statCls+'">'+fmtN(l.cant_montata)+' <span class="total">/ '+fmtN(l.cant_planificata)+' '+esc(l.um||'buc')+'</span></div>';
+            html += '<div class="mat-row-bar"><div class="mat-row-bar-fill '+(pct>=100?'complete':'')+'" style="width:'+pct+'%"></div></div>';
+            html += '</div>';
+            html += '<div class="mat-row-chevron">▾</div>';
+            html += '</div>';
+            // Actions panel (visible only when row.open)
+            html += '<div class="mat-row-actions">';
+            var ramas = Math.max(0, l.cant_planificata - l.cant_montata);
+            html += '<div class="mat-quick">';
+            html += '<span style="font-size:11px;color:var(--gray);font-weight:700;margin-right:4px">Adaugă rapid:</span>';
+            html += '<button class="mat-quick-btn" onclick="addProgres('+l.linie_id+',1)">+1</button>';
+            html += '<button class="mat-quick-btn" onclick="addProgres('+l.linie_id+',5)">+5</button>';
+            html += '<button class="mat-quick-btn" onclick="addProgres('+l.linie_id+',10)">+10</button>';
+            if(ramas > 0) html += '<button class="mat-quick-btn green" onclick="addProgres('+l.linie_id+','+ramas+')">✓ Marchează tot ('+fmtN(ramas)+')</button>';
+            html += '</div>';
+            html += '<div class="mat-custom">';
+            html += '<input type="number" id="mc-cant-'+l.linie_id+'" placeholder="Cant." step="0.5">';
+            html += '<input type="text" id="mc-note-'+l.linie_id+'" placeholder="Notă (opțional, ex: locația, problemă...)">';
+            html += '<button class="add-btn" onclick="addProgresCustom('+l.linie_id+')">＋ Adaugă</button>';
+            html += '</div>';
+            // Istoric eveniments pentru această linie
+            var ev = STATE.materiale.evenimente.filter(function(e){return e.linie_id == l.linie_id;});
+            if(ev.length){
+                html += '<div class="mat-history"><div class="mat-history-title">Istoric '+ev.length+' '+(ev.length===1?'eveniment':'evenimente')+':</div>';
+                ev.forEach(function(e){
+                    var cantCls = e.cantitate < 0 ? ' neg' : '';
+                    var sign = e.cantitate > 0 ? '+' : '';
+                    html += '<div class="mat-event">';
+                    html += '<span class="mat-event-cant'+cantCls+'">'+sign+fmtN(e.cantitate)+'</span>';
+                    html += '<span class="mat-event-meta"><span class="av">'+(techName(e.user_id)||'?').charAt(0)+'</span>'+esc(techName(e.user_id)||e.user_id)+' · '+fmtDate(e.data_montaj)+(e.note?' · "'+esc(e.note)+'"':'')+'</span>';
+                    html += '<button class="mat-event-del" onclick="deleteProgres('+e.id+')" title="Șterge">×</button>';
+                    html += '</div>';
+                });
+                html += '</div>';
+            }
+            html += '</div>';
+            html += '</div>';
+        });
+        html += '</div>';
+    });
+    c.innerHTML = html;
+}
+function fmtN(n){var v=Number(n||0);return v%1===0?v.toString():v.toFixed(2).replace(/\.?0+$/,'');}
+function toggleMaterial(lid){STATE.materialeOpen[lid] = !STATE.materialeOpen[lid]; renderMateriale();}
+function addProgres(lid, cant){
+    fetch(API_DB+'?action=addProgresMaterial',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'addProgresMaterial',proiect_id:STATE.id,linie_id:lid,cantitate:cant,user_id:role,data:todayStr()})})
+        .then(function(r){return r.json()}).then(function(res){
+            if(!res.success) throw new Error(res.error||'Eroare');
+            toast('✅ +'+fmtN(cant)+' montat','success');
+            STATE.materialeOpen[lid] = true;  // Keep panel open after add
+            refreshData();
+        }).catch(function(e){toast('❌ '+(e.message||e),'error');});
+}
+function addProgresCustom(lid){
+    var c = parseFloat(document.getElementById('mc-cant-'+lid).value);
+    var n = document.getElementById('mc-note-'+lid).value.trim();
+    if(!c || isNaN(c)){ toast('⚠️ Introdu o cantitate','error'); return; }
+    fetch(API_DB+'?action=addProgresMaterial',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'addProgresMaterial',proiect_id:STATE.id,linie_id:lid,cantitate:c,user_id:role,note:n,data:todayStr()})})
+        .then(function(r){return r.json()}).then(function(res){
+            if(!res.success) throw new Error(res.error||'Eroare');
+            toast('✅ '+(c>0?'+':'')+fmtN(c)+' '+(n?'('+n+')':''),'success');
+            STATE.materialeOpen[lid] = true;
+            refreshData();
+        }).catch(function(e){toast('❌ '+(e.message||e),'error');});
+}
+function deleteProgres(id){
+    if(!confirm('Ștergi această intrare?')) return;
+    fetch(API_DB+'?action=deleteProgresMaterial',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'deleteProgresMaterial',id:id})})
+        .then(function(r){return r.json()}).then(function(){toast('Șters','info');refreshData();});
 }
 
 // ═══ TABS ═══

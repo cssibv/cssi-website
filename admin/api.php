@@ -1139,6 +1139,118 @@ try {
             jsonResponse(['success' => true, 'id' => $fid, 'url' => UPLOAD_URL.'executie/'.$codProiect.'/'.$tip.'/'.$newName]);
             break;
 
+        // ══════════════════════════════════════
+        // EXECUȚIE — progres montaj per material (cuantificare)
+        // ══════════════════════════════════════
+        case 'getProiectMateriale':
+            $db->exec("CREATE TABLE IF NOT EXISTS executie_progres_material (
+                id INT PRIMARY KEY AUTO_INCREMENT,
+                proiect_id INT NOT NULL,
+                linie_id INT NOT NULL,
+                cantitate DECIMAL(10,2) NOT NULL DEFAULT 0,
+                data_montaj DATE NOT NULL,
+                user_id VARCHAR(60) NOT NULL,
+                note TEXT,
+                created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+                KEY idx_proiect (proiect_id),
+                KEY idx_linie (linie_id)
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4");
+
+            $pid = isset($_GET['id']) ? intval($_GET['id']) : 0;
+            if (!$pid) { jsonResponse(['success' => false, 'error' => 'id obligatoriu'], 400); break; }
+
+            // Liniile materialelor din ofertele acceptate ale proiectului
+            $sql = "SELECT o.id AS oferta_db_id, o.oferta_id, o.titlu AS oferta_titlu, o.obiectiv,
+                           ol.id AS linie_id, ol.cod, ol.denumire, ol.um, ol.cantitate AS cant_planificata, ol.ordine
+                    FROM oferte o
+                    INNER JOIN oferta_linii ol ON ol.oferta_id = o.id AND ol.tip = 'echipament'
+                    WHERE o.proiect_id = ? AND o.status = 'Acceptata'
+                    ORDER BY o.id, ol.ordine, ol.id";
+            $stmt = $db->prepare($sql);
+            $stmt->execute([$pid]);
+            $linii = $stmt->fetchAll();
+
+            // Sume montat per linie + ultima actualizare
+            $sumeMap = []; $ultimMap = [];
+            if (!empty($linii)) {
+                $ids = array_column($linii, 'linie_id');
+                $place = implode(',', array_fill(0, count($ids), '?'));
+                $stmtS = $db->prepare("SELECT linie_id, SUM(cantitate) AS total, MAX(created_at) AS ultim_at FROM executie_progres_material WHERE proiect_id = ? AND linie_id IN ($place) GROUP BY linie_id");
+                $stmtS->execute(array_merge([$pid], $ids));
+                foreach ($stmtS->fetchAll() as $row) {
+                    $sumeMap[$row['linie_id']] = floatval($row['total']);
+                    $ultimMap[$row['linie_id']] = $row['ultim_at'];
+                }
+            }
+
+            // Eventele individuale pentru istoric (toate, frontend filtrează la expand)
+            $stmtE = $db->prepare("SELECT * FROM executie_progres_material WHERE proiect_id = ? ORDER BY created_at DESC");
+            $stmtE->execute([$pid]);
+            $evenimente = $stmtE->fetchAll();
+
+            // Grupează liniile pe oferte
+            $oferte = [];
+            foreach ($linii as $l) {
+                $oid = $l['oferta_db_id'];
+                if (!isset($oferte[$oid])) {
+                    $oferte[$oid] = [
+                        'oferta_db_id' => $oid,
+                        'oferta_id'    => $l['oferta_id'],
+                        'titlu'        => $l['oferta_titlu'],
+                        'obiectiv'     => $l['obiectiv'],
+                        'linii'        => [],
+                    ];
+                }
+                $lid = intval($l['linie_id']);
+                $oferte[$oid]['linii'][] = [
+                    'linie_id'         => $lid,
+                    'cod'              => $l['cod'],
+                    'denumire'         => $l['denumire'],
+                    'um'               => $l['um'],
+                    'cant_planificata' => floatval($l['cant_planificata']),
+                    'cant_montata'     => isset($sumeMap[$lid]) ? $sumeMap[$lid] : 0,
+                    'ultim_montaj'     => isset($ultimMap[$lid]) ? $ultimMap[$lid] : null,
+                ];
+            }
+
+            jsonResponse(['success' => true, 'data' => [
+                'oferte'      => array_values($oferte),
+                'evenimente'  => $evenimente,
+            ]]);
+            break;
+
+        case 'addProgresMaterial':
+            $db->exec("CREATE TABLE IF NOT EXISTS executie_progres_material (
+                id INT PRIMARY KEY AUTO_INCREMENT,
+                proiect_id INT NOT NULL,
+                linie_id INT NOT NULL,
+                cantitate DECIMAL(10,2) NOT NULL DEFAULT 0,
+                data_montaj DATE NOT NULL,
+                user_id VARCHAR(60) NOT NULL,
+                note TEXT,
+                created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+                KEY idx_proiect (proiect_id),
+                KEY idx_linie (linie_id)
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4");
+            $pid  = isset($data['proiect_id']) ? intval($data['proiect_id']) : 0;
+            $lid  = isset($data['linie_id']) ? intval($data['linie_id']) : 0;
+            $cant = isset($data['cantitate']) ? floatval($data['cantitate']) : 0;
+            $usr  = isset($data['user_id']) ? trim($data['user_id']) : '';
+            $note = isset($data['note']) ? trim($data['note']) : '';
+            $dt   = isset($data['data']) && $data['data'] ? trim($data['data']) : date('Y-m-d');
+            if (!$pid || !$lid || $cant == 0) { jsonResponse(['success' => false, 'error' => 'proiect_id + linie_id + cantitate (≠0) obligatorii'], 400); break; }
+            $db->prepare("INSERT INTO executie_progres_material (proiect_id, linie_id, cantitate, data_montaj, user_id, note) VALUES (?,?,?,?,?,?)")
+               ->execute([$pid, $lid, $cant, $dt, $usr, $note]);
+            jsonResponse(['success' => true, 'id' => $db->lastInsertId()]);
+            break;
+
+        case 'deleteProgresMaterial':
+            $id = isset($data['id']) ? intval($data['id']) : 0;
+            if (!$id) { jsonResponse(['success' => false, 'error' => 'id obligatoriu'], 400); break; }
+            $db->prepare("DELETE FROM executie_progres_material WHERE id = ?")->execute([$id]);
+            jsonResponse(['success' => true]);
+            break;
+
         case 'deleteProiectFile':
             $id = isset($data['id']) ? intval($data['id']) : 0;
             if (!$id) { jsonResponse(['success' => false, 'error' => 'id obligatoriu'], 400); break; }
