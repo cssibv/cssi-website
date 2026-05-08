@@ -400,8 +400,18 @@ var PW={
 "bb84ec45d72a12da066c86de536eeb88aa4c29d9622eb5d6aaeb501f9acb5a75":"mihai",
 "8589f985d87ab442f842621a8f9b86e78f67d955d79d1c8c3dd94928ee6c48b9":"roxana",
 "ec2d7be6fc8659569fc9a8f5385b9ae4d4a733f7b6f1c8cb55acb9ed977d3f4e":"valentin",
-"d9f325f6038f9c5109278ead8bc2d310292a37e856e3de350e81da702e4a9eae":"cristina"
+"d9f325f6038f9c5109278ead8bc2d310292a37e856e3de350e81da702e4a9eae":"cristina",
+// Tehnicieni — echipa execuție
+"a19be85fa0c403b3d31207fb9e8e0037d62ccfcdc2526b00fbd7666dd38555c9":"zoli",
+"ff20749c3bee7ea2d1e56af348d994cdc4e3a4454c5c53b9fda94b49acc1dce7":"sanyi",
+"c9bcd6f2cdf2766ae300971f8abdf3201e8f151e3978907b3c86882fe803cd29":"bogdan",
+"5880752d9dc43fe1b96fa624050da57e4826cdae5711abd89a0fddb5ed9391c6":"cezar",
+"de6d5ec12cb1b0eacf66375a8bd66bf1455a0b5c15398e3d696f8393e6a9f6fa":"cristi",
+"fdd14e4f2dc06f6abc19bbc3f2a00bea24270a874d8a53f53351330ee61f594e":"denes"
 };
+// Lista tehnicieni — folosit în userCanSee + alte place-uri pentru a aplica
+// permisiuni restrânse (vezi doar Execuția lor + module conexe)
+var TECHNICIANS=['zoli','sanyi','bogdan','cezar','cristi','denes'];
 
 // ═══════ ROLE CONFIG ═══════
 var ROLES={
@@ -419,7 +429,26 @@ var ROLES={
         showKanban:true,showKpi:true,showQuick:true,showAlerts:true},
     cristina:{name:"Cristina",greeting:"👋 Salut, Cristina!",sub:"Lead-uri · Prospectare · Acces complet",pill:"📞 Cristina — Lead-uri",gradient:"admin",
         actions:[{l:"+ Lead Nou",h:"javascript:openModal()",i:"📞"},{l:"CRM Clienți",h:"/admin/crm-clienti.html",i:"💰"},{l:"Board Proiecte",h:"/admin/proiecte.html",i:"📌"},{l:"Oferte",h:"/admin/calculator-pret.html",i:"📝"},{l:"Marketing",h:"/admin/marketing.html",i:"📊"}],
-        showKanban:true,showKpi:true,showQuick:true,showAlerts:true}
+        showKanban:true,showKpi:true,showQuick:true,showAlerts:true},
+    // ═══ TEHNICIENI — echipa de execuție pe teren ═══
+    zoli:{name:"Zoli",greeting:"👋 Salut, Zoli!",sub:"Tehnician execuție · Lucrări pe teren",pill:"🔧 Zoli — Execuție",gradient:"tech",
+        actions:[{l:"Execuția mea",h:"/admin/executie.html",i:"🔧"},{l:"Programul meu",h:"/admin/planificare.html",i:"📅"},{l:"Necesar materiale",h:"/admin/necesar-materiale.html",i:"🛒"}],
+        showKanban:false,showKpi:false,showQuick:false,showAlerts:true},
+    sanyi:{name:"Sanyi",greeting:"👋 Salut, Sanyi!",sub:"Tehnician execuție · Lucrări pe teren",pill:"🔧 Sanyi — Execuție",gradient:"tech",
+        actions:[{l:"Execuția mea",h:"/admin/executie.html",i:"🔧"},{l:"Programul meu",h:"/admin/planificare.html",i:"📅"},{l:"Necesar materiale",h:"/admin/necesar-materiale.html",i:"🛒"}],
+        showKanban:false,showKpi:false,showQuick:false,showAlerts:true},
+    bogdan:{name:"Bogdan",greeting:"👋 Salut, Bogdan!",sub:"Tehnician execuție · Lucrări pe teren",pill:"🔧 Bogdan — Execuție",gradient:"tech",
+        actions:[{l:"Execuția mea",h:"/admin/executie.html",i:"🔧"},{l:"Programul meu",h:"/admin/planificare.html",i:"📅"},{l:"Necesar materiale",h:"/admin/necesar-materiale.html",i:"🛒"}],
+        showKanban:false,showKpi:false,showQuick:false,showAlerts:true},
+    cezar:{name:"Cezar",greeting:"👋 Salut, Cezar!",sub:"Tehnician execuție · Lucrări pe teren",pill:"🔧 Cezar — Execuție",gradient:"tech",
+        actions:[{l:"Execuția mea",h:"/admin/executie.html",i:"🔧"},{l:"Programul meu",h:"/admin/planificare.html",i:"📅"},{l:"Necesar materiale",h:"/admin/necesar-materiale.html",i:"🛒"}],
+        showKanban:false,showKpi:false,showQuick:false,showAlerts:true},
+    cristi:{name:"Cristi",greeting:"👋 Salut, Cristi!",sub:"Tehnician execuție · Lucrări pe teren",pill:"🔧 Cristi — Execuție",gradient:"tech",
+        actions:[{l:"Execuția mea",h:"/admin/executie.html",i:"🔧"},{l:"Programul meu",h:"/admin/planificare.html",i:"📅"},{l:"Necesar materiale",h:"/admin/necesar-materiale.html",i:"🛒"}],
+        showKanban:false,showKpi:false,showQuick:false,showAlerts:true},
+    denes:{name:"Denes",greeting:"👋 Salut, Denes!",sub:"Tehnician execuție · Lucrări pe teren",pill:"🔧 Denes — Execuție",gradient:"tech",
+        actions:[{l:"Execuția mea",h:"/admin/executie.html",i:"🔧"},{l:"Programul meu",h:"/admin/planificare.html",i:"📅"},{l:"Necesar materiale",h:"/admin/necesar-materiale.html",i:"🛒"}],
+        showKanban:false,showKpi:false,showQuick:false,showAlerts:true}
 };
 
 // ═══════ KANBAN STATUSES ═══════
@@ -652,9 +681,12 @@ function renderAlerts(){
 // ═══════ MODULES — funcții helper (FAVORITES + CATEGORIES sunt declarate sus) ═══════
 function userCanSee(m){
     var fullAccess=['admin','mihai','roxana','valentin','cristina'];
+    // Module pe care le văd tehnicienii (execuție pe teren)
+    var TECH_MODULES=['executie','planificare','necesar','mentenanta'];
     if(m.id==='utilizatori'&&role!=='admin')return false;
-    if(fullAccess.indexOf(role)<0&&m.roles.indexOf(role)<0)return false;
-    return true;
+    if(fullAccess.indexOf(role)>=0)return true;
+    if(TECHNICIANS.indexOf(role)>=0) return TECH_MODULES.indexOf(m.id)>=0;
+    return m.roles.indexOf(role)>=0;
 }
 function modById(id){for(var i=0;i<MODULES.length;i++){if(MODULES[i].id===id)return MODULES[i];}return null;}
 function renderModules(){
