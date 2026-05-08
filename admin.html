@@ -132,6 +132,61 @@ a{text-decoration:none;color:inherit;}button{font-family:inherit;cursor:pointer;
 .mod-card[data-cat="maint"]{border-left-color:var(--teal);}
 .mod-card[data-cat="docs"]{border-left-color:#0ea5e9;}
 
+/* Favorites (Top 3 — Acces Rapid) */
+.fav-grid{display:grid;grid-template-columns:1fr;gap:8px;margin-bottom:14px;}
+@media(min-width:640px){.fav-grid{grid-template-columns:repeat(3,1fr);}}
+.fav-card{background:linear-gradient(135deg,#fff,#f8fafc);border:1px solid var(--gray-b);border-radius:var(--radius-sm);padding:12px 14px;box-shadow:var(--shadow);transition:all 0.2s;display:flex;align-items:center;gap:10px;cursor:pointer;position:relative;overflow:hidden;}
+.fav-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--red),var(--red-d));}
+.fav-card:hover{transform:translateY(-2px);box-shadow:var(--shadow-md);border-color:var(--red);}
+.fav-card .fav-icon{width:36px;height:36px;border-radius:10px;background:linear-gradient(135deg,#fef2f2,#fee2e2);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;}
+.fav-card .fav-text{flex:1;min-width:0;}
+.fav-card .fav-title{font-size:13px;font-weight:800;color:var(--dark);line-height:1.2;}
+.fav-card .fav-desc{font-size:10px;color:var(--gray);margin-top:1px;}
+.fav-card .fav-arrow{color:var(--gray-l);font-size:14px;flex-shrink:0;transition:transform 0.2s;}
+.fav-card:hover .fav-arrow{transform:translateX(3px);color:var(--red);}
+
+/* Module Categories — collapsible accordion (3 col grid, opened = full row) */
+#modCategories{display:grid;grid-template-columns:1fr;gap:10px;margin-bottom:18px;align-items:start;}
+@media(min-width:640px){#modCategories{grid-template-columns:repeat(2,1fr);}}
+@media(min-width:1024px){#modCategories{grid-template-columns:repeat(3,1fr);}}
+.cat-group{background:#fff;border-radius:var(--radius-sm);box-shadow:var(--shadow);overflow:hidden;border:1px solid var(--gray-b);transition:box-shadow 0.2s;}
+.cat-group:hover{box-shadow:var(--shadow-md);}
+.cat-header{width:100%;display:flex;align-items:center;gap:12px;padding:14px 16px;background:#fff;border:none;text-align:left;cursor:pointer;transition:background 0.15s;font-family:inherit;}
+.cat-header:hover{background:var(--gray-bg);}
+.cat-header .cat-icon{font-size:18px;width:28px;text-align:center;}
+.cat-header .cat-name{flex:1;font-size:13px;font-weight:700;color:var(--dark);letter-spacing:-0.1px;}
+.cat-header .cat-count{font-size:11px;font-weight:700;color:var(--gray);background:var(--gray-bg);padding:3px 9px;border-radius:10px;}
+.cat-header .cat-chevron{font-size:13px;color:var(--gray-l);transition:transform 0.25s;display:inline-block;}
+.cat-group.open{box-shadow:var(--shadow-md);border-color:var(--gray-xl);}
+.cat-group.open .cat-header{background:var(--gray-bg);border-bottom:1px solid var(--gray-b);}
+.cat-group.open .cat-chevron{transform:rotate(180deg);color:var(--red);}
+/* Open: span full row to give cards breathing room */
+@media(min-width:640px){.cat-group.open{grid-column:1 / -1;}}
+.cat-body{display:none;padding:14px;}
+.cat-group.open .cat-body{display:block;animation:catFade 0.25s ease;}
+@keyframes catFade{from{opacity:0;transform:translateY(-4px);}to{opacity:1;transform:translateY(0);}}
+/* Module cards inside opened categories — bigger now (full row) */
+.cat-body .mod-grid{margin-bottom:0;gap:10px;grid-template-columns:repeat(2,1fr);}
+@media(min-width:640px){.cat-body .mod-grid{grid-template-columns:repeat(4,1fr);}}
+@media(min-width:1024px){.cat-body .mod-grid{grid-template-columns:repeat(5,1fr);}}
+@media(min-width:1280px){.cat-body .mod-grid{grid-template-columns:repeat(6,1fr);}}
+.cat-body .mod-card{min-height:110px;padding:16px 12px;border-radius:12px;}
+.cat-body .mod-card .m-icon{font-size:26px;margin-bottom:6px;}
+.cat-body .mod-card .m-title{font-size:12px;}
+.cat-body .mod-card .m-desc{font-size:10px;line-height:1.3;}
+
+/* Collapsible section header (Activitate Recentă) */
+.section-head.collapsible{cursor:pointer;user-select:none;padding:6px 4px;border-radius:8px;transition:background 0.15s;}
+.section-head.collapsible:hover{background:rgba(0,0,0,0.03);}
+.section-head.collapsible .toggle-chev{font-size:12px;color:var(--gray-l);transition:transform 0.25s;margin-left:6px;display:inline-block;}
+#alertSection #alertList{display:none;}
+#alertSection.open #alertList{display:block;animation:catFade 0.25s ease;}
+#alertSection.open .toggle-chev{transform:rotate(180deg);color:var(--red);}
+#quickSection #quickRow{display:none;}
+#quickSection.open #quickRow{display:block;animation:catFade 0.25s ease;}
+#quickSection.open .toggle-chev{transform:rotate(180deg);color:var(--red);}
+.section-title .badge-count{font-size:11px;font-weight:800;color:var(--red);background:#fef2f2;padding:2px 9px;border-radius:10px;letter-spacing:0;text-transform:none;}
+
 /* Alerts */
 .alerts{background:#fff;border-radius:var(--radius);box-shadow:var(--shadow);padding:14px;margin-bottom:24px;}
 .alert-item{display:flex;align-items:flex-start;gap:10px;padding:10px 0;border-bottom:1px solid var(--gray-bg);}
@@ -249,10 +304,10 @@ a{text-decoration:none;color:inherit;}button{font-family:inherit;cursor:pointer;
         <div class="kpi-grid fade-up" id="kpiGrid"></div>
     </div>
 
-    <!-- QUICK STATS -->
-    <div id="quickSection" class="hidden">
-        <div class="quick-row" id="quickRow"></div>
-    </div>
+    <!-- CENTRUL DE APLICAȚII -->
+    <div class="section-head"><div class="section-title">🚀 Centrul de Aplicații</div></div>
+    <div id="favGrid" class="fav-grid fade-up"></div>
+    <div id="modCategories" class="fade-up"></div>
 
     <!-- KANBAN -->
     <div id="kanbanSection" class="hidden">
@@ -263,15 +318,21 @@ a{text-decoration:none;color:inherit;}button{font-family:inherit;cursor:pointer;
         <div class="kanban-wrap fade-up"><div class="kanban" id="kanbanBoard"></div></div>
     </div>
 
-    <!-- ACTIVITATE RECENTA (din baza de date) -->
-    <div id="alertSection" class="hidden">
-        <div class="section-head"><div class="section-title">🔔 Activitate Recentă</div></div>
-        <div class="alerts fade-up" id="alertList"><div style="text-align:center;padding:20px;color:#94a3b8;font-size:13px">Se încarcă...</div></div>
+    <!-- DE FĂCUT -->
+    <div id="quickSection" class="hidden">
+        <div class="section-head collapsible" onclick="document.getElementById('quickSection').classList.toggle('open')">
+            <div class="section-title">📌 De Făcut <span class="badge-count" id="quickCount">0</span> <span class="toggle-chev">▾</span></div>
+        </div>
+        <div class="quick-row" id="quickRow"></div>
     </div>
 
-    <!-- MODULES -->
-    <div class="section-head"><div class="section-title">📱 Module Portal</div></div>
-    <div id="modGrid" class="mod-grid fade-up"></div>
+    <!-- ACTIVITATE RECENTA (din baza de date) -->
+    <div id="alertSection" class="hidden">
+        <div class="section-head collapsible" onclick="document.getElementById('alertSection').classList.toggle('open')">
+            <div class="section-title">🔔 Activitate Recentă <span class="toggle-chev">▾</span></div>
+        </div>
+        <div class="alerts fade-up" id="alertList"><div style="text-align:center;padding:20px;color:#94a3b8;font-size:13px">Se încarcă...</div></div>
+    </div>
 
     <div class="footer">CSSI · Portal v3.0 · 14 Module · Sistem Integrat de Management</div>
 </div>
@@ -512,7 +573,8 @@ function renderDeFacut(){
     
     if(!items.length){qs.classList.add('hidden');return;}
     qs.classList.remove('hidden');
-    var html='<div style="font-size:13px;font-weight:800;margin-bottom:8px;color:var(--dark)">📌 De făcut</div>';
+    var qc=document.getElementById('quickCount');if(qc)qc.textContent=items.length;
+    var html='';
     items.forEach(function(it){
         html+='<a href="'+it.link+'" style="display:flex;align-items:center;gap:8px;padding:8px 12px;background:#fff;border-radius:10px;margin-bottom:4px;font-size:12px;border-left:3px solid '+it.color+';box-shadow:var(--shadow);transition:all 0.2s">';
         html+='<span>'+it.icon+'</span><span style="flex:1">'+it.text+'</span><span style="color:var(--gray-l);font-size:10px">→</span></a>';
@@ -568,15 +630,50 @@ function renderAlerts(){
 }
 
 // ═══════ MODULES ═══════
-function renderModules(){
-    var g=document.getElementById('modGrid');g.innerHTML='';
+var FAVORITES=['proiecte','crm','calculator'];
+var CATEGORIES=[
+    {title:'Vânzări & Clienți',icon:'💼',mods:['crm','calculator']},
+    {title:'Proiecte & Execuție',icon:'📋',mods:['proiecte','proiectare','executie','planificare','mentenanta']},
+    {title:'Stocuri & Materiale',icon:'📦',mods:['materiale','necesar']},
+    {title:'Financiar',icon:'💳',mods:['financiar']},
+    {title:'Marketing & Conținut',icon:'📣',mods:['marketing','social']},
+    {title:'Resurse & Admin',icon:'📁',mods:['documente','utilizatori']}
+];
+function userCanSee(m){
     var fullAccess=['admin','mihai','roxana','valentin','cristina'];
-    MODULES.forEach(function(m){
-        if(m.id==='utilizatori'&&role!=='admin')return;
-        if(fullAccess.indexOf(role)<0&&m.roles.indexOf(role)<0)return;
-        var c=document.createElement('a');c.href=m.h;c.className='mod-card'+(m.v3?' new':'');c.setAttribute('data-cat',m.cat);
-        c.innerHTML='<div class="m-icon">'+m.i+'</div><div class="m-title">'+m.t+'</div><div class="m-desc">'+m.d+'</div>';
-        g.appendChild(c);
+    if(m.id==='utilizatori'&&role!=='admin')return false;
+    if(fullAccess.indexOf(role)<0&&m.roles.indexOf(role)<0)return false;
+    return true;
+}
+function modById(id){for(var i=0;i<MODULES.length;i++){if(MODULES[i].id===id)return MODULES[i];}return null;}
+function renderModules(){
+    // Favorite (acces rapid)
+    var fg=document.getElementById('favGrid');fg.innerHTML='';
+    FAVORITES.forEach(function(id){
+        var m=modById(id);if(!m||!userCanSee(m))return;
+        var c=document.createElement('a');c.href=m.h;c.className='fav-card';
+        c.innerHTML='<div class="fav-icon">'+m.i+'</div><div class="fav-text"><div class="fav-title">'+m.t+'</div><div class="fav-desc">'+m.d+'</div></div><div class="fav-arrow">→</div>';
+        fg.appendChild(c);
+    });
+    // Categorii (accordion — click pe header pentru deschidere)
+    var cont=document.getElementById('modCategories');cont.innerHTML='';
+    CATEGORIES.forEach(function(cat){
+        var visible=cat.mods.map(modById).filter(function(m){return m&&userCanSee(m);});
+        if(!visible.length)return;
+        var group=document.createElement('div');group.className='cat-group';
+        var header=document.createElement('button');header.type='button';header.className='cat-header';
+        header.innerHTML='<span class="cat-icon">'+cat.icon+'</span><span class="cat-name">'+cat.title+'</span><span class="cat-count">'+visible.length+'</span><span class="cat-chevron">▾</span>';
+        header.onclick=function(){group.classList.toggle('open');};
+        var body=document.createElement('div');body.className='cat-body';
+        var grid=document.createElement('div');grid.className='mod-grid';
+        visible.forEach(function(m){
+            var c=document.createElement('a');c.href=m.h;c.className='mod-card'+(m.v3?' new':'');c.setAttribute('data-cat',m.cat);
+            c.innerHTML='<div class="m-icon">'+m.i+'</div><div class="m-title">'+m.t+'</div><div class="m-desc">'+m.d+'</div>';
+            grid.appendChild(c);
+        });
+        body.appendChild(grid);
+        group.appendChild(header);group.appendChild(body);
+        cont.appendChild(group);
     });
 }
 
