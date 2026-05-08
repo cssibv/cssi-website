@@ -102,11 +102,15 @@ a{text-decoration:none;color:inherit;}button{font-family:inherit;cursor:pointer;
 .oferta-card:hover{border-color:var(--gray-xl);box-shadow:var(--shadow);}
 
 /* Comandat badge & buton */
-.comandat-info{display:inline-flex;align-items:center;gap:6px;padding:5px 10px;border-radius:8px;background:#f0fdf4;border:1px solid #bbf7d0;color:var(--green);font-size:11px;font-weight:700;flex-shrink:0;}
-.comandat-info .ci-icon{font-size:13px;}
-.comandat-info .ci-meta{font-weight:600;color:#166534;font-size:10px;}
-.comandat-info .ci-undo{background:transparent;border:none;color:var(--green);font-size:14px;cursor:pointer;padding:0 2px;line-height:1;border-radius:4px;}
-.comandat-info .ci-undo:hover{background:#bbf7d0;color:var(--red);}
+.comandat-info{display:inline-flex;align-items:center;gap:8px;padding:5px 5px 5px 12px;border-radius:99px;background:#f0fdf4;border:1px solid #bbf7d0;color:var(--green);font-size:11px;font-weight:700;flex-shrink:0;line-height:1.2;}
+.comandat-info .ci-icon{font-size:13px;display:inline-flex;align-items:center;justify-content:center;width:18px;height:18px;border-radius:50%;background:#bbf7d0;color:#166534;}
+.comandat-info .ci-text{display:inline-flex;flex-direction:column;gap:1px;line-height:1.2;}
+.comandat-info .ci-text-top{font-weight:800;color:var(--green);font-size:11px;text-transform:uppercase;letter-spacing:0.3px;}
+.comandat-info .ci-meta{font-weight:600;color:#166534;font-size:10px;font-variant-numeric:tabular-nums;}
+.comandat-info .ci-divider{width:1px;height:20px;background:#bbf7d0;flex-shrink:0;}
+.comandat-info .ci-undo{width:24px;height:24px;border-radius:50%;background:#fff;border:1px solid #bbf7d0;color:var(--green);font-size:14px;font-weight:700;cursor:pointer;padding:0;display:inline-flex;align-items:center;justify-content:center;line-height:1;transition:all 0.15s;flex-shrink:0;}
+.comandat-info .ci-undo:hover{background:var(--red);border-color:var(--red);color:#fff;transform:scale(1.1);box-shadow:0 2px 8px rgba(220,38,38,0.3);}
+.comandat-info .ci-undo:active{transform:scale(0.95);}
 .btn-mark{padding:6px 12px;border-radius:8px;border:1px solid var(--green);background:#fff;color:var(--green);font-size:11px;font-weight:700;cursor:pointer;transition:all 0.15s;font-family:inherit;display:inline-flex;align-items:center;gap:5px;flex-shrink:0;}
 .btn-mark:hover{background:var(--green);color:#fff;}
 .btn-mark:disabled{opacity:0.5;cursor:wait;}
@@ -497,9 +501,13 @@ function render(){
             if(o.comandat_at){
                 html += '<span class="comandat-info" title="Comandat de '+esc(o.comandat_by||'?')+' la '+esc(o.comandat_at)+'">';
                 html += '<span class="ci-icon">✓</span>';
-                html += '<span>Comandat <span class="ci-meta">'+fmtDateTime(o.comandat_at);
+                html += '<span class="ci-text">';
+                html += '<span class="ci-text-top">Comandat</span>';
+                html += '<span class="ci-meta">'+fmtDateTime(o.comandat_at);
                 if(o.comandat_by) html += ' · '+esc(o.comandat_by);
-                html += '</span></span>';
+                html += '</span>';
+                html += '</span>';
+                html += '<span class="ci-divider"></span>';
                 html += '<button type="button" class="ci-undo" onclick="event.stopPropagation();unmarkOferta('+o.oferta_db_id+')" title="Anulează marcaj comandă" aria-label="Anulează marcaj">×</button>';
                 html += '</span>';
             }
