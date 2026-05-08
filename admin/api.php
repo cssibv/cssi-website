@@ -326,6 +326,16 @@ try {
             $stmt->execute([$id, $id]);
             $o = $stmt->fetch();
             if ($o) {
+                // View-ul redenumește clientId ca crm_client_id (text); luăm FK-urile
+                // numerice direct din tabela oferte ca să le poată folosi frontend-ul
+                // la save (păstrare legătură ofertă→client/proiect la edit)
+                $stmtFK = $db->prepare("SELECT client_id, proiect_id FROM oferte WHERE id = ?");
+                $stmtFK->execute([$o['id']]);
+                $fk = $stmtFK->fetch();
+                if ($fk) {
+                    $o['client_id']  = $fk['client_id']  !== null ? intval($fk['client_id'])  : null;
+                    $o['proiect_id'] = $fk['proiect_id'] !== null ? intval($fk['proiect_id']) : null;
+                }
                 $stmtL = $db->prepare("SELECT * FROM oferta_linii WHERE oferta_id = ? ORDER BY tip, ordine");
                 $stmtL->execute([$o['id']]);
                 $linii = $stmtL->fetchAll();
