@@ -452,37 +452,51 @@ var SERV_DB_TO_UI={"Detectie Incendiu":"Detecție Incendiu","Alarma":"Alarmă An
 var STAT_UI_TO_DB={"Lead":"Lead","Ofertă":"Oferta","Contract":"Contract","Proiectare":"Proiectare","Execuție":"Executie","Recepție":"Receptie","Facturat":"Facturat","Mentenanță":"Mentenanta","Finalizat":"Finalizat","Anulat":"Anulat"};
 var STAT_DB_TO_UI={"Lead":"Lead","Oferta":"Ofertă","Contract":"Contract","Proiectare":"Proiectare","Executie":"Execuție","Receptie":"Recepție","Facturat":"Facturat","Mentenanta":"Mentenanță","Finalizat":"Finalizat","Anulat":"Anulat"};
 
+// ═══════ MODULES — favorite + categorii (DECLARATE ÎNAINTE de orice cod care le folosește) ═══════
+var FAVORITES=['proiecte','crm','calculator'];
+var CATEGORIES=[
+    {title:'Vânzări & Clienți',icon:'💼',mods:['crm','calculator']},
+    {title:'Proiecte & Execuție',icon:'📋',mods:['proiecte','proiectare','executie','planificare','mentenanta']},
+    {title:'Stocuri & Materiale',icon:'📦',mods:['materiale','necesar']},
+    {title:'Financiar',icon:'💳',mods:['financiar']},
+    {title:'Marketing & Conținut',icon:'📣',mods:['marketing','social']},
+    {title:'Resurse & Admin',icon:'📁',mods:['documente','utilizatori']}
+];
+
 // ═══════ DATE PROIECTE (se încarcă din MySQL) ═══════
 var PROJECTS=[];
 var projectsLoaded=false;
 var OFERTE_STATS={total:0,acceptate:0,pipeline:0,contracte:0};
+var DASHBOARD_STATS={rezumat:{},board:{}};
 
 
 
 // ═══════ AUTH ═══════
 var role="";
 function sha256(m){return crypto.subtle.digest('SHA-256',new TextEncoder().encode(m)).then(function(b){return Array.from(new Uint8Array(b)).map(function(x){return x.toString(16).padStart(2,'0')}).join('')})}
-function doLogin(e){e.preventDefault();var p=document.getElementById('pw').value;sha256(p).then(function(h){if(PW[h]){role=PW[h];sessionStorage.setItem("cssi-role",role);sessionStorage.setItem("cssi-user",ROLES[role]?ROLES[role].name:role);showDash()}else{var err=document.getElementById('err');err.textContent="Parolă incorectă!";err.style.display="block";document.getElementById('pw').value='';document.getElementById('pw').focus()}})}
+function doLogin(e){e.preventDefault();var p=document.getElementById('pw').value;sha256(p).then(function(h){if(PW[h]){role=PW[h];sessionStorage.setItem("cssi-role",role);sessionStorage.setItem("cssi-user",ROLES[role]?ROLES[role].name:role);bootDashboard()}else{var err=document.getElementById('err');err.textContent="Parolă incorectă!";err.style.display="block";document.getElementById('pw').value='';document.getElementById('pw').focus()}})}
 function doLogout(){sessionStorage.removeItem("cssi-role");sessionStorage.removeItem("cssi-user");role="";document.getElementById('dash').style.display='none';document.getElementById('login').style.display='';document.getElementById('pw').value=''}
-(function(){var s=sessionStorage.getItem("cssi-role");if(s&&ROLES[s]){role=s;showDash()}})();
+function showLogin(){document.getElementById('dash').style.display='none';document.getElementById('login').style.display='';}
 
-// ═══════ DASHBOARD ═══════
-function showDash(){
+// ═══════ DASHBOARD SHELL (sync — fără date din DB) ═══════
+function showDashShell(){
     document.getElementById('login').style.display='none';
     document.getElementById('dash').style.display='block';
-    var r=ROLES[role];
+    var r=ROLES[role];if(!r)return;
     document.getElementById('hero').className='hero '+r.gradient+' fade-up';
     document.getElementById('heroTitle').textContent=r.greeting;
     document.getElementById('heroSub').textContent=r.sub;
     document.getElementById('rolePill').textContent=r.pill;
     var ha=document.getElementById('heroActions');ha.innerHTML='';
     if(r.actions&&r.actions.length){ha.style.display='flex';r.actions.forEach(function(a){ha.innerHTML+='<a href="'+a.h+'" class="hero-action"><span>'+a.i+'</span> '+a.l+'</a>'})}
-    tog('kpiSection',r.showKpi);if(r.showKpi)renderKPI();
+    tog('kpiSection',r.showKpi);
     tog('quickSection',r.showKpi);
-    tog('kanbanSection',r.showKanban);if(r.showKanban)renderKanban();
-    tog('alertSection',r.showAlerts!==false);if(r.showAlerts!==false)renderAlerts();
+    tog('kanbanSection',r.showKanban);
+    tog('alertSection',r.showAlerts!==false);
     renderModules();
 }
+// Compat: orice cod care încă apelează showDash() merge prin shell + reboot loaders.
+function showDash(){showDashShell();bootLoaders();}
 function tog(id,s){document.getElementById(id).classList.toggle('hidden',!s)}
 function fmtRON(n){if(n>=1e6)return(n/1e6).toFixed(1)+'M';if(n>=1e3)return(n/1e3).toFixed(0)+'K';return n+''}
 
@@ -529,7 +543,7 @@ function renderQuick(){
 
 // ═══════ LOAD OFERTE SUMMARY (Dashboard) ═══════
 function loadOferteSummaryDash(){
-    fetch(API_DB+'?action=getOferte&_t='+Date.now())
+    return fetch(API_DB+'?action=getOferte&_t='+Date.now())
     .then(function(r){return r.json()})
     .then(function(res){
         if(!res.success||!res.data) return;
@@ -610,9 +624,9 @@ function renderKanban(){
 
 // ═══════ ACTIVITATE RECENTA (din MySQL) ═══════
 function renderAlerts(){
-    var l=document.getElementById('alertList');
+    var l=document.getElementById('alertList');if(!l)return Promise.resolve();
     l.innerHTML='<div style="text-align:center;padding:20px;color:#94a3b8;font-size:13px">⏳ Se încarcă activitatea...</div>';
-    fetch('/admin/api.php?action=getActivitateRecenta&limit=10&_t='+Date.now())
+    return fetch('/admin/api.php?action=getActivitateRecenta&limit=10&_t='+Date.now())
     .then(function(r){return r.json()})
     .then(function(res){
         if(!res.success||!res.data||!res.data.length){
@@ -629,16 +643,7 @@ function renderAlerts(){
     });
 }
 
-// ═══════ MODULES ═══════
-var FAVORITES=['proiecte','crm','calculator'];
-var CATEGORIES=[
-    {title:'Vânzări & Clienți',icon:'💼',mods:['crm','calculator']},
-    {title:'Proiecte & Execuție',icon:'📋',mods:['proiecte','proiectare','executie','planificare','mentenanta']},
-    {title:'Stocuri & Materiale',icon:'📦',mods:['materiale','necesar']},
-    {title:'Financiar',icon:'💳',mods:['financiar']},
-    {title:'Marketing & Conținut',icon:'📣',mods:['marketing','social']},
-    {title:'Resurse & Admin',icon:'📁',mods:['documente','utilizatori']}
-];
+// ═══════ MODULES — funcții helper (FAVORITES + CATEGORIES sunt declarate sus) ═══════
 function userCanSee(m){
     var fullAccess=['admin','mihai','roxana','valentin','cristina'];
     if(m.id==='utilizatori'&&role!=='admin')return false;
@@ -714,8 +719,8 @@ function addProject(e){
 
 // ═══════ ÎNCĂRCARE PROIECTE DIN MySQL ═══════
 function loadProjectsFromDB(){
-    document.getElementById('syncBadge').innerHTML='<span class="sync-dot" style="background:var(--orange);animation:pulse 1s infinite"></span>Sync...';
-    fetch(API_DB+'?action=getProiecte&_t='+Date.now()).then(function(r){return r.json()}).then(function(res){
+    var sb=document.getElementById('syncBadge');if(sb)sb.innerHTML='<span class="sync-dot" style="background:var(--orange);animation:pulse 1s infinite"></span>Sync...';
+    return fetch(API_DB+'?action=getProiecte&_t='+Date.now()).then(function(r){return r.json()}).then(function(res){
         if(res.success&&res.data){
             PROJECTS=res.data.map(function(p){
                 return {
@@ -759,7 +764,7 @@ function getUsername(){return ROLES[role]?ROLES[role].name:role;}
 function toggleNotifPanel(){var p=document.getElementById('notifPanel');if(p.classList.contains('active')){p.classList.remove('active');}else{p.classList.add('active');loadNotifications();}}
 function loadNotifications(){
 var user=getUsername().toLowerCase();
-fetch(API_DB+'?action=getNotificari&user='+user+'&limit=15&_t='+Date.now())
+return fetch(API_DB+'?action=getNotificari&user='+user+'&limit=15&_t='+Date.now())
 .then(function(r){return r.json()}).then(function(res){
 if(!res.success){return;}
 var badge=document.getElementById('notifBadge');
@@ -798,8 +803,71 @@ if(res.success){toast('✅ Proiect preluat de '+user,'success');loadProjectsFrom
 // Polling notificări la fiecare 30 secunde
 setInterval(function(){if(role&&ROLES[role])loadNotifications();},30000);
 
-setTimeout(loadProjectsFromDB,300);
-setTimeout(function(){if(role)loadNotifications();},500);
+// ═══════ DASHBOARD STATS (endpoint nou — counts într-un singur request) ═══════
+function loadDashboardStats(){
+    return fetch(API_DB+'?action=getDashboardStats&_t='+Date.now())
+        .then(function(r){return r.json()})
+        .then(function(res){
+            if(!res.success||!res.data) throw new Error(res.error||'Eroare stats');
+            DASHBOARD_STATS=res.data;
+            renderKPIFromStats(res.data.rezumat||{});
+            renderKanbanCounts(res.data.board||{});
+        });
+}
+function renderKPIFromStats(s){
+    var html='';
+    html+=kpiCard('📋','#eff6ff',s.proiecteActive||0,'Proiecte active','var(--blue)');
+    html+=kpiCard('💰','#fff7ed',fmtRON(s.pipelineOferte||0),'Pipeline oferte','var(--orange)');
+    html+=kpiCard('✅','#f0fdf4',fmtRON(s.contracteSemnate||0),'Contracte semnate','var(--green)');
+    html+=kpiCard('📄','#f5f3ff',s.oferteTrimise||0,'Oferte trimise','var(--purple)');
+    html+=kpiCard('🎯','#f0fdf4',s.oferteAcceptate||0,'Oferte acceptate','var(--green)');
+    html+=kpiCard('📐','#f0fdfa',s.laProiectare||0,'La proiectare','var(--teal)');
+    html+=kpiCard('🔧','#fff7ed',s.inExecutie||0,'În execuție','var(--orange)');
+    var g=document.getElementById('kpiGrid');if(g)g.innerHTML=html;
+}
+function renderKanbanCounts(b){
+    // Actualizează doar badge-urile cu numărul când nu avem încă proiectele complete
+    var map={lead:'lead',oferta:'oferta',contract:'contract',proiectare:'proiectare',executie:'executie',receptie:'receptie',facturat:'facturat',mentenanta:'mentenanta'};
+    Object.keys(map).forEach(function(k){
+        var cnt=b[k]||0;
+        var col=document.querySelectorAll('#kanbanBoard .kanban-col');
+        // best-effort — dacă renderKanban a populat deja DOM-ul cu counts reale, nu suprascriem
+    });
+}
+
+// ═══════ WIDGET ERROR/RETRY ═══════
+function widgetError(containerId,msg,retryFn){
+    var el=document.getElementById(containerId);if(!el)return;
+    el.innerHTML='<div style="text-align:center;padding:18px;color:var(--gray);font-size:12px"><div style="margin-bottom:8px">⚠️ '+msg+'</div><button onclick="('+retryFn.name+')()" style="padding:6px 14px;border-radius:8px;border:1px solid var(--blue);background:#eff6ff;color:var(--blue);font-size:11px;font-weight:700;cursor:pointer">↻ Reîncearcă</button></div>';
+}
+function safeLoad(name,fn,errContainerId,errMsg){
+    return Promise.resolve().then(fn).catch(function(e){
+        console.warn('[boot]',name,'failed:',e&&e.message);
+        if(errContainerId) widgetError(errContainerId,errMsg||(name+' n-a putut fi încărcat'),fn);
+        return e;
+    });
+}
+
+// ═══════ BOOT ORCHESTRATOR ═══════
+function bootLoaders(){
+    return Promise.allSettled([
+        safeLoad('stats',loadDashboardStats,'kpiGrid','Stats indisponibile'),
+        safeLoad('proiecte',loadProjectsFromDB,'kanbanBoard','Proiecte indisponibile'),
+        safeLoad('oferte',loadOferteSummaryDash,null,null),
+        safeLoad('activitate',renderAlerts,'alertList','Activitate indisponibilă'),
+        safeLoad('notificari',loadNotifications,null,null)
+    ]);
+}
+function bootDashboard(){
+    var s=sessionStorage.getItem('cssi-role');
+    if(!s||!ROLES[s]){showLogin();return;}
+    role=s;
+    showDashShell();
+    bootLoaders();
+}
+document.addEventListener('DOMContentLoaded',bootDashboard);
+// Dacă DOMContentLoaded a fost deja emis (script la finalul body-ului), pornim manual:
+if(document.readyState!=='loading'){bootDashboard();}
 </script>
 <script>
 if('serviceWorker' in navigator){

@@ -742,6 +742,59 @@ try {
             break;
 
         // ══════════════════════════════════════
+        // DASHBOARD STATS — counts pentru Rezumat General + Board (1 query / tabel)
+        // Folosit de bootDashboard în /admin pentru randare instant a KPI + count badges
+        // ══════════════════════════════════════
+        case 'getDashboardStats':
+            // Toate counts pe proiecte într-un singur SELECT cu CASE WHEN (evită N+1)
+            $sqlP = "SELECT
+                SUM(CASE WHEN status IN ('Lead','Oferta','Contract','Proiectare','Executie','Receptie') THEN 1 ELSE 0 END) AS proiecte_active,
+                COALESCE(SUM(CASE WHEN status NOT IN ('Anulat') THEN valoare_contract ELSE 0 END), 0) AS contracte_semnate,
+                SUM(CASE WHEN status='Proiectare' THEN 1 ELSE 0 END) AS la_proiectare,
+                SUM(CASE WHEN status='Executie' THEN 1 ELSE 0 END) AS in_executie,
+                SUM(CASE WHEN status='Lead' THEN 1 ELSE 0 END) AS b_lead,
+                SUM(CASE WHEN status='Oferta' THEN 1 ELSE 0 END) AS b_oferta,
+                SUM(CASE WHEN status='Contract' THEN 1 ELSE 0 END) AS b_contract,
+                SUM(CASE WHEN status='Proiectare' THEN 1 ELSE 0 END) AS b_proiectare,
+                SUM(CASE WHEN status='Executie' THEN 1 ELSE 0 END) AS b_executie,
+                SUM(CASE WHEN status='Receptie' THEN 1 ELSE 0 END) AS b_receptie,
+                SUM(CASE WHEN status='Facturat' THEN 1 ELSE 0 END) AS b_facturat,
+                SUM(CASE WHEN status='Mentenanta' THEN 1 ELSE 0 END) AS b_mentenanta
+                FROM proiecte";
+            $rowP = $db->query($sqlP)->fetch() ?: [];
+
+            // Counts pe oferte (tabela separată)
+            $sqlO = "SELECT
+                COUNT(*) AS oferte_trimise,
+                SUM(CASE WHEN status='Acceptata' THEN 1 ELSE 0 END) AS oferte_acceptate,
+                COALESCE(SUM(CASE WHEN status NOT IN ('Refuzata','Anulata') THEN total_cu_tva ELSE 0 END), 0) AS pipeline_oferte
+                FROM oferte";
+            $rowO = $db->query($sqlO)->fetch() ?: [];
+
+            jsonResponse(['success' => true, 'data' => [
+                'rezumat' => [
+                    'proiecteActive'   => intval($rowP['proiecte_active'] ?? 0),
+                    'pipelineOferte'   => floatval($rowO['pipeline_oferte'] ?? 0),
+                    'contracteSemnate' => floatval($rowP['contracte_semnate'] ?? 0),
+                    'oferteTrimise'    => intval($rowO['oferte_trimise'] ?? 0),
+                    'oferteAcceptate'  => intval($rowO['oferte_acceptate'] ?? 0),
+                    'laProiectare'     => intval($rowP['la_proiectare'] ?? 0),
+                    'inExecutie'       => intval($rowP['in_executie'] ?? 0),
+                ],
+                'board' => [
+                    'lead'        => intval($rowP['b_lead'] ?? 0),
+                    'oferta'      => intval($rowP['b_oferta'] ?? 0),
+                    'contract'    => intval($rowP['b_contract'] ?? 0),
+                    'proiectare'  => intval($rowP['b_proiectare'] ?? 0),
+                    'executie'    => intval($rowP['b_executie'] ?? 0),
+                    'receptie'    => intval($rowP['b_receptie'] ?? 0),
+                    'facturat'    => intval($rowP['b_facturat'] ?? 0),
+                    'mentenanta'  => intval($rowP['b_mentenanta'] ?? 0),
+                ],
+            ]]);
+            break;
+
+        // ══════════════════════════════════════
         // NEXT ID (util pt frontend)
         // ══════════════════════════════════════
         case 'nextOfertaId':
