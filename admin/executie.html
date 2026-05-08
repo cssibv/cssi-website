@@ -104,6 +104,11 @@ a{text-decoration:none;color:inherit;}button{font-family:inherit;cursor:pointer;
 .btn-add-prg{padding:8px 14px;border-radius:10px;border:1px dashed var(--blue);background:#eff6ff;color:var(--blue);font-size:12px;font-weight:700;cursor:pointer;transition:all 0.15s;display:inline-flex;align-items:center;gap:6px;}
 .btn-add-prg:hover{background:var(--blue);color:#fff;border-style:solid;}
 
+/* Buton Waze — navigare rapidă pentru tehnicieni */
+.btn-waze{display:inline-flex;align-items:center;gap:5px;padding:5px 10px;border-radius:99px;background:linear-gradient(135deg,#33ccff,#0099cc);color:#fff;font-size:11px;font-weight:800;text-decoration:none;border:none;cursor:pointer;transition:all 0.2s;box-shadow:0 2px 6px rgba(51,204,255,0.25);font-family:inherit;}
+.btn-waze:hover{transform:translateY(-1px);box-shadow:0 4px 12px rgba(51,204,255,0.45);background:linear-gradient(135deg,#1ab8ff,#0080b3);}
+.btn-waze .wz-ic{font-size:12px;}
+
 /* Tehnician view — agenda */
 .day-section{margin-bottom:18px;}
 .day-section-title{font-size:11px;font-weight:800;color:var(--gray);text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;padding-left:6px;display:flex;align-items:center;gap:8px;}
@@ -305,6 +310,7 @@ function toast(msg,type){var c=document.getElementById('toastContainer');var t=d
 function techInitials(id){var t=TECHNICIANS.find(function(x){return x.id===id;});return t?t.name.charAt(0).toUpperCase():(id||'?').charAt(0).toUpperCase();}
 function techName(id){var t=TECHNICIANS.find(function(x){return x.id===id;});return t?t.name:id;}
 function statusKey(s){return (s||'').toLowerCase().replace(/[\s_]+/g,'-');}
+function wazeUrl(addr){return 'https://waze.com/ul?q='+encodeURIComponent((addr||'').trim())+'&navigate=yes';}
 
 var MONTHS_RO = ['Ian','Feb','Mar','Apr','Mai','Iun','Iul','Aug','Sep','Oct','Noi','Dec'];
 function fmtDate(s){
@@ -477,6 +483,9 @@ function renderManagerView(){
                 if(prg.note) html += '<div class="prg-note">📝 '+esc(prg.note)+'</div>';
                 html += '</div>';
                 html += '<div class="prg-actions">';
+                if(p.adresa_obiectiv){
+                    html += '<a href="'+wazeUrl(p.adresa_obiectiv)+'" target="_blank" rel="noopener" class="btn-waze" title="Deschide Waze cu adresa lucrării"><span class="wz-ic">🚗</span> Waze</a>';
+                }
                 html += '<button class="btn-icon" onclick="openEditPrg('+prg.id+')" title="Editează">✏️</button>';
                 html += '<button class="btn-icon del" onclick="deletePrg('+prg.id+')" title="Șterge">🗑️</button>';
                 html += '</div>';
@@ -551,6 +560,9 @@ function renderTechView(){
             if(pj.serviciu) html += ' · '+esc(pj.serviciu);
             if(pj.adresa_obiectiv) html += ' · 📍 '+esc(pj.adresa_obiectiv);
             html += '</div>';
+            if(pj.adresa_obiectiv){
+                html += '<div style="margin-top:8px"><a href="'+wazeUrl(pj.adresa_obiectiv)+'" target="_blank" rel="noopener" class="btn-waze" onclick="event.stopPropagation()" title="Deschide Waze pentru navigație"><span class="wz-ic">🚗</span> Navighează (Waze)</a></div>';
+            }
             if(p.atribuiri && p.atribuiri.length > 1){
                 html += '<div class="tech-prg-team">👥 Echipă: ';
                 p.atribuiri.filter(function(uid){return uid!==role;}).forEach(function(uid){

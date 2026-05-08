@@ -114,6 +114,11 @@ a{text-decoration:none;color:inherit;}button{font-family:inherit;cursor:pointer;
 .acard-team-chip .av{width:18px;height:18px;border-radius:50%;background:linear-gradient(135deg,#f97316,#9a3412);color:#fff;display:inline-flex;align-items:center;justify-content:center;font-size:9px;font-weight:800;}
 .acard-note{font-size:11px;color:var(--gray);margin-top:6px;font-style:italic;}
 
+/* Buton Waze */
+.btn-waze{display:inline-flex;align-items:center;gap:5px;padding:5px 10px;border-radius:99px;background:linear-gradient(135deg,#33ccff,#0099cc);color:#fff;font-size:11px;font-weight:800;text-decoration:none;border:none;cursor:pointer;transition:all 0.2s;box-shadow:0 2px 6px rgba(51,204,255,0.25);font-family:inherit;}
+.btn-waze:hover{transform:translateY(-1px);box-shadow:0 4px 12px rgba(51,204,255,0.45);background:linear-gradient(135deg,#1ab8ff,#0080b3);}
+.btn-waze .wz-ic{font-size:12px;}
+
 /* List view */
 .list-wrap{background:#fff;border-radius:var(--radius);box-shadow:var(--shadow);overflow-x:auto;}
 table{width:100%;border-collapse:collapse;font-size:13px;}
@@ -322,6 +327,7 @@ function techInitial(id){return (techName(id)||'?').charAt(0).toUpperCase();}
 function statusKey(s){return (s||'').toLowerCase().replace(/[\s_]+/g,'-');}
 function fmtTime(s){return s?s.substring(0,5):'';}
 function projById(pid){return STATE.proiecte.find(function(p){return p.proiect_db_id == pid;});}
+function wazeUrl(addr){return 'https://waze.com/ul?q='+encodeURIComponent((addr||'').trim())+'&navigate=yes';}
 
 // ═══ FETCH ═══
 function refreshData(){
@@ -498,6 +504,9 @@ function renderAgenda(){
                     html += '</div>';
                 }
                 if(p.note) html += '<div class="acard-note">📝 '+esc(p.note)+'</div>';
+                if(pj.adresa_obiectiv){
+                    html += '<div style="margin-top:8px"><a href="'+wazeUrl(pj.adresa_obiectiv)+'" target="_blank" rel="noopener" class="btn-waze" onclick="event.stopPropagation()" title="Deschide Waze cu adresa lucrării"><span class="wz-ic">🚗</span> Waze</a></div>';
+                }
                 html += '</div>';
             });
             html += '</div>';

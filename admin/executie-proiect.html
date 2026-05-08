@@ -28,6 +28,12 @@ a{text-decoration:none;color:inherit;}button{font-family:inherit;cursor:pointer;
 .page-meta .pill{background:rgba(255,255,255,0.15);padding:3px 10px;border-radius:99px;font-weight:700;font-size:11px;}
 .page-meta .pill.exec{background:rgba(0,0,0,0.2);}
 
+/* Buton Waze — navigare la adresa lucrării */
+.btn-waze{display:inline-flex;align-items:center;gap:6px;padding:6px 12px;border-radius:99px;background:linear-gradient(135deg,#33ccff,#0099cc);color:#fff;font-size:12px;font-weight:800;text-decoration:none;border:none;cursor:pointer;transition:all 0.2s;box-shadow:0 2px 8px rgba(51,204,255,0.3);font-family:inherit;}
+.btn-waze:hover{transform:translateY(-1px);box-shadow:0 4px 14px rgba(51,204,255,0.5);background:linear-gradient(135deg,#1ab8ff,#0080b3);}
+.btn-waze .wz-ic{font-size:14px;}
+.btn-waze.lg{padding:9px 16px;font-size:13px;}
+
 .container{max-width:1100px;margin:0 auto;padding:16px;}@media(min-width:768px){.container{padding:24px;}}
 .toast-container{position:fixed;top:20px;right:20px;z-index:300;display:flex;flex-direction:column;gap:8px;}
 .toast{padding:12px 18px;border-radius:12px;color:#fff;font-size:13px;font-weight:600;box-shadow:0 8px 24px rgba(0,0,0,0.15);animation:slideIn 0.3s ease;max-width:380px;}
@@ -279,6 +285,7 @@ function fmtDateTime(s){if(!s)return '';var d=new Date(s.replace(' ','T'));if(is
 function fmtSize(b){if(b<1024)return b+' B';if(b<1048576)return Math.round(b/1024)+' KB';return (b/1048576).toFixed(1)+' MB';}
 function statusKey(s){return (s||'').toLowerCase().replace(/[\s_]+/g,'-');}
 function isImage(filename){return /\.(jpg|jpeg|png|gif|webp|heic)$/i.test(filename);}
+function wazeUrl(addr){return 'https://waze.com/ul?q='+encodeURIComponent((addr||'').trim())+'&navigate=yes';}
 
 // ═══ FETCH ═══
 function refreshData(){
@@ -309,7 +316,8 @@ function renderHeader(){
     html += '<span class="pill exec">'+esc(p.proiect_status)+'</span>';
     if(p.serviciu) html += '<span>· '+esc(p.serviciu)+'</span>';
     if(p.adresa_obiectiv) html += '<span>📍 '+esc(p.adresa_obiectiv)+'</span>';
-    if(p.client_telefon) html += '<span>📞 '+esc(p.client_telefon)+'</span>';
+    if(p.client_telefon) html += '<span><a href="tel:'+esc(p.client_telefon)+'" style="color:#fff;text-decoration:none">📞 '+esc(p.client_telefon)+'</a></span>';
+    if(p.adresa_obiectiv) html += '<a href="'+wazeUrl(p.adresa_obiectiv)+'" target="_blank" rel="noopener" class="btn-waze lg" title="Deschide în Waze pentru navigație"><span class="wz-ic">🚗</span> Navighează (Waze)</a>';
     document.getElementById('pageMeta').innerHTML = html;
 }
 function renderProgramari(){
