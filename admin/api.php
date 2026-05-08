@@ -821,6 +821,161 @@ try {
             break;
 
         // ══════════════════════════════════════
+        // EXECUȚIE — programări + atribuiri tehnicieni (echipă)
+        // Tabele auto-create la primul access
+        // ══════════════════════════════════════
+        case 'getExecutie':
+            $db->exec("CREATE TABLE IF NOT EXISTS executie_programari (
+                id INT PRIMARY KEY AUTO_INCREMENT,
+                proiect_id INT NOT NULL,
+                data_programata DATE NOT NULL,
+                ora_start TIME DEFAULT '08:00:00',
+                durata_ore DECIMAL(4,1) DEFAULT 8,
+                status VARCHAR(20) DEFAULT 'Programat',
+                obiectiv TEXT,
+                note TEXT,
+                created_by VARCHAR(60),
+                created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+                KEY idx_data (data_programata),
+                KEY idx_proiect (proiect_id),
+                KEY idx_status (status)
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4");
+            $db->exec("CREATE TABLE IF NOT EXISTS executie_atribuiri (
+                programare_id INT NOT NULL,
+                user_id VARCHAR(60) NOT NULL,
+                PRIMARY KEY (programare_id, user_id),
+                KEY idx_user (user_id)
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4");
+
+            // Filtrare opțională: ?user=X (programările unui tehnician), ?from=DATE, ?to=DATE
+            $userFilter = isset($_GET['user']) ? trim($_GET['user']) : '';
+            $fromFilter = isset($_GET['from']) ? trim($_GET['from']) : '';
+            $toFilter   = isset($_GET['to']) ? trim($_GET['to']) : '';
+
+            // Toate proiectele cu status Executie sau Receptie (în lucru / în finisare)
+            $sqlP = "SELECT p.id AS proiect_db_id, p.proiect_id, p.serviciu, p.obiectiv, p.adresa_obiectiv,
+                            p.status AS proiect_status, p.valoare_contract, p.responsabil,
+                            c.id AS client_db_id, c.client_id AS client_cod, c.nume AS client_nume,
+                            c.telefon AS client_telefon
+                     FROM proiecte p
+                     INNER JOIN clienti c ON p.client_id = c.id
+                     WHERE p.status IN ('Executie','Receptie')
+                     ORDER BY c.nume, p.proiect_id";
+            $proiecte = $db->query($sqlP)->fetchAll();
+
+            // Programări (cu eventuale filtre)
+            $sqlPg = "SELECT pg.* FROM executie_programari pg WHERE 1=1";
+            $params = [];
+            if ($userFilter) {
+                $sqlPg = "SELECT pg.* FROM executie_programari pg
+                          INNER JOIN executie_atribuiri at ON at.programare_id = pg.id
+                          WHERE at.user_id = ?";
+                $params[] = $userFilter;
+            }
+            if ($fromFilter) { $sqlPg .= " AND pg.data_programata >= ?"; $params[] = $fromFilter; }
+            if ($toFilter)   { $sqlPg .= " AND pg.data_programata <= ?"; $params[] = $toFilter; }
+            $sqlPg .= " ORDER BY pg.data_programata, pg.ora_start";
+            $stmtPg = $db->prepare($sqlPg);
+            $stmtPg->execute($params);
+            $programari = $stmtPg->fetchAll();
+
+            // Atribuiri pentru toate programările deodată
+            $atribuiriMap = [];
+            if (!empty($programari)) {
+                $ids = array_column($programari, 'id');
+                $place = implode(',', array_fill(0, count($ids), '?'));
+                $stmtA = $db->prepare("SELECT programare_id, user_id FROM executie_atribuiri WHERE programare_id IN ($place)");
+                $stmtA->execute($ids);
+                foreach ($stmtA->fetchAll() as $a) {
+                    $atribuiriMap[$a['programare_id']][] = $a['user_id'];
+                }
+            }
+            // Atașează atribuirile la fiecare programare
+            foreach ($programari as &$p) {
+                $p['atribuiri'] = isset($atribuiriMap[$p['id']]) ? $atribuiriMap[$p['id']] : [];
+            }
+            unset($p);
+
+            jsonResponse(['success' => true, 'data' => [
+                'proiecte'   => $proiecte,
+                'programari' => $programari,
+            ]]);
+            break;
+
+        case 'saveProgramare':
+            // INSERT sau UPDATE programare + sincronizare atribuiri
+            $db->exec("CREATE TABLE IF NOT EXISTS executie_programari (
+                id INT PRIMARY KEY AUTO_INCREMENT,
+                proiect_id INT NOT NULL,
+                data_programata DATE NOT NULL,
+                ora_start TIME DEFAULT '08:00:00',
+                durata_ore DECIMAL(4,1) DEFAULT 8,
+                status VARCHAR(20) DEFAULT 'Programat',
+                obiectiv TEXT,
+                note TEXT,
+                created_by VARCHAR(60),
+                created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+                KEY idx_data (data_programata),
+                KEY idx_proiect (proiect_id),
+                KEY idx_status (status)
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4");
+            $db->exec("CREATE TABLE IF NOT EXISTS executie_atribuiri (
+                programare_id INT NOT NULL,
+                user_id VARCHAR(60) NOT NULL,
+                PRIMARY KEY (programare_id, user_id),
+                KEY idx_user (user_id)
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4");
+
+            $id        = isset($data['id']) ? intval($data['id']) : 0;
+            $proiectId = isset($data['proiect_id']) ? intval($data['proiect_id']) : 0;
+            $dataPrg   = isset($data['data_programata']) ? trim($data['data_programata']) : '';
+            $oraStart  = isset($data['ora_start']) ? trim($data['ora_start']) : '08:00:00';
+            $durata    = isset($data['durata_ore']) ? floatval($data['durata_ore']) : 8;
+            $status    = isset($data['status']) ? trim($data['status']) : 'Programat';
+            $obiectiv  = isset($data['obiectiv']) ? trim($data['obiectiv']) : '';
+            $note      = isset($data['note']) ? trim($data['note']) : '';
+            $createdBy = isset($data['user']) ? trim($data['user']) : '';
+            $atribuiri = isset($data['atribuiri']) && is_array($data['atribuiri']) ? $data['atribuiri'] : [];
+
+            if (!$proiectId || !$dataPrg) {
+                jsonResponse(['success' => false, 'error' => 'proiect_id + data_programata obligatorii'], 400); break;
+            }
+
+            $db->beginTransaction();
+            try {
+                if ($id > 0) {
+                    $db->prepare("UPDATE executie_programari SET proiect_id=?, data_programata=?, ora_start=?, durata_ore=?, status=?, obiectiv=?, note=? WHERE id=?")
+                       ->execute([$proiectId, $dataPrg, $oraStart, $durata, $status, $obiectiv, $note, $id]);
+                } else {
+                    $db->prepare("INSERT INTO executie_programari (proiect_id, data_programata, ora_start, durata_ore, status, obiectiv, note, created_by) VALUES (?,?,?,?,?,?,?,?)")
+                       ->execute([$proiectId, $dataPrg, $oraStart, $durata, $status, $obiectiv, $note, $createdBy]);
+                    $id = intval($db->lastInsertId());
+                }
+                // Resincronizare atribuiri (delete + insert)
+                $db->prepare("DELETE FROM executie_atribuiri WHERE programare_id=?")->execute([$id]);
+                if (!empty($atribuiri)) {
+                    $stmtA = $db->prepare("INSERT INTO executie_atribuiri (programare_id, user_id) VALUES (?, ?)");
+                    foreach ($atribuiri as $u) {
+                        if (trim($u) !== '') $stmtA->execute([$id, trim($u)]);
+                    }
+                }
+                $db->commit();
+                jsonResponse(['success' => true, 'id' => $id]);
+            } catch (Exception $e) {
+                $db->rollBack();
+                jsonResponse(['success' => false, 'error' => $e->getMessage()], 500);
+            }
+            break;
+
+        case 'deleteProgramare':
+            $id = isset($data['id']) ? intval($data['id']) : 0;
+            if (!$id) { jsonResponse(['success' => false, 'error' => 'id obligatoriu'], 400); break; }
+            $db->prepare("DELETE FROM executie_atribuiri WHERE programare_id=?")->execute([$id]);
+            $db->prepare("DELETE FROM executie_programari WHERE id=?")->execute([$id]);
+            jsonResponse(['success' => true]);
+            break;
+
+        // ══════════════════════════════════════
         // NECESAR — marcare ofertă comandată / anulare marcaj
         // ══════════════════════════════════════
         case 'markOfertaComandata':
