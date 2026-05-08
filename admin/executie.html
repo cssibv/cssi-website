@@ -486,7 +486,7 @@ function renderManagerView(){
         } else {
             html += '<div style="text-align:center;padding:14px;color:var(--gray-l);font-size:12px">Nicio programare încă pentru acest proiect.</div>';
         }
-        html += '<div class="proj-actions"><button class="btn-add-prg" onclick="openNewPrg('+pid+')">＋ Programare nouă</button></div>';
+        html += '<div class="proj-actions" style="gap:8px;justify-content:space-between"><a href="executie-proiect.html?id='+pid+'" class="btn-add-prg" style="border-color:var(--orange);color:var(--orange);background:#fff7ed">📂 Pagina proiectului →</a><button class="btn-add-prg" onclick="openNewPrg('+pid+')">＋ Programare nouă</button></div>';
         html += '</div></div>';
     });
     view.innerHTML = html;
@@ -541,12 +541,12 @@ function renderTechView(){
             var pj = STATE.proiecte.find(function(x){return x.proiect_db_id == p.proiect_id;}) || {};
             var d = fmtDate(p.data_programata);
             var sc = statusKey(p.status);
-            html += '<div class="tech-prg-card '+sc+'">';
+            html += '<a href="executie-proiect.html?id='+p.proiect_id+'" class="tech-prg-card '+sc+'" style="display:block;color:inherit;text-decoration:none">';
             html += '<div class="tech-prg-top">';
             html += '<div class="tech-prg-time">'+(d.day||'?')+' '+(d.month||'')+' · '+fmtTime(p.ora_start)+'<span class="durata">('+p.durata_ore+'h)</span></div>';
             html += '<span class="prg-status '+sc+'">'+esc(p.status||'')+'</span>';
             html += '</div>';
-            html += '<div class="tech-prg-client">'+esc(pj.client_nume||'?')+'</div>';
+            html += '<div class="tech-prg-client">'+esc(pj.client_nume||'?')+' <span style="font-size:11px;color:var(--orange);font-weight:700;margin-left:6px">→ deschide</span></div>';
             html += '<div class="tech-prg-meta">📌 <strong>'+esc(pj.proiect_id||'?')+'</strong>';
             if(pj.serviciu) html += ' · '+esc(pj.serviciu);
             if(pj.adresa_obiectiv) html += ' · 📍 '+esc(pj.adresa_obiectiv);
@@ -559,7 +559,7 @@ function renderTechView(){
                 html += '</div>';
             }
             if(p.note) html += '<div class="tech-prg-note">📝 '+esc(p.note)+'</div>';
-            html += '</div>';
+            html += '</a>';
         });
         html += '</div>';
     });

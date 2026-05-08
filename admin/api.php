@@ -976,6 +976,184 @@ try {
             break;
 
         // ══════════════════════════════════════
+        // EXECUȚIE — pagină proiect (jurnal + fișiere)
+        // ══════════════════════════════════════
+        case 'getProiectExecutie':
+            $db->exec("CREATE TABLE IF NOT EXISTS executie_jurnal (
+                id INT PRIMARY KEY AUTO_INCREMENT,
+                proiect_id INT NOT NULL,
+                data_intrare DATE NOT NULL,
+                user_id VARCHAR(60) NOT NULL,
+                text TEXT NOT NULL,
+                created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+                KEY idx_proiect (proiect_id),
+                KEY idx_data (data_intrare)
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4");
+            $db->exec("CREATE TABLE IF NOT EXISTS executie_files (
+                id INT PRIMARY KEY AUTO_INCREMENT,
+                proiect_id INT NOT NULL,
+                tip VARCHAR(20) NOT NULL,
+                filename VARCHAR(255) NOT NULL,
+                original_name VARCHAR(255),
+                size_bytes INT,
+                mime_type VARCHAR(100),
+                uploaded_by VARCHAR(60),
+                uploaded_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+                KEY idx_proiect (proiect_id),
+                KEY idx_tip (tip)
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4");
+
+            $pid = isset($_GET['id']) ? intval($_GET['id']) : 0;
+            if (!$pid) { jsonResponse(['success' => false, 'error' => 'id obligatoriu'], 400); break; }
+
+            // Date proiect + client
+            $stmtP = $db->prepare("SELECT p.id AS proiect_db_id, p.proiect_id, p.serviciu, p.obiectiv, p.adresa_obiectiv,
+                                          p.status AS proiect_status, p.valoare_contract,
+                                          c.id AS client_db_id, c.client_id AS client_cod, c.nume AS client_nume,
+                                          c.telefon AS client_telefon, c.persoana_contact
+                                   FROM proiecte p
+                                   INNER JOIN clienti c ON p.client_id = c.id
+                                   WHERE p.id = ?");
+            $stmtP->execute([$pid]);
+            $proiect = $stmtP->fetch();
+            if (!$proiect) { jsonResponse(['success' => false, 'error' => 'Proiect inexistent'], 404); break; }
+
+            // Programări
+            $stmtPr = $db->prepare("SELECT * FROM executie_programari WHERE proiect_id = ? ORDER BY data_programata DESC, ora_start");
+            $stmtPr->execute([$pid]);
+            $programari = $stmtPr->fetchAll();
+            $atribuiriMap = [];
+            if (!empty($programari)) {
+                $ids = array_column($programari, 'id');
+                $place = implode(',', array_fill(0, count($ids), '?'));
+                $stmtA = $db->prepare("SELECT programare_id, user_id FROM executie_atribuiri WHERE programare_id IN ($place)");
+                $stmtA->execute($ids);
+                foreach ($stmtA->fetchAll() as $a) { $atribuiriMap[$a['programare_id']][] = $a['user_id']; }
+            }
+            foreach ($programari as &$p) { $p['atribuiri'] = isset($atribuiriMap[$p['id']]) ? $atribuiriMap[$p['id']] : []; }
+            unset($p);
+
+            // Jurnal
+            $stmtJ = $db->prepare("SELECT * FROM executie_jurnal WHERE proiect_id = ? ORDER BY created_at DESC");
+            $stmtJ->execute([$pid]);
+            $jurnal = $stmtJ->fetchAll();
+
+            // Fișiere
+            $stmtF = $db->prepare("SELECT * FROM executie_files WHERE proiect_id = ? ORDER BY uploaded_at DESC");
+            $stmtF->execute([$pid]);
+            $fisiere = $stmtF->fetchAll();
+
+            // URL public pentru fișiere
+            $upUrl = UPLOAD_URL . 'executie/' . $proiect['proiect_id'] . '/';
+            foreach ($fisiere as &$f) { $f['url'] = $upUrl . $f['tip'] . '/' . $f['filename']; }
+            unset($f);
+
+            jsonResponse(['success' => true, 'data' => [
+                'proiect'    => $proiect,
+                'programari' => $programari,
+                'jurnal'     => $jurnal,
+                'fisiere'    => $fisiere,
+            ]]);
+            break;
+
+        case 'addJurnalEntryExec':
+            $db->exec("CREATE TABLE IF NOT EXISTS executie_jurnal (
+                id INT PRIMARY KEY AUTO_INCREMENT,
+                proiect_id INT NOT NULL,
+                data_intrare DATE NOT NULL,
+                user_id VARCHAR(60) NOT NULL,
+                text TEXT NOT NULL,
+                created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+                KEY idx_proiect (proiect_id),
+                KEY idx_data (data_intrare)
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4");
+            $pid  = isset($data['proiect_id']) ? intval($data['proiect_id']) : 0;
+            $usr  = isset($data['user_id']) ? trim($data['user_id']) : '';
+            $txt  = isset($data['text']) ? trim($data['text']) : '';
+            $dt   = isset($data['data']) && $data['data'] ? trim($data['data']) : date('Y-m-d');
+            if (!$pid || !$txt) { jsonResponse(['success' => false, 'error' => 'proiect_id + text obligatorii'], 400); break; }
+            $db->prepare("INSERT INTO executie_jurnal (proiect_id, data_intrare, user_id, text) VALUES (?,?,?,?)")
+               ->execute([$pid, $dt, $usr, $txt]);
+            jsonResponse(['success' => true, 'id' => $db->lastInsertId()]);
+            break;
+
+        case 'deleteJurnalEntryExec':
+            $id = isset($data['id']) ? intval($data['id']) : 0;
+            if (!$id) { jsonResponse(['success' => false, 'error' => 'id obligatoriu'], 400); break; }
+            $db->prepare("DELETE FROM executie_jurnal WHERE id=?")->execute([$id]);
+            jsonResponse(['success' => true]);
+            break;
+
+        case 'uploadProiectFile':
+            // Multipart upload: $_POST proiect_id, tip, user; $_FILES['file']
+            $db->exec("CREATE TABLE IF NOT EXISTS executie_files (
+                id INT PRIMARY KEY AUTO_INCREMENT,
+                proiect_id INT NOT NULL,
+                tip VARCHAR(20) NOT NULL,
+                filename VARCHAR(255) NOT NULL,
+                original_name VARCHAR(255),
+                size_bytes INT,
+                mime_type VARCHAR(100),
+                uploaded_by VARCHAR(60),
+                uploaded_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+                KEY idx_proiect (proiect_id),
+                KEY idx_tip (tip)
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4");
+
+            $pid = isset($_POST['proiect_id']) ? intval($_POST['proiect_id']) : 0;
+            $tip = isset($_POST['tip']) ? trim($_POST['tip']) : 'doc'; // pv | poza | doc
+            $usr = isset($_POST['user']) ? trim($_POST['user']) : '';
+            if (!$pid || !isset($_FILES['file'])) { jsonResponse(['success' => false, 'error' => 'proiect_id + file obligatorii'], 400); break; }
+            if (!in_array($tip, ['pv','poza','doc'])) $tip = 'doc';
+
+            // Aflam codul proiectului (folder folosește codul, nu ID-ul)
+            $stmt = $db->prepare("SELECT proiect_id FROM proiecte WHERE id = ?");
+            $stmt->execute([$pid]);
+            $r = $stmt->fetch();
+            if (!$r) { jsonResponse(['success' => false, 'error' => 'Proiect inexistent'], 404); break; }
+            $codProiect = $r['proiect_id'];
+
+            $f = $_FILES['file'];
+            if ($f['error'] !== UPLOAD_ERR_OK) { jsonResponse(['success' => false, 'error' => 'Upload eșuat (cod '.$f['error'].')'], 400); break; }
+            $maxSize = 25 * 1024 * 1024; // 25 MB
+            if ($f['size'] > $maxSize) { jsonResponse(['success' => false, 'error' => 'Fișier prea mare (max 25 MB)'], 400); break; }
+
+            $allowed = [
+                'pv'   => ['pdf','jpg','jpeg','png','heic','webp'],
+                'poza' => ['jpg','jpeg','png','heic','webp','gif'],
+                'doc'  => ['pdf','jpg','jpeg','png','heic','webp','doc','docx','xls','xlsx'],
+            ];
+            $ext = strtolower(pathinfo($f['name'], PATHINFO_EXTENSION));
+            if (!in_array($ext, $allowed[$tip])) { jsonResponse(['success' => false, 'error' => 'Extensie nepermisă: '.$ext], 400); break; }
+
+            $folder = UPLOAD_DIR . 'executie/' . $codProiect . '/' . $tip . '/';
+            if (!is_dir($folder)) @mkdir($folder, 0755, true);
+            $safe = preg_replace('/[^A-Za-z0-9._-]/', '_', pathinfo($f['name'], PATHINFO_FILENAME));
+            $newName = date('Ymd-His') . '_' . substr($safe, 0, 40) . '.' . $ext;
+            $dest = $folder . $newName;
+            if (!move_uploaded_file($f['tmp_name'], $dest)) { jsonResponse(['success' => false, 'error' => 'Salvare eșuată'], 500); break; }
+
+            $db->prepare("INSERT INTO executie_files (proiect_id, tip, filename, original_name, size_bytes, mime_type, uploaded_by) VALUES (?,?,?,?,?,?,?)")
+               ->execute([$pid, $tip, $newName, $f['name'], $f['size'], $f['type'], $usr]);
+            $fid = $db->lastInsertId();
+            jsonResponse(['success' => true, 'id' => $fid, 'url' => UPLOAD_URL.'executie/'.$codProiect.'/'.$tip.'/'.$newName]);
+            break;
+
+        case 'deleteProiectFile':
+            $id = isset($data['id']) ? intval($data['id']) : 0;
+            if (!$id) { jsonResponse(['success' => false, 'error' => 'id obligatoriu'], 400); break; }
+            $stmt = $db->prepare("SELECT f.*, p.proiect_id AS cod_proiect FROM executie_files f INNER JOIN proiecte p ON p.id=f.proiect_id WHERE f.id=?");
+            $stmt->execute([$id]);
+            $row = $stmt->fetch();
+            if ($row) {
+                $path = UPLOAD_DIR . 'executie/' . $row['cod_proiect'] . '/' . $row['tip'] . '/' . $row['filename'];
+                if (file_exists($path)) @unlink($path);
+                $db->prepare("DELETE FROM executie_files WHERE id=?")->execute([$id]);
+            }
+            jsonResponse(['success' => true]);
+            break;
+
+        // ══════════════════════════════════════
         // NECESAR — marcare ofertă comandată / anulare marcaj
         // ══════════════════════════════════════
         case 'markOfertaComandata':
