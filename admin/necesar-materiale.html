@@ -98,10 +98,11 @@ a{text-decoration:none;color:inherit;}button{font-family:inherit;cursor:pointer;
 .oferta-card:hover{border-color:var(--gray-xl);box-shadow:var(--shadow);}
 .oferta-head{display:flex;align-items:center;gap:12px;padding:var(--density-pad-oferta);padding-left:18px;cursor:pointer;background:#fff;transition:background 0.15s;border:none;width:100%;text-align:left;font-family:inherit;}
 .oferta-head:hover{background:#f8fafc;}
-.oferta-codes{display:flex;flex-direction:column;gap:2px;flex:1;min-width:0;}
-.oferta-cod{font-size:13px;font-weight:800;color:var(--purple);font-family:'Courier New',monospace;}
-.oferta-proj{font-size:11px;color:var(--gray);overflow:hidden;text-overflow:ellipsis;display:-webkit-box;-webkit-line-clamp:1;-webkit-box-orient:vertical;}
-.oferta-proj strong{color:var(--blue);font-weight:700;}
+.oferta-codes{display:flex;flex-direction:column;gap:3px;flex:1;min-width:0;}
+.oferta-name{font-size:14px;font-weight:800;color:var(--dark);letter-spacing:-0.2px;line-height:1.3;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;}
+.oferta-refs{font-size:11px;color:var(--gray);display:flex;flex-wrap:wrap;align-items:center;gap:6px;}
+.oferta-refs .ref-of{color:var(--purple);font-weight:700;font-family:'Courier New',monospace;background:#f5f3ff;padding:1px 6px;border-radius:4px;}
+.oferta-refs .ref-proj{color:var(--blue);font-weight:700;}
 .oferta-status{font-size:10px;font-weight:700;padding:3px 9px;border-radius:99px;text-transform:uppercase;letter-spacing:0.3px;flex-shrink:0;}
 .oferta-status.proiectare{background:#f0fdfa;color:var(--teal);}
 .oferta-status.executie{background:#fff7ed;color:var(--orange);}
@@ -469,10 +470,12 @@ function render(){
             var ofKeyJs = c.client_id+"','"+o.oferta_id;
             html += '<div class="oferta-card '+statusCls+(ofOpen?' open':'')+'" id="'+ofId+'">';
             html += '<button class="oferta-head" type="button" aria-expanded="'+(ofOpen?'true':'false')+'" aria-controls="'+ofBodyId+'" onclick="toggleOferta(\''+esc(c.client_id)+"','"+esc(o.oferta_id)+'\')">';
+            var displayName = (o.obiectiv && o.obiectiv.trim()) || o.titlu || '(fără denumire)';
             html += '<div class="oferta-codes">';
-            html += '<div class="oferta-cod">'+highlight(o.oferta_id||'?', f.q)+'</div>';
-            html += '<div class="oferta-proj">📌 <strong>'+highlight(o.proiect_id||'?', f.q)+'</strong>';
-            if(o.obiectiv) html += ' · '+highlight(o.obiectiv, f.q);
+            html += '<div class="oferta-name" title="'+esc(displayName)+'">'+highlight(displayName, f.q)+'</div>';
+            html += '<div class="oferta-refs">';
+            html += '<span class="ref-of">'+highlight(o.oferta_id||'?', f.q)+'</span>';
+            html += '<span>📌 <span class="ref-proj">'+highlight(o.proiect_id||'?', f.q)+'</span></span>';
             html += '</div></div>';
             html += '<span class="oferta-status '+statusCls+'">'+esc(o.proiect_status||'')+'</span>';
             html += '<span class="oferta-stat-pill">'+o.linii.length+' linii</span>';
