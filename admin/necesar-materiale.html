@@ -109,19 +109,6 @@ a{text-decoration:none;color:inherit;}button{font-family:inherit;cursor:pointer;
 .oferta-total{font-size:13px;font-weight:800;color:var(--dark);flex-shrink:0;font-variant-numeric:tabular-nums;}
 .oferta-total small{color:var(--gray);font-size:10px;font-weight:600;}
 
-/* COPY DROPDOWN */
-.copy-wrap{position:relative;flex-shrink:0;}
-.copy-btn{padding:6px 10px;border-radius:8px;border:1px solid var(--blue);background:#eff6ff;color:var(--blue);font-size:11px;font-weight:700;cursor:pointer;transition:all 0.15s;font-family:inherit;display:inline-flex;align-items:center;gap:5px;}
-.copy-btn:hover{background:var(--blue);color:#fff;}
-.copy-menu{display:none;position:absolute;top:calc(100% + 4px);right:0;background:#fff;border:1px solid var(--gray-b);border-radius:10px;box-shadow:var(--shadow-lg);min-width:240px;z-index:50;padding:4px;}
-.copy-wrap.open .copy-menu{display:block;animation:fadeIn 0.15s ease;}
-.copy-menu-item{display:flex;align-items:center;justify-content:space-between;padding:8px 12px;border-radius:7px;font-size:12px;color:var(--dark);cursor:pointer;border:none;background:none;width:100%;text-align:left;font-family:inherit;font-weight:600;}
-.copy-menu-item:hover{background:#eff6ff;color:var(--blue);}
-.copy-menu-item.default{background:var(--gray-bg);}
-.copy-menu-item .star{color:var(--yellow);font-size:11px;}
-.copy-menu-divider{height:1px;background:var(--gray-bg);margin:4px 8px;}
-.copy-menu-hint{padding:6px 12px 4px;font-size:10px;color:var(--gray-l);font-weight:600;text-transform:uppercase;letter-spacing:0.5px;}
-
 .oferta-chevron{width:28px;height:28px;border-radius:50%;background:var(--gray-bg);color:var(--gray);font-size:16px;font-weight:800;display:flex;align-items:center;justify-content:center;transition:all 0.25s;flex-shrink:0;}
 .oferta-card.open .oferta-chevron{transform:rotate(180deg);background:#dbeafe;color:var(--blue);}
 .oferta-body{display:none;padding:8px;background:linear-gradient(180deg,#f8fafc,#fff);}
@@ -181,9 +168,6 @@ mark{background:#fef08a;color:var(--dark);padding:0 2px;border-radius:3px;font-w
   .oferta-head{flex-wrap:wrap;}
   .oferta-status,.oferta-stat-pill{order:5;}
   .oferta-total{order:6;width:100%;text-align:right;margin-top:4px;}
-  .copy-wrap{order:7;width:100%;margin-top:4px;}
-  .copy-btn{width:100%;justify-content:center;}
-  .copy-menu{right:auto;left:0;width:100%;}
   .tb-btn .kbd{display:none;}
   .kbd-hint{display:none;}
 }
@@ -254,13 +238,7 @@ if (!role) { window.location.href = '../admin.html'; }
 
 // ═══ CONSTANTS ═══
 var API_DB = '/admin/api.php';
-var LS_KEYS = { expanded:'nm.expanded', density:'nm.density', copyFmt:'nm.copyFmt' };
-var COPY_FORMATS = {
-    'code':     { label:'Doar coduri',                    desc:'cod\\n',                       fn:function(l){return l.cod;} },
-    'code-qty': { label:'Cod + Cantitate (Tab)',          desc:'cod<TAB>cant\\n (Excel-ready)',fn:function(l){return l.cod+'\t'+fmtQty(l.cantitate);} },
-    'full':     { label:'Cod + Denumire + Cantitate',     desc:'cod<TAB>denumire<TAB>cant\\n', fn:function(l){return l.cod+'\t'+(l.denumire||'').replace(/\s+/g,' ')+'\t'+fmtQty(l.cantitate);} },
-    'csv':      { label:'CSV (cu ghilimele)',             desc:'"cod","denumire","cant","UM"', fn:function(l){return '"'+(l.cod||'').replace(/"/g,'""')+'","'+(l.denumire||'').replace(/"/g,'""')+'","'+fmtQty(l.cantitate)+'","'+(l.um||'buc')+'"';} }
-};
+var LS_KEYS = { expanded:'nm.expanded', density:'nm.density' };
 
 // ═══ STATE ═══
 var STATE = {
@@ -270,7 +248,6 @@ var STATE = {
     lastRefresh: null,
     expanded: loadJSON(LS_KEYS.expanded, {}),
     density: localStorage.getItem(LS_KEYS.density) || 'comfortable',
-    copyFmt: localStorage.getItem(LS_KEYS.copyFmt) || 'code-qty',
     searchDebounce: null,
 };
 
@@ -500,10 +477,6 @@ function render(){
             html += '<span class="oferta-status '+statusCls+'">'+esc(o.proiect_status||'')+'</span>';
             html += '<span class="oferta-stat-pill">'+o.linii.length+' linii</span>';
             html += '<span class="oferta-total">'+fmt(o.total_cu_tva)+' <small>RON</small></span>';
-            html += '<div class="copy-wrap" id="cw-'+esc(c.client_id)+'-'+esc(o.oferta_id)+'">';
-            var fmtLabel = COPY_FORMATS[STATE.copyFmt] ? COPY_FORMATS[STATE.copyFmt].label.split(' ')[0] : 'Copy';
-            html += '<button class="copy-btn" type="button" onclick="event.stopPropagation();copyAllCodes(\''+esc(c.client_id)+"','"+esc(o.oferta_id)+'\',event)" title="Copiază codurile (format: '+esc(fmtLabel)+'). Ține Shift pentru meniu format.">📋 Copy <span style="opacity:0.6">▾</span></button>';
-            html += '</div>';
             html += '<div class="oferta-chevron" aria-hidden="true">▾</div></button>';
             html += '<div class="oferta-body" id="'+ofBodyId+'">';
             if(o.adresa) html += '<div class="oferta-obiectiv-detail"><strong>📍 Adresă:</strong> '+esc(o.adresa)+(o.data_oferta?' &nbsp;·&nbsp; <strong>📅 Data:</strong> '+esc(o.data_oferta):'')+'</div>';
@@ -531,7 +504,7 @@ function render(){
     view.innerHTML = html;
 }
 
-// ═══ COPY ═══
+// ═══ COPY (per linie) ═══
 function copyCode(btn, code){
     if(!code) return;
     navigator.clipboard.writeText(code).then(function(){
@@ -539,58 +512,6 @@ function copyCode(btn, code){
         setTimeout(function(){btn.classList.remove('copied');btn.textContent='📋 Copy'},1400);
     }).catch(function(){toast('⚠️ Nu pot copia în clipboard','error')});
 }
-
-function findOferta(cid, oid){
-    var c = STATE.data.find(function(x){return String(x.client_id)===String(cid)});
-    if(!c) return null;
-    var o = c.oferte.find(function(x){return String(x.oferta_id)===String(oid)});
-    return o ? {client:c, oferta:o} : null;
-}
-
-function copyAllCodes(cid, oid, ev){
-    if(ev && ev.shiftKey) return openCopyMenu(cid, oid, ev);
-    var found = findOferta(cid, oid); if(!found) return;
-    doCopy(found.oferta.linii, STATE.copyFmt);
-}
-function copyAsFormat(cid, oid, key){
-    var found = findOferta(cid, oid); if(!found) return;
-    STATE.copyFmt = key; localStorage.setItem(LS_KEYS.copyFmt, key);
-    doCopy(found.oferta.linii, key);
-    closeCopyMenus();
-    render();
-}
-function doCopy(linii, fmtKey){
-    var format = COPY_FORMATS[fmtKey] || COPY_FORMATS['code-qty'];
-    var lines = linii.filter(function(l){return l.cod}).map(format.fn);
-    if(!lines.length){ toast('Nu sunt coduri de copiat','info'); return; }
-    var text = (fmtKey==='csv' ? '"Cod","Denumire","Cantitate","UM"\n' : '') + lines.join('\n');
-    navigator.clipboard.writeText(text).then(function(){
-        toast('✅ '+lines.length+' linii copiate ('+format.label+')', 'success');
-    }).catch(function(){ toast('⚠️ Nu pot copia în clipboard','error'); });
-}
-function openCopyMenu(cid, oid, ev){
-    closeCopyMenus();
-    if(ev) ev.preventDefault();
-    var wrap = document.getElementById('cw-'+cid+'-'+oid); if(!wrap) return;
-    var html = '<div class="copy-menu" role="menu">';
-    html += '<div class="copy-menu-hint">Format de copiere</div>';
-    Object.keys(COPY_FORMATS).forEach(function(k){
-        var f=COPY_FORMATS[k];
-        var isDef = STATE.copyFmt===k;
-        html += '<button class="copy-menu-item'+(isDef?' default':'')+'" type="button" role="menuitem" onclick="event.stopPropagation();copyAsFormat(\''+esc(cid)+"','"+esc(oid)+"','"+k+'\')">'+
-                '<span><strong>'+esc(f.label)+'</strong>'+(isDef?' <span class="star">★</span>':'')+'<br><span style="font-size:10px;color:var(--gray);font-family:Courier,monospace">'+esc(f.desc)+'</span></span></button>';
-    });
-    html += '</div>';
-    wrap.innerHTML = wrap.innerHTML + html;
-    wrap.classList.add('open');
-}
-function closeCopyMenus(){
-    document.querySelectorAll('.copy-wrap.open').forEach(function(w){
-        w.classList.remove('open');
-        var m = w.querySelector('.copy-menu'); if(m) m.remove();
-    });
-}
-document.addEventListener('click', function(ev){ if(!ev.target.closest('.copy-wrap')) closeCopyMenus(); });
 
 // ═══ FILTER HANDLERS ═══
 var debouncedRender = debounce(function(){ updateSearchClear(); render(); }, 200);
@@ -605,7 +526,7 @@ function onFilterChange(){ render(); }
 document.addEventListener('keydown', function(ev){
     var inField = ev.target.matches('input, textarea, select');
     if(ev.key==='/' && !inField){ ev.preventDefault(); document.getElementById('searchInput').focus(); }
-    else if(ev.key==='Escape'){ if(inField){ ev.target.blur(); } closeCopyMenus(); if(document.getElementById('searchInput').value){ clearSearch(); } }
+    else if(ev.key==='Escape'){ if(inField){ ev.target.blur(); } if(document.getElementById('searchInput').value){ clearSearch(); } }
     else if((ev.key==='e' || ev.key==='E') && !inField){ ev.preventDefault(); expandAll(); }
     else if((ev.key==='c' || ev.key==='C') && !inField){ ev.preventDefault(); collapseAll(); }
 });
