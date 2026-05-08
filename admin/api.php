@@ -742,6 +742,63 @@ try {
             break;
 
         // ══════════════════════════════════════
+        // NECESAR MATERIALE — echipamente din ofertele acceptate
+        // ale proiectelor în Proiectare / Execuție
+        // Structură: Client → Ofertă → Linii materiale (cod, denumire, UM, cantitate)
+        // ══════════════════════════════════════
+        case 'getNecesarMateriale':
+            $sql = "SELECT
+                c.id AS client_db_id, c.client_id AS client_cod, c.nume AS client_nume,
+                p.id AS proiect_db_id, p.proiect_id, p.obiectiv, p.adresa_obiectiv, p.status AS proiect_status,
+                o.id AS oferta_db_id, o.oferta_id, o.titlu AS oferta_titlu, o.data_oferta, o.total_cu_tva,
+                ol.id AS linie_id, ol.cod, ol.denumire, ol.um, ol.cantitate, ol.pret_vanzare, ol.valoare, ol.ordine
+                FROM proiecte p
+                INNER JOIN clienti c ON p.client_id = c.id
+                INNER JOIN oferte o ON o.proiect_id = p.id AND o.status = 'Acceptata'
+                INNER JOIN oferta_linii ol ON ol.oferta_id = o.id AND ol.tip = 'echipament'
+                WHERE p.status IN ('Proiectare','Executie')
+                ORDER BY c.nume, p.proiect_id, o.data_oferta DESC, ol.ordine, ol.id";
+            $rows = $db->query($sql)->fetchAll();
+
+            // Grupare ierarhică: Client → Ofertă → Linii
+            $clienti = [];
+            foreach ($rows as $r) {
+                $cKey = $r['client_db_id'];
+                if (!isset($clienti[$cKey])) {
+                    $clienti[$cKey] = [
+                        'client_id'    => $r['client_cod'],
+                        'client_nume'  => $r['client_nume'],
+                        'oferte'       => [],
+                    ];
+                }
+                $oKey = $r['oferta_db_id'];
+                if (!isset($clienti[$cKey]['oferte'][$oKey])) {
+                    $clienti[$cKey]['oferte'][$oKey] = [
+                        'oferta_id'      => $r['oferta_id'],
+                        'titlu'          => $r['oferta_titlu'],
+                        'data_oferta'    => $r['data_oferta'],
+                        'total_cu_tva'   => floatval($r['total_cu_tva']),
+                        'proiect_id'     => $r['proiect_id'],
+                        'proiect_status' => $r['proiect_status'],
+                        'obiectiv'       => $r['obiectiv'],
+                        'adresa'         => $r['adresa_obiectiv'],
+                        'linii'          => [],
+                    ];
+                }
+                $clienti[$cKey]['oferte'][$oKey]['linii'][] = [
+                    'cod'       => $r['cod'] ?: '',
+                    'denumire'  => $r['denumire'] ?: '',
+                    'um'        => $r['um'] ?: 'buc',
+                    'cantitate' => floatval($r['cantitate']),
+                ];
+            }
+
+            // Reindex (în loc de chei DB)
+            $out = array_map(function($c){ $c['oferte'] = array_values($c['oferte']); return $c; }, array_values($clienti));
+            jsonResponse(['success' => true, 'data' => $out]);
+            break;
+
+        // ══════════════════════════════════════
         // DASHBOARD STATS — counts pentru Rezumat General + Board (1 query / tabel)
         // Folosit de bootDashboard în /admin pentru randare instant a KPI + count badges
         // ══════════════════════════════════════

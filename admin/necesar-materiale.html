@@ -91,6 +91,56 @@ tr:hover td{background:rgba(59,130,246,0.03);}
 .bottom-nav{position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1px solid var(--gray-b);box-shadow:0 -4px 20px rgba(0,0,0,0.06);padding:6px 12px;z-index:100;display:flex;gap:4px;}@media(min-width:768px){.bottom-nav{display:none;}}
 .bn-item{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:8px 4px;border-radius:10px;font-size:10px;font-weight:600;color:var(--gray);transition:all 0.2s;gap:2px;}.bn-item.active{color:var(--red);background:#fef2f2;}.bn-item .bn-icon{font-size:20px;}
 .empty-msg{text-align:center;padding:40px;color:var(--gray-l);font-size:14px;}
+
+/* ═══ NECESAR — ierarhic Client → Ofertă → Materiale ═══ */
+.client-card{background:#fff;border-radius:var(--radius);box-shadow:var(--shadow);margin-bottom:14px;overflow:hidden;border:1px solid var(--gray-b);}
+.client-head{display:flex;align-items:center;gap:14px;padding:16px 20px;cursor:pointer;background:linear-gradient(135deg,#fff,#f8fafc);transition:background 0.15s;border:none;width:100%;text-align:left;font-family:inherit;}
+.client-head:hover{background:var(--gray-bg);}
+.client-icon{width:42px;height:42px;border-radius:10px;background:linear-gradient(135deg,#eff6ff,#dbeafe);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;}
+.client-info{flex:1;min-width:0;}
+.client-name{font-size:15px;font-weight:800;color:var(--dark);letter-spacing:-0.2px;}
+.client-meta{font-size:11px;color:var(--gray);margin-top:2px;display:flex;flex-wrap:wrap;gap:8px;}
+.client-meta .pill{background:var(--gray-bg);padding:2px 8px;border-radius:99px;font-weight:600;}
+.client-chevron{font-size:14px;color:var(--gray-l);transition:transform 0.25s;flex-shrink:0;}
+.client-card.open .client-chevron{transform:rotate(180deg);color:var(--blue);}
+.client-body{display:none;padding:0 16px 16px;border-top:1px solid var(--gray-b);}
+.client-card.open .client-body{display:block;animation:fadeIn 0.25s ease;}
+@keyframes fadeIn{from{opacity:0;transform:translateY(-4px);}to{opacity:1;transform:translateY(0);}}
+
+.oferta-card{background:var(--gray-bg);border-radius:var(--radius-sm);margin-top:12px;overflow:hidden;border:1px solid var(--gray-b);}
+.oferta-head{display:flex;align-items:center;gap:12px;padding:12px 14px;cursor:pointer;background:#fff;transition:background 0.15s;border:none;width:100%;text-align:left;font-family:inherit;}
+.oferta-head:hover{background:var(--gray-bg);}
+.oferta-codes{display:flex;flex-direction:column;gap:2px;flex:1;min-width:0;}
+.oferta-cod{font-size:13px;font-weight:800;color:var(--purple);font-family:'Courier New',monospace;}
+.oferta-proj{font-size:11px;color:var(--gray);}
+.oferta-proj strong{color:var(--blue);font-weight:700;}
+.oferta-status{font-size:10px;font-weight:700;padding:3px 9px;border-radius:99px;text-transform:uppercase;letter-spacing:0.3px;flex-shrink:0;}
+.oferta-status.proiectare{background:#f0fdfa;color:var(--teal);}
+.oferta-status.executie{background:#fff7ed;color:var(--orange);}
+.oferta-total{font-size:13px;font-weight:800;color:var(--dark);flex-shrink:0;}
+.oferta-actions{display:flex;gap:6px;flex-shrink:0;}
+.oferta-actions .btn-copy-all{padding:6px 10px;border-radius:8px;border:1px solid var(--blue);background:#eff6ff;color:var(--blue);font-size:11px;font-weight:700;cursor:pointer;transition:all 0.15s;font-family:inherit;}
+.oferta-actions .btn-copy-all:hover{background:var(--blue);color:#fff;}
+.oferta-chevron{font-size:13px;color:var(--gray-l);transition:transform 0.25s;flex-shrink:0;}
+.oferta-card.open .oferta-chevron{transform:rotate(180deg);color:var(--blue);}
+.oferta-body{display:none;padding:8px;background:var(--gray-bg);}
+.oferta-card.open .oferta-body{display:block;}
+.oferta-obiectiv{padding:8px 14px;background:#fff;border-bottom:1px solid var(--gray-b);font-size:12px;color:var(--gray);}
+.oferta-obiectiv strong{color:var(--dark);font-weight:700;}
+
+.mat-table{width:100%;border-collapse:collapse;background:#fff;border-radius:8px;overflow:hidden;font-size:13px;}
+.mat-table th{background:var(--dark);color:#fff;padding:9px 12px;text-align:left;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;white-space:nowrap;}
+.mat-table td{padding:9px 12px;border-bottom:1px solid var(--gray-bg);vertical-align:middle;}
+.mat-table tr:last-child td{border-bottom:none;}
+.mat-table tr:hover td{background:#f8fafc;}
+.mat-cod{font-family:'Courier New',monospace;font-weight:700;color:var(--dark);background:#fef9c3;padding:3px 8px;border-radius:5px;display:inline-block;}
+.mat-cod.empty{background:var(--gray-bg);color:var(--gray-l);font-style:italic;}
+.mat-cant{font-weight:800;color:var(--dark);text-align:right;font-variant-numeric:tabular-nums;}
+.mat-um{color:var(--gray);font-size:11px;text-transform:lowercase;}
+.btn-copy{padding:5px 10px;border-radius:6px;border:1px solid var(--gray-b);background:#fff;color:var(--gray);font-size:11px;font-weight:600;cursor:pointer;transition:all 0.15s;font-family:inherit;}
+.btn-copy:hover{border-color:var(--blue);color:var(--blue);background:#eff6ff;}
+.btn-copy.copied{background:var(--green);color:#fff;border-color:var(--green);}
+@media(max-width:640px){.oferta-head{flex-wrap:wrap;}.oferta-total{order:5;width:100%;text-align:right;}.oferta-actions{order:6;width:100%;justify-content:flex-end;}}
 .footer{text-align:center;color:var(--gray-xl);font-size:11px;padding:24px 0 100px;}
 .loading-bar{position:fixed;top:0;left:0;right:0;height:3px;z-index:400;display:none;}.loading-bar.active{display:block;}.loading-bar::after{content:'';display:block;width:30%;height:100%;background:var(--red);border-radius:2px;animation:loadSlide 1.2s infinite ease-in-out;}
 @keyframes loadSlide{0%{margin-left:-30%}100%{margin-left:100%}}
@@ -109,28 +159,24 @@ tr:hover td{background:rgba(59,130,246,0.03);}
         </div>
         <div class="page-actions">
             <a href="materiale.html" class="page-btn secondary">📦 Stocuri</a>
-            <button class="page-btn secondary" onclick="refreshData()">🔄 Sync</button>
-            <button class="page-btn primary" onclick="openAddModal()">+ Solicitare Nouă</button>
+            <button class="page-btn secondary" onclick="refreshData()">🔄 Reîncarcă</button>
         </div>
     </div>
 
     <div class="summary" id="summary"></div>
 
     <div class="filters">
-        <input type="text" class="filter-search" id="searchInput" placeholder="🔍 Caută material, proiect..." oninput="render()">
-        <select class="filter-select" id="filterStatus" onchange="render()"><option value="">Toate statusurile</option><option>Solicitat</option><option>Aprobat</option><option>Comandat</option><option>Livrat</option><option>Anulat</option></select>
-        <select class="filter-select" id="filterUrgenta" onchange="render()"><option value="">Toate urgențele</option><option>Critică</option><option>Urgentă</option><option>Normal</option><option>Scăzută</option></select>
-        <select class="filter-select" id="filterProject" onchange="render()"><option value="">Toate proiectele</option></select>
-        <div class="view-toggle">
-            <button class="view-btn active" id="vCards" onclick="setView('cards')">☷ Carduri</button>
-            <button class="view-btn" id="vTable" onclick="setView('table')">☰ Tabel</button>
-        </div>
+        <input type="text" class="filter-search" id="searchInput" placeholder="🔍 Caută client, proiect, cod, denumire..." oninput="render()">
+        <select class="filter-select" id="filterStatus" onchange="render()">
+            <option value="">Proiectare + Execuție</option>
+            <option value="Proiectare">Doar Proiectare</option>
+            <option value="Executie">Doar Execuție</option>
+        </select>
         <div class="filter-count" id="filterCount"></div>
     </div>
 
-    <div id="cardsView" class="cards"></div>
-    <div id="tableView" class="table-wrap" style="display:none"></div>
-    <div class="footer">Portal CSSI 3.0 · Necesar Materiale v3.0</div>
+    <div id="necesarView"><div class="empty-msg">⏳ Se încarcă necesarul...</div></div>
+    <div class="footer">Portal CSSI 3.0 · Necesar Materiale v4.0 · Materiale din ofertele acceptate ale proiectelor în Proiectare și Execuție</div>
 </div>
 
 <div class="bottom-nav">
@@ -141,251 +187,178 @@ tr:hover td{background:rgba(59,130,246,0.03);}
     <a href="financiar.html" class="bn-item"><span class="bn-icon">📄</span>Facturi</a>
 </div>
 
-<!-- ADD MODAL -->
-<div id="addModal" class="modal-overlay" onclick="if(event.target===this)closeAddModal()">
-<div class="modal">
-    <div class="modal-head"><div class="modal-title" id="modalTitle">🛒 Solicitare Material</div><button class="modal-close" onclick="closeAddModal()">✕</button></div>
-    <div class="modal-body">
-        <form id="addForm" onsubmit="saveRequest(event)">
-            <input type="hidden" name="editId" id="editId" value="">
-            <div class="form-group"><label class="form-label">Proiect <span class="req">*</span></label><select class="form-select" name="proiectId" id="fProiect" required></select></div>
-            <div class="form-group"><label class="form-label">Material solicitat <span class="req">*</span></label><textarea class="form-textarea" name="material" id="fMaterial" required placeholder="ex: 24x Detector fum Bosch FCP-O320&#10;2x Centrală FPA-5000&#10;500m cablu FTP Cat6"></textarea></div>
-            <div class="form-row">
-                <div class="form-group"><label class="form-label">Cantitate</label><input type="number" class="form-input" name="cantitate" id="fCant" min="1" placeholder="1"></div>
-                <div class="form-group"><label class="form-label">Cost estimat (RON)</label><input type="number" class="form-input" name="cost" id="fCost" min="0" step="0.01" placeholder="0"></div>
-            </div>
-            <div class="form-row">
-                <div class="form-group"><label class="form-label">Urgență</label>
-                    <select class="form-select" name="urgenta" id="fUrg"><option>Scăzută</option><option selected>Normal</option><option>Urgentă</option><option>Critică</option></select>
-                </div>
-                <div class="form-group"><label class="form-label">Solicitant</label>
-                    <select class="form-select" name="solicitant" id="fSol"><option>Echipa Mihai</option><option>Echipa Alex</option><option>Echipa Radu</option></select>
-                </div>
-            </div>
-            <div class="form-group"><label class="form-label">Furnizor preferat</label><input type="text" class="form-input" name="furnizor" id="fFurnizor" placeholder="ex: Atu Tech, Elko..."></div>
-            <div class="form-group"><label class="form-label">Observații</label><textarea class="form-textarea" name="note" id="fNote" placeholder="Specificații, termen, compatibilitate..." style="min-height:50px"></textarea></div>
-            <button type="submit" class="form-submit" id="submitBtn">🛒 Trimite Solicitarea</button>
-        </form>
-    </div>
-</div>
-</div>
-
-<!-- DETAIL MODAL -->
-<div id="detailModal" class="modal-overlay" onclick="if(event.target===this)closeDetailModal()">
-<div class="modal">
-    <div class="modal-head"><div class="modal-title" id="detailTitle">📋 Detalii Solicitare</div><button class="modal-close" onclick="closeDetailModal()">✕</button></div>
-    <div class="modal-body" id="detailBody"></div>
-</div>
-</div>
 
 <script>
-var API_URL = 'https://script.google.com/macros/s/AKfycbzdM_e5DY5nmd57TmB24sXz8dML93gKIolkmlqKxE7_d-_o3jHMVYuQ06YiQ5zJgZiB/exec';
+// ═══ AUTH GATE ═══
 var role = sessionStorage.getItem('cssi-role');
 if (!role) { window.location.href = '../admin.html'; }
-var canEdit = true;
-var canApprove = true;
 
-var PROJECTS = [
-    {id:'CSSI-2026-001', client:'Hotel Cheile Râșnoavei'},{id:'CSSI-2026-004', client:'Birouri IT Hub'},
-    {id:'CSSI-2026-005', client:'Restaurant Central'},{id:'CSSI-2026-006', client:'Depozit Ghimbav'},
-    {id:'CSSI-2026-007', client:'Școala Nr. 5'},{id:'CSSI-2026-012', client:'Fabrica Autoliv'},
-    {id:'CSSI-2026-013', client:'Rezidențial Avantgarden'},{id:'CSSI-2026-014', client:'ANAF Brașov'}
-];
-var STATUS_LIST = ['Solicitat','Aprobat','Comandat','Livrat','Anulat'];
-var BADGE_MAP = {'Solicitat':'badge-solicitat','Aprobat':'badge-solicitat','Comandat':'badge-comandat','Livrat':'badge-livrat','Anulat':'badge-anulat'};
-var URG_MAP = {'Scăzută':'urg-scazuta','Normal':'urg-normal','Urgentă':'urg-urgenta','Critică':'urg-critica'};
-var URG_ORDER = {'Critică':0,'Urgentă':1,'Normal':2,'Scăzută':3};
-var REQUESTS = [];
-var currentView = 'cards';
+// ═══ STATE ═══
+var API_DB = '/admin/api.php';
+var DATA = []; // [{client_id, client_nume, oferte:[{oferta_id, proiect_id, ...linii:[{cod,denumire,um,cantitate}]}]}]
 var isLive = false;
-var kpiFilter = '';
 
-var DEMO = [
-    {id:1,row:1,data:'2026-03-04',pid:'CSSI-2026-001',material:'Detector fum adresabil Bosch FCP-O320',cant:24,urg:'Urgentă',cost:4800,sol:'Echipa Mihai',status:'Solicitat',furnizor:'Atu Tech',note:'Necesar urgent pt. etaj 3+4'},
-    {id:2,row:2,data:'2026-03-04',pid:'CSSI-2026-006',material:'Cameră IP Hikvision DS-2CD2143G2-I 4MP',cant:4,urg:'Normal',cost:2080,sol:'Echipa Alex',status:'Comandat',furnizor:'Atu Tech',note:'Livrare estimată 7 zile'},
-    {id:3,row:3,data:'2026-03-03',pid:'CSSI-2026-012',material:'Cablu FTP Cat6 Legrand 305m',cant:2,urg:'Normal',cost:620,sol:'Echipa Radu',status:'Livrat',furnizor:'Elko',note:'Livrat pe 04.03'},
-    {id:4,row:4,data:'2026-03-03',pid:'CSSI-2026-001',material:'Centrală incendiu Bosch FPA-5000',cant:1,urg:'Critică',cost:8500,sol:'Echipa Mihai',status:'Aprobat',furnizor:'Bosch Direct',note:'Termen livrare 10 zile lucr.'},
-    {id:5,row:5,data:'2026-03-02',pid:'CSSI-2026-013',material:'Motor poartă culisantă BFT Deimos BT A600',cant:2,urg:'Normal',cost:3700,sol:'Echipa Mihai',status:'Livrat',furnizor:'BFT Romania',note:''},
-    {id:6,row:6,data:'2026-03-02',pid:'CSSI-2026-006',material:'NVR Hikvision 8 canale',cant:1,urg:'Normal',cost:1750,sol:'Echipa Alex',status:'Livrat',furnizor:'Atu Tech',note:''},
-    {id:7,row:7,data:'2026-03-01',pid:'CSSI-2026-004',material:'Tablou electric 36 module Hager',cant:2,urg:'Scăzută',cost:370,sol:'Echipa Radu',status:'Solicitat',furnizor:'Elko',note:'Poate aștepta'},
-    {id:8,row:8,data:'2026-03-01',pid:'CSSI-2026-012',material:'Pat cabluri 200x60 3m zincat',cant:20,urg:'Normal',cost:840,sol:'Echipa Radu',status:'Comandat',furnizor:'Elko',note:'Livrare pe 06.03'},
-    {id:9,row:9,data:'2026-03-04',pid:'CSSI-2026-014',material:'Cablu incendiu 2x1.5 E30 100m',cant:5,urg:'Urgentă',cost:2400,sol:'Echipa Mihai',status:'Solicitat',furnizor:'Elko',note:'Proiect ANAF, termen scurt'},
-    {id:10,row:10,data:'2026-02-28',pid:'CSSI-2026-007',material:'Sirenă interioară convențională',cant:6,urg:'Scăzută',cost:270,sol:'Echipa Alex',status:'Anulat',furnizor:'Atu Tech',note:'Anulat — existau în stoc'}
-];
-
-function esc(s){if(!s)return '';var d=document.createElement('div');d.textContent=s;return d.innerHTML;}
-function fmt(n){return Number(n||0).toLocaleString('ro-RO');}
-function getPN(pid){var p=PROJECTS.find(function(x){return x.id===pid});return p?p.client:pid;}
+// ═══ HELPERS ═══
+function esc(s){if(s==null)return '';var d=document.createElement('div');d.textContent=s;return d.innerHTML;}
+function fmt(n){return Number(n||0).toLocaleString('ro-RO',{maximumFractionDigits:2});}
+function fmtQty(n){var v=Number(n||0);return v%1===0?v.toString():v.toFixed(2);}
 function showLoading(s){document.getElementById('loadBar').classList.toggle('active',s);}
-function toast(msg,type){var c=document.getElementById('toastContainer');var t=document.createElement('div');t.className='toast '+(type||'info');t.textContent=msg;c.appendChild(t);setTimeout(function(){t.style.opacity='0';t.style.transform='translateX(100px)';t.style.transition='all 0.3s'},3000);setTimeout(function(){t.remove()},3500);}
+function toast(msg,type){var c=document.getElementById('toastContainer');var t=document.createElement('div');t.className='toast '+(type||'info');t.textContent=msg;c.appendChild(t);setTimeout(function(){t.style.opacity='0';t.style.transform='translateX(100px)';t.style.transition='all 0.3s'},2500);setTimeout(function(){t.remove()},3000);}
+function updateSync(state){var el=document.getElementById('syncStatus');if(state==='loading')el.innerHTML='<span class="sync-indicator sync-loading"></span>Se încarcă...';else if(isLive)el.innerHTML='<span class="sync-indicator sync-ok"></span>MySQL · '+countTotalLinii()+' materiale';else el.innerHTML='<span class="sync-indicator sync-off"></span>Indisponibil';}
+function countTotalLinii(){var n=0;DATA.forEach(function(c){c.oferte.forEach(function(o){n+=o.linii.length});});return n;}
 
-function apiGet(a){if(!API_URL)return Promise.reject('No API');showLoading(true);return fetch(API_URL+'?action='+a).then(function(r){return r.json()}).finally(function(){showLoading(false)});}
-function apiPost(d){if(!API_URL)return Promise.reject('No API');showLoading(true);return fetch(API_URL,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(d)}).then(function(r){return r.json()}).finally(function(){showLoading(false)});}
-
+// ═══ FETCH ═══
 function refreshData(){
-    if(!API_URL){toast('⚠️ API nesetat. Date demo.','info');REQUESTS=JSON.parse(JSON.stringify(DEMO));isLive=false;updateSync();render();return;}
-    updateSync('loading');
-    Promise.all([apiGet('getMateriale'),apiGet('getProjects')]).then(function(res){
-        if(Array.isArray(res[0])){REQUESTS=res[0].map(function(r,i){return {id:i+1,row:r.row||i+1,data:r.data||'',pid:r.proiectId||'',material:r.material||'',cant:Number(r.cantitate)||1,urg:r.urgenta||'Normal',cost:Number(r.cost)||0,sol:r.solicitant||'',status:r.status||'Solicitat',furnizor:r.furnizor||'',note:r.note||''};});}
-        if(Array.isArray(res[1])){PROJECTS=res[1].map(function(p){return {id:p.id,client:p.client}});populateDropdowns();}
-        isLive=true;updateSync();render();toast('✅ Sincronizat','success');
-    }).catch(function(){isLive=false;updateSync();toast('❌ Sync eșuat','error');});
+    updateSync('loading');showLoading(true);
+    return fetch(API_DB+'?action=getNecesarMateriale&_t='+Date.now())
+        .then(function(r){return r.json()})
+        .then(function(res){
+            if(!res.success) throw new Error(res.error||'Eroare server');
+            DATA = Array.isArray(res.data)?res.data:[];
+            isLive = true;
+            updateSync();render();
+        })
+        .catch(function(e){
+            isLive = false;DATA=[];
+            updateSync();render();
+            toast('❌ Nu s-a putut încărca: '+(e.message||e),'error');
+        })
+        .finally(function(){showLoading(false)});
 }
-function updateSync(s){var el=document.getElementById('syncStatus');if(s==='loading')el.innerHTML='<span class="sync-indicator sync-loading"></span>Se sincronizează...';else if(isLive)el.innerHTML='<span class="sync-indicator sync-ok"></span>Conectat la Google Sheets';else el.innerHTML='<span class="sync-indicator sync-off"></span>Date locale (demo)';}
 
+// ═══ FILTRARE ═══
 function getFiltered(){
-    var q=document.getElementById('searchInput').value.toLowerCase();
-    var fs=document.getElementById('filterStatus').value;
-    var fu=document.getElementById('filterUrgenta').value;
-    var fp=document.getElementById('filterProject').value;
-    var filtered=REQUESTS.filter(function(r){
-        if(fs&&r.status!==fs)return false;
-        if(fu&&r.urg!==fu)return false;
-        if(fp&&r.pid!==fp)return false;
-        if(kpiFilter&&r.status!==kpiFilter)return false;
-        if(q&&!(r.material.toLowerCase().includes(q)||r.pid.toLowerCase().includes(q)||getPN(r.pid).toLowerCase().includes(q)||r.sol.toLowerCase().includes(q)))return false;
-        return true;
+    var q = (document.getElementById('searchInput').value||'').toLowerCase().trim();
+    var fs = document.getElementById('filterStatus').value;
+    var out = [];
+    DATA.forEach(function(c){
+        var oferteOK = c.oferte.filter(function(o){
+            if(fs && o.proiect_status !== fs) return false;
+            if(!q) return true;
+            // Match pe client, proiect, ofertă, sau orice cod/denumire din linii
+            if(c.client_nume.toLowerCase().includes(q)) return true;
+            if((o.proiect_id||'').toLowerCase().includes(q)) return true;
+            if((o.oferta_id||'').toLowerCase().includes(q)) return true;
+            if((o.obiectiv||'').toLowerCase().includes(q)) return true;
+            return o.linii.some(function(l){
+                return (l.cod||'').toLowerCase().includes(q) || (l.denumire||'').toLowerCase().includes(q);
+            });
+        });
+        if(oferteOK.length){
+            out.push({
+                client_id: c.client_id, client_nume: c.client_nume,
+                oferte: oferteOK
+            });
+        }
     });
-    filtered.sort(function(a,b){
-        var so={'Solicitat':0,'Aprobat':1,'Comandat':2,'Livrat':3,'Anulat':4};
-        if(so[a.status]!==so[b.status])return so[a.status]-so[b.status];
-        if(URG_ORDER[a.urg]!==URG_ORDER[b.urg])return URG_ORDER[a.urg]-URG_ORDER[b.urg];
-        return b.data.localeCompare(a.data);
-    });
-    document.getElementById('filterCount').textContent=filtered.length+' solicitări';
-    return filtered;
+    return out;
 }
-function toggleKpiFilter(f){kpiFilter=kpiFilter===f?'':f;render();}
 
-function render(){renderSummary();var f=getFiltered();if(currentView==='cards'){renderCards(f);document.getElementById('cardsView').style.display='';document.getElementById('tableView').style.display='none';}else{renderTable(f);document.getElementById('cardsView').style.display='none';document.getElementById('tableView').style.display='';}}
+// ═══ RENDER ═══
+function render(){
+    renderSummary();
+    var filtered = getFiltered();
+    var totalOferte = filtered.reduce(function(s,c){return s+c.oferte.length},0);
+    var totalLinii = filtered.reduce(function(s,c){return s+c.oferte.reduce(function(ss,o){return ss+o.linii.length},0)},0);
+    document.getElementById('filterCount').textContent = filtered.length+' clienți · '+totalOferte+' oferte · '+totalLinii+' materiale';
+
+    var view = document.getElementById('necesarView');
+    if(!DATA.length){
+        view.innerHTML = '<div class="empty-msg">Niciun proiect activ în Proiectare/Execuție cu oferte acceptate.</div>';
+        return;
+    }
+    if(!filtered.length){
+        view.innerHTML = '<div class="empty-msg">Niciun rezultat pentru filtrele curente.</div>';
+        return;
+    }
+    var html = '';
+    filtered.forEach(function(c, ci){
+        var totalCli = c.oferte.reduce(function(s,o){return s+o.linii.length},0);
+        var initials = (c.client_nume||'?').split(/\s+/).map(function(w){return w[0]}).join('').slice(0,2).toUpperCase();
+        html += '<div class="client-card" id="cli-'+ci+'">';
+        html += '<button class="client-head" type="button" onclick="toggleClient('+ci+')">';
+        html += '<div class="client-icon">'+initials+'</div>';
+        html += '<div class="client-info"><div class="client-name">'+esc(c.client_nume)+'</div>';
+        html += '<div class="client-meta"><span class="pill">📋 '+c.oferte.length+' ofert'+(c.oferte.length===1?'ă':'e')+'</span><span class="pill">📦 '+totalCli+' materiale</span></div></div>';
+        html += '<div class="client-chevron">▾</div></button>';
+        html += '<div class="client-body">';
+        c.oferte.forEach(function(o, oi){
+            var statusCls = (o.proiect_status||'').toLowerCase();
+            html += '<div class="oferta-card" id="of-'+ci+'-'+oi+'">';
+            html += '<button class="oferta-head" type="button" onclick="toggleOferta('+ci+','+oi+')">';
+            html += '<div class="oferta-codes">';
+            html += '<div class="oferta-cod">'+esc(o.oferta_id||'?')+'</div>';
+            html += '<div class="oferta-proj">📌 <strong>'+esc(o.proiect_id||'?')+'</strong>';
+            if(o.obiectiv) html += ' · '+esc(o.obiectiv);
+            html += '</div></div>';
+            html += '<span class="oferta-status '+statusCls+'">'+esc(o.proiect_status||'')+'</span>';
+            html += '<span class="oferta-total">'+fmt(o.total_cu_tva)+' RON</span>';
+            html += '<div class="oferta-actions"><button type="button" class="btn-copy-all" onclick="event.stopPropagation();copyAllCodes('+ci+','+oi+')">📋 Copy codes</button></div>';
+            html += '<div class="oferta-chevron">▾</div></button>';
+            html += '<div class="oferta-body">';
+            if(o.linii.length){
+                html += '<table class="mat-table"><thead><tr><th style="width:30%">Cod produs</th><th>Denumire</th><th style="width:60px">UM</th><th style="width:80px;text-align:right">Cant.</th><th style="width:80px"></th></tr></thead><tbody>';
+                o.linii.forEach(function(l, li){
+                    var codDisplay = l.cod ? '<span class="mat-cod">'+esc(l.cod)+'</span>' : '<span class="mat-cod empty">— fără cod —</span>';
+                    html += '<tr>';
+                    html += '<td>'+codDisplay+'</td>';
+                    html += '<td>'+esc(l.denumire)+'</td>';
+                    html += '<td class="mat-um">'+esc(l.um||'buc')+'</td>';
+                    html += '<td class="mat-cant">'+fmtQty(l.cantitate)+'</td>';
+                    html += '<td>'+(l.cod?'<button type="button" class="btn-copy" onclick="copyCode(this,\''+esc(l.cod).replace(/'/g,"\\'")+'\')">📋 Copy</button>':'')+'</td>';
+                    html += '</tr>';
+                });
+                html += '</tbody></table>';
+            } else {
+                html += '<div class="empty-msg" style="padding:20px">Nicio linie de echipament</div>';
+            }
+            html += '</div></div>';
+        });
+        html += '</div></div>';
+    });
+    view.innerHTML = html;
+}
 
 function renderSummary(){
-    var sol=REQUESTS.filter(function(r){return r.status==='Solicitat'}).length;
-    var apr=REQUESTS.filter(function(r){return r.status==='Aprobat'}).length;
-    var cmd=REQUESTS.filter(function(r){return r.status==='Comandat'}).length;
-    var liv=REQUESTS.filter(function(r){return r.status==='Livrat'}).length;
-    var costPending=REQUESTS.filter(function(r){return r.status!=='Livrat'&&r.status!=='Anulat'}).reduce(function(s,r){return s+r.cost},0);
-    document.getElementById('summary').innerHTML=
-        '<div class="s-item'+(kpiFilter==='Solicitat'?' active-filter':'')+'" onclick="toggleKpiFilter(\'Solicitat\')"><div class="s-icon" style="background:#eff6ff">📝</div><div><div class="s-val" style="color:var(--blue)">'+sol+'</div><div class="s-label">De aprobat</div></div></div>'+
-        '<div class="s-item'+(kpiFilter==='Aprobat'?' active-filter':'')+'" onclick="toggleKpiFilter(\'Aprobat\')"><div class="s-icon" style="background:#f5f3ff">✅</div><div><div class="s-val" style="color:var(--purple)">'+(apr)+'</div><div class="s-label">Aprobate</div></div></div>'+
-        '<div class="s-item'+(kpiFilter==='Comandat'?' active-filter':'')+'" onclick="toggleKpiFilter(\'Comandat\')"><div class="s-icon" style="background:#fff7ed">📦</div><div><div class="s-val" style="color:var(--orange)">'+cmd+'</div><div class="s-label">Comandate</div></div></div>'+
-        '<div class="s-item'+(kpiFilter==='Livrat'?' active-filter':'')+'" onclick="toggleKpiFilter(\'Livrat\')"><div class="s-icon" style="background:#f0fdf4">✅</div><div><div class="s-val" style="color:var(--green)">'+liv+'</div><div class="s-label">Livrate</div></div></div>'+
-        '<div class="s-item"><div class="s-icon" style="background:#fef2f2">💰</div><div><div class="s-val" style="color:var(--red)">'+fmt(costPending)+'</div><div class="s-label">Cost în așteptare</div></div></div>';
+    var clienti = DATA.length;
+    var totalOferte = DATA.reduce(function(s,c){return s+c.oferte.length},0);
+    var totalMat = countTotalLinii();
+    var totalQty = 0, totalVal = 0;
+    DATA.forEach(function(c){c.oferte.forEach(function(o){
+        totalVal += Number(o.total_cu_tva)||0;
+        o.linii.forEach(function(l){totalQty += Number(l.cantitate)||0});
+    })});
+    document.getElementById('summary').innerHTML =
+        '<div class="s-item"><div class="s-icon" style="background:#eff6ff">🏢</div><div><div class="s-val" style="color:var(--blue)">'+clienti+'</div><div class="s-label">Clienți activi</div></div></div>'+
+        '<div class="s-item"><div class="s-icon" style="background:#f5f3ff">📋</div><div><div class="s-val" style="color:var(--purple)">'+totalOferte+'</div><div class="s-label">Oferte acceptate</div></div></div>'+
+        '<div class="s-item"><div class="s-icon" style="background:#fff7ed">📦</div><div><div class="s-val" style="color:var(--orange)">'+totalMat+'</div><div class="s-label">Linii materiale</div></div></div>'+
+        '<div class="s-item"><div class="s-icon" style="background:#f0fdf4">🔢</div><div><div class="s-val" style="color:var(--green)">'+fmtQty(totalQty)+'</div><div class="s-label">Total cantitate</div></div></div>'+
+        '<div class="s-item"><div class="s-icon" style="background:#fef2f2">💰</div><div><div class="s-val" style="color:var(--red)">'+fmt(totalVal)+'</div><div class="s-label">Valoare totală RON</div></div></div>';
 }
 
-function renderCards(filtered){
-    if(!filtered.length){document.getElementById('cardsView').innerHTML='<div class="empty-msg">Nicio solicitare găsită</div>';return;}
-    var html='';
-    filtered.forEach(function(r){
-        var cardCls=r.status==='Comandat'?'comandat':r.status==='Livrat'?'livrat':r.status==='Anulat'?'anulat':'';
-        var statusOpts=STATUS_LIST.map(function(s){return '<option'+(r.status===s?' selected':'')+'>'+s+'</option>'}).join('');
-        html+='<div class="ncard '+cardCls+'">';
-        html+='<div class="ncard-top"><div class="ncard-mat">'+esc(r.material)+'</div><span class="ncard-badge '+(BADGE_MAP[r.status]||'')+'">'+r.status+'</span></div>';
-        html+='<div class="ncard-pid">🔗 '+r.pid+' — '+esc(getPN(r.pid))+'</div>';
-        html+='<div class="ncard-tags">';
-        html+='<span class="ncard-tag '+(URG_MAP[r.urg]||'urg-normal')+'">'+r.urg+'</span>';
-        html+='<span class="ncard-tag" style="background:var(--gray-bg);color:var(--gray)">×'+r.cant+'</span>';
-        if(r.cost) html+='<span class="ncard-tag" style="background:#fef2f2;color:var(--red)">💰 '+fmt(r.cost)+' RON</span>';
-        html+='<span class="ncard-tag" style="background:var(--gray-bg);color:var(--gray)">👷 '+r.sol+'</span>';
-        html+='</div>';
-        html+='<div class="ncard-info">';
-        html+='<div><dt>📅 Data</dt>'+r.data+'</div>';
-        if(r.furnizor) html+='<div><dt>🏭 Furnizor</dt>'+esc(r.furnizor)+'</div>';
-        html+='</div>';
-        if(r.note) html+='<div style="font-size:12px;color:var(--gray);font-style:italic;padding:6px 10px;background:var(--gray-bg);border-radius:8px;margin-bottom:8px">📝 '+esc(r.note)+'</div>';
-        if(canEdit){
-            html+='<div class="ncard-actions">';
-            html+='<select onchange="changeStatus('+r.id+',this.value)">'+statusOpts+'</select>';
-            if(canApprove&&r.status==='Solicitat') html+='<button class="btn-sm" style="background:#f0fdf4;color:var(--green)" onclick="changeStatus('+r.id+',\'Aprobat\')">✅ Aprobă</button>';
-            html+='<button class="btn-sm" style="background:#eff6ff;color:var(--blue)" onclick="openDetailModal('+r.id+')">ℹ️</button>';
-            html+='</div>';
-        }
-        html+='</div>';
-    });
-    document.getElementById('cardsView').innerHTML=html;
+// ═══ INTERACȚIUNI ═══
+function toggleClient(ci){var el=document.getElementById('cli-'+ci);if(el)el.classList.toggle('open');}
+function toggleOferta(ci,oi){var el=document.getElementById('of-'+ci+'-'+oi);if(el)el.classList.toggle('open');}
+function copyCode(btn, code){
+    if(!code) return;
+    navigator.clipboard.writeText(code).then(function(){
+        btn.classList.add('copied');btn.textContent='✓ Copiat';
+        setTimeout(function(){btn.classList.remove('copied');btn.textContent='📋 Copy'},1400);
+    }).catch(function(){toast('⚠️ Nu pot copia în clipboard','error')});
+}
+function copyAllCodes(ci, oi){
+    var c = DATA[ci]; if(!c) return;
+    var o = c.oferte[oi]; if(!o) return;
+    var lines = o.linii.filter(function(l){return l.cod}).map(function(l){return l.cod+'\t'+fmtQty(l.cantitate)});
+    if(!lines.length){toast('Nu sunt coduri de copiat','info');return;}
+    navigator.clipboard.writeText(lines.join('\n')).then(function(){
+        toast('✅ '+lines.length+' coduri copiate (cod + cantitate, separate cu Tab)','success');
+    }).catch(function(){toast('⚠️ Nu pot copia în clipboard','error')});
 }
 
-function renderTable(filtered){
-    if(!filtered.length){document.getElementById('tableView').innerHTML='<div class="empty-msg">Nicio solicitare găsită</div>';return;}
-    var html='<table><thead><tr><th>Data</th><th>Proiect</th><th>Material</th><th>Cant.</th><th>Urgență</th><th>Cost</th><th>Solicitant</th><th>Status</th></tr></thead><tbody>';
-    filtered.forEach(function(r){
-        var statusOpts=STATUS_LIST.map(function(s){return '<option'+(r.status===s?' selected':'')+'>'+s+'</option>'}).join('');
-        html+='<tr>';
-        html+='<td>'+r.data+'</td>';
-        html+='<td><span style="color:var(--blue);font-weight:700">'+r.pid+'</span><br><span style="font-size:11px;color:var(--gray)">'+esc(getPN(r.pid))+'</span></td>';
-        html+='<td style="white-space:normal;max-width:250px;font-weight:700">'+esc(r.material)+'</td>';
-        html+='<td>'+r.cant+'</td>';
-        html+='<td><span class="ncard-tag '+(URG_MAP[r.urg]||'')+'">'+r.urg+'</span></td>';
-        html+='<td style="font-weight:700">'+fmt(r.cost)+' RON</td>';
-        html+='<td>'+r.sol+'</td>';
-        html+='<td>'+(canEdit?'<select style="padding:6px 10px;border-radius:8px;border:1px solid var(--gray-b);font-size:12px;font-weight:600;font-family:inherit" onchange="changeStatus('+r.id+',this.value)">'+statusOpts+'</select>':'<span class="ncard-badge '+(BADGE_MAP[r.status]||'')+'">'+r.status+'</span>')+'</td>';
-        html+='</tr>';
-    });
-    html+='</tbody></table>';
-    document.getElementById('tableView').innerHTML=html;
-}
+// ═══ INIT ═══
+refreshData();
 
-function setView(v){currentView=v;document.getElementById('vCards').classList.toggle('active',v==='cards');document.getElementById('vTable').classList.toggle('active',v==='table');render();}
-
-function changeStatus(id,val){
-    var r=REQUESTS.find(function(x){return x.id===id});if(!r)return;
-    r.status=val;
-    if(API_URL) apiPost({action:'updateMaterialeStatus',row:r.row,status:val}).catch(function(){});
-    render();toast('✅ Status: '+val,'success');
-}
-
-function openDetailModal(id){
-    var r=REQUESTS.find(function(x){return x.id===id});if(!r)return;
-    document.getElementById('detailTitle').textContent='🛒 Solicitare #'+r.id;
-    var html='<div style="display:grid;gap:14px">';
-    html+='<div style="text-align:center;padding:12px 0"><span class="ncard-badge '+(BADGE_MAP[r.status]||'')+'" style="font-size:14px;padding:6px 16px">'+r.status+'</span></div>';
-    html+=infoRow('📦 Material','<strong>'+esc(r.material)+'</strong>');
-    html+=infoRow('🔗 Proiect','<span style="color:var(--blue);font-weight:700">'+r.pid+'</span> — '+esc(getPN(r.pid)));
-    html+=infoRow('📊 Cantitate','<strong>'+r.cant+'</strong>');
-    html+=infoRow('💰 Cost estimat','<strong>'+fmt(r.cost)+' RON</strong>');
-    html+=infoRow('⚡ Urgență','<span class="ncard-tag '+(URG_MAP[r.urg]||'')+'">'+r.urg+'</span>');
-    html+=infoRow('👷 Solicitant',r.sol);
-    html+=infoRow('📅 Data',r.data);
-    if(r.furnizor) html+=infoRow('🏭 Furnizor',esc(r.furnizor));
-    if(r.note) html+='<div style="background:var(--gray-bg);padding:10px 14px;border-radius:8px;font-size:13px;color:var(--gray);font-style:italic">📝 '+esc(r.note)+'</div>';
-    html+='</div>';
-    document.getElementById('detailBody').innerHTML=html;
-    document.getElementById('detailModal').classList.add('active');
-}
-function closeDetailModal(){document.getElementById('detailModal').classList.remove('active');}
-function infoRow(l,v){return '<div style="display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px solid var(--gray-bg)"><span style="font-size:13px;color:var(--gray)">'+l+'</span><span style="font-size:14px;font-weight:600">'+v+'</span></div>';}
-
-function openAddModal(){
-    document.getElementById('editId').value='';
-    document.getElementById('addForm').reset();
-    document.getElementById('addModal').classList.add('active');
-}
-function closeAddModal(){document.getElementById('addModal').classList.remove('active');}
-
-function saveRequest(e){
-    e.preventDefault();var fd=new FormData(document.getElementById('addForm'));
-    var maxId=0;REQUESTS.forEach(function(x){if(x.id>maxId)maxId=x.id});
-    var newR={id:maxId+1,row:maxId+1,data:new Date().toISOString().split('T')[0],pid:fd.get('proiectId'),material:fd.get('material'),cant:parseInt(fd.get('cantitate'))||1,urg:fd.get('urgenta'),cost:parseFloat(fd.get('cost'))||0,sol:fd.get('solicitant'),status:'Solicitat',furnizor:fd.get('furnizor')||'',note:fd.get('note')||''};
-
-    if(API_URL){
-        apiPost({action:'addMaterial',request:newR}).then(function(res){newR.row=res.row||newR.row;REQUESTS.unshift(newR);render();toast('✅ Solicitare trimisă și sincronizată','success');}).catch(function(){REQUESTS.unshift(newR);render();toast('⚠️ Salvat local','error');});
-    } else {REQUESTS.unshift(newR);toast('✅ Solicitare trimisă (local)','success');}
-    render();closeAddModal();document.getElementById('addForm').reset();
-}
-
-function populateDropdowns(){
-    var opts='<option value="">— Alege proiect —</option>';
-    PROJECTS.forEach(function(p){opts+='<option value="'+p.id+'">'+p.id+' — '+esc(p.client)+'</option>'});
-    document.getElementById('fProiect').innerHTML=opts;
-    var fOpts='<option value="">Toate proiectele</option>';
-    PROJECTS.forEach(function(p){fOpts+='<option value="'+p.id+'">'+p.id+'</option>'});
-    document.getElementById('filterProject').innerHTML=fOpts;
-}
-
-populateDropdowns();
-REQUESTS=JSON.parse(JSON.stringify(DEMO));
-render();
-if(API_URL) refreshData();
 </script>
 <script>
 if('serviceWorker' in navigator){navigator.serviceWorker.register('../sw.js').then(function(r){console.log('[PWA] SW registered, scope:',r.scope)}).catch(function(e){console.log('[PWA] SW failed:',e)})}
