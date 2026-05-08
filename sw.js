@@ -3,8 +3,8 @@
 // Cache-first + network fallback + offline page
 // ═══════════════════════════════════════════
 
-const CACHE_NAME = 'cssi-portal-v3.0';
-const CACHE_VERSION = 1;
+const CACHE_NAME = 'cssi-portal-v3.1';
+const CACHE_VERSION = 2;
 
 // Core pages to pre-cache on install
 const PRECACHE_URLS = [

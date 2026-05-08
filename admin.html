@@ -647,16 +647,20 @@ function userCanSee(m){
 }
 function modById(id){for(var i=0;i<MODULES.length;i++){if(MODULES[i].id===id)return MODULES[i];}return null;}
 function renderModules(){
-    // Favorite (acces rapid)
-    var fg=document.getElementById('favGrid');fg.innerHTML='';
-    FAVORITES.forEach(function(id){
-        var m=modById(id);if(!m||!userCanSee(m))return;
-        var c=document.createElement('a');c.href=m.h;c.className='fav-card';
-        c.innerHTML='<div class="fav-icon">'+m.i+'</div><div class="fav-text"><div class="fav-title">'+m.t+'</div><div class="fav-desc">'+m.d+'</div></div><div class="fav-arrow">→</div>';
-        fg.appendChild(c);
-    });
+    // Favorite (acces rapid) — guard defensiv pentru HTML cached vechi
+    var fg=document.getElementById('favGrid');
+    if(fg){
+        fg.innerHTML='';
+        FAVORITES.forEach(function(id){
+            var m=modById(id);if(!m||!userCanSee(m))return;
+            var c=document.createElement('a');c.href=m.h;c.className='fav-card';
+            c.innerHTML='<div class="fav-icon">'+m.i+'</div><div class="fav-text"><div class="fav-title">'+m.t+'</div><div class="fav-desc">'+m.d+'</div></div><div class="fav-arrow">→</div>';
+            fg.appendChild(c);
+        });
+    }
     // Categorii (accordion — click pe header pentru deschidere)
-    var cont=document.getElementById('modCategories');cont.innerHTML='';
+    var cont=document.getElementById('modCategories');if(!cont)return;
+    cont.innerHTML='';
     CATEGORIES.forEach(function(cat){
         var visible=cat.mods.map(modById).filter(function(m){return m&&userCanSee(m);});
         if(!visible.length)return;
@@ -798,7 +802,16 @@ setTimeout(loadProjectsFromDB,300);
 setTimeout(function(){if(role)loadNotifications();},500);
 </script>
 <script>
-if('serviceWorker' in navigator){navigator.serviceWorker.register('/sw.js').then(function(r){console.log('[PWA] SW registered, scope:',r.scope)}).catch(function(e){console.log('[PWA] SW failed:',e)})}
+if('serviceWorker' in navigator){
+    navigator.serviceWorker.register('/sw.js').then(function(r){console.log('[PWA] SW registered, scope:',r.scope)}).catch(function(e){console.log('[PWA] SW failed:',e)});
+    // Auto-reload o singură dată când un SW nou preia controlul (cache nou)
+    var refreshed=false;
+    navigator.serviceWorker.addEventListener('controllerchange',function(){
+        if(refreshed)return;refreshed=true;
+        console.log('[PWA] SW nou activ — reload pentru cache curat');
+        window.location.reload();
+    });
+}
 </script>
 </body>
 </html>
