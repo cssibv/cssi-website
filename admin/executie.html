@@ -550,7 +550,7 @@ function renderTechView(){
             var pj = STATE.proiecte.find(function(x){return x.proiect_db_id == p.proiect_id;}) || {};
             var d = fmtDate(p.data_programata);
             var sc = statusKey(p.status);
-            html += '<a href="executie-proiect.html?id='+p.proiect_id+'" class="tech-prg-card '+sc+'" style="display:block;color:inherit;text-decoration:none">';
+            html += '<div class="tech-prg-card '+sc+'" style="cursor:pointer" onclick="if(!event.target.closest(\'a,button\'))window.location.href=\'executie-proiect.html?id='+p.proiect_id+'\'">';
             html += '<div class="tech-prg-top">';
             html += '<div class="tech-prg-time">'+(d.day||'?')+' '+(d.month||'')+' · '+fmtTime(p.ora_start)+'<span class="durata">('+p.durata_ore+'h)</span></div>';
             html += '<span class="prg-status '+sc+'">'+esc(p.status||'')+'</span>';
@@ -571,7 +571,7 @@ function renderTechView(){
                 html += '</div>';
             }
             if(p.note) html += '<div class="tech-prg-note">📝 '+esc(p.note)+'</div>';
-            html += '</a>';
+            html += '</div>';
         });
         html += '</div>';
     });
