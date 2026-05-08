@@ -16,134 +16,177 @@
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 <style>
 *{margin:0;padding:0;box-sizing:border-box;}
-:root{--red:#dc2626;--red-d:#991b1b;--dark:#0f172a;--dark2:#1e293b;--gray:#64748b;--gray-l:#94a3b8;--gray-xl:#cbd5e1;--gray-bg:#f1f5f9;--gray-b:#e2e8f0;--blue:#3b82f6;--green:#22c55e;--orange:#f97316;--purple:#8b5cf6;--yellow:#eab308;--teal:#14b8a6;--radius:16px;--radius-sm:12px;--shadow:0 1px 3px rgba(0,0,0,0.06);--shadow-md:0 4px 12px rgba(0,0,0,0.08);--font:'Inter',system-ui,sans-serif;}
+:root{--red:#dc2626;--red-d:#991b1b;--dark:#0f172a;--dark2:#1e293b;--gray:#64748b;--gray-l:#94a3b8;--gray-xl:#cbd5e1;--gray-bg:#f1f5f9;--gray-b:#e2e8f0;--blue:#3b82f6;--green:#22c55e;--orange:#f97316;--purple:#8b5cf6;--yellow:#eab308;--teal:#14b8a6;--radius:16px;--radius-sm:12px;--shadow:0 1px 3px rgba(0,0,0,0.06);--shadow-md:0 4px 12px rgba(0,0,0,0.08);--shadow-lg:0 12px 32px rgba(0,0,0,0.12);--font:'Inter',system-ui,sans-serif;
+    /* density (default = comfortable) */
+    --density-pad-client:18px 22px;--density-pad-oferta:14px 16px;--density-pad-row:10px 12px;--density-mt-oferta:12px;
+}
+body.compact{--density-pad-client:12px 16px;--density-pad-oferta:9px 12px;--density-pad-row:6px 10px;--density-mt-oferta:8px;}
 body{font-family:var(--font);color:var(--dark);background:var(--gray-bg);-webkit-font-smoothing:antialiased;}
 a{text-decoration:none;color:inherit;}button{font-family:inherit;cursor:pointer;}
+:focus-visible{outline:2px solid var(--blue);outline-offset:2px;border-radius:6px;}
+
+/* HEADER */
 .page-header{background:linear-gradient(135deg,var(--dark),var(--dark2));color:#fff;padding:20px 24px;border-radius:20px;margin-bottom:16px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;}
 .page-back{color:rgba(255,255,255,0.7);font-size:13px;font-weight:500;display:flex;align-items:center;gap:6px;}.page-back:hover{color:#fff;}
 .page-title{font-size:22px;font-weight:800;letter-spacing:-0.5px;}
-.page-subtitle{font-size:12px;color:rgba(255,255,255,0.5);margin-top:2px;}
-.page-actions{display:flex;gap:8px;align-items:center;}
-.page-btn{padding:10px 18px;border-radius:12px;font-size:13px;font-weight:700;border:none;transition:all 0.2s;}
+.page-subtitle{font-size:12px;color:rgba(255,255,255,0.55);margin-top:2px;display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
+.page-actions{display:flex;gap:8px;align-items:center;flex-wrap:wrap;}
+.page-btn{padding:10px 16px;border-radius:12px;font-size:13px;font-weight:700;border:none;transition:all 0.2s;display:inline-flex;align-items:center;gap:6px;}
 .page-btn.primary{background:var(--red);color:#fff;}.page-btn.primary:hover{background:var(--red-d);transform:translateY(-1px);}
 .page-btn.secondary{background:rgba(255,255,255,0.1);color:#fff;border:1px solid rgba(255,255,255,0.2);}.page-btn.secondary:hover{background:rgba(255,255,255,0.2);}
-.sync-indicator{width:8px;height:8px;border-radius:50%;display:inline-block;margin-right:6px;}
+.page-btn.spinning .spin-icon{animation:spin 0.8s linear infinite;display:inline-block;}
+@keyframes spin{from{transform:rotate(0)}to{transform:rotate(360deg)}}
+.sync-indicator{width:8px;height:8px;border-radius:50%;display:inline-block;margin-right:4px;}
 .sync-ok{background:var(--green);box-shadow:0 0 6px rgba(34,197,94,0.5);}.sync-off{background:var(--gray-l);}.sync-loading{background:var(--orange);animation:pulse 1s infinite;}
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:0.4}}
+.sub-sep{color:rgba(255,255,255,0.3);}
 .container{max-width:1400px;margin:0 auto;padding:16px;}@media(min-width:768px){.container{padding:24px;}}
 
+/* SUMMARY KPI */
 .summary{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:16px;}
-.s-item{background:#fff;border-radius:var(--radius-sm);padding:14px 18px;box-shadow:var(--shadow);flex:1;min-width:130px;display:flex;align-items:center;gap:12px;transition:all 0.2s;cursor:pointer;}
-.s-item:hover{box-shadow:var(--shadow-md);transform:translateY(-1px);}
-.s-item.active-filter{border:2px solid var(--blue);}
+.s-item{background:#fff;border-radius:var(--radius-sm);padding:14px 18px;box-shadow:var(--shadow);flex:1;min-width:140px;display:flex;align-items:center;gap:12px;transition:all 0.2s;}
 .s-icon{width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;}
-.s-val{font-size:22px;font-weight:900;}.s-label{font-size:11px;color:var(--gray);margin-top:1px;}
+.s-val{font-size:22px;font-weight:900;line-height:1;}.s-label{font-size:11px;color:var(--gray);margin-top:4px;}
 
-.filters{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:16px;align-items:center;}
-.filter-search{padding:10px 16px;border-radius:99px;font-size:13px;border:1px solid var(--gray-b);outline:none;font-family:inherit;min-width:200px;background:#fff;flex:1;max-width:300px;}.filter-search:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(59,130,246,0.08);}
+/* TOOLBAR */
+.toolbar{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:10px;align-items:center;}
+.search-wrap{position:relative;flex:1;min-width:220px;max-width:380px;}
+.search-wrap .search-icon{position:absolute;left:14px;top:50%;transform:translateY(-50%);color:var(--gray-l);pointer-events:none;}
+.filter-search{padding:10px 36px 10px 38px;border-radius:99px;font-size:13px;border:1px solid var(--gray-b);outline:none;font-family:inherit;width:100%;background:#fff;transition:all 0.2s;}
+.filter-search:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(59,130,246,0.08);}
+.search-clear{position:absolute;right:10px;top:50%;transform:translateY(-50%);width:20px;height:20px;border-radius:50%;border:none;background:var(--gray-bg);color:var(--gray);font-size:11px;display:none;align-items:center;justify-content:center;}.search-clear:hover{background:var(--gray-b);color:var(--dark);}.search-wrap.has-value .search-clear{display:flex;}
+.kbd-hint{position:absolute;right:34px;top:50%;transform:translateY(-50%);font-size:10px;color:var(--gray-l);background:var(--gray-bg);padding:2px 6px;border-radius:5px;font-family:'Courier New',monospace;pointer-events:none;}
+.search-wrap.has-value .kbd-hint,.search-wrap:focus-within .kbd-hint{display:none;}
 .filter-select{padding:8px 14px;border-radius:99px;font-size:12px;font-weight:600;border:1px solid var(--gray-b);background:#fff;font-family:inherit;outline:none;cursor:pointer;}
-.view-toggle{display:flex;background:#fff;border-radius:10px;padding:3px;box-shadow:var(--shadow);border:1px solid var(--gray-b);margin-left:auto;}
-.view-btn{padding:7px 14px;border-radius:8px;font-size:12px;font-weight:600;border:none;background:none;color:var(--gray);cursor:pointer;transition:all 0.2s;}.view-btn.active{background:var(--dark);color:#fff;}
-.filter-count{font-size:12px;color:var(--gray);font-weight:500;}
+.tb-btn{padding:8px 12px;border-radius:10px;font-size:12px;font-weight:700;border:1px solid var(--gray-b);background:#fff;color:var(--gray);cursor:pointer;transition:all 0.15s;display:inline-flex;align-items:center;gap:6px;}
+.tb-btn:hover{border-color:var(--blue);color:var(--blue);background:#eff6ff;}
+.tb-btn .kbd{font-size:9px;background:var(--gray-bg);color:var(--gray);padding:1px 5px;border-radius:4px;font-family:'Courier New',monospace;}
+.tb-btn:hover .kbd{background:#dbeafe;color:var(--blue);}
+.density-toggle{display:flex;background:#fff;border-radius:10px;padding:3px;box-shadow:var(--shadow);border:1px solid var(--gray-b);}
+.density-btn{padding:6px 12px;border-radius:7px;font-size:11px;font-weight:700;border:none;background:none;color:var(--gray);cursor:pointer;transition:all 0.15s;}
+.density-btn.active{background:var(--dark);color:#fff;}
+.filter-count{font-size:12px;color:var(--gray);font-weight:600;margin-left:auto;}
 
-.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:12px;margin-bottom:16px;}
-.ncard{background:#fff;border-radius:var(--radius);padding:18px;box-shadow:var(--shadow);border-left:4px solid var(--blue);transition:all 0.2s;}
-.ncard:hover{box-shadow:var(--shadow-md);transform:translateY(-1px);}
-.ncard.comandat{border-left-color:var(--orange);}.ncard.livrat{border-left-color:var(--green);}.ncard.anulat{border-left-color:var(--gray);opacity:0.6;}
-.ncard-top{display:flex;justify-content:space-between;align-items:start;margin-bottom:6px;}
-.ncard-mat{font-size:14px;font-weight:800;flex:1;}
-.ncard-badge{padding:3px 10px;border-radius:6px;font-size:11px;font-weight:700;}
-.badge-solicitat{background:#eff6ff;color:var(--blue);}.badge-comandat{background:#fff7ed;color:var(--orange);}.badge-livrat{background:#f0fdf4;color:var(--green);}.badge-anulat{background:var(--gray-bg);color:var(--gray);}
-.ncard-pid{font-size:11px;font-weight:700;color:var(--blue);background:#eff6ff;padding:3px 8px;border-radius:6px;display:inline-block;margin-bottom:6px;}
-.ncard-tags{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:8px;}
-.ncard-tag{font-size:11px;font-weight:700;padding:3px 10px;border-radius:6px;}
-.urg-scazuta{background:var(--gray-bg);color:var(--gray);}.urg-normal{background:#eff6ff;color:var(--blue);}.urg-urgenta{background:#fff7ed;color:var(--orange);}.urg-critica{background:#fef2f2;color:var(--red);}
-.ncard-info{display:grid;grid-template-columns:1fr 1fr;gap:6px;font-size:12px;color:var(--gray);margin-bottom:8px;}
-.ncard-info dt{font-weight:700;color:var(--dark);}
-.ncard-actions{display:flex;gap:6px;padding-top:10px;border-top:1px solid var(--gray-bg);}
-.ncard-actions select{flex:1;padding:8px 12px;border-radius:10px;border:1px solid var(--gray-b);font-size:12px;font-weight:600;font-family:inherit;cursor:pointer;background:#fff;outline:none;}
-.btn-sm{padding:6px 12px;border-radius:8px;border:none;font-size:11px;font-weight:700;cursor:pointer;transition:all 0.2s;}
+/* ACTIVE CHIPS */
+.chips-row{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin-bottom:10px;min-height:24px;}
+.chip{display:inline-flex;align-items:center;gap:6px;padding:4px 10px;background:#eff6ff;color:var(--blue);border:1px solid #dbeafe;border-radius:99px;font-size:11px;font-weight:700;}
+.chip-x{border:none;background:transparent;color:var(--blue);font-size:14px;line-height:1;padding:0;cursor:pointer;}.chip-x:hover{color:var(--red);}
+.chip-clear{background:none;border:none;color:var(--gray);font-size:12px;font-weight:600;text-decoration:underline;cursor:pointer;padding:2px 6px;}.chip-clear:hover{color:var(--red);}
 
-.table-wrap{background:#fff;border-radius:var(--radius);box-shadow:var(--shadow);overflow-x:auto;}
-table{width:100%;border-collapse:collapse;font-size:13px;}
-th{background:var(--dark);color:#fff;padding:12px 14px;text-align:left;font-weight:700;font-size:11px;text-transform:uppercase;letter-spacing:0.5px;white-space:nowrap;}
-td{padding:10px 14px;border-bottom:1px solid var(--gray-bg);}
-tr:hover td{background:rgba(59,130,246,0.03);}
-
-.toast-container{position:fixed;top:20px;right:20px;z-index:300;display:flex;flex-direction:column;gap:8px;}
-.toast{padding:14px 20px;border-radius:12px;color:#fff;font-size:13px;font-weight:600;box-shadow:0 8px 24px rgba(0,0,0,0.15);animation:slideIn 0.3s ease;max-width:380px;}
-.toast.success{background:var(--green);}.toast.error{background:var(--red);}.toast.info{background:var(--blue);}
-@keyframes slideIn{from{transform:translateX(100%);opacity:0}to{transform:translateX(0);opacity:1}}
-
-.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);backdrop-filter:blur(4px);z-index:200;align-items:center;justify-content:center;padding:16px;}.modal-overlay.active{display:flex;}
-.modal{background:#fff;border-radius:20px;width:100%;max-width:520px;max-height:90vh;overflow-y:auto;box-shadow:0 25px 60px rgba(0,0,0,0.3);}
-.modal-head{padding:20px 24px;border-bottom:1px solid var(--gray-b);display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;background:#fff;border-radius:20px 20px 0 0;z-index:1;}
-.modal-title{font-size:18px;font-weight:800;}
-.modal-close{width:32px;height:32px;border-radius:8px;border:none;background:var(--gray-bg);color:var(--gray);font-size:18px;display:flex;align-items:center;justify-content:center;}.modal-close:hover{background:#fef2f2;color:var(--red);}
-.modal-body{padding:24px;}
-.form-group{margin-bottom:16px;}.form-label{display:block;font-size:13px;font-weight:600;color:var(--dark);margin-bottom:6px;}.form-label .req{color:var(--red);}
-.form-input,.form-select,.form-textarea{width:100%;padding:12px 16px;border:2px solid var(--gray-b);border-radius:var(--radius-sm);font-size:14px;font-family:inherit;outline:none;transition:all 0.2s;background:#fff;}.form-input:focus,.form-select:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(59,130,246,0.08);}
-.form-textarea{min-height:60px;resize:vertical;}
-.form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;}@media(max-width:480px){.form-row{grid-template-columns:1fr;}}
-.form-submit{width:100%;padding:14px;background:linear-gradient(135deg,var(--blue),#2563eb);color:#fff;border:none;border-radius:var(--radius-sm);font-size:15px;font-weight:700;cursor:pointer;transition:all 0.3s;}.form-submit:hover{transform:translateY(-1px);}
-.form-submit:disabled{background:var(--gray-l);cursor:not-allowed;}
-
-.bottom-nav{position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1px solid var(--gray-b);box-shadow:0 -4px 20px rgba(0,0,0,0.06);padding:6px 12px;z-index:100;display:flex;gap:4px;}@media(min-width:768px){.bottom-nav{display:none;}}
-.bn-item{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:8px 4px;border-radius:10px;font-size:10px;font-weight:600;color:var(--gray);transition:all 0.2s;gap:2px;}.bn-item.active{color:var(--red);background:#fef2f2;}.bn-item .bn-icon{font-size:20px;}
-.empty-msg{text-align:center;padding:40px;color:var(--gray-l);font-size:14px;}
-
-/* ═══ NECESAR — ierarhic Client → Ofertă → Materiale ═══ */
-.client-card{background:#fff;border-radius:var(--radius);box-shadow:var(--shadow);margin-bottom:14px;overflow:hidden;border:1px solid var(--gray-b);}
-.client-head{display:flex;align-items:center;gap:14px;padding:16px 20px;cursor:pointer;background:linear-gradient(135deg,#fff,#f8fafc);transition:background 0.15s;border:none;width:100%;text-align:left;font-family:inherit;}
-.client-head:hover{background:var(--gray-bg);}
-.client-icon{width:42px;height:42px;border-radius:10px;background:linear-gradient(135deg,#eff6ff,#dbeafe);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;}
+/* CLIENT CARDS — 3-level hierarchy */
+.client-card{background:#fff;border-radius:var(--radius);box-shadow:var(--shadow);margin-bottom:14px;overflow:hidden;border:1px solid var(--gray-b);transition:box-shadow 0.2s;}
+.client-card:hover{box-shadow:var(--shadow-md);}
+.client-head{display:flex;align-items:center;gap:14px;padding:var(--density-pad-client);cursor:pointer;background:linear-gradient(135deg,#fff,#f8fafc);transition:all 0.15s;border:none;width:100%;text-align:left;font-family:inherit;}
+.client-head:hover{background:linear-gradient(135deg,#f8fafc,#eff6ff);}
+.client-icon{width:44px;height:44px;border-radius:12px;background:linear-gradient(135deg,#eff6ff,#dbeafe);color:var(--blue);display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:800;flex-shrink:0;letter-spacing:-0.5px;}
 .client-info{flex:1;min-width:0;}
-.client-name{font-size:15px;font-weight:800;color:var(--dark);letter-spacing:-0.2px;}
-.client-meta{font-size:11px;color:var(--gray);margin-top:2px;display:flex;flex-wrap:wrap;gap:8px;}
-.client-meta .pill{background:var(--gray-bg);padding:2px 8px;border-radius:99px;font-weight:600;}
-.client-chevron{font-size:14px;color:var(--gray-l);transition:transform 0.25s;flex-shrink:0;}
-.client-card.open .client-chevron{transform:rotate(180deg);color:var(--blue);}
-.client-body{display:none;padding:0 16px 16px;border-top:1px solid var(--gray-b);}
+.client-name{font-size:16px;font-weight:800;color:var(--dark);letter-spacing:-0.2px;}
+.client-meta{font-size:11px;color:var(--gray);margin-top:4px;display:flex;flex-wrap:wrap;gap:6px;align-items:center;}
+.client-meta .pill{background:var(--gray-bg);padding:3px 9px;border-radius:99px;font-weight:700;display:inline-flex;align-items:center;gap:4px;}
+.client-meta .pill.ron{background:#fef9c3;color:#854d0e;}
+.client-chevron{width:32px;height:32px;border-radius:50%;background:var(--gray-bg);color:var(--gray);font-size:18px;font-weight:800;display:flex;align-items:center;justify-content:center;transition:all 0.25s;flex-shrink:0;}
+.client-card.open .client-chevron{transform:rotate(180deg);background:#dbeafe;color:var(--blue);}
+.client-body{display:none;padding:0 18px 18px;}
 .client-card.open .client-body{display:block;animation:fadeIn 0.25s ease;}
 @keyframes fadeIn{from{opacity:0;transform:translateY(-4px);}to{opacity:1;transform:translateY(0);}}
 
-.oferta-card{background:var(--gray-bg);border-radius:var(--radius-sm);margin-top:12px;overflow:hidden;border:1px solid var(--gray-b);}
-.oferta-head{display:flex;align-items:center;gap:12px;padding:12px 14px;cursor:pointer;background:#fff;transition:background 0.15s;border:none;width:100%;text-align:left;font-family:inherit;}
-.oferta-head:hover{background:var(--gray-bg);}
+/* OFERTA CARDS — sub-card with vertical color bar */
+.oferta-card{background:#fff;border-radius:var(--radius-sm);margin-top:var(--density-mt-oferta);overflow:hidden;border:1px solid var(--gray-b);position:relative;transition:all 0.15s;}
+.oferta-card::before{content:'';position:absolute;left:0;top:0;bottom:0;width:4px;background:var(--gray-l);}
+.oferta-card.proiectare::before{background:linear-gradient(180deg,var(--teal),#0891b2);}
+.oferta-card.executie::before{background:linear-gradient(180deg,var(--orange),#ea580c);}
+.oferta-card:hover{border-color:var(--gray-xl);box-shadow:var(--shadow);}
+.oferta-head{display:flex;align-items:center;gap:12px;padding:var(--density-pad-oferta);padding-left:18px;cursor:pointer;background:#fff;transition:background 0.15s;border:none;width:100%;text-align:left;font-family:inherit;}
+.oferta-head:hover{background:#f8fafc;}
 .oferta-codes{display:flex;flex-direction:column;gap:2px;flex:1;min-width:0;}
 .oferta-cod{font-size:13px;font-weight:800;color:var(--purple);font-family:'Courier New',monospace;}
-.oferta-proj{font-size:11px;color:var(--gray);}
+.oferta-proj{font-size:11px;color:var(--gray);overflow:hidden;text-overflow:ellipsis;display:-webkit-box;-webkit-line-clamp:1;-webkit-box-orient:vertical;}
 .oferta-proj strong{color:var(--blue);font-weight:700;}
 .oferta-status{font-size:10px;font-weight:700;padding:3px 9px;border-radius:99px;text-transform:uppercase;letter-spacing:0.3px;flex-shrink:0;}
 .oferta-status.proiectare{background:#f0fdfa;color:var(--teal);}
 .oferta-status.executie{background:#fff7ed;color:var(--orange);}
-.oferta-total{font-size:13px;font-weight:800;color:var(--dark);flex-shrink:0;}
-.oferta-actions{display:flex;gap:6px;flex-shrink:0;}
-.oferta-actions .btn-copy-all{padding:6px 10px;border-radius:8px;border:1px solid var(--blue);background:#eff6ff;color:var(--blue);font-size:11px;font-weight:700;cursor:pointer;transition:all 0.15s;font-family:inherit;}
-.oferta-actions .btn-copy-all:hover{background:var(--blue);color:#fff;}
-.oferta-chevron{font-size:13px;color:var(--gray-l);transition:transform 0.25s;flex-shrink:0;}
-.oferta-card.open .oferta-chevron{transform:rotate(180deg);color:var(--blue);}
-.oferta-body{display:none;padding:8px;background:var(--gray-bg);}
-.oferta-card.open .oferta-body{display:block;}
-.oferta-obiectiv{padding:8px 14px;background:#fff;border-bottom:1px solid var(--gray-b);font-size:12px;color:var(--gray);}
-.oferta-obiectiv strong{color:var(--dark);font-weight:700;}
+.oferta-stat-pill{font-size:10px;font-weight:700;color:var(--gray);background:var(--gray-bg);padding:3px 8px;border-radius:99px;flex-shrink:0;}
+.oferta-total{font-size:13px;font-weight:800;color:var(--dark);flex-shrink:0;font-variant-numeric:tabular-nums;}
+.oferta-total small{color:var(--gray);font-size:10px;font-weight:600;}
 
-.mat-table{width:100%;border-collapse:collapse;background:#fff;border-radius:8px;overflow:hidden;font-size:13px;}
-.mat-table th{background:var(--dark);color:#fff;padding:9px 12px;text-align:left;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;white-space:nowrap;}
-.mat-table td{padding:9px 12px;border-bottom:1px solid var(--gray-bg);vertical-align:middle;}
-.mat-table tr:last-child td{border-bottom:none;}
-.mat-table tr:hover td{background:#f8fafc;}
-.mat-cod{font-family:'Courier New',monospace;font-weight:700;color:var(--dark);background:#fef9c3;padding:3px 8px;border-radius:5px;display:inline-block;}
-.mat-cod.empty{background:var(--gray-bg);color:var(--gray-l);font-style:italic;}
-.mat-cant{font-weight:800;color:var(--dark);text-align:right;font-variant-numeric:tabular-nums;}
+/* COPY DROPDOWN */
+.copy-wrap{position:relative;flex-shrink:0;}
+.copy-btn{padding:6px 10px;border-radius:8px;border:1px solid var(--blue);background:#eff6ff;color:var(--blue);font-size:11px;font-weight:700;cursor:pointer;transition:all 0.15s;font-family:inherit;display:inline-flex;align-items:center;gap:5px;}
+.copy-btn:hover{background:var(--blue);color:#fff;}
+.copy-menu{display:none;position:absolute;top:calc(100% + 4px);right:0;background:#fff;border:1px solid var(--gray-b);border-radius:10px;box-shadow:var(--shadow-lg);min-width:240px;z-index:50;padding:4px;}
+.copy-wrap.open .copy-menu{display:block;animation:fadeIn 0.15s ease;}
+.copy-menu-item{display:flex;align-items:center;justify-content:space-between;padding:8px 12px;border-radius:7px;font-size:12px;color:var(--dark);cursor:pointer;border:none;background:none;width:100%;text-align:left;font-family:inherit;font-weight:600;}
+.copy-menu-item:hover{background:#eff6ff;color:var(--blue);}
+.copy-menu-item.default{background:var(--gray-bg);}
+.copy-menu-item .star{color:var(--yellow);font-size:11px;}
+.copy-menu-divider{height:1px;background:var(--gray-bg);margin:4px 8px;}
+.copy-menu-hint{padding:6px 12px 4px;font-size:10px;color:var(--gray-l);font-weight:600;text-transform:uppercase;letter-spacing:0.5px;}
+
+.oferta-chevron{width:28px;height:28px;border-radius:50%;background:var(--gray-bg);color:var(--gray);font-size:16px;font-weight:800;display:flex;align-items:center;justify-content:center;transition:all 0.25s;flex-shrink:0;}
+.oferta-card.open .oferta-chevron{transform:rotate(180deg);background:#dbeafe;color:var(--blue);}
+.oferta-body{display:none;padding:8px;background:linear-gradient(180deg,#f8fafc,#fff);}
+.oferta-card.open .oferta-body{display:block;}
+.oferta-obiectiv-detail{padding:8px 14px;background:#fff;border-radius:8px;margin-bottom:8px;font-size:12px;color:var(--gray);}
+.oferta-obiectiv-detail strong{color:var(--dark);font-weight:700;}
+
+/* MAT TABLE */
+.mat-table-wrap{background:#fff;border-radius:8px;overflow:hidden;border:1px solid var(--gray-b);}
+.mat-table{width:100%;border-collapse:collapse;font-size:13px;}
+.mat-table thead th{background:var(--dark);color:#fff;padding:10px 12px;text-align:left;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;white-space:nowrap;position:sticky;top:0;z-index:1;}
+.mat-table td{padding:var(--density-pad-row);border-bottom:1px solid var(--gray-bg);vertical-align:middle;}
+.mat-table tbody tr:nth-child(even) td{background:#fafbfc;}
+.mat-table tbody tr:last-child td{border-bottom:none;}
+.mat-table tbody tr:hover td{background:#eff6ff!important;}
+.mat-cod{font-family:'Courier New',monospace;font-weight:700;color:var(--dark);background:#fef9c3;padding:3px 8px;border-radius:5px;display:inline-block;font-size:12px;}
+.mat-cod.empty{background:var(--gray-bg);color:var(--gray-l);font-style:italic;font-family:inherit;}
+.mat-denumire{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;line-height:1.35;}
+.mat-cant{font-weight:800;color:var(--dark);text-align:right;font-variant-numeric:tabular-nums;font-size:14px;}
 .mat-um{color:var(--gray);font-size:11px;text-transform:lowercase;}
-.btn-copy{padding:5px 10px;border-radius:6px;border:1px solid var(--gray-b);background:#fff;color:var(--gray);font-size:11px;font-weight:600;cursor:pointer;transition:all 0.15s;font-family:inherit;}
+.btn-copy{padding:4px 10px;border-radius:6px;border:1px solid var(--gray-b);background:#fff;color:var(--gray);font-size:11px;font-weight:600;cursor:pointer;transition:all 0.15s;font-family:inherit;}
 .btn-copy:hover{border-color:var(--blue);color:var(--blue);background:#eff6ff;}
 .btn-copy.copied{background:var(--green);color:#fff;border-color:var(--green);}
-@media(max-width:640px){.oferta-head{flex-wrap:wrap;}.oferta-total{order:5;width:100%;text-align:right;}.oferta-actions{order:6;width:100%;justify-content:flex-end;}}
+mark{background:#fef08a;color:var(--dark);padding:0 2px;border-radius:3px;font-weight:inherit;}
+
+/* SKELETON LOADERS */
+.skeleton-card{background:#fff;border-radius:var(--radius);padding:18px 22px;margin-bottom:14px;box-shadow:var(--shadow);}
+.skel{background:linear-gradient(90deg,var(--gray-bg) 0%,#f8fafc 50%,var(--gray-bg) 100%);background-size:200% 100%;animation:skelShift 1.4s infinite;border-radius:6px;}
+@keyframes skelShift{0%{background-position:200% 0}100%{background-position:-200% 0}}
+.skel-row{display:flex;align-items:center;gap:14px;}
+.skel-circle{width:44px;height:44px;border-radius:12px;flex-shrink:0;}
+.skel-line{height:14px;flex:1;}
+.skel-line.short{flex:0 0 30%;}.skel-line.tiny{flex:0 0 15%;height:10px;}
+
+/* EMPTY STATE */
+.empty-state{text-align:center;padding:48px 24px;background:#fff;border-radius:var(--radius);box-shadow:var(--shadow);}
+.empty-icon{font-size:48px;margin-bottom:12px;opacity:0.5;}
+.empty-title{font-size:16px;font-weight:800;color:var(--dark);margin-bottom:6px;}
+.empty-msg{color:var(--gray-l);font-size:13px;}
+.empty-action{margin-top:16px;}
+
+/* TOAST */
+.toast-container{position:fixed;top:20px;right:20px;z-index:300;display:flex;flex-direction:column;gap:8px;}
+.toast{padding:12px 18px;border-radius:12px;color:#fff;font-size:13px;font-weight:600;box-shadow:0 8px 24px rgba(0,0,0,0.15);animation:slideIn 0.3s ease;max-width:380px;}
+.toast.success{background:var(--green);}.toast.error{background:var(--red);}.toast.info{background:var(--blue);}
+@keyframes slideIn{from{transform:translateX(100%);opacity:0}to{transform:translateX(0);opacity:1}}
+
+/* BOTTOM NAV */
+.bottom-nav{position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1px solid var(--gray-b);box-shadow:0 -4px 20px rgba(0,0,0,0.06);padding:6px 12px;z-index:100;display:flex;gap:4px;}@media(min-width:768px){.bottom-nav{display:none;}}
+.bn-item{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:8px 4px;border-radius:10px;font-size:10px;font-weight:600;color:var(--gray);transition:all 0.2s;gap:2px;}.bn-item.active{color:var(--red);background:#fef2f2;}.bn-item .bn-icon{font-size:20px;}
 .footer{text-align:center;color:var(--gray-xl);font-size:11px;padding:24px 0 100px;}
 .loading-bar{position:fixed;top:0;left:0;right:0;height:3px;z-index:400;display:none;}.loading-bar.active{display:block;}.loading-bar::after{content:'';display:block;width:30%;height:100%;background:var(--red);border-radius:2px;animation:loadSlide 1.2s infinite ease-in-out;}
 @keyframes loadSlide{0%{margin-left:-30%}100%{margin-left:100%}}
+
+/* MOBILE */
+@media(max-width:640px){
+  .oferta-head{flex-wrap:wrap;}
+  .oferta-status,.oferta-stat-pill{order:5;}
+  .oferta-total{order:6;width:100%;text-align:right;margin-top:4px;}
+  .copy-wrap{order:7;width:100%;margin-top:4px;}
+  .copy-btn{width:100%;justify-content:center;}
+  .copy-menu{right:auto;left:0;width:100%;}
+  .tb-btn .kbd{display:none;}
+  .kbd-hint{display:none;}
+}
 </style>
 </head>
 <body>
@@ -155,28 +198,45 @@ tr:hover td{background:rgba(59,130,246,0.03);}
         <div>
             <a href="../admin.html" class="page-back">← Dashboard</a>
             <div class="page-title">🛒 Necesar Materiale</div>
-            <div class="page-subtitle" id="syncStatus"><span class="sync-indicator sync-off"></span>Date locale (demo)</div>
+            <div class="page-subtitle">
+                <span id="syncStatus"><span class="sync-indicator sync-off"></span>Date locale</span>
+                <span class="sub-sep">·</span>
+                <span id="lastRefreshLabel">—</span>
+            </div>
         </div>
         <div class="page-actions">
-            <a href="materiale.html" class="page-btn secondary">📦 Stocuri</a>
-            <button class="page-btn secondary" onclick="refreshData()">🔄 Reîncarcă</button>
+            <a href="materiale.html" class="page-btn secondary" title="Modul Stocuri">📦 Stocuri</a>
+            <button class="page-btn secondary" id="refreshBtn" onclick="refreshData()" title="Reîncarcă datele"><span class="spin-icon">🔄</span> Reîncarcă</button>
         </div>
     </div>
 
     <div class="summary" id="summary"></div>
 
-    <div class="filters">
-        <input type="text" class="filter-search" id="searchInput" placeholder="🔍 Caută client, proiect, cod, denumire..." oninput="render()">
-        <select class="filter-select" id="filterStatus" onchange="render()">
+    <div class="toolbar">
+        <div class="search-wrap" id="searchWrap">
+            <span class="search-icon">🔍</span>
+            <input type="text" class="filter-search" id="searchInput" placeholder="Caută client, proiect, cod, denumire..." aria-label="Căutare" autocomplete="off">
+            <span class="kbd-hint">/</span>
+            <button class="search-clear" type="button" onclick="clearSearch()" title="Șterge (Esc)" aria-label="Șterge căutarea">✕</button>
+        </div>
+        <select class="filter-select" id="filterStatus" onchange="onFilterChange()" aria-label="Filtru status">
             <option value="">Proiectare + Execuție</option>
             <option value="Proiectare">Doar Proiectare</option>
             <option value="Executie">Doar Execuție</option>
         </select>
-        <div class="filter-count" id="filterCount"></div>
+        <button class="tb-btn" type="button" onclick="expandAll()" title="Expandează tot (E)" aria-label="Expandează tot">⤢ Expand all <span class="kbd">E</span></button>
+        <button class="tb-btn" type="button" onclick="collapseAll()" title="Restrânge tot (C)" aria-label="Restrânge tot">⤡ Collapse all <span class="kbd">C</span></button>
+        <div class="density-toggle" role="group" aria-label="Densitate vizualizare">
+            <button class="density-btn" type="button" data-density="comfortable" onclick="setDensity('comfortable')" title="Vizualizare confortabilă">⊞ Comfortable</button>
+            <button class="density-btn" type="button" data-density="compact" onclick="setDensity('compact')" title="Vizualizare compactă">≡ Compact</button>
+        </div>
+        <span class="filter-count" id="filterCount"></span>
     </div>
 
-    <div id="necesarView"><div class="empty-msg">⏳ Se încarcă necesarul...</div></div>
-    <div class="footer">Portal CSSI 3.0 · Necesar Materiale v4.0 · Materiale din ofertele acceptate ale proiectelor în Proiectare și Execuție</div>
+    <div class="chips-row" id="chipsRow"></div>
+
+    <div id="necesarView"></div>
+    <div class="footer">Portal CSSI 3.0 · Necesar Materiale v5.0 · Materiale din ofertele acceptate (Proiectare + Execuție) · <kbd style="font-family:Courier;background:var(--gray-bg);padding:1px 5px;border-radius:4px">/</kbd> caută · <kbd style="font-family:Courier;background:var(--gray-bg);padding:1px 5px;border-radius:4px">E</kbd>/<kbd style="font-family:Courier;background:var(--gray-bg);padding:1px 5px;border-radius:4px">C</kbd> expand/collapse · <kbd style="font-family:Courier;background:var(--gray-bg);padding:1px 5px;border-radius:4px">Esc</kbd> reset</div>
 </div>
 
 <div class="bottom-nav">
@@ -187,147 +247,189 @@ tr:hover td{background:rgba(59,130,246,0.03);}
     <a href="financiar.html" class="bn-item"><span class="bn-icon">📄</span>Facturi</a>
 </div>
 
-
 <script>
 // ═══ AUTH GATE ═══
 var role = sessionStorage.getItem('cssi-role');
 if (!role) { window.location.href = '../admin.html'; }
 
-// ═══ STATE ═══
+// ═══ CONSTANTS ═══
 var API_DB = '/admin/api.php';
-var DATA = []; // [{client_id, client_nume, oferte:[{oferta_id, proiect_id, ...linii:[{cod,denumire,um,cantitate}]}]}]
-var isLive = false;
+var LS_KEYS = { expanded:'nm.expanded', density:'nm.density', copyFmt:'nm.copyFmt' };
+var COPY_FORMATS = {
+    'code':     { label:'Doar coduri',                    desc:'cod\\n',                       fn:function(l){return l.cod;} },
+    'code-qty': { label:'Cod + Cantitate (Tab)',          desc:'cod<TAB>cant\\n (Excel-ready)',fn:function(l){return l.cod+'\t'+fmtQty(l.cantitate);} },
+    'full':     { label:'Cod + Denumire + Cantitate',     desc:'cod<TAB>denumire<TAB>cant\\n', fn:function(l){return l.cod+'\t'+(l.denumire||'').replace(/\s+/g,' ')+'\t'+fmtQty(l.cantitate);} },
+    'csv':      { label:'CSV (cu ghilimele)',             desc:'"cod","denumire","cant","UM"', fn:function(l){return '"'+(l.cod||'').replace(/"/g,'""')+'","'+(l.denumire||'').replace(/"/g,'""')+'","'+fmtQty(l.cantitate)+'","'+(l.um||'buc')+'"';} }
+};
+
+// ═══ STATE ═══
+var STATE = {
+    data: [],
+    loaded: false,
+    isLive: false,
+    lastRefresh: null,
+    expanded: loadJSON(LS_KEYS.expanded, {}),
+    density: localStorage.getItem(LS_KEYS.density) || 'comfortable',
+    copyFmt: localStorage.getItem(LS_KEYS.copyFmt) || 'code-qty',
+    searchDebounce: null,
+};
 
 // ═══ HELPERS ═══
+function loadJSON(k, def){ try{ var s=localStorage.getItem(k); return s?JSON.parse(s):def; }catch(e){return def;} }
+function saveJSON(k, v){ try{ localStorage.setItem(k, JSON.stringify(v)); }catch(e){} }
 function esc(s){if(s==null)return '';var d=document.createElement('div');d.textContent=s;return d.innerHTML;}
+function highlight(str, q){
+    var safe = esc(str);
+    if(!q) return safe;
+    var pattern = q.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    try{
+        var re = new RegExp('('+pattern+')', 'gi');
+        return safe.replace(re, '<mark>$1</mark>');
+    }catch(e){return safe;}
+}
 function fmt(n){return Number(n||0).toLocaleString('ro-RO',{maximumFractionDigits:2});}
 function fmtQty(n){var v=Number(n||0);return v%1===0?v.toString():v.toFixed(2);}
 function showLoading(s){document.getElementById('loadBar').classList.toggle('active',s);}
-function toast(msg,type){var c=document.getElementById('toastContainer');var t=document.createElement('div');t.className='toast '+(type||'info');t.textContent=msg;c.appendChild(t);setTimeout(function(){t.style.opacity='0';t.style.transform='translateX(100px)';t.style.transition='all 0.3s'},2500);setTimeout(function(){t.remove()},3000);}
-function updateSync(state){var el=document.getElementById('syncStatus');if(state==='loading')el.innerHTML='<span class="sync-indicator sync-loading"></span>Se încarcă...';else if(isLive)el.innerHTML='<span class="sync-indicator sync-ok"></span>MySQL · '+countTotalLinii()+' materiale';else el.innerHTML='<span class="sync-indicator sync-off"></span>Indisponibil';}
-function countTotalLinii(){var n=0;DATA.forEach(function(c){c.oferte.forEach(function(o){n+=o.linii.length});});return n;}
+function toast(msg, type){
+    var c=document.getElementById('toastContainer');
+    var t=document.createElement('div');t.className='toast '+(type||'info');t.textContent=msg;
+    c.appendChild(t);
+    setTimeout(function(){t.style.opacity='0';t.style.transform='translateX(100px)';t.style.transition='all 0.3s'},2500);
+    setTimeout(function(){t.remove()},3000);
+}
+function countTotalLinii(){var n=0;STATE.data.forEach(function(c){c.oferte.forEach(function(o){n+=o.linii.length});});return n;}
+function relTime(d){
+    if(!d) return '—';
+    var diff = Math.floor((Date.now()-d)/1000);
+    if(diff<5) return 'acum';
+    if(diff<60) return 'acum '+diff+'s';
+    if(diff<3600) return 'acum '+Math.floor(diff/60)+'m';
+    if(diff<86400) return 'acum '+Math.floor(diff/3600)+'h';
+    return 'acum '+Math.floor(diff/86400)+'z';
+}
+function debounce(fn, ms){
+    return function(){
+        var args=arguments, ctx=this;
+        clearTimeout(STATE.searchDebounce);
+        STATE.searchDebounce = setTimeout(function(){fn.apply(ctx,args)}, ms);
+    };
+}
+
+// ═══ SYNC + STATUS ═══
+function updateSync(state){
+    var el=document.getElementById('syncStatus');
+    if(state==='loading') el.innerHTML='<span class="sync-indicator sync-loading"></span>Se încarcă...';
+    else if(STATE.isLive) el.innerHTML='<span class="sync-indicator sync-ok"></span>MySQL · '+countTotalLinii()+' materiale';
+    else el.innerHTML='<span class="sync-indicator sync-off"></span>Indisponibil';
+    document.getElementById('lastRefreshLabel').textContent = STATE.lastRefresh ? 'Actualizat '+relTime(STATE.lastRefresh) : '—';
+}
+setInterval(function(){ if(STATE.lastRefresh) document.getElementById('lastRefreshLabel').textContent='Actualizat '+relTime(STATE.lastRefresh); }, 15000);
 
 // ═══ FETCH ═══
 function refreshData(){
+    var btn=document.getElementById('refreshBtn');btn.classList.add('spinning');
     updateSync('loading');showLoading(true);
+    if(!STATE.loaded) renderSkeletons();
     return fetch(API_DB+'?action=getNecesarMateriale&_t='+Date.now())
         .then(function(r){return r.json()})
         .then(function(res){
             if(!res.success) throw new Error(res.error||'Eroare server');
-            DATA = Array.isArray(res.data)?res.data:[];
-            isLive = true;
+            STATE.data = Array.isArray(res.data)?res.data:[];
+            STATE.isLive = true;STATE.loaded=true;STATE.lastRefresh=Date.now();
             updateSync();render();
         })
         .catch(function(e){
-            isLive = false;DATA=[];
+            STATE.isLive = false;
             updateSync();render();
             toast('❌ Nu s-a putut încărca: '+(e.message||e),'error');
         })
-        .finally(function(){showLoading(false)});
+        .finally(function(){ showLoading(false);btn.classList.remove('spinning'); });
 }
 
-// ═══ FILTRARE ═══
+// ═══ FILTER ═══
+function getFilters(){
+    return {
+        q: (document.getElementById('searchInput').value||'').toLowerCase().trim(),
+        status: document.getElementById('filterStatus').value,
+    };
+}
 function getFiltered(){
-    var q = (document.getElementById('searchInput').value||'').toLowerCase().trim();
-    var fs = document.getElementById('filterStatus').value;
+    var f = getFilters();
     var out = [];
-    DATA.forEach(function(c){
+    STATE.data.forEach(function(c){
         var oferteOK = c.oferte.filter(function(o){
-            if(fs && o.proiect_status !== fs) return false;
-            if(!q) return true;
-            // Match pe client, proiect, ofertă, sau orice cod/denumire din linii
-            if(c.client_nume.toLowerCase().includes(q)) return true;
-            if((o.proiect_id||'').toLowerCase().includes(q)) return true;
-            if((o.oferta_id||'').toLowerCase().includes(q)) return true;
-            if((o.obiectiv||'').toLowerCase().includes(q)) return true;
+            if(f.status && o.proiect_status !== f.status) return false;
+            if(!f.q) return true;
+            if(c.client_nume.toLowerCase().includes(f.q)) return true;
+            if((o.proiect_id||'').toLowerCase().includes(f.q)) return true;
+            if((o.oferta_id||'').toLowerCase().includes(f.q)) return true;
+            if((o.obiectiv||'').toLowerCase().includes(f.q)) return true;
             return o.linii.some(function(l){
-                return (l.cod||'').toLowerCase().includes(q) || (l.denumire||'').toLowerCase().includes(q);
+                return (l.cod||'').toLowerCase().includes(f.q) || (l.denumire||'').toLowerCase().includes(f.q);
             });
         });
         if(oferteOK.length){
-            out.push({
-                client_id: c.client_id, client_nume: c.client_nume,
-                oferte: oferteOK
-            });
+            out.push({ client_id:c.client_id, client_nume:c.client_nume, oferte:oferteOK });
         }
     });
     return out;
 }
 
-// ═══ RENDER ═══
-function render(){
-    renderSummary();
-    var filtered = getFiltered();
-    var totalOferte = filtered.reduce(function(s,c){return s+c.oferte.length},0);
-    var totalLinii = filtered.reduce(function(s,c){return s+c.oferte.reduce(function(ss,o){return ss+o.linii.length},0)},0);
-    document.getElementById('filterCount').textContent = filtered.length+' clienți · '+totalOferte+' oferte · '+totalLinii+' materiale';
-
-    var view = document.getElementById('necesarView');
-    if(!DATA.length){
-        view.innerHTML = '<div class="empty-msg">Niciun proiect activ în Proiectare/Execuție cu oferte acceptate.</div>';
-        return;
-    }
-    if(!filtered.length){
-        view.innerHTML = '<div class="empty-msg">Niciun rezultat pentru filtrele curente.</div>';
-        return;
-    }
-    var html = '';
-    filtered.forEach(function(c, ci){
-        var totalCli = c.oferte.reduce(function(s,o){return s+o.linii.length},0);
-        var initials = (c.client_nume||'?').split(/\s+/).map(function(w){return w[0]}).join('').slice(0,2).toUpperCase();
-        html += '<div class="client-card" id="cli-'+ci+'">';
-        html += '<button class="client-head" type="button" onclick="toggleClient('+ci+')">';
-        html += '<div class="client-icon">'+initials+'</div>';
-        html += '<div class="client-info"><div class="client-name">'+esc(c.client_nume)+'</div>';
-        html += '<div class="client-meta"><span class="pill">📋 '+c.oferte.length+' ofert'+(c.oferte.length===1?'ă':'e')+'</span><span class="pill">📦 '+totalCli+' materiale</span></div></div>';
-        html += '<div class="client-chevron">▾</div></button>';
-        html += '<div class="client-body">';
-        c.oferte.forEach(function(o, oi){
-            var statusCls = (o.proiect_status||'').toLowerCase();
-            html += '<div class="oferta-card" id="of-'+ci+'-'+oi+'">';
-            html += '<button class="oferta-head" type="button" onclick="toggleOferta('+ci+','+oi+')">';
-            html += '<div class="oferta-codes">';
-            html += '<div class="oferta-cod">'+esc(o.oferta_id||'?')+'</div>';
-            html += '<div class="oferta-proj">📌 <strong>'+esc(o.proiect_id||'?')+'</strong>';
-            if(o.obiectiv) html += ' · '+esc(o.obiectiv);
-            html += '</div></div>';
-            html += '<span class="oferta-status '+statusCls+'">'+esc(o.proiect_status||'')+'</span>';
-            html += '<span class="oferta-total">'+fmt(o.total_cu_tva)+' RON</span>';
-            html += '<div class="oferta-actions"><button type="button" class="btn-copy-all" onclick="event.stopPropagation();copyAllCodes('+ci+','+oi+')">📋 Copy codes</button></div>';
-            html += '<div class="oferta-chevron">▾</div></button>';
-            html += '<div class="oferta-body">';
-            if(o.linii.length){
-                html += '<table class="mat-table"><thead><tr><th style="width:30%">Cod produs</th><th>Denumire</th><th style="width:60px">UM</th><th style="width:80px;text-align:right">Cant.</th><th style="width:80px"></th></tr></thead><tbody>';
-                o.linii.forEach(function(l, li){
-                    var codDisplay = l.cod ? '<span class="mat-cod">'+esc(l.cod)+'</span>' : '<span class="mat-cod empty">— fără cod —</span>';
-                    html += '<tr>';
-                    html += '<td>'+codDisplay+'</td>';
-                    html += '<td>'+esc(l.denumire)+'</td>';
-                    html += '<td class="mat-um">'+esc(l.um||'buc')+'</td>';
-                    html += '<td class="mat-cant">'+fmtQty(l.cantitate)+'</td>';
-                    html += '<td>'+(l.cod?'<button type="button" class="btn-copy" onclick="copyCode(this,\''+esc(l.cod).replace(/'/g,"\\'")+'\')">📋 Copy</button>':'')+'</td>';
-                    html += '</tr>';
-                });
-                html += '</tbody></table>';
-            } else {
-                html += '<div class="empty-msg" style="padding:20px">Nicio linie de echipament</div>';
-            }
-            html += '</div></div>';
-        });
-        html += '</div></div>';
+// ═══ EXPAND/COLLAPSE STATE ═══
+function isOpen(key){ return !!STATE.expanded[key]; }
+function setOpen(key, v){ if(v) STATE.expanded[key]=true; else delete STATE.expanded[key]; saveJSON(LS_KEYS.expanded, STATE.expanded); }
+function toggleClient(cid){ var key='c:'+cid; setOpen(key, !isOpen(key)); var el=document.getElementById('cli-'+cid); if(el){ el.classList.toggle('open'); var btn=el.querySelector('.client-head'); if(btn) btn.setAttribute('aria-expanded', isOpen(key)?'true':'false'); } }
+function toggleOferta(cid, oid){ var key='o:'+cid+'|'+oid; setOpen(key, !isOpen(key)); var el=document.getElementById('of-'+cid+'-'+oid); if(el){ el.classList.toggle('open'); var btn=el.querySelector('.oferta-head'); if(btn) btn.setAttribute('aria-expanded', isOpen(key)?'true':'false'); } }
+function expandAll(){
+    getFiltered().forEach(function(c){
+        STATE.expanded['c:'+c.client_id] = true;
+        c.oferte.forEach(function(o){ STATE.expanded['o:'+c.client_id+'|'+o.oferta_id] = true; });
     });
-    view.innerHTML = html;
+    saveJSON(LS_KEYS.expanded, STATE.expanded);render();
+    toast('Toate cardurile expandate','info');
+}
+function collapseAll(){ STATE.expanded={}; saveJSON(LS_KEYS.expanded, {}); render(); toast('Toate cardurile restrânse','info'); }
+
+// ═══ DENSITY ═══
+function setDensity(d){
+    STATE.density=d; localStorage.setItem(LS_KEYS.density, d);
+    document.body.classList.toggle('compact', d==='compact');
+    document.querySelectorAll('.density-btn').forEach(function(b){b.classList.toggle('active', b.dataset.density===d);});
+}
+
+// ═══ RENDER ═══
+function renderSkeletons(){
+    var view=document.getElementById('necesarView');
+    var html='';
+    for(var i=0;i<3;i++){
+        html += '<div class="skeleton-card"><div class="skel-row"><div class="skel skel-circle"></div><div style="flex:1"><div class="skel skel-line short" style="margin-bottom:8px"></div><div class="skel skel-line tiny"></div></div></div></div>';
+    }
+    view.innerHTML=html;
+}
+
+function renderChips(){
+    var f=getFilters();
+    var row=document.getElementById('chipsRow');
+    var chips=[];
+    if(f.q) chips.push({label:'Căutare: "'+esc(f.q)+'"', clear:'clearSearch()'});
+    if(f.status) chips.push({label:'Status: '+esc(f.status), clear:'clearStatus()'});
+    if(!chips.length){ row.innerHTML=''; return; }
+    var html = chips.map(function(c){return '<span class="chip">'+c.label+' <button class="chip-x" onclick="'+c.clear+'" title="Elimină filtrul" aria-label="Elimină">×</button></span>';}).join('');
+    html += '<button class="chip-clear" onclick="clearAllFilters()">Șterge toate filtrele</button>';
+    row.innerHTML = html;
 }
 
 function renderSummary(){
-    var clienti = DATA.length;
-    var totalOferte = DATA.reduce(function(s,c){return s+c.oferte.length},0);
-    var totalMat = countTotalLinii();
-    var totalQty = 0, totalVal = 0;
-    DATA.forEach(function(c){c.oferte.forEach(function(o){
-        totalVal += Number(o.total_cu_tva)||0;
-        o.linii.forEach(function(l){totalQty += Number(l.cantitate)||0});
-    })});
+    var clienti = STATE.data.length;
+    var totalOferte=0, totalMat=0, totalQty=0, totalVal=0;
+    STATE.data.forEach(function(c){
+        totalOferte += c.oferte.length;
+        c.oferte.forEach(function(o){
+            totalVal += Number(o.total_cu_tva)||0;
+            totalMat += o.linii.length;
+            o.linii.forEach(function(l){totalQty += Number(l.cantitate)||0});
+        });
+    });
     document.getElementById('summary').innerHTML =
         '<div class="s-item"><div class="s-icon" style="background:#eff6ff">🏢</div><div><div class="s-val" style="color:var(--blue)">'+clienti+'</div><div class="s-label">Clienți activi</div></div></div>'+
         '<div class="s-item"><div class="s-icon" style="background:#f5f3ff">📋</div><div><div class="s-val" style="color:var(--purple)">'+totalOferte+'</div><div class="s-label">Oferte acceptate</div></div></div>'+
@@ -336,9 +438,100 @@ function renderSummary(){
         '<div class="s-item"><div class="s-icon" style="background:#fef2f2">💰</div><div><div class="s-val" style="color:var(--red)">'+fmt(totalVal)+'</div><div class="s-label">Valoare totală RON</div></div></div>';
 }
 
-// ═══ INTERACȚIUNI ═══
-function toggleClient(ci){var el=document.getElementById('cli-'+ci);if(el)el.classList.toggle('open');}
-function toggleOferta(ci,oi){var el=document.getElementById('of-'+ci+'-'+oi);if(el)el.classList.toggle('open');}
+function renderEmpty(view, why){
+    var html;
+    if(why==='no-data'){
+        html = '<div class="empty-state"><div class="empty-icon">📭</div><div class="empty-title">Niciun proiect activ</div><div class="empty-msg">Nu există proiecte în Proiectare/Execuție cu oferte acceptate.</div></div>';
+    } else {
+        html = '<div class="empty-state"><div class="empty-icon">🔍</div><div class="empty-title">Niciun rezultat</div><div class="empty-msg">Nimic nu corespunde filtrelor curente.</div><div class="empty-action"><button class="tb-btn" onclick="clearAllFilters()">Șterge toate filtrele</button></div></div>';
+    }
+    view.innerHTML = html;
+}
+
+function render(){
+    renderSummary();
+    renderChips();
+    var f = getFilters();
+    var filtered = getFiltered();
+    var totalOferte = filtered.reduce(function(s,c){return s+c.oferte.length},0);
+    var totalLinii = filtered.reduce(function(s,c){return s+c.oferte.reduce(function(ss,o){return ss+o.linii.length},0)},0);
+    document.getElementById('filterCount').textContent = filtered.length+' clienți · '+totalOferte+' oferte · '+totalLinii+' materiale';
+
+    var view = document.getElementById('necesarView');
+    if(!STATE.loaded){ renderSkeletons(); return; }
+    if(!STATE.data.length){ renderEmpty(view, 'no-data'); return; }
+    if(!filtered.length){ renderEmpty(view, 'no-match'); return; }
+
+    var html = '';
+    filtered.forEach(function(c){
+        var clientKey = 'c:'+c.client_id;
+        var clientOpen = isOpen(clientKey);
+        var totalMatCli = c.oferte.reduce(function(s,o){return s+o.linii.length},0);
+        var totalRonCli = c.oferte.reduce(function(s,o){return s+(Number(o.total_cu_tva)||0)},0);
+        var initials = (c.client_nume||'?').split(/\s+/).filter(Boolean).map(function(w){return w[0]}).join('').slice(0,2).toUpperCase();
+        var clientId = 'cli-'+c.client_id;
+        var bodyId = 'cli-body-'+c.client_id;
+        html += '<div class="client-card'+(clientOpen?' open':'')+'" id="'+clientId+'">';
+        html += '<button class="client-head" type="button" aria-expanded="'+(clientOpen?'true':'false')+'" aria-controls="'+bodyId+'" onclick="toggleClient(\''+esc(c.client_id)+'\')">';
+        html += '<div class="client-icon">'+esc(initials)+'</div>';
+        html += '<div class="client-info">';
+        html += '<div class="client-name">'+highlight(c.client_nume, f.q)+'</div>';
+        html += '<div class="client-meta">';
+        html += '<span class="pill">📋 '+c.oferte.length+' ofert'+(c.oferte.length===1?'ă':'e')+'</span>';
+        html += '<span class="pill">📦 '+totalMatCli+' materiale</span>';
+        html += '<span class="pill ron">💰 '+fmt(totalRonCli)+' RON</span>';
+        html += '</div></div>';
+        html += '<div class="client-chevron" aria-hidden="true">▾</div></button>';
+        html += '<div class="client-body" id="'+bodyId+'">';
+        c.oferte.forEach(function(o){
+            var ofKey = 'o:'+c.client_id+'|'+o.oferta_id;
+            var ofOpen = isOpen(ofKey);
+            var statusCls = (o.proiect_status||'').toLowerCase();
+            var ofId = 'of-'+c.client_id+'-'+o.oferta_id;
+            var ofBodyId = 'of-body-'+c.client_id+'-'+o.oferta_id;
+            var ofKeyJs = c.client_id+"','"+o.oferta_id;
+            html += '<div class="oferta-card '+statusCls+(ofOpen?' open':'')+'" id="'+ofId+'">';
+            html += '<button class="oferta-head" type="button" aria-expanded="'+(ofOpen?'true':'false')+'" aria-controls="'+ofBodyId+'" onclick="toggleOferta(\''+esc(c.client_id)+"','"+esc(o.oferta_id)+'\')">';
+            html += '<div class="oferta-codes">';
+            html += '<div class="oferta-cod">'+highlight(o.oferta_id||'?', f.q)+'</div>';
+            html += '<div class="oferta-proj">📌 <strong>'+highlight(o.proiect_id||'?', f.q)+'</strong>';
+            if(o.obiectiv) html += ' · '+highlight(o.obiectiv, f.q);
+            html += '</div></div>';
+            html += '<span class="oferta-status '+statusCls+'">'+esc(o.proiect_status||'')+'</span>';
+            html += '<span class="oferta-stat-pill">'+o.linii.length+' linii</span>';
+            html += '<span class="oferta-total">'+fmt(o.total_cu_tva)+' <small>RON</small></span>';
+            html += '<div class="copy-wrap" id="cw-'+esc(c.client_id)+'-'+esc(o.oferta_id)+'">';
+            var fmtLabel = COPY_FORMATS[STATE.copyFmt] ? COPY_FORMATS[STATE.copyFmt].label.split(' ')[0] : 'Copy';
+            html += '<button class="copy-btn" type="button" onclick="event.stopPropagation();copyAllCodes(\''+esc(c.client_id)+"','"+esc(o.oferta_id)+'\',event)" title="Copiază codurile (format: '+esc(fmtLabel)+'). Ține Shift pentru meniu format.">📋 Copy <span style="opacity:0.6">▾</span></button>';
+            html += '</div>';
+            html += '<div class="oferta-chevron" aria-hidden="true">▾</div></button>';
+            html += '<div class="oferta-body" id="'+ofBodyId+'">';
+            if(o.adresa) html += '<div class="oferta-obiectiv-detail"><strong>📍 Adresă:</strong> '+esc(o.adresa)+(o.data_oferta?' &nbsp;·&nbsp; <strong>📅 Data:</strong> '+esc(o.data_oferta):'')+'</div>';
+            if(o.linii.length){
+                html += '<div class="mat-table-wrap"><table class="mat-table"><thead><tr><th style="width:25%">Cod produs</th><th>Denumire</th><th style="width:60px">UM</th><th style="width:90px;text-align:right">Cant.</th><th style="width:90px"></th></tr></thead><tbody>';
+                o.linii.forEach(function(l){
+                    var codDisplay = l.cod ? '<span class="mat-cod">'+highlight(l.cod, f.q)+'</span>' : '<span class="mat-cod empty">— fără cod —</span>';
+                    var den = l.denumire||'';
+                    html += '<tr>';
+                    html += '<td>'+codDisplay+'</td>';
+                    html += '<td><div class="mat-denumire" title="'+esc(den)+'">'+highlight(den, f.q)+'</div></td>';
+                    html += '<td class="mat-um">'+esc(l.um||'buc')+'</td>';
+                    html += '<td class="mat-cant">'+fmtQty(l.cantitate)+'</td>';
+                    html += '<td>'+(l.cod?'<button type="button" class="btn-copy" onclick="copyCode(this,\''+esc(l.cod).replace(/'/g,"\\'")+'\')" title="Copiază doar codul">📋 Copy</button>':'')+'</td>';
+                    html += '</tr>';
+                });
+                html += '</tbody></table></div>';
+            } else {
+                html += '<div class="empty-msg" style="padding:20px;text-align:center">Nicio linie de echipament</div>';
+            }
+            html += '</div></div>';
+        });
+        html += '</div></div>';
+    });
+    view.innerHTML = html;
+}
+
+// ═══ COPY ═══
 function copyCode(btn, code){
     if(!code) return;
     navigator.clipboard.writeText(code).then(function(){
@@ -346,17 +539,80 @@ function copyCode(btn, code){
         setTimeout(function(){btn.classList.remove('copied');btn.textContent='📋 Copy'},1400);
     }).catch(function(){toast('⚠️ Nu pot copia în clipboard','error')});
 }
-function copyAllCodes(ci, oi){
-    var c = DATA[ci]; if(!c) return;
-    var o = c.oferte[oi]; if(!o) return;
-    var lines = o.linii.filter(function(l){return l.cod}).map(function(l){return l.cod+'\t'+fmtQty(l.cantitate)});
-    if(!lines.length){toast('Nu sunt coduri de copiat','info');return;}
-    navigator.clipboard.writeText(lines.join('\n')).then(function(){
-        toast('✅ '+lines.length+' coduri copiate (cod + cantitate, separate cu Tab)','success');
-    }).catch(function(){toast('⚠️ Nu pot copia în clipboard','error')});
+
+function findOferta(cid, oid){
+    var c = STATE.data.find(function(x){return String(x.client_id)===String(cid)});
+    if(!c) return null;
+    var o = c.oferte.find(function(x){return String(x.oferta_id)===String(oid)});
+    return o ? {client:c, oferta:o} : null;
 }
 
+function copyAllCodes(cid, oid, ev){
+    if(ev && ev.shiftKey) return openCopyMenu(cid, oid, ev);
+    var found = findOferta(cid, oid); if(!found) return;
+    doCopy(found.oferta.linii, STATE.copyFmt);
+}
+function copyAsFormat(cid, oid, key){
+    var found = findOferta(cid, oid); if(!found) return;
+    STATE.copyFmt = key; localStorage.setItem(LS_KEYS.copyFmt, key);
+    doCopy(found.oferta.linii, key);
+    closeCopyMenus();
+    render();
+}
+function doCopy(linii, fmtKey){
+    var format = COPY_FORMATS[fmtKey] || COPY_FORMATS['code-qty'];
+    var lines = linii.filter(function(l){return l.cod}).map(format.fn);
+    if(!lines.length){ toast('Nu sunt coduri de copiat','info'); return; }
+    var text = (fmtKey==='csv' ? '"Cod","Denumire","Cantitate","UM"\n' : '') + lines.join('\n');
+    navigator.clipboard.writeText(text).then(function(){
+        toast('✅ '+lines.length+' linii copiate ('+format.label+')', 'success');
+    }).catch(function(){ toast('⚠️ Nu pot copia în clipboard','error'); });
+}
+function openCopyMenu(cid, oid, ev){
+    closeCopyMenus();
+    if(ev) ev.preventDefault();
+    var wrap = document.getElementById('cw-'+cid+'-'+oid); if(!wrap) return;
+    var html = '<div class="copy-menu" role="menu">';
+    html += '<div class="copy-menu-hint">Format de copiere</div>';
+    Object.keys(COPY_FORMATS).forEach(function(k){
+        var f=COPY_FORMATS[k];
+        var isDef = STATE.copyFmt===k;
+        html += '<button class="copy-menu-item'+(isDef?' default':'')+'" type="button" role="menuitem" onclick="event.stopPropagation();copyAsFormat(\''+esc(cid)+"','"+esc(oid)+"','"+k+'\')">'+
+                '<span><strong>'+esc(f.label)+'</strong>'+(isDef?' <span class="star">★</span>':'')+'<br><span style="font-size:10px;color:var(--gray);font-family:Courier,monospace">'+esc(f.desc)+'</span></span></button>';
+    });
+    html += '</div>';
+    wrap.innerHTML = wrap.innerHTML + html;
+    wrap.classList.add('open');
+}
+function closeCopyMenus(){
+    document.querySelectorAll('.copy-wrap.open').forEach(function(w){
+        w.classList.remove('open');
+        var m = w.querySelector('.copy-menu'); if(m) m.remove();
+    });
+}
+document.addEventListener('click', function(ev){ if(!ev.target.closest('.copy-wrap')) closeCopyMenus(); });
+
+// ═══ FILTER HANDLERS ═══
+var debouncedRender = debounce(function(){ updateSearchClear(); render(); }, 200);
+function onSearchInput(){ debouncedRender(); }
+function updateSearchClear(){ var w=document.getElementById('searchWrap'); var v=document.getElementById('searchInput').value; w.classList.toggle('has-value', !!v); }
+function clearSearch(){ document.getElementById('searchInput').value=''; updateSearchClear(); render(); }
+function clearStatus(){ document.getElementById('filterStatus').value=''; render(); }
+function clearAllFilters(){ document.getElementById('searchInput').value=''; document.getElementById('filterStatus').value=''; updateSearchClear(); render(); }
+function onFilterChange(){ render(); }
+
+// ═══ KEYBOARD SHORTCUTS ═══
+document.addEventListener('keydown', function(ev){
+    var inField = ev.target.matches('input, textarea, select');
+    if(ev.key==='/' && !inField){ ev.preventDefault(); document.getElementById('searchInput').focus(); }
+    else if(ev.key==='Escape'){ if(inField){ ev.target.blur(); } closeCopyMenus(); if(document.getElementById('searchInput').value){ clearSearch(); } }
+    else if((ev.key==='e' || ev.key==='E') && !inField){ ev.preventDefault(); expandAll(); }
+    else if((ev.key==='c' || ev.key==='C') && !inField){ ev.preventDefault(); collapseAll(); }
+});
+
 // ═══ INIT ═══
+document.getElementById('searchInput').addEventListener('input', onSearchInput);
+setDensity(STATE.density);
 refreshData();
 
 </script>
