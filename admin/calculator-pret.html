@@ -163,7 +163,9 @@ lines:JSON.parse(JSON.stringify(offerLines)),
 labor:JSON.parse(JSON.stringify(laborLines.filter(function(l){return parseFloat(l.cant)>0;}))),
 subtotalEchip:eT,subtotalManop:mT,totalNet:net,tva:Math.round(net*21)/100,totalBrut:Math.round(net*121)/100};}
 function saveOffer(){
-document.getElementById('oData').value=todayStr();
+// NU suprascriem data — la edit păstrăm data originală a ofertei;
+// la ofertă nouă, câmpul deja e populat cu azi din init (linia ~278).
+// buildOfferPayload face fallback la todayStr() doar dacă user-ul golește manual câmpul.
 var p=buildOfferPayload();if(!p)return;
 p.client_db_id=window._prefillClientDbId||'';
 p.proiect_db_id=window._prefillProiectDbId||'';
