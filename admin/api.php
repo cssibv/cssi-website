@@ -747,15 +747,24 @@ try {
         // Structură: Client → Ofertă → Linii materiale (cod, denumire, UM, cantitate)
         // ══════════════════════════════════════
         case 'getNecesarMateriale':
+            // Asigură că tabela necesar_comenzi există (auto-create la prima rulare)
+            $db->exec("CREATE TABLE IF NOT EXISTS necesar_comenzi (
+                oferta_id INT PRIMARY KEY,
+                comandat_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+                comandat_by VARCHAR(60) NOT NULL DEFAULT ''
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4");
+
             $sql = "SELECT
                 c.id AS client_db_id, c.client_id AS client_cod, c.nume AS client_nume,
                 p.id AS proiect_db_id, p.proiect_id, p.obiectiv, p.adresa_obiectiv, p.status AS proiect_status,
                 o.id AS oferta_db_id, o.oferta_id, o.titlu AS oferta_titlu, o.data_oferta, o.total_cu_tva,
+                nc.comandat_at, nc.comandat_by,
                 ol.id AS linie_id, ol.cod, ol.denumire, ol.um, ol.cantitate, ol.pret_vanzare, ol.valoare, ol.ordine
                 FROM proiecte p
                 INNER JOIN clienti c ON p.client_id = c.id
                 INNER JOIN oferte o ON o.proiect_id = p.id AND o.status = 'Acceptata'
                 INNER JOIN oferta_linii ol ON ol.oferta_id = o.id AND ol.tip = 'echipament'
+                LEFT JOIN necesar_comenzi nc ON nc.oferta_id = o.id
                 WHERE p.status IN ('Proiectare','Executie')
                 ORDER BY c.nume, p.proiect_id, o.data_oferta DESC, ol.ordine, ol.id";
             $rows = $db->query($sql)->fetchAll();
@@ -774,6 +783,7 @@ try {
                 $oKey = $r['oferta_db_id'];
                 if (!isset($clienti[$cKey]['oferte'][$oKey])) {
                     $clienti[$cKey]['oferte'][$oKey] = [
+                        'oferta_db_id'   => intval($r['oferta_db_id']),
                         'oferta_id'      => $r['oferta_id'],
                         'titlu'          => $r['oferta_titlu'],
                         'data_oferta'    => $r['data_oferta'],
@@ -782,6 +792,8 @@ try {
                         'proiect_status' => $r['proiect_status'],
                         'obiectiv'       => $r['obiectiv'],
                         'adresa'         => $r['adresa_obiectiv'],
+                        'comandat_at'    => $r['comandat_at'],
+                        'comandat_by'    => $r['comandat_by'],
                         'linii'          => [],
                     ];
                 }
@@ -796,6 +808,32 @@ try {
             // Reindex (în loc de chei DB)
             $out = array_map(function($c){ $c['oferte'] = array_values($c['oferte']); return $c; }, array_values($clienti));
             jsonResponse(['success' => true, 'data' => $out]);
+            break;
+
+        // ══════════════════════════════════════
+        // NECESAR — marcare ofertă comandată / anulare marcaj
+        // ══════════════════════════════════════
+        case 'markOfertaComandata':
+            $ofId = isset($data['oferta_db_id']) ? intval($data['oferta_db_id']) : 0;
+            $user = isset($data['user']) ? trim($data['user']) : '';
+            if (!$ofId) { jsonResponse(['success' => false, 'error' => 'oferta_db_id obligatoriu'], 400); break; }
+            $db->exec("CREATE TABLE IF NOT EXISTS necesar_comenzi (
+                oferta_id INT PRIMARY KEY,
+                comandat_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+                comandat_by VARCHAR(60) NOT NULL DEFAULT ''
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4");
+            $stmt = $db->prepare("REPLACE INTO necesar_comenzi (oferta_id, comandat_at, comandat_by) VALUES (?, NOW(), ?)");
+            $stmt->execute([$ofId, $user]);
+            $stmt = $db->prepare("SELECT comandat_at, comandat_by FROM necesar_comenzi WHERE oferta_id = ?");
+            $stmt->execute([$ofId]);
+            jsonResponse(['success' => true, 'data' => $stmt->fetch()]);
+            break;
+
+        case 'unmarkOfertaComandata':
+            $ofId = isset($data['oferta_db_id']) ? intval($data['oferta_db_id']) : 0;
+            if (!$ofId) { jsonResponse(['success' => false, 'error' => 'oferta_db_id obligatoriu'], 400); break; }
+            $db->prepare("DELETE FROM necesar_comenzi WHERE oferta_id = ?")->execute([$ofId]);
+            jsonResponse(['success' => true]);
             break;
 
         // ══════════════════════════════════════

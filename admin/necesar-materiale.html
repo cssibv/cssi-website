@@ -95,7 +95,21 @@ a{text-decoration:none;color:inherit;}button{font-family:inherit;cursor:pointer;
 .oferta-card::before{content:'';position:absolute;left:0;top:0;bottom:0;width:4px;background:var(--gray-l);}
 .oferta-card.proiectare::before{background:linear-gradient(180deg,var(--teal),#0891b2);}
 .oferta-card.executie::before{background:linear-gradient(180deg,var(--orange),#ea580c);}
+.oferta-card.comandata{background:#f0fdf4;border-color:#bbf7d0;}
+.oferta-card.comandata::before{background:linear-gradient(180deg,var(--green),#16a34a)!important;}
+.oferta-card.comandata .oferta-name{color:var(--green);}
+.oferta-card.comandata .oferta-head{background:linear-gradient(135deg,#f0fdf4,#dcfce7);}
 .oferta-card:hover{border-color:var(--gray-xl);box-shadow:var(--shadow);}
+
+/* Comandat badge & buton */
+.comandat-info{display:inline-flex;align-items:center;gap:6px;padding:5px 10px;border-radius:8px;background:#f0fdf4;border:1px solid #bbf7d0;color:var(--green);font-size:11px;font-weight:700;flex-shrink:0;}
+.comandat-info .ci-icon{font-size:13px;}
+.comandat-info .ci-meta{font-weight:600;color:#166534;font-size:10px;}
+.comandat-info .ci-undo{background:transparent;border:none;color:var(--green);font-size:14px;cursor:pointer;padding:0 2px;line-height:1;border-radius:4px;}
+.comandat-info .ci-undo:hover{background:#bbf7d0;color:var(--red);}
+.btn-mark{padding:6px 12px;border-radius:8px;border:1px solid var(--green);background:#fff;color:var(--green);font-size:11px;font-weight:700;cursor:pointer;transition:all 0.15s;font-family:inherit;display:inline-flex;align-items:center;gap:5px;flex-shrink:0;}
+.btn-mark:hover{background:var(--green);color:#fff;}
+.btn-mark:disabled{opacity:0.5;cursor:wait;}
 .oferta-head{display:flex;align-items:center;gap:12px;padding:var(--density-pad-oferta);padding-left:18px;cursor:pointer;background:#fff;transition:background 0.15s;border:none;width:100%;text-align:left;font-family:inherit;}
 .oferta-head:hover{background:#f8fafc;}
 .oferta-codes{display:flex;flex-direction:column;gap:3px;flex:1;min-width:0;}
@@ -468,7 +482,8 @@ function render(){
             var ofId = 'of-'+c.client_id+'-'+o.oferta_id;
             var ofBodyId = 'of-body-'+c.client_id+'-'+o.oferta_id;
             var ofKeyJs = c.client_id+"','"+o.oferta_id;
-            html += '<div class="oferta-card '+statusCls+(ofOpen?' open':'')+'" id="'+ofId+'">';
+            var comandataCls = o.comandat_at ? ' comandata' : '';
+            html += '<div class="oferta-card '+statusCls+(ofOpen?' open':'')+comandataCls+'" id="'+ofId+'">';
             html += '<button class="oferta-head" type="button" aria-expanded="'+(ofOpen?'true':'false')+'" aria-controls="'+ofBodyId+'" onclick="toggleOferta(\''+esc(c.client_id)+"','"+esc(o.oferta_id)+'\')">';
             var displayName = (o.obiectiv && o.obiectiv.trim()) || o.titlu || '(fără denumire)';
             html += '<div class="oferta-codes">';
@@ -480,6 +495,17 @@ function render(){
             html += '<span class="oferta-status '+statusCls+'">'+esc(o.proiect_status||'')+'</span>';
             html += '<span class="oferta-stat-pill">'+o.linii.length+' linii</span>';
             html += '<span class="oferta-total">'+fmt(o.total_cu_tva)+' <small>RON</small></span>';
+            if(o.comandat_at){
+                html += '<span class="comandat-info" title="Comandat de '+esc(o.comandat_by||'?')+' la '+esc(o.comandat_at)+'">';
+                html += '<span class="ci-icon">✓</span>';
+                html += '<span>Comandat <span class="ci-meta">'+fmtDateTime(o.comandat_at);
+                if(o.comandat_by) html += ' · '+esc(o.comandat_by);
+                html += '</span></span>';
+                html += '<button type="button" class="ci-undo" onclick="event.stopPropagation();unmarkOferta('+o.oferta_db_id+')" title="Anulează marcaj comandă" aria-label="Anulează marcaj">×</button>';
+                html += '</span>';
+            } else {
+                html += '<button type="button" class="btn-mark" onclick="event.stopPropagation();markOferta('+o.oferta_db_id+')" title="Marchează această ofertă ca fiind comandată">✓ Marchează comandat</button>';
+            }
             html += '<div class="oferta-chevron" aria-hidden="true">▾</div></button>';
             html += '<div class="oferta-body" id="'+ofBodyId+'">';
             if(o.adresa) html += '<div class="oferta-obiectiv-detail"><strong>📍 Adresă:</strong> '+esc(o.adresa)+(o.data_oferta?' &nbsp;·&nbsp; <strong>📅 Data:</strong> '+esc(o.data_oferta):'')+'</div>';
@@ -505,6 +531,58 @@ function render(){
         html += '</div></div>';
     });
     view.innerHTML = html;
+}
+
+// ═══ MARK COMANDAT ═══
+function fmtDateTime(s){
+    if(!s) return '';
+    // Acceptăm "2026-05-09 14:23:00" sau ISO
+    var d = new Date(s.replace(' ','T'));
+    if(isNaN(d.getTime())) return s;
+    var pad = function(n){return n<10?'0'+n:n;};
+    var months = ['Ian','Feb','Mar','Apr','Mai','Iun','Iul','Aug','Sep','Oct','Noi','Dec'];
+    return pad(d.getDate())+' '+months[d.getMonth()]+' '+d.getFullYear()+' '+pad(d.getHours())+':'+pad(d.getMinutes());
+}
+function getCurrentUser(){
+    return sessionStorage.getItem('cssi-user') || sessionStorage.getItem('cssi-role') || '';
+}
+function findOfertaByDbId(ofDbId){
+    for(var i=0;i<STATE.data.length;i++){
+        var c = STATE.data[i];
+        for(var j=0;j<c.oferte.length;j++){
+            if(c.oferte[j].oferta_db_id === ofDbId) return c.oferte[j];
+        }
+    }
+    return null;
+}
+function markOferta(ofDbId){
+    var user = getCurrentUser();
+    fetch(API_DB+'?action=markOfertaComandata',{
+        method:'POST',headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({action:'markOfertaComandata',oferta_db_id:ofDbId,user:user})
+    }).then(function(r){return r.json()}).then(function(res){
+        if(!res.success) throw new Error(res.error||'Eroare');
+        var of = findOfertaByDbId(ofDbId);
+        if(of){
+            of.comandat_at = res.data && res.data.comandat_at ? res.data.comandat_at : new Date().toISOString().slice(0,19).replace('T',' ');
+            of.comandat_by = res.data && res.data.comandat_by ? res.data.comandat_by : user;
+        }
+        render();
+        toast('✅ Marcată ca comandat','success');
+    }).catch(function(e){toast('❌ Nu s-a putut marca: '+(e.message||e),'error')});
+}
+function unmarkOferta(ofDbId){
+    if(!confirm('Anulezi marcajul de comandă pentru această ofertă?')) return;
+    fetch(API_DB+'?action=unmarkOfertaComandata',{
+        method:'POST',headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({action:'unmarkOfertaComandata',oferta_db_id:ofDbId})
+    }).then(function(r){return r.json()}).then(function(res){
+        if(!res.success) throw new Error(res.error||'Eroare');
+        var of = findOfertaByDbId(ofDbId);
+        if(of){ of.comandat_at = null; of.comandat_by = null; }
+        render();
+        toast('Marcaj anulat','info');
+    }).catch(function(e){toast('❌ Nu s-a putut anula: '+(e.message||e),'error')});
 }
 
 // ═══ COPY (per linie) ═══
