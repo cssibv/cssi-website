@@ -1,0 +1,711 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="UTF-8">
+<title>CSSI — Review candidați poze servicii</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #0f172a; color: #e2e8f0; padding: 24px; line-height: 1.5; }
+h1 { color: #fff; margin-bottom: 8px; font-size: 28px; }
+.subtitle { color: #94a3b8; margin-bottom: 32px; font-size: 14px; }
+.category { background: #1e293b; border-radius: 12px; padding: 20px; margin-bottom: 24px; }
+.cat-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; flex-wrap: wrap; gap: 8px; }
+.cat-title { color: #fff; font-size: 20px; font-weight: 700; }
+.cat-page { color: #38bdf8; font-size: 13px; font-family: monospace; }
+.cat-note { color: #94a3b8; font-size: 13px; }
+.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 16px; }
+.card { background: #0f172a; border: 2px solid #334155; border-radius: 8px; overflow: hidden; cursor: pointer; transition: all .2s; position: relative; }
+.card:hover { border-color: #38bdf8; transform: translateY(-2px); }
+.card.selected { border-color: #22c55e; box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.2); }
+.card.selected::after { content: '✓ ALES'; position: absolute; top: 8px; right: 8px; background: #22c55e; color: #fff; padding: 4px 10px; border-radius: 999px; font-size: 11px; font-weight: 700; }
+.card img { width: 100%; height: 180px; object-fit: cover; display: block; }
+.card-info { padding: 8px 12px; font-size: 12px; color: #94a3b8; display: flex; justify-content: space-between; }
+.card-info .badge { background: #1e40af; color: #fff; padding: 2px 8px; border-radius: 4px; font-weight: 600; }
+.summary { position: fixed; bottom: 16px; right: 16px; background: #1e293b; border: 2px solid #38bdf8; border-radius: 12px; padding: 16px 20px; box-shadow: 0 10px 30px rgba(0,0,0,.5); max-width: 360px; z-index: 100; }
+.summary h3 { color: #fff; margin-bottom: 8px; font-size: 14px; }
+.summary p { color: #94a3b8; font-size: 12px; }
+.summary button { background: #22c55e; color: #fff; border: none; padding: 8px 16px; border-radius: 8px; font-weight: 700; cursor: pointer; margin-top: 8px; }
+.summary button:hover { background: #16a34a; }
+.legend { background: #0c1322; border-left: 3px solid #38bdf8; padding: 12px 16px; margin-bottom: 24px; border-radius: 6px; font-size: 13px; color: #cbd5e1; }
+.legend strong { color: #fff; }
+</style>
+</head>
+<body>
+<h1>CSSI — Review candidați poze servicii</h1>
+<p class="subtitle">75 candidați (top 5 cei mai mari/calitate per categorie). Click pe poze pentru selecție. Selecția se salvează automat în URL ca să-mi poți trimite link-ul.</p>
+
+<div class="legend">
+<strong>Cum funcționează:</strong> Click pe o poză să o selectezi (verde) sau de-selectezi. La final dai screenshot la pagină sau îmi trimiți URL-ul (selecția se salvează în URL hash). Eu apoi: (1) auto-rotate EXIF, (2) resize la dimensiuni standardizate (hero 1200×675 + card 800×600 + IG 1080×1080), (3) ton uniform (lumină + saturație constantă), (4) watermark CSSI discret bottom-right, (5) deploy în <code>images/portofoliu/</code>.
+</div>
+
+<div class="category">
+<div class="cat-header">
+<div>
+<div class="cat-title">Camere Supraveghere</div>
+<div class="cat-note">Top SEO term — pagină principală reclamă Google Ads</div>
+</div>
+<span class="cat-page">/camere-supraveghere.html</span>
+</div>
+<div class="grid">
+<div class="card" data-id="camere-supraveghere_1" data-slug="camere-supraveghere" data-file="camere-supraveghere_top1_1200x900.jpg" onclick="toggleSelect(this)">
+<img src="camere-supraveghere/camere-supraveghere_top1_1200x900.jpg" loading="lazy" alt="Camere Supraveghere top 1">
+<div class="card-info">
+<span class="badge">Top 1</span>
+<span>1200x900</span>
+</div>
+</div><div class="card" data-id="camere-supraveghere_2" data-slug="camere-supraveghere" data-file="camere-supraveghere_top2_1200x900.jpg" onclick="toggleSelect(this)">
+<img src="camere-supraveghere/camere-supraveghere_top2_1200x900.jpg" loading="lazy" alt="Camere Supraveghere top 2">
+<div class="card-info">
+<span class="badge">Top 2</span>
+<span>1200x900</span>
+</div>
+</div><div class="card" data-id="camere-supraveghere_3" data-slug="camere-supraveghere" data-file="camere-supraveghere_top3_900x1200.jpg" onclick="toggleSelect(this)">
+<img src="camere-supraveghere/camere-supraveghere_top3_900x1200.jpg" loading="lazy" alt="Camere Supraveghere top 3">
+<div class="card-info">
+<span class="badge">Top 3</span>
+<span>900x1200</span>
+</div>
+</div><div class="card" data-id="camere-supraveghere_4" data-slug="camere-supraveghere" data-file="camere-supraveghere_top4_900x1200.jpg" onclick="toggleSelect(this)">
+<img src="camere-supraveghere/camere-supraveghere_top4_900x1200.jpg" loading="lazy" alt="Camere Supraveghere top 4">
+<div class="card-info">
+<span class="badge">Top 4</span>
+<span>900x1200</span>
+</div>
+</div><div class="card" data-id="camere-supraveghere_5" data-slug="camere-supraveghere" data-file="camere-supraveghere_top5_900x1200.jpg" onclick="toggleSelect(this)">
+<img src="camere-supraveghere/camere-supraveghere_top5_900x1200.jpg" loading="lazy" alt="Camere Supraveghere top 5">
+<div class="card-info">
+<span class="badge">Top 5</span>
+<span>900x1200</span>
+</div>
+</div></div></div>
+<div class="category">
+<div class="cat-header">
+<div>
+<div class="cat-title">Alarmă Antiefracție</div>
+<div class="cat-note">Pagină centrală securitate</div>
+</div>
+<span class="cat-page">/alarma-antiefractie.html</span>
+</div>
+<div class="grid">
+<div class="card" data-id="alarma-antiefractie_1" data-slug="alarma-antiefractie" data-file="alarma-antiefractie_top1_900x1200.jpg" onclick="toggleSelect(this)">
+<img src="alarma-antiefractie/alarma-antiefractie_top1_900x1200.jpg" loading="lazy" alt="Alarmă Antiefracție top 1">
+<div class="card-info">
+<span class="badge">Top 1</span>
+<span>900x1200</span>
+</div>
+</div><div class="card" data-id="alarma-antiefractie_2" data-slug="alarma-antiefractie" data-file="alarma-antiefractie_top2_1200x900.jpg" onclick="toggleSelect(this)">
+<img src="alarma-antiefractie/alarma-antiefractie_top2_1200x900.jpg" loading="lazy" alt="Alarmă Antiefracție top 2">
+<div class="card-info">
+<span class="badge">Top 2</span>
+<span>1200x900</span>
+</div>
+</div><div class="card" data-id="alarma-antiefractie_3" data-slug="alarma-antiefractie" data-file="alarma-antiefractie_top3_1200x900.jpg" onclick="toggleSelect(this)">
+<img src="alarma-antiefractie/alarma-antiefractie_top3_1200x900.jpg" loading="lazy" alt="Alarmă Antiefracție top 3">
+<div class="card-info">
+<span class="badge">Top 3</span>
+<span>1200x900</span>
+</div>
+</div><div class="card" data-id="alarma-antiefractie_4" data-slug="alarma-antiefractie" data-file="alarma-antiefractie_top4_1200x900.jpg" onclick="toggleSelect(this)">
+<img src="alarma-antiefractie/alarma-antiefractie_top4_1200x900.jpg" loading="lazy" alt="Alarmă Antiefracție top 4">
+<div class="card-info">
+<span class="badge">Top 4</span>
+<span>1200x900</span>
+</div>
+</div><div class="card" data-id="alarma-antiefractie_5" data-slug="alarma-antiefractie" data-file="alarma-antiefractie_top5_900x1200.jpg" onclick="toggleSelect(this)">
+<img src="alarma-antiefractie/alarma-antiefractie_top5_900x1200.jpg" loading="lazy" alt="Alarmă Antiefracție top 5">
+<div class="card-info">
+<span class="badge">Top 5</span>
+<span>900x1200</span>
+</div>
+</div></div></div>
+<div class="category">
+<div class="cat-header">
+<div>
+<div class="cat-title">Control Acces</div>
+<div class="cat-note">Include și pontaj electronic (folder dedicat gol)</div>
+</div>
+<span class="cat-page">/control-acces.html</span>
+</div>
+<div class="grid">
+<div class="card" data-id="control-acces_1" data-slug="control-acces" data-file="control-acces_top1_900x1200.jpg" onclick="toggleSelect(this)">
+<img src="control-acces/control-acces_top1_900x1200.jpg" loading="lazy" alt="Control Acces top 1">
+<div class="card-info">
+<span class="badge">Top 1</span>
+<span>900x1200</span>
+</div>
+</div><div class="card" data-id="control-acces_2" data-slug="control-acces" data-file="control-acces_top2_900x1200.jpg" onclick="toggleSelect(this)">
+<img src="control-acces/control-acces_top2_900x1200.jpg" loading="lazy" alt="Control Acces top 2">
+<div class="card-info">
+<span class="badge">Top 2</span>
+<span>900x1200</span>
+</div>
+</div><div class="card" data-id="control-acces_3" data-slug="control-acces" data-file="control-acces_top3_900x1200.jpg" onclick="toggleSelect(this)">
+<img src="control-acces/control-acces_top3_900x1200.jpg" loading="lazy" alt="Control Acces top 3">
+<div class="card-info">
+<span class="badge">Top 3</span>
+<span>900x1200</span>
+</div>
+</div><div class="card" data-id="control-acces_4" data-slug="control-acces" data-file="control-acces_top4_900x1200.jpg" onclick="toggleSelect(this)">
+<img src="control-acces/control-acces_top4_900x1200.jpg" loading="lazy" alt="Control Acces top 4">
+<div class="card-info">
+<span class="badge">Top 4</span>
+<span>900x1200</span>
+</div>
+</div><div class="card" data-id="control-acces_5" data-slug="control-acces" data-file="control-acces_top5_900x1200.jpg" onclick="toggleSelect(this)">
+<img src="control-acces/control-acces_top5_900x1200.jpg" loading="lazy" alt="Control Acces top 5">
+<div class="card-info">
+<span class="badge">Top 5</span>
+<span>900x1200</span>
+</div>
+</div></div></div>
+<div class="category">
+<div class="cat-header">
+<div>
+<div class="cat-title">Detecție Incendiu ISU</div>
+<div class="cat-note">Nișă B2B mare — avize ISU</div>
+</div>
+<span class="cat-page">/detectie-incendiu-isu.html</span>
+</div>
+<div class="grid">
+<div class="card" data-id="detectie-incendiu_1" data-slug="detectie-incendiu" data-file="detectie-incendiu_top1_900x1200.jpg" onclick="toggleSelect(this)">
+<img src="detectie-incendiu/detectie-incendiu_top1_900x1200.jpg" loading="lazy" alt="Detecție Incendiu ISU top 1">
+<div class="card-info">
+<span class="badge">Top 1</span>
+<span>900x1200</span>
+</div>
+</div><div class="card" data-id="detectie-incendiu_2" data-slug="detectie-incendiu" data-file="detectie-incendiu_top2_900x1200.jpg" onclick="toggleSelect(this)">
+<img src="detectie-incendiu/detectie-incendiu_top2_900x1200.jpg" loading="lazy" alt="Detecție Incendiu ISU top 2">
+<div class="card-info">
+<span class="badge">Top 2</span>
+<span>900x1200</span>
+</div>
+</div><div class="card" data-id="detectie-incendiu_3" data-slug="detectie-incendiu" data-file="detectie-incendiu_top3_900x1200.jpg" onclick="toggleSelect(this)">
+<img src="detectie-incendiu/detectie-incendiu_top3_900x1200.jpg" loading="lazy" alt="Detecție Incendiu ISU top 3">
+<div class="card-info">
+<span class="badge">Top 3</span>
+<span>900x1200</span>
+</div>
+</div><div class="card" data-id="detectie-incendiu_4" data-slug="detectie-incendiu" data-file="detectie-incendiu_top4_1200x900.jpg" onclick="toggleSelect(this)">
+<img src="detectie-incendiu/detectie-incendiu_top4_1200x900.jpg" loading="lazy" alt="Detecție Incendiu ISU top 4">
+<div class="card-info">
+<span class="badge">Top 4</span>
+<span>1200x900</span>
+</div>
+</div><div class="card" data-id="detectie-incendiu_5" data-slug="detectie-incendiu" data-file="detectie-incendiu_top5_1200x900.jpg" onclick="toggleSelect(this)">
+<img src="detectie-incendiu/detectie-incendiu_top5_1200x900.jpg" loading="lazy" alt="Detecție Incendiu ISU top 5">
+<div class="card-info">
+<span class="badge">Top 5</span>
+<span>1200x900</span>
+</div>
+</div></div></div>
+<div class="category">
+<div class="cat-header">
+<div>
+<div class="cat-title">Automatizări Porți</div>
+<div class="cat-note">Servicii rezidențiale + comerciale</div>
+</div>
+<span class="cat-page">/automatizari-porti.html</span>
+</div>
+<div class="grid">
+<div class="card" data-id="automatizari-porti_1" data-slug="automatizari-porti" data-file="automatizari-porti_top1_1200x900.jpg" onclick="toggleSelect(this)">
+<img src="automatizari-porti/automatizari-porti_top1_1200x900.jpg" loading="lazy" alt="Automatizări Porți top 1">
+<div class="card-info">
+<span class="badge">Top 1</span>
+<span>1200x900</span>
+</div>
+</div><div class="card" data-id="automatizari-porti_2" data-slug="automatizari-porti" data-file="automatizari-porti_top2_1200x900.jpg" onclick="toggleSelect(this)">
+<img src="automatizari-porti/automatizari-porti_top2_1200x900.jpg" loading="lazy" alt="Automatizări Porți top 2">
+<div class="card-info">
+<span class="badge">Top 2</span>
+<span>1200x900</span>
+</div>
+</div><div class="card" data-id="automatizari-porti_3" data-slug="automatizari-porti" data-file="automatizari-porti_top3_1200x900.jpg" onclick="toggleSelect(this)">
+<img src="automatizari-porti/automatizari-porti_top3_1200x900.jpg" loading="lazy" alt="Automatizări Porți top 3">
+<div class="card-info">
+<span class="badge">Top 3</span>
+<span>1200x900</span>
+</div>
+</div><div class="card" data-id="automatizari-porti_4" data-slug="automatizari-porti" data-file="automatizari-porti_top4_1200x900.jpg" onclick="toggleSelect(this)">
+<img src="automatizari-porti/automatizari-porti_top4_1200x900.jpg" loading="lazy" alt="Automatizări Porți top 4">
+<div class="card-info">
+<span class="badge">Top 4</span>
+<span>1200x900</span>
+</div>
+</div><div class="card" data-id="automatizari-porti_5" data-slug="automatizari-porti" data-file="automatizari-porti_top5_1200x900.jpg" onclick="toggleSelect(this)">
+<img src="automatizari-porti/automatizari-porti_top5_1200x900.jpg" loading="lazy" alt="Automatizări Porți top 5">
+<div class="card-info">
+<span class="badge">Top 5</span>
+<span>1200x900</span>
+</div>
+</div></div></div>
+<div class="category">
+<div class="cat-header">
+<div>
+<div class="cat-title">Bariere Auto</div>
+<div class="cat-note">Parking + acces vehicule</div>
+</div>
+<span class="cat-page">/bariere-auto.html</span>
+</div>
+<div class="grid">
+<div class="card" data-id="bariere-auto_1" data-slug="bariere-auto" data-file="bariere-auto_top1_1200x1200.jpg" onclick="toggleSelect(this)">
+<img src="bariere-auto/bariere-auto_top1_1200x1200.jpg" loading="lazy" alt="Bariere Auto top 1">
+<div class="card-info">
+<span class="badge">Top 1</span>
+<span>1200x1200</span>
+</div>
+</div><div class="card" data-id="bariere-auto_2" data-slug="bariere-auto" data-file="bariere-auto_top2_1200x900.jpg" onclick="toggleSelect(this)">
+<img src="bariere-auto/bariere-auto_top2_1200x900.jpg" loading="lazy" alt="Bariere Auto top 2">
+<div class="card-info">
+<span class="badge">Top 2</span>
+<span>1200x900</span>
+</div>
+</div><div class="card" data-id="bariere-auto_3" data-slug="bariere-auto" data-file="bariere-auto_top3_1200x1200.jpg" onclick="toggleSelect(this)">
+<img src="bariere-auto/bariere-auto_top3_1200x1200.jpg" loading="lazy" alt="Bariere Auto top 3">
+<div class="card-info">
+<span class="badge">Top 3</span>
+<span>1200x1200</span>
+</div>
+</div><div class="card" data-id="bariere-auto_4" data-slug="bariere-auto" data-file="bariere-auto_top4_1200x1200.jpg" onclick="toggleSelect(this)">
+<img src="bariere-auto/bariere-auto_top4_1200x1200.jpg" loading="lazy" alt="Bariere Auto top 4">
+<div class="card-info">
+<span class="badge">Top 4</span>
+<span>1200x1200</span>
+</div>
+</div><div class="card" data-id="bariere-auto_5" data-slug="bariere-auto" data-file="bariere-auto_top5_1200x900.jpg" onclick="toggleSelect(this)">
+<img src="bariere-auto/bariere-auto_top5_1200x900.jpg" loading="lazy" alt="Bariere Auto top 5">
+<div class="card-info">
+<span class="badge">Top 5</span>
+<span>1200x900</span>
+</div>
+</div></div></div>
+<div class="category">
+<div class="cat-header">
+<div>
+<div class="cat-title">Interfoane / Videointerfoane</div>
+<div class="cat-note">Rezidențial / blocuri</div>
+</div>
+<span class="cat-page">/interfoane-videointerfoane.html</span>
+</div>
+<div class="grid">
+<div class="card" data-id="interfoane_1" data-slug="interfoane" data-file="interfoane_top1_900x1200.jpg" onclick="toggleSelect(this)">
+<img src="interfoane/interfoane_top1_900x1200.jpg" loading="lazy" alt="Interfoane / Videointerfoane top 1">
+<div class="card-info">
+<span class="badge">Top 1</span>
+<span>900x1200</span>
+</div>
+</div><div class="card" data-id="interfoane_2" data-slug="interfoane" data-file="interfoane_top2_900x1200.jpg" onclick="toggleSelect(this)">
+<img src="interfoane/interfoane_top2_900x1200.jpg" loading="lazy" alt="Interfoane / Videointerfoane top 2">
+<div class="card-info">
+<span class="badge">Top 2</span>
+<span>900x1200</span>
+</div>
+</div><div class="card" data-id="interfoane_3" data-slug="interfoane" data-file="interfoane_top3_675x1200.jpg" onclick="toggleSelect(this)">
+<img src="interfoane/interfoane_top3_675x1200.jpg" loading="lazy" alt="Interfoane / Videointerfoane top 3">
+<div class="card-info">
+<span class="badge">Top 3</span>
+<span>675x1200</span>
+</div>
+</div><div class="card" data-id="interfoane_4" data-slug="interfoane" data-file="interfoane_top4_675x1200.jpg" onclick="toggleSelect(this)">
+<img src="interfoane/interfoane_top4_675x1200.jpg" loading="lazy" alt="Interfoane / Videointerfoane top 4">
+<div class="card-info">
+<span class="badge">Top 4</span>
+<span>675x1200</span>
+</div>
+</div><div class="card" data-id="interfoane_5" data-slug="interfoane" data-file="interfoane_top5_675x1200.jpg" onclick="toggleSelect(this)">
+<img src="interfoane/interfoane_top5_675x1200.jpg" loading="lazy" alt="Interfoane / Videointerfoane top 5">
+<div class="card-info">
+<span class="badge">Top 5</span>
+<span>675x1200</span>
+</div>
+</div></div></div>
+<div class="category">
+<div class="cat-header">
+<div>
+<div class="cat-title">Uși Garaj</div>
+<div class="cat-note">Rezidențial</div>
+</div>
+<span class="cat-page">/usi-garaj.html</span>
+</div>
+<div class="grid">
+<div class="card" data-id="usi-garaj_1" data-slug="usi-garaj" data-file="usi-garaj_top1_900x1200.jpg" onclick="toggleSelect(this)">
+<img src="usi-garaj/usi-garaj_top1_900x1200.jpg" loading="lazy" alt="Uși Garaj top 1">
+<div class="card-info">
+<span class="badge">Top 1</span>
+<span>900x1200</span>
+</div>
+</div><div class="card" data-id="usi-garaj_2" data-slug="usi-garaj" data-file="usi-garaj_top2_900x1200.jpg" onclick="toggleSelect(this)">
+<img src="usi-garaj/usi-garaj_top2_900x1200.jpg" loading="lazy" alt="Uși Garaj top 2">
+<div class="card-info">
+<span class="badge">Top 2</span>
+<span>900x1200</span>
+</div>
+</div><div class="card" data-id="usi-garaj_3" data-slug="usi-garaj" data-file="usi-garaj_top3_900x1200.jpg" onclick="toggleSelect(this)">
+<img src="usi-garaj/usi-garaj_top3_900x1200.jpg" loading="lazy" alt="Uși Garaj top 3">
+<div class="card-info">
+<span class="badge">Top 3</span>
+<span>900x1200</span>
+</div>
+</div><div class="card" data-id="usi-garaj_4" data-slug="usi-garaj" data-file="usi-garaj_top4_900x1200.jpg" onclick="toggleSelect(this)">
+<img src="usi-garaj/usi-garaj_top4_900x1200.jpg" loading="lazy" alt="Uși Garaj top 4">
+<div class="card-info">
+<span class="badge">Top 4</span>
+<span>900x1200</span>
+</div>
+</div><div class="card" data-id="usi-garaj_5" data-slug="usi-garaj" data-file="usi-garaj_top5_1200x900.jpg" onclick="toggleSelect(this)">
+<img src="usi-garaj/usi-garaj_top5_1200x900.jpg" loading="lazy" alt="Uși Garaj top 5">
+<div class="card-info">
+<span class="badge">Top 5</span>
+<span>1200x900</span>
+</div>
+</div></div></div>
+<div class="category">
+<div class="cat-header">
+<div>
+<div class="cat-title">Aer Condiționat</div>
+<div class="cat-note">Sezonalitate vară mare</div>
+</div>
+<span class="cat-page">/aer-conditionat.html</span>
+</div>
+<div class="grid">
+<div class="card" data-id="aer-conditionat_1" data-slug="aer-conditionat" data-file="aer-conditionat_top1_900x1200.jpg" onclick="toggleSelect(this)">
+<img src="aer-conditionat/aer-conditionat_top1_900x1200.jpg" loading="lazy" alt="Aer Condiționat top 1">
+<div class="card-info">
+<span class="badge">Top 1</span>
+<span>900x1200</span>
+</div>
+</div><div class="card" data-id="aer-conditionat_2" data-slug="aer-conditionat" data-file="aer-conditionat_top2_900x1200.jpg" onclick="toggleSelect(this)">
+<img src="aer-conditionat/aer-conditionat_top2_900x1200.jpg" loading="lazy" alt="Aer Condiționat top 2">
+<div class="card-info">
+<span class="badge">Top 2</span>
+<span>900x1200</span>
+</div>
+</div><div class="card" data-id="aer-conditionat_3" data-slug="aer-conditionat" data-file="aer-conditionat_top3_900x1200.jpg" onclick="toggleSelect(this)">
+<img src="aer-conditionat/aer-conditionat_top3_900x1200.jpg" loading="lazy" alt="Aer Condiționat top 3">
+<div class="card-info">
+<span class="badge">Top 3</span>
+<span>900x1200</span>
+</div>
+</div><div class="card" data-id="aer-conditionat_4" data-slug="aer-conditionat" data-file="aer-conditionat_top4_900x1200.jpg" onclick="toggleSelect(this)">
+<img src="aer-conditionat/aer-conditionat_top4_900x1200.jpg" loading="lazy" alt="Aer Condiționat top 4">
+<div class="card-info">
+<span class="badge">Top 4</span>
+<span>900x1200</span>
+</div>
+</div><div class="card" data-id="aer-conditionat_5" data-slug="aer-conditionat" data-file="aer-conditionat_top5_900x1200.jpg" onclick="toggleSelect(this)">
+<img src="aer-conditionat/aer-conditionat_top5_900x1200.jpg" loading="lazy" alt="Aer Condiționat top 5">
+<div class="card-info">
+<span class="badge">Top 5</span>
+<span>900x1200</span>
+</div>
+</div></div></div>
+<div class="category">
+<div class="cat-header">
+<div>
+<div class="cat-title">Ventilație</div>
+<div class="cat-note">B2B + B2C</div>
+</div>
+<span class="cat-page">/ventilatie.html</span>
+</div>
+<div class="grid">
+<div class="card" data-id="ventilatie_1" data-slug="ventilatie" data-file="ventilatie_top1_1200x900.jpg" onclick="toggleSelect(this)">
+<img src="ventilatie/ventilatie_top1_1200x900.jpg" loading="lazy" alt="Ventilație top 1">
+<div class="card-info">
+<span class="badge">Top 1</span>
+<span>1200x900</span>
+</div>
+</div><div class="card" data-id="ventilatie_2" data-slug="ventilatie" data-file="ventilatie_top2_900x1200.jpg" onclick="toggleSelect(this)">
+<img src="ventilatie/ventilatie_top2_900x1200.jpg" loading="lazy" alt="Ventilație top 2">
+<div class="card-info">
+<span class="badge">Top 2</span>
+<span>900x1200</span>
+</div>
+</div><div class="card" data-id="ventilatie_3" data-slug="ventilatie" data-file="ventilatie_top3_1200x900.jpg" onclick="toggleSelect(this)">
+<img src="ventilatie/ventilatie_top3_1200x900.jpg" loading="lazy" alt="Ventilație top 3">
+<div class="card-info">
+<span class="badge">Top 3</span>
+<span>1200x900</span>
+</div>
+</div><div class="card" data-id="ventilatie_4" data-slug="ventilatie" data-file="ventilatie_top4_900x1200.jpg" onclick="toggleSelect(this)">
+<img src="ventilatie/ventilatie_top4_900x1200.jpg" loading="lazy" alt="Ventilație top 4">
+<div class="card-info">
+<span class="badge">Top 4</span>
+<span>900x1200</span>
+</div>
+</div><div class="card" data-id="ventilatie_5" data-slug="ventilatie" data-file="ventilatie_top5_900x1200.jpg" onclick="toggleSelect(this)">
+<img src="ventilatie/ventilatie_top5_900x1200.jpg" loading="lazy" alt="Ventilație top 5">
+<div class="card-info">
+<span class="badge">Top 5</span>
+<span>900x1200</span>
+</div>
+</div></div></div>
+<div class="category">
+<div class="cat-header">
+<div>
+<div class="cat-title">Sonorizare</div>
+<div class="cat-note">Niche, conferințe + rezidențial</div>
+</div>
+<span class="cat-page">/sonorizare.html</span>
+</div>
+<div class="grid">
+<div class="card" data-id="sonorizare_1" data-slug="sonorizare" data-file="sonorizare_top1_1200x900.jpg" onclick="toggleSelect(this)">
+<img src="sonorizare/sonorizare_top1_1200x900.jpg" loading="lazy" alt="Sonorizare top 1">
+<div class="card-info">
+<span class="badge">Top 1</span>
+<span>1200x900</span>
+</div>
+</div><div class="card" data-id="sonorizare_2" data-slug="sonorizare" data-file="sonorizare_top2_675x1200.jpg" onclick="toggleSelect(this)">
+<img src="sonorizare/sonorizare_top2_675x1200.jpg" loading="lazy" alt="Sonorizare top 2">
+<div class="card-info">
+<span class="badge">Top 2</span>
+<span>675x1200</span>
+</div>
+</div><div class="card" data-id="sonorizare_3" data-slug="sonorizare" data-file="sonorizare_top3_675x1200.jpg" onclick="toggleSelect(this)">
+<img src="sonorizare/sonorizare_top3_675x1200.jpg" loading="lazy" alt="Sonorizare top 3">
+<div class="card-info">
+<span class="badge">Top 3</span>
+<span>675x1200</span>
+</div>
+</div><div class="card" data-id="sonorizare_4" data-slug="sonorizare" data-file="sonorizare_top4_675x1200.jpg" onclick="toggleSelect(this)">
+<img src="sonorizare/sonorizare_top4_675x1200.jpg" loading="lazy" alt="Sonorizare top 4">
+<div class="card-info">
+<span class="badge">Top 4</span>
+<span>675x1200</span>
+</div>
+</div><div class="card" data-id="sonorizare_5" data-slug="sonorizare" data-file="sonorizare_top5_1200x675.jpg" onclick="toggleSelect(this)">
+<img src="sonorizare/sonorizare_top5_1200x675.jpg" loading="lazy" alt="Sonorizare top 5">
+<div class="card-info">
+<span class="badge">Top 5</span>
+<span>1200x675</span>
+</div>
+</div></div></div>
+<div class="category">
+<div class="cat-header">
+<div>
+<div class="cat-title">Instalații Electrice</div>
+<div class="cat-note">Servicii suport</div>
+</div>
+<span class="cat-page">/instalatii-electrice.html</span>
+</div>
+<div class="grid">
+<div class="card" data-id="instalatii-electrice_1" data-slug="instalatii-electrice" data-file="instalatii-electrice_top1_900x1200.jpg" onclick="toggleSelect(this)">
+<img src="instalatii-electrice/instalatii-electrice_top1_900x1200.jpg" loading="lazy" alt="Instalații Electrice top 1">
+<div class="card-info">
+<span class="badge">Top 1</span>
+<span>900x1200</span>
+</div>
+</div><div class="card" data-id="instalatii-electrice_2" data-slug="instalatii-electrice" data-file="instalatii-electrice_top2_900x1200.jpg" onclick="toggleSelect(this)">
+<img src="instalatii-electrice/instalatii-electrice_top2_900x1200.jpg" loading="lazy" alt="Instalații Electrice top 2">
+<div class="card-info">
+<span class="badge">Top 2</span>
+<span>900x1200</span>
+</div>
+</div><div class="card" data-id="instalatii-electrice_3" data-slug="instalatii-electrice" data-file="instalatii-electrice_top3_900x1200.jpg" onclick="toggleSelect(this)">
+<img src="instalatii-electrice/instalatii-electrice_top3_900x1200.jpg" loading="lazy" alt="Instalații Electrice top 3">
+<div class="card-info">
+<span class="badge">Top 3</span>
+<span>900x1200</span>
+</div>
+</div><div class="card" data-id="instalatii-electrice_4" data-slug="instalatii-electrice" data-file="instalatii-electrice_top4_900x1200.jpg" onclick="toggleSelect(this)">
+<img src="instalatii-electrice/instalatii-electrice_top4_900x1200.jpg" loading="lazy" alt="Instalații Electrice top 4">
+<div class="card-info">
+<span class="badge">Top 4</span>
+<span>900x1200</span>
+</div>
+</div><div class="card" data-id="instalatii-electrice_5" data-slug="instalatii-electrice" data-file="instalatii-electrice_top5_900x1200.jpg" onclick="toggleSelect(this)">
+<img src="instalatii-electrice/instalatii-electrice_top5_900x1200.jpg" loading="lazy" alt="Instalații Electrice top 5">
+<div class="card-info">
+<span class="badge">Top 5</span>
+<span>900x1200</span>
+</div>
+</div></div></div>
+<div class="category">
+<div class="cat-header">
+<div>
+<div class="cat-title">Instalații Termice-Sanitare</div>
+<div class="cat-note">Servicii suport</div>
+</div>
+<span class="cat-page">/instalatii-termice-sanitare.html</span>
+</div>
+<div class="grid">
+<div class="card" data-id="instalatii-termice_1" data-slug="instalatii-termice" data-file="instalatii-termice_top1_1200x900.jpg" onclick="toggleSelect(this)">
+<img src="instalatii-termice/instalatii-termice_top1_1200x900.jpg" loading="lazy" alt="Instalații Termice-Sanitare top 1">
+<div class="card-info">
+<span class="badge">Top 1</span>
+<span>1200x900</span>
+</div>
+</div><div class="card" data-id="instalatii-termice_2" data-slug="instalatii-termice" data-file="instalatii-termice_top2_1200x900.jpg" onclick="toggleSelect(this)">
+<img src="instalatii-termice/instalatii-termice_top2_1200x900.jpg" loading="lazy" alt="Instalații Termice-Sanitare top 2">
+<div class="card-info">
+<span class="badge">Top 2</span>
+<span>1200x900</span>
+</div>
+</div><div class="card" data-id="instalatii-termice_3" data-slug="instalatii-termice" data-file="instalatii-termice_top3_1200x900.jpg" onclick="toggleSelect(this)">
+<img src="instalatii-termice/instalatii-termice_top3_1200x900.jpg" loading="lazy" alt="Instalații Termice-Sanitare top 3">
+<div class="card-info">
+<span class="badge">Top 3</span>
+<span>1200x900</span>
+</div>
+</div><div class="card" data-id="instalatii-termice_4" data-slug="instalatii-termice" data-file="instalatii-termice_top4_900x1200.jpg" onclick="toggleSelect(this)">
+<img src="instalatii-termice/instalatii-termice_top4_900x1200.jpg" loading="lazy" alt="Instalații Termice-Sanitare top 4">
+<div class="card-info">
+<span class="badge">Top 4</span>
+<span>900x1200</span>
+</div>
+</div><div class="card" data-id="instalatii-termice_5" data-slug="instalatii-termice" data-file="instalatii-termice_top5_900x1200.jpg" onclick="toggleSelect(this)">
+<img src="instalatii-termice/instalatii-termice_top5_900x1200.jpg" loading="lazy" alt="Instalații Termice-Sanitare top 5">
+<div class="card-info">
+<span class="badge">Top 5</span>
+<span>900x1200</span>
+</div>
+</div></div></div>
+<div class="category">
+<div class="cat-header">
+<div>
+<div class="cat-title">Iluminat LED</div>
+<div class="cat-note">Fără pagină dedicată — folosit pe blog/portofoliu</div>
+</div>
+<span class="cat-page" style="color:#94a3b8">(fără pagină dedicată)</span>
+</div>
+<div class="grid">
+<div class="card" data-id="iluminat-led_1" data-slug="iluminat-led" data-file="iluminat-led_top1_900x1200.jpg" onclick="toggleSelect(this)">
+<img src="iluminat-led/iluminat-led_top1_900x1200.jpg" loading="lazy" alt="Iluminat LED top 1">
+<div class="card-info">
+<span class="badge">Top 1</span>
+<span>900x1200</span>
+</div>
+</div><div class="card" data-id="iluminat-led_2" data-slug="iluminat-led" data-file="iluminat-led_top2_1200x835.jpg" onclick="toggleSelect(this)">
+<img src="iluminat-led/iluminat-led_top2_1200x835.jpg" loading="lazy" alt="Iluminat LED top 2">
+<div class="card-info">
+<span class="badge">Top 2</span>
+<span>1200x835</span>
+</div>
+</div><div class="card" data-id="iluminat-led_3" data-slug="iluminat-led" data-file="iluminat-led_top3_835x1200.jpg" onclick="toggleSelect(this)">
+<img src="iluminat-led/iluminat-led_top3_835x1200.jpg" loading="lazy" alt="Iluminat LED top 3">
+<div class="card-info">
+<span class="badge">Top 3</span>
+<span>835x1200</span>
+</div>
+</div><div class="card" data-id="iluminat-led_4" data-slug="iluminat-led" data-file="iluminat-led_top4_1200x835.jpg" onclick="toggleSelect(this)">
+<img src="iluminat-led/iluminat-led_top4_1200x835.jpg" loading="lazy" alt="Iluminat LED top 4">
+<div class="card-info">
+<span class="badge">Top 4</span>
+<span>1200x835</span>
+</div>
+</div><div class="card" data-id="iluminat-led_5" data-slug="iluminat-led" data-file="iluminat-led_top5_1200x835.jpg" onclick="toggleSelect(this)">
+<img src="iluminat-led/iluminat-led_top5_1200x835.jpg" loading="lazy" alt="Iluminat LED top 5">
+<div class="card-info">
+<span class="badge">Top 5</span>
+<span>1200x835</span>
+</div>
+</div></div></div>
+<div class="category">
+<div class="cat-header">
+<div>
+<div class="cat-title">Server / Camere Tehnice</div>
+<div class="cat-note">Fără pagină dedicată — folosit pe blog/portofoliu</div>
+</div>
+<span class="cat-page" style="color:#94a3b8">(fără pagină dedicată)</span>
+</div>
+<div class="grid">
+<div class="card" data-id="server_1" data-slug="server" data-file="server_top1_900x1200.jpg" onclick="toggleSelect(this)">
+<img src="server/server_top1_900x1200.jpg" loading="lazy" alt="Server / Camere Tehnice top 1">
+<div class="card-info">
+<span class="badge">Top 1</span>
+<span>900x1200</span>
+</div>
+</div><div class="card" data-id="server_2" data-slug="server" data-file="server_top2_900x1200.jpg" onclick="toggleSelect(this)">
+<img src="server/server_top2_900x1200.jpg" loading="lazy" alt="Server / Camere Tehnice top 2">
+<div class="card-info">
+<span class="badge">Top 2</span>
+<span>900x1200</span>
+</div>
+</div><div class="card" data-id="server_3" data-slug="server" data-file="server_top3_1200x900.jpg" onclick="toggleSelect(this)">
+<img src="server/server_top3_1200x900.jpg" loading="lazy" alt="Server / Camere Tehnice top 3">
+<div class="card-info">
+<span class="badge">Top 3</span>
+<span>1200x900</span>
+</div>
+</div><div class="card" data-id="server_4" data-slug="server" data-file="server_top4_900x1200.jpg" onclick="toggleSelect(this)">
+<img src="server/server_top4_900x1200.jpg" loading="lazy" alt="Server / Camere Tehnice top 4">
+<div class="card-info">
+<span class="badge">Top 4</span>
+<span>900x1200</span>
+</div>
+</div><div class="card" data-id="server_5" data-slug="server" data-file="server_top5_900x1200.jpg" onclick="toggleSelect(this)">
+<img src="server/server_top5_900x1200.jpg" loading="lazy" alt="Server / Camere Tehnice top 5">
+<div class="card-info">
+<span class="badge">Top 5</span>
+<span>900x1200</span>
+</div>
+</div></div></div>
+<div class="summary" id="summary">
+<h3>Selecții: <span id="count">0</span> / 15</h3>
+<p>Click pe poze pentru selecție. Una singură per categorie.</p>
+<button onclick="copySelection()">Copiază selecția</button>
+</div>
+
+<script>
+const selected = new Map();
+
+function toggleSelect(el) {
+  const slug = el.dataset.slug;
+  const id = el.dataset.id;
+  const file = el.dataset.file;
+
+  // Deselect any other from same category
+  document.querySelectorAll(`.card[data-slug="${slug}"]`).forEach(c => {
+    if (c !== el) c.classList.remove('selected');
+  });
+
+  if (selected.get(slug) === id) {
+    selected.delete(slug);
+    el.classList.remove('selected');
+  } else {
+    selected.set(slug, id);
+    el.classList.add('selected');
+    // Capture file name too
+    selected.set(slug + '__file', file);
+  }
+  updateSummary();
+}
+
+function updateSummary() {
+  const count = Array.from(selected.keys()).filter(k => !k.endsWith('__file')).length;
+  document.getElementById('count').textContent = count;
+  // Save to URL hash
+  const data = {};
+  for (const [k, v] of selected) {
+    if (!k.endsWith('__file')) data[k] = selected.get(k + '__file');
+  }
+  history.replaceState(null, '', '#' + encodeURIComponent(JSON.stringify(data)));
+}
+
+function copySelection() {
+  const data = {};
+  for (const [k, v] of selected) {
+    if (!k.endsWith('__file')) data[k] = selected.get(k + '__file');
+  }
+  const txt = JSON.stringify(data, null, 2);
+  navigator.clipboard.writeText(txt).then(() => alert('Selecția copiată în clipboard! Lipește-mi-o în chat.'));
+}
+
+// Restore from URL hash
+window.addEventListener('load', () => {
+  if (location.hash) {
+    try {
+      const data = JSON.parse(decodeURIComponent(location.hash.slice(1)));
+      for (const [slug, file] of Object.entries(data)) {
+        const card = document.querySelector(`.card[data-slug="${slug}"][data-file="${file}"]`);
+        if (card) {
+          card.classList.add('selected');
+          selected.set(slug, card.dataset.id);
+          selected.set(slug + '__file', file);
+        }
+      }
+      updateSummary();
+    } catch (e) { console.warn('hash parse', e); }
+  }
+});
+</script>
+</body>
+</html>

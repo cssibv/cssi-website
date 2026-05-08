@@ -2,5 +2,13 @@
 deployment:
   tasks:
     - export DEPLOYPATH=/home/r101042brea/cssi.ro/
+    - echo "=== BEFORE cp — repo state ==="
+    - ls -la admin/api.php 2>&1 || echo "!!! api.php LIPSEȘTE DIN REPO-UL CPANEL !!!"
+    - echo "=== BEFORE cp — deploy state ==="
+    - ls -la $DEPLOYPATH/admin/api.php 2>&1 || echo "api.php NU e în $DEPLOYPATH/admin/"
     - /bin/cp -R * $DEPLOYPATH
+    - echo "=== AFTER cp — deploy state ==="
+    - ls -la $DEPLOYPATH/admin/api.php 2>&1 || echo "!!! api.php LIPSEȘTE DUPĂ CP !!!"
     - cd $DEPLOYPATH && php generate-localized.php
+    - echo "=== AFTER generate-localized.php ==="
+    - ls -la $DEPLOYPATH/admin/api.php 2>&1 || echo "!!! api.php A DISPĂRUT după generate-localized !!!"
