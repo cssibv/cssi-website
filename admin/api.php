@@ -63,6 +63,107 @@ try {
         case 'ping':
             jsonResponse(['success' => true, 'time' => date('c'), 'authenticated' => (bool)currentUser()]);
             break;
+
+        // ══════════════════════════════════════
+        // USERS — schimbare parolă proprie + admin user management
+        // ══════════════════════════════════════
+        case 'changeMyPassword':
+            // Self-service — user-ul logat își schimbă parola
+            $u = currentUser();
+            $current = isset($data['current']) ? $data['current'] : '';
+            $new     = isset($data['new']) ? $data['new'] : '';
+            if (!$current || !$new) jsonResponse(['success' => false, 'error' => 'Parolă curentă + nouă obligatorii'], 400);
+            if (strlen($new) < 6)   jsonResponse(['success' => false, 'error' => 'Parola nouă min. 6 caractere'], 400);
+            if ($current === $new)  jsonResponse(['success' => false, 'error' => 'Parola nouă trebuie să fie diferită'], 400);
+
+            $stmt = $db->prepare("SELECT password_hash FROM users WHERE id = ? AND active = 1");
+            $stmt->execute([$u['id']]);
+            $row = $stmt->fetch();
+            if (!$row || !password_verify($current, $row['password_hash'])) {
+                usleep(800000);
+                jsonResponse(['success' => false, 'error' => 'Parola curentă incorectă'], 401);
+            }
+            $newHash = password_hash($new, PASSWORD_BCRYPT, ['cost' => 11]);
+            $db->prepare("UPDATE users SET password_hash=?, failed_attempts=0, locked_until=NULL WHERE id=?")
+               ->execute([$newHash, $u['id']]);
+            jsonResponse(['success' => true, 'message' => 'Parolă schimbată']);
+            break;
+
+        case 'adminListUsers':
+            requireAdmin();
+            $rows = $db->query("SELECT id, username, display_name, role, is_tehnician, active, last_login, failed_attempts, locked_until, created_at FROM users ORDER BY id")->fetchAll();
+            // Cast bool-uri pentru frontend
+            foreach ($rows as &$r) {
+                $r['is_tehnician'] = (bool)$r['is_tehnician'];
+                $r['active'] = (bool)$r['active'];
+                $r['locked'] = !empty($r['locked_until']) && strtotime($r['locked_until']) > time();
+            }
+            unset($r);
+            jsonResponse(['success' => true, 'data' => $rows]);
+            break;
+
+        case 'adminSetPassword':
+            requireAdmin();
+            $userId = isset($data['user_id']) ? intval($data['user_id']) : 0;
+            $newPw  = isset($data['new']) ? $data['new'] : '';
+            if (!$userId || strlen($newPw) < 6) jsonResponse(['success' => false, 'error' => 'user_id + parolă (min 6 chars) obligatorii'], 400);
+            $newHash = password_hash($newPw, PASSWORD_BCRYPT, ['cost' => 11]);
+            $stmt = $db->prepare("UPDATE users SET password_hash=?, failed_attempts=0, locked_until=NULL WHERE id=?");
+            $stmt->execute([$newHash, $userId]);
+            jsonResponse(['success' => true, 'affected' => $stmt->rowCount()]);
+            break;
+
+        case 'adminUpdateUser':
+            requireAdmin();
+            $userId = isset($data['user_id']) ? intval($data['user_id']) : 0;
+            if (!$userId) jsonResponse(['success' => false, 'error' => 'user_id obligatoriu'], 400);
+            $allowedFields = ['display_name','role','is_tehnician','active'];
+            $fields = []; $values = [];
+            foreach ($allowedFields as $f) {
+                if (array_key_exists($f, $data)) {
+                    $fields[] = "$f = ?";
+                    $values[] = in_array($f, ['is_tehnician','active'], true) ? (!empty($data[$f]) ? 1 : 0) : $data[$f];
+                }
+            }
+            if (!$fields) jsonResponse(['success' => false, 'error' => 'Nimic de modificat'], 400);
+            // Protecție: ultimul admin activ nu poate fi dezactivat sau scos din rol admin
+            if ((isset($data['active']) && empty($data['active'])) || (isset($data['role']) && $data['role'] !== 'admin')) {
+                $cur = $db->prepare("SELECT role, active FROM users WHERE id=?"); $cur->execute([$userId]); $crow = $cur->fetch();
+                if ($crow && $crow['role'] === 'admin' && $crow['active']) {
+                    $cnt = intval($db->query("SELECT COUNT(*) FROM users WHERE role='admin' AND active=1")->fetchColumn());
+                    if ($cnt <= 1) jsonResponse(['success' => false, 'error' => 'Nu poți dezactiva sau scoate ultimul admin'], 400);
+                }
+            }
+            $values[] = $userId;
+            $db->prepare("UPDATE users SET " . implode(', ', $fields) . " WHERE id=?")->execute($values);
+            jsonResponse(['success' => true]);
+            break;
+
+        case 'adminUnlockUser':
+            requireAdmin();
+            $userId = isset($data['user_id']) ? intval($data['user_id']) : 0;
+            if (!$userId) jsonResponse(['success' => false, 'error' => 'user_id obligatoriu'], 400);
+            $db->prepare("UPDATE users SET failed_attempts=0, locked_until=NULL WHERE id=?")->execute([$userId]);
+            jsonResponse(['success' => true]);
+            break;
+
+        case 'adminCreateUser':
+            requireAdmin();
+            $username    = strtolower(trim($data['username'] ?? ''));
+            $password    = isset($data['password']) ? $data['password'] : '';
+            $displayName = trim($data['display_name'] ?? '');
+            $role        = trim($data['role'] ?? 'tech');
+            $isTeh       = !empty($data['is_tehnician']) ? 1 : 0;
+            if (!preg_match('/^[a-z0-9_-]{3,30}$/', $username)) jsonResponse(['success' => false, 'error' => 'Username invalid (3-30 caractere, doar a-z, 0-9, _ -)'], 400);
+            if (strlen($password) < 6) jsonResponse(['success' => false, 'error' => 'Parolă min. 6 caractere'], 400);
+            $check = $db->prepare("SELECT id FROM users WHERE username=?");
+            $check->execute([$username]);
+            if ($check->fetch()) jsonResponse(['success' => false, 'error' => 'Username deja folosit'], 400);
+            $hash = password_hash($password, PASSWORD_BCRYPT, ['cost' => 11]);
+            $stmt = $db->prepare("INSERT INTO users (username, password_hash, display_name, role, is_tehnician) VALUES (?,?,?,?,?)");
+            $stmt->execute([$username, $hash, $displayName ?: ucfirst($username), $role, $isTeh]);
+            jsonResponse(['success' => true, 'id' => intval($db->lastInsertId())]);
+            break;
         // ══════════════════════════════════════
         // CLIENTI
         // ══════════════════════════════════════

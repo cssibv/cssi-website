@@ -48,47 +48,187 @@ a{text-decoration:none;color:inherit;}.container{max-width:1200px;margin:0 auto;
 .toast{position:fixed;top:20px;right:20px;z-index:300;padding:12px 20px;border-radius:12px;color:#fff;font-size:13px;font-weight:700;box-shadow:0 8px 24px rgba(0,0,0,0.15);display:none;animation:slideIn 0.3s ease;}
 @keyframes slideIn{from{transform:translateX(100%);opacity:0}to{transform:translateX(0);opacity:1}}
 @media(max-width:500px){.users-grid{grid-template-columns:1fr;}}
+
+/* Account status badges + action buttons */
+.acc-status{display:inline-flex;align-items:center;gap:4px;font-size:10px;font-weight:700;padding:3px 8px;border-radius:99px;text-transform:uppercase;letter-spacing:0.3px;}
+.acc-status.active{background:#f0fdf4;color:#166534;}
+.acc-status.inactive{background:var(--gray-bg);color:var(--gray);}
+.acc-status.locked{background:#fef2f2;color:var(--red);animation:pulse 2s infinite;}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.6}}
+.acc-meta{font-size:10px;color:var(--gray-l);margin-top:2px;}
+.acc-actions{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px;}
+.acc-btn{padding:6px 10px;border-radius:8px;border:1px solid var(--gray-b);background:#fff;color:var(--gray);font-size:11px;font-weight:700;cursor:pointer;transition:all 0.15s;font-family:inherit;display:inline-flex;align-items:center;gap:4px;}
+.acc-btn:hover{border-color:var(--blue);color:var(--blue);background:#eff6ff;}
+.acc-btn.unlock{border-color:var(--orange);color:var(--orange);background:#fff7ed;}
+.acc-btn.unlock:hover{background:var(--orange);color:#fff;}
+.acc-btn.danger:hover{border-color:var(--red);color:var(--red);background:#fef2f2;}
+.acc-btn.success{border-color:var(--green);color:var(--green);background:#f0fdf4;}
+.acc-btn.success:hover{background:var(--green);color:#fff;}
+.add-user-btn{padding:8px 14px;background:var(--green);color:#fff;border:none;border-radius:10px;font-size:13px;font-weight:700;cursor:pointer;display:inline-flex;align-items:center;gap:6px;}
+.add-user-btn:hover{background:#16a34a;transform:translateY(-1px);}
+
+/* Modals */
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);backdrop-filter:blur(4px);z-index:200;align-items:center;justify-content:center;padding:16px;}
+.modal-overlay.active{display:flex;}
+.modal{background:#fff;border-radius:20px;width:100%;max-width:440px;box-shadow:0 25px 60px rgba(0,0,0,0.3);max-height:90vh;overflow-y:auto;}
+.modal-head{padding:18px 22px;border-bottom:1px solid var(--gray-b);display:flex;align-items:center;justify-content:space-between;}
+.modal-title{font-size:16px;font-weight:800;}
+.modal-close{width:32px;height:32px;border-radius:8px;border:none;background:var(--gray-bg);color:var(--gray);font-size:18px;cursor:pointer;}.modal-close:hover{background:#fef2f2;color:var(--red);}
+.modal-body{padding:20px 22px;}
+.form-group{margin-bottom:14px;}
+.form-label{display:block;font-size:12px;font-weight:700;color:var(--dark);margin-bottom:6px;}
+.form-input,.form-select{width:100%;padding:11px 14px;border:2px solid var(--gray-b);border-radius:10px;font-size:14px;font-family:inherit;outline:none;transition:all 0.2s;background:#fff;}
+.form-input:focus,.form-select:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(59,130,246,0.08);}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.form-submit{width:100%;padding:12px;background:var(--green);color:#fff;border:none;border-radius:10px;font-size:14px;font-weight:700;cursor:pointer;}.form-submit:hover{background:#16a34a;}
+.form-err{color:var(--red);font-size:12px;padding:8px;background:#fef2f2;border-radius:6px;display:none;margin-bottom:10px;font-weight:600;}
+
 </style>
 </head>
 <body>
 <div class="container">
     <div class="page-header"><div><a href="/admin.html" class="page-back">← Înapoi la Portal</a><div class="page-title">👥 Utilizatori & Drepturi</div><div class="page-subtitle">Administrare conturi, roluri și permisiuni — salvate în MySQL</div></div>
-    <div style="display:flex;align-items:center;gap:8px"><span style="font-size:10px;color:rgba(255,255,255,0.5)">💾 MySQL</span><span id="dbStatus" style="width:8px;height:8px;border-radius:50%;background:var(--orange)"></span></div></div>
+    <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+        <button class="add-user-btn" onclick="openCreateUserModal()">＋ Utilizator nou</button>
+        <span style="font-size:10px;color:rgba(255,255,255,0.5)">💾 MySQL</span>
+        <span id="dbStatus" style="width:8px;height:8px;border-radius:50%;background:var(--orange)"></span>
+    </div></div>
     <div id="mainContent"><div style="text-align:center;padding:40px;color:var(--gray-l)">⏳ Se încarcă din baza de date...</div></div>
 </div>
 <div class="save-bar" id="saveBar"><span style="font-size:13px;color:var(--gray);font-weight:600">⚠️ Ai modificări nesalvate</span><button class="btn btn-green" id="saveBtn" onclick="saveAllToDB()">💾 Salvează în MySQL</button><button class="btn btn-outline" onclick="resetPerms()">Anulează</button></div>
 <div class="toast" id="toast"></div>
+
+<!-- SET PASSWORD MODAL (admin) -->
+<div id="setPwModal" class="modal-overlay" onclick="if(event.target===this)closeSetPwModal()">
+<div class="modal">
+    <div class="modal-head"><div class="modal-title">🔑 Setează parolă pentru <span id="setPwUser">—</span></div><button class="modal-close" onclick="closeSetPwModal()">✕</button></div>
+    <div class="modal-body">
+        <form onsubmit="doAdminSetPassword(event)">
+            <input type="hidden" id="setPwUserId">
+            <div class="form-group"><label class="form-label">Parolă nouă (min. 6 caractere)</label>
+                <input type="text" class="form-input" id="setPwNew" required minlength="6" autocomplete="new-password" autocapitalize="off" style="font-family:'Courier New',monospace;letter-spacing:1px">
+            </div>
+            <div class="form-group" style="display:flex;gap:6px;flex-wrap:wrap">
+                <button type="button" class="acc-btn" onclick="generatePw()">🎲 Generează aleatoriu</button>
+                <button type="button" class="acc-btn" onclick="document.getElementById('setPwNew').type=document.getElementById('setPwNew').type==='text'?'password':'text'">👁️ Toggle vizibilitate</button>
+            </div>
+            <div id="setPwErr" class="form-err"></div>
+            <button type="submit" class="form-submit">💾 Setează parola</button>
+        </form>
+    </div>
+</div>
+</div>
+
+<!-- CREATE USER MODAL -->
+<div id="createUserModal" class="modal-overlay" onclick="if(event.target===this)closeCreateUserModal()">
+<div class="modal">
+    <div class="modal-head"><div class="modal-title">➕ Utilizator nou</div><button class="modal-close" onclick="closeCreateUserModal()">✕</button></div>
+    <div class="modal-body">
+        <form onsubmit="doCreateUser(event)">
+            <div class="form-group"><label class="form-label">Username (3-30 caractere, doar a-z, 0-9, _ -)</label>
+                <input type="text" class="form-input" id="cuUsername" required pattern="[a-z0-9_-]{3,30}" autocomplete="off" autocapitalize="off" placeholder="ex: andrei">
+            </div>
+            <div class="form-group"><label class="form-label">Nume afișat</label>
+                <input type="text" class="form-input" id="cuDisplayName" placeholder="ex: Andrei Popescu">
+            </div>
+            <div class="form-row">
+                <div class="form-group"><label class="form-label">Rol</label>
+                    <select class="form-select" id="cuRole">
+                        <option value="tech">tech (tehnician)</option>
+                        <option value="sales">sales (vânzări)</option>
+                        <option value="org">org (org/contracte)</option>
+                        <option value="mkt">mkt (marketing)</option>
+                        <option value="admin">admin (acces total)</option>
+                    </select>
+                </div>
+                <div class="form-group"><label class="form-label">Tip</label>
+                    <select class="form-select" id="cuTehnician">
+                        <option value="0">Birou (acces complet la rolul lui)</option>
+                        <option value="1">Tehnician teren (doar Execuție)</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group"><label class="form-label">Parolă inițială (min. 6 caractere)</label>
+                <input type="text" class="form-input" id="cuPassword" required minlength="6" autocomplete="new-password" autocapitalize="off" style="font-family:'Courier New',monospace">
+            </div>
+            <button type="button" class="acc-btn" onclick="generateCuPw()" style="margin-bottom:10px">🎲 Generează parolă aleatorie</button>
+            <div id="cuErr" class="form-err"></div>
+            <button type="submit" class="form-submit">➕ Creează contul</button>
+        </form>
+    </div>
+</div>
+</div>
 <script>
 var role=sessionStorage.getItem('cssi-role');
 if(role!=='admin'){window.location.href='../admin.html';}
 var API='/admin/api.php';
-var USERS=[
-{id:'admin',name:'Admin',pass:'admin',color:'c-admin',icon:'🔑',pill:'Admin',pillBg:'#0f172a',pillColor:'#fff'},
-{id:'mihai',name:'Mihai',pass:'mihai2026',color:'c-mihai',icon:'💰',pill:'Ofertare',pillBg:'#eff6ff',pillColor:'#3b82f6'},
-{id:'roxana',name:'Roxana',pass:'roxana2026',color:'c-roxana',icon:'📋',pill:'Contracte',pillBg:'#fff7ed',pillColor:'#f97316'},
-{id:'valentin',name:'Valentin',pass:'valentin2026',color:'c-valentin',icon:'📐',pill:'Proiectare',pillBg:'#f5f3ff',pillColor:'#8b5cf6'},
-{id:'cristina',name:'Cristina',pass:'cristina2026',color:'c-cristina',icon:'📞',pill:'Lead-uri',pillBg:'#f0fdfa',pillColor:'#14b8a6'},
-// Tehnicieni — echipa de execuție pe teren
-{id:'zoli',name:'Zoli',pass:'zoli2000',color:'c-tehnician',icon:'🔧',pill:'Tehnician',pillBg:'#fff7ed',pillColor:'#ea580c'},
-{id:'sanyi',name:'Sanyi',pass:'sanyi3000',color:'c-tehnician',icon:'🔧',pill:'Tehnician',pillBg:'#fff7ed',pillColor:'#ea580c'},
-{id:'bogdan',name:'Bogdan',pass:'bogdan4000',color:'c-tehnician',icon:'🔧',pill:'Tehnician',pillBg:'#fff7ed',pillColor:'#ea580c'},
-{id:'cezar',name:'Cezar',pass:'cezar5000',color:'c-tehnician',icon:'🔧',pill:'Tehnician',pillBg:'#fff7ed',pillColor:'#ea580c'},
-{id:'cristi',name:'Cristi',pass:'cristi6000',color:'c-tehnician',icon:'🔧',pill:'Tehnician',pillBg:'#fff7ed',pillColor:'#ea580c'},
-{id:'denes',name:'Denes',pass:'denes7000',color:'c-tehnician',icon:'🔧',pill:'Tehnician',pillBg:'#fff7ed',pillColor:'#ea580c'}
-];
+// USERS e populat din DB la load (adminListUsers)
+var USERS=[];
+var ICON_BY_ROLE = { admin:'🔑', sales:'💰', org:'📋', mkt:'📊', tech:'📐' };
+var COLOR_BY_USER = { admin:'c-admin', mihai:'c-mihai', roxana:'c-roxana', valentin:'c-valentin', cristina:'c-cristina' };
+function colorForUser(u){
+    if (COLOR_BY_USER[u.username]) return COLOR_BY_USER[u.username];
+    if (u.is_tehnician) return 'c-tehnician';
+    return 'c-admin';
+}
+function iconForUser(u){
+    if (u.is_tehnician) return '🔧';
+    return ICON_BY_ROLE[u.role] || '👤';
+}
+function pillForUser(u){
+    if (u.role === 'admin') return {label:'Admin', bg:'#0f172a', color:'#fff'};
+    if (u.is_tehnician) return {label:'Tehnician', bg:'#fff7ed', color:'#ea580c'};
+    if (u.role === 'sales') return {label:'Vânzări', bg:'#eff6ff', color:'#3b82f6'};
+    if (u.role === 'org') return {label:'Org', bg:'#fff7ed', color:'#f97316'};
+    if (u.role === 'mkt') return {label:'Marketing', bg:'#f5f3ff', color:'#8b5cf6'};
+    if (u.role === 'tech') return {label:'Tehnic', bg:'#f0fdfa', color:'#14b8a6'};
+    return {label:u.role, bg:'#f1f5f9', color:'#64748b'};
+}
+function fmtRelTime(s){
+    if(!s) return 'niciodată';
+    var d = new Date(s.replace(' ','T'));
+    var diff = Math.floor((Date.now() - d.getTime()) / 1000);
+    if (diff < 60) return 'acum';
+    if (diff < 3600) return Math.floor(diff/60)+' min';
+    if (diff < 86400) return Math.floor(diff/3600)+'h';
+    if (diff < 2592000) return Math.floor(diff/86400)+' zile';
+    return d.toLocaleDateString('ro-RO');
+}
 var MODS=[{id:'proiecte',icon:'📋',name:'Proiecte'},{id:'crm',icon:'💰',name:'CRM Clienți'},{id:'calculator',icon:'📝',name:'Oferte'},{id:'financiar',icon:'💳',name:'Financiar'},{id:'planificare',icon:'📅',name:'Planificare'},{id:'executie',icon:'✅',name:'Execuție'},{id:'proiectare',icon:'📐',name:'Proiectare'},{id:'mentenanta',icon:'🔄',name:'Mentenanță'},{id:'materiale',icon:'📦',name:'Inventar'},{id:'necesar',icon:'🛒',name:'Necesar'},{id:'social',icon:'📅',name:'Calendar Social'},{id:'marketing',icon:'📊',name:'Marketing'},{id:'documente',icon:'📁',name:'Documente'}];
 var STAGES=['Lead','Ofertă','Contract','Facturare','Proiectare','Execuție','Recepție','Facturare 2','Mentenanță'];
 var perms={},originalPerms='{}';
 
 function loadFromDB(){
-fetch(API+'?action=getUserConfig&_t='+Date.now()).then(function(r){return r.json()}).then(function(res){
-if(res.success&&res.data&&res.data.length){res.data.forEach(function(c){perms[c.user_id]={modules:c.modules||[],stages:c.stages||[],primary:c.primary_stages||[],focus:c.focus||''};});}
-USERS.forEach(function(u){if(!perms[u.id])perms[u.id]={modules:MODS.map(function(m){return m.id}),stages:[],primary:[],focus:''};});
-originalPerms=JSON.stringify(perms);document.getElementById('dbStatus').style.background='var(--green)';renderAll();
-}).catch(function(){
-USERS.forEach(function(u){perms[u.id]={modules:MODS.map(function(m){return m.id}),stages:[],primary:[],focus:''};});
-originalPerms=JSON.stringify(perms);document.getElementById('dbStatus').style.background='var(--red)';renderAll();showToast('⚠️ Eroare DB','error');
-});}
+    Promise.all([
+        fetch(API+'?action=adminListUsers&_t='+Date.now(), {credentials:'include'}).then(function(r){return r.json();}),
+        fetch(API+'?action=getUserConfig&_t='+Date.now(), {credentials:'include'}).then(function(r){return r.json();})
+    ]).then(function(results){
+        var resU = results[0], resP = results[1];
+        if (resU.success && resU.data) {
+            USERS = resU.data.map(function(u){
+                u.dbId = u.id;        // păstrez DB id (numeric) pentru endpointuri admin
+                u.id = u.username;    // overwrite cu username pt compat cu codul perms[uid] / matrix
+                u.name = u.display_name || u.username;  // pt back-compat în restul render
+                u.icon = iconForUser(u);
+                return u;
+            });
+        }
+        if (resP.success && resP.data && resP.data.length) {
+            resP.data.forEach(function(c){
+                perms[c.user_id] = {modules:c.modules||[], stages:c.stages||[], primary:c.primary_stages||[], focus:c.focus||''};
+            });
+        }
+        USERS.forEach(function(u){
+            if(!perms[u.id]) perms[u.id] = {modules:MODS.map(function(m){return m.id;}), stages:[], primary:[], focus:''};
+        });
+        originalPerms = JSON.stringify(perms);
+        document.getElementById('dbStatus').style.background = 'var(--green)';
+        renderAll();
+    }).catch(function(){
+        document.getElementById('dbStatus').style.background = 'var(--red)';
+        showToast('⚠️ Eroare DB sau lipsă acces admin', 'error');
+    });
+}
 
 function saveAllToDB(){
 var btn=document.getElementById('saveBtn');btn.textContent='⏳ Se salvează...';btn.disabled=true;
@@ -100,9 +240,30 @@ else showToast('⚠️ Eroare parțială','error');}).catch(function(){btn.textC
 
 function renderAll(){
 var h='<div class="section-title">👤 Conturi Active</div><div class="users-grid">';
-USERS.forEach(function(u){var up=perms[u.id]||{stages:[],primary:[],modules:[],focus:''};
-h+='<div class="user-card"><div class="user-head"><div class="user-avatar '+u.color+'">'+u.name[0]+'</div><div><div class="user-name">'+u.icon+' '+u.name+'</div><div class="user-focus">'+(up.focus||'—')+'</div><span class="user-pill" style="background:'+u.pillBg+';color:'+u.pillColor+'">'+u.pill+'</span></div></div><div class="user-body">';
-h+='<div class="user-section"><div class="user-section-title">🔐 Credențiale</div><div class="cred-row"><span class="cred-label">User:</span><span class="cred-value">'+u.id+'</span></div><div class="cred-row"><span class="cred-label">Parolă:</span><span class="cred-value masked" id="pass-'+u.id+'">••••••••</span><button class="eye-btn" onclick="togglePass(\''+u.id+'\',\''+u.pass+'\')">👁</button></div></div>';
+USERS.forEach(function(u){
+    var up=perms[u.id]||{stages:[],primary:[],modules:[],focus:''};
+    var name = u.display_name || u.id;
+    var color = colorForUser(u);
+    var icon = iconForUser(u);
+    var pill = pillForUser(u);
+    var statusBadge = '';
+    if (u.locked)        statusBadge = '<span class="acc-status locked">🔒 Blocat</span>';
+    else if (!u.active)  statusBadge = '<span class="acc-status inactive">⊘ Dezactivat</span>';
+    else                 statusBadge = '<span class="acc-status active">✓ Activ</span>';
+
+h+='<div class="user-card"><div class="user-head"><div class="user-avatar '+color+'">'+name[0].toUpperCase()+'</div><div><div class="user-name">'+icon+' '+name+'</div><div class="user-focus">'+(up.focus||'—')+'</div><span class="user-pill" style="background:'+pill.bg+';color:'+pill.color+'">'+pill.label+'</span></div></div><div class="user-body">';
+h+='<div class="user-section"><div class="user-section-title">🔐 Cont</div>';
+h+='<div class="cred-row"><span class="cred-label">User:</span><span class="cred-value">'+u.id+'</span></div>';
+h+='<div class="cred-row"><span class="cred-label">Status:</span><span style="flex:1">'+statusBadge+'</span></div>';
+h+='<div class="cred-row"><span class="cred-label">Login:</span><span style="font-size:11px;color:var(--gray)">'+fmtRelTime(u.last_login)+(u.failed_attempts>0?' · <span style="color:var(--orange)">'+u.failed_attempts+' eșecuri</span>':'')+'</span></div>';
+h+='<div class="acc-actions">';
+h+='<button class="acc-btn" onclick="openSetPwModal('+u.dbId+',\''+name+'\')">🔑 Setează parolă</button>';
+if (u.locked) h+='<button class="acc-btn unlock" onclick="doUnlock('+u.dbId+',\''+name+'\')">🔓 Deblochează</button>';
+if (u.id !== 'admin') {
+    if (u.active) h+='<button class="acc-btn danger" onclick="doToggleActive('+u.dbId+',\''+name+'\',false)">⊘ Dezactivează</button>';
+    else h+='<button class="acc-btn success" onclick="doToggleActive('+u.dbId+',\''+name+'\',true)">✓ Activează</button>';
+}
+h+='</div></div>';
 h+='<div class="user-section"><div class="user-section-title">🔄 Etape responsabil <span style="font-weight:400;text-transform:none;letter-spacing:0;color:var(--gray-l)">(click = toggle · dublu-click = responsabil principal)</span></div><div class="workflow">';
 STAGES.forEach(function(s){var isP=up.primary.indexOf(s)>=0;var isA=up.stages.indexOf(s)>=0;h+='<div class="wf-stage '+(isP?'primary':(isA?'active':''))+'" onclick="tgStage(\''+u.id+'\',\''+s+'\')" ondblclick="tgPrimary(\''+u.id+'\',\''+s+'\')">'+s+'</div>';});
 h+='</div></div>';
@@ -128,7 +289,77 @@ h+='<div style="background:var(--gray-bg);padding:10px 14px;border-radius:10px;f
 h+='</div></div>';
 document.getElementById('mainContent').innerHTML=h;}
 
-function togglePass(uid,pass){var el=document.getElementById('pass-'+uid);if(el.classList.contains('masked')){el.textContent=pass;el.classList.remove('masked')}else{el.textContent='••••••••';el.classList.add('masked')}}
+// ═══ ADMIN ACTIONS pentru conturi ═══
+function genRandPw(len){
+    var chars='ABCDEFGHJKLMNPQRSTUVWXYZabcdefghjkmnpqrstuvwxyz23456789';
+    var s=''; for(var i=0;i<(len||10);i++) s += chars.charAt(Math.floor(Math.random()*chars.length));
+    return s;
+}
+function openSetPwModal(dbId, name){
+    document.getElementById('setPwUserId').value = dbId;
+    document.getElementById('setPwUser').textContent = name;
+    document.getElementById('setPwNew').value = '';
+    document.getElementById('setPwErr').style.display = 'none';
+    document.getElementById('setPwModal').classList.add('active');
+    setTimeout(function(){document.getElementById('setPwNew').focus();},150);
+}
+function closeSetPwModal(){document.getElementById('setPwModal').classList.remove('active');}
+function generatePw(){document.getElementById('setPwNew').value = genRandPw(10); document.getElementById('setPwNew').type='text';}
+function doAdminSetPassword(ev){
+    ev.preventDefault();
+    var dbId = parseInt(document.getElementById('setPwUserId').value);
+    var newPw = document.getElementById('setPwNew').value;
+    var err = document.getElementById('setPwErr'); err.style.display='none';
+    if (newPw.length < 6) { err.textContent='Min. 6 caractere'; err.style.display='block'; return; }
+    fetch(API+'?action=adminSetPassword',{method:'POST',credentials:'include',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'adminSetPassword',user_id:dbId,new:newPw})})
+        .then(function(r){return r.json();}).then(function(res){
+            if (res.success) { closeSetPwModal(); showToast('✅ Parolă setată. Comunic-o user-ului: '+newPw, 'ok'); loadFromDB(); }
+            else { err.textContent=res.error||'Eroare'; err.style.display='block'; }
+        }).catch(function(e){err.textContent='Eroare server'; err.style.display='block';});
+}
+function doUnlock(dbId, name){
+    if (!confirm('Deblochezi contul '+name+'?')) return;
+    fetch(API+'?action=adminUnlockUser',{method:'POST',credentials:'include',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'adminUnlockUser',user_id:dbId})})
+        .then(function(r){return r.json();}).then(function(res){
+            if (res.success) { showToast('✅ Cont deblocat: '+name,'ok'); loadFromDB(); }
+            else showToast('❌ '+(res.error||'Eroare'),'error');
+        });
+}
+function doToggleActive(dbId, name, activate){
+    var msg = activate ? 'Activezi contul '+name+'?' : 'Dezactivezi contul '+name+'? (Nu se va mai putea autentifica)';
+    if (!confirm(msg)) return;
+    fetch(API+'?action=adminUpdateUser',{method:'POST',credentials:'include',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'adminUpdateUser',user_id:dbId,active:activate?1:0})})
+        .then(function(r){return r.json();}).then(function(res){
+            if (res.success) { showToast('✅ '+(activate?'Activat':'Dezactivat')+': '+name,'ok'); loadFromDB(); }
+            else showToast('❌ '+(res.error||'Eroare'),'error');
+        });
+}
+function openCreateUserModal(){
+    document.getElementById('cuUsername').value='';
+    document.getElementById('cuDisplayName').value='';
+    document.getElementById('cuRole').value='tech';
+    document.getElementById('cuTehnician').value='1';
+    document.getElementById('cuPassword').value='';
+    document.getElementById('cuErr').style.display='none';
+    document.getElementById('createUserModal').classList.add('active');
+    setTimeout(function(){document.getElementById('cuUsername').focus();},150);
+}
+function closeCreateUserModal(){document.getElementById('createUserModal').classList.remove('active');}
+function generateCuPw(){document.getElementById('cuPassword').value = genRandPw(10);}
+function doCreateUser(ev){
+    ev.preventDefault();
+    var u = document.getElementById('cuUsername').value.trim().toLowerCase();
+    var d = document.getElementById('cuDisplayName').value.trim();
+    var r = document.getElementById('cuRole').value;
+    var t = parseInt(document.getElementById('cuTehnician').value);
+    var p = document.getElementById('cuPassword').value;
+    var err = document.getElementById('cuErr'); err.style.display='none';
+    fetch(API+'?action=adminCreateUser',{method:'POST',credentials:'include',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'adminCreateUser',username:u,password:p,display_name:d,role:r,is_tehnician:t})})
+        .then(function(r){return r.json();}).then(function(res){
+            if (res.success) { closeCreateUserModal(); showToast('✅ User creat: '+u+' / parola: '+p,'ok'); loadFromDB(); }
+            else { err.textContent=res.error||'Eroare'; err.style.display='block'; }
+        }).catch(function(e){err.textContent='Eroare server'; err.style.display='block';});
+}
 function tgStage(uid,s){var up=perms[uid];if(!up)return;var i=up.stages.indexOf(s);if(i>=0){up.stages.splice(i,1);var pi=up.primary.indexOf(s);if(pi>=0)up.primary.splice(pi,1);}else up.stages.push(s);checkChanges();renderAll();}
 function tgPrimary(uid,s){var up=perms[uid];if(!up)return;if(up.stages.indexOf(s)<0)up.stages.push(s);var pi=up.primary.indexOf(s);if(pi>=0)up.primary.splice(pi,1);else up.primary.push(s);checkChanges();renderAll();}
 function tgMod(uid,mid){var up=perms[uid];if(!up)return;var i=up.modules.indexOf(mid);if(i>=0)up.modules.splice(i,1);else up.modules.push(mid);checkChanges();renderAll();}

@@ -284,6 +284,7 @@ a{text-decoration:none;color:inherit;}button{font-family:inherit;cursor:pointer;
             </div>
             <span id="syncBadge" style="font-size:11px;color:var(--gray);display:flex;align-items:center"><span class="sync-dot off"></span>Demo</span>
             <span id="rolePill" class="topbar-pill"></span>
+            <button onclick="openChangePwModal()" class="topbar-logout" title="Schimbă parola" style="margin-right:4px">🔑</button>
             <button onclick="doLogout()" class="topbar-logout">Ieși</button>
         </div>
     </div>
@@ -390,6 +391,22 @@ a{text-decoration:none;color:inherit;}button{font-family:inherit;cursor:pointer;
             </div>
             <div class="form-group"><label class="form-label">Observații</label><textarea class="form-textarea" name="note" placeholder="Detalii suplimentare..."></textarea></div>
             <button type="submit" class="form-submit">Creează Proiect</button>
+        </form>
+    </div>
+</div>
+</div>
+
+<!-- CHANGE PASSWORD MODAL -->
+<div id="changePwModal" class="modal-overlay" onclick="if(event.target===this)closeChangePwModal()">
+<div class="modal" style="max-width:420px">
+    <div class="modal-head"><div class="modal-title">🔑 Schimbă parola</div><button class="modal-close" onclick="closeChangePwModal()">✕</button></div>
+    <div class="modal-body">
+        <form id="changePwForm" onsubmit="doChangePw(event)">
+            <div class="form-group"><label class="form-label">Parolă curentă <span class="req">*</span></label><input type="password" class="form-input" id="cpwCurrent" autocomplete="current-password" required></div>
+            <div class="form-group"><label class="form-label">Parolă nouă <span class="req">*</span> <small style="color:var(--gray);font-weight:500">(min. 6 caractere)</small></label><input type="password" class="form-input" id="cpwNew" autocomplete="new-password" required minlength="6"></div>
+            <div class="form-group"><label class="form-label">Confirmă parola nouă <span class="req">*</span></label><input type="password" class="form-input" id="cpwConfirm" autocomplete="new-password" required minlength="6"></div>
+            <div id="cpwErr" style="color:var(--red);font-size:13px;padding:8px;background:#fef2f2;border-radius:8px;display:none;margin-bottom:10px;font-weight:600"></div>
+            <button type="submit" class="form-submit" id="cpwBtn">💾 Salvează parola</button>
         </form>
     </div>
 </div>
@@ -539,6 +556,46 @@ function doLogout(){
     });
 }
 function showLogin(){document.getElementById('dash').style.display='none';document.getElementById('login').style.display='';}
+
+// ═══════ SCHIMBARE PAROLĂ ═══════
+function openChangePwModal(){
+    document.getElementById('cpwCurrent').value='';document.getElementById('cpwNew').value='';document.getElementById('cpwConfirm').value='';
+    document.getElementById('cpwErr').style.display='none';
+    document.getElementById('changePwModal').classList.add('active');
+    setTimeout(function(){document.getElementById('cpwCurrent').focus();},150);
+}
+function closeChangePwModal(){document.getElementById('changePwModal').classList.remove('active');}
+function doChangePw(ev){
+    ev.preventDefault();
+    var cur = document.getElementById('cpwCurrent').value;
+    var nw  = document.getElementById('cpwNew').value;
+    var cf  = document.getElementById('cpwConfirm').value;
+    var err = document.getElementById('cpwErr');
+    err.style.display='none';
+    if (nw !== cf) { err.textContent='⚠️ Parola nouă și confirmarea nu coincid'; err.style.display='block'; return; }
+    if (nw.length < 6) { err.textContent='⚠️ Parola nouă trebuie să aibă minim 6 caractere'; err.style.display='block'; return; }
+    if (cur === nw) { err.textContent='⚠️ Parola nouă trebuie să fie diferită de cea curentă'; err.style.display='block'; return; }
+    var btn = document.getElementById('cpwBtn'); btn.disabled=true; btn.textContent='⏳ Se salvează...';
+    fetch('/admin/api.php?action=changeMyPassword',{
+        method:'POST', credentials:'include',
+        headers:{'Content-Type':'application/json'},
+        body: JSON.stringify({action:'changeMyPassword', current:cur, new:nw})
+    }).then(function(r){return r.json();}).then(function(res){
+        btn.disabled=false; btn.textContent='💾 Salvează parola';
+        if (res.success) {
+            closeChangePwModal();
+            alert('✅ Parolă schimbată cu succes! La următorul login folosește parola nouă.');
+        } else {
+            err.textContent = '❌ ' + (res.error || 'Eroare necunoscută');
+            err.style.display = 'block';
+            document.getElementById('cpwCurrent').focus();
+            document.getElementById('cpwCurrent').select();
+        }
+    }).catch(function(e){
+        btn.disabled=false; btn.textContent='💾 Salvează parola';
+        err.textContent = '❌ Eroare server: ' + (e.message||e); err.style.display='block';
+    });
+}
 
 // ═══════ DASHBOARD SHELL (sync — fără date din DB) ═══════
 function showDashShell(){
