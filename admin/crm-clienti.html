@@ -331,6 +331,39 @@ tr:hover td{background:rgba(59,130,246,0.03);}
 
 
 <!-- OFFERS MODAL -->
+<!-- MODAL: Istoric complet client (oferte + proiecte + mentenanțe + LTV) -->
+<div id="clientFullModal" class="modal-overlay" onclick="if(event.target===this)closeClientFullModal()">
+<div class="modal" style="max-width:760px">
+    <div class="modal-head">
+        <div class="modal-title" id="cfTitle">📊 Istoric Client</div>
+        <button class="modal-close" onclick="closeClientFullModal()">✕</button>
+    </div>
+    <div class="modal-body" id="cfBody"><div class="empty-msg">⏳ Se încarcă...</div></div>
+</div>
+</div>
+<style>
+.cf-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(110px,1fr));gap:8px;margin-bottom:14px;}
+.cf-stat{background:var(--gray-bg);border-radius:10px;padding:10px 12px;border-left:3px solid var(--blue);}
+.cf-stat .lbl{font-size:10px;color:var(--gray);font-weight:700;text-transform:uppercase;letter-spacing:0.5px;}
+.cf-stat .val{font-size:18px;font-weight:800;color:var(--dark);margin-top:3px;font-variant-numeric:tabular-nums;}
+.cf-stat.green{border-left-color:var(--green);}.cf-stat.green .val{color:var(--green);}
+.cf-stat.orange{border-left-color:var(--orange);}.cf-stat.orange .val{color:var(--orange);}
+.cf-stat.purple{border-left-color:var(--purple);}.cf-stat.purple .val{color:var(--purple);}
+.cf-section{margin-bottom:18px;}
+.cf-section-title{font-size:12px;font-weight:800;color:var(--gray);text-transform:uppercase;letter-spacing:0.8px;margin-bottom:8px;display:flex;align-items:center;gap:8px;}
+.cf-section-title .badge-num{background:var(--gray-bg);color:var(--dark);border-radius:99px;padding:2px 9px;font-size:10px;font-weight:800;letter-spacing:0;}
+.cf-row{background:#fff;border:1px solid var(--gray-b);border-radius:10px;padding:10px 14px;margin-bottom:6px;display:flex;align-items:center;gap:10px;cursor:pointer;transition:all 0.15s;}
+.cf-row:hover{border-color:var(--blue);background:#eff6ff;}
+.cf-row .ico{font-size:18px;}
+.cf-row .info{flex:1;min-width:0;}
+.cf-row .nr{font-family:'Courier New',monospace;font-size:11px;background:#fef9c3;padding:2px 7px;border-radius:5px;font-weight:700;color:var(--dark);}
+.cf-row .name{font-size:13px;font-weight:700;color:var(--dark);margin-top:2px;}
+.cf-row .meta{font-size:11px;color:var(--gray);margin-top:2px;}
+.cf-row .val{font-size:14px;font-weight:800;color:var(--green);font-variant-numeric:tabular-nums;}
+.cf-row .pill{font-size:10px;font-weight:800;padding:2px 8px;border-radius:99px;text-transform:uppercase;letter-spacing:0.3px;}
+.cf-row.archived{opacity:0.6;}
+</style>
+
 <div id="offersModal" class="modal-overlay" onclick="if(event.target===this)closeOffersModal()">
 <div class="modal" style="max-width:600px">
     <div class="modal-head"><div class="modal-title" id="offersModalTitle">📋 Oferte</div><button class="modal-close" onclick="closeOffersModal()">✕</button></div>
@@ -620,9 +653,10 @@ function renderCards() {
         }
         // Ofertare buttons
         html += '</div>';
-        html += '<div style="display:flex;gap:6px;margin-top:8px">';
+        html += '<div style="display:flex;gap:6px;margin-top:8px;flex-wrap:wrap">';
         html += '<button class="btn-offer new" onclick="goOfertare('+l.id+')">📄 Ofertă nouă</button>';
         html += '<button class="btn-offer list" onclick="showOferte('+l.id+')">📋 Oferte</button>';
+        if(l.clientDbId) html += '<button class="btn-offer list" style="background:#faf5ff;color:var(--purple);border-color:var(--purple)" onclick="openClientFull('+l.clientDbId+')">📊 Istoric complet</button>';
         html += '</div>';
         html += '</div>';
     });
@@ -1026,6 +1060,117 @@ function updateOfertaStatus(ofertaId, newStatus, motiv, leadId){
 function closeOffersModal() {
     document.getElementById('offersModal').classList.remove('active');
 }
+
+// ═══════════════════════════════════════════════════
+// CLIENT FULL — istoric complet (oferte + proiecte + mentenanțe + LTV)
+// ═══════════════════════════════════════════════════
+function openClientFull(clientDbId){
+    document.getElementById('cfTitle').textContent = '📊 Istoric Client';
+    document.getElementById('cfBody').innerHTML = '<div class="empty-msg">⏳ Se încarcă...</div>';
+    document.getElementById('clientFullModal').classList.add('active');
+    fetch(API_DB + '?action=getClientFull&id=' + clientDbId + '&_t=' + Date.now(), {credentials:'include'})
+        .then(function(r){return r.json();})
+        .then(function(res){
+            if(!res.success){
+                document.getElementById('cfBody').innerHTML = '<div class="empty-msg">❌ '+(res.error||'Eroare')+'</div>';
+                return;
+            }
+            renderClientFull(res.data);
+        })
+        .catch(function(e){
+            document.getElementById('cfBody').innerHTML = '<div class="empty-msg">❌ '+(e.message||e)+'</div>';
+        });
+}
+function closeClientFullModal(){
+    document.getElementById('clientFullModal').classList.remove('active');
+}
+function fmtMoneyRO(n){return Number(n||0).toLocaleString('ro-RO',{minimumFractionDigits:2,maximumFractionDigits:2})+' RON';}
+function fmtMoneyShortRO(n){var v=Number(n||0);if(v>=1e6)return (v/1e6).toFixed(1)+'M RON';if(v>=1e3)return Math.round(v/1e3)+'k RON';return v.toFixed(0)+' RON';}
+
+function renderClientFull(d){
+    var c = d.client, s = d.stat;
+    document.getElementById('cfTitle').textContent = '📊 ' + (c.nume || 'Client');
+    var statusColors = {
+        'Draft':'#94a3b8','Trimisa':'#3b82f6','In_discutie':'#f97316',
+        'Acceptata':'#22c55e','Refuzata':'#dc2626','Expirata':'#94a3b8'
+    };
+    var statusIcons = {
+        'Draft':'📝','Trimisa':'📤','In_discutie':'💬',
+        'Acceptata':'✅','Refuzata':'❌','Expirata':'⏱️'
+    };
+    var html = '';
+    // Header info contact
+    html += '<div style="background:linear-gradient(135deg,#1e3a8a,#3b82f6);color:#fff;border-radius:12px;padding:14px 16px;margin-bottom:14px">';
+    html += '<div style="font-size:11px;opacity:0.85">' + esc(c.tip || 'Client') + (c.cui?' · CUI: '+esc(c.cui):'') + '</div>';
+    html += '<div style="font-size:18px;font-weight:800;margin-top:2px">' + esc(c.nume) + '</div>';
+    var contactBits = [];
+    if(c.telefon) contactBits.push('📞 <a href="tel:'+esc(c.telefon)+'" style="color:#fff;text-decoration:underline">'+esc(c.telefon)+'</a>');
+    if(c.email)   contactBits.push('✉️ <a href="mailto:'+esc(c.email)+'" style="color:#fff;text-decoration:underline">'+esc(c.email)+'</a>');
+    if(c.adresa)  contactBits.push('📍 ' + esc(c.adresa));
+    if(contactBits.length) html += '<div style="font-size:12px;margin-top:6px;display:flex;flex-wrap:wrap;gap:14px">' + contactBits.join('') + '</div>';
+    html += '</div>';
+    // Stats
+    html += '<div class="cf-stats">';
+    html += '<div class="cf-stat green"><div class="lbl">LTV total</div><div class="val">'+fmtMoneyShortRO(s.ltv_total)+'</div></div>';
+    html += '<div class="cf-stat"><div class="lbl">Oferte</div><div class="val">'+s.total_oferte+'</div></div>';
+    html += '<div class="cf-stat green"><div class="lbl">Acceptate</div><div class="val">'+s.oferte_acceptate+'</div></div>';
+    html += '<div class="cf-stat orange"><div class="lbl">Proiecte</div><div class="val">'+s.total_proiecte+'</div></div>';
+    if(s.proiecte_active) html += '<div class="cf-stat purple"><div class="lbl">Active</div><div class="val">'+s.proiecte_active+'</div></div>';
+    html += '</div>';
+    // OFERTE
+    html += '<div class="cf-section"><div class="cf-section-title">📋 Oferte <span class="badge-num">'+d.oferte.length+'</span></div>';
+    if(!d.oferte.length){ html += '<div class="empty-msg" style="padding:16px">Nicio ofertă încă.</div>'; }
+    else {
+        d.oferte.forEach(function(o){
+            var st = o.status || 'Draft';
+            var arch = o.archived_at ? ' archived' : '';
+            html += '<div class="cf-row'+arch+'" onclick="window.open(\'oferte.html?search='+esc(o.oferta_id)+'\',\'_self\')">';
+            html += '<span class="ico">'+(statusIcons[st]||'❓')+'</span>';
+            html += '<div class="info">';
+            html += '<span class="nr">#'+esc(o.oferta_id)+'</span> <span class="meta">· '+fmtDateRO(o.data_oferta)+'</span>';
+            if(o.obiectiv) html += '<div class="name">'+esc(o.obiectiv)+'</div>';
+            html += '</div>';
+            html += '<span class="pill" style="background:'+statusColors[st]+'22;color:'+statusColors[st]+'">'+esc(st)+'</span>';
+            html += '<span class="val">'+fmtMoneyRO(o.total_cu_tva)+'</span>';
+            html += '</div>';
+        });
+    }
+    html += '</div>';
+    // PROIECTE
+    html += '<div class="cf-section"><div class="cf-section-title">📐 Proiecte <span class="badge-num">'+d.proiecte.length+'</span></div>';
+    if(!d.proiecte.length){ html += '<div class="empty-msg" style="padding:16px">Niciun proiect încă.</div>'; }
+    else {
+        d.proiecte.forEach(function(p){
+            html += '<div class="cf-row" onclick="window.open(\'proiecte.html\',\'_self\')">';
+            html += '<span class="ico">📐</span>';
+            html += '<div class="info">';
+            html += '<span class="nr">'+esc(p.proiect_id||'#'+p.id)+'</span> <span class="meta">· '+esc(p.serviciu||'—')+'</span>';
+            if(p.adresa_obiectiv) html += '<div class="name">📍 '+esc(p.adresa_obiectiv)+'</div>';
+            html += '</div>';
+            html += '<span class="pill" style="background:#dbeafe;color:#1d4ed8">'+esc(p.status)+'</span>';
+            if(p.valoare_contract) html += '<span class="val">'+fmtMoneyRO(p.valoare_contract)+'</span>';
+            html += '</div>';
+        });
+    }
+    html += '</div>';
+    // MENTENANTE (best effort)
+    if(d.mentenante && d.mentenante.length){
+        html += '<div class="cf-section"><div class="cf-section-title">🔄 Mentenanță <span class="badge-num">'+d.mentenante.length+'</span></div>';
+        d.mentenante.forEach(function(m){
+            html += '<div class="cf-row">';
+            html += '<span class="ico">🔄</span>';
+            html += '<div class="info">';
+            html += '<div class="name">'+esc(m.tip||'Mentenanță')+'</div>';
+            html += '<div class="meta">Scadență: '+(m.data_scadenta?fmtDateRO(m.data_scadenta):'—')+'</div>';
+            html += '</div>';
+            html += '<span class="pill" style="background:#dcfce7;color:#166534">'+esc(m.status||'')+'</span>';
+            html += '</div>';
+        });
+        html += '</div>';
+    }
+    document.getElementById('cfBody').innerHTML = html;
+}
+function fmtDateRO(s){if(!s)return '';var MO=['Ian','Feb','Mar','Apr','Mai','Iun','Iul','Aug','Sep','Oct','Noi','Dec'];var d=new Date(s.replace(' ','T'));if(isNaN(d.getTime()))return s;return d.getDate()+' '+MO[d.getMonth()]+' '+d.getFullYear();}
 
 function viewOferta(ofertaId) {
     window.open('calculator-pret.html?view_offer=' + ofertaId, '_blank');
