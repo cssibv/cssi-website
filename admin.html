@@ -259,9 +259,10 @@ a{text-decoration:none;color:inherit;}button{font-family:inherit;cursor:pointer;
     <h1 class="auth-title">Portal Intern CSSI</h1>
     <p class="auth-sub"><span class="auth-version">v3.0</span>&ensp;Sistem Integrat de Management</p>
     <form onsubmit="doLogin(event)">
-        <input type="password" id="pw" class="auth-input" placeholder="••••••••" autofocus autocomplete="current-password">
+        <input type="text" id="username" class="auth-input" placeholder="utilizator" autofocus autocomplete="username" autocapitalize="off" style="letter-spacing:1px;margin-bottom:10px">
+        <input type="password" id="pw" class="auth-input" placeholder="••••••••" autocomplete="current-password">
         <div id="err" class="auth-error"></div>
-        <button type="submit" class="auth-btn">Intră în Portal</button>
+        <button type="submit" class="auth-btn" id="loginBtn">Intră în Portal</button>
     </form>
     <a href="/admin/teren.html" style="display:block;margin-top:18px;padding:12px;background:linear-gradient(135deg,#fff7ed,#ffedd5);border:1px solid #fed7aa;border-radius:12px;text-align:center;font-size:13px;font-weight:700;color:#9a3412;text-decoration:none;transition:all 0.2s">🔧 Ești tehnician? <span style="color:var(--orange);text-decoration:underline">Acces echipă teren →</span></a>
     <p class="auth-footer">CSSI · Confort, Securitate, Siguranță, Imobil</p>
@@ -395,23 +396,8 @@ a{text-decoration:none;color:inherit;}button{font-family:inherit;cursor:pointer;
 </div>
 
 <script>
-// ═══════ PASSWORD HASHES ═══════
-var PW={
-"8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918":"admin",
-"bb84ec45d72a12da066c86de536eeb88aa4c29d9622eb5d6aaeb501f9acb5a75":"mihai",
-"8589f985d87ab442f842621a8f9b86e78f67d955d79d1c8c3dd94928ee6c48b9":"roxana",
-"ec2d7be6fc8659569fc9a8f5385b9ae4d4a733f7b6f1c8cb55acb9ed977d3f4e":"valentin",
-"d9f325f6038f9c5109278ead8bc2d310292a37e856e3de350e81da702e4a9eae":"cristina",
-// Tehnicieni — echipa execuție
-"a19be85fa0c403b3d31207fb9e8e0037d62ccfcdc2526b00fbd7666dd38555c9":"zoli",
-"ff20749c3bee7ea2d1e56af348d994cdc4e3a4454c5c53b9fda94b49acc1dce7":"sanyi",
-"c9bcd6f2cdf2766ae300971f8abdf3201e8f151e3978907b3c86882fe803cd29":"bogdan",
-"5880752d9dc43fe1b96fa624050da57e4826cdae5711abd89a0fddb5ed9391c6":"cezar",
-"de6d5ec12cb1b0eacf66375a8bd66bf1455a0b5c15398e3d696f8393e6a9f6fa":"cristi",
-"fdd14e4f2dc06f6abc19bbc3f2a00bea24270a874d8a53f53351330ee61f594e":"denes"
-};
-// Lista tehnicieni — folosit în userCanSee + alte place-uri pentru a aplica
-// permisiuni restrânse (vezi doar Execuția lor + module conexe)
+// ═══════ AUTH — server-side via /admin/api.php ═══════
+// (parolele sunt verificate cu bcrypt în PHP; HTML-ul nu mai conține hash-uri)
 var TECHNICIANS=['zoli','sanyi','bogdan','cezar','cristi','denes'];
 
 // ═══════ ROLE CONFIG ═══════
@@ -509,9 +495,49 @@ var DASHBOARD_STATS={rezumat:{},board:{}};
 
 // ═══════ AUTH ═══════
 var role="";
-function sha256(m){return crypto.subtle.digest('SHA-256',new TextEncoder().encode(m)).then(function(b){return Array.from(new Uint8Array(b)).map(function(x){return x.toString(16).padStart(2,'0')}).join('')})}
-function doLogin(e){e.preventDefault();var p=document.getElementById('pw').value;sha256(p).then(function(h){if(PW[h]){role=PW[h];sessionStorage.setItem("cssi-role",role);sessionStorage.setItem("cssi-user",ROLES[role]?ROLES[role].name:role);bootDashboard()}else{var err=document.getElementById('err');err.textContent="Parolă incorectă!";err.style.display="block";document.getElementById('pw').value='';document.getElementById('pw').focus()}})}
-function doLogout(){sessionStorage.removeItem("cssi-role");sessionStorage.removeItem("cssi-user");role="";document.getElementById('dash').style.display='none';document.getElementById('login').style.display='';document.getElementById('pw').value=''}
+function doLogin(e){
+    e.preventDefault();
+    var u = document.getElementById('username').value.trim().toLowerCase();
+    var p = document.getElementById('pw').value;
+    var btn = document.getElementById('loginBtn');
+    var err = document.getElementById('err');
+    err.style.display = 'none';
+    if (!u || !p) { err.textContent = 'Introdu utilizator + parolă'; err.style.display='block'; return; }
+    btn.disabled = true; btn.textContent = '⏳ Se autentifică...';
+    fetch('/admin/api.php?action=login', {
+        method: 'POST', credentials: 'include',
+        headers: {'Content-Type':'application/json'},
+        body: JSON.stringify({action:'login', username:u, password:p})
+    }).then(function(r){return r.json().then(function(j){return {status:r.status,data:j};});})
+      .then(function(res){
+        btn.disabled = false; btn.textContent = 'Intră în Portal';
+        if (res.data.success) {
+            role = res.data.user.username;
+            sessionStorage.setItem('cssi-role', role);
+            sessionStorage.setItem('cssi-user', res.data.user.display_name || role);
+            document.getElementById('pw').value = '';
+            bootDashboard();
+        } else {
+            err.textContent = res.data.error || 'Credențiale invalide';
+            err.style.display = 'block';
+            document.getElementById('pw').value = '';
+            document.getElementById('pw').focus();
+        }
+      }).catch(function(e){
+        btn.disabled = false; btn.textContent = 'Intră în Portal';
+        err.textContent = 'Eroare server: ' + (e.message || e);
+        err.style.display = 'block';
+      });
+}
+function doLogout(){
+    fetch('/admin/api.php?action=logout',{method:'POST',credentials:'include'}).finally(function(){
+        sessionStorage.removeItem('cssi-role');sessionStorage.removeItem('cssi-user');
+        role='';
+        document.getElementById('dash').style.display='none';
+        document.getElementById('login').style.display='';
+        document.getElementById('pw').value='';document.getElementById('username').value='';
+    });
+}
 function showLogin(){document.getElementById('dash').style.display='none';document.getElementById('login').style.display='';}
 
 // ═══════ DASHBOARD SHELL (sync — fără date din DB) ═══════
@@ -898,11 +924,23 @@ function bootLoaders(){
     ]);
 }
 function bootDashboard(){
-    var s=sessionStorage.getItem('cssi-role');
-    if(!s||!ROLES[s]){showLogin();return;}
-    role=s;
-    showDashShell();
-    bootLoaders();
+    // Verifică sesiunea server-side cu /me — nu te baza doar pe sessionStorage
+    fetch('/admin/api.php?action=me',{credentials:'include'})
+        .then(function(r){return r.json();})
+        .then(function(res){
+            if(!res.success || !res.user){
+                sessionStorage.removeItem('cssi-role');
+                sessionStorage.removeItem('cssi-user');
+                showLogin(); return;
+            }
+            role = res.user.username;
+            sessionStorage.setItem('cssi-role', role);
+            sessionStorage.setItem('cssi-user', res.user.display_name || role);
+            if(!ROLES[role]){ showLogin(); return; }
+            showDashShell();
+            bootLoaders();
+        })
+        .catch(function(){showLogin();});
 }
 document.addEventListener('DOMContentLoaded',bootDashboard);
 // Dacă DOMContentLoaded a fost deja emis (script la finalul body-ului), pornim manual:

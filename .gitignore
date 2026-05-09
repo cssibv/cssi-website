@@ -1,0 +1,33 @@
+# ───────── Secrete ─────────
+secrets.php
+.env
+.env.local
+*.env
+
+# ───────── Backups & temp ─────────
+*.bak
+*.backup
+*.old
+*.orig
+*.save
+*~
+
+# ───────── Uploads (datele de utilizator NU se versionează) ─────────
+# Dar PĂSTRĂM .htaccess pentru blocare execuție PHP în uploads
+admin/uploads/*
+!admin/uploads/.htaccess
+uploads/*
+!uploads/.htaccess
+
+# ───────── Local dev / IDE ─────────
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# ───────── Excel lock files ─────────
+.~lock.*
+~$*
+
+# ───────── Claude / dev tools ─────────
+.claude/

@@ -131,17 +131,7 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(circle
 </div>
 
 <script>
-// ═══ HASHES PAROLE TEHNICIENI ═══
-// (Sincronizate cu admin.html — nu modifica direct, regenerează cu sha256)
-var PW = {
-    "a19be85fa0c403b3d31207fb9e8e0037d62ccfcdc2526b00fbd7666dd38555c9":"zoli",
-    "ff20749c3bee7ea2d1e56af348d994cdc4e3a4454c5c53b9fda94b49acc1dce7":"sanyi",
-    "c9bcd6f2cdf2766ae300971f8abdf3201e8f151e3978907b3c86882fe803cd29":"bogdan",
-    "5880752d9dc43fe1b96fa624050da57e4826cdae5711abd89a0fddb5ed9391c6":"cezar",
-    "de6d5ec12cb1b0eacf66375a8bd66bf1455a0b5c15398e3d696f8393e6a9f6fa":"cristi",
-    "fdd14e4f2dc06f6abc19bbc3f2a00bea24270a874d8a53f53351330ee61f594e":"denes"
-};
-
+// ═══ AUTH server-side via /admin/api.php (bcrypt în PHP, fără hash-uri client) ═══
 var TECHS = [
     {id:'zoli',  name:'Zoli'},
     {id:'sanyi', name:'Sanyi'},
@@ -153,13 +143,18 @@ var TECHS = [
 
 var currentUser = null;
 
-// ═══ AUTO-LOGIN dacă sesiunea există ═══
+// ═══ AUTO-LOGIN dacă sesiunea server-side e validă ═══
 (function autoLogin(){
-    var role = sessionStorage.getItem('cssi-role');
-    if (role && TECHS.find(function(t){return t.id===role;})) {
-        // Sesiune validă tehnician → mergi direct la Execuție
-        window.location.replace('executie.html');
-    }
+    fetch('/admin/api.php?action=me',{credentials:'include'})
+        .then(function(r){return r.json();})
+        .then(function(res){
+            if (res.success && res.user && res.user.is_tehnician) {
+                sessionStorage.setItem('cssi-role', res.user.username);
+                sessionStorage.setItem('cssi-user', res.user.display_name || res.user.username);
+                window.location.replace('executie.html');
+            }
+        })
+        .catch(function(){/* nu suntem logați — rămâi pe pagina login */});
 })();
 
 // ═══ Render avatar grid ═══
@@ -204,15 +199,7 @@ function showErr(msg){
 }
 function hideErr(){ document.getElementById('err').classList.remove('show'); }
 
-// ═══ SHA-256 (acelaşi cu admin.html) ═══
-function sha256(m){
-    return crypto.subtle.digest('SHA-256', new TextEncoder().encode(m))
-        .then(function(b){
-            return Array.from(new Uint8Array(b)).map(function(x){return x.toString(16).padStart(2,'0');}).join('');
-        });
-}
-
-// ═══ LOGIN ═══
+// ═══ LOGIN — POST către /admin/api.php?action=login (bcrypt server-side) ═══
 function doLogin(ev){
     ev.preventDefault();
     if (!currentUser) return;
@@ -223,25 +210,29 @@ function doLogin(ev){
     var btnText = document.getElementById('btnText');
     btn.disabled = true;
     btnText.innerHTML = '<span class="spinner"></span> Verific...';
-    sha256(pw).then(function(h){
-        if (PW[h] && PW[h] === currentUser.id) {
-            // Succes — salvează sesiunea + redirect
-            sessionStorage.setItem('cssi-role', currentUser.id);
-            sessionStorage.setItem('cssi-user', currentUser.name);
+    fetch('/admin/api.php?action=login', {
+        method:'POST', credentials:'include',
+        headers:{'Content-Type':'application/json'},
+        body: JSON.stringify({action:'login', username: currentUser.id, password: pw})
+    }).then(function(r){return r.json().then(function(j){return {status:r.status,data:j};});})
+      .then(function(res){
+        if (res.data.success) {
+            sessionStorage.setItem('cssi-role', res.data.user.username);
+            sessionStorage.setItem('cssi-user', res.data.user.display_name || currentUser.name);
             btnText.innerHTML = '✓ Bun venit, ' + currentUser.name + '!';
             setTimeout(function(){ window.location.href = 'executie.html'; }, 400);
         } else {
             btn.disabled = false;
             btnText.textContent = '🔓 Intră în Teren';
-            showErr('Parolă greșită pentru ' + currentUser.name);
+            showErr(res.data.error || 'Parolă greșită');
             document.getElementById('pw').value = '';
             document.getElementById('pw').focus();
         }
-    }).catch(function(e){
+      }).catch(function(e){
         btn.disabled = false;
         btnText.textContent = '🔓 Intră în Teren';
-        showErr('Eroare la verificare. Încearcă din nou.');
-    });
+        showErr('Eroare server: ' + (e.message||e));
+      });
 }
 
 // Esc to go back from step 2

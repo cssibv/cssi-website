@@ -1,0 +1,41 @@
+# ============================================================
+# CSSI Portal — uploads/ security
+# Blochează execuția PHP/CGI pentru fișierele uploadate de utilizatori
+# ============================================================
+
+# Niciun PHP/script să nu fie executat aici, indiferent de extensie reală
+<FilesMatch "\.(php|phtml|php3|php4|php5|php7|phps|cgi|pl|py|jsp|asp|aspx|sh|exe)$">
+    Order allow,deny
+    Deny from all
+    Require all denied
+</FilesMatch>
+
+# Forțează MIME type corect (anti-sniffing) pentru toate fișierele
+<IfModule mod_headers.c>
+    Header set X-Content-Type-Options "nosniff"
+    Header set Content-Security-Policy "default-src 'none'; img-src 'self'; media-src 'self'; object-src 'none';"
+    Header always unset X-Frame-Options
+    Header set X-Frame-Options "DENY"
+</IfModule>
+
+# Dezactivează parsarea PHP în acest folder (defense in depth)
+<IfModule mod_php.c>
+    php_flag engine off
+</IfModule>
+<IfModule mod_php7.c>
+    php_flag engine off
+</IfModule>
+<IfModule mod_php8.c>
+    php_flag engine off
+</IfModule>
+
+# Listing director oprit
+Options -Indexes -ExecCGI
+
+# Forțează download pentru tipuri ne-imagine (PDF/DOC se deschid în browser, OK)
+# (păstrăm imaginile + PDF inline pentru UX, restul download)
+<FilesMatch "\.(doc|docx|xls|xlsx|zip|tar|gz|rar)$">
+    <IfModule mod_headers.c>
+        Header set Content-Disposition "attachment"
+    </IfModule>
+</FilesMatch>

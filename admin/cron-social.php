@@ -10,7 +10,8 @@ date_default_timezone_set('Europe/Bucharest');
 
 $db = getDB();
 $now = date('Y-m-d H:i:s');
-$zernioKey = 'sk_c7b7a4f08d5bab22497ab169e58313a02d6ef47ead1d2bfa39b5bd7237fd76c0';
+$zernioKey = defined('ZERNIO_KEY') ? ZERNIO_KEY : '';
+if (!$zernioKey) { die("[ERR] ZERNIO_KEY missing in secrets.php\n"); }
 $baseUrl = 'https://cssi.ro';
 
 // Găsește postările programate care trebuie publicate

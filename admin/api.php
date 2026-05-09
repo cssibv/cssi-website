@@ -1,20 +1,28 @@
 <?php
 // ============================================================
-// CSSI Portal v4.0 — REST API -
+// CSSI Portal v4.0 — REST API
 // ============================================================
 // Endpoint unic: /admin/api.php?action=...
 // GET  = citire date
 // POST = creare/modificare/stergere
 // ============================================================
 
-header('Access-Control-Allow-Origin: *');
+// CORS — restrânge la origin-ul portalului (Allow-Credentials cere origin specific)
+$allowedOrigins = ['https://cssi.ro', 'https://www.cssi.ro'];
+$origin = $_SERVER['HTTP_ORIGIN'] ?? '';
+if (in_array($origin, $allowedOrigins, true)) {
+    header('Access-Control-Allow-Origin: ' . $origin);
+    header('Access-Control-Allow-Credentials: true');
+    header('Vary: Origin');
+}
 header('Access-Control-Allow-Methods: GET, POST, OPTIONS');
-header('Access-Control-Allow-Headers: Content-Type');
+header('Access-Control-Allow-Headers: Content-Type, X-Requested-With');
 header('Cache-Control: no-store, no-cache, must-revalidate, max-age=0');
 header('Pragma: no-cache');
 if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') { exit; }
 
 require_once __DIR__ . '/db.php';
+require_once __DIR__ . '/auth.php';
 date_default_timezone_set('Europe/Bucharest');
 
 $action = (isset($_GET['action']) ? $_GET['action'] : ((isset($_POST['action']) ? $_POST['action'] : '')));
@@ -22,8 +30,39 @@ $data = getPostData();
 
 try {
     $db = getDB();
-    
+
+    // ─── PROTECȚIE GLOBALĂ ───────────────────────────────────────
+    // Toate endpoint-urile necesită autentificare, EXCEPT lista publică
+    if (!in_array($action, publicActions(), true)) {
+        requireAuth();
+    }
+
     switch ($action) {
+
+        // ══════════════════════════════════════
+        // AUTH — login / logout / me / ping
+        // ══════════════════════════════════════
+        case 'login':
+            $username = isset($data['username']) ? $data['username'] : '';
+            $password = isset($data['password']) ? $data['password'] : '';
+            $res = attemptLogin($db, $username, $password);
+            $code = !$res['success'] ? (($res['code'] ?? '') === 'LOCKED' ? 429 : 401) : 200;
+            jsonResponse($res, $code);
+            break;
+
+        case 'logout':
+            doLogout();
+            jsonResponse(['success' => true]);
+            break;
+
+        case 'me':
+            $u = currentUser();
+            jsonResponse(['success' => (bool)$u, 'user' => $u]);
+            break;
+
+        case 'ping':
+            jsonResponse(['success' => true, 'time' => date('c'), 'authenticated' => (bool)currentUser()]);
+            break;
         // ══════════════════════════════════════
         // CLIENTI
         // ══════════════════════════════════════
@@ -1999,7 +2038,8 @@ try {
             if (!$post) { jsonResponse(['success' => false, 'error' => 'Post negăsit'], 404); break; }
 
             $platforme = json_decode($post['platforme'] ?: '[]', true);
-            $zernioKey = 'sk_c7b7a4f08d5bab22497ab169e58313a02d6ef47ead1d2bfa39b5bd7237fd76c0';
+            $zernioKey = defined('ZERNIO_KEY') ? ZERNIO_KEY : '';
+            if (!$zernioKey) { jsonResponse(['success' => false, 'error' => 'ZERNIO_KEY nesetat în secrets.php'], 500); break; }
 
             // Fetch connected accounts from Zernio
             $chAccounts = curl_init('https://zernio.com/api/v1/accounts');
@@ -2081,10 +2121,6 @@ try {
                 $db->prepare("UPDATE social_posts SET status = 'Eroare' WHERE id = ?")->execute([$id]);
                 jsonResponse(['success' => false, 'error' => 'Zernio error: ' . ($response ?: 'timeout'), 'httpCode' => $httpCode], 500);
             }
-            break;
-
-        case 'ping':
-            jsonResponse(['success' => true, 'message' => 'CSSI Portal API v4.0', 'time' => date('Y-m-d H:i:s'), 'db' => 'MySQL OK']);
             break;
 
         default:

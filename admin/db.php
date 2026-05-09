@@ -6,11 +6,19 @@
 // cPanel → MySQL Databases → Create Database + User
 // ============================================================
 
+// Încarcă secretele din fișier extern (gitignored) sau din variabile de mediu
+$secretsFile = __DIR__ . '/../secrets.php';
+$SECRETS = file_exists($secretsFile) ? require $secretsFile : [];
+
 define('DB_HOST', 'localhost');
 define('DB_NAME', 'r101042brea_cssi');  // cPanel prefix + db name
 define('DB_USER', 'r101042brea_cssi');  // cPanel prefix + user
-define('DB_PASS', 'cssi-install-2026'); // Parola reala din cPanel
+// Prioritate: variabilă de mediu > fișier secrets > fallback (DOAR pentru compat tranziție)
+define('DB_PASS', getenv('CSSI_DB_PASS') ?: ($SECRETS['DB_PASS'] ?? 'cssi-install-2026'));
 define('DB_CHARSET', 'utf8mb4');
+
+// API keys externe
+define('ZERNIO_KEY', getenv('CSSI_ZERNIO_KEY') ?: ($SECRETS['ZERNIO_KEY'] ?? ''));
 
 // Upload paths
 define('UPLOAD_DIR', __DIR__ . '/uploads/');
