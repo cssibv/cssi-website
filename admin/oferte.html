@@ -199,8 +199,8 @@ a{text-decoration:none;color:inherit;}button{font-family:inherit;cursor:pointer;
 
     <div class="toolbar">
         <input type="text" class="tb-search" id="searchInput" placeholder="🔍 Caută client, nr. ofertă, obiectiv..." oninput="onSearchChange()">
-        <input type="month" class="tb-input" id="monthFilter" onchange="render()">
-        <select class="tb-select" id="sortBy" onchange="render()">
+        <input type="month" class="tb-input" id="monthFilter" onchange="applyFilters()">
+        <select class="tb-select" id="sortBy" onchange="applyFilters()">
             <option value="data_desc">📅 Data ↓ (recente)</option>
             <option value="data_asc">📅 Data ↑ (vechi)</option>
             <option value="valoare_desc">💰 Valoare ↓</option>
@@ -268,16 +268,17 @@ var API = '/admin/api.php';
 // ═══ STATE ═══
 var STATE = {
     oferte: [],
-    selected: {},  // {id: true}
+    pipelineCounts: null,  // { all: N, Draft: N, Trimisa: N, ... } — totaluri (independent de filtre)
+    selected: {},
     filters: {
         status: 'all',
-        archived: '0',  // '0' active, '1' arhivate, 'all' ambele
+        archived: '0',
         search: '',
         month: '',
         sort: 'data_desc',
         group: ''
     },
-    statusTarget: null  // ID(uri) când deschidem modalul status
+    statusTarget: null
 };
 
 // ═══ HELPERS ═══
@@ -304,28 +305,50 @@ function statusInfo(s){
 function ofStatus(o){return o.oferta_status || o.status || 'Draft';}
 
 // ═══ FETCH ═══
-function refreshData(){
-    showLoading(true);
-    var params = new URLSearchParams({
+function buildParams(){
+    var p = new URLSearchParams({
         light: '1',
         sort: STATE.filters.sort,
         archived: STATE.filters.archived
     });
-    if(STATE.filters.status !== 'all') params.append('status', STATE.filters.status);
-    if(STATE.filters.month) params.append('month', STATE.filters.month);
-    if(STATE.filters.search) params.append('search', STATE.filters.search);
-    fetch(API+'?action=getOferte&'+params.toString()+'&_t='+Date.now(),{credentials:'include'})
-        .then(function(r){return r.json();})
-        .then(function(res){
-            if(!res.success){ toast('❌ '+(res.error||'Eroare'),'error'); return; }
-            STATE.oferte = res.data || [];
-            document.getElementById('syncStatus').textContent = STATE.oferte.length + ' oferte încărcate · ' + new Date().toLocaleTimeString('ro-RO');
-            render();
-            renderStats();
-            renderPipeline();
-        })
-        .catch(function(e){ toast('❌ '+(e.message||e),'error'); })
-        .finally(function(){ showLoading(false); });
+    if(STATE.filters.status !== 'all') p.append('status', STATE.filters.status);
+    if(STATE.filters.month)  p.append('month', STATE.filters.month);
+    if(STATE.filters.search) p.append('search', STATE.filters.search);
+    return p;
+}
+// Aplica filtrele curente (din DOM) si reincarca
+function applyFilters(){
+    STATE.filters.sort  = document.getElementById('sortBy').value;
+    STATE.filters.month = document.getElementById('monthFilter').value;
+    STATE.filters.group = document.getElementById('groupBy').value;
+    refreshData();
+}
+function refreshData(){
+    showLoading(true);
+    // Fetch 1: lista filtrata (cu sort/status/month/search/archive)
+    var listFetch = fetch(API+'?action=getOferte&'+buildParams().toString()+'&_t='+Date.now(),{credentials:'include'}).then(function(r){return r.json();});
+    // Fetch 2: count-uri totale per status (NU aplicam status si search ca sa avem cifrele complete)
+    var countParams = new URLSearchParams({light:'1', archived: STATE.filters.archived});
+    if(STATE.filters.month) countParams.append('month', STATE.filters.month);
+    var countFetch = fetch(API+'?action=getOferte&'+countParams.toString()+'&_t='+Date.now(),{credentials:'include'}).then(function(r){return r.json();});
+
+    Promise.all([listFetch, countFetch]).then(function(results){
+        var listRes = results[0], countRes = results[1];
+        if(!listRes.success){ toast('❌ '+(listRes.error||'Eroare list'),'error'); return; }
+        STATE.oferte = listRes.data || [];
+        // Calculam count-uri totale pe TOATE ofertele (countRes), nu pe lista filtrata
+        var counts = {all:0, Draft:0, Trimisa:0, In_discutie:0, Acceptata:0, Refuzata:0, Expirata:0};
+        if(countRes && countRes.success){
+            counts.all = (countRes.data||[]).length;
+            (countRes.data||[]).forEach(function(o){ var s=ofStatus(o); if(counts[s]!==undefined) counts[s]++; });
+        }
+        STATE.pipelineCounts = counts;
+        document.getElementById('syncStatus').textContent = STATE.oferte.length + ' afisate · ' + counts.all + ' total · ' + new Date().toLocaleTimeString('ro-RO');
+        render();
+        renderStats();
+        renderPipeline();
+    }).catch(function(e){ toast('❌ '+(e.message||e),'error'); })
+      .finally(function(){ showLoading(false); });
 }
 
 // ═══ RENDER ═══
@@ -350,10 +373,8 @@ function renderStats(){
 }
 
 function renderPipeline(){
-    // Calcul count per status PE TOATE OFERTELE (nu pe filtrate) — facem fetch separat
-    // Pentru moment: count pe vizibile (suficient pentru orientare)
-    var counts = {all: STATE.oferte.length, Draft:0, Trimisa:0, In_discutie:0, Acceptata:0, Refuzata:0, Expirata:0};
-    STATE.oferte.forEach(function(o){ var s=ofStatus(o); if(counts[s]!==undefined) counts[s]++; });
+    // Folosim count-urile totale (din fetch separat) — independente de filtrul de status curent
+    var counts = STATE.pipelineCounts || {all: STATE.oferte.length, Draft:0, Trimisa:0, In_discutie:0, Acceptata:0, Refuzata:0, Expirata:0};
     var stages = [
         {id:'all',         ic:'📋', lbl:'Toate'},
         {id:'Draft',       ic:'📝', lbl:'Draft'},
@@ -372,10 +393,8 @@ function renderPipeline(){
 }
 
 function render(){
-    // Apply group + sort (sort already applied on server, group apply here)
-    STATE.filters.sort = document.getElementById('sortBy').value;
+    // Group e LOCAL (re-organizam datele dupa fetch). Sort si month sunt remote — set in applyFilters
     STATE.filters.group = document.getElementById('groupBy').value;
-    STATE.filters.month = document.getElementById('monthFilter').value;
     var view = document.getElementById('mainView');
     if(!STATE.oferte.length){
         view.innerHTML = '<div class="empty-state"><div class="empty-icon">📭</div><div class="empty-title">Nicio ofertă</div><div class="empty-msg">Cu filtrele curente nu există oferte. Încearcă să resetezi filtrele sau bifează "Arhivă".</div></div>';
