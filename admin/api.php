@@ -28,6 +28,42 @@ date_default_timezone_set('Europe/Bucharest');
 $action = (isset($_GET['action']) ? $_GET['action'] : ((isset($_POST['action']) ? $_POST['action'] : '')));
 $data = getPostData();
 
+// ─── Helper: schemă oferte (idempotent migration) ─────────────
+function ensureOferteColumns($db) {
+    static $checked = false;
+    if ($checked) return;
+    $checked = true;
+    try {
+        $cols = $db->query("SHOW COLUMNS FROM oferte")->fetchAll(PDO::FETCH_COLUMN);
+        if (!in_array('archived_at', $cols)) {
+            $db->exec("ALTER TABLE oferte ADD COLUMN archived_at DATETIME NULL DEFAULT NULL, ADD INDEX idx_archived (archived_at)");
+        }
+        if (!in_array('expires_at', $cols)) {
+            $db->exec("ALTER TABLE oferte ADD COLUMN expires_at DATE NULL DEFAULT NULL, ADD INDEX idx_expires (expires_at)");
+        }
+    } catch (Exception $e) { /* silent */ }
+}
+
+// Auto-expire oferte: Trimisa/In_discutie cu expires_at < azi → Expirata
+function autoExpireOferte($db) {
+    static $done = false;
+    if ($done) return;
+    $done = true;
+    try {
+        $db->exec("UPDATE oferte SET status='Expirata' WHERE status IN ('Draft','Trimisa','In_discutie') AND expires_at IS NOT NULL AND expires_at < CURDATE() AND archived_at IS NULL");
+    } catch (Exception $e) { /* silent */ }
+}
+
+// Calculează expires_at din data_oferta + valabilitate ("4 zile", "30 zile" etc)
+function calcExpiresAt($dataOferta, $valab) {
+    if (!$dataOferta) return null;
+    $days = 30;
+    if (preg_match('/(\d+)\s*zi/iu', $valab, $m)) $days = intval($m[1]);
+    if ($days <= 0 || $days > 365) $days = 30;
+    try { $d = new DateTime($dataOferta); $d->modify("+{$days} days"); return $d->format('Y-m-d'); }
+    catch (Exception $e) { return null; }
+}
+
 try {
     $db = getDB();
 
@@ -527,39 +563,62 @@ try {
         // OFERTE
         // ══════════════════════════════════════
         case 'getOferte':
+            ensureOferteColumns($db);
+            autoExpireOferte($db);
             $search = (isset($_GET['search']) ? $_GET['search'] : '');
             $clientId = (isset($_GET['client_id']) ? $_GET['client_id'] : '');
             $proiectId = (isset($_GET['proiect_id']) ? $_GET['proiect_id'] : '');
-            $sql = "SELECT vc.*, o2.client_id AS client_db_id, o2.proiect_id AS proiect_db_id, o2.motiv_respingere, o2.data_decizie, o2.decis_de FROM v_oferte_complete vc JOIN oferte o2 ON vc.id = o2.id WHERE 1=1";
+            $statusF = (isset($_GET['status']) ? $_GET['status'] : '');
+            $archived = isset($_GET['archived']) ? $_GET['archived'] : '0';  // '0' = active, '1' = arhivate, 'all' = toate
+            $monthF = (isset($_GET['month']) ? $_GET['month'] : '');         // YYYY-MM
+            $minVal = (isset($_GET['min_val']) ? floatval($_GET['min_val']) : 0);
+            $maxVal = (isset($_GET['max_val']) ? floatval($_GET['max_val']) : 0);
+            $sortBy = (isset($_GET['sort']) ? $_GET['sort'] : 'data_desc'); // data_desc/asc, valoare_desc/asc, client_asc, status
+            $light = !empty($_GET['light']);  // true = nu adaugă linii (mult mai rapid pentru listing)
+
+            $sql = "SELECT vc.*, o2.client_id AS client_db_id, o2.proiect_id AS proiect_db_id, o2.motiv_respingere, o2.data_decizie, o2.decis_de, o2.archived_at, o2.expires_at FROM v_oferte_complete vc JOIN oferte o2 ON vc.id = o2.id WHERE 1=1";
             $params = [];
-            if ($clientId) {
-                $sql .= " AND o2.client_id = ?";
-                $params[] = $clientId;
-            }
-            if ($proiectId) {
-                $sql .= " AND o2.proiect_id = ?";
-                $params[] = $proiectId;
-            }
+            if ($clientId) { $sql .= " AND o2.client_id = ?"; $params[] = $clientId; }
+            if ($proiectId) { $sql .= " AND o2.proiect_id = ?"; $params[] = $proiectId; }
             if ($search) {
                 $sql .= " AND (vc.client_nume LIKE ? OR vc.oferta_id LIKE ? OR vc.obiectiv LIKE ?)";
-                $s = "%$search%";
-                $params = array_merge($params, [$s, $s, $s]);
+                $s = "%$search%"; $params = array_merge($params, [$s, $s, $s]);
             }
+            if ($statusF) { $sql .= " AND vc.status = ?"; $params[] = $statusF; }
+            if ($archived === '0')      { $sql .= " AND o2.archived_at IS NULL"; }
+            elseif ($archived === '1')  { $sql .= " AND o2.archived_at IS NOT NULL"; }
+            // 'all' → fără filtru
+            if ($monthF && preg_match('/^\d{4}-\d{2}$/', $monthF)) {
+                $sql .= " AND DATE_FORMAT(vc.data_oferta, '%Y-%m') = ?"; $params[] = $monthF;
+            }
+            if ($minVal > 0) { $sql .= " AND vc.total_cu_tva >= ?"; $params[] = $minVal; }
+            if ($maxVal > 0) { $sql .= " AND vc.total_cu_tva <= ?"; $params[] = $maxVal; }
+            // Sortare
+            $sortMap = [
+                'data_desc'    => 'vc.data_oferta DESC, vc.id DESC',
+                'data_asc'     => 'vc.data_oferta ASC, vc.id ASC',
+                'valoare_desc' => 'vc.total_cu_tva DESC',
+                'valoare_asc'  => 'vc.total_cu_tva ASC',
+                'client_asc'   => 'vc.client_nume ASC, vc.data_oferta DESC',
+                'status'       => "FIELD(vc.status,'Draft','Trimisa','In_discutie','Acceptata','Refuzata','Expirata') ASC, vc.data_oferta DESC",
+            ];
+            $sql .= " ORDER BY " . (isset($sortMap[$sortBy]) ? $sortMap[$sortBy] : $sortMap['data_desc']);
+
             $stmt = $db->prepare($sql);
             $stmt->execute($params);
             $oferte = $stmt->fetchAll();
-            
-            // Adauga linii pt fiecare oferta
-            foreach ($oferte as &$o) {
-                $stmtL = $db->prepare("SELECT * FROM oferta_linii WHERE oferta_id = ? ORDER BY tip, ordine");
-                $stmtL->execute([$o['id']]);
-                $linii = $stmtL->fetchAll();
-                $o['lines'] = array_filter($linii, function($l) { return $l['tip'] === 'echipament'; });
-                $o['labor'] = array_filter($linii, function($l) { return $l['tip'] === 'manopera'; });
-                $o['lines'] = array_values($o['lines']);
-                $o['labor'] = array_values($o['labor']);
+
+            // Adauga linii pt fiecare oferta (skip dacă light=1)
+            if (!$light) {
+                foreach ($oferte as &$o) {
+                    $stmtL = $db->prepare("SELECT * FROM oferta_linii WHERE oferta_id = ? ORDER BY tip, ordine");
+                    $stmtL->execute([$o['id']]);
+                    $linii = $stmtL->fetchAll();
+                    $o['lines'] = array_values(array_filter($linii, function($l) { return $l['tip'] === 'echipament'; }));
+                    $o['labor'] = array_values(array_filter($linii, function($l) { return $l['tip'] === 'manopera'; }));
+                }
+                unset($o);
             }
-            unset($o);
             jsonResponse(['success' => true, 'data' => $oferte]);
             break;
 
@@ -623,11 +682,15 @@ try {
                         $chkP->execute([$data['proiect_db_id']]);
                         if ($chkP->fetch()) $proiectIdVal = $data['proiect_db_id'];
                     }
-                    $db->prepare("UPDATE oferte SET titlu=?, data_oferta=?, valabilitate=?, obiectiv=?, client_id=?, proiect_id=?, subtotal_echip=?, subtotal_manop=?, total_fara_tva=?, tva=?, total_cu_tva=?, client_nume=?, client_cui=?, client_adresa=?, client_contact=?, status=? WHERE id=?")
+                    ensureOferteColumns($db);
+                    $dataOf = (isset($data['data']) ? $data['data'] : date('Y-m-d'));
+                    $valabUpd = (isset($data['valab']) ? $data['valab'] : '4 zile');
+                    $expUpd = calcExpiresAt($dataOf, $valabUpd);
+                    $db->prepare("UPDATE oferte SET titlu=?, data_oferta=?, valabilitate=?, obiectiv=?, client_id=?, proiect_id=?, subtotal_echip=?, subtotal_manop=?, total_fara_tva=?, tva=?, total_cu_tva=?, client_nume=?, client_cui=?, client_adresa=?, client_contact=?, status=?, expires_at=? WHERE id=?")
                        ->execute([
                            (isset($data['titlu']) ? $data['titlu'] : ''),
-                           (isset($data['data']) ? $data['data'] : date('Y-m-d')),
-                           (isset($data['valab']) ? $data['valab'] : '4 zile'),
+                           $dataOf,
+                           $valabUpd,
                            (isset($data['obiectiv']) ? $data['obiectiv'] : ''),
                            $clientIdVal,
                            $proiectIdVal,
@@ -641,6 +704,7 @@ try {
                            (isset($data['adresa']) ? $data['adresa'] : ''),
                            (isset($data['contact']) ? $data['contact'] : ''),
                            (isset($data['oferta_status']) ? $data['oferta_status'] : 'Draft'),
+                           $expUpd,
                            $ofertaDbId
                        ]);
                     // Sterge linii vechi
@@ -655,7 +719,9 @@ try {
                     $dataParts = explode('-', $dataOf);
                     $dataFmt = (isset($dataParts[2]) ? $dataParts[2].'.'.$dataParts[1].'.'.$dataParts[0] : $dataOf);
                     $titlu = 'Deviz ' . $client . ($obiectiv ? ' ' . $obiectiv : '') . ' ser.BV Nr. ' . $ofertaId . ' din ' . $dataFmt;
-                    $stmt = $db->prepare("INSERT INTO oferte (oferta_id, titlu, data_oferta, valabilitate, obiectiv, client_id, proiect_id, subtotal_echip, subtotal_manop, total_fara_tva, tva, total_cu_tva, client_nume, client_cui, client_adresa, client_contact, status) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
+                    ensureOferteColumns($db);
+                    $expIns = calcExpiresAt($dataOf, (isset($data['valab']) ? $data['valab'] : '4 zile'));
+                    $stmt = $db->prepare("INSERT INTO oferte (oferta_id, titlu, data_oferta, valabilitate, obiectiv, client_id, proiect_id, subtotal_echip, subtotal_manop, total_fara_tva, tva, total_cu_tva, client_nume, client_cui, client_adresa, client_contact, status, expires_at) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
                     // Validare FK pt INSERT
                     $clientIdValI = null;
                     if (!empty($data['client_db_id'])) {
@@ -672,7 +738,7 @@ try {
                     $stmt->execute([
                         $ofertaId,
                         $titlu,
-                        (isset($data['data']) ? $data['data'] : date('Y-m-d')),
+                        $dataOf,
                         (isset($data['valab']) ? $data['valab'] : '4 zile'),
                         (isset($data['obiectiv']) ? $data['obiectiv'] : ''),
                         $clientIdValI,
@@ -686,7 +752,8 @@ try {
                         (isset($data['cui']) ? $data['cui'] : ''),
                         (isset($data['adresa']) ? $data['adresa'] : ''),
                         (isset($data['contact']) ? $data['contact'] : ''),
-                        (isset($data['oferta_status']) ? $data['oferta_status'] : 'Draft')]);
+                        (isset($data['oferta_status']) ? $data['oferta_status'] : 'Draft'),
+                        $expIns]);
                     $ofertaDbId = $db->lastInsertId();
                 }
                 
@@ -734,6 +801,125 @@ try {
             $id = (isset($data['id']) ? $data['id'] : 0);
             $db->prepare("DELETE FROM oferte WHERE id = ? OR oferta_id = ?")->execute([$id, $id]);
             jsonResponse(['success' => true]);
+            break;
+
+        // Arhivare ofertă (soft) — păstrează date dar o scoate din vederea principală
+        case 'archiveOferta':
+            ensureOferteColumns($db);
+            $id = isset($data['id']) ? intval($data['id']) : 0;
+            if (!$id) jsonResponse(['success' => false, 'error' => 'id obligatoriu'], 400);
+            $db->prepare("UPDATE oferte SET archived_at = NOW() WHERE id = ?")->execute([$id]);
+            jsonResponse(['success' => true]);
+            break;
+        case 'unarchiveOferta':
+            ensureOferteColumns($db);
+            $id = isset($data['id']) ? intval($data['id']) : 0;
+            if (!$id) jsonResponse(['success' => false, 'error' => 'id obligatoriu'], 400);
+            $db->prepare("UPDATE oferte SET archived_at = NULL WHERE id = ?")->execute([$id]);
+            jsonResponse(['success' => true]);
+            break;
+        // Bulk: archive/unarchive/delete/setStatus pe mai multe oferte deodata
+        case 'bulkOferte':
+            ensureOferteColumns($db);
+            $ids = isset($data['ids']) && is_array($data['ids']) ? array_map('intval', $data['ids']) : [];
+            $op  = isset($data['op']) ? $data['op'] : '';
+            if (!$ids) jsonResponse(['success' => false, 'error' => 'Niciun ID selectat'], 400);
+            $placeholders = implode(',', array_fill(0, count($ids), '?'));
+            switch ($op) {
+                case 'archive':
+                    $db->prepare("UPDATE oferte SET archived_at = NOW() WHERE id IN ($placeholders)")->execute($ids);
+                    break;
+                case 'unarchive':
+                    $db->prepare("UPDATE oferte SET archived_at = NULL WHERE id IN ($placeholders)")->execute($ids);
+                    break;
+                case 'delete':
+                    $db->prepare("DELETE FROM oferte WHERE id IN ($placeholders)")->execute($ids);
+                    break;
+                case 'setStatus':
+                    $st = isset($data['status']) ? $data['status'] : '';
+                    if (!in_array($st, ['Draft','Trimisa','In_discutie','Acceptata','Refuzata','Expirata'], true)) {
+                        jsonResponse(['success' => false, 'error' => 'Status invalid'], 400);
+                    }
+                    $params = array_merge([$st], $ids);
+                    $db->prepare("UPDATE oferte SET status = ? WHERE id IN ($placeholders)")->execute($params);
+                    break;
+                default:
+                    jsonResponse(['success' => false, 'error' => 'Operațiune necunoscută'], 400);
+            }
+            jsonResponse(['success' => true, 'count' => count($ids)]);
+            break;
+        // Export CSV pentru oferte (cu aceleași filtre ca getOferte)
+        case 'exportOferteCSV':
+            ensureOferteColumns($db);
+            autoExpireOferte($db);
+            $statusF = isset($_GET['status']) ? $_GET['status'] : '';
+            $archived = isset($_GET['archived']) ? $_GET['archived'] : '0';
+            $monthF = isset($_GET['month']) ? $_GET['month'] : '';
+            $sql = "SELECT vc.oferta_id, vc.data_oferta, vc.client_nume, vc.obiectiv, vc.total_cu_tva, vc.status, o2.expires_at, o2.archived_at, vc.client_cui, vc.client_adresa FROM v_oferte_complete vc JOIN oferte o2 ON vc.id = o2.id WHERE 1=1";
+            $params = [];
+            if ($statusF) { $sql .= " AND vc.status = ?"; $params[] = $statusF; }
+            if ($archived === '0') $sql .= " AND o2.archived_at IS NULL";
+            elseif ($archived === '1') $sql .= " AND o2.archived_at IS NOT NULL";
+            if ($monthF && preg_match('/^\d{4}-\d{2}$/', $monthF)) { $sql .= " AND DATE_FORMAT(vc.data_oferta, '%Y-%m') = ?"; $params[] = $monthF; }
+            $sql .= " ORDER BY vc.data_oferta DESC";
+            $stmt = $db->prepare($sql); $stmt->execute($params); $rows = $stmt->fetchAll();
+            // Output CSV (UTF-8 BOM pentru Excel)
+            header('Content-Type: text/csv; charset=utf-8');
+            header('Content-Disposition: attachment; filename="oferte-' . date('Y-m-d') . '.csv"');
+            echo "\xEF\xBB\xBF";
+            $out = fopen('php://output', 'w');
+            fputcsv($out, ['Nr. ofertă','Data','Client','Obiectiv','Total CU TVA','Status','Expiră la','Arhivată la','CUI','Adresă'], ';');
+            foreach ($rows as $r) {
+                fputcsv($out, [$r['oferta_id'], $r['data_oferta'], $r['client_nume'], $r['obiectiv'], $r['total_cu_tva'], $r['status'], $r['expires_at'], $r['archived_at'], $r['client_cui'], $r['client_adresa']], ';');
+            }
+            fclose($out);
+            exit;
+
+        // Vedere client-centric: client + oferte + proiecte + LTV
+        case 'getClientFull':
+            ensureOferteColumns($db);
+            $cid = isset($_GET['id']) ? intval($_GET['id']) : 0;
+            if (!$cid) jsonResponse(['success' => false, 'error' => 'id obligatoriu'], 400);
+            $stmtC = $db->prepare("SELECT * FROM clienti WHERE id = ?");
+            $stmtC->execute([$cid]);
+            $client = $stmtC->fetch();
+            if (!$client) jsonResponse(['success' => false, 'error' => 'Client inexistent'], 404);
+            // Oferte
+            $stmtO = $db->prepare("SELECT vc.id, vc.oferta_id, vc.data_oferta, vc.obiectiv, vc.total_cu_tva, vc.status, o2.archived_at, o2.expires_at FROM v_oferte_complete vc JOIN oferte o2 ON vc.id = o2.id WHERE o2.client_id = ? ORDER BY vc.data_oferta DESC");
+            $stmtO->execute([$cid]);
+            $oferte = $stmtO->fetchAll();
+            // Proiecte
+            $stmtP = $db->prepare("SELECT id, proiect_id, status, serviciu, valoare_contract, created_at, adresa_obiectiv FROM proiecte WHERE client_id = ? ORDER BY created_at DESC");
+            $stmtP->execute([$cid]);
+            $proiecte = $stmtP->fetchAll();
+            // Mentenante (best-effort, dacă tabelul există)
+            $mentenante = [];
+            try {
+                $stmtM = $db->prepare("SELECT id, proiect_id, tip, status, data_scadenta, created_at FROM mentenanta WHERE client_id = ? OR proiect_id IN (SELECT id FROM proiecte WHERE client_id = ?) ORDER BY data_scadenta DESC LIMIT 50");
+                $stmtM->execute([$cid, $cid]);
+                $mentenante = $stmtM->fetchAll();
+            } catch (Exception $e) { /* tabel poate să nu existe */ }
+            // LTV: suma ofertelor acceptate + valoarea contractelor proiectelor
+            $ltvOferte = 0; foreach ($oferte as $o) if ($o['status'] === 'Acceptata') $ltvOferte += floatval($o['total_cu_tva']);
+            $ltvProiecte = 0; foreach ($proiecte as $p) $ltvProiecte += floatval($p['valoare_contract']);
+            // Statistici sumar
+            $stat = [
+                'total_oferte'    => count($oferte),
+                'oferte_active'   => count(array_filter($oferte, function($o){ return !$o['archived_at']; })),
+                'oferte_acceptate'=> count(array_filter($oferte, function($o){ return $o['status']==='Acceptata'; })),
+                'total_proiecte'  => count($proiecte),
+                'proiecte_active' => count(array_filter($proiecte, function($p){ return !in_array($p['status'], ['Inchis','Anulat'], true); })),
+                'ltv_oferte'      => round($ltvOferte, 2),
+                'ltv_proiecte'    => round($ltvProiecte, 2),
+                'ltv_total'       => round(max($ltvOferte, $ltvProiecte), 2),
+            ];
+            jsonResponse(['success' => true, 'data' => [
+                'client'    => $client,
+                'oferte'    => $oferte,
+                'proiecte'  => $proiecte,
+                'mentenante'=> $mentenante,
+                'stat'      => $stat,
+            ]]);
             break;
 
         case 'updateOfertaStatus':
