@@ -3,120 +3,78 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Proiectare & Avize — Portal CSSI 3.0</title>
+<title>Proiectare — Portal CSSI 3.0</title>
 <meta name="robots" content="noindex, nofollow">
 <link rel="icon" type="image/x-icon" href="/images/favicon.ico">
 <meta name="theme-color" content="#dc2626">
 <link rel="manifest" href="../manifest.json">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="Portal CSSI">
-<link rel="apple-touch-icon" sizes="180x180" href="../icons/apple-touch-icon.png">
-<link rel="icon" type="image/png" sizes="96x96" href="../icons/favicon-96x96.png">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 <style>
 *{margin:0;padding:0;box-sizing:border-box;}
-:root{--red:#dc2626;--red-d:#991b1b;--dark:#0f172a;--dark2:#1e293b;--gray:#64748b;--gray-l:#94a3b8;--gray-xl:#cbd5e1;--gray-bg:#f1f5f9;--gray-b:#e2e8f0;--blue:#3b82f6;--green:#22c55e;--orange:#f97316;--purple:#8b5cf6;--yellow:#eab308;--teal:#14b8a6;--radius:16px;--radius-sm:12px;--shadow:0 1px 3px rgba(0,0,0,0.06);--shadow-md:0 4px 12px rgba(0,0,0,0.08);--font:'Inter',system-ui,sans-serif;}
+:root{--red:#dc2626;--red-d:#991b1b;--dark:#0f172a;--dark2:#1e293b;--gray:#64748b;--gray-l:#94a3b8;--gray-xl:#cbd5e1;--gray-bg:#f1f5f9;--gray-b:#e2e8f0;--blue:#3b82f6;--green:#22c55e;--orange:#f97316;--purple:#8b5cf6;--teal:#14b8a6;--yellow:#eab308;--radius:16px;--radius-sm:12px;--shadow:0 1px 3px rgba(0,0,0,0.06);--shadow-md:0 4px 12px rgba(0,0,0,0.08);--font:'Inter',system-ui,sans-serif;}
 body{font-family:var(--font);color:var(--dark);background:var(--gray-bg);-webkit-font-smoothing:antialiased;}
 a{text-decoration:none;color:inherit;}button{font-family:inherit;cursor:pointer;}
+:focus-visible{outline:2px solid var(--blue);outline-offset:2px;border-radius:6px;}
 
-.page-header{background:linear-gradient(135deg,var(--dark),var(--dark2));color:#fff;padding:20px 24px;border-radius:20px;margin-bottom:16px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;}
-.page-back{color:rgba(255,255,255,0.7);font-size:13px;font-weight:500;}.page-back:hover{color:#fff;}
+.page-header{background:linear-gradient(135deg,#0f4c81,#1e3a8a);color:#fff;padding:20px 24px;border-radius:20px;margin-bottom:16px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;}
+.page-back{color:rgba(255,255,255,0.7);font-size:13px;font-weight:500;display:inline-flex;align-items:center;gap:6px;}.page-back:hover{color:#fff;}
 .page-title{font-size:22px;font-weight:800;letter-spacing:-0.5px;}
-.page-actions{display:flex;gap:8px;}
-.page-btn{padding:10px 18px;border-radius:12px;font-size:13px;font-weight:700;border:none;transition:all 0.2s;}
-.page-btn.ghost{background:rgba(255,255,255,0.1);color:#fff;border:1px solid rgba(255,255,255,0.15);}
+.page-subtitle{font-size:12px;color:rgba(255,255,255,0.55);margin-top:2px;display:flex;align-items:center;gap:6px;}
+.page-actions{display:flex;gap:8px;align-items:center;}
+.page-btn{padding:10px 16px;border-radius:12px;font-size:13px;font-weight:700;border:none;transition:all 0.2s;display:inline-flex;align-items:center;gap:6px;}
+.page-btn.secondary{background:rgba(255,255,255,0.1);color:#fff;border:1px solid rgba(255,255,255,0.2);}.page-btn.secondary:hover{background:rgba(255,255,255,0.2);}
+.sync-indicator{width:8px;height:8px;border-radius:50%;display:inline-block;margin-right:4px;}
+.sync-ok{background:var(--green);box-shadow:0 0 6px rgba(34,197,94,0.5);}.sync-off{background:var(--gray-l);}.sync-loading{background:var(--orange);animation:pulse 1s infinite;}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.4}}
+.container{max-width:1200px;margin:0 auto;padding:16px;}@media(min-width:768px){.container{padding:24px;}}
 
-.container{max-width:1400px;margin:0 auto;padding:16px;}
-@media(min-width:768px){.container{padding:24px;}}
+.summary{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:16px;}
+.s-item{background:#fff;border-radius:var(--radius-sm);padding:14px 18px;box-shadow:var(--shadow);flex:1;min-width:140px;display:flex;align-items:center;gap:12px;}
+.s-icon{width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;}
+.s-val{font-size:22px;font-weight:900;line-height:1;}.s-label{font-size:11px;color:var(--gray);margin-top:4px;}
 
-/* Layout: split */
-.split{display:grid;grid-template-columns:380px 1fr;gap:16px;min-height:70vh;}
-@media(max-width:900px){.split{grid-template-columns:1fr;}}
+.toolbar{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px;align-items:center;}
+.filter-search{padding:10px 16px;border-radius:99px;font-size:13px;border:1px solid var(--gray-b);outline:none;font-family:inherit;background:#fff;flex:1;min-width:220px;max-width:380px;}
+.filter-search:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(59,130,246,0.08);}
+.filter-count{font-size:12px;color:var(--gray);font-weight:600;margin-left:auto;}
 
-/* Project list */
-.proj-list{background:#fff;border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden;}
-.proj-list-head{padding:16px 20px;border-bottom:1px solid var(--gray-b);font-weight:800;font-size:14px;display:flex;justify-content:space-between;align-items:center;}
-.proj-list-body{overflow-y:auto;max-height:calc(100vh - 240px);}
-.proj-item{padding:14px 20px;border-bottom:1px solid var(--gray-bg);cursor:pointer;transition:all 0.15s;}
-.proj-item:hover{background:var(--gray-bg);}
-.proj-item.active{background:#eff6ff;border-left:3px solid var(--blue);}
-.proj-item-id{font-size:10px;font-weight:700;color:var(--gray);letter-spacing:0.5px;}
-.proj-item-name{font-size:14px;font-weight:700;color:var(--dark);margin:2px 0;}
-.proj-item-meta{font-size:11px;color:var(--gray);display:flex;gap:8px;align-items:center;flex-wrap:wrap;}
-.proj-item-progress{height:4px;background:var(--gray-b);border-radius:2px;margin-top:6px;overflow:hidden;}
-.proj-item-progress-bar{height:100%;border-radius:2px;background:var(--teal);transition:width 0.3s;}
-
-/* Detail panel */
-.detail-panel{background:#fff;border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden;}
-.detail-empty{display:flex;align-items:center;justify-content:center;min-height:400px;color:var(--gray-l);font-size:14px;flex-direction:column;gap:8px;}
-.detail-empty .de-icon{font-size:48px;}
-
-/* Detail tabs */
-.dtabs{display:flex;gap:2px;background:var(--gray-bg);padding:3px;border-radius:10px;margin:16px 20px;}
-.dtab{flex:1;padding:10px 8px;text-align:center;border-radius:8px;font-size:12px;font-weight:700;border:none;background:none;color:var(--gray);cursor:pointer;transition:all 0.2s;}
-.dtab.active{background:#fff;color:var(--dark);box-shadow:var(--shadow);}
-.dtab-panel{display:none;padding:20px;}
-.dtab-panel.active{display:block;}
-
-/* Brief section */
-.brief-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;font-size:12px;margin-bottom:16px;}
-.brief-grid div{padding:8px 12px;background:var(--gray-bg);border-radius:8px;}
-.brief-grid strong{color:var(--dark);display:block;font-size:11px;margin-bottom:2px;}
-
-/* Checklist */
-.check-item{display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--gray-bg);}
-.check-item:last-child{border:none;}
-.check-box{width:22px;height:22px;border-radius:6px;border:2px solid var(--gray-b);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all 0.2s;flex-shrink:0;font-size:12px;}
-.check-box.done{background:var(--green);border-color:var(--green);color:#fff;}
-.check-label{flex:1;font-size:13px;}
-.check-label.done{text-decoration:line-through;color:var(--gray-l);}
-.check-meta{font-size:10px;color:var(--gray-l);}
-
-/* Progress bar */
-.progress-wrap{margin:0 20px 0;padding:12px 0;border-bottom:1px solid var(--gray-bg);}
-.progress-bar-bg{height:8px;background:var(--gray-b);border-radius:4px;overflow:hidden;}
-.progress-bar-fill{height:100%;border-radius:4px;transition:width 0.5s;background:linear-gradient(90deg,var(--teal),var(--green));}
-.progress-text{display:flex;justify-content:space-between;font-size:11px;color:var(--gray);margin-top:4px;}
-
-/* Equipment table */
-.eq-group{margin-bottom:16px;}
-.eq-group-title{font-size:12px;font-weight:700;color:var(--blue);padding:8px 0;border-bottom:2px solid var(--blue);margin-bottom:8px;}
-.eq-row{display:grid;grid-template-columns:1fr 60px 50px 80px;gap:8px;padding:6px 0;border-bottom:1px solid var(--gray-bg);font-size:12px;align-items:center;}
-.eq-row.head{font-weight:700;color:var(--gray);font-size:10px;text-transform:uppercase;}
-.eq-name{font-weight:600;}
-.eq-code{font-size:10px;color:var(--gray-l);}
-.eq-val{text-align:right;font-weight:700;}
-
-/* Journal */
-.journal-add{display:flex;gap:8px;margin-bottom:16px;}
-.journal-input{flex:1;padding:10px 14px;border:2px solid var(--gray-b);border-radius:10px;font-size:13px;font-family:inherit;outline:none;resize:none;min-height:42px;}
-.journal-input:focus{border-color:var(--teal);}
-.journal-btn{padding:10px 18px;border-radius:10px;border:none;background:var(--teal);color:#fff;font-weight:700;font-size:13px;cursor:pointer;white-space:nowrap;}
-.journal-entry{padding:12px;border-left:3px solid var(--teal);background:var(--gray-bg);border-radius:0 8px 8px 0;margin-bottom:8px;}
-.journal-entry-head{font-size:10px;color:var(--gray);margin-bottom:4px;}
-.journal-entry-text{font-size:13px;line-height:1.5;}
-
-/* Termen */
-.termen-badge{display:inline-flex;align-items:center;gap:4px;padding:4px 10px;border-radius:6px;font-size:11px;font-weight:700;}
-.termen-badge.ok{background:#f0fdf4;color:var(--green);}
-.termen-badge.warn{background:#fff7ed;color:var(--orange);}
-.termen-badge.late{background:#fef2f2;color:var(--red);}
+.proj-card{background:#fff;border-radius:var(--radius);box-shadow:var(--shadow);margin-bottom:12px;padding:16px 20px;display:flex;align-items:center;gap:16px;cursor:pointer;transition:all 0.2s;border-left:4px solid #1e3a8a;}
+.proj-card:hover{box-shadow:var(--shadow-md);transform:translateY(-1px);}
+.proj-card.complete{border-left-color:var(--green);background:linear-gradient(135deg,#f0fdf4,#fff);}
+.proj-icon{width:48px;height:48px;border-radius:12px;background:linear-gradient(135deg,#dbeafe,#bfdbfe);color:#1e3a8a;display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:800;flex-shrink:0;}
+.proj-card.complete .proj-icon{background:linear-gradient(135deg,#dcfce7,#bbf7d0);color:#166534;}
+.proj-info{flex:1;min-width:0;}
+.proj-name{font-size:16px;font-weight:800;color:var(--dark);letter-spacing:-0.2px;}
+.proj-meta{font-size:11px;color:var(--gray);margin-top:4px;display:flex;flex-wrap:wrap;gap:8px;align-items:center;}
+.proj-meta .pill{background:var(--gray-bg);padding:2px 8px;border-radius:99px;font-weight:700;}
+.proj-meta .pill.cnt{background:#eff6ff;color:#1e3a8a;}
+.proj-meta .pill.docs{background:#f5f3ff;color:var(--purple);}
+.proj-progress{flex-shrink:0;display:flex;flex-direction:column;align-items:flex-end;gap:6px;min-width:160px;}
+.proj-pct{font-size:18px;font-weight:900;color:var(--orange);font-variant-numeric:tabular-nums;}
+.proj-pct.complete{color:var(--green);}
+.proj-bar{width:140px;height:8px;background:var(--gray-bg);border-radius:99px;overflow:hidden;border:1px solid var(--gray-b);}
+.proj-bar-fill{height:100%;background:linear-gradient(90deg,var(--orange),#ea580c);border-radius:99px;transition:width 0.4s;}
+.proj-bar-fill.complete{background:linear-gradient(90deg,var(--green),#16a34a);}
+.proj-stat-text{font-size:10px;color:var(--gray);font-variant-numeric:tabular-nums;}
+.proj-arrow{color:var(--gray-l);font-size:18px;flex-shrink:0;}
 
 .toast-container{position:fixed;top:20px;right:20px;z-index:300;display:flex;flex-direction:column;gap:8px;}
-.toast{padding:12px 18px;border-radius:12px;color:#fff;font-size:12px;font-weight:600;box-shadow:0 8px 24px rgba(0,0,0,0.15);animation:slideIn 0.3s ease;max-width:360px;}
+.toast{padding:12px 18px;border-radius:12px;color:#fff;font-size:13px;font-weight:600;box-shadow:0 8px 24px rgba(0,0,0,0.15);animation:slideIn 0.3s ease;max-width:380px;}
 .toast.success{background:var(--green);}.toast.error{background:var(--red);}.toast.info{background:var(--blue);}
 @keyframes slideIn{from{transform:translateX(100%);opacity:0}to{transform:translateX(0);opacity:1}}
+.loading-bar{position:fixed;top:0;left:0;right:0;height:3px;z-index:400;display:none;}
+.loading-bar.active{display:block;}.loading-bar::after{content:'';display:block;width:30%;height:100%;background:#1e3a8a;border-radius:2px;animation:loadSlide 1.2s infinite ease-in-out;}
+@keyframes loadSlide{0%{margin-left:-30%}100%{margin-left:100%}}
 
 .bottom-nav{position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1px solid var(--gray-b);box-shadow:0 -4px 20px rgba(0,0,0,0.06);padding:6px 12px;z-index:100;display:flex;gap:4px;}
 @media(min-width:768px){.bottom-nav{display:none;}}
-.bn-item{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:8px 4px;border-radius:10px;font-size:10px;font-weight:600;color:var(--gray);transition:all 0.2s;gap:2px;}
-.bn-item.active{color:var(--red);background:#fef2f2;}.bn-item .bn-icon{font-size:20px;}
+.bn-item{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:8px 4px;border-radius:10px;font-size:10px;font-weight:600;color:var(--gray);transition:all 0.2s;gap:2px;}.bn-item.active{color:var(--red);background:#fef2f2;}.bn-item .bn-icon{font-size:20px;}
+.empty-state{text-align:center;padding:48px 24px;background:#fff;border-radius:var(--radius);box-shadow:var(--shadow);}
+.empty-icon{font-size:48px;margin-bottom:12px;opacity:0.5;}
+.empty-title{font-size:16px;font-weight:800;color:var(--dark);margin-bottom:6px;}
+.empty-msg{color:var(--gray-l);font-size:13px;}
 .footer{text-align:center;color:var(--gray-xl);font-size:11px;padding:24px 0 100px;}
-.loading-bar{position:fixed;top:0;left:0;right:0;height:3px;z-index:400;display:none;}
-.loading-bar.active{display:block;}
-.loading-bar::after{content:'';display:block;width:30%;height:100%;background:var(--teal);border-radius:2px;animation:loadSlide 1.2s infinite ease-in-out;}
-@keyframes loadSlide{0%{margin-left:-30%}100%{margin-left:100%}}
+@media(max-width:600px){.proj-card{flex-wrap:wrap;}.proj-progress{order:5;width:100%;align-items:flex-start;margin-top:8px;}.proj-arrow{display:none;}}
 </style>
 </head>
 <body>
@@ -127,465 +85,130 @@ a{text-decoration:none;color:inherit;}button{font-family:inherit;cursor:pointer;
     <div class="page-header">
         <div>
             <a href="../admin.html" class="page-back">← Dashboard</a>
-            <div class="page-title">📐 Proiectare & Avize</div>
+            <div class="page-title">📐 Proiectare</div>
+            <div class="page-subtitle" id="syncStatus"><span class="sync-indicator sync-off"></span>Se încarcă...</div>
         </div>
         <div class="page-actions">
-            <button class="page-btn ghost" onclick="loadProjects()">🔄 Refresh</button>
+            <a href="executie.html" class="page-btn secondary">🔧 Execuție</a>
+            <button class="page-btn secondary" onclick="refreshData()">🔄 Reîncarcă</button>
         </div>
     </div>
 
-    <div class="split">
-        <!-- Left: Project List -->
-        <div class="proj-list">
-            <div class="proj-list-head">
-                <span>Proiecte de proiectat</span>
-                <span id="projCount" style="font-size:12px;color:var(--gray);font-weight:600">0</span>
-            </div>
-            <div class="proj-list-body" id="projListBody">
-                <div class="detail-empty"><div class="de-icon">⏳</div>Se încarcă...</div>
-            </div>
-        </div>
+    <div class="summary" id="summary"></div>
 
-        <!-- Right: Detail Panel -->
-        <div class="detail-panel" id="detailPanel">
-            <div class="detail-empty" id="detailEmpty">
-                <div class="de-icon">📐</div>
-                Selectează un proiect din stânga
-            </div>
-            <div id="detailContent" style="display:none">
-                <!-- Header -->
-                <div style="padding:20px 20px 0;display:flex;justify-content:space-between;align-items:start">
-                    <div>
-                        <div style="font-size:11px;font-weight:700;color:var(--teal)" id="dCod"></div>
-                        <div style="font-size:20px;font-weight:900" id="dClient"></div>
-                        <div style="font-size:12px;color:var(--gray);margin-top:2px" id="dServiciu"></div>
-                    </div>
-                    <div id="dStatusBadge"></div>
-                </div>
-
-                <!-- Action Bar -->
-                <div id="actionBar" style="padding:12px 20px;display:flex;gap:10px;flex-wrap:wrap;border-bottom:1px solid var(--gray-bg);background:var(--gray-bg);align-items:end">
-                    <div style="flex:1;min-width:120px">
-                        <div style="font-size:10px;font-weight:700;color:var(--gray);margin-bottom:3px">PROIECTANT</div>
-                        <select id="aProiectant" onchange="saveField('proiectant',this.value)" style="width:100%;padding:6px 10px;border:1px solid var(--gray-b);border-radius:8px;font-size:12px;font-weight:600;font-family:inherit;background:#fff">
-                            <option value="">— Nealocat —</option>
-                            <option value="Valentin">📐 Valentin</option>
-                            <option value="Mihai">💰 Mihai</option>
-                            <option value="Admin">🔑 Admin</option>
-                        </select>
-                    </div>
-                    <div style="flex:1;min-width:120px">
-                        <div style="font-size:10px;font-weight:700;color:var(--gray);margin-bottom:3px">TERMEN</div>
-                        <input type="date" id="aTermen" onchange="saveField('termen',this.value)" style="width:100%;padding:6px 10px;border:1px solid var(--gray-b);border-radius:8px;font-size:12px;font-family:inherit;background:#fff">
-                    </div>
-                    <div style="flex:1;min-width:100px">
-                        <div style="font-size:10px;font-weight:700;color:var(--gray);margin-bottom:3px">STATUS</div>
-                        <select id="aStatus" onchange="saveField('status',this.value)" style="width:100%;padding:6px 10px;border:1px solid var(--gray-b);border-radius:8px;font-size:12px;font-weight:600;font-family:inherit;background:#fff">
-                            <option value="Nepornit">⬜ Nepornit</option>
-                            <option value="In lucru">🔨 În lucru</option>
-                            <option value="Finalizat">✅ Finalizat</option>
-                        </select>
-                    </div>
-                    <div id="aAvizIGPR_wrap" style="flex:1;min-width:100px;display:none">
-                        <div style="font-size:10px;font-weight:700;color:var(--gray);margin-bottom:3px">👮 IGPR</div>
-                        <select id="aAvizIGPR" onchange="saveField('aviz_igpr',this.value)" style="width:100%;padding:6px 10px;border:1px solid var(--gray-b);border-radius:8px;font-size:12px;font-weight:600;font-family:inherit;background:#fff">
-                            <option value="NA">N/A</option><option value="Depus">📤 Depus</option><option value="DA">✅ Obținut</option><option value="NU">❌ Respins</option>
-                        </select>
-                    </div>
-                    <div id="aAvizISU_wrap" style="flex:1;min-width:100px;display:none">
-                        <div style="font-size:10px;font-weight:700;color:var(--gray);margin-bottom:3px">🛡️ ISU</div>
-                        <select id="aAvizISU" onchange="saveField('aviz_isu',this.value)" style="width:100%;padding:6px 10px;border:1px solid var(--gray-b);border-radius:8px;font-size:12px;font-weight:600;font-family:inherit;background:#fff">
-                            <option value="NA">N/A</option><option value="Depus">📤 Depus</option><option value="DA">✅ Obținut</option><option value="NU">❌ Respins</option>
-                        </select>
-                    </div>
-                </div>
-
-                <!-- Progress -->
-                <div class="progress-wrap">
-                    <div class="progress-bar-bg"><div class="progress-bar-fill" id="dProgressBar" style="width:0%"></div></div>
-                    <div class="progress-text"><span id="dProgressText">0% completat</span><span id="dTermen"></span></div>
-                </div>
-
-                <!-- Tabs -->
-                <div class="dtabs">
-                    <button class="dtab active" onclick="switchTab('brief',this)">📋 Brief</button>
-                    <button class="dtab" onclick="switchTab('checklist',this)">✅ Checklist</button>
-                    <button class="dtab" onclick="switchTab('echipamente',this)">📦 Echipamente</button>
-                    <button class="dtab" onclick="switchTab('jurnal',this)">📝 Jurnal</button>
-                </div>
-
-                <!-- Tab: Brief -->
-                <div class="dtab-panel active" id="tab-brief">
-                    <div class="brief-grid" id="briefGrid"></div>
-                    <div id="briefOferte"></div>
-                </div>
-
-                <!-- Tab: Checklist -->
-                <div class="dtab-panel" id="tab-checklist">
-                    <div id="checklistBody"></div>
-                </div>
-
-                <!-- Tab: Echipamente -->
-                <div class="dtab-panel" id="tab-echipamente">
-                    <div id="echipamenteBody"></div>
-                </div>
-
-                <!-- Tab: Jurnal -->
-                <div class="dtab-panel" id="tab-jurnal">
-                    <div class="journal-add">
-                        <textarea class="journal-input" id="jurnalInput" placeholder="Adaugă o notă (ex: Am vizitat terenul, probleme cu traseul cablurilor...)"></textarea>
-                        <button class="journal-btn" onclick="addJurnalEntry()">📝 Adaugă</button>
-                    </div>
-                    <div id="jurnalBody"></div>
-                </div>
-            </div>
-        </div>
+    <div class="toolbar">
+        <input type="text" class="filter-search" id="searchInput" placeholder="🔍 Caută client, proiect, adresă..." oninput="render()">
+        <span class="filter-count" id="filterCount"></span>
     </div>
 
-    <div class="footer">Portal CSSI 3.0 · Modul Proiectare v1.0</div>
+    <div id="projList"></div>
+
+    <div class="footer">Portal CSSI 3.0 · Modul Proiectare v4.0 · Conform L. 333/2003 + I7-2011 + P118/3-2015 + GDPR</div>
 </div>
 
 <div class="bottom-nav">
     <a href="../admin.html" class="bn-item"><span class="bn-icon">🏠</span>Acasă</a>
     <a href="proiecte.html" class="bn-item"><span class="bn-icon">📋</span>Proiecte</a>
-    <a href="crm-clienti.html" class="bn-item"><span class="bn-icon">💰</span>CRM</a>
-    <a href="executie.html" class="bn-item"><span class="bn-icon">🔧</span>Execuție</a>
     <a href="proiectare.html" class="bn-item active"><span class="bn-icon">📐</span>Proiectare</a>
+    <a href="executie.html" class="bn-item"><span class="bn-icon">🔧</span>Execuție</a>
+    <a href="financiar.html" class="bn-item"><span class="bn-icon">📄</span>Facturi</a>
 </div>
 
 <script>
-var API_DB='/admin/api.php';
-var role=sessionStorage.getItem('cssi-role');
-if(!role){window.location.href='../admin.html';}
-var userName=sessionStorage.getItem('cssi-user')||role;
-var PROJECTS=[];
-var currentProject=null;
-var currentData=null;
+var role = sessionStorage.getItem('cssi-role');
+if (!role) { window.location.href = '../admin.html'; }
+var API_DB = '/admin/api.php';
+var STATE = { proiecte:[], loaded:false, isLive:false };
 
-function esc(s){if(!s)return'';var d=document.createElement('div');d.textContent=s;return d.innerHTML;}
-function showLoading(on){document.getElementById('loadBar').classList.toggle('active',on);}
-function toast(msg,type){var c=document.getElementById('toastContainer');var t=document.createElement('div');t.className='toast '+(type||'info');t.textContent=msg;c.appendChild(t);setTimeout(function(){t.remove()},4000);}
-function fmt(n){return Number(n||0).toLocaleString('ro-RO',{minimumFractionDigits:0,maximumFractionDigits:2});}
+function esc(s){if(s==null)return '';var d=document.createElement('div');d.textContent=s;return d.innerHTML;}
+function showLoading(s){document.getElementById('loadBar').classList.toggle('active',s);}
+function toast(msg,type){var c=document.getElementById('toastContainer');var t=document.createElement('div');t.className='toast '+(type||'info');t.textContent=msg;c.appendChild(t);setTimeout(function(){t.style.opacity='0';t.style.transform='translateX(100px)';t.style.transition='all 0.3s'},2500);setTimeout(function(){t.remove()},3000);}
 
-// ═══════ LOAD PROJECTS ═══════
-function loadProjects(){
+function refreshData(){
     showLoading(true);
-    fetch(API_DB+'?action=getProiecteProiectare&_t='+Date.now())
-    .then(function(r){return r.json()})
-    .then(function(res){
-        showLoading(false);
-        PROJECTS=res.data||[];
-        renderProjectList();
-    })
-    .catch(function(e){showLoading(false);toast('Eroare încărcare','error');});
+    document.getElementById('syncStatus').innerHTML = '<span class="sync-indicator sync-loading"></span>Se încarcă...';
+    fetch(API_DB+'?action=getProiectareList&_t='+Date.now())
+        .then(function(r){return r.json()}).then(function(res){
+            if(!res.success) throw new Error(res.error||'Eroare');
+            STATE.proiecte = res.data||[];STATE.loaded=true;STATE.isLive=true;
+            document.getElementById('syncStatus').innerHTML = '<span class="sync-indicator sync-ok"></span>MySQL · '+STATE.proiecte.length+' proiecte în proiectare';
+            render();
+        }).catch(function(e){
+            document.getElementById('syncStatus').innerHTML = '<span class="sync-indicator sync-off"></span>Indisponibil';
+            toast('❌ '+(e.message||e),'error');
+        }).finally(function(){showLoading(false);});
 }
-loadProjects();
 
-function renderProjectList(){
-    var body=document.getElementById('projListBody');
-    document.getElementById('projCount').textContent=PROJECTS.length+' proiecte';
-    if(!PROJECTS.length){body.innerHTML='<div class="detail-empty"><div class="de-icon">📭</div>Niciun proiect în Contract/Proiectare</div>';return;}
-    
-    var html='';
-    PROJECTS.forEach(function(p){
-        var isActive=currentProject&&currentProject==p.id;
-        var progres=p.progres||0;
-        var statusColor=p.status==='Proiectare'?'var(--teal)':'var(--green)';
-        var prStatus=p.pr_status||'Nepornit';
-        var badgeColor = prStatus==='Finalizat'?'var(--green)':(prStatus==='In lucru'?'var(--orange)':'var(--gray-l)');
-        var badgeIcon = prStatus==='Finalizat'?'✅':(prStatus==='In lucru'?'🔨':'⬜');
-        html+='<div class="proj-item'+(isActive?' active':'')+'" onclick="selectProject('+p.id+')">';
-        html+='<div class="proj-item-id">'+esc(p.proiect_id)+' <span style="color:'+statusColor+';font-weight:700">'+esc(p.status)+'</span></div>';
-        html+='<div class="proj-item-name">'+esc(p.client_nume)+'</div>';
-        html+='<div class="proj-item-meta">';
-        html+='<span style="color:'+badgeColor+';font-weight:700">'+badgeIcon+' '+prStatus+'</span>';
-        html+='<span>'+esc(p.serviciu||'—')+'</span>';
-        if(p.valoare_contract) html+='<span style="color:var(--green);font-weight:700">'+fmt(p.valoare_contract)+' RON</span>';
-        if(p.proiectant) html+='<span>📐 '+esc(p.proiectant)+'</span>';
-        html+='</div>';
-        if(p.status==='Proiectare'){
-            html+='<div class="proj-item-progress"><div class="proj-item-progress-bar" style="width:'+progres+'%"></div></div>';
-        }
-        html+='</div>';
+function render(){
+    var q = (document.getElementById('searchInput').value||'').toLowerCase().trim();
+    var filtered = STATE.proiecte.filter(function(p){
+        if(!q) return true;
+        return (p.client_nume||'').toLowerCase().includes(q) ||
+               (p.proiect_id||'').toLowerCase().includes(q) ||
+               (p.adresa_obiectiv||'').toLowerCase().includes(q) ||
+               (p.serviciu||'').toLowerCase().includes(q);
     });
-    body.innerHTML=html;
-}
+    document.getElementById('filterCount').textContent = filtered.length+' proiecte';
 
-// ═══════ SELECT PROJECT ═══════
-function selectProject(dbId){
-    currentProject=dbId;
-    renderProjectList();
-    showLoading(true);
-    
-    fetch(API_DB+'?action=getProiectare&proiect_id='+dbId+'&_t='+Date.now())
-    .then(function(r){return r.json()})
-    .then(function(res){
-        showLoading(false);
-        if(!res.success||!res.data){toast('Eroare încărcare proiect','error');return;}
-        currentData=res.data;
-        currentData.oferte=res.oferte||[];
-        renderDetail();
-    })
-    .catch(function(e){showLoading(false);toast('Eroare rețea','error');});
-}
+    renderSummary();
+    var c = document.getElementById('projList');
+    if(!STATE.loaded){c.innerHTML = '<div class="empty-state"><div class="empty-icon">⏳</div><div class="empty-msg">Se încarcă...</div></div>';return;}
+    if(!STATE.proiecte.length){c.innerHTML = '<div class="empty-state"><div class="empty-icon">📭</div><div class="empty-title">Niciun proiect în Proiectare</div><div class="empty-msg">Mută un proiect cu status "Contract" în "Proiectare" din Board Proiecte.</div></div>';return;}
+    if(!filtered.length){c.innerHTML = '<div class="empty-state"><div class="empty-icon">🔍</div><div class="empty-msg">Niciun rezultat pentru căutare.</div></div>';return;}
 
-// ═══════ RENDER DETAIL ═══════
-function renderDetail(){
-    var d=currentData;
-    if(!d) return;
-    
-    document.getElementById('detailEmpty').style.display='none';
-    document.getElementById('detailContent').style.display='block';
-    
-    // Header
-    document.getElementById('dCod').textContent=d.cod||'';
-    document.getElementById('dClient').textContent=d.client_nume||'';
-    document.getElementById('dServiciu').textContent=(d.serviciu||'')+' · '+(d.adresa_obiectiv||d.client_adresa||'');
-    
-    var prStatus=d.status||'Nepornit';
-    var statusColors={'Nepornit':'var(--gray)','In lucru':'var(--teal)','Finalizat':'var(--green)'};
-    document.getElementById('dStatusBadge').innerHTML='<span style="padding:6px 14px;border-radius:8px;font-size:12px;font-weight:700;background:var(--gray-bg);color:'+(statusColors[prStatus]||'var(--gray)')+'">'+prStatus+'</span>';
-    
-    // Progress
-    var progres=d.progres||0;
-    document.getElementById('dProgressBar').style.width=progres+'%';
-    document.getElementById('dProgressText').textContent=progres+'% completat';
-    
-    // Termen
-    var termenHtml='';
-    if(d.termen){
-        var termenDate=new Date(d.termen);
-        var daysLeft=Math.ceil((termenDate-Date.now())/86400000);
-        var cls=daysLeft>7?'ok':(daysLeft>0?'warn':'late');
-        termenHtml='<span class="termen-badge '+cls+'">⏰ Termen: '+d.termen+(daysLeft>0?' ('+daysLeft+' zile)':' (DEPĂȘIT!)')+'</span>';
-    }
-    document.getElementById('dTermen').innerHTML=termenHtml;
-    
-    // Populate action bar
-    var aP = document.getElementById('aProiectant');
-    if(aP){ aP.value = d.proiectant || ''; }
-    var aT = document.getElementById('aTermen');
-    if(aT){ aT.value = d.termen || ''; }
-    var aS = document.getElementById('aStatus');
-    if(aS){ aS.value = d.status || 'Nepornit'; }
-    
-    // Show/hide aviz fields based on checklist
-    var checklist = []; try{checklist=JSON.parse(d.checklist_json||'[]');}catch(e){}
-    var hasIGPR = checklist.some(function(c){return c.id.indexOf('igpr')>-1;});
-    var hasISU = checklist.some(function(c){return c.id.indexOf('isu')>-1;});
-    document.getElementById('aAvizIGPR_wrap').style.display = hasIGPR ? 'block' : 'none';
-    document.getElementById('aAvizISU_wrap').style.display = hasISU ? 'block' : 'none';
-    if(hasIGPR){ document.getElementById('aAvizIGPR').value = d.aviz_igpr || 'NA'; }
-    if(hasISU){ document.getElementById('aAvizISU').value = d.aviz_isu || 'NA'; }
-    
-    // Show exec button if finalizat or 100%
-    var execBtn = '';
-    if(d.status === 'Finalizat' || progres >= 100){
-        execBtn = '<div style="padding:0 20px 12px"><button onclick="sendToExec()" style="width:100%;padding:12px;border-radius:10px;border:none;background:linear-gradient(135deg,var(--orange),#ea580c);color:#fff;font-weight:700;font-size:14px;cursor:pointer;box-shadow:0 4px 12px rgba(249,115,22,0.3)">🔧 Proiectare finalizată → Trimite la Execuție</button></div>';
-    }
-    document.getElementById('dTermen').insertAdjacentHTML('afterend', '');
-    var execDiv = document.getElementById('execBtnWrap');
-    if(!execDiv){
-        execDiv = document.createElement('div');
-        execDiv.id = 'execBtnWrap';
-        document.querySelector('.progress-wrap').after(execDiv);
-    }
-    execDiv.innerHTML = execBtn;
-    
-    renderBrief();
-    renderChecklist();
-    renderEchipamente();
-    renderJurnal();
-}
-
-// ═══════ BRIEF ═══════
-function renderBrief(){
-    var d=currentData;
-    document.getElementById('briefGrid').innerHTML=
-        '<div><strong>Client</strong>'+esc(d.client_nume)+'</div>'+
-        '<div><strong>Telefon</strong>'+(d.telefon?'<a href="tel:'+esc(d.telefon)+'" style="color:var(--blue);font-weight:700">📞 '+esc(d.telefon)+'</a>':'—')+'</div>'+
-        '<div><strong>Email</strong>'+esc(d.email||'—')+'</div>'+
-        '<div><strong>Contact</strong>'+esc(d.persoana_contact||'—')+'</div>'+
-        '<div><strong>Adresă obiectiv</strong>'+(function(){var a=d.adresa_obiectiv||d.client_adresa||'';return a?'<a href="https://www.google.com/maps/search/?api=1&query='+encodeURIComponent(a)+'" target="_blank" style="color:var(--blue)">📍 '+esc(a)+'</a>':'—';}())+'</div>'+
-        '<div><strong>Serviciu</strong>'+esc(d.serviciu||'—')+'</div>'+
-        '<div><strong>Valoare contract</strong><span style="color:var(--green);font-weight:800">'+fmt(d.valoare_contract)+' RON</span></div>'+
-        '<div><strong>Responsabil</strong>'+esc(d.responsabil||'—')+'</div>'+
-        '<div><strong>Aviz ISU</strong>'+esc(d.aviz_isu||'NA')+'</div>'+
-        '<div><strong>Aviz IGPR</strong>'+esc(d.aviz_igpr||'NA')+'</div>'+
-        '<div><strong>Proiectant</strong>'+esc(d.proiectant||'Nealocat')+'</div>'+
-        '<div><strong>Tip client</strong>'+(d.client_nume&&d.client_nume.indexOf('SRL')>-1||d.client_nume&&d.client_nume.indexOf('SA')>-1?'<span style="color:var(--blue);font-weight:700">🏢 Firmă (necesită avize IGPR)</span>':'<span style="color:var(--gray)">👤 Persoană fizică</span>')+'</div>';
-    
-    // Oferte rezumat
-    if(d.oferte&&d.oferte.length){
-        var html='<div style="margin-top:12px;font-size:13px;font-weight:700;margin-bottom:8px">📄 Oferte Acceptate ('+d.oferte.length+')</div>';
-        d.oferte.forEach(function(o){
-            html+='<div style="display:flex;justify-content:space-between;padding:6px 10px;background:var(--gray-bg);border-radius:8px;margin-bottom:4px;font-size:12px">';
-            html+='<span><strong>'+esc(o.oferta_id)+'</strong> — '+esc(o.titlu||'')+'</span>';
-            html+='<span style="color:var(--green);font-weight:800">'+fmt(o.total_cu_tva)+' RON</span></div>';
-        });
-        document.getElementById('briefOferte').innerHTML=html;
-    } else {
-        document.getElementById('briefOferte').innerHTML='<div style="color:var(--gray-l);font-size:12px;padding:8px">Nicio ofertă acceptată</div>';
-    }
-}
-
-// ═══════ CHECKLIST ═══════
-function renderChecklist(){
-    var d=currentData;
-    var checklist=[];
-    try{checklist=JSON.parse(d.checklist_json||'[]');}catch(e){}
-    
-    var html='';
-    checklist.forEach(function(item){
-        html+='<div class="check-item">';
-        html+='<div class="check-box'+(item.done?' done':'')+'" onclick="toggleCheck('+d.proiect_id+',\''+item.id+'\','+(!item.done)+')">'+(item.done?'✓':'')+'</div>';
-        html+='<div class="check-label'+(item.done?' done':'')+'">'+esc(item.label)+'</div>';
-        if(item.done&&item.date) html+='<div class="check-meta">'+esc(item.user||'')+' · '+item.date.substring(0,10)+'</div>';
-        html+='</div>';
+    var html = '';
+    filtered.forEach(function(p){
+        var tot = parseInt(p.checklist_total)||0;
+        var done = parseInt(p.checklist_done)||0;
+        var na = parseInt(p.checklist_na)||0;
+        var doneTotal = done+na;
+        var pct = tot ? Math.round((doneTotal/tot)*100) : 0;
+        var complete = pct >= 100 && tot > 0;
+        var initials = (p.client_nume||'?').split(/\s+/).filter(Boolean).map(function(w){return w[0];}).join('').slice(0,2).toUpperCase();
+        html += '<div class="proj-card'+(complete?' complete':'')+'" onclick="window.location.href=\'proiectare-proiect.html?id='+p.proiect_db_id+'\'">';
+        html += '<div class="proj-icon">'+esc(initials)+'</div>';
+        html += '<div class="proj-info">';
+        html += '<div class="proj-name">'+esc(p.client_nume||'?')+'</div>';
+        html += '<div class="proj-meta">';
+        html += '<span class="pill cnt">'+esc(p.proiect_id)+'</span>';
+        if(p.serviciu) html += '<span class="pill">'+esc(p.serviciu)+'</span>';
+        if(p.docs_count > 0) html += '<span class="pill docs">📁 '+p.docs_count+' docs</span>';
+        if(p.adresa_obiectiv) html += '<span style="color:var(--gray-l)">📍 '+esc(p.adresa_obiectiv)+'</span>';
+        html += '</div></div>';
+        html += '<div class="proj-progress">';
+        html += '<div class="proj-pct'+(complete?' complete':'')+'">'+pct+'%</div>';
+        html += '<div class="proj-bar"><div class="proj-bar-fill'+(complete?' complete':'')+'" style="width:'+pct+'%"></div></div>';
+        html += '<div class="proj-stat-text">'+done+' bif. · '+na+' n/a · '+(tot-doneTotal)+' rămase</div>';
+        html += '</div>';
+        html += '<div class="proj-arrow">→</div>';
+        html += '</div>';
     });
-    
-    if(!html) html='<div style="color:var(--gray-l);font-size:12px;padding:16px;text-align:center">Checklistul se va genera automat</div>';
-    document.getElementById('checklistBody').innerHTML=html;
+    c.innerHTML = html;
 }
 
-function toggleCheck(pid, itemId, done){
-    fetch(API_DB+'?action=toggleChecklist',{
-        method:'POST',headers:{'Content-Type':'application/json'},
-        body:JSON.stringify({action:'toggleChecklist',proiect_id:pid,item_id:itemId,done:done,user:userName})
-    })
-    .then(function(r){return r.json()})
-    .then(function(res){
-        if(res.success){
-            currentData.checklist_json=JSON.stringify(res.checklist);
-            currentData.progres=res.progres;
-            document.getElementById('dProgressBar').style.width=res.progres+'%';
-            document.getElementById('dProgressText').textContent=res.progres+'% completat';
-            renderChecklist();
-            toast(done?'✅ Bifat':'⬜ Debifat','success');
-        } else {toast('Eroare: '+(res.error||''),'error');}
-    })
-    .catch(function(e){toast('Eroare rețea','error');});
+function renderSummary(){
+    var nProj = STATE.proiecte.length;
+    var ready = STATE.proiecte.filter(function(p){return parseInt(p.checklist_total)>0 && parseInt(p.checklist_done)+parseInt(p.checklist_na) >= parseInt(p.checklist_total);}).length;
+    var inProgress = nProj - ready;
+    var totalDocs = STATE.proiecte.reduce(function(s,p){return s+(parseInt(p.docs_count)||0);},0);
+    document.getElementById('summary').innerHTML =
+        '<div class="s-item"><div class="s-icon" style="background:#dbeafe">📐</div><div><div class="s-val" style="color:#1e3a8a">'+nProj+'</div><div class="s-label">Proiecte în lucru</div></div></div>'+
+        '<div class="s-item"><div class="s-icon" style="background:#fff7ed">⏳</div><div><div class="s-val" style="color:var(--orange)">'+inProgress+'</div><div class="s-label">În desfășurare</div></div></div>'+
+        '<div class="s-item"><div class="s-icon" style="background:#f0fdf4">✅</div><div><div class="s-val" style="color:var(--green)">'+ready+'</div><div class="s-label">Gata de predat</div></div></div>'+
+        '<div class="s-item"><div class="s-icon" style="background:#f5f3ff">📁</div><div><div class="s-val" style="color:var(--purple)">'+totalDocs+'</div><div class="s-label">Documente uploadate</div></div></div>';
 }
 
-// ═══════ ECHIPAMENTE ═══════
-function renderEchipamente(){
-    var d=currentData;
-    if(!d.oferte||!d.oferte.length){
-        document.getElementById('echipamenteBody').innerHTML='<div style="color:var(--gray-l);font-size:12px;padding:16px;text-align:center">Nicio ofertă acceptată cu echipamente</div>';
-        return;
-    }
-    
-    var html='';
-    var totalEchip=0;
-    d.oferte.forEach(function(o){
-        if(!o.echipamente||!o.echipamente.length) return;
-        html+='<div class="eq-group">';
-        html+='<div class="eq-group-title">'+esc(o.oferta_id)+' — '+esc(o.titlu||'Ofertă')+'</div>';
-        html+='<div class="eq-row head"><div>Denumire</div><div>Cant.</div><div>UM</div><div style="text-align:right">Valoare</div></div>';
-        o.echipamente.forEach(function(e){
-            var val=parseFloat(e.valoare)||0;
-            totalEchip+=val;
-            html+='<div class="eq-row">';
-            html+='<div><div class="eq-name">'+esc(e.denumire)+'</div>'+(e.cod?'<div class="eq-code">'+esc(e.cod)+'</div>':'')+'</div>';
-            html+='<div>'+e.cantitate+'</div>';
-            html+='<div>'+esc(e.um)+'</div>';
-            html+='<div class="eq-val">'+fmt(val)+'</div>';
-            html+='</div>';
-        });
-        html+='</div>';
-    });
-    
-    html+='<div style="display:flex;justify-content:space-between;padding:12px;background:var(--dark);color:#fff;border-radius:10px;font-weight:900;font-size:14px;margin-top:8px">';
-    html+='<span>TOTAL ECHIPAMENTE</span><span>'+fmt(totalEchip)+' RON</span></div>';
-    
-    document.getElementById('echipamenteBody').innerHTML=html;
-}
-
-// ═══════ JURNAL ═══════
-function renderJurnal(){
-    var d=currentData;
-    var jurnal=[];
-    try{jurnal=JSON.parse(d.jurnal_json||'[]');}catch(e){}
-    
-    if(!jurnal.length){
-        document.getElementById('jurnalBody').innerHTML='<div style="color:var(--gray-l);font-size:12px;padding:16px;text-align:center">Nicio notă adăugată încă</div>';
-        return;
-    }
-    var html='';
-    jurnal.forEach(function(e){
-        html+='<div class="journal-entry">';
-        html+='<div class="journal-entry-head">👤 '+esc(e.user)+' · '+e.date+'</div>';
-        html+='<div class="journal-entry-text">'+esc(e.text)+'</div>';
-        html+='</div>';
-    });
-    document.getElementById('jurnalBody').innerHTML=html;
-}
-
-function addJurnalEntry(){
-    var input=document.getElementById('jurnalInput');
-    var text=input.value.trim();
-    if(!text){toast('Scrie o notă','error');return;}
-    
-    fetch(API_DB+'?action=addJurnalEntry',{
-        method:'POST',headers:{'Content-Type':'application/json'},
-        body:JSON.stringify({action:'addJurnalEntry',proiect_id:currentData.proiect_id,text:text,user:userName})
-    })
-    .then(function(r){return r.json()})
-    .then(function(res){
-        if(res.success){
-            currentData.jurnal_json=JSON.stringify(res.jurnal);
-            input.value='';
-            renderJurnal();
-            toast('📝 Notă adăugată','success');
-        } else {toast('Eroare','error');}
-    })
-    .catch(function(e){toast('Eroare rețea','error');});
-}
-
-// ═══════ SAVE FIELD ═══════
-function saveField(field, value){
-    if(!currentData) return;
-    var payload = {action:'updateProiectare', proiect_id: currentData.proiect_id};
-    payload[field] = value;
-    fetch(API_DB+'?action=updateProiectare',{
-        method:'POST',headers:{'Content-Type':'application/json'},
-        body:JSON.stringify(payload)
-    })
-    .then(function(r){return r.json()})
-    .then(function(res){
-        if(res.success){
-            currentData[field] = value;
-            toast('💾 Salvat: '+field,'success');
-            loadProjects();
-        } else { toast('Eroare: '+(res.error||''),'error'); }
-    })
-    .catch(function(e){toast('Eroare rețea','error');});
-}
-
-function sendToExec(){
-    if(!currentData) return;
-    if(!confirm('Trimiți proiectul '+currentData.cod+' la Execuție?')) return;
-    fetch(API_DB+'?action=updateStatus',{
-        method:'POST',headers:{'Content-Type':'application/json'},
-        body:JSON.stringify({action:'updateStatus',id:currentData.proiect_id,status:'Executie',user:userName})
-    })
-    .then(function(r){return r.json()})
-    .then(function(res){
-        if(res.success){toast('🔧 Trimis la Execuție!','success');loadProjects();currentProject=null;document.getElementById('detailContent').style.display='none';document.getElementById('detailEmpty').style.display='flex';}
-        else{toast('Eroare','error');}
-    });
-}
-
-// ═══════ TAB SWITCHING ═══════
-function switchTab(tab,btn){
-    document.querySelectorAll('.dtab').forEach(function(t){t.classList.remove('active')});
-    document.querySelectorAll('.dtab-panel').forEach(function(p){p.classList.remove('active')});
-    btn.classList.add('active');
-    document.getElementById('tab-'+tab).classList.add('active');
-}
+refreshData();
 </script>
 <script>
-if('serviceWorker' in navigator){navigator.serviceWorker.register('../sw.js').then(function(r){console.log('[PWA] SW registered')}).catch(function(e){});var __reloaded=false;navigator.serviceWorker.addEventListener('controllerchange',function(){if(__reloaded)return;__reloaded=true;window.location.reload();});}
+if('serviceWorker' in navigator){
+    navigator.serviceWorker.register('../sw.js').then(function(r){console.log('[PWA] SW registered, scope:',r.scope)}).catch(function(e){console.log('[PWA] SW failed:',e)});
+    var __reloaded=false;
+    navigator.serviceWorker.addEventListener('controllerchange',function(){
+        if(__reloaded)return;__reloaded=true;
+        window.location.reload();
+    });
+}
 </script>
 </body>
 </html>
