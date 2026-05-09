@@ -234,6 +234,57 @@ a{text-decoration:none;color:inherit;}button{font-family:inherit;cursor:pointer;
     <div class="footer">Portal CSSI 3.0 · Modul Oferte v1.0 · Pipeline + arhivă + bulk</div>
 </div>
 
+<!-- MODAL: vizualizare ofertă -->
+<div id="viewModal" class="modal-overlay" onclick="if(event.target===this)closeViewModal()">
+<div class="modal" style="max-width:900px">
+    <div class="modal-head">
+        <div class="modal-title" id="vmTitle">📋 Ofertă</div>
+        <button class="modal-close" onclick="closeViewModal()">✕</button>
+    </div>
+    <div class="modal-body" id="vmBody"><div class="empty-msg" style="text-align:center;padding:30px;color:var(--gray)">⏳ Se încarcă...</div></div>
+</div>
+</div>
+<style>
+.vm-stat-row{display:flex;flex-wrap:wrap;gap:10px;align-items:center;background:linear-gradient(135deg,#1e3a8a,#3b82f6);color:#fff;border-radius:12px;padding:14px 18px;margin-bottom:14px;}
+.vm-stat-row .stat-bit{font-size:12px;opacity:0.92;display:inline-flex;align-items:center;gap:6px;}
+.vm-stat-row .stat-bit strong{font-size:13px;}
+.vm-stat-row .stat-val{margin-left:auto;font-size:22px;font-weight:800;font-variant-numeric:tabular-nums;}
+.vm-section{margin-bottom:18px;}
+.vm-section-title{font-size:12px;font-weight:800;color:var(--gray);text-transform:uppercase;letter-spacing:0.8px;margin-bottom:8px;display:flex;align-items:center;gap:8px;}
+.vm-section-title .badge-num{background:var(--gray-bg);color:var(--dark);border-radius:99px;padding:2px 9px;font-size:10px;font-weight:800;letter-spacing:0;}
+.vm-section-title .sum{margin-left:auto;font-size:13px;color:var(--green);font-weight:800;}
+.vm-table{width:100%;border-collapse:collapse;font-size:12px;}
+.vm-table thead th{text-align:left;padding:8px 10px;background:var(--gray-bg);font-size:10px;font-weight:800;color:var(--gray);text-transform:uppercase;letter-spacing:0.5px;border-bottom:1px solid var(--gray-b);}
+.vm-table tbody td{padding:8px 10px;border-bottom:1px solid var(--gray-b);vertical-align:top;}
+.vm-table tbody tr:hover{background:#fafbfc;}
+.vm-table .num{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap;}
+.vm-table .cod{font-family:'Courier New',monospace;font-size:11px;background:#fef9c3;padding:2px 6px;border-radius:4px;font-weight:700;color:var(--dark);}
+.vm-table .name{font-weight:600;color:var(--dark);}
+@media(max-width:600px){
+    .vm-table thead{display:none;}
+    .vm-table tbody tr{display:block;border:1px solid var(--gray-b);border-radius:10px;padding:10px;margin-bottom:8px;}
+    .vm-table tbody td{display:block;padding:3px 0;border:none;font-size:13px;}
+    .vm-table tbody td:before{content:attr(data-lbl);font-size:10px;color:var(--gray);font-weight:700;text-transform:uppercase;letter-spacing:0.3px;display:inline-block;margin-right:6px;}
+    .vm-table tbody td.num{text-align:left;}
+}
+.vm-totals{background:var(--gray-bg);border-radius:12px;padding:14px 16px;margin-top:8px;}
+.vm-totals .row{display:flex;justify-content:space-between;padding:5px 0;font-size:13px;color:var(--gray);}
+.vm-totals .row.big{border-top:2px solid var(--gray-b);margin-top:6px;padding-top:10px;font-size:18px;font-weight:800;color:var(--dark);}
+.vm-totals .row strong{color:var(--dark);font-weight:700;font-variant-numeric:tabular-nums;}
+.vm-totals .row.big strong{color:var(--green);}
+.vm-actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px;padding-top:14px;border-top:1px solid var(--gray-b);}
+.vm-act-btn{flex:1;min-width:130px;padding:11px 14px;border-radius:10px;border:none;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;display:inline-flex;align-items:center;justify-content:center;gap:6px;transition:all 0.15s;-webkit-tap-highlight-color:transparent;text-decoration:none;}
+.vm-act-btn.primary{background:linear-gradient(135deg,var(--blue),#2563eb);color:#fff;}
+.vm-act-btn.primary:hover{transform:translateY(-1px);box-shadow:0 6px 16px rgba(59,130,246,0.35);}
+.vm-act-btn.secondary{background:#fff;border:1.5px solid var(--gray-b);color:var(--gray);}
+.vm-act-btn.secondary:hover{border-color:var(--blue);color:var(--blue);}
+.vm-act-btn.warn{background:#fff;border:1.5px solid var(--orange);color:var(--orange);}
+.vm-act-btn.warn:hover{background:var(--orange);color:#fff;}
+.vm-meta-line{display:flex;flex-wrap:wrap;gap:12px;margin-bottom:10px;font-size:12px;color:var(--gray);}
+.vm-meta-line span strong{color:var(--dark);}
+.vm-empty-section{text-align:center;padding:14px;color:var(--gray-l);font-size:12px;font-style:italic;}
+</style>
+
 <!-- MODAL: schimbă status -->
 <div id="statusModal" class="modal-overlay" onclick="if(event.target===this)closeStatusModal()">
 <div class="modal">
@@ -449,24 +500,25 @@ function renderCard(o){
     var motivHtml = (st==='Refuzata' && o.motiv_respingere) ? '<div style="font-size:11px;color:var(--red);font-style:italic;margin-top:4px">Motiv: '+esc(o.motiv_respingere)+'</div>' : '';
     var html = '<div class="oferta-card'+checked+arch+'" id="card-'+o.id+'">';
     html += '<div class="oc-top">';
-    html += '<input type="checkbox" class="oc-check" '+ckBox+' onchange="toggleSelect('+o.id+',this.checked)">';
-    html += '<div class="oc-main">';
+    html += '<input type="checkbox" class="oc-check" '+ckBox+' onchange="toggleSelect('+o.id+',this.checked);event.stopPropagation()" onclick="event.stopPropagation()">';
+    html += '<div class="oc-main" onclick="openOfertaView('+o.id+')" style="cursor:pointer">';
     html += '<div class="oc-client">'+esc(o.client_nume||'— fără client —')+'</div>';
     if(o.obiectiv) html += '<div class="oc-obiectiv">'+esc(o.obiectiv)+'</div>';
     html += motivHtml;
     html += '</div>';
     html += '</div>';
-    html += '<div class="oc-meta"><span class="nr">#'+esc(o.oferta_id)+'</span><span class="data">'+fmtDate(o.data_oferta)+'</span>'+expHtml+'<span class="val">'+fmtMoney(o.total_cu_tva)+'</span></div>';
+    html += '<div class="oc-meta" onclick="openOfertaView('+o.id+')" style="cursor:pointer"><span class="nr">#'+esc(o.oferta_id)+'</span><span class="data">'+fmtDate(o.data_oferta)+'</span>'+expHtml+'<span class="val">'+fmtMoney(o.total_cu_tva)+'</span></div>';
     html += '<div class="oc-row">';
-    html += '<button class="status-pill s-'+st+'" onclick="openStatusModal('+o.id+',\''+esc((o.client_nume||'').replace(/\047/g,'')).replace(/'/g,"\\'")+'\')" title="Click pentru a schimba status">'+statusInfo(st).ic+' '+statusInfo(st).lbl+'</button>';
+    html += '<button class="status-pill s-'+st+'" onclick="event.stopPropagation();openStatusModal('+o.id+',\''+esc((o.client_nume||'').replace(/\047/g,'')).replace(/'/g,"\\'")+'\')" title="Click pentru a schimba status">'+statusInfo(st).ic+' '+statusInfo(st).lbl+'</button>';
     html += '<div class="oc-actions">';
-    html += '<a class="oc-btn primary" href="calculator-pret.html?edit='+esc(o.oferta_id)+'" title="Editează">✏️</a>';
+    html += '<button class="oc-btn primary" onclick="event.stopPropagation();openOfertaView('+o.id+')" title="Vezi detalii ofertă">👁️</button>';
+    html += '<a class="oc-btn" href="calculator-pret.html?edit='+esc(o.oferta_id)+'" onclick="event.stopPropagation()" title="Editează în calculator">✏️</a>';
     if(o.archived_at){
-        html += '<button class="oc-btn warn" onclick="doUnarchive('+o.id+')" title="Dezarhivează">📤</button>';
+        html += '<button class="oc-btn warn" onclick="event.stopPropagation();doUnarchive('+o.id+')" title="Dezarhivează">📤</button>';
     } else {
-        html += '<button class="oc-btn" onclick="doArchive('+o.id+')" title="Arhivează">🗄️</button>';
+        html += '<button class="oc-btn" onclick="event.stopPropagation();doArchive('+o.id+')" title="Arhivează">🗄️</button>';
     }
-    html += '<button class="oc-btn danger" onclick="doDelete('+o.id+')" title="Șterge">🗑️</button>';
+    html += '<button class="oc-btn danger" onclick="event.stopPropagation();doDelete('+o.id+')" title="Șterge">🗑️</button>';
     html += '</div>';
     html += '</div>';
     html += '</div>';
@@ -613,6 +665,112 @@ function doDelete(id){
             if(res.success){ toast('🗑️ Ștearsă','info'); refreshData(); }
             else toast('❌ '+(res.error||'Eroare'),'error');
         });
+}
+
+// ═══ VIEW (vizualizare ofertă cu detalii complete) ═══
+function openOfertaView(id){
+    document.getElementById('vmTitle').textContent = '📋 Ofertă';
+    document.getElementById('vmBody').innerHTML = '<div class="empty-msg" style="text-align:center;padding:30px;color:var(--gray)">⏳ Se încarcă...</div>';
+    document.getElementById('viewModal').classList.add('active');
+    fetch(API+'?action=getOferta&id='+id+'&_t='+Date.now(),{credentials:'include'})
+        .then(function(r){return r.json();})
+        .then(function(res){
+            if(!res.success || !res.data){
+                document.getElementById('vmBody').innerHTML = '<div class="empty-msg" style="padding:30px;text-align:center">❌ '+(res.error||'Oferta inexistentă')+'</div>';
+                return;
+            }
+            renderOfertaView(res.data);
+        })
+        .catch(function(e){ document.getElementById('vmBody').innerHTML = '<div class="empty-msg" style="padding:30px;text-align:center">❌ '+(e.message||e)+'</div>'; });
+}
+function closeViewModal(){ document.getElementById('viewModal').classList.remove('active'); }
+function renderOfertaView(o){
+    var st = ofStatus(o);
+    var si = statusInfo(st);
+    document.getElementById('vmTitle').textContent = '📋 Ofertă #' + (o.oferta_id||o.id);
+    var lines = o.lines || [];
+    var labor = o.labor || [];
+    var subEchip = parseFloat(o.subtotal_echip||0);
+    var subManop = parseFloat(o.subtotal_manop||0);
+    var totalNet = parseFloat(o.total_fara_tva||0);
+    var tva      = parseFloat(o.tva||0);
+    var totalBrut= parseFloat(o.total_cu_tva||0);
+    var html = '';
+    // Header colorat cu sumar
+    html += '<div class="vm-stat-row">';
+    html += '<div class="stat-bit">📅 <strong>'+fmtDate(o.data_oferta)+'</strong></div>';
+    if(o.valabilitate) html += '<div class="stat-bit">⏱️ valab. '+esc(o.valabilitate)+'</div>';
+    if(o.expires_at) html += '<div class="stat-bit">expiră: '+fmtDate(o.expires_at)+'</div>';
+    html += '<div class="stat-bit"><span class="status-pill s-'+st+'" style="background:rgba(255,255,255,0.2);color:#fff">'+si.ic+' '+si.lbl+'</span></div>';
+    html += '<div class="stat-val">'+fmtMoney(totalBrut)+'</div>';
+    html += '</div>';
+    // Beneficiar
+    html += '<div class="vm-meta-line">';
+    html += '<span><strong>Client:</strong> '+esc(o.client_nume||'—')+'</span>';
+    if(o.client_cui)     html += '<span><strong>CUI:</strong> '+esc(o.client_cui)+'</span>';
+    if(o.client_adresa)  html += '<span><strong>Adresă:</strong> '+esc(o.client_adresa)+'</span>';
+    if(o.client_contact) html += '<span><strong>Contact:</strong> '+esc(o.client_contact)+'</span>';
+    html += '</div>';
+    if(o.obiectiv) html += '<div class="vm-meta-line"><span><strong>Obiectiv:</strong> '+esc(o.obiectiv)+'</span></div>';
+    if(o.motiv_respingere) html += '<div class="vm-meta-line"><span style="color:var(--red)"><strong>Motiv refuz:</strong> '+esc(o.motiv_respingere)+(o.decis_de?' · '+esc(o.decis_de):'')+'</span></div>';
+    // Echipamente
+    html += '<div class="vm-section">';
+    html += '<div class="vm-section-title">📦 Echipamente <span class="badge-num">'+lines.length+'</span><span class="sum">Subtotal: '+fmtMoney(subEchip)+'</span></div>';
+    if(!lines.length){ html += '<div class="vm-empty-section">Fără echipamente</div>'; }
+    else {
+        html += '<table class="vm-table"><thead><tr><th>Cod</th><th>Denumire</th><th>UM</th><th class="num">Cant.</th><th class="num">Preț unit.</th><th class="num">Valoare</th></tr></thead><tbody>';
+        lines.forEach(function(l){
+            var cant = parseFloat(l.cantitate||0);
+            var pret = parseFloat(l.pret_vanzare||l.pret_achizitie||0);
+            var val  = parseFloat(l.valoare || (cant*pret));
+            html += '<tr>';
+            html += '<td data-lbl="Cod">'+(l.cod?'<span class="cod">'+esc(l.cod)+'</span>':'<span style="color:var(--gray-l)">—</span>')+'</td>';
+            html += '<td data-lbl="Denumire" class="name">'+esc(l.denumire||'')+'</td>';
+            html += '<td data-lbl="UM" style="color:var(--gray)">'+esc(l.um||'buc')+'</td>';
+            html += '<td data-lbl="Cantitate" class="num">'+cant+'</td>';
+            html += '<td data-lbl="Preț unit." class="num">'+fmtMoney(pret)+'</td>';
+            html += '<td data-lbl="Valoare" class="num"><strong>'+fmtMoney(val)+'</strong></td>';
+            html += '</tr>';
+        });
+        html += '</tbody></table>';
+    }
+    html += '</div>';
+    // Manoperă
+    html += '<div class="vm-section">';
+    html += '<div class="vm-section-title">🔧 Manoperă & Servicii <span class="badge-num">'+labor.length+'</span><span class="sum">Subtotal: '+fmtMoney(subManop)+'</span></div>';
+    if(!labor.length){ html += '<div class="vm-empty-section">Fără manoperă</div>'; }
+    else {
+        html += '<table class="vm-table"><thead><tr><th>Denumire</th><th>UM</th><th class="num">Cant.</th><th class="num">Preț unit.</th><th class="num">Valoare</th></tr></thead><tbody>';
+        labor.forEach(function(l){
+            var cant = parseFloat(l.cantitate||0);
+            var pret = parseFloat(l.pret_vanzare||l.pret_achizitie||0);
+            var val  = parseFloat(l.valoare || (cant*pret));
+            html += '<tr>';
+            html += '<td data-lbl="Denumire" class="name">'+esc(l.denumire||'')+'</td>';
+            html += '<td data-lbl="UM" style="color:var(--gray)">'+esc(l.um||'ore')+'</td>';
+            html += '<td data-lbl="Cantitate" class="num">'+cant+'</td>';
+            html += '<td data-lbl="Preț unit." class="num">'+fmtMoney(pret)+'</td>';
+            html += '<td data-lbl="Valoare" class="num"><strong>'+fmtMoney(val)+'</strong></td>';
+            html += '</tr>';
+        });
+        html += '</tbody></table>';
+    }
+    html += '</div>';
+    // Totaluri
+    html += '<div class="vm-totals">';
+    html += '<div class="row"><span>Subtotal echipamente</span><strong>'+fmtMoney(subEchip)+'</strong></div>';
+    html += '<div class="row"><span>Subtotal manoperă</span><strong>'+fmtMoney(subManop)+'</strong></div>';
+    html += '<div class="row"><span>Total fără TVA</span><strong>'+fmtMoney(totalNet)+'</strong></div>';
+    html += '<div class="row"><span>TVA</span><strong>'+fmtMoney(tva)+'</strong></div>';
+    html += '<div class="row big"><span>TOTAL CU TVA</span><strong>'+fmtMoney(totalBrut)+'</strong></div>';
+    html += '</div>';
+    // Acțiuni
+    html += '<div class="vm-actions">';
+    html += '<a class="vm-act-btn primary" href="calculator-pret.html?edit='+esc(o.oferta_id)+'">✏️ Editează în calculator</a>';
+    html += '<a class="vm-act-btn secondary" href="calculator-pret.html?view_offer='+esc(o.oferta_id)+'" target="_blank">📄 Export PDF</a>';
+    html += '<button class="vm-act-btn warn" onclick="closeViewModal();openStatusModal('+o.id+',\''+esc((o.client_nume||'').replace(/\047/g,'')).replace(/'/g,"\\'")+'\')">🎯 Schimbă status</button>';
+    html += '</div>';
+    document.getElementById('vmBody').innerHTML = html;
 }
 
 // ═══ INIT ═══
