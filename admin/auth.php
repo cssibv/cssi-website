@@ -7,14 +7,14 @@
 // Session config — securitate
 ini_set('session.cookie_httponly', '1');           // Cookie inaccesibil din JS (anti-XSS)
 ini_set('session.cookie_secure', '1');             // Doar HTTPS
-ini_set('session.cookie_samesite', 'Lax');         // Anti-CSRF basic
+ini_set('session.cookie_samesite', 'Strict');      // Anti-CSRF strong (era Lax)
 ini_set('session.use_strict_mode', '1');           // Refuză session ID nevalid
 session_set_cookie_params([
-    'lifetime' => 0,                                // Session cookie (până la închidere browser) — sau 86400 pt 24h
+    'lifetime' => 0,                                // Session cookie (până la închidere browser)
     'path'     => '/',
     'secure'   => true,
     'httponly' => true,
-    'samesite' => 'Lax',
+    'samesite' => 'Strict',                         // Strict — cookie nu se trimite cross-site, anti-CSRF
 ]);
 
 if (session_status() === PHP_SESSION_NONE) {
@@ -158,6 +158,47 @@ function attemptLogin($db, $username, $password) {
     ];
     $_SESSION['user'] = $userInfo;
     return ['success' => true, 'user' => $userInfo];
+}
+
+// Verificare CSRF: pentru toate POST-urile, cerem fie X-Requested-With, fie
+// Content-Type application/json (browser-ele nu permit cross-origin form POST
+// cu header-uri custom fără CORS preflight). SameSite=Strict pe cookie face
+// CSRF practic imposibil din cross-site, asta e doar o linie suplimentară.
+function requireCsrfProtection() {
+    if (($_SERVER['REQUEST_METHOD'] ?? 'GET') !== 'POST') return;
+    $ct = $_SERVER['CONTENT_TYPE'] ?? '';
+    $xrw = $_SERVER['HTTP_X_REQUESTED_WITH'] ?? '';
+    // Acceptăm dacă: Content-Type = application/json, SAU X-Requested-With = XMLHttpRequest,
+    // SAU multipart/form-data (necesar pt upload, dar SameSite=Strict deja protejează)
+    if (stripos($ct, 'application/json') !== false) return;
+    if ($xrw === 'XMLHttpRequest' || $xrw === 'fetch') return;
+    if (stripos($ct, 'multipart/form-data') !== false) return;
+    http_response_code(403);
+    header('Content-Type: application/json; charset=utf-8');
+    echo json_encode(['success' => false, 'error' => 'CSRF protection: header lipsă', 'code' => 'CSRF_BLOCKED']);
+    exit;
+}
+
+// Forțează ca user-ul țintă să fie cel curent (anti scraping notificări altora)
+// Dacă $userParam e setat și diferit de currentUser și nu sunt admin → 403
+function enforceOwnUserOrAdmin($userParam) {
+    $u = currentUser();
+    if (!$u) requireAuth(); // 401
+    if (isAdmin()) return $userParam ?: $u['username']; // admin poate cere altcuiva
+    // Non-admin: ignor parametru, returnez username-ul lui
+    return $u['username'];
+}
+
+// Helper: verifică ownership pe un row (admin sau user creator)
+function requireOwnerOrAdmin($creatorUsername) {
+    $u = requireAuth();
+    if (isAdmin()) return $u;
+    if (strtolower(trim($creatorUsername)) === strtolower($u['username'])) return $u;
+    if (strtolower(trim($creatorUsername)) === strtolower($u['display_name'] ?? '')) return $u;
+    http_response_code(403);
+    header('Content-Type: application/json; charset=utf-8');
+    echo json_encode(['success' => false, 'error' => 'Acces interzis. Doar autorul sau admin poate modifica.', 'code' => 'OWNERSHIP_REQUIRED']);
+    exit;
 }
 
 function doLogout() {

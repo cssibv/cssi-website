@@ -31,13 +31,43 @@ $data = getPostData();
 try {
     $db = getDB();
 
+    // ─── CSRF PROTECTION ─────────────────────────────────────────
+    // Verifică pe toate POST-urile (login inclus — anti CSRF login)
+    requireCsrfProtection();
+
     // ─── PROTECȚIE GLOBALĂ ───────────────────────────────────────
     // Toate endpoint-urile necesită autentificare, EXCEPT lista publică
-    if (!in_array($action, publicActions(), true)) {
+    if (!in_array($action, publicActions(), true) && $action !== '_resetLock') {
         requireAuth();
     }
 
     switch ($action) {
+
+        // ══════════════════════════════════════
+        // RECOVERY — deblocare cont cu RECOVERY_TOKEN (din secrets.php)
+        // Pentru cazuri de urgență când admin e blocat din rate-limit
+        // ══════════════════════════════════════
+        case '_resetLock':
+            $token = isset($data['token']) ? trim($data['token']) : '';
+            $expected = defined('RECOVERY_TOKEN') ? RECOVERY_TOKEN : '';
+            if (!$expected || strlen($expected) < 16) {
+                jsonResponse(['success' => false, 'error' => 'RECOVERY_TOKEN nesetat în secrets.php (min 16 chars)'], 503);
+            }
+            // Comparare timing-safe
+            if (!hash_equals($expected, $token)) {
+                usleep(800000);
+                jsonResponse(['success' => false, 'error' => 'Token invalid'], 401);
+            }
+            $username = isset($data['username']) ? strtolower(trim($data['username'])) : '';
+            if ($username) {
+                $stmt = $db->prepare("UPDATE users SET failed_attempts=0, locked_until=NULL WHERE username=?");
+                $stmt->execute([$username]);
+                jsonResponse(['success' => true, 'unlocked' => $stmt->rowCount(), 'user' => $username]);
+            } else {
+                $stmt = $db->exec("UPDATE users SET failed_attempts=0, locked_until=NULL");
+                jsonResponse(['success' => true, 'unlocked' => $stmt, 'user' => '*all*']);
+            }
+            break;
 
         // ══════════════════════════════════════
         // AUTH — login / logout / me / ping
@@ -988,7 +1018,15 @@ try {
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4");
 
             // Filtrare opțională: ?user=X (programările unui tehnician), ?from=DATE, ?to=DATE
-            $userFilter = isset($_GET['user']) ? trim($_GET['user']) : '';
+            // SECURITATE: tehnicienii pot vedea DOAR programările lor.
+            // Admin/manageri pot cere oricare (?user=X) sau lista totală (fără filtru).
+            $reqUserFilter = isset($_GET['user']) ? trim($_GET['user']) : '';
+            $sessUser = currentUser();
+            if (isAdmin() || (!isTehnician())) {
+                $userFilter = $reqUserFilter; // poate fi gol = lista completă
+            } else {
+                $userFilter = $sessUser['username']; // tehnician → forțat la el
+            }
             $fromFilter = isset($_GET['from']) ? trim($_GET['from']) : '';
             $toFilter   = isset($_GET['to']) ? trim($_GET['to']) : '';
 
@@ -1074,7 +1112,9 @@ try {
             $status    = isset($data['status']) ? trim($data['status']) : 'Programat';
             $obiectiv  = isset($data['obiectiv']) ? trim($data['obiectiv']) : '';
             $note      = isset($data['note']) ? trim($data['note']) : '';
-            $createdBy = isset($data['user']) ? trim($data['user']) : '';
+            // SECURITATE: created_by din sesiune (anti-spoofing)
+            $sessUser = currentUser();
+            $createdBy = $sessUser['username'];
             $atribuiri = isset($data['atribuiri']) && is_array($data['atribuiri']) ? $data['atribuiri'] : [];
 
             if (!$proiectId || !$dataPrg) {
@@ -1108,8 +1148,13 @@ try {
             break;
 
         case 'deleteProgramare':
+            // SECURITATE: doar admin sau cel care a creat programarea
             $id = isset($data['id']) ? intval($data['id']) : 0;
             if (!$id) { jsonResponse(['success' => false, 'error' => 'id obligatoriu'], 400); break; }
+            $stmt = $db->prepare("SELECT created_by FROM executie_programari WHERE id=?");
+            $stmt->execute([$id]);
+            $row = $stmt->fetch();
+            if ($row) requireOwnerOrAdmin($row['created_by']);
             $db->prepare("DELETE FROM executie_atribuiri WHERE programare_id=?")->execute([$id]);
             $db->prepare("DELETE FROM executie_programari WHERE id=?")->execute([$id]);
             jsonResponse(['success' => true]);
@@ -1207,10 +1252,12 @@ try {
                 KEY idx_proiect (proiect_id),
                 KEY idx_data (data_intrare)
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4");
-            $pid  = isset($data['proiect_id']) ? intval($data['proiect_id']) : 0;
-            $usr  = isset($data['user_id']) ? trim($data['user_id']) : '';
-            $txt  = isset($data['text']) ? trim($data['text']) : '';
-            $dt   = isset($data['data']) && $data['data'] ? trim($data['data']) : date('Y-m-d');
+            // SECURITATE: user_id forțat la cel din sesiune (anti-spoofing)
+            $sessUser = currentUser();
+            $pid = isset($data['proiect_id']) ? intval($data['proiect_id']) : 0;
+            $usr = $sessUser['username'];
+            $txt = isset($data['text']) ? trim($data['text']) : '';
+            $dt  = isset($data['data']) && $data['data'] ? trim($data['data']) : date('Y-m-d');
             if (!$pid || !$txt) { jsonResponse(['success' => false, 'error' => 'proiect_id + text obligatorii'], 400); break; }
             $db->prepare("INSERT INTO executie_jurnal (proiect_id, data_intrare, user_id, text) VALUES (?,?,?,?)")
                ->execute([$pid, $dt, $usr, $txt]);
@@ -1218,8 +1265,13 @@ try {
             break;
 
         case 'deleteJurnalEntryExec':
+            // SECURITATE: doar autorul sau admin poate șterge
             $id = isset($data['id']) ? intval($data['id']) : 0;
             if (!$id) { jsonResponse(['success' => false, 'error' => 'id obligatoriu'], 400); break; }
+            $stmt = $db->prepare("SELECT user_id FROM executie_jurnal WHERE id=?");
+            $stmt->execute([$id]);
+            $row = $stmt->fetch();
+            if ($row) requireOwnerOrAdmin($row['user_id']);
             $db->prepare("DELETE FROM executie_jurnal WHERE id=?")->execute([$id]);
             jsonResponse(['success' => true]);
             break;
@@ -1242,7 +1294,7 @@ try {
 
             $pid = isset($_POST['proiect_id']) ? intval($_POST['proiect_id']) : 0;
             $tip = isset($_POST['tip']) ? trim($_POST['tip']) : 'doc'; // pv | poza | doc
-            $usr = isset($_POST['user']) ? trim($_POST['user']) : '';
+            $_sessUserUp = currentUser(); $usr = $_sessUserUp['username']; // forțat din sesiune
             if (!$pid || !isset($_FILES['file'])) { jsonResponse(['success' => false, 'error' => 'proiect_id + file obligatorii'], 400); break; }
             if (!in_array($tip, ['pv','poza','doc'])) $tip = 'doc';
 
@@ -1372,10 +1424,12 @@ try {
                 KEY idx_proiect (proiect_id),
                 KEY idx_linie (linie_id)
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4");
+            // SECURITATE: user_id forțat la cel din sesiune (anti-spoofing)
+            $sessUser = currentUser();
             $pid  = isset($data['proiect_id']) ? intval($data['proiect_id']) : 0;
             $lid  = isset($data['linie_id']) ? intval($data['linie_id']) : 0;
             $cant = isset($data['cantitate']) ? floatval($data['cantitate']) : 0;
-            $usr  = isset($data['user_id']) ? trim($data['user_id']) : '';
+            $usr  = $sessUser['username'];
             $note = isset($data['note']) ? trim($data['note']) : '';
             $dt   = isset($data['data']) && $data['data'] ? trim($data['data']) : date('Y-m-d');
             if (!$pid || !$lid || $cant == 0) { jsonResponse(['success' => false, 'error' => 'proiect_id + linie_id + cantitate (≠0) obligatorii'], 400); break; }
@@ -1385,8 +1439,13 @@ try {
             break;
 
         case 'deleteProgresMaterial':
+            // SECURITATE: doar autorul sau admin poate șterge
             $id = isset($data['id']) ? intval($data['id']) : 0;
             if (!$id) { jsonResponse(['success' => false, 'error' => 'id obligatoriu'], 400); break; }
+            $stmt = $db->prepare("SELECT user_id FROM executie_progres_material WHERE id=?");
+            $stmt->execute([$id]);
+            $row = $stmt->fetch();
+            if ($row) requireOwnerOrAdmin($row['user_id']);
             $db->prepare("DELETE FROM executie_progres_material WHERE id = ?")->execute([$id]);
             jsonResponse(['success' => true]);
             break;
@@ -1639,7 +1698,7 @@ try {
 
             $pid = isset($_POST['proiect_id']) ? intval($_POST['proiect_id']) : 0;
             $tip = isset($_POST['tip_doc']) ? trim($_POST['tip_doc']) : 'altele';
-            $usr = isset($_POST['user']) ? trim($_POST['user']) : '';
+            $_sessUserUp = currentUser(); $usr = $_sessUserUp['username']; // forțat din sesiune
             if (!$pid || !isset($_FILES['file'])) { jsonResponse(['success' => false, 'error' => 'proiect_id + file obligatorii'], 400); break; }
 
             $stmt = $db->prepare("SELECT proiect_id FROM proiecte WHERE id = ?");
@@ -1671,12 +1730,14 @@ try {
             break;
 
         case 'deleteProiectareDoc':
+            // SECURITATE: doar autorul (uploaded_by) sau admin
             $id = isset($data['id']) ? intval($data['id']) : 0;
             if (!$id) { jsonResponse(['success' => false, 'error' => 'id obligatoriu'], 400); break; }
             $stmt = $db->prepare("SELECT d.*, p.proiect_id AS cod_proiect FROM proiectare_documente d INNER JOIN proiecte p ON p.id=d.proiect_id WHERE d.id=?");
             $stmt->execute([$id]);
             $row = $stmt->fetch();
             if ($row) {
+                requireOwnerOrAdmin($row['uploaded_by']);
                 $path = UPLOAD_DIR . 'proiectare/' . $row['cod_proiect'] . '/' . $row['tip_doc'] . '/' . $row['filename'];
                 if (file_exists($path)) @unlink($path);
                 $db->prepare("DELETE FROM proiectare_documente WHERE id=?")->execute([$id]);
@@ -1713,12 +1774,14 @@ try {
             break;
 
         case 'deleteProiectFile':
+            // SECURITATE: doar uploaderul (uploaded_by) sau admin
             $id = isset($data['id']) ? intval($data['id']) : 0;
             if (!$id) { jsonResponse(['success' => false, 'error' => 'id obligatoriu'], 400); break; }
             $stmt = $db->prepare("SELECT f.*, p.proiect_id AS cod_proiect FROM executie_files f INNER JOIN proiecte p ON p.id=f.proiect_id WHERE f.id=?");
             $stmt->execute([$id]);
             $row = $stmt->fetch();
             if ($row) {
+                requireOwnerOrAdmin($row['uploaded_by']);
                 $path = UPLOAD_DIR . 'executie/' . $row['cod_proiect'] . '/' . $row['tip'] . '/' . $row['filename'];
                 if (file_exists($path)) @unlink($path);
                 $db->prepare("DELETE FROM executie_files WHERE id=?")->execute([$id]);
@@ -1886,7 +1949,11 @@ try {
         // NOTIFICĂRI
         // ══════════════════════════════════════
         case 'getNotificari':
-            $user = isset($_GET['user']) ? strtolower($_GET['user']) : '';
+            // SECURITATE: ignor parametrul URL ?user= și folosesc sesiunea
+            // (admin poate cere notificările altcuiva, restul doar pe ale lor)
+            $sessUser = currentUser();
+            $reqUser = strtolower($_GET['user'] ?? $sessUser['username']);
+            $user = isAdmin() ? $reqUser : strtolower($sessUser['username']);
             $limit = isset($_GET['limit']) ? intval($_GET['limit']) : 20;
             $cititCol = '';
             if (in_array($user, ['mihai','roxana','valentin','cristina'])) {
@@ -1912,10 +1979,12 @@ try {
             break;
 
         case 'markNotificareRead':
+            // SECURITATE: user-ul e din sesiune (un user nu poate marca notificările altuia)
+            $sessUser = currentUser();
             $nid = isset($data['id']) ? $data['id'] : '';
-            $user = isset($data['user']) ? strtolower($data['user']) : '';
+            $user = strtolower($sessUser['username']);
             if (!$nid || !in_array($user, ['mihai','roxana','valentin','cristina'])) {
-                jsonResponse(['success' => false, 'error' => 'Parametri lipsă'], 400); break;
+                jsonResponse(['success' => false, 'error' => 'Parametri lipsă sau user fără coloană notificări'], 400); break;
             }
             $col = 'citit_' . $user;
             $db->prepare("UPDATE notificari SET $col = 1 WHERE id = ?")->execute([$nid]);
@@ -1923,9 +1992,11 @@ try {
             break;
 
         case 'markAllRead':
-            $user = isset($data['user']) ? strtolower($data['user']) : '';
+            // SECURITATE: din sesiune
+            $sessUser = currentUser();
+            $user = strtolower($sessUser['username']);
             if (!in_array($user, ['mihai','roxana','valentin','cristina'])) {
-                jsonResponse(['success' => false, 'error' => 'User invalid'], 400); break;
+                jsonResponse(['success' => false, 'error' => 'User fără coloană notificări'], 400); break;
             }
             $col = 'citit_' . $user;
             $db->exec("UPDATE notificari SET $col = 1 WHERE $col = 0");
@@ -1933,9 +2004,11 @@ try {
             break;
 
         case 'preiaProiect':
+            // SECURITATE: user-ul e DIN SESIUNE — nu poate cineva să atribuie altcuiva
+            $sessUser = currentUser();
             $pid = isset($data['proiect_id']) ? $data['proiect_id'] : '';
-            $user = isset($data['user']) ? $data['user'] : '';
-            if (!$pid || !$user) { jsonResponse(['success' => false, 'error' => 'Parametri lipsă'], 400); break; }
+            $user = $sessUser['display_name'] ?: $sessUser['username'];
+            if (!$pid) { jsonResponse(['success' => false, 'error' => 'proiect_id obligatoriu'], 400); break; }
             
             $db->prepare("UPDATE proiecte SET preluat_de = ?, preluat_la = NOW() WHERE id = ? OR proiect_id = ?")
                ->execute([$user, $pid, $pid]);

@@ -20,6 +20,9 @@ define('DB_CHARSET', 'utf8mb4');
 // API keys externe
 define('ZERNIO_KEY', getenv('CSSI_ZERNIO_KEY') ?: ($SECRETS['ZERNIO_KEY'] ?? ''));
 
+// Recovery token — pentru endpoint-uri de recuperare admin (ex: deblocare cont)
+define('RECOVERY_TOKEN', getenv('CSSI_RECOVERY_TOKEN') ?: ($SECRETS['RECOVERY_TOKEN'] ?? ''));
+
 // Upload paths
 define('UPLOAD_DIR', __DIR__ . '/uploads/');
 define('UPLOAD_URL', '/admin/uploads/');
