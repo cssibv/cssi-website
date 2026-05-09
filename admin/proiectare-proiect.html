@@ -53,10 +53,27 @@ a{text-decoration:none;color:inherit;}button{font-family:inherit;cursor:pointer;
 .tab:not(.active) .badge{background:var(--gray-b);color:var(--gray);}
 .tab-panel{display:none;}.tab-panel.active{display:block;}
 
+/* Toolbar checklist */
+.check-toolbar{background:#fff;border-radius:var(--radius);padding:10px 12px;box-shadow:var(--shadow);margin-bottom:12px;display:flex;flex-wrap:wrap;gap:8px;align-items:center;position:sticky;top:8px;z-index:50;}
+.check-search{padding:8px 14px 8px 36px;border-radius:99px;font-size:12px;border:1px solid var(--gray-b);outline:none;background:#fff url('data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%2214%22 height=%2214%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22%2364748b%22 stroke-width=%222%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22><circle cx=%2211%22 cy=%2211%22 r=%228%22></circle><line x1=%2221%22 y1=%2221%22 x2=%2216.65%22 y2=%2216.65%22></line></svg>') no-repeat 12px center;flex:1;min-width:180px;max-width:280px;font-family:inherit;}
+.check-search:focus{border-color:#1e3a8a;}
+.filter-chips{display:flex;gap:5px;flex-wrap:wrap;}
+.f-chip{padding:6px 11px;border-radius:99px;border:1px solid var(--gray-b);background:#fff;color:var(--gray);font-size:11px;font-weight:700;cursor:pointer;transition:all 0.15s;font-family:inherit;display:inline-flex;align-items:center;gap:4px;}
+.f-chip:hover{border-color:#1e3a8a;color:#1e3a8a;}
+.f-chip.active{background:#1e3a8a;color:#fff;border-color:#1e3a8a;}
+.f-chip .num{background:rgba(0,0,0,0.12);padding:1px 6px;border-radius:99px;font-size:10px;font-weight:800;}
+.f-chip.active .num{background:rgba(255,255,255,0.25);}
+
 /* Categorii checklist */
-.cat-block{background:#fff;border-radius:var(--radius);box-shadow:var(--shadow);margin-bottom:12px;overflow:hidden;border:1px solid var(--gray-b);}
+.cat-block{background:#fff;border-radius:var(--radius);box-shadow:var(--shadow);margin-bottom:12px;overflow:hidden;border:1px solid var(--gray-b);scroll-margin-top:80px;}
 .cat-head{padding:14px 18px;background:linear-gradient(135deg,#fff,#f8fafc);display:flex;align-items:center;gap:12px;cursor:pointer;border:none;width:100%;text-align:left;font-family:inherit;transition:background 0.15s;}
 .cat-head:hover{background:var(--gray-bg);}
+.cat-bulk{display:flex;gap:4px;flex-shrink:0;}
+.cat-bulk-btn{padding:5px 10px;border-radius:6px;border:1px solid var(--gray-b);background:#fff;color:var(--gray);font-size:10px;font-weight:700;cursor:pointer;transition:all 0.15s;font-family:inherit;text-transform:uppercase;letter-spacing:0.3px;}
+.cat-bulk-btn:hover{border-color:var(--green);color:var(--green);background:#f0fdf4;}
+.cat-bulk-btn.na:hover{border-color:#ca8a04;color:#ca8a04;background:#fef9c3;}
+.item.hidden-by-filter{display:none;}
+.cat-empty{padding:14px;text-align:center;color:var(--gray-l);font-size:11px;font-style:italic;}
 .cat-icon{width:36px;height:36px;border-radius:10px;background:linear-gradient(135deg,#dbeafe,#bfdbfe);color:#1e3a8a;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:800;flex-shrink:0;}
 .cat-info{flex:1;min-width:0;}
 .cat-title{font-size:14px;font-weight:800;color:var(--dark);}
@@ -155,6 +172,10 @@ a{text-decoration:none;color:inherit;}button{font-family:inherit;cursor:pointer;
 
     <!-- TAB CHECKLIST -->
     <div class="tab-panel active" id="tabCheck">
+        <div class="check-toolbar" id="checkToolbar" style="display:none">
+            <input type="text" class="check-search" id="checkSearch" placeholder="Caută în checklist..." oninput="renderChecklist()">
+            <div class="filter-chips" id="filterChips"></div>
+        </div>
         <div id="checklistArea"><div class="empty-state"><div class="ei">⏳</div>Se încarcă checklist-ul...</div></div>
     </div>
 
@@ -213,7 +234,7 @@ var role = sessionStorage.getItem('cssi-role');
 var userName = sessionStorage.getItem('cssi-user') || role || '';
 if (!role) { window.location.href = '../admin.html'; }
 var API_DB = '/admin/api.php';
-var STATE = { id:0, proiect:null, items:[], documente:[], stats:{}, gata_predat:false, opened:{}, currentItemId:null };
+var STATE = { id:0, proiect:null, items:[], documente:[], stats:{}, gata_predat:false, opened:{}, currentItemId:null, filter:'all' };
 
 var CATEGORII = {
     'e1':  {icon:'1', title:'E1. Pre-analiză & clasificare obiectiv', sub:'Tip beneficiar, categorie obiectiv, avize necesare'},
@@ -295,51 +316,128 @@ function renderHeader(){
 }
 
 function renderChecklist(){
+    // Show toolbar after first load
+    document.getElementById('checkToolbar').style.display = '';
+    renderFilterChips();
+
+    var q = (document.getElementById('checkSearch')?.value || '').toLowerCase().trim();
+    var filter = STATE.filter; // all / todo / done / na
+
     // Grupează pe categorii
     var byCat = {};
     STATE.items.forEach(function(it){
         if(!byCat[it.category]) byCat[it.category] = [];
         byCat[it.category].push(it);
     });
+
+    function passesFilter(it){
+        if(filter === 'todo' && it.status !== 'todo') return false;
+        if(filter === 'done' && it.status !== 'done') return false;
+        if(filter === 'na' && it.status !== 'n/a') return false;
+        if(q && (it.label||'').toLowerCase().indexOf(q) === -1 && (it.note||'').toLowerCase().indexOf(q) === -1) return false;
+        return true;
+    }
+
     var html = '';
+    var anyVisible = false;
     Object.keys(CATEGORII).forEach(function(catKey){
         var cat = CATEGORII[catKey];
         var items = byCat[catKey] || [];
         if(!items.length) return;
+        var visibleItems = items.filter(passesFilter);
+        // Categoria e ascunsă complet doar dacă search/filter filtrează tot
+        if(!visibleItems.length && (q || filter !== 'all')) return;
+        anyVisible = true;
         var done = items.filter(function(i){return i.status==='done'||i.status==='n/a';}).length;
         var pct = items.length ? Math.round((done/items.length)*100) : 0;
-        var open = STATE.opened[catKey] !== false; // default open
+        // Auto-deschidere când filter activ și mai sunt items vizibile
+        var forceOpen = (q || filter !== 'all') && visibleItems.length > 0;
+        var open = forceOpen || (STATE.opened[catKey] !== false);
+        var todoCount = items.filter(function(i){return i.status==='todo';}).length;
+
         html += '<div class="cat-block'+(open?' open':'')+'" id="cat-'+catKey+'">';
-        html += '<button class="cat-head" type="button" onclick="toggleCat(\''+catKey+'\')">';
+        html += '<div class="cat-head" style="cursor:pointer" onclick="if(!event.target.closest(\'button\'))toggleCat(\''+catKey+'\')">';
         html += '<div class="cat-icon">'+cat.icon+'</div>';
         html += '<div class="cat-info"><div class="cat-title">'+esc(cat.title)+'</div><div class="cat-sub">'+esc(cat.sub)+'</div></div>';
+        // Bulk buttons (vizibile doar dacă mai sunt items todo în categorie)
+        if(todoCount > 0){
+            html += '<div class="cat-bulk">';
+            html += '<button class="cat-bulk-btn" onclick="bulkCat(\''+catKey+'\',\'done\')" title="Bifează cele '+todoCount+' nebifate ca done">✓ Bif tot ('+todoCount+')</button>';
+            html += '<button class="cat-bulk-btn na" onclick="bulkCat(\''+catKey+'\',\'n/a\')" title="Marchează cele '+todoCount+' nebifate ca neaplicabile">⊘ N/A tot</button>';
+            html += '</div>';
+        }
         html += '<div class="cat-stat"><div class="cat-progress-mini"><div class="cat-progress-mini-fill'+(pct>=100?' complete':'')+'" style="width:'+pct+'%"></div></div><div class="cat-stat-text'+(pct>=100?' complete':'')+'">'+done+'/'+items.length+'</div></div>';
-        html += '<div class="cat-chevron">▾</div></button>';
+        html += '<div class="cat-chevron">▾</div></div>';
         html += '<div class="cat-body">';
-        items.forEach(function(it){
-            var cls = it.status==='done'?'done':(it.status==='n/a'?'na':'');
-            var checkSym = it.status==='done'?'✓':(it.status==='n/a'?'N/A':'');
-            html += '<div class="item '+cls+'" id="item-'+it.id+'">';
-            html += '<div class="item-checkbox" onclick="toggleStatus('+it.id+')" title="Click pentru bifa/debifa">'+checkSym+'</div>';
-            html += '<div class="item-content">';
-            html += '<div class="item-label">'+esc(it.label)+'</div>';
-            if(it.checked_at){
-                html += '<div class="item-meta">';
-                html += '<span><span class="av">'+esc((it.checked_by||'?').charAt(0).toUpperCase())+'</span> '+esc(it.checked_by||'?')+'</span>';
-                html += '<span>· '+fmtDateTime(it.checked_at)+'</span>';
+        if(visibleItems.length){
+            visibleItems.forEach(function(it){
+                var cls = it.status==='done'?'done':(it.status==='n/a'?'na':'');
+                var checkSym = it.status==='done'?'✓':(it.status==='n/a'?'N/A':'');
+                html += '<div class="item '+cls+'" id="item-'+it.id+'">';
+                html += '<div class="item-checkbox" role="checkbox" tabindex="0" aria-checked="'+(it.status==='done'?'true':'false')+'" onclick="toggleStatus('+it.id+')" onkeydown="if(event.key===\' \'||event.key===\'Enter\'){event.preventDefault();toggleStatus('+it.id+')}" title="Click pentru bifa/debifa">'+checkSym+'</div>';
+                html += '<div class="item-content">';
+                html += '<div class="item-label">'+highlight(it.label, q)+'</div>';
+                if(it.checked_at){
+                    html += '<div class="item-meta">';
+                    html += '<span><span class="av">'+esc((it.checked_by||'?').charAt(0).toUpperCase())+'</span> '+esc(it.checked_by||'?')+'</span>';
+                    html += '<span>· '+fmtDateTime(it.checked_at)+'</span>';
+                    html += '</div>';
+                }
+                if(it.note) html += '<div class="item-note">📝 '+highlight(it.note, q)+'</div>';
                 html += '</div>';
-            }
-            if(it.note) html += '<div class="item-note">📝 '+esc(it.note)+'</div>';
-            html += '</div>';
-            html += '<div class="item-actions">';
-            html += '<button class="item-btn-na" onclick="markNa('+it.id+')" title="Marchează ca neaplicabil">N/A</button>';
-            html += '<button class="item-btn-note" onclick="openNote('+it.id+')" title="Adaugă/editează notă">📝</button>';
-            html += '</div>';
-            html += '</div>';
-        });
+                html += '<div class="item-actions">';
+                html += '<button class="item-btn-na" onclick="markNa('+it.id+')" title="Marchează ca neaplicabil">N/A</button>';
+                html += '<button class="item-btn-note" onclick="openNote('+it.id+')" title="Adaugă/editează notă">📝</button>';
+                html += '</div>';
+                html += '</div>';
+            });
+        } else {
+            html += '<div class="cat-empty">Niciun item nu corespunde filtrului în această categorie.</div>';
+        }
         html += '</div></div>';
     });
+    if(!anyVisible){
+        html = '<div class="empty-state"><div class="ei">🔍</div><div class="empty-msg">Niciun item nu corespunde filtrului. <button class="cat-bulk-btn" style="margin-left:8px" onclick="setFilter(\'all\');document.getElementById(\'checkSearch\').value=\'\';renderChecklist()">Șterge filtre</button></div></div>';
+    }
     document.getElementById('checklistArea').innerHTML = html;
+}
+
+function highlight(text, q){
+    var safe = esc(text);
+    if(!q) return safe;
+    var re = new RegExp('('+q.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')+')','gi');
+    return safe.replace(re, '<mark style="background:#fef08a;padding:0 2px;border-radius:3px">$1</mark>');
+}
+
+function renderFilterChips(){
+    var counts = {all:STATE.items.length, todo:0, done:0, na:0};
+    STATE.items.forEach(function(i){
+        if(i.status==='todo') counts.todo++;
+        else if(i.status==='done') counts.done++;
+        else if(i.status==='n/a') counts.na++;
+    });
+    var f = STATE.filter;
+    var html = '';
+    html += '<button class="f-chip'+(f==='all'?' active':'')+'" onclick="setFilter(\'all\')">Toate <span class="num">'+counts.all+'</span></button>';
+    html += '<button class="f-chip'+(f==='todo'?' active':'')+'" onclick="setFilter(\'todo\')" style="'+(f==='todo'?'background:var(--orange);border-color:var(--orange)':'')+'">⏳ Rămase <span class="num">'+counts.todo+'</span></button>';
+    html += '<button class="f-chip'+(f==='done'?' active':'')+'" onclick="setFilter(\'done\')" style="'+(f==='done'?'background:var(--green);border-color:var(--green)':'')+'">✓ Bifate <span class="num">'+counts.done+'</span></button>';
+    html += '<button class="f-chip'+(f==='na'?' active':'')+'" onclick="setFilter(\'na\')" style="'+(f==='na'?'background:#ca8a04;border-color:#ca8a04':'')+'">⊘ N/A <span class="num">'+counts.na+'</span></button>';
+    document.getElementById('filterChips').innerHTML = html;
+}
+
+function setFilter(f){STATE.filter = f; renderChecklist();}
+
+function bulkCat(catKey, status){
+    var label = status === 'done' ? 'bifezi TOATE rămase ca done' : 'marchezi TOATE rămase ca n/a';
+    if(!confirm('Sigur '+label+' în categoria asta?')) return;
+    showLoading(true);
+    fetch(API_DB+'?action=bulkSaveProiectareItems',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'bulkSaveProiectareItems',proiect_id:STATE.id,category:catKey,status:status,user:userName,only_todo:true})})
+        .then(function(r){return r.json()}).then(function(res){
+            if(!res.success) throw new Error(res.error||'Eroare');
+            toast('✅ '+res.affected+' item-uri actualizate','success');
+            refreshData();
+        }).catch(function(e){toast('❌ '+(e.message||e),'error');})
+        .finally(function(){showLoading(false);});
 }
 
 function renderDocs(){

@@ -1371,8 +1371,34 @@ try {
 
             // Insertăm itemii lipsă din template (idempotent)
             $stmtIns = $db->prepare("INSERT IGNORE INTO proiectare_checklist (proiect_id, item_key, category, ordine) VALUES (?,?,?,?)");
+            $insertedAny = false;
             foreach ($TEMPLATE as $i => $it) {
                 $stmtIns->execute([$pid, $it['key'], $it['cat'], $i]);
+                if ($stmtIns->rowCount() > 0) $insertedAny = true;
+            }
+
+            // SMART DEFAULTS: la prima generare, auto-marcăm n/a categoriile
+            // E4a/E4b/E4c/E4d care NU sunt relevante pentru tipul de serviciu
+            if ($insertedAny) {
+                $serviciu = strtolower($proiect['serviciu'] ?? '');
+                $relevante = ['e1','e2','e3','e5','e6','e7','e8']; // mereu relevante
+                if (strpos($serviciu, 'incendiu') !== false) $relevante[] = 'e4f';
+                if (strpos($serviciu, 'alarm') !== false || strpos($serviciu, 'efrac') !== false) $relevante[] = 'e4s';
+                if (strpos($serviciu, 'supraveg') !== false || strpos($serviciu, 'video') !== false || strpos($serviciu, 'cctv') !== false || strpos($serviciu, 'camer') !== false) $relevante[] = 'e4c';
+                // E4d Instalații electrice — relevante pentru orice sistem (alimentare, cabluri)
+                $relevante[] = 'e4e';
+                if (strpos($serviciu, 'complex') !== false) {
+                    $relevante = array_merge($relevante, ['e4s','e4c','e4f']);
+                }
+                $relevante = array_unique($relevante);
+
+                $allCats = ['e4s','e4c','e4f']; // categoriile candidate la auto-na (E4d e mereu relevant)
+                foreach ($allCats as $cat) {
+                    if (!in_array($cat, $relevante)) {
+                        $stmtNA = $db->prepare("UPDATE proiectare_checklist SET status='n/a', note=?, checked_by='Sistem (auto)', checked_at=NOW() WHERE proiect_id=? AND category=? AND status='todo'");
+                        $stmtNA->execute(['Auto-marcat: serviciul "'.($proiect['serviciu']??'').'" nu necesită această categorie. Modifică manual dacă e nevoie.', $pid, $cat]);
+                    }
+                }
             }
 
             // Citim toate item-urile (cu valoarea actuală)
@@ -1437,6 +1463,23 @@ try {
                    ->execute([$status, $note, $user, $id]);
             }
             jsonResponse(['success' => true]);
+            break;
+
+        case 'bulkSaveProiectareItems':
+            // Marcare bulk: toate items dintr-o categorie cu status nou
+            $pid = isset($data['proiect_id']) ? intval($data['proiect_id']) : 0;
+            $cat = isset($data['category']) ? trim($data['category']) : '';
+            $status = isset($data['status']) ? trim($data['status']) : 'done';
+            $user = isset($data['user']) ? trim($data['user']) : '';
+            $onlyTodo = !empty($data['only_todo']); // true = doar cele nebifate
+            if (!$pid || !$cat) { jsonResponse(['success' => false, 'error' => 'proiect_id + category obligatorii'], 400); break; }
+            if (!in_array($status, ['todo','done','n/a'])) $status = 'done';
+            $sql = "UPDATE proiectare_checklist SET status=?, checked_by=?, checked_at=NOW() WHERE proiect_id=? AND category=?";
+            $params = [$status, $user, $pid, $cat];
+            if ($onlyTodo) { $sql .= " AND status='todo'"; }
+            $stmt = $db->prepare($sql);
+            $stmt->execute($params);
+            jsonResponse(['success' => true, 'affected' => $stmt->rowCount()]);
             break;
 
         case 'uploadProiectareDoc':
