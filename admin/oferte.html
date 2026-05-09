@@ -1,0 +1,608 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Oferte — Portal CSSI 3.0</title>
+<meta name="robots" content="noindex, nofollow">
+<link rel="icon" type="image/x-icon" href="/images/favicon.ico">
+<meta name="theme-color" content="#dc2626">
+<link rel="manifest" href="../manifest.json">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Portal CSSI">
+<link rel="apple-touch-icon" sizes="180x180" href="../icons/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="96x96" href="../icons/favicon-96x96.png">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+:root{
+    --red:#dc2626;--red-d:#991b1b;--dark:#0f172a;--dark2:#1e293b;
+    --gray:#64748b;--gray-l:#94a3b8;--gray-xl:#cbd5e1;--gray-bg:#f1f5f9;--gray-b:#e2e8f0;
+    --blue:#3b82f6;--green:#22c55e;--orange:#f97316;--purple:#8b5cf6;--teal:#14b8a6;--pink:#ec4899;
+    --radius:16px;--radius-sm:12px;
+    --shadow:0 1px 3px rgba(0,0,0,0.06);--shadow-md:0 4px 12px rgba(0,0,0,0.08);--shadow-lg:0 12px 32px rgba(0,0,0,0.12);
+    --font:'Inter',system-ui,sans-serif;
+}
+body{font-family:var(--font);color:var(--dark);background:var(--gray-bg);-webkit-font-smoothing:antialiased;}
+a{text-decoration:none;color:inherit;}button{font-family:inherit;cursor:pointer;}
+:focus-visible{outline:2px solid var(--blue);outline-offset:2px;border-radius:6px;}
+
+.container{max-width:1400px;margin:0 auto;padding:16px;}@media(min-width:768px){.container{padding:24px;}}
+.toast-container{position:fixed;top:20px;right:20px;z-index:300;display:flex;flex-direction:column;gap:8px;}
+.toast{padding:12px 18px;border-radius:12px;color:#fff;font-size:13px;font-weight:600;box-shadow:0 8px 24px rgba(0,0,0,0.15);animation:slideIn 0.3s ease;max-width:380px;}
+.toast.success{background:var(--green);}.toast.error{background:var(--red);}.toast.info{background:var(--blue);}
+@keyframes slideIn{from{transform:translateX(100%);opacity:0}to{transform:translateX(0);opacity:1}}
+.loading-bar{position:fixed;top:0;left:0;right:0;height:3px;z-index:400;display:none;}
+.loading-bar.active{display:block;}.loading-bar::after{content:'';display:block;width:30%;height:100%;background:var(--blue);border-radius:2px;animation:loadSlide 1.2s infinite ease-in-out;}
+@keyframes loadSlide{0%{margin-left:-30%}100%{margin-left:100%}}
+
+/* Header */
+.page-header{background:linear-gradient(135deg,#1e3a8a,#3b82f6);color:#fff;padding:20px 22px;border-radius:20px;margin-bottom:14px;display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:12px;}
+.page-back{color:rgba(255,255,255,0.75);font-size:13px;font-weight:500;display:inline-flex;align-items:center;gap:6px;}.page-back:hover{color:#fff;}
+.page-title{font-size:24px;font-weight:800;letter-spacing:-0.5px;margin-top:4px;}
+.page-subtitle{font-size:12px;color:rgba(255,255,255,0.8);margin-top:4px;}
+.page-actions{display:flex;gap:8px;flex-wrap:wrap;}
+.page-btn{padding:10px 14px;border-radius:10px;border:none;font-size:13px;font-weight:700;cursor:pointer;display:inline-flex;align-items:center;gap:6px;font-family:inherit;text-decoration:none;transition:all 0.15s;-webkit-tap-highlight-color:transparent;min-height:40px;}
+.page-btn.primary{background:#fff;color:#1e3a8a;}.page-btn.primary:hover{background:rgba(255,255,255,0.9);transform:translateY(-1px);}
+.page-btn.secondary{background:rgba(255,255,255,0.18);color:#fff;}.page-btn.secondary:hover{background:rgba(255,255,255,0.28);}
+
+/* Stats bar */
+.stats-bar{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:8px;margin-bottom:14px;}
+.stat-card{background:#fff;border-radius:var(--radius-sm);padding:12px 14px;box-shadow:var(--shadow);border-left:3px solid var(--gray-b);}
+.stat-card.blue{border-left-color:var(--blue);}.stat-card.orange{border-left-color:var(--orange);}.stat-card.green{border-left-color:var(--green);}.stat-card.red{border-left-color:var(--red);}.stat-card.purple{border-left-color:var(--purple);}
+.stat-card .lbl{font-size:11px;color:var(--gray);font-weight:700;text-transform:uppercase;letter-spacing:0.5px;}
+.stat-card .val{font-size:20px;font-weight:800;color:var(--dark);margin-top:4px;font-variant-numeric:tabular-nums;}
+.stat-card .sub{font-size:10px;color:var(--gray-l);margin-top:1px;}
+
+/* Pipeline */
+.pipeline{display:flex;background:#fff;border-radius:var(--radius);padding:6px;margin-bottom:12px;box-shadow:var(--shadow);overflow-x:auto;gap:4px;}
+.pipe-stage{flex:1;min-width:110px;padding:10px 8px;text-align:center;border-radius:var(--radius-sm);cursor:pointer;transition:all 0.15s;border:2px solid transparent;-webkit-tap-highlight-color:transparent;}
+.pipe-stage:hover{background:var(--gray-bg);}
+.pipe-stage.active{border-color:currentColor;background:rgba(59,130,246,0.06);}
+.pipe-stage .ic{font-size:18px;display:block;margin-bottom:2px;}
+.pipe-stage .lbl{font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:0.5px;color:var(--gray);}
+.pipe-stage .num{font-size:16px;font-weight:800;margin-top:3px;font-variant-numeric:tabular-nums;}
+.pipe-stage[data-status=all]      {color:var(--dark);}
+.pipe-stage[data-status=Draft]    {color:var(--gray);}
+.pipe-stage[data-status=Trimisa]  {color:var(--blue);}
+.pipe-stage[data-status=In_discutie]{color:var(--orange);}
+.pipe-stage[data-status=Acceptata]{color:var(--green);}
+.pipe-stage[data-status=Refuzata] {color:var(--red);}
+.pipe-stage[data-status=Expirata] {color:#94a3b8;}
+.pipe-stage[data-status=archived] {color:var(--purple);}
+.pipe-stage.active .lbl,.pipe-stage.active .num{color:currentColor;}
+
+/* Toolbar */
+.toolbar{display:flex;flex-wrap:wrap;gap:8px;align-items:center;background:#fff;border-radius:var(--radius);padding:10px 14px;margin-bottom:12px;box-shadow:var(--shadow);}
+.tb-search{flex:1;min-width:200px;padding:10px 14px;border:1px solid var(--gray-b);border-radius:99px;font-size:13px;font-family:inherit;outline:none;background:#fafbfc;}
+.tb-search:focus{border-color:var(--blue);background:#fff;box-shadow:0 0 0 3px rgba(59,130,246,0.08);}
+.tb-input,.tb-select{padding:9px 12px;border:1px solid var(--gray-b);border-radius:8px;font-size:12px;font-family:inherit;outline:none;background:#fff;font-weight:600;color:var(--dark);}
+.tb-input:focus,.tb-select:focus{border-color:var(--blue);}
+.tb-toggle{display:inline-flex;align-items:center;gap:6px;padding:8px 12px;border:1px solid var(--gray-b);border-radius:8px;cursor:pointer;font-size:12px;font-weight:700;color:var(--gray);background:#fff;-webkit-tap-highlight-color:transparent;user-select:none;}
+.tb-toggle input{accent-color:var(--purple);}
+.tb-toggle.on{border-color:var(--purple);color:var(--purple);background:#faf5ff;}
+.tb-clear{padding:8px 10px;border:none;background:transparent;color:var(--gray);font-size:12px;font-weight:600;cursor:pointer;border-radius:6px;}
+.tb-clear:hover{background:var(--gray-bg);color:var(--red);}
+
+/* Bulk bar */
+.bulk-bar{display:none;background:linear-gradient(135deg,var(--purple),#7c3aed);color:#fff;border-radius:var(--radius-sm);padding:12px 16px;margin-bottom:12px;align-items:center;gap:10px;flex-wrap:wrap;box-shadow:var(--shadow-md);position:sticky;top:8px;z-index:50;}
+.bulk-bar.active{display:flex;}
+.bulk-count{font-size:14px;font-weight:800;}
+.bulk-actions{display:flex;gap:6px;flex-wrap:wrap;margin-left:auto;}
+.bulk-btn{padding:8px 12px;border-radius:8px;border:1px solid rgba(255,255,255,0.3);background:rgba(255,255,255,0.18);color:#fff;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;-webkit-tap-highlight-color:transparent;}
+.bulk-btn:hover{background:rgba(255,255,255,0.3);}
+.bulk-btn.danger{background:rgba(220,38,38,0.4);border-color:rgba(220,38,38,0.5);}
+.bulk-btn.danger:hover{background:rgba(220,38,38,0.6);}
+
+/* Group section */
+.group-head{font-size:11px;font-weight:800;color:var(--gray);text-transform:uppercase;letter-spacing:1px;margin:18px 0 8px;display:flex;align-items:center;gap:10px;}
+.group-head .badge-num{background:var(--gray-bg);color:var(--gray);border-radius:99px;padding:2px 9px;font-size:10px;font-weight:800;letter-spacing:0;}
+.group-head .group-sum{margin-left:auto;font-size:11px;color:var(--green);font-weight:800;}
+
+/* Card ofertă */
+.cards-grid{display:grid;grid-template-columns:1fr;gap:8px;}
+@media(min-width:768px){.cards-grid{grid-template-columns:1fr 1fr;}}
+@media(min-width:1200px){.cards-grid{grid-template-columns:1fr 1fr 1fr;}}
+.oferta-card{background:#fff;border-radius:var(--radius-sm);padding:14px 16px;box-shadow:var(--shadow);border-left:4px solid var(--gray-l);transition:all 0.15s;position:relative;display:flex;flex-direction:column;gap:8px;}
+.oferta-card:hover{box-shadow:var(--shadow-md);transform:translateY(-1px);}
+.oferta-card.checked{border-left-color:var(--purple);background:#faf5ff;}
+.oferta-card.archived{opacity:0.65;background:#f8fafc;}
+.oc-top{display:flex;align-items:flex-start;gap:10px;}
+.oc-check{flex-shrink:0;width:22px;height:22px;cursor:pointer;accent-color:var(--purple);margin-top:2px;}
+.oc-main{flex:1;min-width:0;}
+.oc-client{font-size:14px;font-weight:800;color:var(--dark);line-height:1.3;word-break:break-word;}
+.oc-obiectiv{font-size:12px;color:var(--gray);margin-top:2px;line-height:1.3;}
+.oc-meta{display:flex;flex-wrap:wrap;gap:8px;font-size:11px;color:var(--gray);align-items:center;}
+.oc-meta .nr{font-family:'Courier New',monospace;background:var(--gray-bg);padding:2px 7px;border-radius:5px;font-weight:700;color:var(--dark);}
+.oc-meta .data{font-weight:600;}
+.oc-meta .val{margin-left:auto;font-size:14px;font-weight:800;color:var(--green);font-variant-numeric:tabular-nums;}
+.oc-row{display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap;}
+
+/* Status badge */
+.status-pill{display:inline-flex;align-items:center;gap:5px;padding:4px 10px;border-radius:99px;font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:0.3px;cursor:pointer;border:none;font-family:inherit;-webkit-tap-highlight-color:transparent;transition:all 0.15s;}
+.status-pill:hover{transform:scale(1.05);}
+.status-pill.s-Draft     {background:#f1f5f9;color:var(--gray);}
+.status-pill.s-Trimisa   {background:#dbeafe;color:#1d4ed8;}
+.status-pill.s-In_discutie{background:#ffedd5;color:#9a3412;}
+.status-pill.s-Acceptata {background:#dcfce7;color:#166534;}
+.status-pill.s-Refuzata  {background:#fee2e2;color:#991b1b;}
+.status-pill.s-Expirata  {background:#e2e8f0;color:#475569;}
+
+.exp-warn{font-size:10px;color:var(--orange);font-weight:800;background:#fff7ed;padding:2px 7px;border-radius:5px;margin-left:6px;}
+.exp-warn.danger{color:var(--red);background:#fef2f2;}
+
+/* Quick actions row pe card */
+.oc-actions{display:flex;gap:6px;flex-wrap:wrap;}
+.oc-btn{padding:7px 11px;border-radius:8px;border:1px solid var(--gray-b);background:#fff;color:var(--gray);font-size:11px;font-weight:700;cursor:pointer;font-family:inherit;display:inline-flex;align-items:center;gap:4px;-webkit-tap-highlight-color:transparent;min-height:36px;}
+.oc-btn:hover{border-color:var(--blue);color:var(--blue);}
+.oc-btn.primary{border-color:var(--blue);color:var(--blue);background:#eff6ff;}
+.oc-btn.primary:hover{background:var(--blue);color:#fff;}
+.oc-btn.warn{border-color:var(--orange);color:var(--orange);}
+.oc-btn.warn:hover{background:var(--orange);color:#fff;}
+.oc-btn.danger:hover{background:var(--red);color:#fff;border-color:var(--red);}
+
+/* Empty state */
+.empty-state{text-align:center;padding:50px 20px;background:#fff;border-radius:var(--radius);box-shadow:var(--shadow);}
+.empty-icon{font-size:50px;margin-bottom:10px;opacity:0.4;}
+.empty-title{font-size:16px;font-weight:800;color:var(--dark);margin-bottom:6px;}
+.empty-msg{color:var(--gray-l);font-size:13px;}
+
+/* Modal change status */
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.55);backdrop-filter:blur(4px);z-index:200;align-items:center;justify-content:center;padding:16px;}
+.modal-overlay.active{display:flex;}
+.modal{background:#fff;border-radius:20px;width:100%;max-width:480px;max-height:90vh;overflow-y:auto;box-shadow:0 25px 60px rgba(0,0,0,0.3);}
+.modal-head{padding:18px 22px;border-bottom:1px solid var(--gray-b);display:flex;align-items:center;justify-content:space-between;}
+.modal-title{font-size:17px;font-weight:800;}
+.modal-close{width:36px;height:36px;border-radius:8px;border:none;background:var(--gray-bg);color:var(--gray);font-size:18px;display:flex;align-items:center;justify-content:center;cursor:pointer;}
+.modal-close:hover{background:#fef2f2;color:var(--red);}
+.modal-body{padding:22px;}
+.status-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px;}
+.status-opt{padding:14px 12px;border:2px solid var(--gray-b);border-radius:12px;background:#fff;cursor:pointer;text-align:center;font-size:12px;font-weight:800;color:var(--dark);transition:all 0.15s;-webkit-tap-highlight-color:transparent;display:flex;flex-direction:column;align-items:center;gap:6px;}
+.status-opt:hover{border-color:currentColor;}
+.status-opt.s-Draft    {color:var(--gray);}
+.status-opt.s-Trimisa  {color:var(--blue);}
+.status-opt.s-In_discutie{color:var(--orange);}
+.status-opt.s-Acceptata{color:var(--green);}
+.status-opt.s-Refuzata {color:var(--red);}
+.status-opt.s-Expirata {color:#94a3b8;}
+.status-opt .ic{font-size:24px;}
+.modal-input{width:100%;padding:10px 14px;border:1.5px solid var(--gray-b);border-radius:10px;font-size:13px;font-family:inherit;outline:none;}
+.modal-input:focus{border-color:var(--blue);}
+.modal-label{font-size:11px;font-weight:700;color:var(--gray);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:6px;}
+
+.footer{text-align:center;color:var(--gray-xl);font-size:11px;padding:24px 0 60px;}
+</style>
+<script src="/admin/access-guard.js" defer></script>
+</head>
+<body data-module="calculator">
+<div class="loading-bar" id="loadBar"></div>
+<div class="toast-container" id="toastContainer"></div>
+
+<div class="container">
+    <div class="page-header">
+        <div>
+            <a href="../admin.html" class="page-back">← Dashboard</a>
+            <div class="page-title">📋 Oferte</div>
+            <div class="page-subtitle" id="syncStatus">Se încarcă...</div>
+        </div>
+        <div class="page-actions">
+            <a href="calculator-pret.html" class="page-btn secondary">📦 Catalog & creare</a>
+            <a href="calculator-pret.html" class="page-btn primary">＋ Ofertă nouă</a>
+            <button class="page-btn secondary" onclick="refreshData()">🔄</button>
+        </div>
+    </div>
+
+    <div class="stats-bar" id="statsBar"></div>
+
+    <div class="pipeline" id="pipeline"></div>
+
+    <div class="toolbar">
+        <input type="text" class="tb-search" id="searchInput" placeholder="🔍 Caută client, nr. ofertă, obiectiv..." oninput="onSearchChange()">
+        <input type="month" class="tb-input" id="monthFilter" onchange="render()">
+        <select class="tb-select" id="sortBy" onchange="render()">
+            <option value="data_desc">📅 Data ↓ (recente)</option>
+            <option value="data_asc">📅 Data ↑ (vechi)</option>
+            <option value="valoare_desc">💰 Valoare ↓</option>
+            <option value="valoare_asc">💰 Valoare ↑</option>
+            <option value="client_asc">👤 Client A-Z</option>
+            <option value="status">🎯 Status</option>
+        </select>
+        <select class="tb-select" id="groupBy" onchange="render()">
+            <option value="">Fără grupare</option>
+            <option value="month">📅 Pe lună</option>
+            <option value="client">👤 Pe client</option>
+            <option value="status">🎯 Pe status</option>
+        </select>
+        <label class="tb-toggle" id="archToggle"><input type="checkbox" id="archChk" onchange="onArchToggle()"> 🗄️ Arhivă</label>
+        <button class="tb-clear" onclick="clearFilters()">✕ Reset filtre</button>
+    </div>
+
+    <div class="bulk-bar" id="bulkBar">
+        <span class="bulk-count" id="bulkCount">0 selectate</span>
+        <div class="bulk-actions">
+            <button class="bulk-btn" onclick="bulkSetStatus()">🎯 Status</button>
+            <button class="bulk-btn" onclick="bulkArchive()" id="bulkArchBtn">🗄️ Arhivează</button>
+            <button class="bulk-btn" onclick="bulkExport()">📥 Export CSV</button>
+            <button class="bulk-btn danger" onclick="bulkDelete()">🗑️ Șterge</button>
+            <button class="bulk-btn" onclick="clearSelection()">✕</button>
+        </div>
+    </div>
+
+    <div id="mainView"></div>
+
+    <div class="footer">Portal CSSI 3.0 · Modul Oferte v1.0 · Pipeline + arhivă + bulk</div>
+</div>
+
+<!-- MODAL: schimbă status -->
+<div id="statusModal" class="modal-overlay" onclick="if(event.target===this)closeStatusModal()">
+<div class="modal">
+    <div class="modal-head"><div class="modal-title">🎯 Schimbă status — <span id="smTitle">—</span></div><button class="modal-close" onclick="closeStatusModal()">✕</button></div>
+    <div class="modal-body">
+        <div class="modal-label">Selectează status nou:</div>
+        <div class="status-grid">
+            <button class="status-opt s-Draft"     onclick="doSetStatus('Draft')"><span class="ic">📝</span>Draft</button>
+            <button class="status-opt s-Trimisa"   onclick="doSetStatus('Trimisa')"><span class="ic">📤</span>Trimisă</button>
+            <button class="status-opt s-In_discutie" onclick="doSetStatus('In_discutie')"><span class="ic">💬</span>În discuție</button>
+            <button class="status-opt s-Acceptata" onclick="doSetStatus('Acceptata')"><span class="ic">✅</span>Acceptată</button>
+            <button class="status-opt s-Refuzata"  onclick="askRefuzata()"><span class="ic">❌</span>Refuzată</button>
+            <button class="status-opt s-Expirata"  onclick="doSetStatus('Expirata')"><span class="ic">⏱️</span>Expirată</button>
+        </div>
+        <div id="motivBlock" style="display:none">
+            <div class="modal-label">Motiv refuz (apare în notificări):</div>
+            <input type="text" class="modal-input" id="motivInput" placeholder="Ex: preț prea mare, am ales alt furnizor..." style="margin-bottom:10px">
+            <button class="page-btn primary" style="width:100%;background:var(--red);color:#fff" onclick="doSetStatus('Refuzata')">Confirmă Refuzare</button>
+        </div>
+    </div>
+</div>
+</div>
+
+<script>
+// ═══ AUTH ═══
+var role = sessionStorage.getItem('cssi-role');
+var userName = sessionStorage.getItem('cssi-user') || role || '';
+if (!role) { window.location.href = '../admin.html'; }
+
+var API = '/admin/api.php';
+
+// ═══ STATE ═══
+var STATE = {
+    oferte: [],
+    selected: {},  // {id: true}
+    filters: {
+        status: 'all',
+        archived: '0',  // '0' active, '1' arhivate, 'all' ambele
+        search: '',
+        month: '',
+        sort: 'data_desc',
+        group: ''
+    },
+    statusTarget: null  // ID(uri) când deschidem modalul status
+};
+
+// ═══ HELPERS ═══
+function esc(s){if(s==null)return '';var d=document.createElement('div');d.textContent=s;return d.innerHTML;}
+function fmtMoney(n){var v=Number(n||0);return v.toLocaleString('ro-RO',{minimumFractionDigits:2,maximumFractionDigits:2})+' RON';}
+function fmtMoneyShort(n){var v=Number(n||0);if(v>=1e6)return (v/1e6).toFixed(1)+'M';if(v>=1e3)return (v/1e3).toFixed(1)+'k';return v.toFixed(0);}
+var MONTHS=['Ian','Feb','Mar','Apr','Mai','Iun','Iul','Aug','Sep','Oct','Noi','Dec'];
+function fmtDate(s){if(!s)return '';var d=new Date(s.replace(' ','T'));if(isNaN(d.getTime()))return s;return d.getDate()+' '+MONTHS[d.getMonth()]+' '+d.getFullYear();}
+function showLoading(s){document.getElementById('loadBar').classList.toggle('active',s);}
+function toast(msg,type){var c=document.getElementById('toastContainer');var t=document.createElement('div');t.className='toast '+(type||'info');t.textContent=msg;c.appendChild(t);setTimeout(function(){t.style.opacity='0';t.style.transform='translateX(100px)';t.style.transition='all 0.3s'},2500);setTimeout(function(){t.remove()},3000);}
+function daysBetween(d1, d2){var ms=new Date(d2)-new Date(d1);return Math.ceil(ms/86400000);}
+
+function statusInfo(s){
+    var map = {
+        'Draft':       {ic:'📝', lbl:'Draft'},
+        'Trimisa':     {ic:'📤', lbl:'Trimisă'},
+        'In_discutie': {ic:'💬', lbl:'În discuție'},
+        'Acceptata':   {ic:'✅', lbl:'Acceptată'},
+        'Refuzata':    {ic:'❌', lbl:'Refuzată'},
+        'Expirata':    {ic:'⏱️', lbl:'Expirată'}
+    };
+    return map[s] || {ic:'❓', lbl:s||'—'};
+}
+function ofStatus(o){return o.oferta_status || o.status || 'Draft';}
+
+// ═══ FETCH ═══
+function refreshData(){
+    showLoading(true);
+    var params = new URLSearchParams({
+        light: '1',
+        sort: STATE.filters.sort,
+        archived: STATE.filters.archived
+    });
+    if(STATE.filters.status !== 'all') params.append('status', STATE.filters.status);
+    if(STATE.filters.month) params.append('month', STATE.filters.month);
+    if(STATE.filters.search) params.append('search', STATE.filters.search);
+    fetch(API+'?action=getOferte&'+params.toString()+'&_t='+Date.now(),{credentials:'include'})
+        .then(function(r){return r.json();})
+        .then(function(res){
+            if(!res.success){ toast('❌ '+(res.error||'Eroare'),'error'); return; }
+            STATE.oferte = res.data || [];
+            document.getElementById('syncStatus').textContent = STATE.oferte.length + ' oferte încărcate · ' + new Date().toLocaleTimeString('ro-RO');
+            render();
+            renderStats();
+            renderPipeline();
+        })
+        .catch(function(e){ toast('❌ '+(e.message||e),'error'); })
+        .finally(function(){ showLoading(false); });
+}
+
+// ═══ RENDER ═══
+function renderStats(){
+    var total = STATE.oferte.length;
+    var totalVal = 0, accVal = 0, accCount = 0, expCount = 0, todoCount = 0;
+    STATE.oferte.forEach(function(o){
+        totalVal += Number(o.total_cu_tva || 0);
+        var st = ofStatus(o);
+        if(st === 'Acceptata'){ accVal += Number(o.total_cu_tva || 0); accCount++; }
+        if(st === 'Expirata') expCount++;
+        if(['Trimisa','In_discutie'].indexOf(st) >= 0) todoCount++;
+    });
+    var conversie = total ? Math.round((accCount / total) * 100) : 0;
+    var html = '';
+    html += '<div class="stat-card blue"><div class="lbl">Total oferte</div><div class="val">'+total+'</div><div class="sub">vizibile cu filtre</div></div>';
+    html += '<div class="stat-card orange"><div class="lbl">Valoare totală</div><div class="val">'+fmtMoneyShort(totalVal)+' <span style="font-size:12px;color:var(--gray)">RON</span></div><div class="sub">cu TVA</div></div>';
+    html += '<div class="stat-card green"><div class="lbl">Acceptate</div><div class="val">'+accCount+' <span style="font-size:12px;color:var(--gray)">· '+conversie+'%</span></div><div class="sub">'+fmtMoneyShort(accVal)+' RON câștigat</div></div>';
+    html += '<div class="stat-card purple"><div class="lbl">De urmărit</div><div class="val">'+todoCount+'</div><div class="sub">trimise + în discuție</div></div>';
+    if(expCount) html += '<div class="stat-card red"><div class="lbl">Expirate</div><div class="val">'+expCount+'</div><div class="sub">necesită follow-up</div></div>';
+    document.getElementById('statsBar').innerHTML = html;
+}
+
+function renderPipeline(){
+    // Calcul count per status PE TOATE OFERTELE (nu pe filtrate) — facem fetch separat
+    // Pentru moment: count pe vizibile (suficient pentru orientare)
+    var counts = {all: STATE.oferte.length, Draft:0, Trimisa:0, In_discutie:0, Acceptata:0, Refuzata:0, Expirata:0};
+    STATE.oferte.forEach(function(o){ var s=ofStatus(o); if(counts[s]!==undefined) counts[s]++; });
+    var stages = [
+        {id:'all',         ic:'📋', lbl:'Toate'},
+        {id:'Draft',       ic:'📝', lbl:'Draft'},
+        {id:'Trimisa',     ic:'📤', lbl:'Trimise'},
+        {id:'In_discutie', ic:'💬', lbl:'Discuție'},
+        {id:'Acceptata',   ic:'✅', lbl:'Acceptate'},
+        {id:'Refuzata',    ic:'❌', lbl:'Refuzate'},
+        {id:'Expirata',    ic:'⏱️', lbl:'Expirate'}
+    ];
+    var html = stages.map(function(s){
+        var active = STATE.filters.status === s.id ? ' active' : '';
+        return '<div class="pipe-stage'+active+'" data-status="'+s.id+'" onclick="setStatusFilter(\''+s.id+'\')">'+
+               '<span class="ic">'+s.ic+'</span><span class="lbl">'+s.lbl+'</span><div class="num">'+counts[s.id]+'</div></div>';
+    }).join('');
+    document.getElementById('pipeline').innerHTML = html;
+}
+
+function render(){
+    // Apply group + sort (sort already applied on server, group apply here)
+    STATE.filters.sort = document.getElementById('sortBy').value;
+    STATE.filters.group = document.getElementById('groupBy').value;
+    STATE.filters.month = document.getElementById('monthFilter').value;
+    var view = document.getElementById('mainView');
+    if(!STATE.oferte.length){
+        view.innerHTML = '<div class="empty-state"><div class="empty-icon">📭</div><div class="empty-title">Nicio ofertă</div><div class="empty-msg">Cu filtrele curente nu există oferte. Încearcă să resetezi filtrele sau bifează "Arhivă".</div></div>';
+        renderBulkBar();
+        return;
+    }
+    var html = '';
+    if(!STATE.filters.group){
+        html = '<div class="cards-grid">' + STATE.oferte.map(renderCard).join('') + '</div>';
+    } else {
+        var groups = {};
+        STATE.oferte.forEach(function(o){
+            var key;
+            if(STATE.filters.group === 'month') key = (o.data_oferta||'').substring(0,7);
+            else if(STATE.filters.group === 'client') key = o.client_nume || '— necunoscut —';
+            else if(STATE.filters.group === 'status') key = ofStatus(o);
+            if(!groups[key]) groups[key] = {items:[], sum:0};
+            groups[key].items.push(o);
+            groups[key].sum += Number(o.total_cu_tva||0);
+        });
+        var keys = Object.keys(groups).sort();
+        if(STATE.filters.group === 'month' || STATE.filters.sort === 'data_desc') keys.reverse();
+        keys.forEach(function(k){
+            var g = groups[k];
+            var lbl = k;
+            if(STATE.filters.group === 'month' && /^\d{4}-\d{2}$/.test(k)){
+                var p = k.split('-'); lbl = MONTHS[parseInt(p[1])-1]+' '+p[0];
+            }
+            if(STATE.filters.group === 'status'){
+                var si = statusInfo(k); lbl = si.ic+' '+si.lbl;
+            }
+            html += '<div class="group-head"><span>'+esc(lbl)+'</span><span class="badge-num">'+g.items.length+'</span><span class="group-sum">'+fmtMoney(g.sum)+'</span></div>';
+            html += '<div class="cards-grid">' + g.items.map(renderCard).join('') + '</div>';
+        });
+    }
+    view.innerHTML = html;
+    renderBulkBar();
+}
+
+function renderCard(o){
+    var st = ofStatus(o);
+    var checked = STATE.selected[o.id] ? ' checked' : '';
+    var ckBox = STATE.selected[o.id] ? 'checked' : '';
+    var arch = o.archived_at ? ' archived' : '';
+    // Expirare warning
+    var expHtml = '';
+    if(o.expires_at && ['Draft','Trimisa','In_discutie'].indexOf(st) >= 0){
+        var d = daysBetween(new Date(), o.expires_at);
+        if(d < 0) expHtml = '<span class="exp-warn danger">expirat de '+(-d)+' zile</span>';
+        else if(d <= 7) expHtml = '<span class="exp-warn">expiră în '+d+'z</span>';
+    }
+    var motivHtml = (st==='Refuzata' && o.motiv_respingere) ? '<div style="font-size:11px;color:var(--red);font-style:italic;margin-top:4px">Motiv: '+esc(o.motiv_respingere)+'</div>' : '';
+    var html = '<div class="oferta-card'+checked+arch+'" id="card-'+o.id+'">';
+    html += '<div class="oc-top">';
+    html += '<input type="checkbox" class="oc-check" '+ckBox+' onchange="toggleSelect('+o.id+',this.checked)">';
+    html += '<div class="oc-main">';
+    html += '<div class="oc-client">'+esc(o.client_nume||'— fără client —')+'</div>';
+    if(o.obiectiv) html += '<div class="oc-obiectiv">'+esc(o.obiectiv)+'</div>';
+    html += motivHtml;
+    html += '</div>';
+    html += '</div>';
+    html += '<div class="oc-meta"><span class="nr">#'+esc(o.oferta_id)+'</span><span class="data">'+fmtDate(o.data_oferta)+'</span>'+expHtml+'<span class="val">'+fmtMoney(o.total_cu_tva)+'</span></div>';
+    html += '<div class="oc-row">';
+    html += '<button class="status-pill s-'+st+'" onclick="openStatusModal('+o.id+',\''+esc((o.client_nume||'').replace(/\047/g,'')).replace(/'/g,"\\'")+'\')" title="Click pentru a schimba status">'+statusInfo(st).ic+' '+statusInfo(st).lbl+'</button>';
+    html += '<div class="oc-actions">';
+    html += '<a class="oc-btn primary" href="calculator-pret.html?edit='+esc(o.oferta_id)+'" title="Editează">✏️</a>';
+    if(o.archived_at){
+        html += '<button class="oc-btn warn" onclick="doUnarchive('+o.id+')" title="Dezarhivează">📤</button>';
+    } else {
+        html += '<button class="oc-btn" onclick="doArchive('+o.id+')" title="Arhivează">🗄️</button>';
+    }
+    html += '<button class="oc-btn danger" onclick="doDelete('+o.id+')" title="Șterge">🗑️</button>';
+    html += '</div>';
+    html += '</div>';
+    html += '</div>';
+    return html;
+}
+
+// ═══ FILTERS ═══
+function setStatusFilter(s){ STATE.filters.status = s; refreshData(); }
+function onSearchChange(){
+    clearTimeout(window._searchT);
+    window._searchT = setTimeout(function(){
+        STATE.filters.search = document.getElementById('searchInput').value.trim();
+        refreshData();
+    }, 350);
+}
+function onArchToggle(){
+    var on = document.getElementById('archChk').checked;
+    STATE.filters.archived = on ? 'all' : '0';
+    document.getElementById('archToggle').classList.toggle('on', on);
+    refreshData();
+}
+function clearFilters(){
+    STATE.filters = {status:'all', archived:'0', search:'', month:'', sort:'data_desc', group:''};
+    document.getElementById('searchInput').value = '';
+    document.getElementById('monthFilter').value = '';
+    document.getElementById('sortBy').value = 'data_desc';
+    document.getElementById('groupBy').value = '';
+    document.getElementById('archChk').checked = false;
+    document.getElementById('archToggle').classList.remove('on');
+    clearSelection();
+    refreshData();
+}
+
+// ═══ SELECTION + BULK ═══
+function toggleSelect(id, on){
+    if(on) STATE.selected[id] = true;
+    else delete STATE.selected[id];
+    document.getElementById('card-'+id).classList.toggle('checked', on);
+    renderBulkBar();
+}
+function clearSelection(){ STATE.selected = {}; render(); }
+function selectedIds(){ return Object.keys(STATE.selected).map(function(k){return parseInt(k);}); }
+function renderBulkBar(){
+    var ids = selectedIds();
+    var bar = document.getElementById('bulkBar');
+    bar.classList.toggle('active', ids.length > 0);
+    document.getElementById('bulkCount').textContent = ids.length + (ids.length===1?' selectată':' selectate');
+    // Switch arhivă/dezarhivă în funcție de filtru curent
+    var bulkArchBtn = document.getElementById('bulkArchBtn');
+    if(STATE.filters.archived === '1'){ bulkArchBtn.textContent = '📤 Dezarhivează'; bulkArchBtn.dataset.op = 'unarchive'; }
+    else { bulkArchBtn.textContent = '🗄️ Arhivează'; bulkArchBtn.dataset.op = 'archive'; }
+}
+function bulkArchive(){
+    var ids = selectedIds(); if(!ids.length) return;
+    var op = document.getElementById('bulkArchBtn').dataset.op || 'archive';
+    var verb = op === 'unarchive' ? 'dezarhivezi' : 'arhivezi';
+    if(!confirm(verb.charAt(0).toUpperCase()+verb.slice(1)+' '+ids.length+' oferte?')) return;
+    fetch(API+'?action=bulkOferte',{method:'POST',credentials:'include',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'bulkOferte',op:op,ids:ids})})
+        .then(function(r){return r.json();}).then(function(res){
+            if(res.success){ toast('✅ '+res.count+' oferte '+(op==='unarchive'?'dezarhivate':'arhivate'),'success'); STATE.selected={}; refreshData(); }
+            else toast('❌ '+(res.error||'Eroare'),'error');
+        });
+}
+function bulkDelete(){
+    var ids = selectedIds(); if(!ids.length) return;
+    if(!confirm('⚠️ Ștergi DEFINITIV '+ids.length+' oferte? Acțiunea nu poate fi anulată.')) return;
+    fetch(API+'?action=bulkOferte',{method:'POST',credentials:'include',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'bulkOferte',op:'delete',ids:ids})})
+        .then(function(r){return r.json();}).then(function(res){
+            if(res.success){ toast('✅ '+res.count+' oferte șterse','success'); STATE.selected={}; refreshData(); }
+            else toast('❌ '+(res.error||'Eroare'),'error');
+        });
+}
+function bulkSetStatus(){
+    var ids = selectedIds(); if(!ids.length) return;
+    STATE.statusTarget = ids;
+    document.getElementById('smTitle').textContent = ids.length + ' oferte selectate';
+    document.getElementById('motivBlock').style.display = 'none';
+    document.getElementById('statusModal').classList.add('active');
+}
+function bulkExport(){
+    // Fără filtre suplimentare — exportă tot ce e vizibil cu filtrele curente
+    var params = new URLSearchParams({archived: STATE.filters.archived});
+    if(STATE.filters.status !== 'all') params.append('status', STATE.filters.status);
+    if(STATE.filters.month) params.append('month', STATE.filters.month);
+    var url = API+'?action=exportOferteCSV&'+params.toString();
+    window.location.href = url;
+    toast('📥 Se descarcă CSV-ul...','info');
+}
+
+// ═══ STATUS MODAL ═══
+function openStatusModal(id, name){
+    STATE.statusTarget = [id];
+    document.getElementById('smTitle').textContent = name || ('ID '+id);
+    document.getElementById('motivBlock').style.display = 'none';
+    document.getElementById('motivInput').value = '';
+    document.getElementById('statusModal').classList.add('active');
+}
+function closeStatusModal(){
+    document.getElementById('statusModal').classList.remove('active');
+    STATE.statusTarget = null;
+}
+function askRefuzata(){
+    document.getElementById('motivBlock').style.display = 'block';
+    document.getElementById('motivInput').focus();
+}
+function doSetStatus(status){
+    var ids = STATE.statusTarget; if(!ids || !ids.length) return;
+    var motiv = document.getElementById('motivInput').value.trim();
+    // Pentru bulk folosim bulkOferte; pentru 1 folosim updateOfertaStatus (care propagă în proiect)
+    if(ids.length === 1){
+        fetch(API+'?action=updateOfertaStatus',{method:'POST',credentials:'include',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'updateOfertaStatus',id:ids[0],status:status,motiv_respingere:motiv,user:userName})})
+            .then(function(r){return r.json();}).then(function(res){
+                if(res.success){ toast('✅ Status schimbat','success'); closeStatusModal(); refreshData(); }
+                else toast('❌ '+(res.error||'Eroare'),'error');
+            });
+    } else {
+        fetch(API+'?action=bulkOferte',{method:'POST',credentials:'include',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'bulkOferte',op:'setStatus',ids:ids,status:status})})
+            .then(function(r){return r.json();}).then(function(res){
+                if(res.success){ toast('✅ '+res.count+' oferte schimbate','success'); closeStatusModal(); STATE.selected={}; refreshData(); }
+                else toast('❌ '+(res.error||'Eroare'),'error');
+            });
+    }
+}
+
+// ═══ ACTIONS PER CARD ═══
+function doArchive(id){
+    fetch(API+'?action=archiveOferta',{method:'POST',credentials:'include',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'archiveOferta',id:id})})
+        .then(function(r){return r.json();}).then(function(res){
+            if(res.success){ toast('🗄️ Arhivată','info'); refreshData(); }
+            else toast('❌ '+(res.error||'Eroare'),'error');
+        });
+}
+function doUnarchive(id){
+    fetch(API+'?action=unarchiveOferta',{method:'POST',credentials:'include',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'unarchiveOferta',id:id})})
+        .then(function(r){return r.json();}).then(function(res){
+            if(res.success){ toast('📤 Dezarhivată','info'); refreshData(); }
+            else toast('❌ '+(res.error||'Eroare'),'error');
+        });
+}
+function doDelete(id){
+    if(!confirm('Ștergi DEFINITIV oferta? Nu se poate anula.')) return;
+    fetch(API+'?action=deleteOferta',{method:'POST',credentials:'include',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'deleteOferta',id:id})})
+        .then(function(r){return r.json();}).then(function(res){
+            if(res.success){ toast('🗑️ Ștearsă','info'); refreshData(); }
+            else toast('❌ '+(res.error||'Eroare'),'error');
+        });
+}
+
+// ═══ INIT ═══
+refreshData();
+</script>
+<script>
+if('serviceWorker' in navigator){
+    navigator.serviceWorker.register('../sw.js').then(function(r){console.log('[PWA] SW registered, scope:',r.scope)}).catch(function(e){console.log('[PWA] SW failed:',e)});
+}
+</script>
+</body>
+</html>
