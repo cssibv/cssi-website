@@ -1509,6 +1509,12 @@ try {
                 checked_by VARCHAR(60), checked_at DATETIME, ordine INT DEFAULT 0,
                 UNIQUE KEY unq_proiect_item (proiect_id, item_key), KEY idx_proiect (proiect_id)
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4");
+            $db->exec("CREATE TABLE IF NOT EXISTS proiectare_documente (
+                id INT PRIMARY KEY AUTO_INCREMENT, proiect_id INT NOT NULL, tip_doc VARCHAR(40) NOT NULL,
+                filename VARCHAR(255) NOT NULL, original_name VARCHAR(255), size_bytes INT,
+                mime_type VARCHAR(100), uploaded_by VARCHAR(60), uploaded_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+                KEY idx_proiect (proiect_id), KEY idx_tip (tip_doc)
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4");
             $sql = "SELECT p.id AS proiect_db_id, p.proiect_id, p.serviciu, p.obiectiv, p.adresa_obiectiv,
                            p.status AS proiect_status, p.responsabil, p.created_at,
                            c.id AS client_db_id, c.nume AS client_nume, c.telefon AS client_telefon,
