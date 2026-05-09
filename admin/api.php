@@ -36,12 +36,22 @@ function ensureOferteColumns($db) {
     try {
         $cols = $db->query("SHOW COLUMNS FROM oferte")->fetchAll(PDO::FETCH_COLUMN);
         if (!in_array('archived_at', $cols)) {
-            $db->exec("ALTER TABLE oferte ADD COLUMN archived_at DATETIME NULL DEFAULT NULL, ADD INDEX idx_archived (archived_at)");
+            $db->exec("ALTER TABLE oferte ADD COLUMN archived_at DATETIME NULL DEFAULT NULL");
+            try { $db->exec("ALTER TABLE oferte ADD INDEX idx_archived (archived_at)"); } catch(Exception $e){}
         }
         if (!in_array('expires_at', $cols)) {
-            $db->exec("ALTER TABLE oferte ADD COLUMN expires_at DATE NULL DEFAULT NULL, ADD INDEX idx_expires (expires_at)");
+            $db->exec("ALTER TABLE oferte ADD COLUMN expires_at DATE NULL DEFAULT NULL");
+            try { $db->exec("ALTER TABLE oferte ADD INDEX idx_expires (expires_at)"); } catch(Exception $e){}
         }
-    } catch (Exception $e) { /* silent */ }
+    } catch (Exception $e) {
+        // Loghez ca să pot debug (apare în error_log)
+        error_log('ensureOferteColumns FAILED: ' . $e->getMessage());
+    }
+}
+// Debug helper: returneaza listă coloane oferte (admin only — pentru troubleshoot)
+function debugOferteColumns($db) {
+    try { return $db->query("SHOW COLUMNS FROM oferte")->fetchAll(PDO::FETCH_COLUMN); }
+    catch (Exception $e) { return ['ERR' => $e->getMessage()]; }
 }
 
 // Auto-expire oferte: Trimisa/In_discutie cu expires_at < azi → Expirata
@@ -562,6 +572,13 @@ try {
         // ══════════════════════════════════════
         // OFERTE
         // ══════════════════════════════════════
+        case '_debugOferteSchema':
+            // Doar admin: returnează coloanele actuale ale tabelei oferte
+            requireAdmin();
+            ensureOferteColumns($db);
+            jsonResponse(['success' => true, 'columns' => debugOferteColumns($db)]);
+            break;
+
         case 'getOferte':
             ensureOferteColumns($db);
             autoExpireOferte($db);
@@ -584,7 +601,7 @@ try {
                 $sql .= " AND (vc.client_nume LIKE ? OR vc.oferta_id LIKE ? OR vc.obiectiv LIKE ?)";
                 $s = "%$search%"; $params = array_merge($params, [$s, $s, $s]);
             }
-            if ($statusF) { $sql .= " AND vc.status = ?"; $params[] = $statusF; }
+            if ($statusF) { $sql .= " AND o2.status = ?"; $params[] = $statusF; }
             if ($archived === '0')      { $sql .= " AND o2.archived_at IS NULL"; }
             elseif ($archived === '1')  { $sql .= " AND o2.archived_at IS NOT NULL"; }
             // 'all' → fără filtru
@@ -600,7 +617,7 @@ try {
                 'valoare_desc' => 'vc.total_cu_tva DESC',
                 'valoare_asc'  => 'vc.total_cu_tva ASC',
                 'client_asc'   => 'vc.client_nume ASC, vc.data_oferta DESC',
-                'status'       => "FIELD(vc.status,'Draft','Trimisa','In_discutie','Acceptata','Refuzata','Expirata') ASC, vc.data_oferta DESC",
+                'status'       => "FIELD(o2.status,'Draft','Trimisa','In_discutie','Acceptata','Refuzata','Expirata') ASC, vc.data_oferta DESC",
             ];
             $sql .= " ORDER BY " . (isset($sortMap[$sortBy]) ? $sortMap[$sortBy] : $sortMap['data_desc']);
 
@@ -855,9 +872,9 @@ try {
             $statusF = isset($_GET['status']) ? $_GET['status'] : '';
             $archived = isset($_GET['archived']) ? $_GET['archived'] : '0';
             $monthF = isset($_GET['month']) ? $_GET['month'] : '';
-            $sql = "SELECT vc.oferta_id, vc.data_oferta, vc.client_nume, vc.obiectiv, vc.total_cu_tva, vc.status, o2.expires_at, o2.archived_at, vc.client_cui, vc.client_adresa FROM v_oferte_complete vc JOIN oferte o2 ON vc.id = o2.id WHERE 1=1";
+            $sql = "SELECT vc.oferta_id, vc.data_oferta, vc.client_nume, vc.obiectiv, vc.total_cu_tva, o2.status, o2.expires_at, o2.archived_at, vc.client_cui, vc.client_adresa FROM v_oferte_complete vc JOIN oferte o2 ON vc.id = o2.id WHERE 1=1";
             $params = [];
-            if ($statusF) { $sql .= " AND vc.status = ?"; $params[] = $statusF; }
+            if ($statusF) { $sql .= " AND o2.status = ?"; $params[] = $statusF; }
             if ($archived === '0') $sql .= " AND o2.archived_at IS NULL";
             elseif ($archived === '1') $sql .= " AND o2.archived_at IS NOT NULL";
             if ($monthF && preg_match('/^\d{4}-\d{2}$/', $monthF)) { $sql .= " AND DATE_FORMAT(vc.data_oferta, '%Y-%m') = ?"; $params[] = $monthF; }
@@ -885,7 +902,7 @@ try {
             $client = $stmtC->fetch();
             if (!$client) jsonResponse(['success' => false, 'error' => 'Client inexistent'], 404);
             // Oferte
-            $stmtO = $db->prepare("SELECT vc.id, vc.oferta_id, vc.data_oferta, vc.obiectiv, vc.total_cu_tva, vc.status, o2.archived_at, o2.expires_at FROM v_oferte_complete vc JOIN oferte o2 ON vc.id = o2.id WHERE o2.client_id = ? ORDER BY vc.data_oferta DESC");
+            $stmtO = $db->prepare("SELECT vc.id, vc.oferta_id, vc.data_oferta, vc.obiectiv, vc.total_cu_tva, o2.status, o2.archived_at, o2.expires_at FROM v_oferte_complete vc JOIN oferte o2 ON vc.id = o2.id WHERE o2.client_id = ? ORDER BY vc.data_oferta DESC");
             $stmtO->execute([$cid]);
             $oferte = $stmtO->fetchAll();
             // Proiecte
