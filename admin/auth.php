@@ -106,6 +106,49 @@ function isTehnician() {
     return $u && !empty($u['is_tehnician']);
 }
 
+// ─── MODULE ACCESS ────────────────────────────────────────────
+// Lista TOATE modulele din portal (sursă unică de adevăr)
+function allModules() {
+    return ['proiecte','crm','calculator','financiar','planificare','executie','proiectare',
+            'mentenanta','materiale','necesar','social','marketing','documente','utilizatori'];
+}
+
+// Defaults per rol — folosite când user_config.modules e gol
+function defaultModulesForUser($u) {
+    if (($u['role'] ?? '') === 'admin') return allModules();
+    if (!empty($u['is_tehnician'])) return ['executie','planificare','necesar','mentenanta'];
+    switch ($u['role'] ?? '') {
+        case 'sales': return ['calculator','crm','proiecte','financiar','marketing','social','documente'];
+        case 'org':   return ['proiecte','planificare','financiar','mentenanta','documente','crm'];
+        case 'mkt':   return ['marketing','social','documente'];
+        case 'tech':  return ['proiecte','proiectare','executie','planificare','materiale','necesar','mentenanta','documente'];
+        default:      return [];
+    }
+}
+
+// Returnează lista de module accesibile pentru un user.
+// Logica: dacă există override în user_config.modules → folosește acela.
+// Altfel → defaults per rol.
+function getAllowedModules($db, $u) {
+    if (($u['role'] ?? '') === 'admin') return allModules(); // admin = mereu tot
+    // Citim override din user_config
+    try {
+        $stmt = $db->prepare("SELECT modules FROM user_config WHERE user_id = ?");
+        $stmt->execute([$u['username']]);
+        $row = $stmt->fetch();
+        if ($row && !empty($row['modules'])) {
+            $custom = json_decode($row['modules'], true);
+            if (is_array($custom) && !empty($custom)) {
+                // utilizatori e mereu admin-only, nu suprascriem
+                $custom = array_diff($custom, ['utilizatori']);
+                return array_values($custom);
+            }
+        }
+    } catch (Exception $e) { /* user_config tabelă lipsă — folosim defaults */ }
+    $def = defaultModulesForUser($u);
+    return array_values(array_diff($def, ['utilizatori']));
+}
+
 // Login attempt — întoarce array cu success + user/error
 function attemptLogin($db, $username, $password) {
     ensureUsersTable($db);

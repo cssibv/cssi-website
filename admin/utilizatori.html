@@ -236,6 +236,31 @@ a{text-decoration:none;color:inherit;}button{font-family:inherit;cursor:pointer;
 </div>
 </div>
 
+<!-- MODAL: MODULE ACCESS -->
+<div id="modulesModal" class="modal-overlay" onclick="if(event.target===this)closeModulesModal()">
+<div class="modal" style="max-width:540px">
+    <div class="modal-head"><div class="modal-title">🔐 Module accesibile pentru <strong id="modUser">—</strong></div><button class="modal-close" onclick="closeModulesModal()">✕</button></div>
+    <div class="modal-body">
+        <div id="modStatus" style="font-size:12px;color:var(--gray);background:var(--gray-bg);padding:10px 14px;border-radius:8px;margin-bottom:12px"></div>
+        <div style="font-size:11px;color:var(--gray);font-weight:700;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:8px">Bifează modulele permise:</div>
+        <div id="modulesList" style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:14px"></div>
+        <div id="modErr" class="form-err"></div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap">
+            <button type="button" class="form-submit" style="flex:1" onclick="doSaveModules()">💾 Salvează</button>
+            <button type="button" class="helper-btn" onclick="doResetModules()" title="Șterge override-ul, revine la defaults per rol">🔄 Reset la defaults</button>
+        </div>
+    </div>
+</div>
+</div>
+
+<style>
+.mod-chip{display:flex;align-items:center;gap:8px;padding:9px 12px;border:2px solid var(--gray-b);border-radius:10px;background:#fff;cursor:pointer;font-size:12px;font-weight:700;user-select:none;transition:all 0.15s;}
+.mod-chip:hover{border-color:var(--blue);background:#eff6ff;}
+.mod-chip.checked{border-color:var(--blue);background:#eff6ff;color:#1d4ed8;}
+.mod-chip input{accent-color:var(--blue);}
+.mod-chip .ic{font-size:16px;}
+</style>
+
 <!-- MODAL: EDIT USER -->
 <div id="editModal" class="modal-overlay" onclick="if(event.target===this)closeEditModal()">
 <div class="modal">
@@ -401,6 +426,7 @@ function renderUsers(){
         html += '<div class="actions">';
         html += '<button class="act-btn primary" onclick="openEditModal('+u.id+')">✏️ Editează</button>';
         html += '<button class="act-btn primary" onclick="openSetPwModal('+u.id+',\''+esc(name).replace(/\047/g,'')+'\')">🔑 Parolă</button>';
+        if(u.username !== 'admin') html += '<button class="act-btn primary" onclick="openModulesModal('+u.id+',\''+esc(name).replace(/\047/g,'')+'\')">🔐 Module</button>';
         if(u.locked) html += '<button class="act-btn warn" onclick="doUnlock('+u.id+',\''+esc(name).replace(/\047/g,'')+'\')">🔓 Deblochează</button>';
         if(u.username !== 'admin'){
             if(u.active) html += '<button class="act-btn danger" onclick="doToggleActive('+u.id+',\''+esc(name).replace(/\047/g,'')+'\',false)">⊘ Dezactivează</button>';
@@ -497,6 +523,71 @@ function doUnlock(uid, name){
             else showToast('❌ '+(res.error||'Eroare'),'error');
         });
 }
+// ═══ MODULE ACCESS ═══
+var MODULE_CATALOG = [
+    {id:'proiecte',    icon:'📋', name:'Proiecte (Board Kanban)'},
+    {id:'crm',         icon:'💰', name:'CRM Clienți'},
+    {id:'calculator',  icon:'📝', name:'Oferte (Generator)'},
+    {id:'planificare', icon:'📅', name:'Planificare'},
+    {id:'executie',    icon:'🔧', name:'Execuție'},
+    {id:'proiectare',  icon:'📐', name:'Proiectare'},
+    {id:'mentenanta',  icon:'🔄', name:'Mentenanță'},
+    {id:'financiar',   icon:'💳', name:'Financiar'},
+    {id:'materiale',   icon:'📦', name:'Inventar & Stocuri'},
+    {id:'necesar',     icon:'🛒', name:'Necesar Materiale'},
+    {id:'social',      icon:'📅', name:'Calendar Social'},
+    {id:'marketing',   icon:'📊', name:'Marketing Hub'},
+    {id:'documente',   icon:'📁', name:'Documente'},
+];
+var modCurrentUid = null;
+
+function openModulesModal(uid, name){
+    modCurrentUid = uid;
+    document.getElementById('modUser').textContent = name;
+    document.getElementById('modErr').style.display = 'none';
+    document.getElementById('modStatus').textContent = '⏳ Se încarcă...';
+    document.getElementById('modulesList').innerHTML = '';
+    document.getElementById('modulesModal').classList.add('active');
+
+    fetch(API+'?action=adminGetUserModules&user_id='+uid+'&_t='+Date.now(),{credentials:'include'})
+        .then(function(r){return r.json();}).then(function(res){
+            if(!res.success){document.getElementById('modStatus').textContent='❌ '+(res.error||'Eroare');return;}
+            var d = res.data;
+            var status = d.has_override
+                ? '✏️ <strong>Custom override</strong> — folosește lista de mai jos.'
+                : '🔄 <strong>Defaults per rol</strong> ('+d.defaults.length+' module). Bifele de mai jos sunt cele active. Modifică-le pentru a suprascrie.';
+            document.getElementById('modStatus').innerHTML = status;
+            // Render checkbox-uri
+            var html = MODULE_CATALOG.map(function(m){
+                var checked = d.allowed.indexOf(m.id) >= 0;
+                return '<label class="mod-chip'+(checked?' checked':'')+'" data-mid="'+m.id+'">'+
+                       '<input type="checkbox" value="'+m.id+'"'+(checked?' checked':'')+' onchange="this.parentElement.classList.toggle(\'checked\',this.checked)">'+
+                       '<span class="ic">'+m.icon+'</span>'+esc(m.name)+'</label>';
+            }).join('');
+            document.getElementById('modulesList').innerHTML = html;
+        }).catch(function(e){document.getElementById('modStatus').textContent='❌ '+(e.message||e);});
+}
+function closeModulesModal(){document.getElementById('modulesModal').classList.remove('active');modCurrentUid=null;}
+function doSaveModules(){
+    if(!modCurrentUid)return;
+    var picked = [].slice.call(document.querySelectorAll('#modulesList input:checked')).map(function(i){return i.value;});
+    var err = document.getElementById('modErr'); err.style.display='none';
+    fetch(API+'?action=adminSetUserModules',{method:'POST',credentials:'include',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'adminSetUserModules',user_id:modCurrentUid,modules:picked})})
+        .then(function(r){return r.json();}).then(function(res){
+            if(res.success){closeModulesModal();showToast('✅ Module salvate ('+picked.length+')','success');loadUsers();}
+            else{err.textContent=res.error||'Eroare';err.style.display='block';}
+        }).catch(function(e){err.textContent='Eroare server';err.style.display='block';});
+}
+function doResetModules(){
+    if(!modCurrentUid)return;
+    if(!confirm('Resetezi modulele la defaults per rol? Override-ul custom va fi șters.'))return;
+    fetch(API+'?action=adminSetUserModules',{method:'POST',credentials:'include',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'adminSetUserModules',user_id:modCurrentUid,use_defaults:true})})
+        .then(function(r){return r.json();}).then(function(res){
+            if(res.success){closeModulesModal();showToast('✅ Resetat la defaults','success');loadUsers();}
+            else showToast('❌ '+(res.error||'Eroare'),'error');
+        });
+}
+
 function doToggleActive(uid, name, activate){
     var msg = activate ? 'Activezi contul '+name+'?' : 'Dezactivezi contul '+name+'?\n\nUser-ul nu se va mai putea autentifica până la reactivare.';
     if(!confirm(msg))return;

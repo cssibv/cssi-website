@@ -763,14 +763,17 @@ function renderAlerts(){
 }
 
 // ═══════ MODULES — funcții helper (FAVORITES + CATEGORIES sunt declarate sus) ═══════
+// Modulele permise utilizatorului curent — populat din /api.php?action=getMyModules
+var MY_ALLOWED_MODULES = null;
 function userCanSee(m){
-    var fullAccess=['admin','mihai','roxana','valentin','cristina'];
-    // Module pe care le văd tehnicienii (execuție pe teren)
-    var TECH_MODULES=['executie','planificare','necesar','mentenanta'];
-    if(m.id==='utilizatori'&&role!=='admin')return false;
-    if(fullAccess.indexOf(role)>=0)return true;
-    if(TECHNICIANS.indexOf(role)>=0) return TECH_MODULES.indexOf(m.id)>=0;
-    return m.roles.indexOf(role)>=0;
+    if(m.id==='utilizatori' && role!=='admin') return false;
+    if(role==='admin') return true;
+    // Dacă lista din DB e încărcată, folosim DOAR ea (sursa de adevăr)
+    if(MY_ALLOWED_MODULES !== null){
+        return MY_ALLOWED_MODULES.indexOf(m.id) >= 0;
+    }
+    // Fallback până se încarcă (afișăm tot ca să nu pâlpâie pagina)
+    return true;
 }
 function modById(id){for(var i=0;i<MODULES.length;i++){if(MODULES[i].id===id)return MODULES[i];}return null;}
 function renderModules(){
@@ -981,23 +984,28 @@ function bootLoaders(){
     ]);
 }
 function bootDashboard(){
-    // Verifică sesiunea server-side cu /me — nu te baza doar pe sessionStorage
-    fetch('/admin/api.php?action=me',{credentials:'include'})
-        .then(function(r){return r.json();})
-        .then(function(res){
-            if(!res.success || !res.user){
-                sessionStorage.removeItem('cssi-role');
-                sessionStorage.removeItem('cssi-user');
-                showLogin(); return;
-            }
-            role = res.user.username;
-            sessionStorage.setItem('cssi-role', role);
-            sessionStorage.setItem('cssi-user', res.user.display_name || role);
-            if(!ROLES[role]){ showLogin(); return; }
-            showDashShell();
-            bootLoaders();
-        })
-        .catch(function(){showLogin();});
+    // Verifică sesiunea + încarcă modulele permise în paralel
+    Promise.all([
+        fetch('/admin/api.php?action=me',{credentials:'include'}).then(function(r){return r.json();}),
+        fetch('/admin/api.php?action=getMyModules',{credentials:'include'}).then(function(r){return r.json();}).catch(function(){return null;})
+    ]).then(function(results){
+        var meRes = results[0], modRes = results[1];
+        if(!meRes.success || !meRes.user){
+            sessionStorage.removeItem('cssi-role');
+            sessionStorage.removeItem('cssi-user');
+            showLogin(); return;
+        }
+        role = meRes.user.username;
+        sessionStorage.setItem('cssi-role', role);
+        sessionStorage.setItem('cssi-user', meRes.user.display_name || role);
+        // Încarcă lista modulelor permise (din DB user_config sau defaults per rol)
+        if(modRes && modRes.success && Array.isArray(modRes.modules)){
+            MY_ALLOWED_MODULES = modRes.modules;
+        }
+        if(!ROLES[role]){ showLogin(); return; }
+        showDashShell();
+        bootLoaders();
+    }).catch(function(){showLogin();});
 }
 document.addEventListener('DOMContentLoaded',bootDashboard);
 // Dacă DOMContentLoaded a fost deja emis (script la finalul body-ului), pornim manual:

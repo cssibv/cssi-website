@@ -95,6 +95,79 @@ try {
             break;
 
         // ══════════════════════════════════════
+        // MODULE ACCESS — verificare access user pe pagină
+        // ══════════════════════════════════════
+        case 'getMyModules':
+            requireAuth();
+            $u = currentUser();
+            jsonResponse(['success' => true, 'modules' => getAllowedModules($db, $u), 'role' => $u['role'], 'is_tehnician' => $u['is_tehnician']]);
+            break;
+
+        case 'checkModuleAccess':
+            requireAuth();
+            $module = isset($_GET['module']) ? trim($_GET['module']) : '';
+            if (!$module) jsonResponse(['success' => false, 'error' => 'module obligatoriu'], 400);
+            $u = currentUser();
+            $allowed = getAllowedModules($db, $u);
+            if ($module === 'utilizatori' && !isAdmin()) {
+                jsonResponse(['success' => false, 'allowed' => false, 'error' => 'Doar admin'], 403);
+            }
+            if (in_array($module, $allowed, true) || isAdmin()) {
+                jsonResponse(['success' => true, 'allowed' => true]);
+            }
+            jsonResponse(['success' => false, 'allowed' => false, 'error' => 'Acces interzis la modulul "'.$module.'"'], 403);
+            break;
+
+        case 'adminGetUserModules':
+            requireAdmin();
+            $userId = isset($_GET['user_id']) ? intval($_GET['user_id']) : 0;
+            if (!$userId) jsonResponse(['success' => false, 'error' => 'user_id obligatoriu'], 400);
+            $stmt = $db->prepare("SELECT * FROM users WHERE id = ?");
+            $stmt->execute([$userId]);
+            $u = $stmt->fetch();
+            if (!$u) jsonResponse(['success' => false, 'error' => 'User inexistent'], 404);
+            $u['is_tehnician'] = (bool)$u['is_tehnician'];
+            $allowed  = getAllowedModules($db, $u);
+            $defaults = defaultModulesForUser($u);
+            $stmtC = $db->prepare("SELECT modules FROM user_config WHERE user_id = ?");
+            $stmtC->execute([$u['username']]);
+            $row = $stmtC->fetch();
+            $hasOverride = $row && !empty($row['modules']) && $row['modules'] !== '[]';
+            jsonResponse(['success' => true, 'data' => [
+                'all_modules' => allModules(),
+                'allowed'     => $allowed,
+                'defaults'    => $defaults,
+                'has_override'=> $hasOverride,
+            ]]);
+            break;
+
+        case 'adminSetUserModules':
+            requireAdmin();
+            $userId = isset($data['user_id']) ? intval($data['user_id']) : 0;
+            $modules = isset($data['modules']) && is_array($data['modules']) ? $data['modules'] : null;
+            $useDefaults = !empty($data['use_defaults']);
+            if (!$userId) jsonResponse(['success' => false, 'error' => 'user_id obligatoriu'], 400);
+            $stmt = $db->prepare("SELECT username FROM users WHERE id = ?");
+            $stmt->execute([$userId]);
+            $u = $stmt->fetch();
+            if (!$u) jsonResponse(['success' => false, 'error' => 'User inexistent'], 404);
+            $db->exec("CREATE TABLE IF NOT EXISTS user_config (
+                user_id VARCHAR(60) PRIMARY KEY,
+                modules TEXT, stages TEXT, primary_stages TEXT, focus VARCHAR(255),
+                updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4");
+            if ($useDefaults) {
+                $db->prepare("DELETE FROM user_config WHERE user_id = ?")->execute([$u['username']]);
+                jsonResponse(['success' => true, 'reset' => true]);
+            } else {
+                $valid = array_values(array_filter($modules ?: [], function($m){ return in_array($m, allModules(), true) && $m !== 'utilizatori'; }));
+                $db->prepare("INSERT INTO user_config (user_id, modules) VALUES (?, ?) ON DUPLICATE KEY UPDATE modules = VALUES(modules)")
+                   ->execute([$u['username'], json_encode($valid)]);
+                jsonResponse(['success' => true, 'modules' => $valid]);
+            }
+            break;
+
+        // ══════════════════════════════════════
         // USERS — schimbare parolă proprie + admin user management
         // ══════════════════════════════════════
         case 'changeMyPassword':
