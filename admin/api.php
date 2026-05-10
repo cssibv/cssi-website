@@ -2156,7 +2156,10 @@ try {
         // Folosit de bootDashboard în /admin pentru randare instant a KPI + count badges
         // ══════════════════════════════════════
         case 'getDashboardStats':
-            // Toate counts pe proiecte într-un singur SELECT cu CASE WHEN (evită N+1)
+            ensureOferteColumns($db);
+            autoExpireOferte($db);
+
+            // ─── Counts pe proiecte ────────────────────────────────────
             $sqlP = "SELECT
                 SUM(CASE WHEN status IN ('Lead','Oferta','Contract','Proiectare','Executie','Receptie') THEN 1 ELSE 0 END) AS proiecte_active,
                 COALESCE(SUM(CASE WHEN status NOT IN ('Anulat') THEN valoare_contract ELSE 0 END), 0) AS contracte_semnate,
@@ -2173,23 +2176,60 @@ try {
                 FROM proiecte";
             $rowP = $db->query($sqlP)->fetch() ?: [];
 
-            // Counts pe oferte (tabela separată)
+            // ─── Counts + valori pe oferte (status precis) ─────────────
+            $monthStart = date('Y-m-01');
             $sqlO = "SELECT
-                COUNT(*) AS oferte_trimise,
-                SUM(CASE WHEN status='Acceptata' THEN 1 ELSE 0 END) AS oferte_acceptate,
-                COALESCE(SUM(CASE WHEN status NOT IN ('Refuzata','Anulata') THEN total_cu_tva ELSE 0 END), 0) AS pipeline_oferte
-                FROM oferte";
-            $rowO = $db->query($sqlO)->fetch() ?: [];
+                SUM(CASE WHEN status IN ('Trimisa','In_discutie') THEN 1 ELSE 0 END) AS oferte_in_asteptare_count,
+                COALESCE(SUM(CASE WHEN status IN ('Trimisa','In_discutie') THEN total_cu_tva ELSE 0 END), 0) AS oferte_in_asteptare_valoare,
+                SUM(CASE WHEN status='Acceptata' THEN 1 ELSE 0 END) AS acceptate_total_count,
+                COALESCE(SUM(CASE WHEN status='Acceptata' THEN total_cu_tva ELSE 0 END), 0) AS acceptate_total_valoare,
+                SUM(CASE WHEN status='Acceptata' AND data_decizie >= ? THEN 1 ELSE 0 END) AS acceptate_luna_count,
+                COALESCE(SUM(CASE WHEN status='Acceptata' AND data_decizie >= ? THEN total_cu_tva ELSE 0 END), 0) AS acceptate_luna_valoare,
+                SUM(CASE WHEN status='Refuzata' THEN 1 ELSE 0 END) AS refuzate_count,
+                SUM(CASE WHEN status='Expirata' AND archived_at IS NULL THEN 1 ELSE 0 END) AS expirate_count,
+                SUM(CASE WHEN status='Draft' THEN 1 ELSE 0 END) AS draft_count,
+                COUNT(*) AS oferte_total
+                FROM oferte WHERE archived_at IS NULL";
+            $stmtO = $db->prepare($sqlO);
+            $stmtO->execute([$monthStart, $monthStart]);
+            $rowO = $stmtO->fetch() ?: [];
+
+            // ─── Valoare totala activa (Σ valoare_calc pe proiecte ne-anulate) ─────
+            // Folosim aceeasi logica ca in getProiecte (valoare_calc derivata)
+            $sqlA = "SELECT
+                COALESCE(SUM(CASE
+                    WHEN p.valoare_contract > 0 THEN p.valoare_contract
+                    ELSE COALESCE((SELECT SUM(o.total_cu_tva) FROM oferte o WHERE (o.proiect_id = p.id OR (o.client_id = p.client_id AND o.proiect_id IS NULL)) AND o.status='Acceptata' AND o.archived_at IS NULL), 0)
+                END), 0) AS valoare_castigata_proiecte
+                FROM proiecte p WHERE p.status NOT IN ('Anulat')";
+            $rowA = $db->query($sqlA)->fetch() ?: [];
+
+            // ─── Conversion rate ─────────────────────────────────────
+            $accCount = intval($rowO['acceptate_total_count'] ?? 0);
+            $refCount = intval($rowO['refuzate_count'] ?? 0);
+            $expCount = intval($rowO['expirate_count'] ?? 0);
+            $totalDecis = $accCount + $refCount + $expCount;
+            $conversion = $totalDecis > 0 ? round(($accCount / $totalDecis) * 100) : 0;
 
             jsonResponse(['success' => true, 'data' => [
                 'rezumat' => [
-                    'proiecteActive'   => intval($rowP['proiecte_active'] ?? 0),
-                    'pipelineOferte'   => floatval($rowO['pipeline_oferte'] ?? 0),
-                    'contracteSemnate' => floatval($rowP['contracte_semnate'] ?? 0),
-                    'oferteTrimise'    => intval($rowO['oferte_trimise'] ?? 0),
-                    'oferteAcceptate'  => intval($rowO['oferte_acceptate'] ?? 0),
-                    'laProiectare'     => intval($rowP['la_proiectare'] ?? 0),
-                    'inExecutie'       => intval($rowP['in_executie'] ?? 0),
+                    'proiecteActive'         => intval($rowP['proiecte_active'] ?? 0),
+                    'valoareCastigata'       => floatval($rowA['valoare_castigata_proiecte'] ?? 0),
+                    'oferteInAsteptare'      => intval($rowO['oferte_in_asteptare_count'] ?? 0),
+                    'pipelineValoare'        => floatval($rowO['oferte_in_asteptare_valoare'] ?? 0),
+                    'castigatLuna'           => floatval($rowO['acceptate_luna_valoare'] ?? 0),
+                    'castigatLunaCount'      => intval($rowO['acceptate_luna_count'] ?? 0),
+                    'conversionRate'         => $conversion,
+                    'oferteAcceptateTotal'   => $accCount,
+                    'expirate'               => $expCount,
+                    'inExecutie'             => intval($rowP['in_executie'] ?? 0),
+                    'laProiectare'           => intval($rowP['la_proiectare'] ?? 0),
+                    'oferteTotal'            => intval($rowO['oferte_total'] ?? 0),
+                    // Compatibilitate cu UI vechi (nu sparge dacă cineva folosește încă)
+                    'pipelineOferte'         => floatval($rowO['oferte_in_asteptare_valoare'] ?? 0),
+                    'contracteSemnate'       => floatval($rowP['contracte_semnate'] ?? 0),
+                    'oferteTrimise'          => intval($rowO['oferte_in_asteptare_count'] ?? 0),
+                    'oferteAcceptate'        => $accCount,
                 ],
                 'board' => [
                     'lead'        => intval($rowP['b_lead'] ?? 0),

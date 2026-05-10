@@ -76,6 +76,7 @@ a{text-decoration:none;color:inherit;}button{font-family:inherit;cursor:pointer;
 .kpi-change{font-size:10px;font-weight:700;padding:2px 6px;border-radius:4px;}
 .kpi-value{font-size:26px;font-weight:900;color:var(--dark);line-height:1;letter-spacing:-1px;}
 .kpi-label{font-size:11px;color:var(--gray);font-weight:500;margin-top:3px;}
+.kpi-sub{font-size:10px;color:var(--gray-l);font-weight:500;margin-top:2px;}
 .kpi-bar{position:absolute;bottom:0;left:0;right:0;height:3px;}
 
 /* Section */
@@ -653,8 +654,9 @@ function renderKPI(){
     // Render De Făcut section
     renderDeFacut();
 }
-function kpiCard(icon,bg,val,label,color){
-    return '<div class="kpi"><div class="kpi-top"><div class="kpi-icon" style="background:'+bg+'">'+icon+'</div></div><div class="kpi-value">'+val+'</div><div class="kpi-label">'+label+'</div><div class="kpi-bar" style="background:'+color+'"></div></div>';
+function kpiCard(icon,bg,val,label,color,sub){
+    var subHtml = sub ? '<div class="kpi-sub">'+sub+'</div>' : '';
+    return '<div class="kpi"><div class="kpi-top"><div class="kpi-icon" style="background:'+bg+'">'+icon+'</div></div><div class="kpi-value" style="color:'+color+'">'+val+'</div><div class="kpi-label">'+label+'</div>'+subHtml+'<div class="kpi-bar" style="background:'+color+'"></div></div>';
 }
 
 // ═══════ QUICK STATS ═══════
@@ -954,13 +956,18 @@ function loadDashboardStats(){
 }
 function renderKPIFromStats(s){
     var html='';
+    var castigatLunaSub = (s.castigatLunaCount||0) + ' oferte luna asta';
+    var pipelineSub = (s.oferteInAsteptare||0) + ' oferte de urmărit';
+    var convCls = (s.conversionRate||0) >= 50 ? 'var(--green)' : (s.conversionRate||0) >= 25 ? 'var(--orange)' : 'var(--red)';
+    var expCls = (s.expirate||0) > 0 ? 'var(--red)' : 'var(--gray)';
     html+=kpiCard('📋','#eff6ff',s.proiecteActive||0,'Proiecte active','var(--blue)');
-    html+=kpiCard('💰','#fff7ed',fmtRON(s.pipelineOferte||0),'Pipeline oferte','var(--orange)');
-    html+=kpiCard('✅','#f0fdf4',fmtRON(s.contracteSemnate||0),'Contracte semnate','var(--green)');
-    html+=kpiCard('📄','#f5f3ff',s.oferteTrimise||0,'Oferte trimise','var(--purple)');
-    html+=kpiCard('🎯','#f0fdf4',s.oferteAcceptate||0,'Oferte acceptate','var(--green)');
-    html+=kpiCard('📐','#f0fdfa',s.laProiectare||0,'La proiectare','var(--teal)');
+    html+=kpiCard('💎','#f0fdf4',fmtRON(s.valoareCastigata||0),'Valoare câștigată activă','var(--green)','contracte + acceptate');
+    html+=kpiCard('💰','#fff7ed',fmtRON(s.pipelineValoare||0),'Pipeline (în așteptare)','var(--orange)',pipelineSub);
+    html+=kpiCard('🤝','#f0fdf4',fmtRON(s.castigatLuna||0),'Câștigat luna asta','var(--green)',castigatLunaSub);
+    html+=kpiCard('🎯','#f0fdf4',(s.conversionRate||0)+'%','Rată conversie',convCls,(s.oferteAcceptateTotal||0)+' acceptate total');
     html+=kpiCard('🔧','#fff7ed',s.inExecutie||0,'În execuție','var(--orange)');
+    html+=kpiCard('📐','#f0fdfa',s.laProiectare||0,'La proiectare','var(--teal)');
+    html+=kpiCard('⏱️','#fef2f2',s.expirate||0,'Oferte expirate',expCls,(s.expirate||0)>0?'necesită follow-up':'totul OK');
     var g=document.getElementById('kpiGrid');if(g)g.innerHTML=html;
 }
 function renderKanbanCounts(b){
