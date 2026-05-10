@@ -427,7 +427,67 @@ try {
             if ($search) { $sql .= " AND (client_nume LIKE ? OR proiect_id LIKE ? OR obiectiv LIKE ?)"; $s = "%$search%"; $params = array_merge($params, [$s,$s,$s]); }
             $stmt = $db->prepare($sql);
             $stmt->execute($params);
-            jsonResponse(['success' => true, 'data' => $stmt->fetchAll()]);
+            $rows = $stmt->fetchAll();
+
+            // Imbogatim cu valori agregate din oferte (pentru proiectele fara valoare_contract setata)
+            // Strategie: pentru fiecare proiect, calculam:
+            //   - valoare_oferte_acceptate = SUM(total_cu_tva) WHERE proiect_id sau client_id match si status='Acceptata'
+            //   - valoare_oferte_pipeline  = SUM(total_cu_tva) WHERE match si status IN ('Trimisa','In_discutie')
+            //   - valoare_oferte_max       = max valoare unica (cea mai recenta) — pentru Lead/Oferta
+            // Folosim 1 query agregat pe toate proiectele deodata pentru performanta
+            if (!empty($rows)) {
+                $clientIds = array_unique(array_filter(array_map(function($r){ return $r['client_db_id'] ?? null; }, $rows)));
+                $proiectIds = array_unique(array_filter(array_map(function($r){ return $r['id'] ?? null; }, $rows)));
+                $ofData = ['by_proiect' => [], 'by_client' => []];
+                if ($proiectIds) {
+                    $ph = implode(',', array_fill(0, count($proiectIds), '?'));
+                    $stmtO = $db->prepare("SELECT proiect_id, status, total_cu_tva FROM oferte WHERE proiect_id IN ($ph)");
+                    $stmtO->execute($proiectIds);
+                    foreach ($stmtO->fetchAll() as $o) {
+                        $pid = $o['proiect_id'];
+                        if (!isset($ofData['by_proiect'][$pid])) $ofData['by_proiect'][$pid] = ['acc'=>0,'pip'=>0,'max'=>0];
+                        $val = floatval($o['total_cu_tva']);
+                        if ($o['status'] === 'Acceptata') $ofData['by_proiect'][$pid]['acc'] += $val;
+                        elseif (in_array($o['status'], ['Trimisa','In_discutie'], true)) $ofData['by_proiect'][$pid]['pip'] += $val;
+                        if ($val > $ofData['by_proiect'][$pid]['max']) $ofData['by_proiect'][$pid]['max'] = $val;
+                    }
+                }
+                if ($clientIds) {
+                    $ph = implode(',', array_fill(0, count($clientIds), '?'));
+                    $stmtO = $db->prepare("SELECT client_id, status, total_cu_tva FROM oferte WHERE client_id IN ($ph) AND proiect_id IS NULL");
+                    $stmtO->execute($clientIds);
+                    foreach ($stmtO->fetchAll() as $o) {
+                        $cid = $o['client_id'];
+                        if (!isset($ofData['by_client'][$cid])) $ofData['by_client'][$cid] = ['acc'=>0,'pip'=>0,'max'=>0];
+                        $val = floatval($o['total_cu_tva']);
+                        if ($o['status'] === 'Acceptata') $ofData['by_client'][$cid]['acc'] += $val;
+                        elseif (in_array($o['status'], ['Trimisa','In_discutie'], true)) $ofData['by_client'][$cid]['pip'] += $val;
+                        if ($val > $ofData['by_client'][$cid]['max']) $ofData['by_client'][$cid]['max'] = $val;
+                    }
+                }
+                // Atasam pe fiecare rand
+                foreach ($rows as &$r) {
+                    $bp = $ofData['by_proiect'][$r['id']] ?? ['acc'=>0,'pip'=>0,'max'=>0];
+                    $bc = $ofData['by_client'][$r['client_db_id']] ?? ['acc'=>0,'pip'=>0,'max'=>0];
+                    $r['valoare_oferte_acceptate'] = $bp['acc'] + $bc['acc'];
+                    $r['valoare_oferte_pipeline']  = $bp['pip'] + $bc['pip'];
+                    $r['valoare_oferta_max']       = max($bp['max'], $bc['max']);
+                    // valoare_calc = "cea mai relevanta" — folosita de UI:
+                    //   contract semnat? -> valoare_contract
+                    //   altfel acceptate? -> oferte acceptate
+                    //   altfel pipeline?  -> oferte pipeline
+                    //   altfel max ofera (Lead/Draft) sau valoare_estimata
+                    $vc = floatval($r['valoare_contract'] ?? 0);
+                    $ve = floatval($r['valoare_estimata'] ?? 0);
+                    if ($vc > 0)                          $r['valoare_calc'] = $vc;
+                    elseif ($r['valoare_oferte_acceptate'] > 0) $r['valoare_calc'] = $r['valoare_oferte_acceptate'];
+                    elseif ($r['valoare_oferte_pipeline'] > 0)  $r['valoare_calc'] = $r['valoare_oferte_pipeline'];
+                    elseif ($r['valoare_oferta_max'] > 0)       $r['valoare_calc'] = $r['valoare_oferta_max'];
+                    else                                        $r['valoare_calc'] = $ve;
+                }
+                unset($r);
+            }
+            jsonResponse(['success' => true, 'data' => $rows]);
             break;
 
         case 'getProiect':

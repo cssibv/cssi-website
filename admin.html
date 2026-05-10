@@ -93,6 +93,8 @@ a{text-decoration:none;color:inherit;}button{font-family:inherit;cursor:pointer;
 .kcol-head.lead{border-color:var(--blue);background:#eff6ff;}.kcol-head.oferta{border-color:var(--purple);background:#f5f3ff;}.kcol-head.contract{border-color:var(--green);background:#f0fdf4;}.kcol-head.proiectare{border-color:var(--teal);background:#f0fdfa;}.kcol-head.executie{border-color:var(--orange);background:#fff7ed;}.kcol-head.receptie{border-color:var(--yellow);background:#fefce8;}.kcol-head.facturat{border-color:var(--pink);background:#fdf2f8;}.kcol-head.mentenanta{border-color:var(--gray);background:var(--gray-bg);}
 .kcol-name{font-size:10px;font-weight:700;color:var(--dark);text-transform:uppercase;letter-spacing:0.5px;}
 .kcol-count{font-size:10px;font-weight:700;width:20px;height:20px;border-radius:6px;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,0.06);color:var(--gray);}
+.kcol-suma{padding:6px 12px;font-size:11px;font-weight:800;color:var(--green);border-bottom:1px solid var(--gray-b);background:#f0fdf4;letter-spacing:0.3px;font-variant-numeric:tabular-nums;}
+.kcol-suma:before{content:'∑ ';opacity:0.6;}
 .kcol-body{padding:6px;min-height:80px;max-height:600px;overflow-y:auto;overscroll-behavior:contain;display:flex;flex-direction:column;gap:6px;}
 .kcol-body::-webkit-scrollbar{width:6px;}
 .kcol-body::-webkit-scrollbar-thumb{background:var(--gray-b);border-radius:3px;}
@@ -719,10 +721,13 @@ function renderDeFacut(){
 function renderKanban(){
     var b=document.getElementById('kanbanBoard');b.innerHTML='';
     var sm={"Lead":"lead","Ofertă":"oferta","Contract":"contract","Proiectare":"proiectare","Execuție":"executie","Recepție":"receptie","Facturat":"facturat","Mentenanță":"mentenanta"};
+    var SRC_INFO={contract:{ic:'✅',lbl:'contract'},acceptata:{ic:'🤝',lbl:'oferte acceptate'},pipeline:{ic:'📤',lbl:'oferte trimise'},oferta:{ic:'📝',lbl:'cea mai mare ofertă'},estimata:{ic:'~',lbl:'estimat'}};
     STATUSES.forEach(function(st){
         var prj=PROJECTS.filter(function(p){return sm[p.status]===st.id});
+        var sumaCol=prj.reduce(function(s,p){return s+(p.valoare||0);},0);
         var col=document.createElement('div');col.className='kanban-col';
-        col.innerHTML='<div class="kcol-head '+st.cls+'"><span class="kcol-name">'+st.icon+' '+st.name+'</span><span class="kcol-count">'+prj.length+'</span></div>';
+        var sumaHtml=sumaCol>0?'<div class="kcol-suma">'+fmtRONShort(sumaCol)+'</div>':'';
+        col.innerHTML='<div class="kcol-head '+st.cls+'"><span class="kcol-name">'+st.icon+' '+st.name+'</span><span class="kcol-count">'+prj.length+'</span></div>'+sumaHtml;
         var body=document.createElement('div');body.className='kcol-body';
         if(!prj.length){body.innerHTML='<div class="kanban-empty">—</div>'}
         else{prj.forEach(function(p){
@@ -734,12 +739,18 @@ function renderKanban(){
                 if(p.preluat_de){preluatHtml='<div class="preluat-badge verde">✅ Preluat: '+p.preluat_de+'</div>';}
                 else{preluatHtml='<div class="preluat-badge rosu">⚠️ Nepreluat</div><button class="preluat-badge" style="background:var(--blue);color:#fff;border:none;cursor:pointer;margin-left:4px" onclick="event.stopPropagation();preiaProiect(\''+p.id+'\')">🤚 Preia</button>';}
             }
-            c.innerHTML='<div class="kcard-id">'+p.id+'</div><div class="kcard-title">'+p.client+'</div><div class="kcard-meta"><span class="kcard-tag '+t.cls+'">'+t.s+'</span><span>📍 '+p.loc+'</span></div><div class="kcard-val">'+p.valoare.toLocaleString('ro-RO')+' RON</div>'+preluatHtml;
+            // Valoare cu indicator sursă (contract / oferte / estimat)
+            var srcInfo=SRC_INFO[p.valoareSursa]||SRC_INFO.estimata;
+            var valHtml=p.valoare>0
+                ? '<div class="kcard-val" title="Sursă: '+srcInfo.lbl+'">'+srcInfo.ic+' '+p.valoare.toLocaleString('ro-RO')+' RON</div>'
+                : '<div class="kcard-val" style="color:var(--gray-l);font-weight:500">— fără valoare —</div>';
+            c.innerHTML='<div class="kcard-id">'+p.id+'</div><div class="kcard-title">'+p.client+'</div><div class="kcard-meta"><span class="kcard-tag '+t.cls+'">'+t.s+'</span><span>📍 '+p.loc+'</span></div>'+valHtml+preluatHtml;
             body.appendChild(c);
         })}
         col.appendChild(body);b.appendChild(col);
     });
 }
+function fmtRONShort(n){var v=Number(n||0);if(v>=1e6)return (v/1e6).toFixed(1)+'M';if(v>=1e3)return Math.round(v/1e3)+'k';return v.toFixed(0);}
 
 // ═══════ ACTIVITATE RECENTA (din MySQL) ═══════
 function renderAlerts(){
@@ -854,8 +865,10 @@ function loadProjectsFromDB(){
                     client:p.client_nume||'',
                     serviciu:SERV_DB_TO_UI[p.serviciu]||p.serviciu||'',
                     status:STAT_DB_TO_UI[p.status]||p.status||'Lead',
-                    valoare:parseFloat(p.valoare_estimata)||0,
+                    valoare:parseFloat(p.valoare_calc||p.valoare_contract||p.valoare_estimata)||0,
                     valoareContract:parseFloat(p.valoare_contract)||0,
+                    valoareOferte:parseFloat(p.valoare_oferte_acceptate||0)+parseFloat(p.valoare_oferte_pipeline||0),
+                    valoareSursa:p.valoare_contract>0?'contract':(p.valoare_oferte_acceptate>0?'acceptata':(p.valoare_oferte_pipeline>0?'pipeline':(p.valoare_oferta_max>0?'oferta':'estimata'))),
                     loc:p.oras||p.adresa_obiectiv||'Brașov',
                     obiectiv:p.obiectiv||'',
                     note:p.note||'',
