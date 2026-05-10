@@ -462,7 +462,8 @@ var ROLES={
 var STATUSES=[
     {id:"lead",name:"Lead",icon:"📞",cls:"lead"},{id:"oferta",name:"Ofertă",icon:"📋",cls:"oferta"},
     {id:"contract",name:"Contract",icon:"✅",cls:"contract"},{id:"proiectare",name:"Proiectare",icon:"📐",cls:"proiectare"},
-    {id:"executie",name:"Execuție",icon:"🔧",cls:"executie"},{id:"receptie",name:"Recepție",icon:"📸",cls:"receptie"},
+    {id:"executie",name:"Execuție",icon:"🔧",cls:"executie"},{id:"interventie",name:"Intervenție",icon:"⚡",cls:"executie"},
+    {id:"receptie",name:"Recepție",icon:"📸",cls:"receptie"},
     {id:"facturat",name:"Facturat",icon:"💳",cls:"facturat"},{id:"mentenanta",name:"Mentenanță",icon:"🔄",cls:"mentenanta"}
 ];
 var SERVICE_TAGS={"Detecție Incendiu":{cls:"incendiu",s:"Incendiu"},"Alarmă Antiefracție":{cls:"alarm",s:"Alarmă"},"Supraveghere Video":{cls:"camera",s:"Camere"},"Instalații Electrice":{cls:"electric",s:"Electric"},"Instalații Sanitare":{cls:"install",s:"Sanitare"},"Automatizări Porți":{cls:"auto",s:"Porți"},"Proiect Complex":{cls:"incendiu",s:"Complex"}};
@@ -491,8 +492,8 @@ var API_DB='/admin/api.php';
 // Mapping UI (diacritice) → DB (ENUM fără diacritice)
 var SERV_UI_TO_DB={"Detecție Incendiu":"Detectie Incendiu","Alarmă Antiefracție":"Alarma","Supraveghere Video":"Supraveghere Video","Instalații Electrice":"Electric","Instalații Sanitare":"Electric","Automatizări Porți":"Automatizari","Proiect Complex":"Complex","Control Acces":"Control Acces","Rețelistică":"Retelistică"};
 var SERV_DB_TO_UI={"Detectie Incendiu":"Detecție Incendiu","Alarma":"Alarmă Antiefracție","Supraveghere Video":"Supraveghere Video","Electric":"Instalații Electrice","Automatizari":"Automatizări Porți","Complex":"Proiect Complex","Control Acces":"Control Acces","Retelistică":"Rețelistică"};
-var STAT_UI_TO_DB={"Lead":"Lead","Ofertă":"Oferta","Contract":"Contract","Proiectare":"Proiectare","Execuție":"Executie","Recepție":"Receptie","Facturat":"Facturat","Mentenanță":"Mentenanta","Finalizat":"Finalizat","Anulat":"Anulat"};
-var STAT_DB_TO_UI={"Lead":"Lead","Oferta":"Ofertă","Contract":"Contract","Proiectare":"Proiectare","Executie":"Execuție","Receptie":"Recepție","Facturat":"Facturat","Mentenanta":"Mentenanță","Finalizat":"Finalizat","Anulat":"Anulat"};
+var STAT_UI_TO_DB={"Lead":"Lead","Ofertă":"Oferta","Contract":"Contract","Proiectare":"Proiectare","Execuție":"Executie","Intervenție":"Interventie","Recepție":"Receptie","Facturat":"Facturat","Mentenanță":"Mentenanta","Finalizat":"Finalizat","Anulat":"Anulat"};
+var STAT_DB_TO_UI={"Lead":"Lead","Oferta":"Ofertă","Contract":"Contract","Proiectare":"Proiectare","Executie":"Execuție","Interventie":"Intervenție","Receptie":"Recepție","Facturat":"Facturat","Mentenanta":"Mentenanță","Finalizat":"Finalizat","Anulat":"Anulat"};
 
 // ═══════ MODULES — favorite + categorii (DECLARATE ÎNAINTE de orice cod care le folosește) ═══════
 var FAVORITES=['proiecte','crm','calculator'];
@@ -722,7 +723,7 @@ function renderDeFacut(){
 // ═══════ KANBAN ═══════
 function renderKanban(){
     var b=document.getElementById('kanbanBoard');b.innerHTML='';
-    var sm={"Lead":"lead","Ofertă":"oferta","Contract":"contract","Proiectare":"proiectare","Execuție":"executie","Recepție":"receptie","Facturat":"facturat","Mentenanță":"mentenanta"};
+    var sm={"Lead":"lead","Ofertă":"oferta","Contract":"contract","Proiectare":"proiectare","Execuție":"executie","Intervenție":"interventie","Recepție":"receptie","Facturat":"facturat","Mentenanță":"mentenanta"};
     var SRC_INFO={contract:{ic:'✅',lbl:'contract'},acceptata:{ic:'🤝',lbl:'oferte acceptate'},pipeline:{ic:'📤',lbl:'oferte trimise'},oferta:{ic:'📝',lbl:'cea mai mare ofertă'},estimata:{ic:'~',lbl:'estimat'}};
     STATUSES.forEach(function(st){
         var prj=PROJECTS.filter(function(p){return sm[p.status]===st.id});

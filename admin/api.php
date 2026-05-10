@@ -64,6 +64,23 @@ function autoExpireOferte($db) {
     } catch (Exception $e) { /* silent */ }
 }
 
+// Schema proiecte: extinde ENUM status cu 'Interventie' (idempotent)
+function ensureProiecteSchema($db) {
+    static $checked = false;
+    if ($checked) return;
+    $checked = true;
+    try {
+        // Vedem ENUM-ul curent al coloanei status
+        $row = $db->query("SHOW COLUMNS FROM proiecte LIKE 'status'")->fetch();
+        if ($row && stripos($row['Type'], "'Interventie'") === false) {
+            // Construim noul ENUM = vechiul + Interventie inainte de Anulat
+            $db->exec("ALTER TABLE proiecte MODIFY status ENUM('Lead','Oferta','Contract','Proiectare','Executie','Receptie','Facturat','Mentenanta','Interventie','Anulat') NOT NULL DEFAULT 'Lead'");
+        }
+    } catch (Exception $e) {
+        error_log('ensureProiecteSchema FAILED: ' . $e->getMessage());
+    }
+}
+
 // Calculează expires_at din data_oferta + valabilitate ("4 zile", "30 zile" etc)
 function calcExpiresAt($dataOferta, $valab) {
     if (!$dataOferta) return null;
@@ -526,6 +543,76 @@ try {
             }
             
             jsonResponse(['success' => true, 'id' => $db->lastInsertId(), 'proiect_id' => $proiectId]);
+            break;
+
+        // Lucrare rapida / Interventie — creeaza atomic: client (daca e nou) +
+        // proiect cu status='Interventie' + programare + atribuiri tehnicieni
+        case 'createInterventie':
+            ensureProiecteSchema($db);
+            $clientId   = isset($data['client_id']) ? intval($data['client_id']) : 0;
+            $clientNume = isset($data['client_nume']) ? trim($data['client_nume']) : '';
+            $titlu      = isset($data['titlu']) ? trim($data['titlu']) : '';
+            $adresa     = isset($data['adresa']) ? trim($data['adresa']) : '';
+            $dataPrg    = isset($data['data']) ? $data['data'] : date('Y-m-d');
+            $oraStart   = isset($data['ora_start']) ? $data['ora_start'] : '08:00';
+            $durata     = isset($data['durata_ore']) ? floatval($data['durata_ore']) : 4;
+            $tehnicieni = isset($data['tehnicieni']) && is_array($data['tehnicieni']) ? $data['tehnicieni'] : [];
+            $note       = isset($data['note']) ? trim($data['note']) : '';
+            $telefon    = isset($data['telefon']) ? trim($data['telefon']) : '';
+            $serviciu   = isset($data['serviciu']) ? $data['serviciu'] : 'Supraveghere Video';
+            $user       = isset($data['user']) ? $data['user'] : 'Admin';
+
+            if (!$titlu)              jsonResponse(['success' => false, 'error' => 'Titlu obligatoriu'], 400);
+            if (!$clientId && !$clientNume) jsonResponse(['success' => false, 'error' => 'Client obligatoriu (existent sau nume nou)'], 400);
+
+            $db->beginTransaction();
+            try {
+                // 1. Creeaza client daca e ad-hoc
+                if (!$clientId) {
+                    $year = date('Y');
+                    $newCid = nextId('client_seq', "CLI-", 4);
+                    $stmtC = $db->prepare("INSERT INTO clienti (client_id, nume, telefon, oras, tip, note) VALUES (?,?,?,?,?,?)");
+                    $stmtC->execute([$newCid, $clientNume, $telefon, '', 'Persoana fizica', 'Client creat din lucrare rapida']);
+                    $clientId = $db->lastInsertId();
+                }
+                // 2. Creeaza proiect cu status Interventie
+                $proiectIdCod = nextId('proiect_seq', "CSSI-" . date('Y') . "-", 4);
+                $istoric = json_encode([['status' => 'Interventie', 'data' => date('Y-m-d H:i:s'), 'user' => $user, 'nota' => 'Lucrare rapida']]);
+                $db->prepare("INSERT INTO proiecte (proiect_id, client_id, serviciu, obiectiv, status, valoare_estimata, responsabil, adresa_obiectiv, note, istoric_status, preluat_de) VALUES (?,?,?,?,?,?,?,?,?,?,?)")
+                   ->execute([$proiectIdCod, $clientId, $serviciu, $titlu, 'Interventie', 0, $user, $adresa, $note, $istoric, $user]);
+                $proiectIdDb = $db->lastInsertId();
+                // Creare directoare uploads
+                $projDir = PROIECTE_DIR . $proiectIdCod . '/';
+                foreach (['executie','receptie','facturi'] as $sub) { @mkdir($projDir . $sub, 0755, true); }
+                // 3. Creeaza programare in executie_programari (acelasi tabel folosit
+                //    de saveProgramare din planificare/executie pages)
+                // Asigur tabela exista (idempotent — la fel ca saveProgramare)
+                $db->exec("CREATE TABLE IF NOT EXISTS executie_programari (
+                    id INT PRIMARY KEY AUTO_INCREMENT, proiect_id INT NOT NULL,
+                    data_programata DATE NOT NULL, ora_start TIME DEFAULT '08:00:00',
+                    durata_ore DECIMAL(4,1) DEFAULT 8, status VARCHAR(20) DEFAULT 'Programat',
+                    obiectiv TEXT, note TEXT, created_by VARCHAR(60),
+                    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+                    KEY idx_data (data_programata), KEY idx_proiect (proiect_id), KEY idx_status (status)
+                ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4");
+                $db->exec("CREATE TABLE IF NOT EXISTS executie_atribuiri (
+                    programare_id INT NOT NULL, user_id VARCHAR(60) NOT NULL,
+                    PRIMARY KEY (programare_id, user_id), KEY idx_user (user_id)
+                ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4");
+                $stmtP = $db->prepare("INSERT INTO executie_programari (proiect_id, data_programata, ora_start, durata_ore, status, obiectiv, note, created_by) VALUES (?,?,?,?,?,?,?,?)");
+                $stmtP->execute([$proiectIdDb, $dataPrg, $oraStart . ':00', $durata, 'Programat', $titlu, $note, $user]);
+                $prgId = $db->lastInsertId();
+                // 4. Atribuiri tehnicieni
+                if ($tehnicieni) {
+                    $stmtA = $db->prepare("INSERT INTO executie_atribuiri (programare_id, user_id) VALUES (?,?)");
+                    foreach ($tehnicieni as $t) { if (trim($t) !== '') $stmtA->execute([$prgId, trim($t)]); }
+                }
+                $db->commit();
+                jsonResponse(['success' => true, 'proiect_id' => $proiectIdCod, 'proiect_db_id' => $proiectIdDb, 'programare_id' => $prgId, 'client_id' => $clientId]);
+            } catch (Exception $e) {
+                $db->rollBack();
+                jsonResponse(['success' => false, 'error' => $e->getMessage()], 500);
+            }
             break;
 
         case 'deleteProiect':
@@ -1373,7 +1460,7 @@ try {
                             c.telefon AS client_telefon
                      FROM proiecte p
                      INNER JOIN clienti c ON p.client_id = c.id
-                     WHERE p.status IN ('Executie','Receptie')
+                     WHERE p.status IN ('Executie','Receptie','Interventie')
                      ORDER BY c.nume, p.proiect_id";
             $proiecte = $db->query($sqlP)->fetchAll();
 
@@ -2161,15 +2248,16 @@ try {
 
             // ─── Counts pe proiecte ────────────────────────────────────
             $sqlP = "SELECT
-                SUM(CASE WHEN status IN ('Lead','Oferta','Contract','Proiectare','Executie','Receptie') THEN 1 ELSE 0 END) AS proiecte_active,
+                SUM(CASE WHEN status IN ('Lead','Oferta','Contract','Proiectare','Executie','Receptie','Interventie') THEN 1 ELSE 0 END) AS proiecte_active,
                 COALESCE(SUM(CASE WHEN status NOT IN ('Anulat') THEN valoare_contract ELSE 0 END), 0) AS contracte_semnate,
                 SUM(CASE WHEN status='Proiectare' THEN 1 ELSE 0 END) AS la_proiectare,
-                SUM(CASE WHEN status='Executie' THEN 1 ELSE 0 END) AS in_executie,
+                SUM(CASE WHEN status IN ('Executie','Interventie') THEN 1 ELSE 0 END) AS in_executie,
                 SUM(CASE WHEN status='Lead' THEN 1 ELSE 0 END) AS b_lead,
                 SUM(CASE WHEN status='Oferta' THEN 1 ELSE 0 END) AS b_oferta,
                 SUM(CASE WHEN status='Contract' THEN 1 ELSE 0 END) AS b_contract,
                 SUM(CASE WHEN status='Proiectare' THEN 1 ELSE 0 END) AS b_proiectare,
                 SUM(CASE WHEN status='Executie' THEN 1 ELSE 0 END) AS b_executie,
+                SUM(CASE WHEN status='Interventie' THEN 1 ELSE 0 END) AS b_interventie,
                 SUM(CASE WHEN status='Receptie' THEN 1 ELSE 0 END) AS b_receptie,
                 SUM(CASE WHEN status='Facturat' THEN 1 ELSE 0 END) AS b_facturat,
                 SUM(CASE WHEN status='Mentenanta' THEN 1 ELSE 0 END) AS b_mentenanta
@@ -2237,6 +2325,7 @@ try {
                     'contract'    => intval($rowP['b_contract'] ?? 0),
                     'proiectare'  => intval($rowP['b_proiectare'] ?? 0),
                     'executie'    => intval($rowP['b_executie'] ?? 0),
+                    'interventie' => intval($rowP['b_interventie'] ?? 0),
                     'receptie'    => intval($rowP['b_receptie'] ?? 0),
                     'facturat'    => intval($rowP['b_facturat'] ?? 0),
                     'mentenanta'  => intval($rowP['b_mentenanta'] ?? 0),

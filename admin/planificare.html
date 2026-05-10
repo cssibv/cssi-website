@@ -217,6 +217,7 @@ tr:hover td{background:#f8fafc;}
             <button class="view-btn" id="vList" onclick="setView('list')">☰ Listă</button>
         </div>
         <div class="tb-spacer"></div>
+        <button class="add-btn" id="addInterventieBtn" onclick="openInterventieModal()" style="background:linear-gradient(135deg,#9333ea,#7c3aed);margin-right:6px" title="Programare rapidă, fără proiect formal (intervenții, lucrări mici, urgențe)">⚡ Lucrare rapidă</button>
         <button class="add-btn" id="addBtn" onclick="openNewPrg()">＋ Programare nouă</button>
     </div>
 
@@ -233,6 +234,84 @@ tr:hover td{background:#f8fafc;}
     <a href="planificare.html" class="bn-item active"><span class="bn-icon">📅</span>Plan</a>
     <a href="executie.html" class="bn-item"><span class="bn-icon">🔧</span>Execuție</a>
     <a href="financiar.html" class="bn-item"><span class="bn-icon">📄</span>Facturi</a>
+</div>
+
+<!-- MODAL: Lucrare rapidă (intervenție) -->
+<div id="interventieModal" class="modal-overlay" onclick="if(event.target===this)closeInterventieModal()">
+<div class="modal" style="max-width:600px">
+    <div class="modal-head">
+        <div class="modal-title">⚡ Lucrare rapidă (intervenție)</div>
+        <button class="modal-close" onclick="closeInterventieModal()">✕</button>
+    </div>
+    <div class="modal-body">
+        <div style="background:#faf5ff;border-left:3px solid #9333ea;padding:10px 14px;border-radius:8px;margin-bottom:14px;font-size:12px;color:#6b21a8;line-height:1.5">
+            Creezi atomic: client (dacă e nou) + proiect cu status <strong>Intervenție</strong> + programare. Apare în Execuție și are jurnal/PV/poze ca proiectele normale, dar fără pipeline ofertă.
+        </div>
+        <form id="interventieForm" onsubmit="submitInterventie(event)">
+            <div class="form-group">
+                <label class="form-label">Client</label>
+                <div style="display:flex;gap:6px;margin-bottom:6px">
+                    <button type="button" class="seg-btn active" id="segCliExist" onclick="setCliMode('exist')" style="flex:1;padding:8px;border-radius:8px;border:1.5px solid var(--gray-b);background:#fff;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit">📒 Client existent</button>
+                    <button type="button" class="seg-btn" id="segCliNou" onclick="setCliMode('nou')" style="flex:1;padding:8px;border-radius:8px;border:1.5px solid var(--gray-b);background:#fff;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit">➕ Client nou</button>
+                </div>
+                <div id="cliExistBlock">
+                    <select class="form-select" id="iClientId">
+                        <option value="">— Alege client —</option>
+                    </select>
+                </div>
+                <div id="cliNouBlock" style="display:none">
+                    <input type="text" class="form-input" id="iClientNume" placeholder="Nume client / firmă" style="margin-bottom:6px">
+                    <input type="tel" class="form-input" id="iTelefon" placeholder="Telefon (opțional)">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="form-label">Titlu lucrare <span class="req">*</span></label>
+                <input type="text" class="form-input" id="iTitlu" required placeholder="Ex: Reparație centrală alarmă, montaj cameră suplimentară">
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label class="form-label">Tip serviciu</label>
+                    <select class="form-select" id="iServiciu">
+                        <option value="Supraveghere Video">📹 Supraveghere Video</option>
+                        <option value="Alarma">🔔 Alarmă</option>
+                        <option value="Detectie Incendiu">🔥 Incendiu</option>
+                        <option value="Electric">⚡ Electric</option>
+                        <option value="Control Acces">🔑 Control Acces</option>
+                        <option value="Automatizari">🚪 Automatizări</option>
+                        <option value="Complex">🛠️ Intervenție generală</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Adresă lucrare</label>
+                    <input type="text" class="form-input" id="iAdresa" placeholder="Str. ..., nr. ..., oraș">
+                </div>
+            </div>
+            <div class="form-row-3">
+                <div class="form-group">
+                    <label class="form-label">Data <span class="req">*</span></label>
+                    <input type="date" class="form-input" id="iData" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Ora start</label>
+                    <input type="time" class="form-input" id="iOra" value="09:00">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Durata (h)</label>
+                    <input type="number" class="form-input" id="iDurata" value="2" min="0.5" step="0.5">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="form-label">Tehnicieni atribuiți</label>
+                <div class="tech-pick" id="iTehnicieni"></div>
+            </div>
+            <div class="form-group">
+                <label class="form-label">Note / instrucțiuni</label>
+                <textarea class="form-textarea" id="iNote" placeholder="Detalii pt. echipă: contact, materiale necesare, particularități..."></textarea>
+            </div>
+            <button type="submit" class="form-submit" id="iSubmitBtn" style="background:linear-gradient(135deg,#9333ea,#7c3aed)">⚡ Creează intervenția</button>
+        </form>
+    </div>
+</div>
 </div>
 
 <!-- MODAL programare -->
@@ -622,6 +701,108 @@ function savePrg(ev){
         }).catch(function(e){toast('❌ '+(e.message||e),'error');})
         .finally(function(){showLoading(false);});
 }
+// ═══ LUCRARE RAPIDA / INTERVENTIE ═══
+var _interventieClientiLoaded = false;
+function openInterventieModal(){
+    // Reset form
+    document.getElementById('iTitlu').value = '';
+    document.getElementById('iAdresa').value = '';
+    document.getElementById('iNote').value = '';
+    document.getElementById('iClientNume').value = '';
+    document.getElementById('iTelefon').value = '';
+    document.getElementById('iClientId').value = '';
+    document.getElementById('iData').value = new Date().toISOString().split('T')[0];
+    document.getElementById('iOra').value = '09:00';
+    document.getElementById('iDurata').value = 2;
+    setCliMode('exist');
+    // Render tehnicieni picker (pre-selectează tehnicianul curent dacă e tehnician)
+    var preselect = isTehnician ? [role] : [];
+    document.getElementById('iTehnicieni').innerHTML = TECHNICIANS.map(function(t){
+        var checked = preselect.indexOf(t.id) >= 0;
+        return '<label class="tech-chip'+(checked?' checked':'')+'"><input type="checkbox" value="'+t.id+'"'+(checked?' checked':'')+' onchange="this.parentElement.classList.toggle(\'checked\',this.checked)"><span class="av">'+t.name.charAt(0)+'</span>'+t.name+'</label>';
+    }).join('');
+    // Lazy-load lista de clienti la prima deschidere
+    if(!_interventieClientiLoaded){
+        document.getElementById('iClientId').innerHTML = '<option value="">⏳ Se încarcă...</option>';
+        fetch(API_DB+'?action=getClienti&_t='+Date.now(),{credentials:'include'})
+            .then(function(r){return r.json();})
+            .then(function(res){
+                var opts = '<option value="">— Alege client —</option>';
+                if(res.success && res.data){
+                    res.data.sort(function(a,b){return (a.nume||'').localeCompare(b.nume||'');});
+                    res.data.forEach(function(c){
+                        opts += '<option value="'+c.id+'">'+c.nume.replace(/</g,'&lt;')+(c.telefon?' · '+c.telefon:'')+'</option>';
+                    });
+                }
+                document.getElementById('iClientId').innerHTML = opts;
+                _interventieClientiLoaded = true;
+            }).catch(function(){
+                document.getElementById('iClientId').innerHTML = '<option value="">⚠️ Eroare încărcare</option>';
+            });
+    }
+    document.getElementById('interventieModal').classList.add('active');
+    setTimeout(function(){document.getElementById('iTitlu').focus();}, 150);
+}
+function closeInterventieModal(){
+    document.getElementById('interventieModal').classList.remove('active');
+}
+function setCliMode(mode){
+    var existB = document.getElementById('cliExistBlock');
+    var nouB   = document.getElementById('cliNouBlock');
+    var sE = document.getElementById('segCliExist');
+    var sN = document.getElementById('segCliNou');
+    if(mode === 'nou'){
+        existB.style.display = 'none'; nouB.style.display = 'block';
+        sN.style.borderColor = '#9333ea'; sN.style.background = '#faf5ff'; sN.style.color = '#6b21a8';
+        sE.style.borderColor = ''; sE.style.background = ''; sE.style.color = '';
+    } else {
+        existB.style.display = 'block'; nouB.style.display = 'none';
+        sE.style.borderColor = '#9333ea'; sE.style.background = '#faf5ff'; sE.style.color = '#6b21a8';
+        sN.style.borderColor = ''; sN.style.background = ''; sN.style.color = '';
+    }
+}
+function submitInterventie(ev){
+    ev.preventDefault();
+    var clientId = parseInt(document.getElementById('iClientId').value) || 0;
+    var clientNume = document.getElementById('iClientNume').value.trim();
+    var titlu = document.getElementById('iTitlu').value.trim();
+    if(!titlu){ toast('⚠️ Titlu obligatoriu','error'); return; }
+    if(!clientId && !clientNume){ toast('⚠️ Alege client existent sau introdu nume nou','error'); return; }
+    var atribuiri = [].slice.call(document.querySelectorAll('#iTehnicieni input:checked')).map(function(i){return i.value;});
+    var payload = {
+        action: 'createInterventie',
+        client_id: clientId || null,
+        client_nume: clientNume,
+        telefon: document.getElementById('iTelefon').value.trim(),
+        titlu: titlu,
+        serviciu: document.getElementById('iServiciu').value,
+        adresa: document.getElementById('iAdresa').value.trim(),
+        data: document.getElementById('iData').value,
+        ora_start: document.getElementById('iOra').value,
+        durata_ore: parseFloat(document.getElementById('iDurata').value) || 2,
+        tehnicieni: atribuiri,
+        note: document.getElementById('iNote').value.trim(),
+        user: userName
+    };
+    var btn = document.getElementById('iSubmitBtn');
+    var origTxt = btn.textContent;
+    btn.disabled = true; btn.textContent = '⏳ Se creează...';
+    fetch(API_DB+'?action=createInterventie',{method:'POST',credentials:'include',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)})
+        .then(function(r){return r.json();})
+        .then(function(res){
+            btn.disabled = false; btn.textContent = origTxt;
+            if(!res.success) throw new Error(res.error||'Eroare');
+            closeInterventieModal();
+            toast('⚡ Intervenție creată: '+res.proiect_id,'success');
+            _interventieClientiLoaded = false;  // re-fetch dacă userul a creat client nou
+            refreshData();
+        })
+        .catch(function(e){
+            btn.disabled = false; btn.textContent = origTxt;
+            toast('❌ '+(e.message||e),'error');
+        });
+}
+
 function deleteCurrentPrg(){
     var id = document.getElementById('fId').value;
     if(!id) return;
