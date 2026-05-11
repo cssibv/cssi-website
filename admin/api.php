@@ -109,6 +109,14 @@ function ensureContracteSchema($db) {
                 try { $db->exec("ALTER TABLE contracte $sql"); } catch (Exception $e) { error_log("contracte ALTER $col: " . $e->getMessage()); }
             }
         }
+        // Relax NOT NULL pe coloanele vechi care nu mai sunt obligatorii in noul flow
+        try { $db->exec("ALTER TABLE contracte MODIFY proiect_id INT NULL"); } catch (Exception $e) {}
+        try { $db->exec("ALTER TABLE contracte MODIFY contract_id VARCHAR(40) NULL"); } catch (Exception $e) {}
+        try { $db->exec("ALTER TABLE contracte MODIFY data_semnare DATE NULL"); } catch (Exception $e) {}
+        try { $db->exec("ALTER TABLE contracte MODIFY valoare DECIMAL(12,2) NULL"); } catch (Exception $e) {}
+        try { $db->exec("ALTER TABLE contracte MODIFY conditii_plata TEXT NULL"); } catch (Exception $e) {}
+        try { $db->exec("ALTER TABLE contracte MODIFY pdf_path VARCHAR(255) NULL"); } catch (Exception $e) {}
+        try { $db->exec("ALTER TABLE contracte MODIFY clauze TEXT NULL"); } catch (Exception $e) {}
         // Adaug index-uri (best-effort)
         try { $db->exec("ALTER TABLE contracte ADD INDEX idx_status (status)"); } catch (Exception $e) {}
         try { $db->exec("ALTER TABLE contracte ADD INDEX idx_token (token)"); } catch (Exception $e) {}
