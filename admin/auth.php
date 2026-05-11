@@ -64,7 +64,9 @@ function ensureUsersTable($db) {
 
 // Endpoint-uri care NU necesită autentificare
 function publicActions() {
-    return ['login', 'logout', 'me', 'ping'];
+    // getContractByToken + submitContractDate trebuie publice — clientul primeste
+    // link-ul cu token pe WhatsApp, fara cont in platforma
+    return ['login', 'logout', 'me', 'ping', 'getContractByToken', 'submitContractDate'];
 }
 
 // Returnează user-ul curent sau null

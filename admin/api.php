@@ -64,6 +64,66 @@ function autoExpireOferte($db) {
     } catch (Exception $e) { /* silent */ }
 }
 
+// Schema contracte: tabela noua + token unic + JSON pt date PF/PJ flexibile
+function ensureContracteSchema($db) {
+    static $checked = false;
+    if ($checked) return;
+    $checked = true;
+    try {
+        $db->exec("CREATE TABLE IF NOT EXISTS contracte (
+            id INT PRIMARY KEY AUTO_INCREMENT,
+            contract_nr VARCHAR(40) UNIQUE,
+            oferta_id INT NULL,
+            proiect_id INT NULL,
+            client_id INT NULL,
+            token VARCHAR(64) UNIQUE,
+            tip_client ENUM('PF','PJ') DEFAULT 'PF',
+            status ENUM('asteapta_date','completat','generat','semnat','anulat') DEFAULT 'asteapta_date',
+            date_completate JSON NULL,
+            adresa_instalare VARCHAR(500),
+            avans_procent DECIMAL(5,2) DEFAULT 35,
+            termen_plata_zile INT DEFAULT 15,
+            durata_executie_zile INT DEFAULT 20,
+            garantie_luni INT DEFAULT 24,
+            valoare_net DECIMAL(12,2) DEFAULT 0,
+            valoare_tva DECIMAL(12,2) DEFAULT 0,
+            valoare_total DECIMAL(12,2) DEFAULT 0,
+            note TEXT,
+            generat_doc_path VARCHAR(255),
+            generat_pdf_path VARCHAR(255),
+            created_by VARCHAR(60),
+            completat_la DATETIME NULL,
+            generat_la DATETIME NULL,
+            created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+            updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+            KEY idx_status (status),
+            KEY idx_token (token),
+            KEY idx_oferta (oferta_id),
+            KEY idx_client (client_id)
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4");
+    } catch (Exception $e) { error_log('ensureContracteSchema FAILED: ' . $e->getMessage()); }
+}
+
+// Genereaza token securizat 32 chars URL-safe
+function generateContractToken() {
+    return bin2hex(random_bytes(16)); // 32 hex chars
+}
+
+// Date PRESTATOR (fixe — pot fi mutate in setari mai tarziu)
+function prestatorData() {
+    return [
+        'denumire'   => 'BREAK SISTEMS SRL',
+        'sediu'      => 'Brasov, str. Bisericii Romane Nr. 42 Ap.2, judetul Brasov',
+        'reg_com'    => 'J200800843087',
+        'cif'        => 'RO 23576950',
+        'cont_iban'  => 'RO50 BTRL 0080 1202 U749 90XX',
+        'banca'      => 'Banca Transilvania Brasov',
+        'reprezentant' => 'Diaconu Mihai',
+        'email'      => 'office@breaksistems.ro',
+        'telefon'    => '',
+    ];
+}
+
 // Schema proiecte: extinde ENUM status cu 'Interventie' (idempotent)
 function ensureProiecteSchema($db) {
     static $checked = false;
@@ -1123,7 +1183,7 @@ try {
                     $stmtSum->execute([$pId, $oferta['client_id']]);
                     $sumRow = $stmtSum->fetch();
                     $totalContract = $sumRow ? $sumRow['total'] : $oferta['total_cu_tva'];
-                    
+
                     $db->prepare("UPDATE proiecte SET status = 'Contract', valoare_contract = ? WHERE id = ?")->execute([
                         $totalContract, $pId
                     ]);
@@ -1135,7 +1195,7 @@ try {
                         $istoric = json_decode($proj['istoric_status'] ?: '[]', true);
                         $istoric[] = ['status' => 'Contract', 'data' => date('Y-m-d H:i:s'), 'user' => $user, 'nota' => 'Ofertă acceptată'];
                         $db->prepare("UPDATE proiecte SET istoric_status = ? WHERE id = ?")->execute([json_encode($istoric), $pId]);
-                        
+
                         // Notificare
                         $db->prepare("INSERT INTO notificari (proiect_id, mesaj, tip, de_la, etapa_noua) VALUES (?,?,?,?,?)")->execute([
                             $proj['proiect_id'],
@@ -1144,6 +1204,51 @@ try {
                             $user,
                             'Contract'
                         ]);
+                    }
+                }
+                // ─── AUTO-CREARE DRAFT CONTRACT ────────────────────────────
+                // Daca nu exista deja contract pentru aceasta oferta, creez draft
+                ensureContracteSchema($db);
+                $chkC = $db->prepare("SELECT id FROM contracte WHERE oferta_id = ? LIMIT 1");
+                $chkC->execute([$id]);
+                if (!$chkC->fetch()) {
+                    $contractNr = 'C-' . date('Y') . '-' . str_pad($id, 4, '0', STR_PAD_LEFT);
+                    $token = generateContractToken();
+                    // Detect tip client din clienti.tip
+                    $tipClient = 'PF';
+                    if ($oferta['client_id']) {
+                        $stmtTC = $db->prepare("SELECT tip FROM clienti WHERE id = ?");
+                        $stmtTC->execute([$oferta['client_id']]);
+                        $tcRow = $stmtTC->fetch();
+                        if ($tcRow && stripos($tcRow['tip'] ?? '', 'jurid') !== false) $tipClient = 'PJ';
+                        elseif ($tcRow && stripos($tcRow['tip'] ?? '', 'firma') !== false) $tipClient = 'PJ';
+                    }
+                    // Iau valorile din oferta
+                    $stmtV = $db->prepare("SELECT total_fara_tva, tva, total_cu_tva FROM oferte WHERE id = ?");
+                    $stmtV->execute([$id]);
+                    $vRow = $stmtV->fetch();
+                    $db->prepare("INSERT INTO contracte (contract_nr, oferta_id, proiect_id, client_id, token, tip_client, status, valoare_net, valoare_tva, valoare_total, created_by) VALUES (?,?,?,?,?,?,?,?,?,?,?)")
+                       ->execute([
+                            $contractNr, $id, $pId, $oferta['client_id'], $token, $tipClient,
+                            'asteapta_date',
+                            $vRow['total_fara_tva'] ?? 0,
+                            $vRow['tva'] ?? 0,
+                            $vRow['total_cu_tva'] ?? $oferta['total_cu_tva'] ?? 0,
+                            $user
+                       ]);
+                    // Notificare separata pt Roxana — apare in pagina de contracte
+                    if ($pId) {
+                        $stmtPx = $db->prepare("SELECT proiect_id FROM proiecte WHERE id = ?");
+                        $stmtPx->execute([$pId]);
+                        $pxRow = $stmtPx->fetch();
+                        if ($pxRow) {
+                            $db->prepare("INSERT INTO notificari (proiect_id, mesaj, tip, de_la) VALUES (?,?,?,?)")->execute([
+                                $pxRow['proiect_id'],
+                                '📄 Contract draft creat (' . $contractNr . ') — trimite link client pentru completare date',
+                                'contract',
+                                $user
+                            ]);
+                        }
                     }
                 }
             }
@@ -1170,6 +1275,211 @@ try {
                 }
             }
             
+            jsonResponse(['success' => true]);
+            break;
+
+        // ══════════════════════════════════════
+        // CONTRACTE
+        // ══════════════════════════════════════
+        case 'getContracte':
+            ensureContracteSchema($db);
+            $statusF = isset($_GET['status']) ? $_GET['status'] : '';
+            $sql = "SELECT c.*, cl.nume AS client_nume, cl.telefon AS client_telefon, cl.email AS client_email, cl.tip AS client_tip,
+                           o.oferta_id AS oferta_cod, o.obiectiv,
+                           p.proiect_id AS proiect_cod, p.serviciu, p.adresa_obiectiv
+                    FROM contracte c
+                    LEFT JOIN clienti cl ON c.client_id = cl.id
+                    LEFT JOIN oferte o ON c.oferta_id = o.id
+                    LEFT JOIN proiecte p ON c.proiect_id = p.id
+                    WHERE 1=1";
+            $params = [];
+            if ($statusF) { $sql .= " AND c.status = ?"; $params[] = $statusF; }
+            $sql .= " ORDER BY c.created_at DESC";
+            $stmt = $db->prepare($sql); $stmt->execute($params);
+            $rows = $stmt->fetchAll();
+            // Decode JSON pentru fiecare
+            foreach ($rows as &$r) {
+                if (!empty($r['date_completate'])) {
+                    $r['date_completate'] = json_decode($r['date_completate'], true);
+                }
+            }
+            unset($r);
+            jsonResponse(['success' => true, 'data' => $rows]);
+            break;
+
+        case 'getContract':
+            ensureContracteSchema($db);
+            $id = isset($_GET['id']) ? intval($_GET['id']) : 0;
+            if (!$id) jsonResponse(['success' => false, 'error' => 'id obligatoriu'], 400);
+            $stmt = $db->prepare("SELECT c.*, cl.nume AS client_nume, cl.telefon AS client_telefon, cl.email AS client_email, cl.tip AS client_tip,
+                                         o.oferta_id AS oferta_cod, o.obiectiv, o.client_nume AS oferta_client_nume,
+                                         p.proiect_id AS proiect_cod, p.serviciu, p.adresa_obiectiv
+                                  FROM contracte c
+                                  LEFT JOIN clienti cl ON c.client_id = cl.id
+                                  LEFT JOIN oferte o ON c.oferta_id = o.id
+                                  LEFT JOIN proiecte p ON c.proiect_id = p.id
+                                  WHERE c.id = ?");
+            $stmt->execute([$id]);
+            $row = $stmt->fetch();
+            if (!$row) jsonResponse(['success' => false, 'error' => 'Contract inexistent'], 404);
+            if (!empty($row['date_completate'])) $row['date_completate'] = json_decode($row['date_completate'], true);
+            $row['prestator'] = prestatorData();
+            jsonResponse(['success' => true, 'data' => $row]);
+            break;
+
+        // PUBLIC: clientul deschide pagina cu token-ul primit pe WhatsApp
+        case 'getContractByToken':
+            ensureContracteSchema($db);
+            $token = isset($_GET['token']) ? trim($_GET['token']) : '';
+            if (!$token || !preg_match('/^[a-f0-9]{32}$/', $token)) {
+                jsonResponse(['success' => false, 'error' => 'Token invalid'], 400);
+            }
+            $stmt = $db->prepare("SELECT c.id, c.contract_nr, c.tip_client, c.status, c.date_completate,
+                                         c.adresa_instalare, c.avans_procent, c.termen_plata_zile,
+                                         c.valoare_total, o.obiectiv, o.oferta_id AS oferta_cod,
+                                         cl.nume AS client_nume, cl.telefon AS client_telefon, cl.email AS client_email
+                                  FROM contracte c
+                                  LEFT JOIN clienti cl ON c.client_id = cl.id
+                                  LEFT JOIN oferte o ON c.oferta_id = o.id
+                                  WHERE c.token = ?");
+            $stmt->execute([$token]);
+            $row = $stmt->fetch();
+            if (!$row) jsonResponse(['success' => false, 'error' => 'Token invalid sau expirat'], 404);
+            if (!empty($row['date_completate'])) $row['date_completate'] = json_decode($row['date_completate'], true);
+            jsonResponse(['success' => true, 'data' => $row]);
+            break;
+
+        // PUBLIC: clientul submite datele
+        case 'submitContractDate':
+            ensureContracteSchema($db);
+            $token = isset($data['token']) ? trim($data['token']) : '';
+            if (!$token || !preg_match('/^[a-f0-9]{32}$/', $token)) {
+                jsonResponse(['success' => false, 'error' => 'Token invalid'], 400);
+            }
+            $stmt = $db->prepare("SELECT id, status, client_id FROM contracte WHERE token = ?");
+            $stmt->execute([$token]);
+            $row = $stmt->fetch();
+            if (!$row) jsonResponse(['success' => false, 'error' => 'Token invalid sau expirat'], 404);
+            // Permitem update si dupa completare initiala (clientul poate corecta)
+            $tipClient = isset($data['tip_client']) && in_array($data['tip_client'], ['PF','PJ'], true) ? $data['tip_client'] : 'PF';
+            // Sanitizam datele
+            $dateCompletate = [];
+            if ($tipClient === 'PF') {
+                $dateCompletate = [
+                    'nume'        => trim($data['nume'] ?? ''),
+                    'cnp'         => trim($data['cnp'] ?? ''),
+                    'ci_seria'    => trim($data['ci_seria'] ?? ''),
+                    'ci_numar'    => trim($data['ci_numar'] ?? ''),
+                    'domiciliu'   => trim($data['domiciliu'] ?? ''),
+                    'telefon'     => trim($data['telefon'] ?? ''),
+                    'email'       => trim($data['email'] ?? ''),
+                ];
+                if (!$dateCompletate['nume']) jsonResponse(['success' => false, 'error' => 'Nume obligatoriu'], 400);
+            } else {
+                $dateCompletate = [
+                    'denumire'         => trim($data['denumire'] ?? ''),
+                    'cui'              => trim($data['cui'] ?? ''),
+                    'reg_com'          => trim($data['reg_com'] ?? ''),
+                    'sediu'            => trim($data['sediu'] ?? ''),
+                    'reprezentant'     => trim($data['reprezentant'] ?? ''),
+                    'functia'          => trim($data['functia'] ?? ''),
+                    'cont_iban'        => trim($data['cont_iban'] ?? ''),
+                    'banca'            => trim($data['banca'] ?? ''),
+                    'telefon'          => trim($data['telefon'] ?? ''),
+                    'email'            => trim($data['email'] ?? ''),
+                ];
+                if (!$dateCompletate['denumire']) jsonResponse(['success' => false, 'error' => 'Denumire firmă obligatorie'], 400);
+                if (!$dateCompletate['cui'])      jsonResponse(['success' => false, 'error' => 'CUI obligatoriu'], 400);
+            }
+            $adresaInst = trim($data['adresa_instalare'] ?? '');
+            $avansProc  = isset($data['avans_procent']) ? floatval($data['avans_procent']) : 35;
+            if ($avansProc < 0 || $avansProc > 100) $avansProc = 35;
+            $termenZile = isset($data['termen_plata_zile']) ? intval($data['termen_plata_zile']) : 15;
+
+            $newStatus = $row['status'] === 'asteapta_date' ? 'completat' : $row['status'];
+            $db->prepare("UPDATE contracte SET tip_client=?, date_completate=?, adresa_instalare=?, avans_procent=?, termen_plata_zile=?, status=?, completat_la=NOW() WHERE id=?")
+               ->execute([$tipClient, json_encode($dateCompletate, JSON_UNESCAPED_UNICODE), $adresaInst, $avansProc, $termenZile, $newStatus, $row['id']]);
+
+            // Notificare admin (Roxana)
+            try {
+                $stmtN = $db->prepare("SELECT p.proiect_id FROM contracte c LEFT JOIN proiecte p ON c.proiect_id = p.id WHERE c.id = ?");
+                $stmtN->execute([$row['id']]);
+                $nRow = $stmtN->fetch();
+                if ($nRow && $nRow['proiect_id']) {
+                    $msg = '📄 Client a completat datele pentru contract (' . ($dateCompletate['nume'] ?? $dateCompletate['denumire'] ?? 'fără nume') . ')';
+                    $db->prepare("INSERT INTO notificari (proiect_id, mesaj, tip, de_la) VALUES (?,?,?,?)")->execute([$nRow['proiect_id'], $msg, 'contract', 'Client']);
+                }
+            } catch (Exception $e) { /* ignore */ }
+
+            jsonResponse(['success' => true, 'status' => $newStatus]);
+            break;
+
+        case 'updateContract':
+            ensureContracteSchema($db);
+            requireAuth();
+            $id = isset($data['id']) ? intval($data['id']) : 0;
+            if (!$id) jsonResponse(['success' => false, 'error' => 'id obligatoriu'], 400);
+            $fields = []; $values = [];
+            foreach (['adresa_instalare','note','status'] as $f) {
+                if (isset($data[$f])) { $fields[] = "$f = ?"; $values[] = $data[$f]; }
+            }
+            foreach (['avans_procent','termen_plata_zile','durata_executie_zile','garantie_luni','valoare_net','valoare_tva','valoare_total'] as $f) {
+                if (isset($data[$f])) { $fields[] = "$f = ?"; $values[] = floatval($data[$f]); }
+            }
+            if (isset($data['date_completate']) && is_array($data['date_completate'])) {
+                $fields[] = "date_completate = ?";
+                $values[] = json_encode($data['date_completate'], JSON_UNESCAPED_UNICODE);
+            }
+            if (isset($data['tip_client']) && in_array($data['tip_client'], ['PF','PJ'], true)) {
+                $fields[] = "tip_client = ?"; $values[] = $data['tip_client'];
+            }
+            if (!$fields) jsonResponse(['success' => false, 'error' => 'Nimic de actualizat'], 400);
+            $values[] = $id;
+            $db->prepare("UPDATE contracte SET " . implode(', ', $fields) . " WHERE id = ?")->execute($values);
+            jsonResponse(['success' => true]);
+            break;
+
+        case 'regenerateContractToken':
+            ensureContracteSchema($db);
+            requireAuth();
+            $id = isset($data['id']) ? intval($data['id']) : 0;
+            if (!$id) jsonResponse(['success' => false, 'error' => 'id obligatoriu'], 400);
+            $newToken = generateContractToken();
+            $db->prepare("UPDATE contracte SET token = ?, status = IF(status='asteapta_date',status,'asteapta_date') WHERE id = ?")->execute([$newToken, $id]);
+            jsonResponse(['success' => true, 'token' => $newToken]);
+            break;
+
+        case 'createContractDraft':
+            ensureContracteSchema($db);
+            requireAuth();
+            $ofertaId = isset($data['oferta_id']) ? intval($data['oferta_id']) : 0;
+            if (!$ofertaId) jsonResponse(['success' => false, 'error' => 'oferta_id obligatoriu'], 400);
+            // Verific dacă există deja contract pentru această ofertă
+            $chk = $db->prepare("SELECT id, token FROM contracte WHERE oferta_id = ? LIMIT 1");
+            $chk->execute([$ofertaId]);
+            $existing = $chk->fetch();
+            if ($existing) jsonResponse(['success' => true, 'id' => $existing['id'], 'token' => $existing['token'], 'existed' => true]);
+            // Iau detaliile ofertei
+            $stmtO = $db->prepare("SELECT o.id, o.client_id, o.proiect_id, o.total_fara_tva, o.tva, o.total_cu_tva, c.tip FROM oferte o LEFT JOIN clienti c ON o.client_id = c.id WHERE o.id = ?");
+            $stmtO->execute([$ofertaId]);
+            $o = $stmtO->fetch();
+            if (!$o) jsonResponse(['success' => false, 'error' => 'Oferta inexistentă'], 404);
+            $contractNr = 'C-' . date('Y') . '-' . str_pad($ofertaId, 4, '0', STR_PAD_LEFT);
+            $token = generateContractToken();
+            $tipClient = stripos($o['tip'] ?? '', 'jurid') !== false || stripos($o['tip'] ?? '', 'firma') !== false ? 'PJ' : 'PF';
+            $userCur = currentUser();
+            $createdBy = $userCur['username'] ?? 'Admin';
+            $db->prepare("INSERT INTO contracte (contract_nr, oferta_id, proiect_id, client_id, token, tip_client, status, valoare_net, valoare_tva, valoare_total, created_by) VALUES (?,?,?,?,?,?,?,?,?,?,?)")
+               ->execute([$contractNr, $ofertaId, $o['proiect_id'], $o['client_id'], $token, $tipClient, 'asteapta_date', $o['total_fara_tva'], $o['tva'], $o['total_cu_tva'], $createdBy]);
+            jsonResponse(['success' => true, 'id' => $db->lastInsertId(), 'token' => $token, 'contract_nr' => $contractNr]);
+            break;
+
+        case 'deleteContract':
+            ensureContracteSchema($db);
+            requireAdmin();
+            $id = isset($data['id']) ? intval($data['id']) : 0;
+            if (!$id) jsonResponse(['success' => false, 'error' => 'id obligatoriu'], 400);
+            $db->prepare("DELETE FROM contracte WHERE id = ?")->execute([$id]);
             jsonResponse(['success' => true]);
             break;
 
