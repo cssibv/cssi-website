@@ -1501,13 +1501,22 @@ try {
             $stmtO->execute([$ofertaId]);
             $o = $stmtO->fetch();
             if (!$o) jsonResponse(['success' => false, 'error' => 'Oferta inexistentă'], 404);
+            // proiect_id e NOT NULL in tabela veche — fallback: cel mai recent proiect al clientului
+            $pid = intval($o['proiect_id'] ?? 0);
+            if (!$pid && $o['client_id']) {
+                $stmtFP = $db->prepare("SELECT id FROM proiecte WHERE client_id = ? ORDER BY created_at DESC LIMIT 1");
+                $stmtFP->execute([$o['client_id']]);
+                $fpRow = $stmtFP->fetch();
+                if ($fpRow) $pid = intval($fpRow['id']);
+            }
+            if (!$pid) jsonResponse(['success' => false, 'error' => 'Oferta nu are proiect asociat și nici client cu proiect existent. Creează proiect înainte sau atribuie ofertei un proiect.'], 400);
             $contractNr = 'C-' . date('Y') . '-' . str_pad($ofertaId, 4, '0', STR_PAD_LEFT);
             $token = generateContractToken();
             $tipClient = stripos($o['tip'] ?? '', 'jurid') !== false || stripos($o['tip'] ?? '', 'firma') !== false ? 'PJ' : 'PF';
             $userCur = currentUser();
             $createdBy = $userCur['username'] ?? 'Admin';
             $db->prepare("INSERT INTO contracte (contract_nr, oferta_id, proiect_id, client_id, token, tip_client, status, valoare_net, valoare_tva, valoare_total, created_by) VALUES (?,?,?,?,?,?,?,?,?,?,?)")
-               ->execute([$contractNr, $ofertaId, $o['proiect_id'], $o['client_id'], $token, $tipClient, 'asteapta_date', $o['total_fara_tva'], $o['tva'], $o['total_cu_tva'], $createdBy]);
+               ->execute([$contractNr, $ofertaId, $pid, $o['client_id'], $token, $tipClient, 'asteapta_date', $o['total_fara_tva'], $o['tva'], $o['total_cu_tva'], $createdBy]);
             jsonResponse(['success' => true, 'id' => $db->lastInsertId(), 'token' => $token, 'contract_nr' => $contractNr]);
             break;
 
