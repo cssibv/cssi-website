@@ -131,10 +131,12 @@ function ensureContracteSchema($db) {
     }
 }
 
-// Helper debug — returneaza coloanele actuale
+// Helper debug — returneaza coloanele actuale (cu Type pt diagnoza ENUM)
 function debugContracteColumns($db) {
-    try { return array_column($db->query("SHOW COLUMNS FROM contracte")->fetchAll(PDO::FETCH_ASSOC), 'Field'); }
-    catch (Exception $e) { return ['ERR' => $e->getMessage()]; }
+    try {
+        $rows = $db->query("SHOW COLUMNS FROM contracte")->fetchAll(PDO::FETCH_ASSOC);
+        return array_map(function($r){ return ['col'=>$r['Field'],'type'=>$r['Type'],'null'=>$r['Null'],'default'=>$r['Default']]; }, $rows);
+    } catch (Exception $e) { return ['ERR' => $e->getMessage()]; }
 }
 
 // Genereaza token securizat 32 chars URL-safe
@@ -1438,7 +1440,9 @@ try {
             if ($avansProc < 0 || $avansProc > 100) $avansProc = 35;
             $termenZile = isset($data['termen_plata_zile']) ? intval($data['termen_plata_zile']) : 15;
 
-            $newStatus = $row['status'] === 'asteapta_date' ? 'completat' : $row['status'];
+            // Normalizam status — ENUM vechi poate retrieve gol; tratam ca asteapta_date
+            $curStatus = empty($row['status']) ? 'asteapta_date' : $row['status'];
+            $newStatus = ($curStatus === 'asteapta_date') ? 'completat' : $curStatus;
             $db->prepare("UPDATE contracte SET tip_client=?, date_completate=?, adresa_instalare=?, avans_procent=?, termen_plata_zile=?, status=?, completat_la=NOW() WHERE id=?")
                ->execute([$tipClient, json_encode($dateCompletate, JSON_UNESCAPED_UNICODE), $adresaInst, $avansProc, $termenZile, $newStatus, $row['id']]);
 
