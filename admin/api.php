@@ -1336,11 +1336,12 @@ try {
             $sql .= " ORDER BY c.created_at DESC";
             $stmt = $db->prepare($sql); $stmt->execute($params);
             $rows = $stmt->fetchAll();
-            // Decode JSON pentru fiecare
+            // Decode JSON + normalize status (gol/NULL → asteapta_date)
             foreach ($rows as &$r) {
                 if (!empty($r['date_completate'])) {
                     $r['date_completate'] = json_decode($r['date_completate'], true);
                 }
+                if (empty($r['status'])) $r['status'] = $r['completat_la'] ? 'completat' : 'asteapta_date';
             }
             unset($r);
             jsonResponse(['success' => true, 'data' => $rows]);
@@ -1362,6 +1363,7 @@ try {
             $row = $stmt->fetch();
             if (!$row) jsonResponse(['success' => false, 'error' => 'Contract inexistent'], 404);
             if (!empty($row['date_completate'])) $row['date_completate'] = json_decode($row['date_completate'], true);
+            if (empty($row['status'])) $row['status'] = $row['completat_la'] ? 'completat' : 'asteapta_date';
             $row['prestator'] = prestatorData();
             jsonResponse(['success' => true, 'data' => $row]);
             break;
@@ -1385,6 +1387,7 @@ try {
             $row = $stmt->fetch();
             if (!$row) jsonResponse(['success' => false, 'error' => 'Token invalid sau expirat'], 404);
             if (!empty($row['date_completate'])) $row['date_completate'] = json_decode($row['date_completate'], true);
+            if (empty($row['status'])) $row['status'] = $row['date_completate'] ? 'completat' : 'asteapta_date';
             jsonResponse(['success' => true, 'data' => $row]);
             break;
 
