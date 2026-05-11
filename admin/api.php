@@ -64,7 +64,8 @@ function autoExpireOferte($db) {
     } catch (Exception $e) { /* silent */ }
 }
 
-// Schema contracte: tabela noua + token unic + JSON pt date PF/PJ flexibile
+// Schema contracte: creeaza daca nu exista + ALTER pentru coloanele lipsa
+// (idempotent — protejeaza pt cazul cand exista deja o tabela 'contracte' veche)
 function ensureContracteSchema($db) {
     static $checked = false;
     if ($checked) return;
@@ -72,36 +73,57 @@ function ensureContracteSchema($db) {
     try {
         $db->exec("CREATE TABLE IF NOT EXISTS contracte (
             id INT PRIMARY KEY AUTO_INCREMENT,
-            contract_nr VARCHAR(40) UNIQUE,
-            oferta_id INT NULL,
-            proiect_id INT NULL,
-            client_id INT NULL,
-            token VARCHAR(64) UNIQUE,
-            tip_client ENUM('PF','PJ') DEFAULT 'PF',
-            status ENUM('asteapta_date','completat','generat','semnat','anulat') DEFAULT 'asteapta_date',
-            date_completate JSON NULL,
-            adresa_instalare VARCHAR(500),
-            avans_procent DECIMAL(5,2) DEFAULT 35,
-            termen_plata_zile INT DEFAULT 15,
-            durata_executie_zile INT DEFAULT 20,
-            garantie_luni INT DEFAULT 24,
-            valoare_net DECIMAL(12,2) DEFAULT 0,
-            valoare_tva DECIMAL(12,2) DEFAULT 0,
-            valoare_total DECIMAL(12,2) DEFAULT 0,
-            note TEXT,
-            generat_doc_path VARCHAR(255),
-            generat_pdf_path VARCHAR(255),
-            created_by VARCHAR(60),
-            completat_la DATETIME NULL,
-            generat_la DATETIME NULL,
-            created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-            updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-            KEY idx_status (status),
-            KEY idx_token (token),
-            KEY idx_oferta (oferta_id),
-            KEY idx_client (client_id)
+            contract_nr VARCHAR(40),
+            created_at DATETIME DEFAULT CURRENT_TIMESTAMP
         ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4");
-    } catch (Exception $e) { error_log('ensureContracteSchema FAILED: ' . $e->getMessage()); }
+        // Adaug coloane lipsa (idempotent — verific cu SHOW COLUMNS)
+        $cols = array_column($db->query("SHOW COLUMNS FROM contracte")->fetchAll(PDO::FETCH_ASSOC), 'Field');
+        $cols = array_flip($cols);
+        $alters = [
+            'oferta_id'             => "ADD COLUMN oferta_id INT NULL",
+            'proiect_id'            => "ADD COLUMN proiect_id INT NULL",
+            'client_id'             => "ADD COLUMN client_id INT NULL",
+            'token'                 => "ADD COLUMN token VARCHAR(64)",
+            'tip_client'            => "ADD COLUMN tip_client VARCHAR(2) DEFAULT 'PF'",
+            'status'                => "ADD COLUMN status VARCHAR(20) DEFAULT 'asteapta_date'",
+            'date_completate'       => "ADD COLUMN date_completate TEXT NULL",
+            'adresa_instalare'      => "ADD COLUMN adresa_instalare VARCHAR(500)",
+            'avans_procent'         => "ADD COLUMN avans_procent DECIMAL(5,2) DEFAULT 35",
+            'termen_plata_zile'     => "ADD COLUMN termen_plata_zile INT DEFAULT 15",
+            'durata_executie_zile'  => "ADD COLUMN durata_executie_zile INT DEFAULT 20",
+            'garantie_luni'         => "ADD COLUMN garantie_luni INT DEFAULT 24",
+            'valoare_net'           => "ADD COLUMN valoare_net DECIMAL(12,2) DEFAULT 0",
+            'valoare_tva'           => "ADD COLUMN valoare_tva DECIMAL(12,2) DEFAULT 0",
+            'valoare_total'         => "ADD COLUMN valoare_total DECIMAL(12,2) DEFAULT 0",
+            'note'                  => "ADD COLUMN note TEXT",
+            'generat_doc_path'      => "ADD COLUMN generat_doc_path VARCHAR(255)",
+            'generat_pdf_path'      => "ADD COLUMN generat_pdf_path VARCHAR(255)",
+            'created_by'            => "ADD COLUMN created_by VARCHAR(60)",
+            'completat_la'          => "ADD COLUMN completat_la DATETIME NULL",
+            'generat_la'            => "ADD COLUMN generat_la DATETIME NULL",
+            'updated_at'            => "ADD COLUMN updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP",
+        ];
+        foreach ($alters as $col => $sql) {
+            if (!isset($cols[$col])) {
+                try { $db->exec("ALTER TABLE contracte $sql"); } catch (Exception $e) { error_log("contracte ALTER $col: " . $e->getMessage()); }
+            }
+        }
+        // Adaug index-uri (best-effort)
+        try { $db->exec("ALTER TABLE contracte ADD INDEX idx_status (status)"); } catch (Exception $e) {}
+        try { $db->exec("ALTER TABLE contracte ADD INDEX idx_token (token)"); } catch (Exception $e) {}
+        try { $db->exec("ALTER TABLE contracte ADD INDEX idx_oferta (oferta_id)"); } catch (Exception $e) {}
+        try { $db->exec("ALTER TABLE contracte ADD INDEX idx_client (client_id)"); } catch (Exception $e) {}
+        try { $db->exec("ALTER TABLE contracte ADD UNIQUE KEY uniq_contract_nr (contract_nr)"); } catch (Exception $e) {}
+        try { $db->exec("ALTER TABLE contracte ADD UNIQUE KEY uniq_token (token)"); } catch (Exception $e) {}
+    } catch (Exception $e) {
+        error_log('ensureContracteSchema FAILED: ' . $e->getMessage());
+    }
+}
+
+// Helper debug — returneaza coloanele actuale
+function debugContracteColumns($db) {
+    try { return array_column($db->query("SHOW COLUMNS FROM contracte")->fetchAll(PDO::FETCH_ASSOC), 'Field'); }
+    catch (Exception $e) { return ['ERR' => $e->getMessage()]; }
 }
 
 // Genereaza token securizat 32 chars URL-safe
@@ -1281,6 +1303,12 @@ try {
         // ══════════════════════════════════════
         // CONTRACTE
         // ══════════════════════════════════════
+        case '_debugContracteSchema':
+            requireAdmin();
+            ensureContracteSchema($db);
+            jsonResponse(['success' => true, 'columns' => debugContracteColumns($db)]);
+            break;
+
         case 'getContracte':
             ensureContracteSchema($db);
             $statusF = isset($_GET['status']) ? $_GET['status'] : '';
