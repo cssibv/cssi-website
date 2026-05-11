@@ -1421,6 +1421,11 @@ try {
         // ══════════════════════════════════════
         case '_debugContracteSchema':
             requireAdmin();
+            // Force schema sync — manualy add lipsa columns indiferent de static check
+            try { $db->exec("ALTER TABLE contracte ADD COLUMN token_expires_at DATETIME NULL"); } catch (Exception $e) {}
+            try { $db->exec("ALTER TABLE contracte ADD COLUMN locked_resubmit TINYINT(1) DEFAULT 0"); } catch (Exception $e) {}
+            try { $db->exec("ALTER TABLE contracte ADD COLUMN gdpr_consent_at DATETIME NULL"); } catch (Exception $e) {}
+            try { $db->exec("ALTER TABLE contracte ADD COLUMN gdpr_consent_ip VARCHAR(45) NULL"); } catch (Exception $e) {}
             ensureContracteSchema($db);
             jsonResponse(['success' => true, 'columns' => debugContracteColumns($db)]);
             break;
