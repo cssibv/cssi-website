@@ -1525,18 +1525,6 @@ try {
             }
             if (empty($row['status'])) $row['status'] = $row['date_completate'] ? 'completat' : 'asteapta_date';
             $row['locked_resubmit'] = !empty($row['locked_resubmit']);
-            // Calcul grace period (5 min post-submit) — frontend afișează formul + countdown
-            $row['in_grace_period'] = false;
-            $row['grace_seconds_left'] = 0;
-            $row['_v'] = 'grace_v2';  // cache buster
-            if ($row['locked_resubmit'] && !empty($row['completat_la'])) {
-                $graceEndTs = strtotime($row['completat_la']) + (5 * 60);
-                $left = $graceEndTs - time();
-                if ($left > 0) {
-                    $row['in_grace_period'] = true;
-                    $row['grace_seconds_left'] = $left;
-                }
-            }
             logContractAccess($db, $row['id'], 'view_public');
             jsonResponse(['success' => true, 'data' => $row]);
             break;
@@ -1558,17 +1546,10 @@ try {
                 logContractAccess($db, $row['id'], 'submit_expired');
                 jsonResponse(['success' => false, 'error' => 'Link expirat. Solicitați unul nou de la CSSI.', 'expired' => true], 410);
             }
-            // Verific lock re-submit + grace period 5 minute pt corectii imediate
+            // Single-use: dupa primul submit, blocat. Pentru modificari -> contact CSSI
             if (!empty($row['locked_resubmit'])) {
-                $completedAt = !empty($row['completat_la']) ? strtotime($row['completat_la']) : 0;
-                $graceMinutes = 5;
-                $inGrace = $completedAt && (time() - $completedAt) < ($graceMinutes * 60);
-                if (!$inGrace) {
-                    logContractAccess($db, $row['id'], 'submit_locked');
-                    jsonResponse(['success' => false, 'error' => 'Datele au fost deja transmise. Pentru modificări, contactați CSSI.', 'locked' => true], 423);
-                }
-                // In grace period — permitem re-submit (corectie)
-                logContractAccess($db, $row['id'], 'submit_grace_retry', 'in 5min grace');
+                logContractAccess($db, $row['id'], 'submit_locked');
+                jsonResponse(['success' => false, 'error' => 'Datele au fost deja transmise. Pentru modificări, contactați CSSI.', 'locked' => true], 423);
             }
             // GDPR consent obligatoriu
             if (empty($data['gdpr_consent'])) {
@@ -1614,20 +1595,11 @@ try {
             $curStatus = empty($row['status']) ? 'asteapta_date' : $row['status'];
             $newStatus = ($curStatus === 'asteapta_date') ? 'completat' : $curStatus;
             $clientIP = substr($_SERVER['REMOTE_ADDR'] ?? '', 0, 45);
-            // Auto-expire token la 24h dupa primul submit reusit (one-time-ish behavior)
-            // In grace period, pastram completat_la original (nu resetam grace clock)
-            $isFirstSubmit = empty($row['locked_resubmit']);
-            $newTokenExpiry = $isFirstSubmit ? date('Y-m-d H:i:s', strtotime('+24 hours')) : null;
-            // Daca prim submit -> setez token_expires_at +24h. Daca grace retry -> pastrez expirarea existenta
-            if ($isFirstSubmit) {
-                $db->prepare("UPDATE contracte SET tip_client=?, date_completate=?, adresa_instalare=?, avans_procent=?, termen_plata_zile=?, status=?, completat_la=NOW(), locked_resubmit=1, token_expires_at=?, gdpr_consent_at=NOW(), gdpr_consent_ip=? WHERE id=?")
-                   ->execute([$tipClient, json_encode($dateCompletate, JSON_UNESCAPED_UNICODE), $adresaInst, $avansProc, $termenZile, $newStatus, $newTokenExpiry, $clientIP, $row['id']]);
-            } else {
-                // Grace retry: doar update date, pastram completat_la si token_expires_at
-                $db->prepare("UPDATE contracte SET tip_client=?, date_completate=?, adresa_instalare=?, avans_procent=?, termen_plata_zile=?, status=?, gdpr_consent_at=NOW(), gdpr_consent_ip=? WHERE id=?")
-                   ->execute([$tipClient, json_encode($dateCompletate, JSON_UNESCAPED_UNICODE), $adresaInst, $avansProc, $termenZile, $newStatus, $clientIP, $row['id']]);
-            }
-            logContractAccess($db, $row['id'], $isFirstSubmit ? 'submit_data' : 'submit_corrected', 'tip=' . $tipClient . ' avans=' . $avansProc . '%');
+            // Single-use: dupa submit, lock + token expira in 24h (pt confirmare la reload)
+            $newTokenExpiry = date('Y-m-d H:i:s', strtotime('+24 hours'));
+            $db->prepare("UPDATE contracte SET tip_client=?, date_completate=?, adresa_instalare=?, avans_procent=?, termen_plata_zile=?, status=?, completat_la=NOW(), locked_resubmit=1, token_expires_at=?, gdpr_consent_at=NOW(), gdpr_consent_ip=? WHERE id=?")
+               ->execute([$tipClient, json_encode($dateCompletate, JSON_UNESCAPED_UNICODE), $adresaInst, $avansProc, $termenZile, $newStatus, $newTokenExpiry, $clientIP, $row['id']]);
+            logContractAccess($db, $row['id'], 'submit_data', 'tip=' . $tipClient . ' avans=' . $avansProc . '%');
 
             // Notificare admin (Roxana)
             try {

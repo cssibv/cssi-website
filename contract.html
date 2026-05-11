@@ -235,11 +235,18 @@ body{font-family:var(--font);color:var(--dark);background:linear-gradient(135deg
         <div class="card">
             <div class="success-state">
                 <div class="success-icon">✅</div>
-                <div class="success-title">Datele au fost trimise!</div>
-                <div class="success-msg">Mulțumim! Vom întocmi contractul cu datele furnizate și vă vom contacta în scurt timp pentru semnare.<br><br><strong>Ai observat o greșeală?</strong> Ai 5 minute să corectezi date — apasă <a href="javascript:location.reload()" style="color:var(--blue);text-decoration:underline">aici</a> pentru a redeschide formularul.</div>
+                <div class="success-title">Mulțumim! Datele au fost trimise.</div>
+                <div class="success-msg">
+                    Vom întocmi contractul cu datele furnizate și vă vom contacta în scurt timp pentru semnare.
+                    <br><br>
+                    <strong>Ai observat o greșeală?</strong><br>
+                    Contactează-ne direct și o corectăm imediat:<br>
+                    📞 <a href="tel:+40712345678" style="color:var(--blue);text-decoration:underline;font-weight:700">07XX XXX XXX</a>
+                    sau ✉️ <a href="mailto:office@cssi.ro" style="color:var(--blue);text-decoration:underline;font-weight:700">office@cssi.ro</a>
+                </div>
             </div>
         </div>
-        <div class="foot">🔒 CSSI · Sisteme de securitate · Link valabil 24h post-completare</div>
+        <div class="foot">🔒 CSSI · Sisteme de securitate · Datele tale sunt în siguranță (GDPR)</div>
     </div>
 </div>
 
@@ -279,38 +286,11 @@ function showError(msg){
     document.getElementById('errMsg').textContent = msg;
 }
 
-var graceTimer = null;
-function showGraceBanner(secondsLeft){
-    var banner = document.getElementById('graceBanner');
-    if(!banner){
-        banner = document.createElement('div');
-        banner.id = 'graceBanner';
-        banner.style.cssText = 'background:linear-gradient(135deg,#dcfce7,#bbf7d0);border-left:4px solid var(--green);padding:14px 16px;border-radius:10px;margin-bottom:14px;color:#166534;font-size:13px;line-height:1.5;font-weight:600';
-        var formState = document.getElementById('formState');
-        var firstCard = formState.querySelector('.card');
-        firstCard.insertBefore(banner, firstCard.firstChild);
-    }
-    var update = function(){
-        if(secondsLeft <= 0){
-            banner.style.background = '#fef2f2';
-            banner.style.borderColor = 'var(--red)';
-            banner.style.color = '#991b1b';
-            banner.innerHTML = '⏱️ <strong>Timpul de corectare a expirat.</strong> Datele transmise rămân înregistrate. Pentru orice modificare suplimentară, contactați CSSI direct.';
-            clearInterval(graceTimer);
-            // Optional: dezactivez submit
-            var submitBtn = document.getElementById('submitBtn');
-            if(submitBtn){ submitBtn.disabled = true; submitBtn.textContent = '🔒 Timpul de corectare a expirat'; }
-            return;
-        }
-        var min = Math.floor(secondsLeft / 60);
-        var sec = secondsLeft % 60;
-        var pad = sec < 10 ? '0' : '';
-        banner.innerHTML = '✅ <strong>Datele au fost trimise cu succes!</strong> Mai ai <strong style="font-variant-numeric:tabular-nums;font-size:15px">' + min + ':' + pad + sec + '</strong> minute să corectezi orice greșeală. Modifică câmpurile de mai jos și apasă din nou „Trimite datele".';
-        secondsLeft--;
-    };
-    update();
-    if(graceTimer) clearInterval(graceTimer);
-    graceTimer = setInterval(update, 1000);
+// Single-use submit: dupa ce datele au fost transmise, afișez confirmation full-screen
+function showCompletedState(){
+    document.getElementById('formState').style.display = 'none';
+    document.getElementById('successState').style.display = 'block';
+    window.scrollTo({top:0, behavior:'smooth'});
 }
 
 function renderContract(){
@@ -318,18 +298,10 @@ function renderContract(){
     document.getElementById('formState').style.display = 'block';
     var c = CONTRACT;
     TOTAL = parseFloat(c.valoare_total) || 0;
-    // Daca e completat + locked + IN AFARA grace period -> read-only success state
-    if(c.locked_resubmit && c.status === 'completat' && !c.in_grace_period){
-        document.getElementById('formState').style.display = 'none';
-        document.getElementById('successState').style.display = 'block';
-        document.querySelector('#successState .success-icon').textContent = '🔒';
-        document.querySelector('#successState .success-title').textContent = 'Datele au fost deja transmise';
-        document.querySelector('#successState .success-msg').innerHTML = 'Datele tale sunt în siguranță la CSSI. Pentru orice modificare, contactează direct echipa noastră la <a href="tel:+40712345678">07XX XXX XXX</a> sau <a href="mailto:office@cssi.ro">office@cssi.ro</a>.';
+    // Single-use: dacă e deja completat -> read-only success state (nu mai pot modifica)
+    if(c.locked_resubmit && c.status === 'completat'){
+        showCompletedState();
         return;
-    }
-    // Daca e in grace period -> afisez formul + banner countdown "Mai ai X:XX să corectezi"
-    if(c.in_grace_period && c.grace_seconds_left > 0){
-        showGraceBanner(c.grace_seconds_left);
     }
     // Render contract info card
     var infoHtml = '';
@@ -466,10 +438,8 @@ function submitForm(ev){
     .then(function(res){
         btn.disabled = false; btn.textContent = '📤 Trimite datele';
         if(res.success){
-            // In loc de full success state, afișez bannerul de grace + las formul vizibil pt corectie
-            window.scrollTo({top:0, behavior:'smooth'});
-            showGraceBanner(5 * 60);  // 5 minute fresh
-            // Banner-ul informeaza despre succes; formul rămâne disponibil pentru corectii
+            // Single-use: afișez confirmation full + previn navigarea înapoi la form
+            showCompletedState();
             return;
         }
         // Erori speciale
