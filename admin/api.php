@@ -1525,6 +1525,17 @@ try {
             }
             if (empty($row['status'])) $row['status'] = $row['date_completate'] ? 'completat' : 'asteapta_date';
             $row['locked_resubmit'] = !empty($row['locked_resubmit']);
+            // Calcul grace period — frontend afișează formul în primele 5 min post-submit
+            $row['in_grace_period'] = false;
+            $row['grace_seconds_left'] = 0;
+            if ($row['locked_resubmit'] && !empty($row['completat_la'])) {
+                $graceEndTs = strtotime($row['completat_la']) + (5 * 60);
+                $left = $graceEndTs - time();
+                if ($left > 0) {
+                    $row['in_grace_period'] = true;
+                    $row['grace_seconds_left'] = $left;
+                }
+            }
             logContractAccess($db, $row['id'], 'view_public');
             jsonResponse(['success' => true, 'data' => $row]);
             break;
