@@ -109,6 +109,8 @@ function ensureContracteSchema($db) {
                 try { $db->exec("ALTER TABLE contracte $sql"); } catch (Exception $e) { error_log("contracte ALTER $col: " . $e->getMessage()); }
             }
         }
+        // status era ENUM cu valori vechi — extind la VARCHAR pentru a accepta noile valori
+        try { $db->exec("ALTER TABLE contracte MODIFY status VARCHAR(20) DEFAULT 'asteapta_date'"); } catch (Exception $e) {}
         // Relax NOT NULL pe coloanele vechi care nu mai sunt obligatorii in noul flow
         try { $db->exec("ALTER TABLE contracte MODIFY proiect_id INT NULL"); } catch (Exception $e) {}
         try { $db->exec("ALTER TABLE contracte MODIFY contract_id VARCHAR(40) NULL"); } catch (Exception $e) {}
