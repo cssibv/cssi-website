@@ -111,7 +111,7 @@ function isTehnician() {
 // ─── MODULE ACCESS ────────────────────────────────────────────
 // Lista TOATE modulele din portal (sursă unică de adevăr)
 function allModules() {
-    return ['proiecte','crm','calculator','financiar','planificare','executie','proiectare',
+    return ['proiecte','crm','calculator','contracte','financiar','planificare','executie','proiectare',
             'mentenanta','materiale','necesar','social','marketing','documente','utilizatori'];
 }
 
@@ -120,8 +120,8 @@ function defaultModulesForUser($u) {
     if (($u['role'] ?? '') === 'admin') return allModules();
     if (!empty($u['is_tehnician'])) return ['executie','planificare','necesar','mentenanta'];
     switch ($u['role'] ?? '') {
-        case 'sales': return ['calculator','crm','proiecte','financiar','marketing','social','documente'];
-        case 'org':   return ['proiecte','planificare','financiar','mentenanta','documente','crm'];
+        case 'sales': return ['calculator','contracte','crm','proiecte','financiar','marketing','social','documente'];
+        case 'org':   return ['proiecte','contracte','planificare','financiar','mentenanta','documente','crm'];
         case 'mkt':   return ['marketing','social','documente'];
         case 'tech':  return ['proiecte','proiectare','executie','planificare','materiale','necesar','mentenanta','documente'];
         default:      return [];

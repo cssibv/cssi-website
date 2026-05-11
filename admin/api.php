@@ -1483,6 +1483,205 @@ try {
             jsonResponse(['success' => true]);
             break;
 
+        // Genereaza contractul in format Word (.doc — HTML cu MIME Word)
+        // sau PDF (HTML print-friendly cu auto-print). Folosit prin link direct
+        // <a href="api.php?action=generateContractDoc&id=X&format=word|pdf">
+        case 'generateContractDoc':
+            ensureContracteSchema($db);
+            requireAuth();
+            $id = isset($_GET['id']) ? intval($_GET['id']) : 0;
+            $format = isset($_GET['format']) ? $_GET['format'] : 'word';
+            if (!$id) { http_response_code(400); echo 'id obligatoriu'; exit; }
+            if (!in_array($format, ['word','pdf'], true)) $format = 'word';
+
+            $stmt = $db->prepare("SELECT c.*, o.oferta_id AS oferta_cod, o.data_oferta, o.obiectiv, p.proiect_id AS proiect_cod, p.serviciu, p.adresa_obiectiv FROM contracte c LEFT JOIN oferte o ON c.oferta_id = o.id LEFT JOIN proiecte p ON c.proiect_id = p.id WHERE c.id = ?");
+            $stmt->execute([$id]);
+            $c = $stmt->fetch();
+            if (!$c) { http_response_code(404); echo 'Contract inexistent'; exit; }
+
+            $d = !empty($c['date_completate']) ? json_decode($c['date_completate'], true) : [];
+            $p = prestatorData();
+            $tipPj = ($c['tip_client'] ?? 'PF') === 'PJ';
+            $contractNr = $c['contract_nr'] ?? ('#' . $c['id']);
+            $dataC = date('d.m.Y');
+            $netto = floatval($c['valoare_net']);
+            $tva   = floatval($c['valoare_tva']);
+            $total = floatval($c['valoare_total']);
+            $avansP = floatval($c['avans_procent'] ?? 35);
+            $diferentaP = 100 - $avansP;
+            $durata = intval($c['durata_executie_zile'] ?? 20);
+            $garantie = intval($c['garantie_luni'] ?? 24);
+            $sistem = strtolower($c['serviciu'] ?? 'supraveghere video');
+            $adresa = $c['adresa_instalare'] ?: ($c['adresa_obiectiv'] ?? '');
+            $oferta_data = $c['data_oferta'] ? date('d.m.Y', strtotime($c['data_oferta'])) : '';
+
+            // Beneficiar bloc
+            if ($tipPj) {
+                $benefBloc = htmlspecialchars($d['denumire'] ?? '— denumire firmă —', ENT_QUOTES, 'UTF-8');
+                $benefBloc .= ', cu sediul în ' . htmlspecialchars($d['sediu'] ?? '— sediu —', ENT_QUOTES, 'UTF-8');
+                if (!empty($d['reg_com'])) $benefBloc .= ', înregistrată la Registrul Comerțului sub nr. ' . htmlspecialchars($d['reg_com'], ENT_QUOTES, 'UTF-8');
+                if (!empty($d['cui']))     $benefBloc .= ', CIF ' . htmlspecialchars($d['cui'], ENT_QUOTES, 'UTF-8');
+                if (!empty($d['cont_iban'])) $benefBloc .= ', cont IBAN ' . htmlspecialchars($d['cont_iban'], ENT_QUOTES, 'UTF-8') . (!empty($d['banca']) ? ' deschis la ' . htmlspecialchars($d['banca'], ENT_QUOTES, 'UTF-8') : '');
+                if (!empty($d['reprezentant'])) $benefBloc .= ', reprezentată prin ' . htmlspecialchars($d['reprezentant'], ENT_QUOTES, 'UTF-8') . (!empty($d['functia']) ? ', în calitate de ' . htmlspecialchars($d['functia'], ENT_QUOTES, 'UTF-8') : '');
+                $benefSemnatura = htmlspecialchars(($d['denumire'] ?? '') . ($d['reprezentant'] ? ' (prin ' . $d['reprezentant'] . ')' : ''), ENT_QUOTES, 'UTF-8');
+            } else {
+                $benefBloc = 'Dl./Dna. ' . htmlspecialchars($d['nume'] ?? '— nume —', ENT_QUOTES, 'UTF-8');
+                if (!empty($d['domiciliu'])) $benefBloc .= ', cu domiciliul în ' . htmlspecialchars($d['domiciliu'], ENT_QUOTES, 'UTF-8');
+                if (!empty($d['ci_seria']) || !empty($d['ci_numar'])) $benefBloc .= ', legitimat cu CI seria ' . htmlspecialchars($d['ci_seria'] ?? '', ENT_QUOTES, 'UTF-8') . ' nr. ' . htmlspecialchars($d['ci_numar'] ?? '', ENT_QUOTES, 'UTF-8');
+                if (!empty($d['cnp'])) $benefBloc .= ', CNP ' . htmlspecialchars($d['cnp'], ENT_QUOTES, 'UTF-8');
+                $benefSemnatura = htmlspecialchars($d['nume'] ?? '', ENT_QUOTES, 'UTF-8');
+            }
+            $emailBenef = htmlspecialchars($d['email'] ?? '', ENT_QUOTES, 'UTF-8');
+
+            // Construim HTML-ul contractului
+            ob_start();
+            ?><!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="UTF-8">
+<title>Contract <?= htmlspecialchars($contractNr) ?></title>
+<style>
+@page { margin: 2cm 1.8cm; }
+body { font-family: Calibri, 'Trebuchet MS', sans-serif; font-size: 11pt; color: #000; line-height: 1.5; max-width: 18cm; margin: 0 auto; padding: 1cm; }
+h1 { text-align: center; font-size: 16pt; font-weight: bold; margin-bottom: 8px; }
+h1 + h2 { text-align: center; font-size: 13pt; font-weight: bold; margin-bottom: 18px; }
+h3 { font-size: 12pt; font-weight: bold; margin-top: 14px; margin-bottom: 6px; }
+p { margin-bottom: 8px; text-align: justify; }
+.art { margin-bottom: 6px; }
+.semnaturi { display: table; width: 100%; margin-top: 30px; }
+.semnaturi .col { display: table-cell; width: 50%; text-align: center; vertical-align: top; padding-top: 10px; }
+.semnaturi .col strong { display: block; margin-bottom: 40px; }
+.print-btn { position: fixed; top: 20px; right: 20px; padding: 12px 20px; background: #3b82f6; color: #fff; border: none; border-radius: 8px; font-size: 14px; font-weight: 700; cursor: pointer; box-shadow: 0 4px 12px rgba(0,0,0,0.15); z-index: 1000; }
+@media print { .print-btn { display: none; } }
+</style>
+</head>
+<body>
+<?php if ($format === 'pdf'): ?>
+<button class="print-btn" onclick="window.print()">🖨️ Print / Salvează ca PDF</button>
+<script>setTimeout(function(){window.print();}, 800);</script>
+<?php endif; ?>
+
+<h1>CONTRACT DE PRESTĂRI SERVICII</h1>
+<h2>Nr. <?= htmlspecialchars($contractNr) ?> din <?= $dataC ?></h2>
+
+<p><strong>Încheiat între:</strong></p>
+<p><strong><?= htmlspecialchars($p['denumire']) ?></strong>, cu sediul în <?= htmlspecialchars($p['sediu']) ?>,
+înregistrată la Registrul Comerțului sub nr. <?= htmlspecialchars($p['reg_com']) ?>, având cod fiscal
+<?= htmlspecialchars($p['cif']) ?> și cont nr. <?= htmlspecialchars($p['cont_iban']) ?> deschis la
+<?= htmlspecialchars($p['banca']) ?>, în calitate de <strong>PRESTATOR</strong>, reprezentată prin
+<?= htmlspecialchars($p['reprezentant']) ?>,</p>
+<p><strong>Și</strong></p>
+<p><?= $benefBloc ?>, în calitate de <strong>BENEFICIAR</strong>, au convenit să încheie prezentul contract,
+cu respectarea următoarelor clauze:</p>
+
+<h3>I. OBIECTUL CONTRACTULUI</h3>
+<p class="art"><strong>Art.1.</strong> PRESTATORUL asigură instalarea unui sistem de <?= htmlspecialchars($sistem) ?> conform
+<?= $c['oferta_cod'] ? 'ofertei nr. <strong>' . htmlspecialchars($c['oferta_cod']) . '</strong>' . ($oferta_data ? ' din ' . $oferta_data : '') . ', atașată la contract' : 'specificațiilor agreate' ?>.</p>
+<p class="art"><strong>Art.2.</strong> Lucrarea se va efectua în <?= htmlspecialchars($adresa ?: '— adresa instalare —') ?>.</p>
+
+<h3>II. TERMENUL CONTRACTULUI</h3>
+<p class="art"><strong>Art.3.</strong> Prezentul contract se încheie pentru o durată de <strong><?= $durata ?> de zile</strong>
+și intră în vigoare la data semnării lui de către părți.</p>
+<p class="art"><strong>Art.4.</strong> Prezentul contract definește și condițiile de vânzare și montare a sistemelor și accesoriilor,
+denumite în continuare „MĂRFURI", comercializate de către prestator și achiziționate conform facturii de către beneficiar.</p>
+
+<h3>III. PREȚ ȘI MODALITĂȚI DE PLATĂ</h3>
+<p class="art"><strong>Art.5.</strong> Prețul contractului este de <strong><?= number_format($netto, 2, ',', '.') ?> lei</strong>,
+la care se adaugă TVA în valoare de <strong><?= number_format($tva, 2, ',', '.') ?> lei</strong>.
+Valoare contract cu TVA inclus: <strong><?= number_format($total, 2, ',', '.') ?> lei</strong>.</p>
+<p class="art"><strong>Art.6.</strong> Plata contractului se va efectua cu <strong>avans de <?= rtrim(rtrim(number_format($avansP, 2, ',', '.'), '0'), ',') ?>%</strong>
+la data semnării contractului, diferența de <strong><?= rtrim(rtrim(number_format($diferentaP, 2, ',', '.'), '0'), ',') ?>%</strong>
+se va achita la data finalizării lucrării și semnării procesului verbal de recepție.</p>
+<p class="art"><strong>Art.7.</strong> Beneficiarul va achita contravaloarea facturilor emise la data scadenței trecute pe facturi.
+Pentru orice întârziere de plată, Beneficiarul va fi obligat și la achitarea unei penalități de <strong>0,5% pe zi</strong>
+din soldul scadent.</p>
+
+<h3>IV. GARANȚII</h3>
+<p class="art"><strong>Art.8.</strong> PRESTATORUL are obligația ca în cadrul termenului de garanție să remedieze deficiențele
+sau viciile ascunse provenite din culpa sa (cu excepția celor care se datorează culpei Beneficiarului), semnalate de
+beneficiar pe durata perioadei de garanție, în termen de 3 zile de la data înregistrării cererii Beneficiarului.</p>
+<p class="art"><strong>Art.9.</strong> PRESTATORUL oferă garanție pentru echipamentele instalate de <strong><?= $garantie ?> luni</strong>
+de la data predării lucrării.</p>
+<p class="art"><strong>Art.10.</strong> Echipamentele instalate își vor pierde garanția în cazul în care acestea suferă
+intervenții ale unor persoane neautorizate.</p>
+<p class="art"><strong>Art.11.</strong> Garanția oferită de PRESTATOR nu acoperă daunele survenite în urma unor acte de
+vandalism, incendii, inundații, cutremure, descărcări electrice sau alte calamități naturale.</p>
+
+<h3>V. OBLIGAȚIILE PĂRȚILOR</h3>
+<p class="art"><strong>Art.12.</strong> Prestatorul de servicii se obligă: să presteze lucrările comandate de către
+BENEFICIAR în termen de maxim <?= $durata ?> zile de la data semnării contractului.</p>
+<p class="art"><strong>Art.13.</strong> Beneficiarul se obligă să:</p>
+<p style="padding-left: 20px;">a) achite contravaloarea facturilor emise de către PRESTATOR;<br>
+b) creeze front de lucru PRESTATORULUI la locația unde se va efectua lucrarea;<br>
+c) verifice, la finalul lucrărilor, calitatea acestora;<br>
+d) respecte toate indicațiile pe care le-a primit de la PRESTATOR în legătură cu modul de manipulare a instalației și să folosească instalația doar în scopul pentru care a fost executată.</p>
+
+<h3>VI. CONDIȚII ÎNCETARE CONTRACT</h3>
+<p>Contractul încetează în următoarele condiții:</p>
+<p style="padding-left: 20px;">a) în cazul în care una dintre părți nu își execută sau își execută necorespunzător oricare dintre obligațiile asumate, prezentul contract se reziliază de plin drept, fără punere în întârziere și fără intervenția instanței de judecată, cu plata de daune interese, în condițiile prevăzute de art. 1066 Cod Civil, în valoarea contractului;<br>
+b) rezilierea de către oricare dintre părțile contractante, cu un preaviz de 15 zile lucrătoare;<br>
+c) falimentul uneia dintre părți.</p>
+
+<h3>VII. FORȚA MAJORĂ</h3>
+<p>Forța majoră, așa cum este definită de lege, apără și exonerează partea care o invocă, în condițiile legii, cu condiția
+notificării, în termen de 5 (cinci) zile de la producerea evenimentului, cu viza Camerei de Comerț și Industrie a României.</p>
+
+<h3>VIII. LITIGII</h3>
+<p>Litigiile ce pot decurge din prezentul contract se vor soluționa pe cale amiabilă. În cazul în care acest lucru nu este
+posibil, litigiul va fi dedus spre soluționare instanței competente din județul prestatorului.</p>
+
+<h3>IX. PRELUCRAREA DATELOR CU CARACTER PERSONAL</h3>
+<p>1. Datele cu caracter personal furnizate de fiecare Parte cu privire la reprezentantul legal și/sau ale persoanei de
+contact (nume, prenume, email, telefon) vor fi prelucrate exclusiv în scopul încheierii și executării prezentului Contract,
+pe întreaga durată a Contractului.</p>
+<p>2. Părțile se obligă să păstreze confidențialitatea datelor cu caracter personal și să implementeze măsurile tehnice
+necesare pentru securitatea acestora, conform GDPR (Regulamentul UE 2016/679).</p>
+<p>3. La încetarea Contractului, fiecare Parte se obligă să înceteze prelucrarea datelor, cu excepția cazurilor în care o
+obligație legală impune prelucrarea în continuare sau exercitarea unor drepturi în instanță.</p>
+
+<h3>X. NOTIFICĂRI</h3>
+<p>Orice notificare, comunicare sau alte informări referitoare la prezentul Contract vor fi efectuate în scris sau trimise
+prin scrisoare recomandată cu confirmare de primire sau prin e-mail la adresele:</p>
+<p style="padding-left: 20px;">- pentru PRESTATOR: <?= htmlspecialchars($p['email']) ?><br>
+- pentru BENEFICIAR: <?= $emailBenef ?: '—' ?></p>
+
+<h3>XI. RĂSPUNDEREA CONTRACTUALĂ</h3>
+<p>Părțile, prin semnarea prezentului contract, convin asupra valabilității tuturor clauzelor înscrise, drept pentru care
+s-a încheiat prezentul contract în două exemplare, câte unul pentru fiecare parte, având aceeași valoare și forță probantă,
+astăzi data semnării.</p>
+
+<div class="semnaturi">
+    <div class="col">
+        <strong>PRESTATOR,</strong>
+        <?= htmlspecialchars($p['denumire']) ?>
+    </div>
+    <div class="col">
+        <strong>BENEFICIAR,</strong>
+        <?= $benefSemnatura ?: '—' ?>
+    </div>
+</div>
+
+</body>
+</html><?php
+            $html = ob_get_clean();
+
+            $safeName = preg_replace('/[^A-Za-z0-9_-]/', '_', $contractNr);
+            if ($format === 'word') {
+                header('Content-Type: application/msword; charset=utf-8');
+                header('Content-Disposition: attachment; filename="contract-' . $safeName . '.doc"');
+                header('Cache-Control: max-age=0');
+                echo $html;
+            } else {
+                // PDF: trimitem HTML inline pentru ca browser-ul sa-l deschida + auto-print
+                header('Content-Type: text/html; charset=utf-8');
+                echo $html;
+            }
+            // Marcam status='generat' daca era 'completat'
+            if ($c['status'] === 'completat') {
+                try { $db->prepare("UPDATE contracte SET status='generat', generat_la=NOW() WHERE id=?")->execute([$id]); } catch (Exception $e) {}
+            }
+            exit;
+
         // ══════════════════════════════════════
         // PROIECTARE
         // ══════════════════════════════════════

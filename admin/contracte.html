@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Contracte — Portal CSSI 3.0</title>
+<meta name="robots" content="noindex, nofollow">
+<link rel="icon" type="image/x-icon" href="/images/favicon.ico">
+<meta name="theme-color" content="#dc2626">
+<link rel="manifest" href="../manifest.json">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Portal CSSI">
+<link rel="apple-touch-icon" sizes="180x180" href="../icons/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="96x96" href="../icons/favicon-96x96.png">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+:root{--red:#dc2626;--dark:#0f172a;--gray:#64748b;--gray-l:#94a3b8;--gray-bg:#f1f5f9;--gray-b:#e2e8f0;--blue:#3b82f6;--green:#22c55e;--orange:#f97316;--purple:#8b5cf6;--teal:#14b8a6;--radius:16px;--radius-sm:12px;--shadow:0 1px 3px rgba(0,0,0,0.06);--shadow-md:0 4px 12px rgba(0,0,0,0.08);--font:'Inter',system-ui,sans-serif;}
+body{font-family:var(--font);color:var(--dark);background:var(--gray-bg);-webkit-font-smoothing:antialiased;}
+a{text-decoration:none;color:inherit;}button{font-family:inherit;cursor:pointer;}
+
+.container{max-width:1300px;margin:0 auto;padding:16px;}@media(min-width:768px){.container{padding:24px;}}
+.toast-container{position:fixed;top:20px;right:20px;z-index:300;display:flex;flex-direction:column;gap:8px;}
+.toast{padding:12px 18px;border-radius:12px;color:#fff;font-size:13px;font-weight:600;box-shadow:0 8px 24px rgba(0,0,0,0.15);animation:slideIn 0.3s ease;max-width:380px;}
+.toast.success{background:var(--green);}.toast.error{background:var(--red);}.toast.info{background:var(--blue);}
+@keyframes slideIn{from{transform:translateX(100%);opacity:0}to{transform:translateX(0);opacity:1}}
+.loading-bar{position:fixed;top:0;left:0;right:0;height:3px;z-index:400;display:none;}
+.loading-bar.active{display:block;}.loading-bar::after{content:'';display:block;width:30%;height:100%;background:var(--blue);border-radius:2px;animation:loadSlide 1.2s infinite ease-in-out;}
+@keyframes loadSlide{0%{margin-left:-30%}100%{margin-left:100%}}
+
+.page-header{background:linear-gradient(135deg,#7c3aed,#a855f7);color:#fff;padding:20px 22px;border-radius:20px;margin-bottom:14px;display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:12px;}
+.page-back{color:rgba(255,255,255,0.75);font-size:13px;font-weight:500;}
+.page-title{font-size:24px;font-weight:800;margin-top:4px;}
+.page-subtitle{font-size:12px;color:rgba(255,255,255,0.85);margin-top:4px;}
+.page-actions{display:flex;gap:8px;flex-wrap:wrap;}
+.page-btn{padding:10px 14px;border-radius:10px;border:none;font-size:13px;font-weight:700;cursor:pointer;display:inline-flex;align-items:center;gap:6px;font-family:inherit;text-decoration:none;min-height:40px;}
+.page-btn.primary{background:#fff;color:#6b21a8;}
+.page-btn.secondary{background:rgba(255,255,255,0.18);color:#fff;}
+
+/* Pipeline status */
+.pipeline{display:flex;background:#fff;border-radius:var(--radius);padding:6px;margin-bottom:14px;box-shadow:var(--shadow);overflow-x:auto;gap:4px;}
+.pipe-stage{flex:1;min-width:140px;padding:10px 8px;text-align:center;border-radius:var(--radius-sm);cursor:pointer;border:2px solid transparent;-webkit-tap-highlight-color:transparent;}
+.pipe-stage:hover{background:var(--gray-bg);}
+.pipe-stage.active{border-color:currentColor;background:rgba(124,58,237,0.06);}
+.pipe-stage .ic{font-size:18px;display:block;margin-bottom:2px;}
+.pipe-stage .lbl{font-size:11px;font-weight:800;text-transform:uppercase;color:var(--gray);}
+.pipe-stage .num{font-size:16px;font-weight:800;margin-top:3px;}
+.pipe-stage[data-s=all]{color:var(--dark);}
+.pipe-stage[data-s=asteapta_date]{color:var(--orange);}
+.pipe-stage[data-s=completat]{color:var(--blue);}
+.pipe-stage[data-s=generat]{color:var(--purple);}
+.pipe-stage[data-s=semnat]{color:var(--green);}
+
+/* Cards */
+.cards-grid{display:grid;grid-template-columns:1fr;gap:10px;}
+@media(min-width:1024px){.cards-grid{grid-template-columns:1fr 1fr;}}
+.contract-card{background:#fff;border-radius:var(--radius-sm);padding:16px;box-shadow:var(--shadow);border-left:4px solid var(--gray-l);transition:all 0.15s;}
+.contract-card:hover{box-shadow:var(--shadow-md);transform:translateY(-1px);}
+.contract-card.s-asteapta_date{border-left-color:var(--orange);}
+.contract-card.s-completat{border-left-color:var(--blue);}
+.contract-card.s-generat{border-left-color:var(--purple);}
+.contract-card.s-semnat{border-left-color:var(--green);}
+.contract-card.s-anulat{border-left-color:var(--gray);opacity:0.6;}
+.cc-top{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;margin-bottom:8px;}
+.cc-nr{font-family:'Courier New',monospace;font-size:12px;font-weight:700;background:#f5f3ff;color:#6b21a8;padding:3px 9px;border-radius:6px;}
+.cc-status{font-size:10px;font-weight:800;padding:3px 9px;border-radius:99px;text-transform:uppercase;letter-spacing:0.3px;}
+.cc-status.s-asteapta_date{background:#ffedd5;color:#9a3412;}
+.cc-status.s-completat{background:#dbeafe;color:#1d4ed8;}
+.cc-status.s-generat{background:#f5f3ff;color:#6b21a8;}
+.cc-status.s-semnat{background:#dcfce7;color:#166534;}
+.cc-status.s-anulat{background:var(--gray-bg);color:var(--gray);}
+.cc-client{font-size:15px;font-weight:800;color:var(--dark);margin-bottom:3px;}
+.cc-meta{font-size:12px;color:var(--gray);display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-bottom:10px;}
+.cc-meta .val{font-weight:800;color:var(--green);font-size:13px;font-variant-numeric:tabular-nums;margin-left:auto;}
+.cc-tip-pill{font-size:10px;font-weight:700;padding:2px 7px;border-radius:5px;background:var(--gray-bg);color:var(--gray);}
+.cc-tip-pill.PJ{background:#eff6ff;color:#1d4ed8;}
+.cc-actions{display:flex;flex-wrap:wrap;gap:6px;padding-top:10px;border-top:1px dashed var(--gray-b);}
+.cc-btn{padding:8px 12px;border-radius:8px;border:1px solid var(--gray-b);background:#fff;color:var(--gray);font-size:11px;font-weight:700;cursor:pointer;display:inline-flex;align-items:center;gap:5px;font-family:inherit;-webkit-tap-highlight-color:transparent;text-decoration:none;}
+.cc-btn:hover{border-color:var(--blue);color:var(--blue);}
+.cc-btn.primary{background:#25d366;color:#fff;border-color:#25d366;}
+.cc-btn.primary:hover{background:#1fa855;border-color:#1fa855;color:#fff;}
+.cc-btn.secondary{background:#6b21a8;color:#fff;border-color:#6b21a8;}
+.cc-btn.secondary:hover{background:#581c87;color:#fff;}
+.cc-btn.warn{border-color:var(--orange);color:var(--orange);}
+.cc-btn.warn:hover{background:var(--orange);color:#fff;}
+.cc-btn.danger:hover{background:var(--red);color:#fff;border-color:var(--red);}
+
+/* Empty */
+.empty-state{text-align:center;padding:50px 20px;background:#fff;border-radius:var(--radius);box-shadow:var(--shadow);}
+.empty-icon{font-size:50px;margin-bottom:10px;opacity:0.4;}
+.empty-title{font-size:16px;font-weight:800;color:var(--dark);margin-bottom:6px;}
+.empty-msg{color:var(--gray-l);font-size:13px;}
+
+/* Modal */
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.55);backdrop-filter:blur(4px);z-index:200;align-items:center;justify-content:center;padding:16px;}
+.modal-overlay.active{display:flex;}
+.modal{background:#fff;border-radius:20px;width:100%;max-width:760px;max-height:92vh;overflow-y:auto;box-shadow:0 25px 60px rgba(0,0,0,0.3);}
+.modal-head{padding:18px 22px;border-bottom:1px solid var(--gray-b);display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;background:#fff;border-radius:20px 20px 0 0;z-index:1;}
+.modal-title{font-size:17px;font-weight:800;}
+.modal-close{width:36px;height:36px;border-radius:8px;border:none;background:var(--gray-bg);color:var(--gray);font-size:18px;display:flex;align-items:center;justify-content:center;}
+.modal-body{padding:22px;}
+
+.detail-section{margin-bottom:18px;}
+.detail-h{font-size:12px;font-weight:800;color:var(--gray);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:8px;border-bottom:1px solid var(--gray-b);padding-bottom:6px;}
+.detail-grid{display:grid;grid-template-columns:160px 1fr;gap:6px 14px;font-size:13px;}
+@media(max-width:600px){.detail-grid{grid-template-columns:1fr;}}
+.detail-grid .lbl{color:var(--gray);font-weight:600;}
+.detail-grid .val{color:var(--dark);font-weight:700;}
+.detail-grid .val.empty{color:var(--gray-l);font-style:italic;font-weight:400;}
+
+.wa-info{background:#dcfce7;border-left:4px solid #25d366;padding:12px 14px;border-radius:8px;margin-bottom:14px;font-size:12px;color:#166534;}
+.wa-link-row{display:flex;gap:6px;margin-top:8px;}
+.wa-link-row input{flex:1;padding:8px 12px;border:1px solid var(--gray-b);border-radius:8px;font-size:11px;font-family:'Courier New',monospace;background:#fff;}
+.wa-link-row button{padding:8px 14px;border-radius:8px;border:none;background:#25d366;color:#fff;font-weight:700;font-size:12px;cursor:pointer;font-family:inherit;}
+
+.foot{text-align:center;color:var(--gray-l);font-size:11px;padding:24px 0 60px;}
+</style>
+<script src="/admin/access-guard.js" defer></script>
+</head>
+<body data-module="contracte">
+<div class="loading-bar" id="loadBar"></div>
+<div class="toast-container" id="toastContainer"></div>
+
+<div class="container">
+    <div class="page-header">
+        <div>
+            <a href="../admin.html" class="page-back">← Dashboard</a>
+            <div class="page-title">📄 Contracte</div>
+            <div class="page-subtitle" id="syncStatus">Se încarcă...</div>
+        </div>
+        <div class="page-actions">
+            <a href="oferte.html" class="page-btn secondary">📋 Oferte</a>
+            <a href="crm-clienti.html" class="page-btn secondary">💰 CRM</a>
+            <button class="page-btn secondary" onclick="refreshData()">🔄</button>
+        </div>
+    </div>
+
+    <div class="pipeline" id="pipeline"></div>
+    <div id="mainView"></div>
+
+    <div class="foot">Portal CSSI 3.0 · Modul Contracte v1.0 · Pipeline + WhatsApp link + generare doc</div>
+</div>
+
+<!-- MODAL detalii contract -->
+<div id="detailModal" class="modal-overlay" onclick="if(event.target===this)closeDetailModal()">
+<div class="modal">
+    <div class="modal-head"><div class="modal-title" id="dmTitle">📄 Contract</div><button class="modal-close" onclick="closeDetailModal()">✕</button></div>
+    <div class="modal-body" id="dmBody"><div class="empty-msg">⏳ Se încarcă...</div></div>
+</div>
+</div>
+
+<script>
+var role = sessionStorage.getItem('cssi-role');
+var userName = sessionStorage.getItem('cssi-user') || role || '';
+if (!role) { window.location.href = '../admin.html'; }
+
+var API = '/admin/api.php';
+var STATE = { contracte: [], filter: 'all', current: null };
+
+function esc(s){if(s==null)return '';var d=document.createElement('div');d.textContent=s;return d.innerHTML;}
+function fmtMoney(n){return Number(n||0).toLocaleString('ro-RO',{minimumFractionDigits:2,maximumFractionDigits:2})+' RON';}
+var MO=['Ian','Feb','Mar','Apr','Mai','Iun','Iul','Aug','Sep','Oct','Noi','Dec'];
+function fmtDate(s){if(!s)return '';var d=new Date(s.replace(' ','T'));if(isNaN(d.getTime()))return s;return d.getDate()+' '+MO[d.getMonth()]+' '+d.getFullYear();}
+function fmtDateTime(s){if(!s)return '';var d=new Date(s.replace(' ','T'));if(isNaN(d.getTime()))return s;var pad=function(n){return n<10?'0'+n:n;};return d.getDate()+' '+MO[d.getMonth()]+' '+pad(d.getHours())+':'+pad(d.getMinutes());}
+function showLoading(s){document.getElementById('loadBar').classList.toggle('active',s);}
+function toast(m,t){var c=document.getElementById('toastContainer');var x=document.createElement('div');x.className='toast '+(t||'info');x.textContent=m;c.appendChild(x);setTimeout(function(){x.style.opacity='0';x.style.transition='opacity 0.3s'},2500);setTimeout(function(){x.remove()},3000);}
+
+var STATUS_INFO = {
+    asteapta_date: {ic:'⏳', lbl:'Așteaptă date'},
+    completat:     {ic:'📥', lbl:'Date completate'},
+    generat:       {ic:'📄', lbl:'Generat'},
+    semnat:        {ic:'✅', lbl:'Semnat'},
+    anulat:        {ic:'❌', lbl:'Anulat'}
+};
+
+function refreshData(){
+    showLoading(true);
+    fetch(API+'?action=getContracte&_t='+Date.now(),{credentials:'include'})
+        .then(function(r){return r.json();})
+        .then(function(res){
+            if(!res.success){ toast('❌ '+(res.error||'Eroare'),'error'); return; }
+            STATE.contracte = res.data || [];
+            document.getElementById('syncStatus').textContent = STATE.contracte.length + ' contracte · ' + new Date().toLocaleTimeString('ro-RO');
+            renderPipeline();
+            render();
+        })
+        .catch(function(e){ toast('❌ '+(e.message||e),'error'); })
+        .finally(function(){ showLoading(false); });
+}
+
+function renderPipeline(){
+    var counts = {all: STATE.contracte.length, asteapta_date:0, completat:0, generat:0, semnat:0};
+    STATE.contracte.forEach(function(c){ if(counts[c.status] !== undefined) counts[c.status]++; });
+    var stages = [
+        {id:'all',           ic:'📋', lbl:'Toate'},
+        {id:'asteapta_date', ic:'⏳', lbl:'Așteaptă date'},
+        {id:'completat',     ic:'📥', lbl:'Completate'},
+        {id:'generat',       ic:'📄', lbl:'Generate'},
+        {id:'semnat',        ic:'✅', lbl:'Semnate'}
+    ];
+    document.getElementById('pipeline').innerHTML = stages.map(function(s){
+        var act = STATE.filter === s.id ? ' active' : '';
+        return '<div class="pipe-stage'+act+'" data-s="'+s.id+'" onclick="setFilter(\''+s.id+'\')">' +
+               '<span class="ic">'+s.ic+'</span><span class="lbl">'+s.lbl+'</span><div class="num">'+counts[s.id]+'</div></div>';
+    }).join('');
+}
+
+function setFilter(f){ STATE.filter = f; renderPipeline(); render(); }
+
+function render(){
+    var view = document.getElementById('mainView');
+    var list = STATE.filter === 'all' ? STATE.contracte : STATE.contracte.filter(function(c){return c.status === STATE.filter;});
+    if(!list.length){
+        view.innerHTML = '<div class="empty-state"><div class="empty-icon">📭</div><div class="empty-title">Niciun contract</div><div class="empty-msg">Contractele apar automat când marchezi o ofertă ca <strong>Acceptată</strong>.</div></div>';
+        return;
+    }
+    view.innerHTML = '<div class="cards-grid">' + list.map(renderCard).join('') + '</div>';
+}
+
+function renderCard(c){
+    var st = STATUS_INFO[c.status] || {ic:'❓', lbl:c.status};
+    var clientNume = c.client_nume || (c.date_completate && (c.date_completate.nume || c.date_completate.denumire)) || '— fără nume —';
+    var html = '<div class="contract-card s-'+c.status+'">';
+    html += '<div class="cc-top">';
+    html += '<span class="cc-nr">'+esc(c.contract_nr||'#'+c.id)+'</span>';
+    html += '<span class="cc-status s-'+c.status+'">'+st.ic+' '+st.lbl+'</span>';
+    html += '</div>';
+    html += '<div class="cc-client">'+esc(clientNume)+' <span class="cc-tip-pill '+c.tip_client+'">'+(c.tip_client==='PJ'?'🏢 PJ':'👤 PF')+'</span></div>';
+    html += '<div class="cc-meta">';
+    if(c.oferta_cod) html += '<span>📋 #'+esc(c.oferta_cod)+'</span>';
+    if(c.proiect_cod) html += '<span>'+esc(c.proiect_cod)+'</span>';
+    html += '<span>'+(c.completat_la?'completat '+fmtDateTime(c.completat_la):'creat '+fmtDateTime(c.created_at))+'</span>';
+    html += '<span class="val">'+fmtMoney(c.valoare_total)+'</span>';
+    html += '</div>';
+    if(c.obiectiv) html += '<div style="font-size:12px;color:var(--gray);margin-bottom:8px;font-style:italic">'+esc(c.obiectiv)+'</div>';
+    html += '<div class="cc-actions">';
+    var publicUrl = window.location.origin + '/contract.html?token=' + encodeURIComponent(c.token);
+    if(c.status === 'asteapta_date'){
+        var waText = encodeURIComponent('Bună ziua! Pentru întocmirea contractului CSSI, vă rugăm completați datele în formularul: ' + publicUrl);
+        var waPhone = (c.client_telefon || '').replace(/[^\d+]/g,'').replace(/^0/,'40');
+        var waUrl = waPhone ? 'https://wa.me/' + waPhone + '?text=' + waText : 'https://wa.me/?text=' + waText;
+        html += '<a class="cc-btn primary" href="'+waUrl+'" target="_blank" rel="noopener" title="Trimite link client pe WhatsApp">💬 WhatsApp client</a>';
+        html += '<button class="cc-btn" onclick="copyLink(\''+esc(publicUrl)+'\')" title="Copiază link-ul">📋 Copiază link</button>';
+    }
+    html += '<button class="cc-btn secondary" onclick="openDetail('+c.id+')">👁️ Vezi detalii</button>';
+    if(c.status !== 'asteapta_date'){
+        html += '<a class="cc-btn warn" href="'+API+'?action=generateContractDoc&id='+c.id+'&format=word" title="Descarcă Word editabil">📝 Word</a>';
+        html += '<a class="cc-btn" href="'+API+'?action=generateContractDoc&id='+c.id+'&format=pdf" title="Descarcă PDF" target="_blank">📄 PDF</a>';
+    }
+    html += '<button class="cc-btn danger" onclick="doDelete('+c.id+')" title="Șterge">🗑️</button>';
+    html += '</div>';
+    html += '</div>';
+    return html;
+}
+
+function copyLink(url){
+    if(navigator.clipboard){
+        navigator.clipboard.writeText(url).then(function(){ toast('📋 Link copiat în clipboard','success'); });
+    } else {
+        var ta = document.createElement('textarea'); ta.value = url; document.body.appendChild(ta); ta.select(); document.execCommand('copy'); ta.remove();
+        toast('📋 Link copiat','success');
+    }
+}
+
+function openDetail(id){
+    document.getElementById('dmTitle').textContent = '📄 Contract';
+    document.getElementById('dmBody').innerHTML = '<div class="empty-msg" style="padding:30px;text-align:center">⏳ Se încarcă...</div>';
+    document.getElementById('detailModal').classList.add('active');
+    fetch(API+'?action=getContract&id='+id+'&_t='+Date.now(),{credentials:'include'})
+        .then(function(r){return r.json();})
+        .then(function(res){
+            if(!res.success){ document.getElementById('dmBody').innerHTML = '<div class="empty-msg" style="padding:30px;text-align:center">❌ '+(res.error||'Eroare')+'</div>'; return; }
+            STATE.current = res.data;
+            renderDetail(res.data);
+        });
+}
+function closeDetailModal(){document.getElementById('detailModal').classList.remove('active');STATE.current=null;}
+
+function renderDetail(c){
+    document.getElementById('dmTitle').textContent = '📄 ' + (c.contract_nr || ('#'+c.id));
+    var d = c.date_completate || {};
+    var p = c.prestator || {};
+    var publicUrl = window.location.origin + '/contract.html?token=' + encodeURIComponent(c.token);
+    var html = '';
+
+    // WhatsApp link box (vizibil doar dacă așteaptă date sau Roxana vrea să retrimite)
+    html += '<div class="wa-info">';
+    html += '<strong>🔗 Link client</strong> — copiază sau trimite pe WhatsApp pentru completare/recompletare:';
+    html += '<div class="wa-link-row"><input type="text" readonly value="'+esc(publicUrl)+'" onclick="this.select()"><button onclick="copyLink(\''+esc(publicUrl)+'\')">📋 Copy</button></div>';
+    html += '</div>';
+
+    // Status + valori
+    html += '<div class="detail-section">';
+    html += '<div class="detail-h">📋 Status & valori</div>';
+    html += '<div class="detail-grid">';
+    html += '<span class="lbl">Status:</span><span class="val">'+(STATUS_INFO[c.status]?STATUS_INFO[c.status].ic+' '+STATUS_INFO[c.status].lbl:c.status)+'</span>';
+    html += '<span class="lbl">Tip client:</span><span class="val">'+(c.tip_client==='PJ'?'🏢 Persoană juridică':'👤 Persoană fizică')+'</span>';
+    if(c.oferta_cod) html += '<span class="lbl">Pe baza ofertei:</span><span class="val">#'+esc(c.oferta_cod)+'</span>';
+    if(c.proiect_cod) html += '<span class="lbl">Proiect asociat:</span><span class="val">'+esc(c.proiect_cod)+'</span>';
+    html += '<span class="lbl">Valoare net:</span><span class="val">'+fmtMoney(c.valoare_net)+'</span>';
+    html += '<span class="lbl">TVA:</span><span class="val">'+fmtMoney(c.valoare_tva)+'</span>';
+    html += '<span class="lbl">TOTAL CU TVA:</span><span class="val" style="color:var(--green);font-size:15px">'+fmtMoney(c.valoare_total)+'</span>';
+    html += '<span class="lbl">Avans:</span><span class="val">'+(c.avans_procent||0)+'% = '+fmtMoney((c.avans_procent||0)*c.valoare_total/100)+'</span>';
+    html += '<span class="lbl">Termen plată:</span><span class="val">'+(c.termen_plata_zile||15)+' zile</span>';
+    html += '<span class="lbl">Durată execuție:</span><span class="val">'+(c.durata_executie_zile||20)+' zile</span>';
+    html += '<span class="lbl">Garanție:</span><span class="val">'+(c.garantie_luni||24)+' luni</span>';
+    html += '</div></div>';
+
+    // Beneficiar (date completate)
+    html += '<div class="detail-section">';
+    html += '<div class="detail-h">'+(c.tip_client==='PJ'?'🏢':'👤')+' Beneficiar (date completate de client)</div>';
+    if(!Object.keys(d).length){
+        html += '<div class="empty-msg" style="padding:14px;text-align:center;color:var(--gray-l);font-style:italic">Clientul încă nu a completat datele. Trimite-i link-ul pe WhatsApp.</div>';
+    } else {
+        html += '<div class="detail-grid">';
+        if(c.tip_client === 'PJ'){
+            html += det('Denumire firmă', d.denumire);
+            html += det('CUI', d.cui);
+            html += det('Reg. comerț', d.reg_com);
+            html += det('Sediu social', d.sediu);
+            html += det('Reprezentant legal', d.reprezentant);
+            html += det('Funcția', d.functia);
+            html += det('Cont IBAN', d.cont_iban);
+            html += det('Banca', d.banca);
+        } else {
+            html += det('Nume și prenume', d.nume);
+            html += det('CNP', d.cnp);
+            html += det('CI seria/nr.', (d.ci_seria||'')+' '+(d.ci_numar||''));
+            html += det('Domiciliu', d.domiciliu);
+        }
+        html += det('Telefon', d.telefon);
+        html += det('Email', d.email);
+        html += '</div>';
+    }
+    html += '</div>';
+
+    // Adresa instalare
+    html += '<div class="detail-section">';
+    html += '<div class="detail-h">📍 Adresa lucrării</div>';
+    html += '<div class="detail-grid">' + det('Adresa instalare', c.adresa_instalare) + '</div>';
+    html += '</div>';
+
+    // Prestator
+    html += '<div class="detail-section">';
+    html += '<div class="detail-h">🏢 Prestator (CSSI)</div>';
+    html += '<div class="detail-grid">';
+    html += det('Denumire', p.denumire);
+    html += det('Sediu', p.sediu);
+    html += det('Reg. comerț', p.reg_com);
+    html += det('CIF', p.cif);
+    html += det('Reprezentant', p.reprezentant);
+    html += det('Cont IBAN', p.cont_iban);
+    html += '</div></div>';
+
+    // Acțiuni footer
+    html += '<div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:14px;padding-top:14px;border-top:1px solid var(--gray-b)">';
+    if(c.status !== 'asteapta_date'){
+        html += '<a class="cc-btn warn" href="'+API+'?action=generateContractDoc&id='+c.id+'&format=word" style="padding:10px 16px;font-size:13px">📝 Descarcă Word</a>';
+        html += '<a class="cc-btn" href="'+API+'?action=generateContractDoc&id='+c.id+'&format=pdf" target="_blank" style="padding:10px 16px;font-size:13px">📄 Descarcă PDF</a>';
+        html += '<button class="cc-btn primary" onclick="markStatus(\'semnat\')" style="padding:10px 16px;font-size:13px;background:var(--green);border-color:var(--green)">✅ Marchează semnat</button>';
+    }
+    html += '<button class="cc-btn" onclick="regenerateToken()" style="padding:10px 16px;font-size:13px">🔄 Regenerează link</button>';
+    html += '</div>';
+
+    document.getElementById('dmBody').innerHTML = html;
+}
+function det(lbl, val){
+    var v = val ? esc(val) : '<span class="val empty">— necompletat —</span>';
+    return '<span class="lbl">'+lbl+':</span><span class="val">'+v+'</span>';
+}
+
+function markStatus(st){
+    if(!STATE.current) return;
+    if(!confirm('Marchezi contractul ca "'+st+'"?')) return;
+    fetch(API+'?action=updateContract',{method:'POST',credentials:'include',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'updateContract',id:STATE.current.id,status:st})})
+        .then(function(r){return r.json();})
+        .then(function(res){
+            if(res.success){ toast('✅ Status actualizat','success'); closeDetailModal(); refreshData(); }
+            else toast('❌ '+(res.error||'Eroare'),'error');
+        });
+}
+function regenerateToken(){
+    if(!STATE.current) return;
+    if(!confirm('Generezi un link nou? Cel vechi nu va mai funcționa.')) return;
+    fetch(API+'?action=regenerateContractToken',{method:'POST',credentials:'include',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'regenerateContractToken',id:STATE.current.id})})
+        .then(function(r){return r.json();})
+        .then(function(res){
+            if(res.success){ toast('🔄 Link nou generat','success'); openDetail(STATE.current.id); refreshData(); }
+            else toast('❌ '+(res.error||'Eroare'),'error');
+        });
+}
+function doDelete(id){
+    if(!confirm('Ștergi DEFINITIV contractul? Acțiunea nu se poate anula.')) return;
+    fetch(API+'?action=deleteContract',{method:'POST',credentials:'include',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'deleteContract',id:id})})
+        .then(function(r){return r.json();})
+        .then(function(res){
+            if(res.success){ toast('🗑️ Șters','info'); refreshData(); }
+            else toast('❌ '+(res.error||'Eroare'),'error');
+        });
+}
+
+refreshData();
+</script>
+<script>
+if('serviceWorker' in navigator){navigator.serviceWorker.register('../sw.js').catch(function(){});}
+</script>
+</body>
+</html>
