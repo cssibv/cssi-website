@@ -80,6 +80,7 @@ function ensureContracteSchema($db) {
         $cols = array_column($db->query("SHOW COLUMNS FROM contracte")->fetchAll(PDO::FETCH_ASSOC), 'Field');
         $cols = array_flip($cols);
         $alters = [
+            'contract_nr'           => "ADD COLUMN contract_nr VARCHAR(40)",
             'oferta_id'             => "ADD COLUMN oferta_id INT NULL",
             'proiect_id'            => "ADD COLUMN proiect_id INT NULL",
             'client_id'             => "ADD COLUMN client_id INT NULL",
