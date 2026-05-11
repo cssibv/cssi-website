@@ -1348,7 +1348,7 @@ try {
                 if (!$chkC->fetch()) {
                     $contractNr = 'C-' . date('Y') . '-' . str_pad($id, 4, '0', STR_PAD_LEFT);
                     $token = generateContractToken();
-                    $autoExpiresAt = date('Y-m-d H:i:s', strtotime('+60 days'));
+                    $autoExpiresAt = date('Y-m-d H:i:s', strtotime('+14 days'));
                     // Detect tip client din clienti.tip
                     $tipClient = 'PF';
                     if ($oferta['client_id']) {
@@ -1537,7 +1537,7 @@ try {
             if (!$token || !preg_match('/^[a-f0-9]{32}$/', $token)) {
                 jsonResponse(['success' => false, 'error' => 'Token invalid'], 400);
             }
-            $stmt = $db->prepare("SELECT id, status, client_id, token_expires_at, locked_resubmit FROM contracte WHERE token = ?");
+            $stmt = $db->prepare("SELECT id, status, client_id, token_expires_at, locked_resubmit, completat_la FROM contracte WHERE token = ?");
             $stmt->execute([$token]);
             $row = $stmt->fetch();
             if (!$row) jsonResponse(['success' => false, 'error' => 'Link invalid'], 404);
@@ -1546,10 +1546,17 @@ try {
                 logContractAccess($db, $row['id'], 'submit_expired');
                 jsonResponse(['success' => false, 'error' => 'Link expirat. Solicitați unul nou de la CSSI.', 'expired' => true], 410);
             }
-            // Verific lock re-submit
+            // Verific lock re-submit + grace period 5 minute pt corectii imediate
             if (!empty($row['locked_resubmit'])) {
-                logContractAccess($db, $row['id'], 'submit_locked');
-                jsonResponse(['success' => false, 'error' => 'Datele au fost deja transmise. Pentru modificări, contactați CSSI.', 'locked' => true], 423);
+                $completedAt = !empty($row['completat_la']) ? strtotime($row['completat_la']) : 0;
+                $graceMinutes = 5;
+                $inGrace = $completedAt && (time() - $completedAt) < ($graceMinutes * 60);
+                if (!$inGrace) {
+                    logContractAccess($db, $row['id'], 'submit_locked');
+                    jsonResponse(['success' => false, 'error' => 'Datele au fost deja transmise. Pentru modificări, contactați CSSI.', 'locked' => true], 423);
+                }
+                // In grace period — permitem re-submit (corectie)
+                logContractAccess($db, $row['id'], 'submit_grace_retry', 'in 5min grace');
             }
             // GDPR consent obligatoriu
             if (empty($data['gdpr_consent'])) {
@@ -1595,10 +1602,20 @@ try {
             $curStatus = empty($row['status']) ? 'asteapta_date' : $row['status'];
             $newStatus = ($curStatus === 'asteapta_date') ? 'completat' : $curStatus;
             $clientIP = substr($_SERVER['REMOTE_ADDR'] ?? '', 0, 45);
-            // Lock re-submit dupa primul submit + GDPR consent timestamp + IP
-            $db->prepare("UPDATE contracte SET tip_client=?, date_completate=?, adresa_instalare=?, avans_procent=?, termen_plata_zile=?, status=?, completat_la=NOW(), locked_resubmit=1, gdpr_consent_at=NOW(), gdpr_consent_ip=? WHERE id=?")
-               ->execute([$tipClient, json_encode($dateCompletate, JSON_UNESCAPED_UNICODE), $adresaInst, $avansProc, $termenZile, $newStatus, $clientIP, $row['id']]);
-            logContractAccess($db, $row['id'], 'submit_data', 'tip=' . $tipClient . ' avans=' . $avansProc . '%');
+            // Auto-expire token la 24h dupa primul submit reusit (one-time-ish behavior)
+            // In grace period, pastram completat_la original (nu resetam grace clock)
+            $isFirstSubmit = empty($row['locked_resubmit']);
+            $newTokenExpiry = $isFirstSubmit ? date('Y-m-d H:i:s', strtotime('+24 hours')) : null;
+            // Daca prim submit -> setez token_expires_at +24h. Daca grace retry -> pastrez expirarea existenta
+            if ($isFirstSubmit) {
+                $db->prepare("UPDATE contracte SET tip_client=?, date_completate=?, adresa_instalare=?, avans_procent=?, termen_plata_zile=?, status=?, completat_la=NOW(), locked_resubmit=1, token_expires_at=?, gdpr_consent_at=NOW(), gdpr_consent_ip=? WHERE id=?")
+                   ->execute([$tipClient, json_encode($dateCompletate, JSON_UNESCAPED_UNICODE), $adresaInst, $avansProc, $termenZile, $newStatus, $newTokenExpiry, $clientIP, $row['id']]);
+            } else {
+                // Grace retry: doar update date, pastram completat_la si token_expires_at
+                $db->prepare("UPDATE contracte SET tip_client=?, date_completate=?, adresa_instalare=?, avans_procent=?, termen_plata_zile=?, status=?, gdpr_consent_at=NOW(), gdpr_consent_ip=? WHERE id=?")
+                   ->execute([$tipClient, json_encode($dateCompletate, JSON_UNESCAPED_UNICODE), $adresaInst, $avansProc, $termenZile, $newStatus, $clientIP, $row['id']]);
+            }
+            logContractAccess($db, $row['id'], $isFirstSubmit ? 'submit_data' : 'submit_corrected', 'tip=' . $tipClient . ' avans=' . $avansProc . '%');
 
             // Notificare admin (Roxana)
             try {
@@ -1660,8 +1677,8 @@ try {
             $id = isset($data['id']) ? intval($data['id']) : 0;
             if (!$id) jsonResponse(['success' => false, 'error' => 'id obligatoriu'], 400);
             $newToken = generateContractToken();
-            $newExpiresAt = date('Y-m-d H:i:s', strtotime('+60 days'));
-            // Regenerare token = extinde validitatea + permite re-completare (unlock)
+            $newExpiresAt = date('Y-m-d H:i:s', strtotime('+14 days'));
+            // Regenerare token = nou TTL 14 zile + permite re-completare (unlock)
             $db->prepare("UPDATE contracte SET token = ?, token_expires_at = ?, locked_resubmit = 0 WHERE id = ?")
                ->execute([$newToken, $newExpiresAt, $id]);
             logContractAccess($db, $id, 'token_regenerated', 'expires=' . $newExpiresAt);
@@ -1697,7 +1714,7 @@ try {
             $tipClient = stripos($o['tip'] ?? '', 'jurid') !== false || stripos($o['tip'] ?? '', 'firma') !== false ? 'PJ' : 'PF';
             $userCur = currentUser();
             $createdBy = $userCur['username'] ?? 'Admin';
-            $expiresAt = date('Y-m-d H:i:s', strtotime('+60 days'));
+            $expiresAt = date('Y-m-d H:i:s', strtotime('+14 days'));
             $db->prepare("INSERT INTO contracte (contract_nr, oferta_id, proiect_id, client_id, token, tip_client, status, valoare_net, valoare_tva, valoare_total, created_by, token_expires_at) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)")
                ->execute([$contractNr, $ofertaId, $pid, $o['client_id'], $token, $tipClient, 'asteapta_date', $o['total_fara_tva'], $o['tva'], $o['total_cu_tva'], $createdBy, $expiresAt]);
             $newId = $db->lastInsertId();
