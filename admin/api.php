@@ -103,6 +103,10 @@ function ensureContracteSchema($db) {
             'completat_la'          => "ADD COLUMN completat_la DATETIME NULL",
             'generat_la'            => "ADD COLUMN generat_la DATETIME NULL",
             'updated_at'            => "ADD COLUMN updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP",
+            'token_expires_at'      => "ADD COLUMN token_expires_at DATETIME NULL",
+            'locked_resubmit'       => "ADD COLUMN locked_resubmit TINYINT(1) DEFAULT 0",
+            'gdpr_consent_at'       => "ADD COLUMN gdpr_consent_at DATETIME NULL",
+            'gdpr_consent_ip'       => "ADD COLUMN gdpr_consent_ip VARCHAR(45) NULL",
         ];
         foreach ($alters as $col => $sql) {
             if (!isset($cols[$col])) {
@@ -129,6 +133,101 @@ function ensureContracteSchema($db) {
     } catch (Exception $e) {
         error_log('ensureContracteSchema FAILED: ' . $e->getMessage());
     }
+}
+
+// ─── ENCRYPTION pt date sensibile (CNP, CI seria/nr) ─────────────
+// Folosim AES-256-GCM cu cheie din secrets.php (CONTRACT_ENCRYPTION_KEY)
+// Fallback graceful: daca cheia lipseste, storage in clar (cu log warning)
+function encryptSensitive($plain) {
+    if ($plain === '' || $plain === null) return '';
+    if (!defined('CONTRACT_ENCRYPTION_KEY') || strlen(CONTRACT_ENCRYPTION_KEY) < 32) {
+        error_log('CONTRACT_ENCRYPTION_KEY missing — date sensibile in clear text');
+        return $plain;  // fallback graceful
+    }
+    $key = substr(hash('sha256', CONTRACT_ENCRYPTION_KEY, true), 0, 32);
+    $iv  = random_bytes(12);
+    $tag = '';
+    $cipher = openssl_encrypt($plain, 'aes-256-gcm', $key, OPENSSL_RAW_DATA, $iv, $tag);
+    if ($cipher === false) return $plain;
+    return 'enc:' . base64_encode($iv . $tag . $cipher);
+}
+function decryptSensitive($stored) {
+    if ($stored === '' || $stored === null) return '';
+    if (substr($stored, 0, 4) !== 'enc:') return $stored;  // plain fallback
+    if (!defined('CONTRACT_ENCRYPTION_KEY') || strlen(CONTRACT_ENCRYPTION_KEY) < 32) return '[CHEIE_LIPSA]';
+    $raw = base64_decode(substr($stored, 4));
+    if (strlen($raw) < 12 + 16) return '[CORRUPT]';
+    $iv  = substr($raw, 0, 12);
+    $tag = substr($raw, 12, 16);
+    $cipher = substr($raw, 28);
+    $key = substr(hash('sha256', CONTRACT_ENCRYPTION_KEY, true), 0, 32);
+    $plain = openssl_decrypt($cipher, 'aes-256-gcm', $key, OPENSSL_RAW_DATA, $iv, $tag);
+    return $plain === false ? '[DECRYPT_FAIL]' : $plain;
+}
+
+// ─── RATE LIMITING pt endpoint-uri publice contracte ─────────────
+function ensureContractRateLimitTable($db) {
+    static $checked = false;
+    if ($checked) return;
+    $checked = true;
+    try {
+        $db->exec("CREATE TABLE IF NOT EXISTS contract_rate_limits (
+            id BIGINT PRIMARY KEY AUTO_INCREMENT,
+            ip VARCHAR(45) NOT NULL,
+            action VARCHAR(40) NOT NULL,
+            ts DATETIME DEFAULT CURRENT_TIMESTAMP,
+            KEY idx_ip_action_ts (ip, action, ts)
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4");
+    } catch (Exception $e) {}
+}
+// Verifica rate limit + inregistreaza cererea curenta. Daca depaseste, throw.
+function checkContractRateLimit($db, $action, $maxPerMinute = 10) {
+    ensureContractRateLimitTable($db);
+    $ip = $_SERVER['REMOTE_ADDR'] ?? '0.0.0.0';
+    if (strlen($ip) > 45) $ip = substr($ip, 0, 45);
+    try {
+        // Cleanup vechi (> 1h) best-effort
+        $db->exec("DELETE FROM contract_rate_limits WHERE ts < DATE_SUB(NOW(), INTERVAL 1 HOUR)");
+        $stmt = $db->prepare("SELECT COUNT(*) FROM contract_rate_limits WHERE ip = ? AND action = ? AND ts > DATE_SUB(NOW(), INTERVAL 1 MINUTE)");
+        $stmt->execute([$ip, $action]);
+        $count = intval($stmt->fetchColumn());
+        if ($count >= $maxPerMinute) {
+            jsonResponse(['success' => false, 'error' => 'Prea multe cereri. Reincearca in 1 minut.'], 429);
+        }
+        $db->prepare("INSERT INTO contract_rate_limits (ip, action) VALUES (?, ?)")->execute([$ip, $action]);
+    } catch (Exception $e) { /* nu blocheaza pe eroare DB */ }
+}
+
+// ─── AUDIT LOG ─────────────────────────────────────────────────
+function ensureContractAccessLog($db) {
+    static $checked = false;
+    if ($checked) return;
+    $checked = true;
+    try {
+        $db->exec("CREATE TABLE IF NOT EXISTS contract_access_log (
+            id BIGINT PRIMARY KEY AUTO_INCREMENT,
+            contract_id INT NOT NULL,
+            action VARCHAR(40) NOT NULL,
+            user_id VARCHAR(60),
+            ip VARCHAR(45),
+            user_agent VARCHAR(255),
+            details VARCHAR(500),
+            ts DATETIME DEFAULT CURRENT_TIMESTAMP,
+            KEY idx_contract (contract_id),
+            KEY idx_ts (ts)
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4");
+    } catch (Exception $e) {}
+}
+function logContractAccess($db, $contractId, $action, $details = '') {
+    ensureContractAccessLog($db);
+    $ip = substr($_SERVER['REMOTE_ADDR'] ?? '', 0, 45);
+    $ua = substr($_SERVER['HTTP_USER_AGENT'] ?? '', 0, 255);
+    $u  = currentUser();
+    $userId = $u ? $u['username'] : 'public';
+    try {
+        $db->prepare("INSERT INTO contract_access_log (contract_id, action, user_id, ip, user_agent, details) VALUES (?,?,?,?,?,?)")
+           ->execute([$contractId, $action, $userId, $ip, $ua, substr($details, 0, 500)]);
+    } catch (Exception $e) {}
 }
 
 // Helper debug — returneaza coloanele actuale (cu Type pt diagnoza ENUM)
@@ -1249,6 +1348,7 @@ try {
                 if (!$chkC->fetch()) {
                     $contractNr = 'C-' . date('Y') . '-' . str_pad($id, 4, '0', STR_PAD_LEFT);
                     $token = generateContractToken();
+                    $autoExpiresAt = date('Y-m-d H:i:s', strtotime('+60 days'));
                     // Detect tip client din clienti.tip
                     $tipClient = 'PF';
                     if ($oferta['client_id']) {
@@ -1262,15 +1362,18 @@ try {
                     $stmtV = $db->prepare("SELECT total_fara_tva, tva, total_cu_tva FROM oferte WHERE id = ?");
                     $stmtV->execute([$id]);
                     $vRow = $stmtV->fetch();
-                    $db->prepare("INSERT INTO contracte (contract_nr, oferta_id, proiect_id, client_id, token, tip_client, status, valoare_net, valoare_tva, valoare_total, created_by) VALUES (?,?,?,?,?,?,?,?,?,?,?)")
+                    $db->prepare("INSERT INTO contracte (contract_nr, oferta_id, proiect_id, client_id, token, tip_client, status, valoare_net, valoare_tva, valoare_total, created_by, token_expires_at) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)")
                        ->execute([
                             $contractNr, $id, $pId, $oferta['client_id'], $token, $tipClient,
                             'asteapta_date',
                             $vRow['total_fara_tva'] ?? 0,
                             $vRow['tva'] ?? 0,
                             $vRow['total_cu_tva'] ?? $oferta['total_cu_tva'] ?? 0,
-                            $user
+                            $user,
+                            $autoExpiresAt
                        ]);
+                    $autoCid = $db->lastInsertId();
+                    logContractAccess($db, $autoCid, 'auto_create', 'oferta acceptata id=' . $id);
                     // Notificare separata pt Roxana — apare in pagina de contracte
                     if ($pId) {
                         $stmtPx = $db->prepare("SELECT proiect_id FROM proiecte WHERE id = ?");
@@ -1364,22 +1467,34 @@ try {
             $stmt->execute([$id]);
             $row = $stmt->fetch();
             if (!$row) jsonResponse(['success' => false, 'error' => 'Contract inexistent'], 404);
-            if (!empty($row['date_completate'])) $row['date_completate'] = json_decode($row['date_completate'], true);
+            if (!empty($row['date_completate'])) {
+                $dec = json_decode($row['date_completate'], true);
+                if (is_array($dec)) {
+                    foreach (['cnp','ci_seria','ci_numar'] as $f) {
+                        if (!empty($dec[$f])) $dec[$f] = decryptSensitive($dec[$f]);
+                    }
+                    $row['date_completate'] = $dec;
+                }
+            }
             if (empty($row['status'])) $row['status'] = $row['completat_la'] ? 'completat' : 'asteapta_date';
+            $row['locked_resubmit'] = !empty($row['locked_resubmit']);
             $row['prestator'] = prestatorData();
+            logContractAccess($db, $id, 'view_admin');
             jsonResponse(['success' => true, 'data' => $row]);
             break;
 
         // PUBLIC: clientul deschide pagina cu token-ul primit pe WhatsApp
         case 'getContractByToken':
             ensureContracteSchema($db);
+            checkContractRateLimit($db, 'view', 30);  // max 30/min/IP
             $token = isset($_GET['token']) ? trim($_GET['token']) : '';
             if (!$token || !preg_match('/^[a-f0-9]{32}$/', $token)) {
                 jsonResponse(['success' => false, 'error' => 'Token invalid'], 400);
             }
             $stmt = $db->prepare("SELECT c.id, c.contract_nr, c.tip_client, c.status, c.date_completate,
                                          c.adresa_instalare, c.avans_procent, c.termen_plata_zile,
-                                         c.valoare_total, o.obiectiv, o.oferta_id AS oferta_cod,
+                                         c.valoare_total, c.token_expires_at, c.locked_resubmit, c.completat_la,
+                                         o.obiectiv, o.oferta_id AS oferta_cod,
                                          cl.nume AS client_nume, cl.telefon AS client_telefon, cl.email AS client_email
                                   FROM contracte c
                                   LEFT JOIN clienti cl ON c.client_id = cl.id
@@ -1387,50 +1502,81 @@ try {
                                   WHERE c.token = ?");
             $stmt->execute([$token]);
             $row = $stmt->fetch();
-            if (!$row) jsonResponse(['success' => false, 'error' => 'Token invalid sau expirat'], 404);
-            if (!empty($row['date_completate'])) $row['date_completate'] = json_decode($row['date_completate'], true);
+            if (!$row) jsonResponse(['success' => false, 'error' => 'Link invalid'], 404);
+            // Verific expirare
+            if (!empty($row['token_expires_at']) && strtotime($row['token_expires_at']) < time()) {
+                logContractAccess($db, $row['id'], 'view_expired', 'token expirat');
+                jsonResponse(['success' => false, 'error' => 'Link expirat. Solicitați unul nou de la CSSI.', 'expired' => true], 410);
+            }
+            // Decrypt date sensibile pt prefill
+            if (!empty($row['date_completate'])) {
+                $dec = json_decode($row['date_completate'], true);
+                if (is_array($dec)) {
+                    foreach (['cnp','ci_seria','ci_numar'] as $f) {
+                        if (!empty($dec[$f])) $dec[$f] = decryptSensitive($dec[$f]);
+                    }
+                    $row['date_completate'] = $dec;
+                }
+            }
             if (empty($row['status'])) $row['status'] = $row['date_completate'] ? 'completat' : 'asteapta_date';
+            $row['locked_resubmit'] = !empty($row['locked_resubmit']);
+            logContractAccess($db, $row['id'], 'view_public');
             jsonResponse(['success' => true, 'data' => $row]);
             break;
 
         // PUBLIC: clientul submite datele
         case 'submitContractDate':
             ensureContracteSchema($db);
+            checkContractRateLimit($db, 'submit', 5);  // max 5 submit/min/IP
             $token = isset($data['token']) ? trim($data['token']) : '';
             if (!$token || !preg_match('/^[a-f0-9]{32}$/', $token)) {
                 jsonResponse(['success' => false, 'error' => 'Token invalid'], 400);
             }
-            $stmt = $db->prepare("SELECT id, status, client_id FROM contracte WHERE token = ?");
+            $stmt = $db->prepare("SELECT id, status, client_id, token_expires_at, locked_resubmit FROM contracte WHERE token = ?");
             $stmt->execute([$token]);
             $row = $stmt->fetch();
-            if (!$row) jsonResponse(['success' => false, 'error' => 'Token invalid sau expirat'], 404);
-            // Permitem update si dupa completare initiala (clientul poate corecta)
+            if (!$row) jsonResponse(['success' => false, 'error' => 'Link invalid'], 404);
+            // Verific expirare
+            if (!empty($row['token_expires_at']) && strtotime($row['token_expires_at']) < time()) {
+                logContractAccess($db, $row['id'], 'submit_expired');
+                jsonResponse(['success' => false, 'error' => 'Link expirat. Solicitați unul nou de la CSSI.', 'expired' => true], 410);
+            }
+            // Verific lock re-submit
+            if (!empty($row['locked_resubmit'])) {
+                logContractAccess($db, $row['id'], 'submit_locked');
+                jsonResponse(['success' => false, 'error' => 'Datele au fost deja transmise. Pentru modificări, contactați CSSI.', 'locked' => true], 423);
+            }
+            // GDPR consent obligatoriu
+            if (empty($data['gdpr_consent'])) {
+                jsonResponse(['success' => false, 'error' => 'Consimțământul GDPR este obligatoriu (bifează caseta).'], 400);
+            }
             $tipClient = isset($data['tip_client']) && in_array($data['tip_client'], ['PF','PJ'], true) ? $data['tip_client'] : 'PF';
-            // Sanitizam datele
+            // Sanitizam datele + cap lungime (anti-DOS)
+            $cap = function($s, $max = 500) { $s = trim((string)$s); return mb_strlen($s) > $max ? mb_substr($s, 0, $max) : $s; };
             $dateCompletate = [];
             if ($tipClient === 'PF') {
                 $dateCompletate = [
-                    'nume'        => trim($data['nume'] ?? ''),
-                    'cnp'         => trim($data['cnp'] ?? ''),
-                    'ci_seria'    => trim($data['ci_seria'] ?? ''),
-                    'ci_numar'    => trim($data['ci_numar'] ?? ''),
-                    'domiciliu'   => trim($data['domiciliu'] ?? ''),
-                    'telefon'     => trim($data['telefon'] ?? ''),
-                    'email'       => trim($data['email'] ?? ''),
+                    'nume'        => $cap($data['nume'] ?? '', 150),
+                    'cnp'         => encryptSensitive($cap($data['cnp'] ?? '', 13)),
+                    'ci_seria'    => encryptSensitive($cap($data['ci_seria'] ?? '', 5)),
+                    'ci_numar'    => encryptSensitive($cap($data['ci_numar'] ?? '', 10)),
+                    'domiciliu'   => $cap($data['domiciliu'] ?? '', 500),
+                    'telefon'     => $cap($data['telefon'] ?? '', 30),
+                    'email'       => $cap($data['email'] ?? '', 150),
                 ];
                 if (!$dateCompletate['nume']) jsonResponse(['success' => false, 'error' => 'Nume obligatoriu'], 400);
             } else {
                 $dateCompletate = [
-                    'denumire'         => trim($data['denumire'] ?? ''),
-                    'cui'              => trim($data['cui'] ?? ''),
-                    'reg_com'          => trim($data['reg_com'] ?? ''),
-                    'sediu'            => trim($data['sediu'] ?? ''),
-                    'reprezentant'     => trim($data['reprezentant'] ?? ''),
-                    'functia'          => trim($data['functia'] ?? ''),
-                    'cont_iban'        => trim($data['cont_iban'] ?? ''),
-                    'banca'            => trim($data['banca'] ?? ''),
-                    'telefon'          => trim($data['telefon'] ?? ''),
-                    'email'            => trim($data['email'] ?? ''),
+                    'denumire'         => $cap($data['denumire'] ?? '', 200),
+                    'cui'              => $cap($data['cui'] ?? '', 30),
+                    'reg_com'          => $cap($data['reg_com'] ?? '', 50),
+                    'sediu'            => $cap($data['sediu'] ?? '', 500),
+                    'reprezentant'     => $cap($data['reprezentant'] ?? '', 150),
+                    'functia'          => $cap($data['functia'] ?? '', 100),
+                    'cont_iban'        => $cap($data['cont_iban'] ?? '', 35),
+                    'banca'            => $cap($data['banca'] ?? '', 100),
+                    'telefon'          => $cap($data['telefon'] ?? '', 30),
+                    'email'            => $cap($data['email'] ?? '', 150),
                 ];
                 if (!$dateCompletate['denumire']) jsonResponse(['success' => false, 'error' => 'Denumire firmă obligatorie'], 400);
                 if (!$dateCompletate['cui'])      jsonResponse(['success' => false, 'error' => 'CUI obligatoriu'], 400);
@@ -1443,8 +1589,11 @@ try {
             // Normalizam status — ENUM vechi poate retrieve gol; tratam ca asteapta_date
             $curStatus = empty($row['status']) ? 'asteapta_date' : $row['status'];
             $newStatus = ($curStatus === 'asteapta_date') ? 'completat' : $curStatus;
-            $db->prepare("UPDATE contracte SET tip_client=?, date_completate=?, adresa_instalare=?, avans_procent=?, termen_plata_zile=?, status=?, completat_la=NOW() WHERE id=?")
-               ->execute([$tipClient, json_encode($dateCompletate, JSON_UNESCAPED_UNICODE), $adresaInst, $avansProc, $termenZile, $newStatus, $row['id']]);
+            $clientIP = substr($_SERVER['REMOTE_ADDR'] ?? '', 0, 45);
+            // Lock re-submit dupa primul submit + GDPR consent timestamp + IP
+            $db->prepare("UPDATE contracte SET tip_client=?, date_completate=?, adresa_instalare=?, avans_procent=?, termen_plata_zile=?, status=?, completat_la=NOW(), locked_resubmit=1, gdpr_consent_at=NOW(), gdpr_consent_ip=? WHERE id=?")
+               ->execute([$tipClient, json_encode($dateCompletate, JSON_UNESCAPED_UNICODE), $adresaInst, $avansProc, $termenZile, $newStatus, $clientIP, $row['id']]);
+            logContractAccess($db, $row['id'], 'submit_data', 'tip=' . $tipClient . ' avans=' . $avansProc . '%');
 
             // Notificare admin (Roxana)
             try {
@@ -1479,10 +1628,25 @@ try {
             if (isset($data['tip_client']) && in_array($data['tip_client'], ['PF','PJ'], true)) {
                 $fields[] = "tip_client = ?"; $values[] = $data['tip_client'];
             }
+            if (isset($data['locked_resubmit'])) {
+                $fields[] = "locked_resubmit = ?"; $values[] = $data['locked_resubmit'] ? 1 : 0;
+            }
             if (!$fields) jsonResponse(['success' => false, 'error' => 'Nimic de actualizat'], 400);
             $values[] = $id;
             $db->prepare("UPDATE contracte SET " . implode(', ', $fields) . " WHERE id = ?")->execute($values);
+            logContractAccess($db, $id, 'admin_update', implode(',', array_map(function($f){ return preg_replace('/\s*=.*/', '', $f); }, $fields)));
             jsonResponse(['success' => true]);
+            break;
+
+        // Endpoint nou: audit log pt un contract
+        case 'getContractAccessLog':
+            requireAuth();
+            ensureContractAccessLog($db);
+            $id = isset($_GET['id']) ? intval($_GET['id']) : 0;
+            if (!$id) jsonResponse(['success' => false, 'error' => 'id obligatoriu'], 400);
+            $stmt = $db->prepare("SELECT id, action, user_id, ip, ts, details FROM contract_access_log WHERE contract_id = ? ORDER BY ts DESC LIMIT 100");
+            $stmt->execute([$id]);
+            jsonResponse(['success' => true, 'data' => $stmt->fetchAll()]);
             break;
 
         case 'regenerateContractToken':
@@ -1491,8 +1655,12 @@ try {
             $id = isset($data['id']) ? intval($data['id']) : 0;
             if (!$id) jsonResponse(['success' => false, 'error' => 'id obligatoriu'], 400);
             $newToken = generateContractToken();
-            $db->prepare("UPDATE contracte SET token = ?, status = IF(status='asteapta_date',status,'asteapta_date') WHERE id = ?")->execute([$newToken, $id]);
-            jsonResponse(['success' => true, 'token' => $newToken]);
+            $newExpiresAt = date('Y-m-d H:i:s', strtotime('+60 days'));
+            // Regenerare token = extinde validitatea + permite re-completare (unlock)
+            $db->prepare("UPDATE contracte SET token = ?, token_expires_at = ?, locked_resubmit = 0 WHERE id = ?")
+               ->execute([$newToken, $newExpiresAt, $id]);
+            logContractAccess($db, $id, 'token_regenerated', 'expires=' . $newExpiresAt);
+            jsonResponse(['success' => true, 'token' => $newToken, 'expires_at' => $newExpiresAt]);
             break;
 
         case 'createContractDraft':
@@ -1524,9 +1692,12 @@ try {
             $tipClient = stripos($o['tip'] ?? '', 'jurid') !== false || stripos($o['tip'] ?? '', 'firma') !== false ? 'PJ' : 'PF';
             $userCur = currentUser();
             $createdBy = $userCur['username'] ?? 'Admin';
-            $db->prepare("INSERT INTO contracte (contract_nr, oferta_id, proiect_id, client_id, token, tip_client, status, valoare_net, valoare_tva, valoare_total, created_by) VALUES (?,?,?,?,?,?,?,?,?,?,?)")
-               ->execute([$contractNr, $ofertaId, $pid, $o['client_id'], $token, $tipClient, 'asteapta_date', $o['total_fara_tva'], $o['tva'], $o['total_cu_tva'], $createdBy]);
-            jsonResponse(['success' => true, 'id' => $db->lastInsertId(), 'token' => $token, 'contract_nr' => $contractNr]);
+            $expiresAt = date('Y-m-d H:i:s', strtotime('+60 days'));
+            $db->prepare("INSERT INTO contracte (contract_nr, oferta_id, proiect_id, client_id, token, tip_client, status, valoare_net, valoare_tva, valoare_total, created_by, token_expires_at) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)")
+               ->execute([$contractNr, $ofertaId, $pid, $o['client_id'], $token, $tipClient, 'asteapta_date', $o['total_fara_tva'], $o['tva'], $o['total_cu_tva'], $createdBy, $expiresAt]);
+            $newId = $db->lastInsertId();
+            logContractAccess($db, $newId, 'create_draft', 'manual via createContractDraft');
+            jsonResponse(['success' => true, 'id' => $newId, 'token' => $token, 'contract_nr' => $contractNr, 'expires_at' => $expiresAt]);
             break;
 
         case 'deleteContract':
@@ -1544,10 +1715,17 @@ try {
         case 'generateContractDoc':
             ensureContracteSchema($db);
             requireAuth();
+            // Restrict acces la roluri responsabile (anti-leak la tehnicieni)
+            $uCur = currentUser();
+            $allowedRoles = ['admin','sales','org'];
+            if (!$uCur || !in_array($uCur['role'] ?? '', $allowedRoles, true)) {
+                http_response_code(403); echo 'Acces interzis pentru rolul tau'; exit;
+            }
             $id = isset($_GET['id']) ? intval($_GET['id']) : 0;
             $format = isset($_GET['format']) ? $_GET['format'] : 'word';
             if (!$id) { http_response_code(400); echo 'id obligatoriu'; exit; }
             if (!in_array($format, ['word','pdf'], true)) $format = 'word';
+            logContractAccess($db, $id, 'download_' . $format);
 
             $stmt = $db->prepare("SELECT c.*, o.oferta_id AS oferta_cod, o.data_oferta, o.obiectiv, p.proiect_id AS proiect_cod, p.serviciu, p.adresa_obiectiv FROM contracte c LEFT JOIN oferte o ON c.oferta_id = o.id LEFT JOIN proiecte p ON c.proiect_id = p.id WHERE c.id = ?");
             $stmt->execute([$id]);
@@ -1555,6 +1733,12 @@ try {
             if (!$c) { http_response_code(404); echo 'Contract inexistent'; exit; }
 
             $d = !empty($c['date_completate']) ? json_decode($c['date_completate'], true) : [];
+            // Decrypt câmpurile sensibile (CNP, CI seria/nr) pentru document
+            if (is_array($d)) {
+                foreach (['cnp','ci_seria','ci_numar'] as $f) {
+                    if (!empty($d[$f])) $d[$f] = decryptSensitive($d[$f]);
+                }
+            }
             $p = prestatorData();
             $tipPj = ($c['tip_client'] ?? 'PF') === 'PJ';
             $contractNr = $c['contract_nr'] ?? ('#' . $c['id']);

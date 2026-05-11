@@ -234,6 +234,16 @@ function renderCard(c){
     html += '<span class="val">'+fmtMoney(c.valoare_total)+'</span>';
     html += '</div>';
     if(c.obiectiv) html += '<div style="font-size:12px;color:var(--gray);margin-bottom:8px;font-style:italic">'+esc(c.obiectiv)+'</div>';
+    // Expire badge — atentioneaza daca link-ul expira curand
+    if(c.token_expires_at){
+        var expDate = new Date(c.token_expires_at.replace(' ','T'));
+        var daysLeft = Math.ceil((expDate - new Date())/86400000);
+        if(daysLeft < 0){
+            html += '<div style="font-size:11px;color:var(--red);font-weight:800;margin-bottom:8px;padding:4px 10px;background:#fef2f2;border-radius:6px;display:inline-block">⏱️ Link expirat (acum '+(-daysLeft)+' zile) — regenerează</div>';
+        } else if(daysLeft <= 7){
+            html += '<div style="font-size:11px;color:var(--orange);font-weight:800;margin-bottom:8px;padding:4px 10px;background:#fff7ed;border-radius:6px;display:inline-block">⏱️ Expiră în '+daysLeft+' zile</div>';
+        }
+    }
     html += '<div class="cc-actions">';
     var publicUrl = window.location.origin + '/contract.html?token=' + encodeURIComponent(c.token);
     if(c.status === 'asteapta_date'){
@@ -361,9 +371,60 @@ function renderDetail(c){
         html += '<button class="cc-btn primary" onclick="markStatus(\'semnat\')" style="padding:10px 16px;font-size:13px;background:var(--green);border-color:var(--green)">✅ Marchează semnat</button>';
     }
     html += '<button class="cc-btn" onclick="regenerateToken()" style="padding:10px 16px;font-size:13px">🔄 Regenerează link</button>';
+    if(c.locked_resubmit){
+        html += '<button class="cc-btn warn" onclick="unlockResubmit()" style="padding:10px 16px;font-size:13px" title="Permite clientului să re-completeze datele fără a regenera link-ul">🔓 Permite re-completare</button>';
+    }
+    html += '<button class="cc-btn" onclick="openAuditLog('+c.id+')" style="padding:10px 16px;font-size:13px">📜 Audit log</button>';
     html += '</div>';
+    // GDPR consent timestamp (legal evidence)
+    if(c.gdpr_consent_at){
+        html += '<div style="margin-top:10px;font-size:11px;color:var(--gray-l)">🔒 Consimțământ GDPR: '+fmtDateTime(c.gdpr_consent_at)+(c.gdpr_consent_ip?' (IP: '+esc(c.gdpr_consent_ip)+')':'')+'</div>';
+    }
 
     document.getElementById('dmBody').innerHTML = html;
+}
+
+function unlockResubmit(){
+    if(!STATE.current) return;
+    if(!confirm('Deblochezi formularul? Clientul va putea re-completa cu date noi (același link).')) return;
+    fetch(API+'?action=updateContract',{method:'POST',credentials:'include',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'updateContract',id:STATE.current.id,locked_resubmit:0})})
+        .then(function(r){return r.json();})
+        .then(function(res){
+            if(res.success){ toast('🔓 Re-completare permisă','success'); openDetail(STATE.current.id); }
+            else toast('❌ '+(res.error||'Eroare'),'error');
+        });
+}
+
+function openAuditLog(id){
+    var actNames = {
+        view_public:'👁️ Vizualizare client',
+        view_admin:'👁️ Vizualizare admin',
+        view_expired:'⏱️ Acces link expirat',
+        submit_data:'📥 Date trimise',
+        submit_expired:'⏱️ Submit pe link expirat',
+        submit_locked:'🔒 Submit blocat (locked)',
+        create_draft:'➕ Draft creat',
+        auto_create:'🤖 Auto-creat la accept',
+        token_regenerated:'🔄 Token regenerat',
+        admin_update:'✏️ Modificat de admin',
+        download_word:'📝 Download Word',
+        download_pdf:'📄 Download PDF'
+    };
+    fetch(API+'?action=getContractAccessLog&id='+id+'&_t='+Date.now(),{credentials:'include'})
+        .then(function(r){return r.json();})
+        .then(function(res){
+            if(!res.success){ toast('❌ '+(res.error||'Eroare'),'error'); return; }
+            var rows = res.data || [];
+            var html = '<div style="max-height:60vh;overflow-y:auto"><table style="width:100%;font-size:12px;border-collapse:collapse">';
+            html += '<thead><tr style="border-bottom:2px solid var(--gray-b)"><th style="text-align:left;padding:6px">Acțiune</th><th style="text-align:left;padding:6px">User</th><th style="text-align:left;padding:6px">IP</th><th style="text-align:left;padding:6px">Data</th></tr></thead><tbody>';
+            if(!rows.length) html += '<tr><td colspan="4" style="padding:20px;text-align:center;color:var(--gray-l)">Niciun acces înregistrat</td></tr>';
+            rows.forEach(function(r){
+                html += '<tr style="border-bottom:1px solid var(--gray-b)"><td style="padding:6px">'+(actNames[r.action]||r.action)+'</td><td style="padding:6px;font-weight:600">'+esc(r.user_id||'?')+'</td><td style="padding:6px;font-family:monospace;font-size:11px">'+esc(r.ip||'')+'</td><td style="padding:6px;color:var(--gray)">'+fmtDateTime(r.ts)+'</td></tr>';
+                if(r.details) html += '<tr><td colspan="4" style="padding:0 6px 6px;color:var(--gray-l);font-size:11px;font-style:italic">↳ '+esc(r.details)+'</td></tr>';
+            });
+            html += '</tbody></table></div>';
+            document.getElementById('dmBody').innerHTML = '<button class="cc-btn" onclick="openDetail('+id+')" style="margin-bottom:14px">← Înapoi la detalii</button>' + html;
+        });
 }
 function det(lbl, val){
     var v = val ? esc(val) : '<span class="val empty">— necompletat —</span>';
