@@ -1525,9 +1525,10 @@ try {
             }
             if (empty($row['status'])) $row['status'] = $row['date_completate'] ? 'completat' : 'asteapta_date';
             $row['locked_resubmit'] = !empty($row['locked_resubmit']);
-            // Calcul grace period — frontend afișează formul în primele 5 min post-submit
+            // Calcul grace period (5 min post-submit) — frontend afișează formul + countdown
             $row['in_grace_period'] = false;
             $row['grace_seconds_left'] = 0;
+            $row['_v'] = 'grace_v2';  // cache buster
             if ($row['locked_resubmit'] && !empty($row['completat_la'])) {
                 $graceEndTs = strtotime($row['completat_la']) + (5 * 60);
                 $left = $graceEndTs - time();
