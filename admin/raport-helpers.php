@@ -220,13 +220,23 @@ function cssiRenderRaportHtml($d) {
 }
 
 function cssiSendRaportEmail($recipients, $subject, $bodyHtml, $bodyText) {
+    // From email — folosim un mailbox real cPanel (default office@cssi.ro)
+    // ca să trecem SPF/DKIM checks la Gmail. noreply@... fictiv = blocat.
+    $fromEmail = defined('REPORT_FROM_EMAIL') ? REPORT_FROM_EMAIL : 'office@cssi.ro';
+    $fromName  = 'Portal CSSI';
+
     $boundary = 'cssi_' . md5(uniqid());
     $headers = [
         'MIME-Version: 1.0',
         'Content-Type: multipart/alternative; boundary="' . $boundary . '"',
-        'From: Portal CSSI <noreply@cssi.ro>',
-        'Reply-To: office@cssi.ro',
+        'From: ' . $fromName . ' <' . $fromEmail . '>',
+        'Reply-To: ' . $fromEmail,
+        'Return-Path: ' . $fromEmail,
+        'Sender: ' . $fromEmail,
+        'Message-ID: <' . md5(uniqid()) . '@cssi.ro>',
+        'Date: ' . date('r'),
         'X-Mailer: CSSI-Cron/1.0',
+        'X-Priority: 3',
     ];
     $multipart  = "--$boundary\r\n";
     $multipart .= "Content-Type: text/plain; charset=UTF-8\r\n";
@@ -238,12 +248,20 @@ function cssiSendRaportEmail($recipients, $subject, $bodyHtml, $bodyText) {
     $multipart .= $bodyHtml . "\r\n\r\n";
     $multipart .= "--$boundary--";
 
-    $sent = 0; $failed = 0;
+    // Envelope sender (-f) — critic pentru SPF: spune cPanel "trimite ca de la $fromEmail"
+    $envelopeParam = '-f ' . $fromEmail;
+
+    $sent = 0; $failed = 0; $errors = [];
     foreach ($recipients as $to) {
-        if (mail($to, $subject, $multipart, implode("\r\n", $headers))) $sent++;
-        else $failed++;
+        $ok = @mail($to, $subject, $multipart, implode("\r\n", $headers), $envelopeParam);
+        if ($ok) $sent++;
+        else {
+            $failed++;
+            $err = error_get_last();
+            $errors[] = $to . ': ' . ($err['message'] ?? 'unknown');
+        }
     }
-    return ['sent' => $sent, 'failed' => $failed];
+    return ['sent' => $sent, 'failed' => $failed, 'errors' => $errors, 'from' => $fromEmail];
 }
 
 function cssiLogCronEmail($db, $script, $recipients, $sent, $failed, $extra = []) {

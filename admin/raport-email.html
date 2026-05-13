@@ -149,10 +149,25 @@ function sendNow(){
         .then(function(r){return r.json();})
         .then(function(res){
             btn.disabled = false; btn.textContent = '📧 Trimite raport ACUM';
-            if(res.success){
-                toast('✅ Raport trimis: '+res.sent+' OK, '+res.failed+' eșuate ('+res.recipients.length+' destinatari)','success');
-                loadLog();
-            } else toast('❌ '+(res.error||'Eroare'),'error');
+            if(!res.success){ toast('❌ '+(res.error||'Eroare'),'error'); return; }
+            // Detail în UI (info-box)
+            var detail = '✅ <strong>'+res.sent+' email(uri) acceptate</strong> de MTA local';
+            if(res.failed) detail += ' · ❌ <strong>'+res.failed+' eșuate</strong>';
+            detail += '<br><strong>From:</strong> '+esc(res.from||'?')+' · <strong>To:</strong> '+esc((res.recipients||[]).join(', '));
+            if(res.errors && res.errors.length){
+                detail += '<br><strong>Erori:</strong><br>' + res.errors.map(function(e){return '• '+esc(e);}).join('<br>');
+            }
+            detail += '<br><br><em>'+esc(res.note||'')+'</em>';
+            var box = document.getElementById('sendResult');
+            if(!box){
+                box = document.createElement('div');
+                box.id = 'sendResult';
+                box.style.cssText = 'background:#eff6ff;border-left:4px solid var(--blue);padding:12px 14px;border-radius:8px;margin-top:10px;font-size:12px;color:#1e3a8a;line-height:1.6';
+                document.getElementById('btnSendNow').parentElement.parentElement.appendChild(box);
+            }
+            box.innerHTML = detail;
+            toast('✅ '+res.sent+' OK · '+res.failed+' eșuate','success');
+            loadLog();
         });
 }
 function loadLog(){

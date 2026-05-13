@@ -1748,8 +1748,21 @@ try {
             $bodyHtml = cssiRenderRaportHtml($rData);
             $bodyText = cssiRenderRaportText($rData);
             $result = cssiSendRaportEmail($recipients, $subject, $bodyHtml, $bodyText);
-            cssiLogCronEmail($db, 'raport_zilnic_manual', $recipients, $result['sent'], $result['failed'], ['kpi' => $rData['kpi'], 'triggered_by' => currentUser()['username'] ?? '?']);
-            jsonResponse(['success' => true, 'sent' => $result['sent'], 'failed' => $result['failed'], 'recipients' => $recipients]);
+            cssiLogCronEmail($db, 'raport_zilnic_manual', $recipients, $result['sent'], $result['failed'], [
+                'kpi' => $rData['kpi'],
+                'triggered_by' => currentUser()['username'] ?? '?',
+                'from' => $result['from'] ?? '',
+                'errors' => $result['errors'] ?? [],
+            ]);
+            jsonResponse([
+                'success' => true,
+                'sent' => $result['sent'],
+                'failed' => $result['failed'],
+                'recipients' => $recipients,
+                'from' => $result['from'] ?? '',
+                'errors' => $result['errors'] ?? [],
+                'note' => 'PHP mail() a returnat ' . ($result['sent'] > 0 ? 'true (acceptat de MTA local)' : 'false') . '. Dacă nu primești email, verifică: 1) folder SPAM, 2) că office@cssi.ro există ca mailbox cPanel, 3) SPF record pt cssi.ro acceptă cPanel server.',
+            ]);
             break;
 
         case 'getCronLog':
