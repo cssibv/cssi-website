@@ -21,6 +21,10 @@
 <div class="toast-container" id="toastContainer"></div>
 <div class="container">
 <div class="page-header"><div><a href="../admin.html" class="page-back">← Dashboard</a><div class="page-title">📋 Generator Oferte CSSI</div><div class="page-subtitle">Creare oferte · Export PDF · Listă salvate</div></div><div class="page-actions"><a href="oferte.html" class="page-btn secondary">📂 Listă oferte</a><button class="page-btn primary" onclick="newOffer()">+ Ofertă Nouă</button></div></div>
+<div id="draftBanner" style="display:none;background:linear-gradient(135deg,#fefce8,#fef3c7);border:1px solid #facc15;border-left:4px solid #eab308;border-radius:12px;padding:0;margin-bottom:14px;box-shadow:0 1px 3px rgba(0,0,0,0.06);overflow:hidden;">
+<div style="padding:11px 14px 9px 14px;display:flex;align-items:center;gap:8px;border-bottom:1px solid rgba(234,179,8,0.25)"><span style="font-size:18px">💾</span><span style="font-size:12px;font-weight:800;color:#854d0e;text-transform:uppercase;letter-spacing:0.5px">Drafturi în lucru — <span id="draftCount">0</span></span><span style="margin-left:auto;font-size:11px;color:#854d0e;opacity:0.7">click pe un draft pentru a-l continua</span><button onclick="closeDraftBanner()" title="Ascunde" style="margin-left:8px;width:24px;height:24px;border-radius:6px;border:none;background:rgba(255,255,255,0.5);color:#854d0e;font-size:14px;cursor:pointer;font-family:inherit">✕</button></div>
+<div id="draftList" style="max-height:240px;overflow-y:auto;background:rgba(255,255,255,0.4)"></div>
+</div>
 <div class="tabs"><button class="tab active" onclick="setTab('offer',this)">📝 Ofertă Nouă</button><button class="tab" onclick="setTab('saved',this)">💾 Salvate <span class="badge" id="savedCount">0</span></button></div>
 <div id="tab-offer" class="tab-panel active"><div class="card"><div class="card-title">🏢 Date ofertă & beneficiar</div><div class="form-row-3"><div class="form-group"><label class="form-label">Nr. ofertă</label><input type="text" class="form-input" id="oNr" placeholder="Auto"></div><div class="form-group"><label class="form-label">Data</label><input type="date" class="form-input" id="oData"></div><div class="form-group"><label class="form-label">Valabilitate</label><select class="form-select" id="oValab"><option>4 zile</option><option>7 zile</option><option>15 zile</option><option>30 zile</option></select></div></div><div class="form-row"><div class="form-group"><label class="form-label">Beneficiar * <button type="button" style="float:right;padding:3px 10px;border-radius:8px;border:1px solid var(--blue);background:#eff6ff;color:var(--blue);font-size:11px;font-weight:700;cursor:pointer" onclick="openClientPicker()">🔍 Client existent</button></label><input type="text" class="form-input" id="oClient" placeholder="Denumire client / firmă"></div><div class="form-group"><label class="form-label">CUI / CNP</label><input type="text" class="form-input" id="oCui" placeholder="RO12345678"></div></div><div class="form-row"><div class="form-group"><label class="form-label">Adresa obiectiv</label><input type="text" class="form-input" id="oAdresa" placeholder="Str..., Nr..., Brașov"></div><div class="form-group"><label class="form-label">Persoană contact</label><input type="text" class="form-input" id="oContact" placeholder="Nume + telefon"></div></div><div class="form-group"><label class="form-label">Obiectiv / descriere lucrare</label><input type="text" class="form-input" id="oObiectiv" placeholder="Ex: Sistem supraveghere video depozit"></div></div>
 <div class="card"><div class="card-title" style="justify-content:space-between;flex-wrap:wrap"><span>📦 Echipamente</span><div style="display:flex;gap:6px"><button class="btn btn-sm btn-outline" onclick="addManualLine()">✏️ Manual</button><button class="btn btn-sm btn-green" onclick="openCodeModal()" style="background:var(--orange)">🔍 Cod produs</button></div></div><div style="font-size:10px;color:var(--gray);margin-bottom:8px;display:flex;gap:12px"><span>🟡 Galben=preț achiz.</span><span>🔵 Albastru=adaos%</span><span>⬛ Negru=automat</span></div><div class="offer-line header"><div></div><div>#</div><div>Denumire</div><div>UM</div><div>Cant.</div><div>Preț achiz.</div><div>Adaos%</div><div>Valoare</div><div></div></div><div id="offerLines"></div><div id="offerEmpty" class="empty" style="padding:20px">Adaugă produse manual sau prin căutare după cod</div></div>
@@ -72,7 +76,7 @@ function saveOfertaToDB(offerData){
 var body=JSON.parse(JSON.stringify(offerData));
 body.action='saveOferta';
 fetch(API_LOCAL+'?action=saveOferta',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)}).then(function(r){return r.json()}).then(function(res){
-if(res.success){toast('✅ Oferta '+res.oferta_id+' salvată în baza de date','success');loadOffersFromDB();}else{toast('⚠️ Eroare: '+(res.error||'necunoscuta'),'error');}
+if(res.success){if(window.__clearOfertaDraft)window.__clearOfertaDraft();toast('✅ Oferta '+res.oferta_id+' salvată în baza de date','success');loadOffersFromDB();}else{toast('⚠️ Eroare: '+(res.error||'necunoscuta'),'error');}
 }).catch(function(e){toast('⚠️ Eroare server: '+e.message,'error');});}
 function deleteOfertaFromDB(oid){
 fetch(API_LOCAL+'?action=deleteOferta',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'deleteOferta',id:oid})}).then(function(r){return r.json()}).then(function(res){
@@ -170,6 +174,7 @@ var p=buildOfferPayload();if(!p)return;
 p.client_db_id=window._prefillClientDbId||'';
 p.proiect_db_id=window._prefillProiectDbId||'';
 p.oferta_db_id=window._editingOfertaDbId||'';
+p.draft_id=window._draftId||'';
 // Pentru oferte NOI, nr se generează de API (nu din câmp)
 if(!window._editingOfertaDbId){p.nr='';}
 saveOfertaToDB(p);
@@ -181,6 +186,7 @@ function saveAsNew(){
 document.getElementById('oData').value=todayStr();
 var p=buildOfferPayload();if(!p)return;
 p.nr='';p.oferta_db_id='';p.client_db_id=window._prefillClientDbId||'';p.proiect_db_id=window._prefillProiectDbId||'';
+p.draft_id=window._draftId||'';
 saveOfertaToDB(p);
 toast('🆕 Ofertă nouă creată!','success');
 window._editingOfertaDbId='';updateEditUI();fetchNextOfertaNr();
@@ -407,6 +413,285 @@ loadClienti();
             toast('📝 Client preluat din CRM: '+c.client,'info');
         }catch(e){}
     }
+})();
+</script>
+<script>
+// ═══ AUTOSAVE SERVER-SIDE DRAFTURI OFERTE ═══
+// Oferte în creare, nesalvate explicit → POST debounced către API.
+// Drafturile sunt vizibile pentru toți utilizatorii și recuperabile cross-device.
+// localStorage rămâne fallback DOAR dacă serverul nu răspunde.
+(function(){
+console.log('[draft] server autosave initialized');
+var FALLBACK_KEY='cssi-oferta-draft-fallback';
+var __t=null,__saving=false,__hyd=false,__lastJSON='';
+window._draftId=window._draftId||0;
+
+function snap(){
+    var tEl=document.getElementById('tTotal');
+    var totalTxt=tEl?tEl.textContent.replace(/[^\d.,]/g,'').replace(',','.'):'0';
+    return {
+        data:document.getElementById('oData').value||'',
+        valab:document.getElementById('oValab').value||'',
+        client:document.getElementById('oClient').value||'',
+        cui:document.getElementById('oCui').value||'',
+        adresa:document.getElementById('oAdresa').value||'',
+        contact:document.getElementById('oContact').value||'',
+        obiectiv:document.getElementById('oObiectiv').value||'',
+        offerLines:offerLines||[],
+        laborLines:laborLines||[],
+        clientDbId:window._prefillClientDbId||'',
+        proiectDbId:window._prefillProiectDbId||'',
+        totalCuTva:parseFloat(totalTxt)||0
+    };
+}
+function meaningful(d){
+    if(!d)return false;
+    if((d.client||'').trim())return true;
+    if((d.obiectiv||'').trim())return true;
+    if((d.offerLines||[]).some(function(l){return (l.name&&String(l.name).trim())||parseFloat(l.cant)>0;}))return true;
+    if((d.laborLines||[]).some(function(l){return parseFloat(l.cant)>0;}))return true;
+    return false;
+}
+function setStatus(msg){
+    // Status-ul autosave apare în page-header (sub titlu) pentru feedback subtil.
+    var el=document.getElementById('autosaveStatus');
+    if(!el){
+        // Inserăm o singură dată elementul în page-header
+        var hdr=document.querySelector('.page-header .page-subtitle');
+        if(hdr){
+            el=document.createElement('span');
+            el.id='autosaveStatus';
+            el.style.cssText='display:inline-block;margin-left:10px;padding:2px 8px;border-radius:99px;background:rgba(255,255,255,0.15);font-size:11px;font-weight:600;color:rgba(255,255,255,0.85)';
+            hdr.appendChild(el);
+        } else return;
+    }
+    if(!msg){el.style.display='none';return;}
+    el.textContent=msg;
+    el.style.display='inline-block';
+}
+function serverSave(){
+    if(window._editingOfertaDbId)return;
+    if(__hyd)return;
+    if(__saving)return;
+    var d=snap();
+    if(!meaningful(d)){
+        // Nimic semnificativ → dacă există un draft pe server, șterge-l
+        if(window._draftId){
+            var idToDel=window._draftId;window._draftId=0;
+            fetch(API_LOCAL+'?action=deleteOfertaDraft',{method:'POST',credentials:'include',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'deleteOfertaDraft',id:idToDel})}).catch(function(){});
+            setStatus('');
+        }
+        return;
+    }
+    var json=JSON.stringify(d);
+    if(json===__lastJSON)return;  // nimic schimbat
+    __lastJSON=json;
+    var body={
+        action:'saveOfertaDraft',
+        draft_id:window._draftId||0,
+        client_nume:d.client||'',
+        obiectiv:d.obiectiv||'',
+        total_cu_tva:d.totalCuTva||0,
+        payload:d
+    };
+    __saving=true;
+    setStatus('💾 Se salvează…');
+    fetch(API_LOCAL+'?action=saveOfertaDraft',{method:'POST',credentials:'include',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)})
+        .then(function(r){return r.json();})
+        .then(function(res){
+            if(res&&res.success){
+                window._draftId=res.id;
+                setStatus('💾 Autosalvat · '+new Date().toLocaleTimeString('ro-RO'));
+                try{localStorage.removeItem(FALLBACK_KEY);}catch(e){}
+            } else {
+                // Fallback: salvez în localStorage dacă serverul respinge
+                try{localStorage.setItem(FALLBACK_KEY,JSON.stringify({payload:d,savedAt:Date.now()}));}catch(e){}
+                setStatus('⚠️ Salvare server eșuată — păstrat local');
+            }
+        })
+        .catch(function(err){
+            // Server nereachable → fallback localStorage
+            try{localStorage.setItem(FALLBACK_KEY,JSON.stringify({payload:d,savedAt:Date.now()}));}catch(e){}
+            setStatus('⚠️ Offline — păstrat local');
+        })
+        .finally(function(){__saving=false;});
+}
+function schedule(){if(__t)clearTimeout(__t);__t=setTimeout(serverSave,2000);}
+
+function fmtAgo(iso){
+    if(!iso)return '';
+    var d=new Date(iso.replace(' ','T'));if(isNaN(d.getTime()))return iso;
+    var s=Math.floor((Date.now()-d.getTime())/1000);
+    if(s<60)return 'acum câteva secunde';
+    if(s<3600)return 'acum '+Math.floor(s/60)+' min';
+    if(s<86400)return 'acum '+Math.floor(s/3600)+' h';
+    return 'acum '+Math.floor(s/86400)+' zile';
+}
+function fmtMoney(n){return Number(n||0).toLocaleString('ro-RO',{minimumFractionDigits:0,maximumFractionDigits:0})+' RON';}
+
+function renderDraftList(drafturi){
+    var list=document.getElementById('draftList');if(!list)return;
+    var count=document.getElementById('draftCount');if(count)count.textContent=drafturi.length;
+    if(!drafturi.length){
+        document.getElementById('draftBanner').style.display='none';
+        return;
+    }
+    var html='';
+    drafturi.forEach(function(d){
+        var who=(d.client_nume||'').trim()||'(fără client)';
+        var obi=(d.obiectiv||'').trim();
+        html+='<div style="display:flex;align-items:center;gap:10px;padding:10px 14px;border-bottom:1px solid rgba(234,179,8,0.15);cursor:pointer;transition:background 0.15s" onmouseover="this.style.background=\'rgba(255,255,255,0.6)\'" onmouseout="this.style.background=\'\'" onclick="window.continueDraft('+d.id+')">';
+        html+='<span style="font-size:16px;flex-shrink:0">▶</span>';
+        html+='<div style="flex:1;min-width:0">';
+        html+='<div style="font-size:13px;font-weight:700;color:#0f172a;line-height:1.3">'+esc(who)+(obi?' <span style="font-weight:500;color:#64748b">— '+esc(obi)+'</span>':'')+'</div>';
+        html+='<div style="font-size:11px;color:#854d0e;margin-top:2px">'+fmtMoney(d.total_cu_tva)+' · de '+esc(d.created_by_name||d.created_by||'?')+' · '+fmtAgo(d.updated_at)+'</div>';
+        html+='</div>';
+        html+='<button onclick="event.stopPropagation();window.discardDraft('+d.id+')" title="Șterge draft" style="width:28px;height:28px;border-radius:6px;border:1px solid rgba(220,38,38,0.3);background:#fff;color:#dc2626;font-size:13px;cursor:pointer;font-family:inherit;flex-shrink:0">🗑️</button>';
+        html+='</div>';
+    });
+    list.innerHTML=html;
+    document.getElementById('draftBanner').style.display='block';
+}
+function loadDraftsList(){
+    fetch(API_LOCAL+'?action=listOferteDrafturi&_t='+Date.now(),{credentials:'include'})
+        .then(function(r){return r.json();})
+        .then(function(res){
+            if(res&&res.success&&Array.isArray(res.data))renderDraftList(res.data);
+        })
+        .catch(function(){
+            // Server jos — încercăm fallback localStorage
+            try{
+                var raw=localStorage.getItem(FALLBACK_KEY);
+                if(raw){
+                    var fb=JSON.parse(raw);
+                    if(fb&&fb.payload){
+                        var fakeList=[{
+                            id:'__fallback__',
+                            client_nume:fb.payload.client||'',
+                            obiectiv:fb.payload.obiectiv||'',
+                            total_cu_tva:fb.payload.totalCuTva||0,
+                            created_by_name:'(local, offline)',
+                            updated_at:new Date(fb.savedAt).toISOString().replace('T',' ').substring(0,19)
+                        }];
+                        renderDraftList(fakeList);
+                    }
+                }
+            }catch(e){}
+        });
+}
+
+window.continueDraft=function(id){
+    if(id==='__fallback__'){
+        try{
+            var raw=localStorage.getItem(FALLBACK_KEY);
+            var fb=JSON.parse(raw);
+            applyDraft(fb.payload,0);
+            document.getElementById('draftBanner').style.display='none';
+        }catch(e){toast('⚠️ Eroare la restaurare locală','error');}
+        return;
+    }
+    fetch(API_LOCAL+'?action=getOfertaDraft&id='+id+'&_t='+Date.now(),{credentials:'include'})
+        .then(function(r){return r.json();})
+        .then(function(res){
+            if(!res||!res.success){toast('⚠️ Draft inexistent','error');return;}
+            var d=res.data;
+            applyDraft(d.payload||{},d.id);
+            document.getElementById('draftBanner').style.display='none';
+        })
+        .catch(function(e){toast('⚠️ Eroare: '+e.message,'error');});
+};
+
+function applyDraft(p,draftId){
+    __hyd=true;
+    try{
+        if(p.data)document.getElementById('oData').value=p.data;
+        if(p.valab)document.getElementById('oValab').value=p.valab;
+        document.getElementById('oClient').value=p.client||'';
+        document.getElementById('oCui').value=p.cui||'';
+        document.getElementById('oAdresa').value=p.adresa||'';
+        document.getElementById('oContact').value=p.contact||'';
+        document.getElementById('oObiectiv').value=p.obiectiv||'';
+        if(Array.isArray(p.offerLines))offerLines=p.offerLines;
+        if(Array.isArray(p.laborLines)&&p.laborLines.length)laborLines=p.laborLines;
+        if(p.clientDbId)window._prefillClientDbId=p.clientDbId;
+        if(p.proiectDbId)window._prefillProiectDbId=p.proiectDbId;
+        window._draftId=draftId||0;
+        __lastJSON=JSON.stringify(snap());
+        renderOfferLines();renderLaborLines();recalcOffer();
+        if(typeof setTab==='function')setTab('offer');
+        toast('✅ Draft restaurat — modificările se autosalvează','success');
+        setStatus('💾 Restaurat · '+new Date().toLocaleTimeString('ro-RO'));
+    }finally{setTimeout(function(){__hyd=false;},200);}
+}
+
+window.discardDraft=function(id){
+    if(!confirm('Ștergi acest draft? Acțiunea nu poate fi anulată.'))return;
+    if(id==='__fallback__'){
+        try{localStorage.removeItem(FALLBACK_KEY);}catch(e){}
+        loadDraftsList();
+        toast('🗑️ Draft local șters','info');
+        return;
+    }
+    fetch(API_LOCAL+'?action=deleteOfertaDraft',{method:'POST',credentials:'include',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'deleteOfertaDraft',id:id})})
+        .then(function(r){return r.json();})
+        .then(function(res){
+            if(res&&res.success){
+                if(window._draftId===id)window._draftId=0;
+                loadDraftsList();
+                toast('🗑️ Draft șters','info');
+            } else toast('⚠️ Eroare ștergere','error');
+        });
+};
+
+window.closeDraftBanner=function(){
+    document.getElementById('draftBanner').style.display='none';
+};
+
+// Apelat din saveOfertaToDB success → resetează state-ul de draft local
+window.__clearOfertaDraft=function(){
+    window._draftId=0;
+    // Anulează orice autosave pending (ar putea zbura ulterior cu state vechi)
+    if(__t){clearTimeout(__t);__t=null;}
+    // Setează __lastJSON la snap-ul curent → următorul serverSave nu va găsi modificări
+    // și nu va crea un draft fantomă imediat după save explicit.
+    try{__lastJSON=JSON.stringify(snap());}catch(e){__lastJSON='';}
+    setStatus('');
+    var b=document.getElementById('draftBanner');if(b)b.style.display='none';
+    try{localStorage.removeItem(FALLBACK_KEY);}catch(e){}
+};
+
+// Hook recalcOffer ca să declanșeze autosave după orice schimbare de linie
+var _origRecalc=window.recalcOffer;
+window.recalcOffer=function(){var x=_origRecalc.apply(this,arguments);schedule();return x;};
+// Listener delegat la nivel de document — prinde modificările din toate inputurile
+document.addEventListener('input',schedule,true);
+document.addEventListener('change',schedule,true);
+// Salvare sincronă înainte de unload (sendBeacon ca să nu blocheze)
+window.addEventListener('beforeunload',function(){
+    if(__t){clearTimeout(__t);}
+    if(window._editingOfertaDbId||__saving)return;
+    var d=snap();
+    if(!meaningful(d))return;
+    var json=JSON.stringify(d);
+    if(json===__lastJSON)return;
+    try{
+        var body={action:'saveOfertaDraft',draft_id:window._draftId||0,client_nume:d.client||'',obiectiv:d.obiectiv||'',total_cu_tva:d.totalCuTva||0,payload:d};
+        if(navigator.sendBeacon){
+            var blob=new Blob([JSON.stringify(body)],{type:'application/json'});
+            navigator.sendBeacon(API_LOCAL+'?action=saveOfertaDraft',blob);
+        }
+    }catch(e){}
+});
+
+// Init: încarcă lista de drafturi (sari peste în mod edit din URL)
+var __params=new URLSearchParams(window.location.search);
+var __isEditUrl=!!(__params.get('edit_offer')||__params.get('edit')||__params.get('view_offer')||__params.get('pdf_offer'));
+if(!__isEditUrl){
+    setTimeout(function(){
+        if(window._editingOfertaDbId)return;
+        loadDraftsList();
+    },350);
+}
 })();
 </script>
 <script>if('serviceWorker' in navigator){navigator.serviceWorker.register('../sw.js').then(function(r){console.log('[PWA] SW registered, scope:',r.scope)}).catch(function(e){console.log('[PWA] SW failed:',e)});var __reloaded=false;navigator.serviceWorker.addEventListener('controllerchange',function(){if(__reloaded)return;__reloaded=true;window.location.reload();});}</script>
