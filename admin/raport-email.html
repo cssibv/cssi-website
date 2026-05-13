@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Raport Email Zilnic — Portal CSSI 3.0</title>
+<meta name="robots" content="noindex, nofollow">
+<link rel="icon" type="image/x-icon" href="/images/favicon.ico">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+:root{--red:#dc2626;--dark:#0f172a;--gray:#64748b;--gray-l:#94a3b8;--gray-bg:#f1f5f9;--gray-b:#e2e8f0;--blue:#3b82f6;--green:#22c55e;--orange:#f97316;--purple:#8b5cf6;--radius:16px;--shadow:0 1px 3px rgba(0,0,0,0.06);--shadow-md:0 4px 12px rgba(0,0,0,0.08);--font:'Inter',system-ui,sans-serif;}
+body{font-family:var(--font);color:var(--dark);background:var(--gray-bg);-webkit-font-smoothing:antialiased;}
+a{text-decoration:none;color:inherit;}button{font-family:inherit;cursor:pointer;}
+.container{max-width:900px;margin:0 auto;padding:16px;}@media(min-width:768px){.container{padding:24px;}}
+.toast-container{position:fixed;top:20px;right:20px;z-index:300;}
+.toast{padding:12px 18px;border-radius:12px;color:#fff;font-size:13px;font-weight:600;box-shadow:0 8px 24px rgba(0,0,0,0.15);max-width:380px;margin-bottom:8px;}
+.toast.success{background:var(--green);}.toast.error{background:var(--red);}.toast.info{background:var(--blue);}
+.page-header{background:linear-gradient(135deg,#1e3a8a,#3b82f6);color:#fff;padding:20px 22px;border-radius:20px;margin-bottom:14px;display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:12px;}
+.page-back{color:rgba(255,255,255,0.75);font-size:13px;}.page-title{font-size:24px;font-weight:800;margin-top:4px;}.page-subtitle{font-size:12px;opacity:0.85;margin-top:4px;}
+.card{background:#fff;border-radius:14px;padding:20px;margin-bottom:14px;box-shadow:var(--shadow);}
+.card-title{font-size:14px;font-weight:800;color:var(--dark);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:12px;display:flex;align-items:center;gap:8px;border-bottom:1px solid var(--gray-b);padding-bottom:10px;}
+.card-desc{font-size:12px;color:var(--gray);line-height:1.5;margin-bottom:14px;}
+.form-input,.form-textarea{width:100%;padding:11px 14px;border:1.5px solid var(--gray-b);border-radius:10px;font-size:13px;font-family:inherit;outline:none;background:#fafbfc;}
+.form-input:focus,.form-textarea:focus{border-color:var(--blue);background:#fff;}
+.form-textarea{min-height:80px;resize:vertical;font-family:'Courier New',monospace;font-size:12px;}
+.btn{padding:11px 18px;border:none;border-radius:10px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;display:inline-flex;align-items:center;gap:6px;text-decoration:none;transition:all 0.15s;}
+.btn.primary{background:linear-gradient(135deg,var(--blue),#2563eb);color:#fff;}
+.btn.primary:hover{transform:translateY(-1px);box-shadow:0 6px 14px rgba(59,130,246,0.3);}
+.btn.success{background:linear-gradient(135deg,var(--green),#16a34a);color:#fff;}
+.btn.success:hover{transform:translateY(-1px);box-shadow:0 6px 14px rgba(34,197,94,0.3);}
+.btn.secondary{background:#fff;border:1.5px solid var(--gray-b);color:var(--gray);}
+.btn.secondary:hover{border-color:var(--blue);color:var(--blue);}
+.btn:disabled{opacity:0.6;cursor:wait;}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center;}
+.info-box{background:#fef3c7;border-left:4px solid #f59e0b;padding:14px;border-radius:8px;margin-bottom:14px;font-size:12px;color:#78350f;line-height:1.6;}
+.info-box code{background:rgba(0,0,0,0.08);padding:2px 6px;border-radius:4px;font-family:'Courier New',monospace;font-size:11px;}
+.log-table{width:100%;font-size:12px;border-collapse:collapse;}
+.log-table th{text-align:left;padding:8px;background:var(--gray-bg);font-size:10px;text-transform:uppercase;letter-spacing:0.5px;color:var(--gray);font-weight:700;border-bottom:1px solid var(--gray-b);}
+.log-table td{padding:8px;border-bottom:1px solid var(--gray-b);}
+.log-status{display:inline-block;padding:2px 8px;border-radius:99px;font-size:10px;font-weight:800;text-transform:uppercase;}
+.log-status.sent{background:#dcfce7;color:#166534;}
+.log-status.partial{background:#fef3c7;color:#78350f;}
+.log-status.failed{background:#fee2e2;color:#991b1b;}
+.empty{text-align:center;padding:24px;color:var(--gray-l);font-size:12px;font-style:italic;}
+</style>
+<script src="/admin/access-guard.js" defer></script>
+</head>
+<body data-module="utilizatori">
+<div class="toast-container" id="toastContainer"></div>
+
+<div class="container">
+    <div class="page-header">
+        <div>
+            <a href="../admin.html" class="page-back">← Dashboard</a>
+            <div class="page-title">📧 Raport Zilnic Email</div>
+            <div class="page-subtitle">Configurare destinatari · Preview · Trimitere manuală · Istoric</div>
+        </div>
+    </div>
+
+    <!-- DESTINATARI -->
+    <div class="card">
+        <div class="card-title">📬 Destinatari raport</div>
+        <div class="card-desc">Lista de email-uri (separate prin virgulă) care primesc raportul zilnic la 8:00 dimineața. Setarea din <code>secrets.php</code> are prioritate asupra DB.</div>
+        <div id="recipientsInfo" style="font-size:12px;color:var(--gray);margin-bottom:10px"></div>
+        <textarea class="form-textarea" id="recipientsInput" placeholder="email1@exemplu.ro, email2@exemplu.ro, ..."></textarea>
+        <div class="row" style="margin-top:10px">
+            <button class="btn primary" id="btnSaveRecipients" onclick="saveRecipients()">💾 Salvează</button>
+            <button class="btn secondary" onclick="loadRecipients()">🔄 Reîncarcă</button>
+        </div>
+    </div>
+
+    <!-- PREVIEW + SEND -->
+    <div class="card">
+        <div class="card-title">🚀 Preview & Trimite</div>
+        <div class="card-desc">Vezi cum arată raportul și trimite-l manual către destinatarii configurați (fără a aștepta cron-ul de 8:00).</div>
+        <div class="row">
+            <a class="btn secondary" href="/admin/api.php?action=raportZilnicPreview" target="_blank">👁️ Preview HTML (tab nou)</a>
+            <a class="btn secondary" href="/admin/api.php?action=raportZilnicPreview&format=text" target="_blank">📄 Preview text</a>
+            <button class="btn success" id="btnSendNow" onclick="sendNow()">📧 Trimite raport ACUM</button>
+        </div>
+    </div>
+
+    <!-- CRON SETUP -->
+    <div class="card">
+        <div class="card-title">⏰ Setup cron job</div>
+        <div class="info-box">
+            <strong>cPanel → Cron Jobs → Add Cron Job</strong><br>
+            Schedule: <code>0 8 * * *</code> (zilnic la 8:00)<br>
+            Command (preferat HTTP, mai simplu de testat):<br>
+            <code>curl -s "https://cssi.ro/admin/cron-raport-zilnic.php?key=YOUR_CRON_SECRET" >/dev/null</code><br><br>
+            <strong>Sau prin CLI direct:</strong><br>
+            <code>/usr/bin/php /home/USERNAME/public_html/admin/cron-raport-zilnic.php</code><br><br>
+            <strong>Înainte de a porni cron-ul, setează în <code>admin/secrets.php</code>:</strong><br>
+            <code>define('CRON_SECRET', 'random_min_32_chars_here');</code><br>
+            <code>define('REPORT_RECIPIENTS', 'email1,email2,...');</code> <em>(opțional — poate folosi setarea de mai sus)</em>
+        </div>
+    </div>
+
+    <!-- ISTORIC -->
+    <div class="card">
+        <div class="card-title">📜 Istoric trimiteri (ultimele 30)</div>
+        <div id="logArea"><div class="empty">⏳ Se încarcă...</div></div>
+        <div class="row" style="margin-top:10px">
+            <button class="btn secondary" onclick="loadLog()">🔄 Reîncarcă istoric</button>
+        </div>
+    </div>
+</div>
+
+<script>
+var role = sessionStorage.getItem('cssi-role');
+if (!role) { window.location.href = '../admin.html'; }
+
+var API = '/admin/api.php';
+function toast(m,t){var c=document.getElementById('toastContainer');var x=document.createElement('div');x.className='toast '+(t||'info');x.textContent=m;c.appendChild(x);setTimeout(function(){x.style.opacity='0';x.style.transition='opacity 0.3s'},2500);setTimeout(function(){x.remove()},3000);}
+function esc(s){if(s==null)return '';var d=document.createElement('div');d.textContent=s;return d.innerHTML;}
+
+function loadRecipients(){
+    fetch(API+'?action=getReportRecipients&_t='+Date.now(),{credentials:'include'})
+        .then(function(r){return r.json();})
+        .then(function(res){
+            if(!res.success){ toast('❌ '+(res.error||'Eroare'),'error'); return; }
+            var info = document.getElementById('recipientsInfo');
+            var bits = [];
+            if(res.from_secrets) bits.push('🔒 din <code>secrets.php</code>: <strong>'+esc(res.from_secrets)+'</strong> (override DB)');
+            if(res.from_db) bits.push('💾 din DB: <strong>'+esc(res.from_db)+'</strong>');
+            if(!bits.length) bits.push('⚠️ Niciun destinatar configurat');
+            info.innerHTML = bits.join('<br>');
+            document.getElementById('recipientsInput').value = res.from_db || '';
+        });
+}
+function saveRecipients(){
+    var btn = document.getElementById('btnSaveRecipients');
+    var val = document.getElementById('recipientsInput').value.trim();
+    btn.disabled = true; btn.textContent = '⏳ Se salvează...';
+    fetch(API+'?action=setReportRecipients',{method:'POST',credentials:'include',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'setReportRecipients',recipients:val})})
+        .then(function(r){return r.json();})
+        .then(function(res){
+            btn.disabled = false; btn.textContent = '💾 Salvează';
+            if(res.success){ toast('✅ Salvat','success'); loadRecipients(); }
+            else toast('❌ '+(res.error||'Eroare'),'error');
+        });
+}
+function sendNow(){
+    if(!confirm('Trimite raportul ACUM către destinatarii configurați?')) return;
+    var btn = document.getElementById('btnSendNow');
+    btn.disabled = true; btn.textContent = '⏳ Se trimite...';
+    fetch(API+'?action=raportZilnicSendNow',{method:'POST',credentials:'include',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'raportZilnicSendNow'})})
+        .then(function(r){return r.json();})
+        .then(function(res){
+            btn.disabled = false; btn.textContent = '📧 Trimite raport ACUM';
+            if(res.success){
+                toast('✅ Raport trimis: '+res.sent+' OK, '+res.failed+' eșuate ('+res.recipients.length+' destinatari)','success');
+                loadLog();
+            } else toast('❌ '+(res.error||'Eroare'),'error');
+        });
+}
+function loadLog(){
+    fetch(API+'?action=getCronLog&script=raport_zilnic&_t='+Date.now(),{credentials:'include'})
+        .then(function(r){return r.json();})
+        .then(function(res){
+            // Și manual log-uri
+            return fetch(API+'?action=getCronLog&script=raport_zilnic_manual&_t='+Date.now(),{credentials:'include'})
+                .then(function(r2){return r2.json();})
+                .then(function(res2){
+                    var all = (res.data||[]).concat(res2.data||[]);
+                    all.sort(function(a,b){return new Date(b.ts) - new Date(a.ts);});
+                    renderLog(all);
+                });
+        });
+}
+function renderLog(rows){
+    var area = document.getElementById('logArea');
+    if(!rows.length){ area.innerHTML = '<div class="empty">📭 Nicio trimitere înregistrată încă. Apasă „Trimite raport ACUM" sau așteaptă cron-ul de la 8:00.</div>'; return; }
+    var html = '<table class="log-table"><thead><tr><th>Data/ora</th><th>Tip</th><th>Status</th><th>Destinatari</th><th>OK</th><th>Eșuate</th></tr></thead><tbody>';
+    rows.forEach(function(r){
+        var typeLbl = r.script === 'raport_zilnic_manual' ? '🖱️ manual' : '⏰ cron';
+        html += '<tr><td>'+esc(r.ts)+'</td><td>'+typeLbl+'</td><td><span class="log-status '+esc(r.status)+'">'+esc(r.status)+'</span></td><td>'+r.recipients_count+'</td><td style="color:var(--green);font-weight:700">'+r.success_count+'</td><td style="color:'+(r.failed_count>0?'var(--red)':'var(--gray-l)')+';font-weight:700">'+r.failed_count+'</td></tr>';
+    });
+    html += '</tbody></table>';
+    area.innerHTML = html;
+}
+
+loadRecipients();
+loadLog();
+</script>
+</body>
+</html>

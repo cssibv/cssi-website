@@ -1706,6 +1706,90 @@ try {
             jsonResponse(['success' => true, 'id' => $newId, 'token' => $token, 'contract_nr' => $contractNr, 'expires_at' => $expiresAt]);
             break;
 
+        // Raport zilnic — preview HTML (vede cum arată email-ul)
+        case 'raportZilnicPreview':
+            requireAuth();
+            require_once __DIR__ . '/raport-helpers.php';
+            $data = cssiCollectRaportData($db);
+            $format = $_GET['format'] ?? 'html';
+            if ($format === 'text') {
+                header('Content-Type: text/plain; charset=utf-8');
+                echo cssiRenderRaportText($data);
+            } else {
+                header('Content-Type: text/html; charset=utf-8');
+                echo cssiRenderRaportHtml($data);
+            }
+            exit;
+
+        // Raport zilnic — trimite manual ACUM (admin only)
+        case 'raportZilnicSendNow':
+            requireAdmin();
+            require_once __DIR__ . '/raport-helpers.php';
+            // Recipients
+            $recipients = [];
+            if (defined('REPORT_RECIPIENTS') && REPORT_RECIPIENTS) {
+                $recipients = array_filter(array_map('trim', explode(',', REPORT_RECIPIENTS)));
+            }
+            if (!$recipients) {
+                try {
+                    $stmt = $db->query("SELECT value FROM cssi_settings WHERE `key` = 'report_recipients' LIMIT 1");
+                    $row = $stmt ? $stmt->fetch() : null;
+                    if ($row && $row['value']) $recipients = array_filter(array_map('trim', explode(',', $row['value'])));
+                } catch (Exception $e) {}
+            }
+            // Override prin POST data (admin trimite la o adresă specifică)
+            if (!empty($data['to'])) {
+                $recipients = array_filter(array_map('trim', explode(',', $data['to'])));
+            }
+            if (!$recipients) jsonResponse(['success' => false, 'error' => 'Niciun destinatar — setează REPORT_RECIPIENTS în secrets.php sau prin setReportRecipients'], 400);
+
+            $rData = cssiCollectRaportData($db);
+            $subject = '📊 Raport Zilnic CSSI — ' . date('d.m.Y') . ' (manual)';
+            $bodyHtml = cssiRenderRaportHtml($rData);
+            $bodyText = cssiRenderRaportText($rData);
+            $result = cssiSendRaportEmail($recipients, $subject, $bodyHtml, $bodyText);
+            cssiLogCronEmail($db, 'raport_zilnic_manual', $recipients, $result['sent'], $result['failed'], ['kpi' => $rData['kpi'], 'triggered_by' => currentUser()['username'] ?? '?']);
+            jsonResponse(['success' => true, 'sent' => $result['sent'], 'failed' => $result['failed'], 'recipients' => $recipients]);
+            break;
+
+        case 'getCronLog':
+            requireAuth();
+            $script = $_GET['script'] ?? 'raport_zilnic';
+            try {
+                $stmt = $db->prepare("SELECT id, script, status, recipients_count, success_count, failed_count, ts FROM cron_log WHERE script = ? ORDER BY ts DESC LIMIT 30");
+                $stmt->execute([$script]);
+                jsonResponse(['success' => true, 'data' => $stmt->fetchAll()]);
+            } catch (Exception $e) {
+                jsonResponse(['success' => true, 'data' => [], 'note' => 'Tabelul cron_log încă nu există (apare după primul raport trimis)']);
+            }
+            break;
+
+        // Settings: get/set raport recipients (alternativ la secrets.php)
+        case 'getReportRecipients':
+            requireAdmin();
+            try { $db->exec("CREATE TABLE IF NOT EXISTS cssi_settings (`key` VARCHAR(60) PRIMARY KEY, value TEXT, updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4"); } catch (Exception $e) {}
+            $fromSecrets = defined('REPORT_RECIPIENTS') ? REPORT_RECIPIENTS : '';
+            $fromDb = '';
+            try {
+                $stmt = $db->query("SELECT value FROM cssi_settings WHERE `key` = 'report_recipients' LIMIT 1");
+                $row = $stmt ? $stmt->fetch() : null;
+                if ($row) $fromDb = $row['value'];
+            } catch (Exception $e) {}
+            jsonResponse(['success' => true, 'from_secrets' => $fromSecrets, 'from_db' => $fromDb, 'effective' => $fromSecrets ?: $fromDb]);
+            break;
+
+        case 'setReportRecipients':
+            requireAdmin();
+            $val = trim($data['recipients'] ?? '');
+            try {
+                $db->exec("CREATE TABLE IF NOT EXISTS cssi_settings (`key` VARCHAR(60) PRIMARY KEY, value TEXT, updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4");
+                $db->prepare("INSERT INTO cssi_settings (`key`, value) VALUES ('report_recipients', ?) ON DUPLICATE KEY UPDATE value = VALUES(value)")->execute([$val]);
+                jsonResponse(['success' => true]);
+            } catch (Exception $e) {
+                jsonResponse(['success' => false, 'error' => $e->getMessage()], 500);
+            }
+            break;
+
         case 'deleteContract':
             ensureContracteSchema($db);
             requireAdmin();
