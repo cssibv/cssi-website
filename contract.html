@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="referrer" content="no-referrer">
+<title>Completare date contract — CSSI</title>
+<meta name="robots" content="noindex, nofollow">
+<link rel="icon" type="image/x-icon" href="/images/favicon.ico">
+<meta name="theme-color" content="#dc2626">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+:root{
+    --red:#dc2626;--dark:#0f172a;--gray:#64748b;--gray-l:#94a3b8;--gray-bg:#f1f5f9;--gray-b:#e2e8f0;
+    --blue:#3b82f6;--green:#22c55e;--orange:#f97316;--purple:#8b5cf6;
+    --radius:14px;--font:'Inter',system-ui,sans-serif;
+}
+body{font-family:var(--font);color:var(--dark);background:linear-gradient(135deg,#1e3a8a 0%,#3b82f6 50%,#dbeafe 100%);min-height:100vh;-webkit-font-smoothing:antialiased;padding:16px 12px;}
+.container{max-width:600px;margin:0 auto;}
+.brand{text-align:center;color:#fff;margin-bottom:18px;}
+.brand-logo{font-size:32px;font-weight:900;letter-spacing:-1px;}
+.brand-sub{font-size:12px;opacity:0.85;margin-top:2px;}
+.card{background:#fff;border-radius:18px;padding:20px 22px;box-shadow:0 12px 40px rgba(0,0,0,0.15);margin-bottom:14px;}
+.card-title{font-size:18px;font-weight:800;color:var(--dark);margin-bottom:6px;}
+.card-sub{font-size:12px;color:var(--gray);line-height:1.5;margin-bottom:14px;}
+.contract-info{background:#eff6ff;border-left:4px solid var(--blue);padding:12px 14px;border-radius:8px;margin-bottom:14px;font-size:13px;}
+.contract-info strong{color:var(--blue);font-weight:800;}
+.contract-info .row{display:flex;justify-content:space-between;align-items:center;margin-top:6px;font-size:12px;color:var(--gray);}
+.contract-info .row .val{font-weight:700;color:var(--dark);font-variant-numeric:tabular-nums;}
+.toggle-pf-pj{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:18px;}
+.toggle-btn{padding:14px 12px;border:2px solid var(--gray-b);border-radius:12px;background:#fff;cursor:pointer;font-size:13px;font-weight:800;color:var(--gray);font-family:inherit;-webkit-tap-highlight-color:transparent;text-align:center;display:flex;flex-direction:column;align-items:center;gap:6px;transition:all 0.15s;}
+.toggle-btn:hover{border-color:var(--blue);}
+.toggle-btn.active{border-color:var(--blue);background:#eff6ff;color:#1d4ed8;}
+.toggle-btn .ic{font-size:24px;}
+.form-group{margin-bottom:14px;}
+.form-label{display:block;font-size:11px;font-weight:800;color:var(--gray);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:6px;}
+.form-label .req{color:var(--red);}
+.form-input,.form-select,.form-textarea{width:100%;padding:12px 14px;border:1.5px solid var(--gray-b);border-radius:10px;font-size:14px;font-family:inherit;outline:none;background:#fafbfc;transition:all 0.15s;-webkit-appearance:none;}
+.form-input:focus,.form-select:focus,.form-textarea:focus{border-color:var(--blue);background:#fff;box-shadow:0 0 0 3px rgba(59,130,246,0.1);}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.form-row-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;}
+@media(max-width:480px){.form-row,.form-row-3{grid-template-columns:1fr;}}
+
+.section-h{font-size:11px;font-weight:800;color:var(--gray);text-transform:uppercase;letter-spacing:0.8px;margin:18px 0 10px;padding-bottom:6px;border-bottom:1px solid var(--gray-b);}
+.section-h:first-child{margin-top:0;}
+
+.payment-box{background:linear-gradient(135deg,#f0fdf4,#dcfce7);border-radius:12px;padding:16px;margin-bottom:14px;}
+.payment-box .lbl{font-size:11px;font-weight:800;color:#166534;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:8px;}
+.slider-row{display:flex;align-items:center;gap:12px;margin-bottom:6px;}
+.slider-row input[type=range]{flex:1;accent-color:var(--green);}
+.slider-row .val{min-width:60px;text-align:right;font-size:18px;font-weight:800;color:var(--green);font-variant-numeric:tabular-nums;}
+.payment-info{font-size:11px;color:var(--gray);line-height:1.5;}
+
+.submit-btn{width:100%;padding:16px;background:linear-gradient(135deg,var(--blue),#2563eb);color:#fff;border:none;border-radius:12px;font-size:15px;font-weight:800;cursor:pointer;font-family:inherit;transition:all 0.2s;-webkit-tap-highlight-color:transparent;}
+.submit-btn:hover,.submit-btn:active{transform:translateY(-1px);box-shadow:0 8px 20px rgba(59,130,246,0.35);}
+.submit-btn:disabled{opacity:0.6;cursor:wait;transform:none;}
+
+.success-state{text-align:center;padding:30px 20px;}
+.success-icon{font-size:64px;margin-bottom:14px;}
+.success-title{font-size:22px;font-weight:800;color:var(--green);margin-bottom:8px;}
+.success-msg{color:var(--gray);font-size:14px;line-height:1.6;}
+
+.err-msg{background:#fef2f2;color:#991b1b;padding:12px 14px;border-radius:8px;font-size:13px;font-weight:600;border-left:3px solid var(--red);margin-bottom:14px;display:none;}
+.err-msg.show{display:block;}
+
+.foot{text-align:center;color:rgba(255,255,255,0.85);font-size:11px;padding:14px 0;line-height:1.6;}
+.foot a{color:#fff;text-decoration:underline;}
+
+.loading{text-align:center;padding:40px;}
+.loading-spin{display:inline-block;width:40px;height:40px;border:3px solid var(--gray-b);border-top-color:var(--blue);border-radius:50%;animation:spin 0.8s linear infinite;}
+@keyframes spin{to{transform:rotate(360deg);}}
+</style>
+</head>
+<body>
+
+<div class="container">
+    <div class="brand">
+        <div class="brand-logo">CSSI</div>
+        <div class="brand-sub">Sisteme de securitate · Brașov</div>
+    </div>
+
+    <div id="loadingState" class="card">
+        <div class="loading"><div class="loading-spin"></div><div style="margin-top:14px;color:var(--gray);font-size:13px">Se încarcă contractul...</div></div>
+    </div>
+
+    <div id="errorState" class="card" style="display:none">
+        <div class="card-title" style="color:var(--red)">⚠️ Link invalid</div>
+        <div class="card-sub" id="errMsg">Link-ul nu este valid sau a expirat. Contactați CSSI pentru un link nou.</div>
+    </div>
+
+    <div id="formState" style="display:none">
+        <div class="card">
+            <div class="card-title">📝 Completare date contract</div>
+            <div class="card-sub">Datele introduse vor fi folosite pentru întocmirea contractului. Vă rugăm completați cu atenție.</div>
+
+            <div class="contract-info" id="contractInfo"></div>
+
+            <div class="section-h">Tipul beneficiarului</div>
+            <div class="toggle-pf-pj">
+                <button type="button" class="toggle-btn active" id="btnPF" onclick="setTip('PF')">
+                    <span class="ic">👤</span>Persoană fizică
+                </button>
+                <button type="button" class="toggle-btn" id="btnPJ" onclick="setTip('PJ')">
+                    <span class="ic">🏢</span>Firmă (PJ)
+                </button>
+            </div>
+
+            <div class="err-msg" id="errBox"></div>
+
+            <form id="contractForm" onsubmit="submitForm(event)">
+                <!-- PF -->
+                <div id="formPF">
+                    <div class="section-h">Datele dumneavoastră</div>
+                    <div class="form-group">
+                        <label class="form-label">Nume și prenume <span class="req">*</span></label>
+                        <input type="text" class="form-input" id="pfNume" placeholder="Ex: Popescu Ion">
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">CI seria <span class="req">*</span></label>
+                            <input type="text" class="form-input" id="pfCiSeria" placeholder="BV" maxlength="3" style="text-transform:uppercase">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">CI număr <span class="req">*</span></label>
+                            <input type="text" class="form-input" id="pfCiNumar" placeholder="123456" maxlength="8">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">CNP (opțional)</label>
+                        <input type="text" class="form-input" id="pfCnp" placeholder="13 cifre" maxlength="13" inputmode="numeric">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Adresa de domiciliu (din CI) <span class="req">*</span></label>
+                        <textarea class="form-textarea" id="pfDomiciliu" rows="2" placeholder="Str. ..., Nr. ..., Bl. ..., Sc. ..., Et. ..., Ap. ..., Localitate, Județ"></textarea>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Telefon <span class="req">*</span></label>
+                            <input type="tel" class="form-input" id="pfTelefon" placeholder="07XX XXX XXX">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Email</label>
+                            <input type="email" class="form-input" id="pfEmail" placeholder="email@exemplu.ro">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- PJ -->
+                <div id="formPJ" style="display:none">
+                    <div class="section-h">Date firmă</div>
+                    <div class="form-group">
+                        <label class="form-label">Denumire firmă <span class="req">*</span></label>
+                        <input type="text" class="form-input" id="pjDenumire" placeholder="Ex: SC EXEMPLU SRL">
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">CUI <span class="req">*</span></label>
+                            <input type="text" class="form-input" id="pjCui" placeholder="RO12345678">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Reg. comerț (J)</label>
+                            <input type="text" class="form-input" id="pjRegCom" placeholder="J08/123/2020">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Sediu social <span class="req">*</span></label>
+                        <textarea class="form-textarea" id="pjSediu" rows="2" placeholder="Str. ..., Nr. ..., Localitate, Județ"></textarea>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Reprezentant legal <span class="req">*</span></label>
+                            <input type="text" class="form-input" id="pjReprezentant" placeholder="Ex: Popescu Ion">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Funcția</label>
+                            <input type="text" class="form-input" id="pjFunctia" placeholder="Administrator">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Cont IBAN</label>
+                            <input type="text" class="form-input" id="pjContIban" placeholder="RO## XXXX XXXX XXXX XXXX XXXX">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Banca</label>
+                            <input type="text" class="form-input" id="pjBanca" placeholder="Banca Transilvania">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Telefon contact <span class="req">*</span></label>
+                            <input type="tel" class="form-input" id="pjTelefon" placeholder="07XX XXX XXX">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Email</label>
+                            <input type="email" class="form-input" id="pjEmail" placeholder="contact@firma.ro">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="section-h">Adresa lucrării</div>
+                <div class="form-group">
+                    <label class="form-label">Adresă montaj / instalare <span class="req">*</span></label>
+                    <textarea class="form-textarea" id="adresaInstalare" rows="2" placeholder="Adresa unde se va executa lucrarea (dacă diferă de domiciliu)"></textarea>
+                </div>
+
+                <div class="section-h">Modalitate de plată</div>
+                <div class="payment-box">
+                    <div class="lbl">Avans la semnarea contractului</div>
+                    <div class="slider-row">
+                        <input type="range" id="avansProc" min="0" max="100" step="5" value="35" oninput="updateAvansVal(this.value)">
+                        <span class="val"><span id="avansLabel">35</span>%</span>
+                    </div>
+                    <div class="payment-info" id="paymentInfo">Avans: <strong id="paymentAvans">—</strong> · Diferența: <strong id="paymentDif">—</strong> la finalizare</div>
+                </div>
+
+                <div class="section-h">Consimțământ GDPR</div>
+                <label style="display:flex;gap:10px;align-items:flex-start;padding:14px;background:#fff7ed;border:1.5px solid #fed7aa;border-radius:10px;cursor:pointer;font-size:12px;line-height:1.5;color:#7c2d12;margin-bottom:14px">
+                    <input type="checkbox" id="gdprConsent" required style="margin-top:2px;width:18px;height:18px;accent-color:var(--orange);flex-shrink:0">
+                    <span>Sunt de acord ca <strong>BREAK SISTEMS SRL (CSSI)</strong> să prelucreze datele personale furnizate exclusiv pentru întocmirea, executarea și păstrarea contractului, conform <strong>Regulamentului UE 2016/679 (GDPR)</strong>. Datele sensibile (CNP, serie buletin) sunt criptate la stocare. Mai multe detalii: <a href="/politica-confidentialitate.html" target="_blank" rel="noopener" style="color:#9a3412;text-decoration:underline">Politică de confidențialitate</a>.</span>
+                </label>
+
+                <button type="submit" class="submit-btn" id="submitBtn">📤 Trimite datele</button>
+            </form>
+        </div>
+
+        <div class="foot">
+            🔒 Datele tale sunt în siguranță · CSSI prelucrează doar pentru contract · GDPR<br>
+            Întrebări? Sună la <a href="tel:+40712345678">07XX XXX XXX</a> sau scrie la <a href="mailto:office@cssi.ro">office@cssi.ro</a>
+        </div>
+    </div>
+
+    <div id="successState" style="display:none">
+        <div class="card">
+            <div class="success-state">
+                <div class="success-icon">✅</div>
+                <div class="success-title">Mulțumim! Datele au fost trimise.</div>
+                <div class="success-msg">
+                    Vom întocmi contractul cu datele furnizate și vă vom contacta în scurt timp pentru semnare.
+                    <br><br>
+                    <strong>Ai observat o greșeală?</strong><br>
+                    Contactează-ne direct și o corectăm imediat:<br>
+                    📞 <a href="tel:+40712345678" style="color:var(--blue);text-decoration:underline;font-weight:700">07XX XXX XXX</a>
+                    sau ✉️ <a href="mailto:office@cssi.ro" style="color:var(--blue);text-decoration:underline;font-weight:700">office@cssi.ro</a>
+                </div>
+            </div>
+        </div>
+        <div class="foot">🔒 CSSI · Sisteme de securitate · Datele tale sunt în siguranță (GDPR)</div>
+    </div>
+</div>
+
+<script>
+var API = '/admin/api.php';
+var TOKEN = '';
+var CONTRACT = null;
+var TIP = 'PF';
+var TOTAL = 0;
+
+function init(){
+    var urlParams = new URLSearchParams(window.location.search);
+    TOKEN = urlParams.get('token') || '';
+    if(!TOKEN || !/^[a-f0-9]{32}$/.test(TOKEN)){
+        showError('Link invalid. Verificați că ați copiat link-ul complet.');
+        return;
+    }
+    fetch(API+'?action=getContractByToken&token='+encodeURIComponent(TOKEN))
+        .then(function(r){return r.json().then(function(j){j._http=r.status;return j;});})
+        .then(function(res){
+            if(!res.success){
+                if(res.expired || res._http === 410) showError('⏱️ Link-ul a expirat. Solicitați unul nou de la CSSI prin telefon sau email.');
+                else if(res._http === 429) showError('Prea multe cereri. Te rog reîncearcă în 1 minut.');
+                else showError(res.error || 'Link invalid sau expirat.');
+                return;
+            }
+            CONTRACT = res.data;
+            renderContract();
+        })
+        .catch(function(e){ showError('Eroare la încărcare: ' + (e.message||e)); });
+}
+
+function showError(msg){
+    document.getElementById('loadingState').style.display = 'none';
+    document.getElementById('formState').style.display = 'none';
+    document.getElementById('errorState').style.display = 'block';
+    document.getElementById('errMsg').textContent = msg;
+}
+
+// Single-use submit: dupa ce datele au fost transmise, afișez confirmation full-screen
+function showCompletedState(){
+    document.getElementById('formState').style.display = 'none';
+    document.getElementById('successState').style.display = 'block';
+    window.scrollTo({top:0, behavior:'smooth'});
+}
+
+function renderContract(){
+    document.getElementById('loadingState').style.display = 'none';
+    document.getElementById('formState').style.display = 'block';
+    var c = CONTRACT;
+    TOTAL = parseFloat(c.valoare_total) || 0;
+    // Single-use: dacă e deja completat -> read-only success state (nu mai pot modifica)
+    if(c.locked_resubmit && c.status === 'completat'){
+        showCompletedState();
+        return;
+    }
+    // Render contract info card
+    var infoHtml = '';
+    infoHtml += 'Contract <strong>'+esc(c.contract_nr||'—')+'</strong>';
+    if(c.oferta_cod) infoHtml += ' · pe baza ofertei <strong>#'+esc(c.oferta_cod)+'</strong>';
+    if(c.obiectiv) infoHtml += '<div class="row"><span>Obiectiv:</span><span class="val">'+esc(c.obiectiv)+'</span></div>';
+    infoHtml += '<div class="row"><span>Valoare totală cu TVA:</span><span class="val">'+fmtMoney(TOTAL)+' RON</span></div>';
+    document.getElementById('contractInfo').innerHTML = infoHtml;
+
+    // Pre-fill cu nume client din ofertă (dacă există)
+    if(c.client_nume){
+        if((c.tip_client||'PF') === 'PJ'){
+            document.getElementById('pjDenumire').value = c.client_nume;
+        } else {
+            document.getElementById('pfNume').value = c.client_nume;
+        }
+    }
+    if(c.client_telefon){
+        document.getElementById('pfTelefon').value = c.client_telefon;
+        document.getElementById('pjTelefon').value = c.client_telefon;
+    }
+    if(c.client_email){
+        document.getElementById('pfEmail').value = c.client_email;
+        document.getElementById('pjEmail').value = c.client_email;
+    }
+    if(c.adresa_instalare) document.getElementById('adresaInstalare').value = c.adresa_instalare;
+    if(c.avans_procent != null){
+        document.getElementById('avansProc').value = c.avans_procent;
+        updateAvansVal(c.avans_procent);
+    } else {
+        updateAvansVal(35);
+    }
+
+    // Pre-fill datele completate dacă există (resubmit)
+    if(c.date_completate){
+        var d = c.date_completate;
+        if((c.tip_client||'PF') === 'PJ'){
+            setTip('PJ');
+            ['denumire','cui','reg_com','sediu','reprezentant','functia','cont_iban','banca','telefon','email'].forEach(function(f){
+                var el = document.getElementById('pj'+f.charAt(0).toUpperCase()+f.replace('_','').slice(1));
+                if(el && d[f]) el.value = d[f];
+            });
+        } else {
+            setTip('PF');
+            ['nume','cnp','ci_seria','ci_numar','domiciliu','telefon','email'].forEach(function(f){
+                var idMap = {'nume':'pfNume','cnp':'pfCnp','ci_seria':'pfCiSeria','ci_numar':'pfCiNumar','domiciliu':'pfDomiciliu','telefon':'pfTelefon','email':'pfEmail'};
+                var el = document.getElementById(idMap[f]);
+                if(el && d[f]) el.value = d[f];
+            });
+        }
+    } else {
+        setTip(c.tip_client || 'PF');
+    }
+}
+
+function setTip(tip){
+    TIP = tip;
+    document.getElementById('btnPF').classList.toggle('active', tip === 'PF');
+    document.getElementById('btnPJ').classList.toggle('active', tip === 'PJ');
+    document.getElementById('formPF').style.display = tip === 'PF' ? 'block' : 'none';
+    document.getElementById('formPJ').style.display = tip === 'PJ' ? 'block' : 'none';
+}
+
+function updateAvansVal(v){
+    document.getElementById('avansLabel').textContent = v;
+    var av = TOTAL * v / 100;
+    var dif = TOTAL - av;
+    document.getElementById('paymentAvans').textContent = fmtMoney(av) + ' RON';
+    document.getElementById('paymentDif').textContent = fmtMoney(dif) + ' RON';
+}
+
+function fmtMoney(n){return Number(n||0).toLocaleString('ro-RO',{minimumFractionDigits:2,maximumFractionDigits:2});}
+function esc(s){if(s==null)return '';var d=document.createElement('div');d.textContent=s;return d.innerHTML;}
+function showErr(msg){
+    var e = document.getElementById('errBox');
+    e.textContent = msg;
+    e.classList.add('show');
+    e.scrollIntoView({behavior:'smooth', block:'center'});
+}
+
+function submitForm(ev){
+    ev.preventDefault();
+    document.getElementById('errBox').classList.remove('show');
+    if(!document.getElementById('gdprConsent').checked){
+        showErr('Trebuie să bifezi consimțământul GDPR pentru a putea trimite datele.');
+        return;
+    }
+    var payload = {
+        action: 'submitContractDate',
+        token: TOKEN,
+        tip_client: TIP,
+        gdpr_consent: true,
+        adresa_instalare: document.getElementById('adresaInstalare').value.trim(),
+        avans_procent: parseInt(document.getElementById('avansProc').value) || 35,
+        termen_plata_zile: 15
+    };
+    if(TIP === 'PF'){
+        payload.nume      = document.getElementById('pfNume').value.trim();
+        payload.cnp       = document.getElementById('pfCnp').value.trim();
+        payload.ci_seria  = document.getElementById('pfCiSeria').value.trim().toUpperCase();
+        payload.ci_numar  = document.getElementById('pfCiNumar').value.trim();
+        payload.domiciliu = document.getElementById('pfDomiciliu').value.trim();
+        payload.telefon   = document.getElementById('pfTelefon').value.trim();
+        payload.email     = document.getElementById('pfEmail').value.trim();
+        if(!payload.nume){ showErr('Numele și prenumele sunt obligatorii'); return; }
+        if(!payload.ci_seria || !payload.ci_numar){ showErr('Seria și numărul CI sunt obligatorii'); return; }
+        if(!payload.domiciliu){ showErr('Adresa de domiciliu e obligatorie'); return; }
+        if(!payload.telefon){ showErr('Telefonul de contact e obligatoriu'); return; }
+    } else {
+        payload.denumire     = document.getElementById('pjDenumire').value.trim();
+        payload.cui          = document.getElementById('pjCui').value.trim();
+        payload.reg_com      = document.getElementById('pjRegCom').value.trim();
+        payload.sediu        = document.getElementById('pjSediu').value.trim();
+        payload.reprezentant = document.getElementById('pjReprezentant').value.trim();
+        payload.functia      = document.getElementById('pjFunctia').value.trim();
+        payload.cont_iban    = document.getElementById('pjContIban').value.trim();
+        payload.banca        = document.getElementById('pjBanca').value.trim();
+        payload.telefon      = document.getElementById('pjTelefon').value.trim();
+        payload.email        = document.getElementById('pjEmail').value.trim();
+        if(!payload.denumire){ showErr('Denumirea firmei e obligatorie'); return; }
+        if(!payload.cui){      showErr('CUI-ul e obligatoriu'); return; }
+        if(!payload.sediu){    showErr('Sediul social e obligatoriu'); return; }
+        if(!payload.reprezentant){ showErr('Reprezentantul legal e obligatoriu'); return; }
+        if(!payload.telefon){  showErr('Telefonul de contact e obligatoriu'); return; }
+    }
+    if(!payload.adresa_instalare){ showErr('Adresa de instalare e obligatorie'); return; }
+
+    var btn = document.getElementById('submitBtn');
+    btn.disabled = true; btn.textContent = '⏳ Se trimit datele...';
+    fetch(API+'?action=submitContractDate', {
+        method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(payload)
+    })
+    .then(function(r){return r.json().then(function(j){j._http=r.status;return j;});})
+    .then(function(res){
+        btn.disabled = false; btn.textContent = '📤 Trimite datele';
+        if(res.success){
+            // Single-use: afișez confirmation full + previn navigarea înapoi la form
+            showCompletedState();
+            return;
+        }
+        // Erori speciale
+        if(res.expired || res._http === 410){ showError('⏱️ Link-ul a expirat. Contactează CSSI pentru un link nou.'); return; }
+        if(res.locked || res._http === 423){
+            // Datele deja transmise — afișez mesaj similar succes
+            document.getElementById('formState').style.display = 'none';
+            document.getElementById('successState').style.display = 'block';
+            document.querySelector('#successState .success-icon').textContent = '🔒';
+            document.querySelector('#successState .success-title').textContent = 'Datele au fost deja transmise';
+            document.querySelector('#successState .success-msg').innerHTML = res.error || 'Pentru modificări, contactează CSSI direct.';
+            return;
+        }
+        if(res._http === 429){ showErr('Prea multe cereri. Te rog reîncearcă în 1 minut.'); return; }
+        showErr('Eroare: ' + (res.error || 'necunoscut'));
+    })
+    .catch(function(e){
+        btn.disabled = false; btn.textContent = '📤 Trimite datele';
+        showErr('Eroare conexiune: ' + (e.message || e));
+    });
+}
+
+init();
+</script>
+</body>
+</html>

@@ -16,87 +16,190 @@
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 <style>
 *{margin:0;padding:0;box-sizing:border-box;}
-:root{--red:#dc2626;--red-d:#991b1b;--dark:#0f172a;--dark2:#1e293b;--gray:#64748b;--gray-l:#94a3b8;--gray-xl:#cbd5e1;--gray-bg:#f1f5f9;--gray-b:#e2e8f0;--blue:#3b82f6;--green:#22c55e;--orange:#f97316;--purple:#8b5cf6;--yellow:#eab308;--teal:#14b8a6;--radius:16px;--radius-sm:12px;--shadow:0 1px 3px rgba(0,0,0,0.06);--shadow-md:0 4px 12px rgba(0,0,0,0.08);--font:'Inter',system-ui,sans-serif;}
+:root{--red:#dc2626;--red-d:#991b1b;--dark:#0f172a;--dark2:#1e293b;--gray:#64748b;--gray-l:#94a3b8;--gray-xl:#cbd5e1;--gray-bg:#f1f5f9;--gray-b:#e2e8f0;--blue:#3b82f6;--green:#22c55e;--orange:#f97316;--purple:#8b5cf6;--yellow:#eab308;--teal:#14b8a6;--radius:16px;--radius-sm:12px;--shadow:0 1px 3px rgba(0,0,0,0.06);--shadow-md:0 4px 12px rgba(0,0,0,0.08);--shadow-lg:0 12px 32px rgba(0,0,0,0.12);--font:'Inter',system-ui,sans-serif;
+    /* density (default = comfortable) */
+    --density-pad-client:18px 22px;--density-pad-oferta:14px 16px;--density-pad-row:10px 12px;--density-mt-oferta:12px;
+}
+body.compact{--density-pad-client:12px 16px;--density-pad-oferta:9px 12px;--density-pad-row:6px 10px;--density-mt-oferta:8px;}
 body{font-family:var(--font);color:var(--dark);background:var(--gray-bg);-webkit-font-smoothing:antialiased;}
 a{text-decoration:none;color:inherit;}button{font-family:inherit;cursor:pointer;}
+:focus-visible{outline:2px solid var(--blue);outline-offset:2px;border-radius:6px;}
+
+/* HEADER */
 .page-header{background:linear-gradient(135deg,var(--dark),var(--dark2));color:#fff;padding:20px 24px;border-radius:20px;margin-bottom:16px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;}
 .page-back{color:rgba(255,255,255,0.7);font-size:13px;font-weight:500;display:flex;align-items:center;gap:6px;}.page-back:hover{color:#fff;}
 .page-title{font-size:22px;font-weight:800;letter-spacing:-0.5px;}
-.page-subtitle{font-size:12px;color:rgba(255,255,255,0.5);margin-top:2px;}
-.page-actions{display:flex;gap:8px;align-items:center;}
-.page-btn{padding:10px 18px;border-radius:12px;font-size:13px;font-weight:700;border:none;transition:all 0.2s;}
+.page-subtitle{font-size:12px;color:rgba(255,255,255,0.55);margin-top:2px;display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
+.page-actions{display:flex;gap:8px;align-items:center;flex-wrap:wrap;}
+.page-btn{padding:10px 16px;border-radius:12px;font-size:13px;font-weight:700;border:none;transition:all 0.2s;display:inline-flex;align-items:center;gap:6px;}
 .page-btn.primary{background:var(--red);color:#fff;}.page-btn.primary:hover{background:var(--red-d);transform:translateY(-1px);}
 .page-btn.secondary{background:rgba(255,255,255,0.1);color:#fff;border:1px solid rgba(255,255,255,0.2);}.page-btn.secondary:hover{background:rgba(255,255,255,0.2);}
-.sync-indicator{width:8px;height:8px;border-radius:50%;display:inline-block;margin-right:6px;}
+.page-btn.spinning .spin-icon{animation:spin 0.8s linear infinite;display:inline-block;}
+@keyframes spin{from{transform:rotate(0)}to{transform:rotate(360deg)}}
+.sync-indicator{width:8px;height:8px;border-radius:50%;display:inline-block;margin-right:4px;}
 .sync-ok{background:var(--green);box-shadow:0 0 6px rgba(34,197,94,0.5);}.sync-off{background:var(--gray-l);}.sync-loading{background:var(--orange);animation:pulse 1s infinite;}
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:0.4}}
+.sub-sep{color:rgba(255,255,255,0.3);}
 .container{max-width:1400px;margin:0 auto;padding:16px;}@media(min-width:768px){.container{padding:24px;}}
 
+/* SUMMARY KPI */
 .summary{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:16px;}
-.s-item{background:#fff;border-radius:var(--radius-sm);padding:14px 18px;box-shadow:var(--shadow);flex:1;min-width:130px;display:flex;align-items:center;gap:12px;transition:all 0.2s;cursor:pointer;}
-.s-item:hover{box-shadow:var(--shadow-md);transform:translateY(-1px);}
-.s-item.active-filter{border:2px solid var(--blue);}
+.s-item{background:#fff;border-radius:var(--radius-sm);padding:14px 18px;box-shadow:var(--shadow);flex:1;min-width:140px;display:flex;align-items:center;gap:12px;transition:all 0.2s;}
 .s-icon{width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;}
-.s-val{font-size:22px;font-weight:900;}.s-label{font-size:11px;color:var(--gray);margin-top:1px;}
+.s-val{font-size:22px;font-weight:900;line-height:1;}.s-label{font-size:11px;color:var(--gray);margin-top:4px;}
 
-.filters{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:16px;align-items:center;}
-.filter-search{padding:10px 16px;border-radius:99px;font-size:13px;border:1px solid var(--gray-b);outline:none;font-family:inherit;min-width:200px;background:#fff;flex:1;max-width:300px;}.filter-search:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(59,130,246,0.08);}
+/* TOOLBAR */
+.toolbar{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:10px;align-items:center;}
+.search-wrap{position:relative;flex:1;min-width:220px;max-width:380px;}
+.search-wrap .search-icon{position:absolute;left:14px;top:50%;transform:translateY(-50%);color:var(--gray-l);pointer-events:none;}
+.filter-search{padding:10px 36px 10px 38px;border-radius:99px;font-size:13px;border:1px solid var(--gray-b);outline:none;font-family:inherit;width:100%;background:#fff;transition:all 0.2s;}
+.filter-search:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(59,130,246,0.08);}
+.search-clear{position:absolute;right:10px;top:50%;transform:translateY(-50%);width:20px;height:20px;border-radius:50%;border:none;background:var(--gray-bg);color:var(--gray);font-size:11px;display:none;align-items:center;justify-content:center;}.search-clear:hover{background:var(--gray-b);color:var(--dark);}.search-wrap.has-value .search-clear{display:flex;}
+.kbd-hint{position:absolute;right:34px;top:50%;transform:translateY(-50%);font-size:10px;color:var(--gray-l);background:var(--gray-bg);padding:2px 6px;border-radius:5px;font-family:'Courier New',monospace;pointer-events:none;}
+.search-wrap.has-value .kbd-hint,.search-wrap:focus-within .kbd-hint{display:none;}
 .filter-select{padding:8px 14px;border-radius:99px;font-size:12px;font-weight:600;border:1px solid var(--gray-b);background:#fff;font-family:inherit;outline:none;cursor:pointer;}
-.view-toggle{display:flex;background:#fff;border-radius:10px;padding:3px;box-shadow:var(--shadow);border:1px solid var(--gray-b);margin-left:auto;}
-.view-btn{padding:7px 14px;border-radius:8px;font-size:12px;font-weight:600;border:none;background:none;color:var(--gray);cursor:pointer;transition:all 0.2s;}.view-btn.active{background:var(--dark);color:#fff;}
-.filter-count{font-size:12px;color:var(--gray);font-weight:500;}
+.tb-btn{padding:8px 12px;border-radius:10px;font-size:12px;font-weight:700;border:1px solid var(--gray-b);background:#fff;color:var(--gray);cursor:pointer;transition:all 0.15s;display:inline-flex;align-items:center;gap:6px;}
+.tb-btn:hover{border-color:var(--blue);color:var(--blue);background:#eff6ff;}
+.tb-btn .kbd{font-size:9px;background:var(--gray-bg);color:var(--gray);padding:1px 5px;border-radius:4px;font-family:'Courier New',monospace;}
+.tb-btn:hover .kbd{background:#dbeafe;color:var(--blue);}
+.density-toggle{display:flex;background:#fff;border-radius:10px;padding:3px;box-shadow:var(--shadow);border:1px solid var(--gray-b);}
+.density-btn{padding:6px 12px;border-radius:7px;font-size:11px;font-weight:700;border:none;background:none;color:var(--gray);cursor:pointer;transition:all 0.15s;}
+.density-btn.active{background:var(--dark);color:#fff;}
+.filter-count{font-size:12px;color:var(--gray);font-weight:600;margin-left:auto;}
 
-.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:12px;margin-bottom:16px;}
-.ncard{background:#fff;border-radius:var(--radius);padding:18px;box-shadow:var(--shadow);border-left:4px solid var(--blue);transition:all 0.2s;}
-.ncard:hover{box-shadow:var(--shadow-md);transform:translateY(-1px);}
-.ncard.comandat{border-left-color:var(--orange);}.ncard.livrat{border-left-color:var(--green);}.ncard.anulat{border-left-color:var(--gray);opacity:0.6;}
-.ncard-top{display:flex;justify-content:space-between;align-items:start;margin-bottom:6px;}
-.ncard-mat{font-size:14px;font-weight:800;flex:1;}
-.ncard-badge{padding:3px 10px;border-radius:6px;font-size:11px;font-weight:700;}
-.badge-solicitat{background:#eff6ff;color:var(--blue);}.badge-comandat{background:#fff7ed;color:var(--orange);}.badge-livrat{background:#f0fdf4;color:var(--green);}.badge-anulat{background:var(--gray-bg);color:var(--gray);}
-.ncard-pid{font-size:11px;font-weight:700;color:var(--blue);background:#eff6ff;padding:3px 8px;border-radius:6px;display:inline-block;margin-bottom:6px;}
-.ncard-tags{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:8px;}
-.ncard-tag{font-size:11px;font-weight:700;padding:3px 10px;border-radius:6px;}
-.urg-scazuta{background:var(--gray-bg);color:var(--gray);}.urg-normal{background:#eff6ff;color:var(--blue);}.urg-urgenta{background:#fff7ed;color:var(--orange);}.urg-critica{background:#fef2f2;color:var(--red);}
-.ncard-info{display:grid;grid-template-columns:1fr 1fr;gap:6px;font-size:12px;color:var(--gray);margin-bottom:8px;}
-.ncard-info dt{font-weight:700;color:var(--dark);}
-.ncard-actions{display:flex;gap:6px;padding-top:10px;border-top:1px solid var(--gray-bg);}
-.ncard-actions select{flex:1;padding:8px 12px;border-radius:10px;border:1px solid var(--gray-b);font-size:12px;font-weight:600;font-family:inherit;cursor:pointer;background:#fff;outline:none;}
-.btn-sm{padding:6px 12px;border-radius:8px;border:none;font-size:11px;font-weight:700;cursor:pointer;transition:all 0.2s;}
+/* ACTIVE CHIPS */
+.chips-row{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin-bottom:10px;min-height:24px;}
+.chip{display:inline-flex;align-items:center;gap:6px;padding:4px 10px;background:#eff6ff;color:var(--blue);border:1px solid #dbeafe;border-radius:99px;font-size:11px;font-weight:700;}
+.chip-x{border:none;background:transparent;color:var(--blue);font-size:14px;line-height:1;padding:0;cursor:pointer;}.chip-x:hover{color:var(--red);}
+.chip-clear{background:none;border:none;color:var(--gray);font-size:12px;font-weight:600;text-decoration:underline;cursor:pointer;padding:2px 6px;}.chip-clear:hover{color:var(--red);}
 
-.table-wrap{background:#fff;border-radius:var(--radius);box-shadow:var(--shadow);overflow-x:auto;}
-table{width:100%;border-collapse:collapse;font-size:13px;}
-th{background:var(--dark);color:#fff;padding:12px 14px;text-align:left;font-weight:700;font-size:11px;text-transform:uppercase;letter-spacing:0.5px;white-space:nowrap;}
-td{padding:10px 14px;border-bottom:1px solid var(--gray-bg);}
-tr:hover td{background:rgba(59,130,246,0.03);}
+/* CLIENT CARDS — 3-level hierarchy */
+.client-card{background:#fff;border-radius:var(--radius);box-shadow:var(--shadow);margin-bottom:14px;overflow:hidden;border:1px solid var(--gray-b);transition:box-shadow 0.2s;}
+.client-card:hover{box-shadow:var(--shadow-md);}
+.client-head{display:flex;align-items:center;gap:14px;padding:var(--density-pad-client);cursor:pointer;background:linear-gradient(135deg,#fff,#f8fafc);transition:all 0.15s;border:none;width:100%;text-align:left;font-family:inherit;}
+.client-head:hover{background:linear-gradient(135deg,#f8fafc,#eff6ff);}
+.client-icon{width:44px;height:44px;border-radius:12px;background:linear-gradient(135deg,#eff6ff,#dbeafe);color:var(--blue);display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:800;flex-shrink:0;letter-spacing:-0.5px;}
+.client-info{flex:1;min-width:0;}
+.client-name{font-size:16px;font-weight:800;color:var(--dark);letter-spacing:-0.2px;}
+.client-meta{font-size:11px;color:var(--gray);margin-top:4px;display:flex;flex-wrap:wrap;gap:6px;align-items:center;}
+.client-meta .pill{background:var(--gray-bg);padding:3px 9px;border-radius:99px;font-weight:700;display:inline-flex;align-items:center;gap:4px;}
+.client-meta .pill.ron{background:#fef9c3;color:#854d0e;}
+.client-chevron{width:32px;height:32px;border-radius:50%;background:var(--gray-bg);color:var(--gray);font-size:18px;font-weight:800;display:flex;align-items:center;justify-content:center;transition:all 0.25s;flex-shrink:0;}
+.client-card.open .client-chevron{transform:rotate(180deg);background:#dbeafe;color:var(--blue);}
+.client-body{display:none;padding:0 18px 18px;}
+.client-card.open .client-body{display:block;animation:fadeIn 0.25s ease;}
+@keyframes fadeIn{from{opacity:0;transform:translateY(-4px);}to{opacity:1;transform:translateY(0);}}
 
+/* OFERTA CARDS — sub-card with vertical color bar */
+.oferta-card{background:#fff;border-radius:var(--radius-sm);margin-top:var(--density-mt-oferta);overflow:hidden;border:1px solid var(--gray-b);position:relative;transition:all 0.15s;}
+.oferta-card::before{content:'';position:absolute;left:0;top:0;bottom:0;width:4px;background:var(--gray-l);}
+.oferta-card.proiectare::before{background:linear-gradient(180deg,var(--teal),#0891b2);}
+.oferta-card.executie::before{background:linear-gradient(180deg,var(--orange),#ea580c);}
+.oferta-card.comandata{background:#f0fdf4;border-color:#bbf7d0;}
+.oferta-card.comandata::before{background:linear-gradient(180deg,var(--green),#16a34a)!important;}
+.oferta-card.comandata .oferta-name{color:var(--green);}
+.oferta-card:hover{border-color:var(--gray-xl);box-shadow:var(--shadow);}
+
+/* Comandat badge */
+.comandat-info{display:inline-flex;align-items:center;gap:10px;padding:6px 14px;border-radius:99px;background:#f0fdf4;border:1px solid #bbf7d0;color:var(--green);font-size:11px;font-weight:700;flex-shrink:0;line-height:1.2;}
+.comandat-info .ci-icon{font-size:13px;display:inline-flex;align-items:center;justify-content:center;width:18px;height:18px;border-radius:50%;background:#bbf7d0;color:#166534;flex-shrink:0;}
+.comandat-info .ci-text{display:inline-flex;flex-direction:column;gap:1px;line-height:1.2;}
+.comandat-info .ci-text-top{font-weight:800;color:var(--green);font-size:11px;text-transform:uppercase;letter-spacing:0.3px;}
+.comandat-info .ci-meta{font-weight:600;color:#166534;font-size:10px;font-variant-numeric:tabular-nums;}
+
+/* Buton standalone Anulează marcaj — outside the badge, distinct */
+.btn-unmark{position:relative;width:34px;height:34px;border-radius:50%;background:#fff;border:1px solid var(--gray-b);color:var(--gray);font-size:16px;font-weight:600;cursor:pointer;padding:0;display:inline-flex;align-items:center;justify-content:center;line-height:1;transition:all 0.2s;flex-shrink:0;margin-left:4px;}
+.btn-unmark:hover{background:#fef2f2;border-color:var(--red);color:var(--red);transform:rotate(-15deg) scale(1.08);box-shadow:0 4px 12px rgba(220,38,38,0.18);}
+.btn-unmark:active{transform:rotate(-15deg) scale(0.96);}
+.btn-unmark::after{content:'Anulează';position:absolute;bottom:calc(100% + 6px);right:50%;transform:translateX(50%);background:var(--dark);color:#fff;font-size:10px;font-weight:700;padding:4px 8px;border-radius:6px;white-space:nowrap;opacity:0;pointer-events:none;transition:opacity 0.15s;letter-spacing:0.2px;}
+.btn-unmark::before{content:'';position:absolute;bottom:calc(100% + 1px);right:50%;transform:translateX(50%);border:5px solid transparent;border-top-color:var(--dark);opacity:0;transition:opacity 0.15s;}
+.btn-unmark:hover::after,.btn-unmark:hover::before{opacity:1;}
+.btn-mark{padding:6px 12px;border-radius:8px;border:1px solid var(--green);background:#fff;color:var(--green);font-size:11px;font-weight:700;cursor:pointer;transition:all 0.15s;font-family:inherit;display:inline-flex;align-items:center;gap:5px;flex-shrink:0;}
+.btn-mark:hover{background:var(--green);color:#fff;}
+.btn-mark:disabled{opacity:0.5;cursor:wait;}
+.oferta-head-row{display:flex;align-items:stretch;background:#fff;}
+.oferta-card.comandata .oferta-head-row{background:linear-gradient(135deg,#f0fdf4,#dcfce7);}
+.oferta-head{display:flex;align-items:center;gap:12px;padding:var(--density-pad-oferta);padding-left:18px;cursor:pointer;background:transparent;transition:background 0.15s;border:none;flex:1;min-width:0;text-align:left;font-family:inherit;}
+.oferta-head:hover{background:rgba(248,250,252,0.6);}
+.oferta-head-row:has(.btn-unmark){padding-right:12px;}
+.oferta-head-row .btn-unmark{align-self:center;}
+.oferta-codes{display:flex;flex-direction:column;gap:3px;flex:1;min-width:0;}
+.oferta-name{font-size:14px;font-weight:800;color:var(--dark);letter-spacing:-0.2px;line-height:1.3;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;}
+.oferta-refs{font-size:11px;color:var(--gray);display:flex;flex-wrap:wrap;align-items:center;gap:6px;}
+.oferta-refs .ref-of{color:var(--purple);font-weight:700;font-family:'Courier New',monospace;background:#f5f3ff;padding:1px 6px;border-radius:4px;}
+.oferta-refs .ref-proj{color:var(--blue);font-weight:700;}
+.oferta-status{font-size:10px;font-weight:700;padding:3px 9px;border-radius:99px;text-transform:uppercase;letter-spacing:0.3px;flex-shrink:0;}
+.oferta-status.proiectare{background:#f0fdfa;color:var(--teal);}
+.oferta-status.executie{background:#fff7ed;color:var(--orange);}
+.oferta-stat-pill{font-size:10px;font-weight:700;color:var(--gray);background:var(--gray-bg);padding:3px 8px;border-radius:99px;flex-shrink:0;}
+.oferta-total{font-size:13px;font-weight:800;color:var(--dark);flex-shrink:0;font-variant-numeric:tabular-nums;}
+.oferta-total small{color:var(--gray);font-size:10px;font-weight:600;}
+
+.oferta-body{display:none;padding:8px;background:linear-gradient(180deg,#f8fafc,#fff);}
+.oferta-foot{padding:10px 4px 4px;display:flex;justify-content:flex-end;}
+.oferta-card.open .oferta-body{display:block;}
+.oferta-obiectiv-detail{padding:8px 14px;background:#fff;border-radius:8px;margin-bottom:8px;font-size:12px;color:var(--gray);}
+.oferta-obiectiv-detail strong{color:var(--dark);font-weight:700;}
+
+/* MAT TABLE */
+.mat-table-wrap{background:#fff;border-radius:8px;overflow:hidden;border:1px solid var(--gray-b);}
+.mat-table{width:100%;border-collapse:collapse;font-size:13px;}
+.mat-table thead th{background:var(--dark);color:#fff;padding:10px 12px;text-align:left;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;white-space:nowrap;position:sticky;top:0;z-index:1;}
+.mat-table td{padding:var(--density-pad-row);border-bottom:1px solid var(--gray-bg);vertical-align:middle;}
+.mat-table tbody tr:nth-child(even) td{background:#fafbfc;}
+.mat-table tbody tr:last-child td{border-bottom:none;}
+.mat-table tbody tr:hover td{background:#eff6ff!important;}
+.mat-cod{font-family:'Courier New',monospace;font-weight:700;color:var(--dark);background:#fef9c3;padding:3px 8px;border-radius:5px;display:inline-block;font-size:12px;}
+.mat-cod.empty{background:var(--gray-bg);color:var(--gray-l);font-style:italic;font-family:inherit;}
+.mat-denumire{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;line-height:1.35;}
+.mat-cant{font-weight:800;color:var(--dark);text-align:right;font-variant-numeric:tabular-nums;font-size:14px;}
+.mat-um{color:var(--gray);font-size:11px;text-transform:lowercase;}
+.btn-copy{padding:4px 10px;border-radius:6px;border:1px solid var(--gray-b);background:#fff;color:var(--gray);font-size:11px;font-weight:600;cursor:pointer;transition:all 0.15s;font-family:inherit;}
+.btn-copy:hover{border-color:var(--blue);color:var(--blue);background:#eff6ff;}
+.btn-copy.copied{background:var(--green);color:#fff;border-color:var(--green);}
+mark{background:#fef08a;color:var(--dark);padding:0 2px;border-radius:3px;font-weight:inherit;}
+
+/* SKELETON LOADERS */
+.skeleton-card{background:#fff;border-radius:var(--radius);padding:18px 22px;margin-bottom:14px;box-shadow:var(--shadow);}
+.skel{background:linear-gradient(90deg,var(--gray-bg) 0%,#f8fafc 50%,var(--gray-bg) 100%);background-size:200% 100%;animation:skelShift 1.4s infinite;border-radius:6px;}
+@keyframes skelShift{0%{background-position:200% 0}100%{background-position:-200% 0}}
+.skel-row{display:flex;align-items:center;gap:14px;}
+.skel-circle{width:44px;height:44px;border-radius:12px;flex-shrink:0;}
+.skel-line{height:14px;flex:1;}
+.skel-line.short{flex:0 0 30%;}.skel-line.tiny{flex:0 0 15%;height:10px;}
+
+/* EMPTY STATE */
+.empty-state{text-align:center;padding:48px 24px;background:#fff;border-radius:var(--radius);box-shadow:var(--shadow);}
+.empty-icon{font-size:48px;margin-bottom:12px;opacity:0.5;}
+.empty-title{font-size:16px;font-weight:800;color:var(--dark);margin-bottom:6px;}
+.empty-msg{color:var(--gray-l);font-size:13px;}
+.empty-action{margin-top:16px;}
+
+/* TOAST */
 .toast-container{position:fixed;top:20px;right:20px;z-index:300;display:flex;flex-direction:column;gap:8px;}
-.toast{padding:14px 20px;border-radius:12px;color:#fff;font-size:13px;font-weight:600;box-shadow:0 8px 24px rgba(0,0,0,0.15);animation:slideIn 0.3s ease;max-width:380px;}
+.toast{padding:12px 18px;border-radius:12px;color:#fff;font-size:13px;font-weight:600;box-shadow:0 8px 24px rgba(0,0,0,0.15);animation:slideIn 0.3s ease;max-width:380px;}
 .toast.success{background:var(--green);}.toast.error{background:var(--red);}.toast.info{background:var(--blue);}
 @keyframes slideIn{from{transform:translateX(100%);opacity:0}to{transform:translateX(0);opacity:1}}
 
-.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);backdrop-filter:blur(4px);z-index:200;align-items:center;justify-content:center;padding:16px;}.modal-overlay.active{display:flex;}
-.modal{background:#fff;border-radius:20px;width:100%;max-width:520px;max-height:90vh;overflow-y:auto;box-shadow:0 25px 60px rgba(0,0,0,0.3);}
-.modal-head{padding:20px 24px;border-bottom:1px solid var(--gray-b);display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;background:#fff;border-radius:20px 20px 0 0;z-index:1;}
-.modal-title{font-size:18px;font-weight:800;}
-.modal-close{width:32px;height:32px;border-radius:8px;border:none;background:var(--gray-bg);color:var(--gray);font-size:18px;display:flex;align-items:center;justify-content:center;}.modal-close:hover{background:#fef2f2;color:var(--red);}
-.modal-body{padding:24px;}
-.form-group{margin-bottom:16px;}.form-label{display:block;font-size:13px;font-weight:600;color:var(--dark);margin-bottom:6px;}.form-label .req{color:var(--red);}
-.form-input,.form-select,.form-textarea{width:100%;padding:12px 16px;border:2px solid var(--gray-b);border-radius:var(--radius-sm);font-size:14px;font-family:inherit;outline:none;transition:all 0.2s;background:#fff;}.form-input:focus,.form-select:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(59,130,246,0.08);}
-.form-textarea{min-height:60px;resize:vertical;}
-.form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;}@media(max-width:480px){.form-row{grid-template-columns:1fr;}}
-.form-submit{width:100%;padding:14px;background:linear-gradient(135deg,var(--blue),#2563eb);color:#fff;border:none;border-radius:var(--radius-sm);font-size:15px;font-weight:700;cursor:pointer;transition:all 0.3s;}.form-submit:hover{transform:translateY(-1px);}
-.form-submit:disabled{background:var(--gray-l);cursor:not-allowed;}
-
+/* BOTTOM NAV */
 .bottom-nav{position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1px solid var(--gray-b);box-shadow:0 -4px 20px rgba(0,0,0,0.06);padding:6px 12px;z-index:100;display:flex;gap:4px;}@media(min-width:768px){.bottom-nav{display:none;}}
 .bn-item{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:8px 4px;border-radius:10px;font-size:10px;font-weight:600;color:var(--gray);transition:all 0.2s;gap:2px;}.bn-item.active{color:var(--red);background:#fef2f2;}.bn-item .bn-icon{font-size:20px;}
-.empty-msg{text-align:center;padding:40px;color:var(--gray-l);font-size:14px;}
 .footer{text-align:center;color:var(--gray-xl);font-size:11px;padding:24px 0 100px;}
 .loading-bar{position:fixed;top:0;left:0;right:0;height:3px;z-index:400;display:none;}.loading-bar.active{display:block;}.loading-bar::after{content:'';display:block;width:30%;height:100%;background:var(--red);border-radius:2px;animation:loadSlide 1.2s infinite ease-in-out;}
 @keyframes loadSlide{0%{margin-left:-30%}100%{margin-left:100%}}
+
+/* MOBILE */
+@media(max-width:640px){
+  .oferta-head{flex-wrap:wrap;}
+  .oferta-status,.oferta-stat-pill{order:5;}
+  .oferta-total{order:6;width:100%;text-align:right;margin-top:4px;}
+  .tb-btn .kbd{display:none;}
+  .kbd-hint{display:none;}
+}
 </style>
+<script src="/admin/access-guard.js" defer></script>
 </head>
-<body>
+<body data-module="necesar">
 <div class="loading-bar" id="loadBar"></div>
 <div class="toast-container" id="toastContainer"></div>
 
@@ -105,32 +208,45 @@ tr:hover td{background:rgba(59,130,246,0.03);}
         <div>
             <a href="../admin.html" class="page-back">← Dashboard</a>
             <div class="page-title">🛒 Necesar Materiale</div>
-            <div class="page-subtitle" id="syncStatus"><span class="sync-indicator sync-off"></span>Date locale (demo)</div>
+            <div class="page-subtitle">
+                <span id="syncStatus"><span class="sync-indicator sync-off"></span>Date locale</span>
+                <span class="sub-sep">·</span>
+                <span id="lastRefreshLabel">—</span>
+            </div>
         </div>
         <div class="page-actions">
-            <a href="materiale.html" class="page-btn secondary">📦 Stocuri</a>
-            <button class="page-btn secondary" onclick="refreshData()">🔄 Sync</button>
-            <button class="page-btn primary" onclick="openAddModal()">+ Solicitare Nouă</button>
+            <a href="materiale.html" class="page-btn secondary" title="Modul Stocuri">📦 Stocuri</a>
+            <button class="page-btn secondary" id="refreshBtn" onclick="refreshData()" title="Reîncarcă datele"><span class="spin-icon">🔄</span> Reîncarcă</button>
         </div>
     </div>
 
     <div class="summary" id="summary"></div>
 
-    <div class="filters">
-        <input type="text" class="filter-search" id="searchInput" placeholder="🔍 Caută material, proiect..." oninput="render()">
-        <select class="filter-select" id="filterStatus" onchange="render()"><option value="">Toate statusurile</option><option>Solicitat</option><option>Aprobat</option><option>Comandat</option><option>Livrat</option><option>Anulat</option></select>
-        <select class="filter-select" id="filterUrgenta" onchange="render()"><option value="">Toate urgențele</option><option>Critică</option><option>Urgentă</option><option>Normal</option><option>Scăzută</option></select>
-        <select class="filter-select" id="filterProject" onchange="render()"><option value="">Toate proiectele</option></select>
-        <div class="view-toggle">
-            <button class="view-btn active" id="vCards" onclick="setView('cards')">☷ Carduri</button>
-            <button class="view-btn" id="vTable" onclick="setView('table')">☰ Tabel</button>
+    <div class="toolbar">
+        <div class="search-wrap" id="searchWrap">
+            <span class="search-icon">🔍</span>
+            <input type="text" class="filter-search" id="searchInput" placeholder="Caută client, proiect, cod, denumire..." aria-label="Căutare" autocomplete="off">
+            <span class="kbd-hint">/</span>
+            <button class="search-clear" type="button" onclick="clearSearch()" title="Șterge (Esc)" aria-label="Șterge căutarea">✕</button>
         </div>
-        <div class="filter-count" id="filterCount"></div>
+        <select class="filter-select" id="filterStatus" onchange="onFilterChange()" aria-label="Filtru status">
+            <option value="">Proiectare + Execuție</option>
+            <option value="Proiectare">Doar Proiectare</option>
+            <option value="Executie">Doar Execuție</option>
+        </select>
+        <button class="tb-btn" type="button" onclick="expandAll()" title="Expandează tot (E)" aria-label="Expandează tot">⤢ Expand all <span class="kbd">E</span></button>
+        <button class="tb-btn" type="button" onclick="collapseAll()" title="Restrânge tot (C)" aria-label="Restrânge tot">⤡ Collapse all <span class="kbd">C</span></button>
+        <div class="density-toggle" role="group" aria-label="Densitate vizualizare">
+            <button class="density-btn" type="button" data-density="comfortable" onclick="setDensity('comfortable')" title="Vizualizare confortabilă">⊞ Comfortable</button>
+            <button class="density-btn" type="button" data-density="compact" onclick="setDensity('compact')" title="Vizualizare compactă">≡ Compact</button>
+        </div>
+        <span class="filter-count" id="filterCount"></span>
     </div>
 
-    <div id="cardsView" class="cards"></div>
-    <div id="tableView" class="table-wrap" style="display:none"></div>
-    <div class="footer">Portal CSSI 3.0 · Necesar Materiale v3.0</div>
+    <div class="chips-row" id="chipsRow"></div>
+
+    <div id="necesarView"></div>
+    <div class="footer">Portal CSSI 3.0 · Necesar Materiale v5.0 · Materiale din ofertele acceptate (Proiectare + Execuție) · <kbd style="font-family:Courier;background:var(--gray-bg);padding:1px 5px;border-radius:4px">/</kbd> caută · <kbd style="font-family:Courier;background:var(--gray-bg);padding:1px 5px;border-radius:4px">E</kbd>/<kbd style="font-family:Courier;background:var(--gray-bg);padding:1px 5px;border-radius:4px">C</kbd> expand/collapse · <kbd style="font-family:Courier;background:var(--gray-bg);padding:1px 5px;border-radius:4px">Esc</kbd> reset</div>
 </div>
 
 <div class="bottom-nav">
@@ -141,254 +257,396 @@ tr:hover td{background:rgba(59,130,246,0.03);}
     <a href="financiar.html" class="bn-item"><span class="bn-icon">📄</span>Facturi</a>
 </div>
 
-<!-- ADD MODAL -->
-<div id="addModal" class="modal-overlay" onclick="if(event.target===this)closeAddModal()">
-<div class="modal">
-    <div class="modal-head"><div class="modal-title" id="modalTitle">🛒 Solicitare Material</div><button class="modal-close" onclick="closeAddModal()">✕</button></div>
-    <div class="modal-body">
-        <form id="addForm" onsubmit="saveRequest(event)">
-            <input type="hidden" name="editId" id="editId" value="">
-            <div class="form-group"><label class="form-label">Proiect <span class="req">*</span></label><select class="form-select" name="proiectId" id="fProiect" required></select></div>
-            <div class="form-group"><label class="form-label">Material solicitat <span class="req">*</span></label><textarea class="form-textarea" name="material" id="fMaterial" required placeholder="ex: 24x Detector fum Bosch FCP-O320&#10;2x Centrală FPA-5000&#10;500m cablu FTP Cat6"></textarea></div>
-            <div class="form-row">
-                <div class="form-group"><label class="form-label">Cantitate</label><input type="number" class="form-input" name="cantitate" id="fCant" min="1" placeholder="1"></div>
-                <div class="form-group"><label class="form-label">Cost estimat (RON)</label><input type="number" class="form-input" name="cost" id="fCost" min="0" step="0.01" placeholder="0"></div>
-            </div>
-            <div class="form-row">
-                <div class="form-group"><label class="form-label">Urgență</label>
-                    <select class="form-select" name="urgenta" id="fUrg"><option>Scăzută</option><option selected>Normal</option><option>Urgentă</option><option>Critică</option></select>
-                </div>
-                <div class="form-group"><label class="form-label">Solicitant</label>
-                    <select class="form-select" name="solicitant" id="fSol"><option>Echipa Mihai</option><option>Echipa Alex</option><option>Echipa Radu</option></select>
-                </div>
-            </div>
-            <div class="form-group"><label class="form-label">Furnizor preferat</label><input type="text" class="form-input" name="furnizor" id="fFurnizor" placeholder="ex: Atu Tech, Elko..."></div>
-            <div class="form-group"><label class="form-label">Observații</label><textarea class="form-textarea" name="note" id="fNote" placeholder="Specificații, termen, compatibilitate..." style="min-height:50px"></textarea></div>
-            <button type="submit" class="form-submit" id="submitBtn">🛒 Trimite Solicitarea</button>
-        </form>
-    </div>
-</div>
-</div>
-
-<!-- DETAIL MODAL -->
-<div id="detailModal" class="modal-overlay" onclick="if(event.target===this)closeDetailModal()">
-<div class="modal">
-    <div class="modal-head"><div class="modal-title" id="detailTitle">📋 Detalii Solicitare</div><button class="modal-close" onclick="closeDetailModal()">✕</button></div>
-    <div class="modal-body" id="detailBody"></div>
-</div>
-</div>
-
 <script>
-var API_URL = 'https://script.google.com/macros/s/AKfycbzdM_e5DY5nmd57TmB24sXz8dML93gKIolkmlqKxE7_d-_o3jHMVYuQ06YiQ5zJgZiB/exec';
+// ═══ AUTH GATE ═══
 var role = sessionStorage.getItem('cssi-role');
 if (!role) { window.location.href = '../admin.html'; }
-var canEdit = true;
-var canApprove = true;
 
-var PROJECTS = [
-    {id:'CSSI-2026-001', client:'Hotel Cheile Râșnoavei'},{id:'CSSI-2026-004', client:'Birouri IT Hub'},
-    {id:'CSSI-2026-005', client:'Restaurant Central'},{id:'CSSI-2026-006', client:'Depozit Ghimbav'},
-    {id:'CSSI-2026-007', client:'Școala Nr. 5'},{id:'CSSI-2026-012', client:'Fabrica Autoliv'},
-    {id:'CSSI-2026-013', client:'Rezidențial Avantgarden'},{id:'CSSI-2026-014', client:'ANAF Brașov'}
-];
-var STATUS_LIST = ['Solicitat','Aprobat','Comandat','Livrat','Anulat'];
-var BADGE_MAP = {'Solicitat':'badge-solicitat','Aprobat':'badge-solicitat','Comandat':'badge-comandat','Livrat':'badge-livrat','Anulat':'badge-anulat'};
-var URG_MAP = {'Scăzută':'urg-scazuta','Normal':'urg-normal','Urgentă':'urg-urgenta','Critică':'urg-critica'};
-var URG_ORDER = {'Critică':0,'Urgentă':1,'Normal':2,'Scăzută':3};
-var REQUESTS = [];
-var currentView = 'cards';
-var isLive = false;
-var kpiFilter = '';
+// ═══ CONSTANTS ═══
+var API_DB = '/admin/api.php';
+var LS_KEYS = { expanded:'nm.expanded', density:'nm.density' };
 
-var DEMO = [
-    {id:1,row:1,data:'2026-03-04',pid:'CSSI-2026-001',material:'Detector fum adresabil Bosch FCP-O320',cant:24,urg:'Urgentă',cost:4800,sol:'Echipa Mihai',status:'Solicitat',furnizor:'Atu Tech',note:'Necesar urgent pt. etaj 3+4'},
-    {id:2,row:2,data:'2026-03-04',pid:'CSSI-2026-006',material:'Cameră IP Hikvision DS-2CD2143G2-I 4MP',cant:4,urg:'Normal',cost:2080,sol:'Echipa Alex',status:'Comandat',furnizor:'Atu Tech',note:'Livrare estimată 7 zile'},
-    {id:3,row:3,data:'2026-03-03',pid:'CSSI-2026-012',material:'Cablu FTP Cat6 Legrand 305m',cant:2,urg:'Normal',cost:620,sol:'Echipa Radu',status:'Livrat',furnizor:'Elko',note:'Livrat pe 04.03'},
-    {id:4,row:4,data:'2026-03-03',pid:'CSSI-2026-001',material:'Centrală incendiu Bosch FPA-5000',cant:1,urg:'Critică',cost:8500,sol:'Echipa Mihai',status:'Aprobat',furnizor:'Bosch Direct',note:'Termen livrare 10 zile lucr.'},
-    {id:5,row:5,data:'2026-03-02',pid:'CSSI-2026-013',material:'Motor poartă culisantă BFT Deimos BT A600',cant:2,urg:'Normal',cost:3700,sol:'Echipa Mihai',status:'Livrat',furnizor:'BFT Romania',note:''},
-    {id:6,row:6,data:'2026-03-02',pid:'CSSI-2026-006',material:'NVR Hikvision 8 canale',cant:1,urg:'Normal',cost:1750,sol:'Echipa Alex',status:'Livrat',furnizor:'Atu Tech',note:''},
-    {id:7,row:7,data:'2026-03-01',pid:'CSSI-2026-004',material:'Tablou electric 36 module Hager',cant:2,urg:'Scăzută',cost:370,sol:'Echipa Radu',status:'Solicitat',furnizor:'Elko',note:'Poate aștepta'},
-    {id:8,row:8,data:'2026-03-01',pid:'CSSI-2026-012',material:'Pat cabluri 200x60 3m zincat',cant:20,urg:'Normal',cost:840,sol:'Echipa Radu',status:'Comandat',furnizor:'Elko',note:'Livrare pe 06.03'},
-    {id:9,row:9,data:'2026-03-04',pid:'CSSI-2026-014',material:'Cablu incendiu 2x1.5 E30 100m',cant:5,urg:'Urgentă',cost:2400,sol:'Echipa Mihai',status:'Solicitat',furnizor:'Elko',note:'Proiect ANAF, termen scurt'},
-    {id:10,row:10,data:'2026-02-28',pid:'CSSI-2026-007',material:'Sirenă interioară convențională',cant:6,urg:'Scăzută',cost:270,sol:'Echipa Alex',status:'Anulat',furnizor:'Atu Tech',note:'Anulat — existau în stoc'}
-];
+// ═══ STATE ═══
+var STATE = {
+    data: [],
+    loaded: false,
+    isLive: false,
+    lastRefresh: null,
+    expanded: loadJSON(LS_KEYS.expanded, {}),
+    density: localStorage.getItem(LS_KEYS.density) || 'comfortable',
+    searchDebounce: null,
+};
 
-function esc(s){if(!s)return '';var d=document.createElement('div');d.textContent=s;return d.innerHTML;}
-function fmt(n){return Number(n||0).toLocaleString('ro-RO');}
-function getPN(pid){var p=PROJECTS.find(function(x){return x.id===pid});return p?p.client:pid;}
+// ═══ HELPERS ═══
+function loadJSON(k, def){ try{ var s=localStorage.getItem(k); return s?JSON.parse(s):def; }catch(e){return def;} }
+function saveJSON(k, v){ try{ localStorage.setItem(k, JSON.stringify(v)); }catch(e){} }
+function esc(s){if(s==null)return '';var d=document.createElement('div');d.textContent=s;return d.innerHTML;}
+function highlight(str, q){
+    var safe = esc(str);
+    if(!q) return safe;
+    var pattern = q.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    try{
+        var re = new RegExp('('+pattern+')', 'gi');
+        return safe.replace(re, '<mark>$1</mark>');
+    }catch(e){return safe;}
+}
+function fmt(n){return Number(n||0).toLocaleString('ro-RO',{maximumFractionDigits:2});}
+function fmtQty(n){var v=Number(n||0);return v%1===0?v.toString():v.toFixed(2);}
 function showLoading(s){document.getElementById('loadBar').classList.toggle('active',s);}
-function toast(msg,type){var c=document.getElementById('toastContainer');var t=document.createElement('div');t.className='toast '+(type||'info');t.textContent=msg;c.appendChild(t);setTimeout(function(){t.style.opacity='0';t.style.transform='translateX(100px)';t.style.transition='all 0.3s'},3000);setTimeout(function(){t.remove()},3500);}
+function toast(msg, type){
+    var c=document.getElementById('toastContainer');
+    var t=document.createElement('div');t.className='toast '+(type||'info');t.textContent=msg;
+    c.appendChild(t);
+    setTimeout(function(){t.style.opacity='0';t.style.transform='translateX(100px)';t.style.transition='all 0.3s'},2500);
+    setTimeout(function(){t.remove()},3000);
+}
+function countTotalLinii(){var n=0;STATE.data.forEach(function(c){c.oferte.forEach(function(o){n+=o.linii.length});});return n;}
+function relTime(d){
+    if(!d) return '—';
+    var diff = Math.floor((Date.now()-d)/1000);
+    if(diff<5) return 'acum';
+    if(diff<60) return 'acum '+diff+'s';
+    if(diff<3600) return 'acum '+Math.floor(diff/60)+'m';
+    if(diff<86400) return 'acum '+Math.floor(diff/3600)+'h';
+    return 'acum '+Math.floor(diff/86400)+'z';
+}
+function debounce(fn, ms){
+    return function(){
+        var args=arguments, ctx=this;
+        clearTimeout(STATE.searchDebounce);
+        STATE.searchDebounce = setTimeout(function(){fn.apply(ctx,args)}, ms);
+    };
+}
 
-function apiGet(a){if(!API_URL)return Promise.reject('No API');showLoading(true);return fetch(API_URL+'?action='+a).then(function(r){return r.json()}).finally(function(){showLoading(false)});}
-function apiPost(d){if(!API_URL)return Promise.reject('No API');showLoading(true);return fetch(API_URL,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(d)}).then(function(r){return r.json()}).finally(function(){showLoading(false)});}
+// ═══ SYNC + STATUS ═══
+function updateSync(state){
+    var el=document.getElementById('syncStatus');
+    if(state==='loading') el.innerHTML='<span class="sync-indicator sync-loading"></span>Se încarcă...';
+    else if(STATE.isLive) el.innerHTML='<span class="sync-indicator sync-ok"></span>MySQL · '+countTotalLinii()+' materiale';
+    else el.innerHTML='<span class="sync-indicator sync-off"></span>Indisponibil';
+    document.getElementById('lastRefreshLabel').textContent = STATE.lastRefresh ? 'Actualizat '+relTime(STATE.lastRefresh) : '—';
+}
+setInterval(function(){ if(STATE.lastRefresh) document.getElementById('lastRefreshLabel').textContent='Actualizat '+relTime(STATE.lastRefresh); }, 15000);
 
+// ═══ FETCH ═══
 function refreshData(){
-    if(!API_URL){toast('⚠️ API nesetat. Date demo.','info');REQUESTS=JSON.parse(JSON.stringify(DEMO));isLive=false;updateSync();render();return;}
-    updateSync('loading');
-    Promise.all([apiGet('getMateriale'),apiGet('getProjects')]).then(function(res){
-        if(Array.isArray(res[0])){REQUESTS=res[0].map(function(r,i){return {id:i+1,row:r.row||i+1,data:r.data||'',pid:r.proiectId||'',material:r.material||'',cant:Number(r.cantitate)||1,urg:r.urgenta||'Normal',cost:Number(r.cost)||0,sol:r.solicitant||'',status:r.status||'Solicitat',furnizor:r.furnizor||'',note:r.note||''};});}
-        if(Array.isArray(res[1])){PROJECTS=res[1].map(function(p){return {id:p.id,client:p.client}});populateDropdowns();}
-        isLive=true;updateSync();render();toast('✅ Sincronizat','success');
-    }).catch(function(){isLive=false;updateSync();toast('❌ Sync eșuat','error');});
+    var btn=document.getElementById('refreshBtn');btn.classList.add('spinning');
+    updateSync('loading');showLoading(true);
+    if(!STATE.loaded) renderSkeletons();
+    return fetch(API_DB+'?action=getNecesarMateriale&_t='+Date.now())
+        .then(function(r){return r.json()})
+        .then(function(res){
+            if(!res.success) throw new Error(res.error||'Eroare server');
+            STATE.data = Array.isArray(res.data)?res.data:[];
+            STATE.isLive = true;STATE.loaded=true;STATE.lastRefresh=Date.now();
+            updateSync();render();
+        })
+        .catch(function(e){
+            STATE.isLive = false;
+            updateSync();render();
+            toast('❌ Nu s-a putut încărca: '+(e.message||e),'error');
+        })
+        .finally(function(){ showLoading(false);btn.classList.remove('spinning'); });
 }
-function updateSync(s){var el=document.getElementById('syncStatus');if(s==='loading')el.innerHTML='<span class="sync-indicator sync-loading"></span>Se sincronizează...';else if(isLive)el.innerHTML='<span class="sync-indicator sync-ok"></span>Conectat la Google Sheets';else el.innerHTML='<span class="sync-indicator sync-off"></span>Date locale (demo)';}
 
+// ═══ FILTER ═══
+function getFilters(){
+    return {
+        q: (document.getElementById('searchInput').value||'').toLowerCase().trim(),
+        status: document.getElementById('filterStatus').value,
+    };
+}
 function getFiltered(){
-    var q=document.getElementById('searchInput').value.toLowerCase();
-    var fs=document.getElementById('filterStatus').value;
-    var fu=document.getElementById('filterUrgenta').value;
-    var fp=document.getElementById('filterProject').value;
-    var filtered=REQUESTS.filter(function(r){
-        if(fs&&r.status!==fs)return false;
-        if(fu&&r.urg!==fu)return false;
-        if(fp&&r.pid!==fp)return false;
-        if(kpiFilter&&r.status!==kpiFilter)return false;
-        if(q&&!(r.material.toLowerCase().includes(q)||r.pid.toLowerCase().includes(q)||getPN(r.pid).toLowerCase().includes(q)||r.sol.toLowerCase().includes(q)))return false;
-        return true;
+    var f = getFilters();
+    var out = [];
+    STATE.data.forEach(function(c){
+        var oferteOK = c.oferte.filter(function(o){
+            if(f.status && o.proiect_status !== f.status) return false;
+            if(!f.q) return true;
+            if(c.client_nume.toLowerCase().includes(f.q)) return true;
+            if((o.proiect_id||'').toLowerCase().includes(f.q)) return true;
+            if((o.oferta_id||'').toLowerCase().includes(f.q)) return true;
+            if((o.obiectiv||'').toLowerCase().includes(f.q)) return true;
+            return o.linii.some(function(l){
+                return (l.cod||'').toLowerCase().includes(f.q) || (l.denumire||'').toLowerCase().includes(f.q);
+            });
+        });
+        if(oferteOK.length){
+            out.push({ client_id:c.client_id, client_nume:c.client_nume, oferte:oferteOK });
+        }
     });
-    filtered.sort(function(a,b){
-        var so={'Solicitat':0,'Aprobat':1,'Comandat':2,'Livrat':3,'Anulat':4};
-        if(so[a.status]!==so[b.status])return so[a.status]-so[b.status];
-        if(URG_ORDER[a.urg]!==URG_ORDER[b.urg])return URG_ORDER[a.urg]-URG_ORDER[b.urg];
-        return b.data.localeCompare(a.data);
-    });
-    document.getElementById('filterCount').textContent=filtered.length+' solicitări';
-    return filtered;
+    return out;
 }
-function toggleKpiFilter(f){kpiFilter=kpiFilter===f?'':f;render();}
 
-function render(){renderSummary();var f=getFiltered();if(currentView==='cards'){renderCards(f);document.getElementById('cardsView').style.display='';document.getElementById('tableView').style.display='none';}else{renderTable(f);document.getElementById('cardsView').style.display='none';document.getElementById('tableView').style.display='';}}
+// ═══ EXPAND/COLLAPSE STATE ═══
+function isOpen(key){ return !!STATE.expanded[key]; }
+function setOpen(key, v){ if(v) STATE.expanded[key]=true; else delete STATE.expanded[key]; saveJSON(LS_KEYS.expanded, STATE.expanded); }
+function toggleClient(cid){ var key='c:'+cid; setOpen(key, !isOpen(key)); var el=document.getElementById('cli-'+cid); if(el){ el.classList.toggle('open'); var btn=el.querySelector('.client-head'); if(btn) btn.setAttribute('aria-expanded', isOpen(key)?'true':'false'); } }
+function toggleOferta(cid, oid){ var key='o:'+cid+'|'+oid; setOpen(key, !isOpen(key)); var el=document.getElementById('of-'+cid+'-'+oid); if(el){ el.classList.toggle('open'); var btn=el.querySelector('.oferta-head'); if(btn) btn.setAttribute('aria-expanded', isOpen(key)?'true':'false'); } }
+function expandAll(){
+    getFiltered().forEach(function(c){
+        STATE.expanded['c:'+c.client_id] = true;
+        c.oferte.forEach(function(o){ STATE.expanded['o:'+c.client_id+'|'+o.oferta_id] = true; });
+    });
+    saveJSON(LS_KEYS.expanded, STATE.expanded);render();
+    toast('Toate cardurile expandate','info');
+}
+function collapseAll(){ STATE.expanded={}; saveJSON(LS_KEYS.expanded, {}); render(); toast('Toate cardurile restrânse','info'); }
+
+// ═══ DENSITY ═══
+function setDensity(d){
+    STATE.density=d; localStorage.setItem(LS_KEYS.density, d);
+    document.body.classList.toggle('compact', d==='compact');
+    document.querySelectorAll('.density-btn').forEach(function(b){b.classList.toggle('active', b.dataset.density===d);});
+}
+
+// ═══ RENDER ═══
+function renderSkeletons(){
+    var view=document.getElementById('necesarView');
+    var html='';
+    for(var i=0;i<3;i++){
+        html += '<div class="skeleton-card"><div class="skel-row"><div class="skel skel-circle"></div><div style="flex:1"><div class="skel skel-line short" style="margin-bottom:8px"></div><div class="skel skel-line tiny"></div></div></div></div>';
+    }
+    view.innerHTML=html;
+}
+
+function renderChips(){
+    var f=getFilters();
+    var row=document.getElementById('chipsRow');
+    var chips=[];
+    if(f.q) chips.push({label:'Căutare: "'+esc(f.q)+'"', clear:'clearSearch()'});
+    if(f.status) chips.push({label:'Status: '+esc(f.status), clear:'clearStatus()'});
+    if(!chips.length){ row.innerHTML=''; return; }
+    var html = chips.map(function(c){return '<span class="chip">'+c.label+' <button class="chip-x" onclick="'+c.clear+'" title="Elimină filtrul" aria-label="Elimină">×</button></span>';}).join('');
+    html += '<button class="chip-clear" onclick="clearAllFilters()">Șterge toate filtrele</button>';
+    row.innerHTML = html;
+}
 
 function renderSummary(){
-    var sol=REQUESTS.filter(function(r){return r.status==='Solicitat'}).length;
-    var apr=REQUESTS.filter(function(r){return r.status==='Aprobat'}).length;
-    var cmd=REQUESTS.filter(function(r){return r.status==='Comandat'}).length;
-    var liv=REQUESTS.filter(function(r){return r.status==='Livrat'}).length;
-    var costPending=REQUESTS.filter(function(r){return r.status!=='Livrat'&&r.status!=='Anulat'}).reduce(function(s,r){return s+r.cost},0);
-    document.getElementById('summary').innerHTML=
-        '<div class="s-item'+(kpiFilter==='Solicitat'?' active-filter':'')+'" onclick="toggleKpiFilter(\'Solicitat\')"><div class="s-icon" style="background:#eff6ff">📝</div><div><div class="s-val" style="color:var(--blue)">'+sol+'</div><div class="s-label">De aprobat</div></div></div>'+
-        '<div class="s-item'+(kpiFilter==='Aprobat'?' active-filter':'')+'" onclick="toggleKpiFilter(\'Aprobat\')"><div class="s-icon" style="background:#f5f3ff">✅</div><div><div class="s-val" style="color:var(--purple)">'+(apr)+'</div><div class="s-label">Aprobate</div></div></div>'+
-        '<div class="s-item'+(kpiFilter==='Comandat'?' active-filter':'')+'" onclick="toggleKpiFilter(\'Comandat\')"><div class="s-icon" style="background:#fff7ed">📦</div><div><div class="s-val" style="color:var(--orange)">'+cmd+'</div><div class="s-label">Comandate</div></div></div>'+
-        '<div class="s-item'+(kpiFilter==='Livrat'?' active-filter':'')+'" onclick="toggleKpiFilter(\'Livrat\')"><div class="s-icon" style="background:#f0fdf4">✅</div><div><div class="s-val" style="color:var(--green)">'+liv+'</div><div class="s-label">Livrate</div></div></div>'+
-        '<div class="s-item"><div class="s-icon" style="background:#fef2f2">💰</div><div><div class="s-val" style="color:var(--red)">'+fmt(costPending)+'</div><div class="s-label">Cost în așteptare</div></div></div>';
+    var clienti = STATE.data.length;
+    var totalOferte=0, totalMat=0, totalQty=0, totalVal=0;
+    STATE.data.forEach(function(c){
+        totalOferte += c.oferte.length;
+        c.oferte.forEach(function(o){
+            totalVal += Number(o.total_cu_tva)||0;
+            totalMat += o.linii.length;
+            o.linii.forEach(function(l){totalQty += Number(l.cantitate)||0});
+        });
+    });
+    document.getElementById('summary').innerHTML =
+        '<div class="s-item"><div class="s-icon" style="background:#eff6ff">🏢</div><div><div class="s-val" style="color:var(--blue)">'+clienti+'</div><div class="s-label">Clienți activi</div></div></div>'+
+        '<div class="s-item"><div class="s-icon" style="background:#f5f3ff">📋</div><div><div class="s-val" style="color:var(--purple)">'+totalOferte+'</div><div class="s-label">Oferte acceptate</div></div></div>'+
+        '<div class="s-item"><div class="s-icon" style="background:#fff7ed">📦</div><div><div class="s-val" style="color:var(--orange)">'+totalMat+'</div><div class="s-label">Linii materiale</div></div></div>'+
+        '<div class="s-item"><div class="s-icon" style="background:#f0fdf4">🔢</div><div><div class="s-val" style="color:var(--green)">'+fmtQty(totalQty)+'</div><div class="s-label">Total cantitate</div></div></div>'+
+        '<div class="s-item"><div class="s-icon" style="background:#fef2f2">💰</div><div><div class="s-val" style="color:var(--red)">'+fmt(totalVal)+'</div><div class="s-label">Valoare totală RON</div></div></div>';
 }
 
-function renderCards(filtered){
-    if(!filtered.length){document.getElementById('cardsView').innerHTML='<div class="empty-msg">Nicio solicitare găsită</div>';return;}
-    var html='';
-    filtered.forEach(function(r){
-        var cardCls=r.status==='Comandat'?'comandat':r.status==='Livrat'?'livrat':r.status==='Anulat'?'anulat':'';
-        var statusOpts=STATUS_LIST.map(function(s){return '<option'+(r.status===s?' selected':'')+'>'+s+'</option>'}).join('');
-        html+='<div class="ncard '+cardCls+'">';
-        html+='<div class="ncard-top"><div class="ncard-mat">'+esc(r.material)+'</div><span class="ncard-badge '+(BADGE_MAP[r.status]||'')+'">'+r.status+'</span></div>';
-        html+='<div class="ncard-pid">🔗 '+r.pid+' — '+esc(getPN(r.pid))+'</div>';
-        html+='<div class="ncard-tags">';
-        html+='<span class="ncard-tag '+(URG_MAP[r.urg]||'urg-normal')+'">'+r.urg+'</span>';
-        html+='<span class="ncard-tag" style="background:var(--gray-bg);color:var(--gray)">×'+r.cant+'</span>';
-        if(r.cost) html+='<span class="ncard-tag" style="background:#fef2f2;color:var(--red)">💰 '+fmt(r.cost)+' RON</span>';
-        html+='<span class="ncard-tag" style="background:var(--gray-bg);color:var(--gray)">👷 '+r.sol+'</span>';
-        html+='</div>';
-        html+='<div class="ncard-info">';
-        html+='<div><dt>📅 Data</dt>'+r.data+'</div>';
-        if(r.furnizor) html+='<div><dt>🏭 Furnizor</dt>'+esc(r.furnizor)+'</div>';
-        html+='</div>';
-        if(r.note) html+='<div style="font-size:12px;color:var(--gray);font-style:italic;padding:6px 10px;background:var(--gray-bg);border-radius:8px;margin-bottom:8px">📝 '+esc(r.note)+'</div>';
-        if(canEdit){
-            html+='<div class="ncard-actions">';
-            html+='<select onchange="changeStatus('+r.id+',this.value)">'+statusOpts+'</select>';
-            if(canApprove&&r.status==='Solicitat') html+='<button class="btn-sm" style="background:#f0fdf4;color:var(--green)" onclick="changeStatus('+r.id+',\'Aprobat\')">✅ Aprobă</button>';
-            html+='<button class="btn-sm" style="background:#eff6ff;color:var(--blue)" onclick="openDetailModal('+r.id+')">ℹ️</button>';
-            html+='</div>';
+function renderEmpty(view, why){
+    var html;
+    if(why==='no-data'){
+        html = '<div class="empty-state"><div class="empty-icon">📭</div><div class="empty-title">Niciun proiect activ</div><div class="empty-msg">Nu există proiecte în Proiectare/Execuție cu oferte acceptate.</div></div>';
+    } else {
+        html = '<div class="empty-state"><div class="empty-icon">🔍</div><div class="empty-title">Niciun rezultat</div><div class="empty-msg">Nimic nu corespunde filtrelor curente.</div><div class="empty-action"><button class="tb-btn" onclick="clearAllFilters()">Șterge toate filtrele</button></div></div>';
+    }
+    view.innerHTML = html;
+}
+
+function render(){
+    renderSummary();
+    renderChips();
+    var f = getFilters();
+    var filtered = getFiltered();
+    var totalOferte = filtered.reduce(function(s,c){return s+c.oferte.length},0);
+    var totalLinii = filtered.reduce(function(s,c){return s+c.oferte.reduce(function(ss,o){return ss+o.linii.length},0)},0);
+    document.getElementById('filterCount').textContent = filtered.length+' clienți · '+totalOferte+' oferte · '+totalLinii+' materiale';
+
+    var view = document.getElementById('necesarView');
+    if(!STATE.loaded){ renderSkeletons(); return; }
+    if(!STATE.data.length){ renderEmpty(view, 'no-data'); return; }
+    if(!filtered.length){ renderEmpty(view, 'no-match'); return; }
+
+    var html = '';
+    filtered.forEach(function(c){
+        var clientKey = 'c:'+c.client_id;
+        var clientOpen = isOpen(clientKey);
+        var totalMatCli = c.oferte.reduce(function(s,o){return s+o.linii.length},0);
+        var totalRonCli = c.oferte.reduce(function(s,o){return s+(Number(o.total_cu_tva)||0)},0);
+        var initials = (c.client_nume||'?').split(/\s+/).filter(Boolean).map(function(w){return w[0]}).join('').slice(0,2).toUpperCase();
+        var clientId = 'cli-'+c.client_id;
+        var bodyId = 'cli-body-'+c.client_id;
+        html += '<div class="client-card'+(clientOpen?' open':'')+'" id="'+clientId+'">';
+        html += '<button class="client-head" type="button" aria-expanded="'+(clientOpen?'true':'false')+'" aria-controls="'+bodyId+'" onclick="toggleClient(\''+esc(c.client_id)+'\')">';
+        html += '<div class="client-icon">'+esc(initials)+'</div>';
+        html += '<div class="client-info">';
+        html += '<div class="client-name">'+highlight(c.client_nume, f.q)+'</div>';
+        html += '<div class="client-meta">';
+        html += '<span class="pill">📋 '+c.oferte.length+' ofert'+(c.oferte.length===1?'ă':'e')+'</span>';
+        html += '<span class="pill">📦 '+totalMatCli+' materiale</span>';
+        html += '<span class="pill ron">💰 '+fmt(totalRonCli)+' RON</span>';
+        html += '</div></div>';
+        html += '<div class="client-chevron" aria-hidden="true">▾</div></button>';
+        html += '<div class="client-body" id="'+bodyId+'">';
+        c.oferte.forEach(function(o){
+            var ofKey = 'o:'+c.client_id+'|'+o.oferta_id;
+            var ofOpen = isOpen(ofKey);
+            var statusCls = (o.proiect_status||'').toLowerCase();
+            var ofId = 'of-'+c.client_id+'-'+o.oferta_id;
+            var ofBodyId = 'of-body-'+c.client_id+'-'+o.oferta_id;
+            var ofKeyJs = c.client_id+"','"+o.oferta_id;
+            var comandataCls = o.comandat_at ? ' comandata' : '';
+            html += '<div class="oferta-card '+statusCls+(ofOpen?' open':'')+comandataCls+'" id="'+ofId+'">';
+            html += '<div class="oferta-head-row">';
+            html += '<button class="oferta-head" type="button" aria-expanded="'+(ofOpen?'true':'false')+'" aria-controls="'+ofBodyId+'" onclick="toggleOferta(\''+esc(c.client_id)+"','"+esc(o.oferta_id)+'\')">';
+            var displayName = (o.obiectiv && o.obiectiv.trim()) || o.titlu || '(fără denumire)';
+            html += '<div class="oferta-codes">';
+            html += '<div class="oferta-name" title="'+esc(displayName)+'">'+highlight(displayName, f.q)+'</div>';
+            html += '<div class="oferta-refs">';
+            html += '<span class="ref-of">'+highlight(o.oferta_id||'?', f.q)+'</span>';
+            html += '<span>📌 <span class="ref-proj">'+highlight(o.proiect_id||'?', f.q)+'</span></span>';
+            html += '</div></div>';
+            html += '<span class="oferta-status '+statusCls+'">'+esc(o.proiect_status||'')+'</span>';
+            html += '<span class="oferta-stat-pill">'+o.linii.length+' linii</span>';
+            html += '<span class="oferta-total">'+fmt(o.total_cu_tva)+' <small>RON</small></span>';
+            if(o.comandat_at){
+                html += '<span class="comandat-info" title="Comandat de '+esc(o.comandat_by||'?')+' la '+esc(o.comandat_at)+'">';
+                html += '<span class="ci-icon">✓</span>';
+                html += '<span class="ci-text">';
+                html += '<span class="ci-text-top">Comandat</span>';
+                html += '<span class="ci-meta">'+fmtDateTime(o.comandat_at);
+                if(o.comandat_by) html += ' · '+esc(o.comandat_by);
+                html += '</span>';
+                html += '</span>';
+                html += '</span>';
+            }
+            html += '</button>';
+            if(o.comandat_at){
+                html += '<button type="button" class="btn-unmark" onclick="unmarkOferta('+o.oferta_db_id+')" aria-label="Anulează marcaj comandă">↶</button>';
+            }
+            html += '</div>';
+            html += '<div class="oferta-body" id="'+ofBodyId+'">';
+            if(o.adresa) html += '<div class="oferta-obiectiv-detail"><strong>📍 Adresă:</strong> '+esc(o.adresa)+(o.data_oferta?' &nbsp;·&nbsp; <strong>📅 Data:</strong> '+esc(o.data_oferta):'')+'</div>';
+            if(o.linii.length){
+                html += '<div class="mat-table-wrap"><table class="mat-table"><thead><tr><th style="width:25%">Cod produs</th><th>Denumire</th><th style="width:60px">UM</th><th style="width:90px;text-align:right">Cant.</th><th style="width:90px"></th></tr></thead><tbody>';
+                o.linii.forEach(function(l){
+                    var codDisplay = l.cod ? '<span class="mat-cod">'+highlight(l.cod, f.q)+'</span>' : '<span class="mat-cod empty">— fără cod —</span>';
+                    var den = l.denumire||'';
+                    html += '<tr>';
+                    html += '<td>'+codDisplay+'</td>';
+                    html += '<td><div class="mat-denumire" title="'+esc(den)+'">'+highlight(den, f.q)+'</div></td>';
+                    html += '<td class="mat-um">'+esc(l.um||'buc')+'</td>';
+                    html += '<td class="mat-cant">'+fmtQty(l.cantitate)+'</td>';
+                    html += '<td>'+(l.cod?'<button type="button" class="btn-copy" onclick="copyCode(this,\''+esc(l.cod).replace(/'/g,"\\'")+'\')" title="Copiază doar codul">📋 Copy</button>':'')+'</td>';
+                    html += '</tr>';
+                });
+                html += '</tbody></table></div>';
+            } else {
+                html += '<div class="empty-msg" style="padding:20px;text-align:center">Nicio linie de echipament</div>';
+            }
+            if(!o.comandat_at){
+                html += '<div class="oferta-foot"><button type="button" class="btn-mark" onclick="markOferta('+o.oferta_db_id+')" title="Marchează această ofertă ca fiind comandată la distribuitor">✓ Marchează ca comandat</button></div>';
+            }
+            html += '</div></div>';
+        });
+        html += '</div></div>';
+    });
+    view.innerHTML = html;
+}
+
+// ═══ MARK COMANDAT ═══
+function fmtDateTime(s){
+    if(!s) return '';
+    // Acceptăm "2026-05-09 14:23:00" sau ISO
+    var d = new Date(s.replace(' ','T'));
+    if(isNaN(d.getTime())) return s;
+    var pad = function(n){return n<10?'0'+n:n;};
+    var months = ['Ian','Feb','Mar','Apr','Mai','Iun','Iul','Aug','Sep','Oct','Noi','Dec'];
+    return pad(d.getDate())+' '+months[d.getMonth()]+' '+d.getFullYear()+' '+pad(d.getHours())+':'+pad(d.getMinutes());
+}
+function getCurrentUser(){
+    return sessionStorage.getItem('cssi-user') || sessionStorage.getItem('cssi-role') || '';
+}
+function findOfertaByDbId(ofDbId){
+    for(var i=0;i<STATE.data.length;i++){
+        var c = STATE.data[i];
+        for(var j=0;j<c.oferte.length;j++){
+            if(c.oferte[j].oferta_db_id === ofDbId) return c.oferte[j];
         }
-        html+='</div>';
-    });
-    document.getElementById('cardsView').innerHTML=html;
+    }
+    return null;
+}
+function markOferta(ofDbId){
+    var user = getCurrentUser();
+    fetch(API_DB+'?action=markOfertaComandata',{
+        method:'POST',headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({action:'markOfertaComandata',oferta_db_id:ofDbId,user:user})
+    }).then(function(r){return r.json()}).then(function(res){
+        if(!res.success) throw new Error(res.error||'Eroare');
+        var of = findOfertaByDbId(ofDbId);
+        if(of){
+            of.comandat_at = res.data && res.data.comandat_at ? res.data.comandat_at : new Date().toISOString().slice(0,19).replace('T',' ');
+            of.comandat_by = res.data && res.data.comandat_by ? res.data.comandat_by : user;
+        }
+        render();
+        toast('✅ Marcată ca comandat','success');
+    }).catch(function(e){toast('❌ Nu s-a putut marca: '+(e.message||e),'error')});
+}
+function unmarkOferta(ofDbId){
+    if(!confirm('Anulezi marcajul de comandă pentru această ofertă?')) return;
+    fetch(API_DB+'?action=unmarkOfertaComandata',{
+        method:'POST',headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({action:'unmarkOfertaComandata',oferta_db_id:ofDbId})
+    }).then(function(r){return r.json()}).then(function(res){
+        if(!res.success) throw new Error(res.error||'Eroare');
+        var of = findOfertaByDbId(ofDbId);
+        if(of){ of.comandat_at = null; of.comandat_by = null; }
+        render();
+        toast('Marcaj anulat','info');
+    }).catch(function(e){toast('❌ Nu s-a putut anula: '+(e.message||e),'error')});
 }
 
-function renderTable(filtered){
-    if(!filtered.length){document.getElementById('tableView').innerHTML='<div class="empty-msg">Nicio solicitare găsită</div>';return;}
-    var html='<table><thead><tr><th>Data</th><th>Proiect</th><th>Material</th><th>Cant.</th><th>Urgență</th><th>Cost</th><th>Solicitant</th><th>Status</th></tr></thead><tbody>';
-    filtered.forEach(function(r){
-        var statusOpts=STATUS_LIST.map(function(s){return '<option'+(r.status===s?' selected':'')+'>'+s+'</option>'}).join('');
-        html+='<tr>';
-        html+='<td>'+r.data+'</td>';
-        html+='<td><span style="color:var(--blue);font-weight:700">'+r.pid+'</span><br><span style="font-size:11px;color:var(--gray)">'+esc(getPN(r.pid))+'</span></td>';
-        html+='<td style="white-space:normal;max-width:250px;font-weight:700">'+esc(r.material)+'</td>';
-        html+='<td>'+r.cant+'</td>';
-        html+='<td><span class="ncard-tag '+(URG_MAP[r.urg]||'')+'">'+r.urg+'</span></td>';
-        html+='<td style="font-weight:700">'+fmt(r.cost)+' RON</td>';
-        html+='<td>'+r.sol+'</td>';
-        html+='<td>'+(canEdit?'<select style="padding:6px 10px;border-radius:8px;border:1px solid var(--gray-b);font-size:12px;font-weight:600;font-family:inherit" onchange="changeStatus('+r.id+',this.value)">'+statusOpts+'</select>':'<span class="ncard-badge '+(BADGE_MAP[r.status]||'')+'">'+r.status+'</span>')+'</td>';
-        html+='</tr>';
-    });
-    html+='</tbody></table>';
-    document.getElementById('tableView').innerHTML=html;
+// ═══ COPY (per linie) ═══
+function copyCode(btn, code){
+    if(!code) return;
+    navigator.clipboard.writeText(code).then(function(){
+        btn.classList.add('copied');btn.textContent='✓ Copiat';
+        setTimeout(function(){btn.classList.remove('copied');btn.textContent='📋 Copy'},1400);
+    }).catch(function(){toast('⚠️ Nu pot copia în clipboard','error')});
 }
 
-function setView(v){currentView=v;document.getElementById('vCards').classList.toggle('active',v==='cards');document.getElementById('vTable').classList.toggle('active',v==='table');render();}
+// ═══ FILTER HANDLERS ═══
+var debouncedRender = debounce(function(){ updateSearchClear(); render(); }, 200);
+function onSearchInput(){ debouncedRender(); }
+function updateSearchClear(){ var w=document.getElementById('searchWrap'); var v=document.getElementById('searchInput').value; w.classList.toggle('has-value', !!v); }
+function clearSearch(){ document.getElementById('searchInput').value=''; updateSearchClear(); render(); }
+function clearStatus(){ document.getElementById('filterStatus').value=''; render(); }
+function clearAllFilters(){ document.getElementById('searchInput').value=''; document.getElementById('filterStatus').value=''; updateSearchClear(); render(); }
+function onFilterChange(){ render(); }
 
-function changeStatus(id,val){
-    var r=REQUESTS.find(function(x){return x.id===id});if(!r)return;
-    r.status=val;
-    if(API_URL) apiPost({action:'updateMaterialeStatus',row:r.row,status:val}).catch(function(){});
-    render();toast('✅ Status: '+val,'success');
-}
+// ═══ KEYBOARD SHORTCUTS ═══
+document.addEventListener('keydown', function(ev){
+    var inField = ev.target.matches('input, textarea, select');
+    if(ev.key==='/' && !inField){ ev.preventDefault(); document.getElementById('searchInput').focus(); }
+    else if(ev.key==='Escape'){ if(inField){ ev.target.blur(); } if(document.getElementById('searchInput').value){ clearSearch(); } }
+    else if((ev.key==='e' || ev.key==='E') && !inField){ ev.preventDefault(); expandAll(); }
+    else if((ev.key==='c' || ev.key==='C') && !inField){ ev.preventDefault(); collapseAll(); }
+});
 
-function openDetailModal(id){
-    var r=REQUESTS.find(function(x){return x.id===id});if(!r)return;
-    document.getElementById('detailTitle').textContent='🛒 Solicitare #'+r.id;
-    var html='<div style="display:grid;gap:14px">';
-    html+='<div style="text-align:center;padding:12px 0"><span class="ncard-badge '+(BADGE_MAP[r.status]||'')+'" style="font-size:14px;padding:6px 16px">'+r.status+'</span></div>';
-    html+=infoRow('📦 Material','<strong>'+esc(r.material)+'</strong>');
-    html+=infoRow('🔗 Proiect','<span style="color:var(--blue);font-weight:700">'+r.pid+'</span> — '+esc(getPN(r.pid)));
-    html+=infoRow('📊 Cantitate','<strong>'+r.cant+'</strong>');
-    html+=infoRow('💰 Cost estimat','<strong>'+fmt(r.cost)+' RON</strong>');
-    html+=infoRow('⚡ Urgență','<span class="ncard-tag '+(URG_MAP[r.urg]||'')+'">'+r.urg+'</span>');
-    html+=infoRow('👷 Solicitant',r.sol);
-    html+=infoRow('📅 Data',r.data);
-    if(r.furnizor) html+=infoRow('🏭 Furnizor',esc(r.furnizor));
-    if(r.note) html+='<div style="background:var(--gray-bg);padding:10px 14px;border-radius:8px;font-size:13px;color:var(--gray);font-style:italic">📝 '+esc(r.note)+'</div>';
-    html+='</div>';
-    document.getElementById('detailBody').innerHTML=html;
-    document.getElementById('detailModal').classList.add('active');
-}
-function closeDetailModal(){document.getElementById('detailModal').classList.remove('active');}
-function infoRow(l,v){return '<div style="display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px solid var(--gray-bg)"><span style="font-size:13px;color:var(--gray)">'+l+'</span><span style="font-size:14px;font-weight:600">'+v+'</span></div>';}
+// ═══ INIT ═══
+document.getElementById('searchInput').addEventListener('input', onSearchInput);
+setDensity(STATE.density);
+refreshData();
 
-function openAddModal(){
-    document.getElementById('editId').value='';
-    document.getElementById('addForm').reset();
-    document.getElementById('addModal').classList.add('active');
-}
-function closeAddModal(){document.getElementById('addModal').classList.remove('active');}
-
-function saveRequest(e){
-    e.preventDefault();var fd=new FormData(document.getElementById('addForm'));
-    var maxId=0;REQUESTS.forEach(function(x){if(x.id>maxId)maxId=x.id});
-    var newR={id:maxId+1,row:maxId+1,data:new Date().toISOString().split('T')[0],pid:fd.get('proiectId'),material:fd.get('material'),cant:parseInt(fd.get('cantitate'))||1,urg:fd.get('urgenta'),cost:parseFloat(fd.get('cost'))||0,sol:fd.get('solicitant'),status:'Solicitat',furnizor:fd.get('furnizor')||'',note:fd.get('note')||''};
-
-    if(API_URL){
-        apiPost({action:'addMaterial',request:newR}).then(function(res){newR.row=res.row||newR.row;REQUESTS.unshift(newR);render();toast('✅ Solicitare trimisă și sincronizată','success');}).catch(function(){REQUESTS.unshift(newR);render();toast('⚠️ Salvat local','error');});
-    } else {REQUESTS.unshift(newR);toast('✅ Solicitare trimisă (local)','success');}
-    render();closeAddModal();document.getElementById('addForm').reset();
-}
-
-function populateDropdowns(){
-    var opts='<option value="">— Alege proiect —</option>';
-    PROJECTS.forEach(function(p){opts+='<option value="'+p.id+'">'+p.id+' — '+esc(p.client)+'</option>'});
-    document.getElementById('fProiect').innerHTML=opts;
-    var fOpts='<option value="">Toate proiectele</option>';
-    PROJECTS.forEach(function(p){fOpts+='<option value="'+p.id+'">'+p.id+'</option>'});
-    document.getElementById('filterProject').innerHTML=fOpts;
-}
-
-populateDropdowns();
-REQUESTS=JSON.parse(JSON.stringify(DEMO));
-render();
-if(API_URL) refreshData();
 </script>
 <script>
-if('serviceWorker' in navigator){navigator.serviceWorker.register('../sw.js').then(function(r){console.log('[PWA] SW registered, scope:',r.scope)}).catch(function(e){console.log('[PWA] SW failed:',e)})}
+if('serviceWorker' in navigator){
+    navigator.serviceWorker.register('../sw.js').then(function(r){console.log('[PWA] SW registered, scope:',r.scope)}).catch(function(e){console.log('[PWA] SW failed:',e)});
+    var __reloaded=false;
+    navigator.serviceWorker.addEventListener('controllerchange',function(){
+        if(__reloaded)return;__reloaded=true;
+        console.log('[PWA] SW nou activ — reload pentru cache curat');
+        window.location.reload();
+    });
+}
 </script>
 </body>
 </html>

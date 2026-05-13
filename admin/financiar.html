@@ -114,8 +114,9 @@ tr:hover td{background:rgba(59,130,246,0.03);}
 .loading-bar{position:fixed;top:0;left:0;right:0;height:3px;z-index:400;display:none;}.loading-bar.active{display:block;}.loading-bar::after{content:'';display:block;width:30%;height:100%;background:var(--red);border-radius:2px;animation:loadSlide 1.2s infinite ease-in-out;}
 @keyframes loadSlide{0%{margin-left:-30%}100%{margin-left:100%}}
 </style>
+<script src="/admin/access-guard.js" defer></script>
 </head>
-<body>
+<body data-module="financiar">
 <div class="loading-bar" id="loadBar"></div>
 <div class="toast-container" id="toastContainer"></div>
 
@@ -562,7 +563,7 @@ render();
 if(API_URL) refreshData();
 </script>
 <script>
-if('serviceWorker' in navigator){navigator.serviceWorker.register('../sw.js').then(function(r){console.log('[PWA] SW registered, scope:',r.scope)}).catch(function(e){console.log('[PWA] SW failed:',e)})}
+if('serviceWorker' in navigator){navigator.serviceWorker.register('../sw.js').then(function(r){console.log('[PWA] SW registered, scope:',r.scope)}).catch(function(e){console.log('[PWA] SW failed:',e)});var __reloaded=false;navigator.serviceWorker.addEventListener('controllerchange',function(){if(__reloaded)return;__reloaded=true;window.location.reload();});}
 </script>
 </body>
 </html>

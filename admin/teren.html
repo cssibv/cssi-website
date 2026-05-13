@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Echipa CSSI · Teren</title>
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#9a3412">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="CSSI Teren">
+<link rel="manifest" href="../manifest.json">
+<link rel="icon" type="image/png" sizes="96x96" href="../icons/favicon-96x96.png">
+<link rel="apple-touch-icon" sizes="180x180" href="../icons/apple-touch-icon.png">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+:root{--orange:#f97316;--orange-d:#9a3412;--orange-l:#fed7aa;--dark:#0f172a;--gray:#64748b;--white:#fff;--font:'Inter',system-ui,-apple-system,sans-serif;}
+html,body{height:100%;overscroll-behavior:none;}
+body{font-family:var(--font);color:var(--white);background:linear-gradient(135deg,#9a3412 0%,#ea580c 50%,#f97316 100%);min-height:100vh;-webkit-font-smoothing:antialiased;display:flex;flex-direction:column;padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);}
+button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit;}
+input{font-family:inherit;}
+
+/* Background pattern */
+body::before{content:'';position:fixed;inset:0;background:radial-gradient(circle at 80% -20%,rgba(255,255,255,0.12),transparent 50%),radial-gradient(circle at -10% 80%,rgba(255,255,255,0.08),transparent 50%);pointer-events:none;z-index:0;}
+
+.app{position:relative;z-index:1;display:flex;flex-direction:column;flex:1;padding:24px 20px;min-height:100vh;}
+
+/* Header */
+.brand{text-align:center;margin-top:18px;margin-bottom:32px;}
+.brand-logo{font-size:40px;margin-bottom:8px;display:inline-block;animation:wrench 6s ease-in-out infinite;}
+@keyframes wrench{0%,100%{transform:rotate(-8deg);}50%{transform:rotate(8deg);}}
+.brand-title{font-size:24px;font-weight:900;letter-spacing:-0.5px;}
+.brand-subtitle{font-size:13px;font-weight:500;color:rgba(255,255,255,0.75);margin-top:4px;}
+
+/* Steps */
+.step{display:none;animation:slideUp 0.35s cubic-bezier(0.34,1.56,0.64,1);flex:1;flex-direction:column;}
+.step.active{display:flex;}
+@keyframes slideUp{from{opacity:0;transform:translateY(20px);}to{opacity:1;transform:translateY(0);}}
+
+/* Step 1 — avatar grid */
+.step-title{text-align:center;font-size:14px;font-weight:600;color:rgba(255,255,255,0.85);margin-bottom:20px;}
+.avatars{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;max-width:440px;margin:0 auto;width:100%;}
+@media(min-width:520px){.avatars{grid-template-columns:repeat(3,1fr);}}
+.av-card{background:rgba(255,255,255,0.12);border:2px solid rgba(255,255,255,0.18);border-radius:20px;padding:22px 12px;display:flex;flex-direction:column;align-items:center;gap:10px;backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);transition:all 0.18s;cursor:pointer;}
+.av-card:hover,.av-card:active{background:rgba(255,255,255,0.22);border-color:rgba(255,255,255,0.4);transform:scale(1.02);}
+.av-card:active{transform:scale(0.98);}
+.av-circle{width:64px;height:64px;border-radius:50%;background:linear-gradient(135deg,#fff,#fde68a);color:var(--orange-d);display:flex;align-items:center;justify-content:center;font-size:28px;font-weight:900;box-shadow:0 8px 24px rgba(0,0,0,0.18);letter-spacing:-1px;}
+.av-name{font-size:14px;font-weight:800;color:var(--white);}
+
+/* Step 2 — parola */
+.user-pick{display:flex;flex-direction:column;align-items:center;gap:12px;margin-bottom:28px;animation:fadeIn 0.3s ease;}
+@keyframes fadeIn{from{opacity:0;}to{opacity:1;}}
+.av-circle.xl{width:96px;height:96px;font-size:42px;border:4px solid rgba(255,255,255,0.3);}
+.user-name-lg{font-size:24px;font-weight:900;color:var(--white);letter-spacing:-0.5px;}
+.user-greeting{font-size:13px;font-weight:600;color:rgba(255,255,255,0.75);margin-top:-4px;}
+.back-btn{position:absolute;top:24px;left:20px;display:inline-flex;align-items:center;gap:6px;padding:8px 14px;border-radius:20px;background:rgba(255,255,255,0.15);font-size:13px;font-weight:700;backdrop-filter:blur(10px);}
+.back-btn:hover{background:rgba(255,255,255,0.25);}
+
+.pw-form{max-width:380px;margin:0 auto;width:100%;}
+.pw-wrap{position:relative;margin-bottom:14px;}
+.pw-input{width:100%;padding:18px 50px 18px 22px;border:2px solid rgba(255,255,255,0.25);background:rgba(255,255,255,0.95);color:var(--dark);border-radius:16px;font-size:18px;font-weight:700;outline:none;text-align:center;letter-spacing:4px;transition:all 0.2s;}
+.pw-input:focus{border-color:var(--white);background:#fff;box-shadow:0 0 0 4px rgba(255,255,255,0.2);}
+.pw-input::placeholder{color:rgba(100,116,139,0.6);font-weight:600;letter-spacing:1px;}
+.pw-toggle{position:absolute;right:14px;top:50%;transform:translateY(-50%);font-size:20px;padding:8px;border-radius:8px;color:var(--gray);}
+.pw-toggle:hover{background:rgba(0,0,0,0.05);}
+
+.btn-enter{width:100%;padding:18px;background:linear-gradient(135deg,#fff,#fde68a);color:var(--orange-d);border-radius:16px;font-size:16px;font-weight:900;letter-spacing:0.3px;box-shadow:0 12px 32px -8px rgba(0,0,0,0.3);transition:all 0.2s;display:inline-flex;align-items:center;justify-content:center;gap:8px;}
+.btn-enter:hover{transform:translateY(-2px);box-shadow:0 16px 40px -10px rgba(0,0,0,0.4);}
+.btn-enter:active{transform:translateY(0) scale(0.98);}
+.btn-enter:disabled{opacity:0.6;cursor:not-allowed;transform:none;}
+
+.err-msg{background:rgba(220,38,38,0.95);color:#fff;padding:10px 16px;border-radius:12px;font-size:13px;font-weight:700;text-align:center;margin-top:14px;display:none;animation:shake 0.3s;}
+.err-msg.show{display:block;}
+@keyframes shake{0%,100%{transform:translateX(0);}25%{transform:translateX(-6px);}75%{transform:translateX(6px);}}
+
+/* Footer */
+.footer{margin-top:auto;padding-top:24px;text-align:center;color:rgba(255,255,255,0.5);font-size:11px;font-weight:600;letter-spacing:0.3px;}
+.footer a{color:rgba(255,255,255,0.7);text-decoration:none;font-weight:700;}
+.footer a:hover{color:#fff;}
+
+.spinner{display:inline-block;width:18px;height:18px;border:2px solid rgba(154,52,18,0.3);border-top-color:var(--orange-d);border-radius:50%;animation:spin 0.7s linear infinite;}
+@keyframes spin{to{transform:rotate(360deg);}}
+
+/* Larger screens — center the whole content */
+@media(min-width:768px){
+    .app{max-width:540px;margin:0 auto;justify-content:center;}
+    .brand{margin-top:0;}
+}
+</style>
+</head>
+<body>
+
+<div class="app">
+    <div class="brand">
+        <div class="brand-logo">🔧</div>
+        <div class="brand-title">CSSI · Echipa Teren</div>
+        <div class="brand-subtitle">Acces rapid pentru tehnicieni</div>
+    </div>
+
+    <!-- STEP 1: alege utilizator -->
+    <div class="step active" id="step1">
+        <div class="step-title">👋 Cine ești?</div>
+        <div class="avatars" id="avList"></div>
+    </div>
+
+    <!-- STEP 2: parola -->
+    <div class="step" id="step2">
+        <button class="back-btn" onclick="goBack()" type="button">← Înapoi</button>
+        <div class="user-pick">
+            <div class="av-circle xl" id="avBigInit"></div>
+            <div class="user-name-lg" id="userNameLg">—</div>
+            <div class="user-greeting">Introdu parola pentru a intra</div>
+        </div>
+        <form class="pw-form" onsubmit="doLogin(event)">
+            <div class="pw-wrap">
+                <input type="password" class="pw-input" id="pw" placeholder="••••••••" autocomplete="current-password" inputmode="text" autocapitalize="off">
+                <button type="button" class="pw-toggle" onclick="togglePw()" id="pwToggleBtn" title="Arată/ascunde parola" aria-label="Toggle password visibility">👁️</button>
+            </div>
+            <button type="submit" class="btn-enter" id="btnEnter">
+                <span id="btnText">🔓 Intră în Teren</span>
+            </button>
+            <div class="err-msg" id="err"></div>
+        </form>
+    </div>
+
+    <div class="footer">
+        CSSI · Confort, Securitate, Siguranță, Imobil<br>
+        <a href="../admin.html">Login standard →</a>
+    </div>
+</div>
+
+<script>
+// ═══ AUTH server-side via /admin/api.php (bcrypt în PHP, fără hash-uri client) ═══
+var TECHS = [
+    {id:'zoli',  name:'Zoli'},
+    {id:'sanyi', name:'Sanyi'},
+    {id:'bogdan',name:'Bogdan'},
+    {id:'cezar', name:'Cezar'},
+    {id:'cristi',name:'Cristi'},
+    {id:'denes', name:'Denes'}
+];
+
+var currentUser = null;
+
+// ═══ AUTO-LOGIN dacă sesiunea server-side e validă ═══
+(function autoLogin(){
+    fetch('/admin/api.php?action=me',{credentials:'include'})
+        .then(function(r){return r.json();})
+        .then(function(res){
+            if (res.success && res.user && res.user.is_tehnician) {
+                sessionStorage.setItem('cssi-role', res.user.username);
+                sessionStorage.setItem('cssi-user', res.user.display_name || res.user.username);
+                window.location.replace('executie.html');
+            }
+        })
+        .catch(function(){/* nu suntem logați — rămâi pe pagina login */});
+})();
+
+// ═══ Render avatar grid ═══
+(function renderAvatars(){
+    var html = TECHS.map(function(t){
+        return '<button class="av-card" data-user="'+t.id+'" onclick="selectUser(\''+t.id+'\',\''+t.name+'\')" type="button">' +
+               '<div class="av-circle">'+t.name.charAt(0).toUpperCase()+'</div>' +
+               '<div class="av-name">'+t.name+'</div>' +
+               '</button>';
+    }).join('');
+    document.getElementById('avList').innerHTML = html;
+})();
+
+// ═══ Step transitions ═══
+function selectUser(id, name){
+    currentUser = {id:id, name:name};
+    document.getElementById('avBigInit').textContent = name.charAt(0).toUpperCase();
+    document.getElementById('userNameLg').textContent = name;
+    document.getElementById('step1').classList.remove('active');
+    document.getElementById('step2').classList.add('active');
+    setTimeout(function(){document.getElementById('pw').focus();}, 350);
+}
+function goBack(){
+    document.getElementById('step2').classList.remove('active');
+    document.getElementById('step1').classList.add('active');
+    document.getElementById('pw').value = '';
+    document.getElementById('pw').type = 'password';
+    document.getElementById('pwToggleBtn').textContent = '👁️';
+    hideErr();
+    currentUser = null;
+}
+function togglePw(){
+    var i = document.getElementById('pw');
+    var b = document.getElementById('pwToggleBtn');
+    if (i.type === 'password') { i.type = 'text'; b.textContent = '🙈'; }
+    else { i.type = 'password'; b.textContent = '👁️'; }
+}
+function showErr(msg){
+    var e = document.getElementById('err');
+    e.textContent = '❌ ' + msg;
+    e.classList.add('show');
+}
+function hideErr(){ document.getElementById('err').classList.remove('show'); }
+
+// ═══ LOGIN — POST către /admin/api.php?action=login (bcrypt server-side) ═══
+function doLogin(ev){
+    ev.preventDefault();
+    if (!currentUser) return;
+    hideErr();
+    var pw = document.getElementById('pw').value;
+    if (!pw) { showErr('Introdu parola'); return; }
+    var btn = document.getElementById('btnEnter');
+    var btnText = document.getElementById('btnText');
+    btn.disabled = true;
+    btnText.innerHTML = '<span class="spinner"></span> Verific...';
+    fetch('/admin/api.php?action=login', {
+        method:'POST', credentials:'include',
+        headers:{'Content-Type':'application/json'},
+        body: JSON.stringify({action:'login', username: currentUser.id, password: pw})
+    }).then(function(r){return r.json().then(function(j){return {status:r.status,data:j};});})
+      .then(function(res){
+        if (res.data.success) {
+            sessionStorage.setItem('cssi-role', res.data.user.username);
+            sessionStorage.setItem('cssi-user', res.data.user.display_name || currentUser.name);
+            btnText.innerHTML = '✓ Bun venit, ' + currentUser.name + '!';
+            setTimeout(function(){ window.location.href = 'executie.html'; }, 400);
+        } else {
+            btn.disabled = false;
+            btnText.textContent = '🔓 Intră în Teren';
+            showErr(res.data.error || 'Parolă greșită');
+            document.getElementById('pw').value = '';
+            document.getElementById('pw').focus();
+        }
+      }).catch(function(e){
+        btn.disabled = false;
+        btnText.textContent = '🔓 Intră în Teren';
+        showErr('Eroare server: ' + (e.message||e));
+      });
+}
+
+// Esc to go back from step 2
+document.addEventListener('keydown', function(e){
+    if (e.key === 'Escape' && document.getElementById('step2').classList.contains('active')) {
+        goBack();
+    }
+});
+</script>
+<script>
+if('serviceWorker' in navigator){
+    navigator.serviceWorker.register('../sw.js').catch(function(){});
+}
+</script>
+</body>
+</html>

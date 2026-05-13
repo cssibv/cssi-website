@@ -76,6 +76,7 @@ a{text-decoration:none;color:inherit;}button{font-family:inherit;cursor:pointer;
 .kpi-change{font-size:10px;font-weight:700;padding:2px 6px;border-radius:4px;}
 .kpi-value{font-size:26px;font-weight:900;color:var(--dark);line-height:1;letter-spacing:-1px;}
 .kpi-label{font-size:11px;color:var(--gray);font-weight:500;margin-top:3px;}
+.kpi-sub{font-size:10px;color:var(--gray-l);font-weight:500;margin-top:2px;}
 .kpi-bar{position:absolute;bottom:0;left:0;right:0;height:3px;}
 
 /* Section */
@@ -93,7 +94,15 @@ a{text-decoration:none;color:inherit;}button{font-family:inherit;cursor:pointer;
 .kcol-head.lead{border-color:var(--blue);background:#eff6ff;}.kcol-head.oferta{border-color:var(--purple);background:#f5f3ff;}.kcol-head.contract{border-color:var(--green);background:#f0fdf4;}.kcol-head.proiectare{border-color:var(--teal);background:#f0fdfa;}.kcol-head.executie{border-color:var(--orange);background:#fff7ed;}.kcol-head.receptie{border-color:var(--yellow);background:#fefce8;}.kcol-head.facturat{border-color:var(--pink);background:#fdf2f8;}.kcol-head.mentenanta{border-color:var(--gray);background:var(--gray-bg);}
 .kcol-name{font-size:10px;font-weight:700;color:var(--dark);text-transform:uppercase;letter-spacing:0.5px;}
 .kcol-count{font-size:10px;font-weight:700;width:20px;height:20px;border-radius:6px;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,0.06);color:var(--gray);}
-.kcol-body{padding:6px;min-height:80px;display:flex;flex-direction:column;gap:6px;}
+.kcol-suma{padding:6px 12px;font-size:11px;font-weight:800;color:var(--green);border-bottom:1px solid var(--gray-b);background:#f0fdf4;letter-spacing:0.3px;font-variant-numeric:tabular-nums;}
+.kcol-suma:before{content:'∑ ';opacity:0.6;}
+.kcol-body{padding:6px;min-height:80px;max-height:600px;overflow-y:auto;overscroll-behavior:contain;display:flex;flex-direction:column;gap:6px;}
+.kcol-body::-webkit-scrollbar{width:6px;}
+.kcol-body::-webkit-scrollbar-thumb{background:var(--gray-b);border-radius:3px;}
+.kcol-body::-webkit-scrollbar-thumb:hover{background:var(--gray-l);}
+.kcol-body::-webkit-scrollbar-track{background:transparent;}
+.kcol-body{scrollbar-width:thin;scrollbar-color:var(--gray-b) transparent;}
+@media(max-width:768px){.kcol-body{max-height:480px;}}
 .kcard{background:var(--gray-bg);border-radius:var(--radius-sm);padding:10px;cursor:pointer;transition:all 0.2s;border:1px solid transparent;}
 .kcard:hover{border-color:var(--gray-b);box-shadow:var(--shadow);transform:translateY(-1px);}
 .kcard-id{font-size:9px;font-weight:700;color:var(--gray);letter-spacing:0.5px;}
@@ -131,6 +140,61 @@ a{text-decoration:none;color:inherit;}button{font-family:inherit;cursor:pointer;
 .mod-card[data-cat="finance"]{border-left-color:var(--pink);}
 .mod-card[data-cat="maint"]{border-left-color:var(--teal);}
 .mod-card[data-cat="docs"]{border-left-color:#0ea5e9;}
+
+/* Favorites (Top 3 — Acces Rapid) */
+.fav-grid{display:grid;grid-template-columns:1fr;gap:8px;margin-bottom:14px;}
+@media(min-width:640px){.fav-grid{grid-template-columns:repeat(3,1fr);}}
+.fav-card{background:linear-gradient(135deg,#fff,#f8fafc);border:1px solid var(--gray-b);border-radius:var(--radius-sm);padding:12px 14px;box-shadow:var(--shadow);transition:all 0.2s;display:flex;align-items:center;gap:10px;cursor:pointer;position:relative;overflow:hidden;}
+.fav-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--red),var(--red-d));}
+.fav-card:hover{transform:translateY(-2px);box-shadow:var(--shadow-md);border-color:var(--red);}
+.fav-card .fav-icon{width:36px;height:36px;border-radius:10px;background:linear-gradient(135deg,#fef2f2,#fee2e2);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;}
+.fav-card .fav-text{flex:1;min-width:0;}
+.fav-card .fav-title{font-size:13px;font-weight:800;color:var(--dark);line-height:1.2;}
+.fav-card .fav-desc{font-size:10px;color:var(--gray);margin-top:1px;}
+.fav-card .fav-arrow{color:var(--gray-l);font-size:14px;flex-shrink:0;transition:transform 0.2s;}
+.fav-card:hover .fav-arrow{transform:translateX(3px);color:var(--red);}
+
+/* Module Categories — collapsible accordion (3 col grid, opened = full row) */
+#modCategories{display:grid;grid-template-columns:1fr;gap:10px;margin-bottom:18px;align-items:start;}
+@media(min-width:640px){#modCategories{grid-template-columns:repeat(2,1fr);}}
+@media(min-width:1024px){#modCategories{grid-template-columns:repeat(3,1fr);}}
+.cat-group{background:#fff;border-radius:var(--radius-sm);box-shadow:var(--shadow);overflow:hidden;border:1px solid var(--gray-b);transition:box-shadow 0.2s;}
+.cat-group:hover{box-shadow:var(--shadow-md);}
+.cat-header{width:100%;display:flex;align-items:center;gap:12px;padding:14px 16px;background:#fff;border:none;text-align:left;cursor:pointer;transition:background 0.15s;font-family:inherit;}
+.cat-header:hover{background:var(--gray-bg);}
+.cat-header .cat-icon{font-size:18px;width:28px;text-align:center;}
+.cat-header .cat-name{flex:1;font-size:13px;font-weight:700;color:var(--dark);letter-spacing:-0.1px;}
+.cat-header .cat-count{font-size:11px;font-weight:700;color:var(--gray);background:var(--gray-bg);padding:3px 9px;border-radius:10px;}
+.cat-header .cat-chevron{font-size:13px;color:var(--gray-l);transition:transform 0.25s;display:inline-block;}
+.cat-group.open{box-shadow:var(--shadow-md);border-color:var(--gray-xl);}
+.cat-group.open .cat-header{background:var(--gray-bg);border-bottom:1px solid var(--gray-b);}
+.cat-group.open .cat-chevron{transform:rotate(180deg);color:var(--red);}
+/* Open: span full row to give cards breathing room */
+@media(min-width:640px){.cat-group.open{grid-column:1 / -1;}}
+.cat-body{display:none;padding:14px;}
+.cat-group.open .cat-body{display:block;animation:catFade 0.25s ease;}
+@keyframes catFade{from{opacity:0;transform:translateY(-4px);}to{opacity:1;transform:translateY(0);}}
+/* Module cards inside opened categories — bigger now (full row) */
+.cat-body .mod-grid{margin-bottom:0;gap:10px;grid-template-columns:repeat(2,1fr);}
+@media(min-width:640px){.cat-body .mod-grid{grid-template-columns:repeat(4,1fr);}}
+@media(min-width:1024px){.cat-body .mod-grid{grid-template-columns:repeat(5,1fr);}}
+@media(min-width:1280px){.cat-body .mod-grid{grid-template-columns:repeat(6,1fr);}}
+.cat-body .mod-card{min-height:110px;padding:16px 12px;border-radius:12px;}
+.cat-body .mod-card .m-icon{font-size:26px;margin-bottom:6px;}
+.cat-body .mod-card .m-title{font-size:12px;}
+.cat-body .mod-card .m-desc{font-size:10px;line-height:1.3;}
+
+/* Collapsible section header (Activitate Recentă) */
+.section-head.collapsible{cursor:pointer;user-select:none;padding:6px 4px;border-radius:8px;transition:background 0.15s;}
+.section-head.collapsible:hover{background:rgba(0,0,0,0.03);}
+.section-head.collapsible .toggle-chev{font-size:12px;color:var(--gray-l);transition:transform 0.25s;margin-left:6px;display:inline-block;}
+#alertSection #alertList{display:none;}
+#alertSection.open #alertList{display:block;animation:catFade 0.25s ease;}
+#alertSection.open .toggle-chev{transform:rotate(180deg);color:var(--red);}
+#quickSection #quickRow{display:none;}
+#quickSection.open #quickRow{display:block;animation:catFade 0.25s ease;}
+#quickSection.open .toggle-chev{transform:rotate(180deg);color:var(--red);}
+.section-title .badge-count{font-size:11px;font-weight:800;color:var(--red);background:#fef2f2;padding:2px 9px;border-radius:10px;letter-spacing:0;text-transform:none;}
 
 /* Alerts */
 .alerts{background:#fff;border-radius:var(--radius);box-shadow:var(--shadow);padding:14px;margin-bottom:24px;}
@@ -198,10 +262,12 @@ a{text-decoration:none;color:inherit;}button{font-family:inherit;cursor:pointer;
     <h1 class="auth-title">Portal Intern CSSI</h1>
     <p class="auth-sub"><span class="auth-version">v3.0</span>&ensp;Sistem Integrat de Management</p>
     <form onsubmit="doLogin(event)">
-        <input type="password" id="pw" class="auth-input" placeholder="••••••••" autofocus autocomplete="current-password">
+        <input type="text" id="username" class="auth-input" placeholder="utilizator" autofocus autocomplete="username" autocapitalize="off" style="letter-spacing:1px;margin-bottom:10px">
+        <input type="password" id="pw" class="auth-input" placeholder="••••••••" autocomplete="current-password">
         <div id="err" class="auth-error"></div>
-        <button type="submit" class="auth-btn">Intră în Portal</button>
+        <button type="submit" class="auth-btn" id="loginBtn">Intră în Portal</button>
     </form>
+    <a href="/admin/teren.html" style="display:block;margin-top:18px;padding:12px;background:linear-gradient(135deg,#fff7ed,#ffedd5);border:1px solid #fed7aa;border-radius:12px;text-align:center;font-size:13px;font-weight:700;color:#9a3412;text-decoration:none;transition:all 0.2s">🔧 Ești tehnician? <span style="color:var(--orange);text-decoration:underline">Acces echipă teren →</span></a>
     <p class="auth-footer">CSSI · Confort, Securitate, Siguranță, Imobil</p>
 </div>
 </div>
@@ -221,6 +287,7 @@ a{text-decoration:none;color:inherit;}button{font-family:inherit;cursor:pointer;
             </div>
             <span id="syncBadge" style="font-size:11px;color:var(--gray);display:flex;align-items:center"><span class="sync-dot off"></span>Demo</span>
             <span id="rolePill" class="topbar-pill"></span>
+            <button onclick="openChangePwModal()" class="topbar-logout" title="Schimbă parola" style="margin-right:4px">🔑</button>
             <button onclick="doLogout()" class="topbar-logout">Ieși</button>
         </div>
     </div>
@@ -249,10 +316,10 @@ a{text-decoration:none;color:inherit;}button{font-family:inherit;cursor:pointer;
         <div class="kpi-grid fade-up" id="kpiGrid"></div>
     </div>
 
-    <!-- QUICK STATS -->
-    <div id="quickSection" class="hidden">
-        <div class="quick-row" id="quickRow"></div>
-    </div>
+    <!-- CENTRUL DE APLICAȚII -->
+    <div class="section-head"><div class="section-title">🚀 Centrul de Aplicații</div></div>
+    <div id="favGrid" class="fav-grid fade-up"></div>
+    <div id="modCategories" class="fade-up"></div>
 
     <!-- KANBAN -->
     <div id="kanbanSection" class="hidden">
@@ -263,15 +330,21 @@ a{text-decoration:none;color:inherit;}button{font-family:inherit;cursor:pointer;
         <div class="kanban-wrap fade-up"><div class="kanban" id="kanbanBoard"></div></div>
     </div>
 
-    <!-- ACTIVITATE RECENTA (din baza de date) -->
-    <div id="alertSection" class="hidden">
-        <div class="section-head"><div class="section-title">🔔 Activitate Recentă</div></div>
-        <div class="alerts fade-up" id="alertList"><div style="text-align:center;padding:20px;color:#94a3b8;font-size:13px">Se încarcă...</div></div>
+    <!-- DE FĂCUT -->
+    <div id="quickSection" class="hidden">
+        <div class="section-head collapsible" onclick="document.getElementById('quickSection').classList.toggle('open')">
+            <div class="section-title">📌 De Făcut <span class="badge-count" id="quickCount">0</span> <span class="toggle-chev">▾</span></div>
+        </div>
+        <div class="quick-row" id="quickRow"></div>
     </div>
 
-    <!-- MODULES -->
-    <div class="section-head"><div class="section-title">📱 Module Portal</div></div>
-    <div id="modGrid" class="mod-grid fade-up"></div>
+    <!-- ACTIVITATE RECENTA (din baza de date) -->
+    <div id="alertSection" class="hidden">
+        <div class="section-head collapsible" onclick="document.getElementById('alertSection').classList.toggle('open')">
+            <div class="section-title">🔔 Activitate Recentă <span class="toggle-chev">▾</span></div>
+        </div>
+        <div class="alerts fade-up" id="alertList"><div style="text-align:center;padding:20px;color:#94a3b8;font-size:13px">Se încarcă...</div></div>
+    </div>
 
     <div class="footer">CSSI · Portal v3.0 · 14 Module · Sistem Integrat de Management</div>
 </div>
@@ -326,15 +399,26 @@ a{text-decoration:none;color:inherit;}button{font-family:inherit;cursor:pointer;
 </div>
 </div>
 
+<!-- CHANGE PASSWORD MODAL -->
+<div id="changePwModal" class="modal-overlay" onclick="if(event.target===this)closeChangePwModal()">
+<div class="modal" style="max-width:420px">
+    <div class="modal-head"><div class="modal-title">🔑 Schimbă parola</div><button class="modal-close" onclick="closeChangePwModal()">✕</button></div>
+    <div class="modal-body">
+        <form id="changePwForm" onsubmit="doChangePw(event)">
+            <div class="form-group"><label class="form-label">Parolă curentă <span class="req">*</span></label><input type="password" class="form-input" id="cpwCurrent" autocomplete="current-password" required></div>
+            <div class="form-group"><label class="form-label">Parolă nouă <span class="req">*</span> <small style="color:var(--gray);font-weight:500">(min. 6 caractere)</small></label><input type="password" class="form-input" id="cpwNew" autocomplete="new-password" required minlength="6"></div>
+            <div class="form-group"><label class="form-label">Confirmă parola nouă <span class="req">*</span></label><input type="password" class="form-input" id="cpwConfirm" autocomplete="new-password" required minlength="6"></div>
+            <div id="cpwErr" style="color:var(--red);font-size:13px;padding:8px;background:#fef2f2;border-radius:8px;display:none;margin-bottom:10px;font-weight:600"></div>
+            <button type="submit" class="form-submit" id="cpwBtn">💾 Salvează parola</button>
+        </form>
+    </div>
+</div>
+</div>
+
 <script>
-// ═══════ PASSWORD HASHES ═══════
-var PW={
-"8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918":"admin",
-"bb84ec45d72a12da066c86de536eeb88aa4c29d9622eb5d6aaeb501f9acb5a75":"mihai",
-"8589f985d87ab442f842621a8f9b86e78f67d955d79d1c8c3dd94928ee6c48b9":"roxana",
-"ec2d7be6fc8659569fc9a8f5385b9ae4d4a733f7b6f1c8cb55acb9ed977d3f4e":"valentin",
-"d9f325f6038f9c5109278ead8bc2d310292a37e856e3de350e81da702e4a9eae":"cristina"
-};
+// ═══════ AUTH — server-side via /admin/api.php ═══════
+// (parolele sunt verificate cu bcrypt în PHP; HTML-ul nu mai conține hash-uri)
+var TECHNICIANS=['zoli','sanyi','bogdan','cezar','cristi','denes'];
 
 // ═══════ ROLE CONFIG ═══════
 var ROLES={
@@ -342,7 +426,7 @@ var ROLES={
         actions:[{l:"+ Proiect Nou",h:"javascript:openModal()",i:"📋"},{l:"Board Proiecte",h:"/admin/proiecte.html",i:"📌"},{l:"CRM Clienți",h:"/admin/crm-clienti.html",i:"💰"},{l:"Financiar",h:"/admin/financiar.html",i:"💳"},{l:"Mentenanță",h:"/admin/mentenanta.html",i:"🔄"}],
         showKanban:true,showKpi:true,showQuick:true,showAlerts:true},
     mihai:{name:"Mihai",greeting:"👋 Salut, Mihai!",sub:"Ofertare · Vânzări · Acces complet",pill:"💰 Mihai — Ofertare",gradient:"admin",
-        actions:[{l:"Calculator Preț",h:"/admin/calculator-pret.html",i:"🧮"},{l:"CRM Clienți",h:"/admin/crm-clienti.html",i:"💰"},{l:"+ Proiect Nou",h:"javascript:openModal()",i:"📋"},{l:"Board Proiecte",h:"/admin/proiecte.html",i:"📌"},{l:"Financiar",h:"/admin/financiar.html",i:"💳"}],
+        actions:[{l:"Oferte",h:"/admin/calculator-pret.html",i:"📝"},{l:"CRM Clienți",h:"/admin/crm-clienti.html",i:"💰"},{l:"+ Proiect Nou",h:"javascript:openModal()",i:"📋"},{l:"Board Proiecte",h:"/admin/proiecte.html",i:"📌"},{l:"Financiar",h:"/admin/financiar.html",i:"💳"}],
         showKanban:true,showKpi:true,showQuick:true,showAlerts:true},
     roxana:{name:"Roxana",greeting:"👋 Salut, Roxana!",sub:"Contractare · Facturare · Acces complet",pill:"📋 Roxana — Contracte",gradient:"admin",
         actions:[{l:"Board Proiecte",h:"/admin/proiecte.html",i:"📌"},{l:"Financiar",h:"/admin/financiar.html",i:"💳"},{l:"CRM Clienți",h:"/admin/crm-clienti.html",i:"💰"},{l:"Documente",h:"/admin/documente.html",i:"📁"},{l:"Mentenanță",h:"/admin/mentenanta.html",i:"🔄"}],
@@ -351,15 +435,35 @@ var ROLES={
         actions:[{l:"Proiectare",h:"/admin/proiectare.html",i:"📐"},{l:"Board Proiecte",h:"/admin/proiecte.html",i:"📌"},{l:"Execuție",h:"/admin/executie.html",i:"🔧"},{l:"Materiale",h:"/admin/materiale.html",i:"📦"},{l:"Necesar",h:"/admin/necesar-materiale.html",i:"🛒"}],
         showKanban:true,showKpi:true,showQuick:true,showAlerts:true},
     cristina:{name:"Cristina",greeting:"👋 Salut, Cristina!",sub:"Lead-uri · Prospectare · Acces complet",pill:"📞 Cristina — Lead-uri",gradient:"admin",
-        actions:[{l:"+ Lead Nou",h:"javascript:openModal()",i:"📞"},{l:"CRM Clienți",h:"/admin/crm-clienti.html",i:"💰"},{l:"Board Proiecte",h:"/admin/proiecte.html",i:"📌"},{l:"Calculator Preț",h:"/admin/calculator-pret.html",i:"🧮"},{l:"Marketing",h:"/admin/marketing.html",i:"📊"}],
-        showKanban:true,showKpi:true,showQuick:true,showAlerts:true}
+        actions:[{l:"+ Lead Nou",h:"javascript:openModal()",i:"📞"},{l:"CRM Clienți",h:"/admin/crm-clienti.html",i:"💰"},{l:"Board Proiecte",h:"/admin/proiecte.html",i:"📌"},{l:"Oferte",h:"/admin/calculator-pret.html",i:"📝"},{l:"Marketing",h:"/admin/marketing.html",i:"📊"}],
+        showKanban:true,showKpi:true,showQuick:true,showAlerts:true},
+    // ═══ TEHNICIENI — echipa de execuție pe teren ═══
+    zoli:{name:"Zoli",greeting:"👋 Salut, Zoli!",sub:"Tehnician execuție · Lucrări pe teren",pill:"🔧 Zoli — Execuție",gradient:"tech",
+        actions:[{l:"Execuția mea",h:"/admin/executie.html",i:"🔧"},{l:"Programul meu",h:"/admin/planificare.html",i:"📅"},{l:"Necesar materiale",h:"/admin/necesar-materiale.html",i:"🛒"}],
+        showKanban:false,showKpi:false,showQuick:false,showAlerts:true},
+    sanyi:{name:"Sanyi",greeting:"👋 Salut, Sanyi!",sub:"Tehnician execuție · Lucrări pe teren",pill:"🔧 Sanyi — Execuție",gradient:"tech",
+        actions:[{l:"Execuția mea",h:"/admin/executie.html",i:"🔧"},{l:"Programul meu",h:"/admin/planificare.html",i:"📅"},{l:"Necesar materiale",h:"/admin/necesar-materiale.html",i:"🛒"}],
+        showKanban:false,showKpi:false,showQuick:false,showAlerts:true},
+    bogdan:{name:"Bogdan",greeting:"👋 Salut, Bogdan!",sub:"Tehnician execuție · Lucrări pe teren",pill:"🔧 Bogdan — Execuție",gradient:"tech",
+        actions:[{l:"Execuția mea",h:"/admin/executie.html",i:"🔧"},{l:"Programul meu",h:"/admin/planificare.html",i:"📅"},{l:"Necesar materiale",h:"/admin/necesar-materiale.html",i:"🛒"}],
+        showKanban:false,showKpi:false,showQuick:false,showAlerts:true},
+    cezar:{name:"Cezar",greeting:"👋 Salut, Cezar!",sub:"Tehnician execuție · Lucrări pe teren",pill:"🔧 Cezar — Execuție",gradient:"tech",
+        actions:[{l:"Execuția mea",h:"/admin/executie.html",i:"🔧"},{l:"Programul meu",h:"/admin/planificare.html",i:"📅"},{l:"Necesar materiale",h:"/admin/necesar-materiale.html",i:"🛒"}],
+        showKanban:false,showKpi:false,showQuick:false,showAlerts:true},
+    cristi:{name:"Cristi",greeting:"👋 Salut, Cristi!",sub:"Tehnician execuție · Lucrări pe teren",pill:"🔧 Cristi — Execuție",gradient:"tech",
+        actions:[{l:"Execuția mea",h:"/admin/executie.html",i:"🔧"},{l:"Programul meu",h:"/admin/planificare.html",i:"📅"},{l:"Necesar materiale",h:"/admin/necesar-materiale.html",i:"🛒"}],
+        showKanban:false,showKpi:false,showQuick:false,showAlerts:true},
+    denes:{name:"Denes",greeting:"👋 Salut, Denes!",sub:"Tehnician execuție · Lucrări pe teren",pill:"🔧 Denes — Execuție",gradient:"tech",
+        actions:[{l:"Execuția mea",h:"/admin/executie.html",i:"🔧"},{l:"Programul meu",h:"/admin/planificare.html",i:"📅"},{l:"Necesar materiale",h:"/admin/necesar-materiale.html",i:"🛒"}],
+        showKanban:false,showKpi:false,showQuick:false,showAlerts:true}
 };
 
 // ═══════ KANBAN STATUSES ═══════
 var STATUSES=[
     {id:"lead",name:"Lead",icon:"📞",cls:"lead"},{id:"oferta",name:"Ofertă",icon:"📋",cls:"oferta"},
     {id:"contract",name:"Contract",icon:"✅",cls:"contract"},{id:"proiectare",name:"Proiectare",icon:"📐",cls:"proiectare"},
-    {id:"executie",name:"Execuție",icon:"🔧",cls:"executie"},{id:"receptie",name:"Recepție",icon:"📸",cls:"receptie"},
+    {id:"executie",name:"Execuție",icon:"🔧",cls:"executie"},{id:"interventie",name:"Intervenție",icon:"⚡",cls:"executie"},
+    {id:"receptie",name:"Recepție",icon:"📸",cls:"receptie"},
     {id:"facturat",name:"Facturat",icon:"💳",cls:"facturat"},{id:"mentenanta",name:"Mentenanță",icon:"🔄",cls:"mentenanta"}
 ];
 var SERVICE_TAGS={"Detecție Incendiu":{cls:"incendiu",s:"Incendiu"},"Alarmă Antiefracție":{cls:"alarm",s:"Alarmă"},"Supraveghere Video":{cls:"camera",s:"Camere"},"Instalații Electrice":{cls:"electric",s:"Electric"},"Instalații Sanitare":{cls:"install",s:"Sanitare"},"Automatizări Porți":{cls:"auto",s:"Porți"},"Proiect Complex":{cls:"incendiu",s:"Complex"}};
@@ -375,7 +479,8 @@ var MODULES=[
     {id:"financiar",h:"/admin/financiar.html",i:"💳",t:"Financiar",d:"Facturi · Încasări · Restanțe",cat:"finance",v3:true,roles:["admin"]},
     {id:"materiale",h:"/admin/materiale.html",i:"📦",t:"Inventar & Stocuri",d:"Produse, stoc, mișcări",cat:"tech",v3:true,roles:["admin","org","tech"]},
     {id:"necesar",h:"/admin/necesar-materiale.html",i:"🛒",t:"Necesar Materiale",d:"Solicitări & Aprovizionare",cat:"tech",v3:true,roles:["admin","org","tech"]},
-    {id:"calculator",h:"/admin/calculator-pret.html",i:"🧮",t:"Calculator Preț",d:"Estimări rapide",cat:"sales",v3:true,roles:["admin","sales"]},
+    {id:"calculator",h:"/admin/calculator-pret.html",i:"📝",t:"Oferte",d:"Generator oferte clienți",cat:"sales",v3:true,roles:["admin","sales"]},
+    {id:"contracte",h:"/admin/contracte.html",i:"📄",t:"Contracte",d:"Pipeline · WhatsApp link · generare doc",cat:"sales",v3:true,roles:["admin","sales"]},
     {id:"social",h:"/admin/calendar-social.html",i:"📅",t:"Calendar Social",d:"Postări · Calendar · Kanban",cat:"mkt",v3:true,roles:["admin","mkt"]},
     {id:"marketing",h:"/admin/marketing.html",i:"📊",t:"Marketing Hub",d:"Campanii · Resurse · Idei",cat:"mkt",v3:true,roles:["admin","mkt"]},
     {id:"documente",h:"/admin/documente.html",i:"📁",t:"Documente & Resurse",d:"Dosare · Template-uri · Media",cat:"docs",v3:true,roles:["admin","org","sales","tech"]},
@@ -388,40 +493,134 @@ var API_DB='/admin/api.php';
 // Mapping UI (diacritice) → DB (ENUM fără diacritice)
 var SERV_UI_TO_DB={"Detecție Incendiu":"Detectie Incendiu","Alarmă Antiefracție":"Alarma","Supraveghere Video":"Supraveghere Video","Instalații Electrice":"Electric","Instalații Sanitare":"Electric","Automatizări Porți":"Automatizari","Proiect Complex":"Complex","Control Acces":"Control Acces","Rețelistică":"Retelistică"};
 var SERV_DB_TO_UI={"Detectie Incendiu":"Detecție Incendiu","Alarma":"Alarmă Antiefracție","Supraveghere Video":"Supraveghere Video","Electric":"Instalații Electrice","Automatizari":"Automatizări Porți","Complex":"Proiect Complex","Control Acces":"Control Acces","Retelistică":"Rețelistică"};
-var STAT_UI_TO_DB={"Lead":"Lead","Ofertă":"Oferta","Contract":"Contract","Proiectare":"Proiectare","Execuție":"Executie","Recepție":"Receptie","Facturat":"Facturat","Mentenanță":"Mentenanta","Finalizat":"Finalizat","Anulat":"Anulat"};
-var STAT_DB_TO_UI={"Lead":"Lead","Oferta":"Ofertă","Contract":"Contract","Proiectare":"Proiectare","Executie":"Execuție","Receptie":"Recepție","Facturat":"Facturat","Mentenanta":"Mentenanță","Finalizat":"Finalizat","Anulat":"Anulat"};
+var STAT_UI_TO_DB={"Lead":"Lead","Ofertă":"Oferta","Contract":"Contract","Proiectare":"Proiectare","Execuție":"Executie","Intervenție":"Interventie","Recepție":"Receptie","Facturat":"Facturat","Mentenanță":"Mentenanta","Finalizat":"Finalizat","Anulat":"Anulat"};
+var STAT_DB_TO_UI={"Lead":"Lead","Oferta":"Ofertă","Contract":"Contract","Proiectare":"Proiectare","Executie":"Execuție","Interventie":"Intervenție","Receptie":"Recepție","Facturat":"Facturat","Mentenanta":"Mentenanță","Finalizat":"Finalizat","Anulat":"Anulat"};
+
+// ═══════ MODULES — favorite + categorii (DECLARATE ÎNAINTE de orice cod care le folosește) ═══════
+var FAVORITES=['proiecte','crm','calculator'];
+var CATEGORIES=[
+    {title:'Vânzări & Clienți',icon:'💼',mods:['crm','calculator','contracte']},
+    {title:'Proiecte & Execuție',icon:'📋',mods:['proiecte','proiectare','executie','planificare','mentenanta']},
+    {title:'Stocuri & Materiale',icon:'📦',mods:['materiale','necesar']},
+    {title:'Financiar',icon:'💳',mods:['financiar']},
+    {title:'Marketing & Conținut',icon:'📣',mods:['marketing','social']},
+    {title:'Resurse & Admin',icon:'📁',mods:['documente','utilizatori']}
+];
 
 // ═══════ DATE PROIECTE (se încarcă din MySQL) ═══════
 var PROJECTS=[];
 var projectsLoaded=false;
 var OFERTE_STATS={total:0,acceptate:0,pipeline:0,contracte:0};
+var DASHBOARD_STATS={rezumat:{},board:{}};
 
 
 
 // ═══════ AUTH ═══════
 var role="";
-function sha256(m){return crypto.subtle.digest('SHA-256',new TextEncoder().encode(m)).then(function(b){return Array.from(new Uint8Array(b)).map(function(x){return x.toString(16).padStart(2,'0')}).join('')})}
-function doLogin(e){e.preventDefault();var p=document.getElementById('pw').value;sha256(p).then(function(h){if(PW[h]){role=PW[h];sessionStorage.setItem("cssi-role",role);sessionStorage.setItem("cssi-user",ROLES[role]?ROLES[role].name:role);showDash()}else{var err=document.getElementById('err');err.textContent="Parolă incorectă!";err.style.display="block";document.getElementById('pw').value='';document.getElementById('pw').focus()}})}
-function doLogout(){sessionStorage.removeItem("cssi-role");sessionStorage.removeItem("cssi-user");role="";document.getElementById('dash').style.display='none';document.getElementById('login').style.display='';document.getElementById('pw').value=''}
-(function(){var s=sessionStorage.getItem("cssi-role");if(s&&ROLES[s]){role=s;showDash()}})();
+function doLogin(e){
+    e.preventDefault();
+    var u = document.getElementById('username').value.trim().toLowerCase();
+    var p = document.getElementById('pw').value;
+    var btn = document.getElementById('loginBtn');
+    var err = document.getElementById('err');
+    err.style.display = 'none';
+    if (!u || !p) { err.textContent = 'Introdu utilizator + parolă'; err.style.display='block'; return; }
+    btn.disabled = true; btn.textContent = '⏳ Se autentifică...';
+    fetch('/admin/api.php?action=login', {
+        method: 'POST', credentials: 'include',
+        headers: {'Content-Type':'application/json'},
+        body: JSON.stringify({action:'login', username:u, password:p})
+    }).then(function(r){return r.json().then(function(j){return {status:r.status,data:j};});})
+      .then(function(res){
+        btn.disabled = false; btn.textContent = 'Intră în Portal';
+        if (res.data.success) {
+            role = res.data.user.username;
+            sessionStorage.setItem('cssi-role', role);
+            sessionStorage.setItem('cssi-user', res.data.user.display_name || role);
+            document.getElementById('pw').value = '';
+            bootDashboard();
+        } else {
+            err.textContent = res.data.error || 'Credențiale invalide';
+            err.style.display = 'block';
+            document.getElementById('pw').value = '';
+            document.getElementById('pw').focus();
+        }
+      }).catch(function(e){
+        btn.disabled = false; btn.textContent = 'Intră în Portal';
+        err.textContent = 'Eroare server: ' + (e.message || e);
+        err.style.display = 'block';
+      });
+}
+function doLogout(){
+    fetch('/admin/api.php?action=logout',{method:'POST',credentials:'include'}).finally(function(){
+        sessionStorage.removeItem('cssi-role');sessionStorage.removeItem('cssi-user');
+        role='';
+        document.getElementById('dash').style.display='none';
+        document.getElementById('login').style.display='';
+        document.getElementById('pw').value='';document.getElementById('username').value='';
+    });
+}
+function showLogin(){document.getElementById('dash').style.display='none';document.getElementById('login').style.display='';}
 
-// ═══════ DASHBOARD ═══════
-function showDash(){
+// ═══════ SCHIMBARE PAROLĂ ═══════
+function openChangePwModal(){
+    document.getElementById('cpwCurrent').value='';document.getElementById('cpwNew').value='';document.getElementById('cpwConfirm').value='';
+    document.getElementById('cpwErr').style.display='none';
+    document.getElementById('changePwModal').classList.add('active');
+    setTimeout(function(){document.getElementById('cpwCurrent').focus();},150);
+}
+function closeChangePwModal(){document.getElementById('changePwModal').classList.remove('active');}
+function doChangePw(ev){
+    ev.preventDefault();
+    var cur = document.getElementById('cpwCurrent').value;
+    var nw  = document.getElementById('cpwNew').value;
+    var cf  = document.getElementById('cpwConfirm').value;
+    var err = document.getElementById('cpwErr');
+    err.style.display='none';
+    if (nw !== cf) { err.textContent='⚠️ Parola nouă și confirmarea nu coincid'; err.style.display='block'; return; }
+    if (nw.length < 6) { err.textContent='⚠️ Parola nouă trebuie să aibă minim 6 caractere'; err.style.display='block'; return; }
+    if (cur === nw) { err.textContent='⚠️ Parola nouă trebuie să fie diferită de cea curentă'; err.style.display='block'; return; }
+    var btn = document.getElementById('cpwBtn'); btn.disabled=true; btn.textContent='⏳ Se salvează...';
+    fetch('/admin/api.php?action=changeMyPassword',{
+        method:'POST', credentials:'include',
+        headers:{'Content-Type':'application/json'},
+        body: JSON.stringify({action:'changeMyPassword', current:cur, new:nw})
+    }).then(function(r){return r.json();}).then(function(res){
+        btn.disabled=false; btn.textContent='💾 Salvează parola';
+        if (res.success) {
+            closeChangePwModal();
+            alert('✅ Parolă schimbată cu succes! La următorul login folosește parola nouă.');
+        } else {
+            err.textContent = '❌ ' + (res.error || 'Eroare necunoscută');
+            err.style.display = 'block';
+            document.getElementById('cpwCurrent').focus();
+            document.getElementById('cpwCurrent').select();
+        }
+    }).catch(function(e){
+        btn.disabled=false; btn.textContent='💾 Salvează parola';
+        err.textContent = '❌ Eroare server: ' + (e.message||e); err.style.display='block';
+    });
+}
+
+// ═══════ DASHBOARD SHELL (sync — fără date din DB) ═══════
+function showDashShell(){
     document.getElementById('login').style.display='none';
     document.getElementById('dash').style.display='block';
-    var r=ROLES[role];
+    var r=ROLES[role];if(!r)return;
     document.getElementById('hero').className='hero '+r.gradient+' fade-up';
     document.getElementById('heroTitle').textContent=r.greeting;
     document.getElementById('heroSub').textContent=r.sub;
     document.getElementById('rolePill').textContent=r.pill;
     var ha=document.getElementById('heroActions');ha.innerHTML='';
     if(r.actions&&r.actions.length){ha.style.display='flex';r.actions.forEach(function(a){ha.innerHTML+='<a href="'+a.h+'" class="hero-action"><span>'+a.i+'</span> '+a.l+'</a>'})}
-    tog('kpiSection',r.showKpi);if(r.showKpi)renderKPI();
+    tog('kpiSection',r.showKpi);
     tog('quickSection',r.showKpi);
-    tog('kanbanSection',r.showKanban);if(r.showKanban)renderKanban();
-    tog('alertSection',r.showAlerts!==false);if(r.showAlerts!==false)renderAlerts();
+    tog('kanbanSection',r.showKanban);
+    tog('alertSection',r.showAlerts!==false);
     renderModules();
 }
+// Compat: orice cod care încă apelează showDash() merge prin shell + reboot loaders.
+function showDash(){showDashShell();bootLoaders();}
 function tog(id,s){document.getElementById(id).classList.toggle('hidden',!s)}
 function fmtRON(n){if(n>=1e6)return(n/1e6).toFixed(1)+'M';if(n>=1e3)return(n/1e3).toFixed(0)+'K';return n+''}
 
@@ -457,8 +656,9 @@ function renderKPI(){
     // Render De Făcut section
     renderDeFacut();
 }
-function kpiCard(icon,bg,val,label,color){
-    return '<div class="kpi"><div class="kpi-top"><div class="kpi-icon" style="background:'+bg+'">'+icon+'</div></div><div class="kpi-value">'+val+'</div><div class="kpi-label">'+label+'</div><div class="kpi-bar" style="background:'+color+'"></div></div>';
+function kpiCard(icon,bg,val,label,color,sub){
+    var subHtml = sub ? '<div class="kpi-sub">'+sub+'</div>' : '';
+    return '<div class="kpi"><div class="kpi-top"><div class="kpi-icon" style="background:'+bg+'">'+icon+'</div></div><div class="kpi-value" style="color:'+color+'">'+val+'</div><div class="kpi-label">'+label+'</div>'+subHtml+'<div class="kpi-bar" style="background:'+color+'"></div></div>';
 }
 
 // ═══════ QUICK STATS ═══════
@@ -468,7 +668,7 @@ function renderQuick(){
 
 // ═══════ LOAD OFERTE SUMMARY (Dashboard) ═══════
 function loadOferteSummaryDash(){
-    fetch(API_DB+'?action=getOferte&_t='+Date.now())
+    return fetch(API_DB+'?action=getOferte&_t='+Date.now())
     .then(function(r){return r.json()})
     .then(function(res){
         if(!res.success||!res.data) return;
@@ -512,7 +712,8 @@ function renderDeFacut(){
     
     if(!items.length){qs.classList.add('hidden');return;}
     qs.classList.remove('hidden');
-    var html='<div style="font-size:13px;font-weight:800;margin-bottom:8px;color:var(--dark)">📌 De făcut</div>';
+    var qc=document.getElementById('quickCount');if(qc)qc.textContent=items.length;
+    var html='';
     items.forEach(function(it){
         html+='<a href="'+it.link+'" style="display:flex;align-items:center;gap:8px;padding:8px 12px;background:#fff;border-radius:10px;margin-bottom:4px;font-size:12px;border-left:3px solid '+it.color+';box-shadow:var(--shadow);transition:all 0.2s">';
         html+='<span>'+it.icon+'</span><span style="flex:1">'+it.text+'</span><span style="color:var(--gray-l);font-size:10px">→</span></a>';
@@ -523,11 +724,14 @@ function renderDeFacut(){
 // ═══════ KANBAN ═══════
 function renderKanban(){
     var b=document.getElementById('kanbanBoard');b.innerHTML='';
-    var sm={"Lead":"lead","Ofertă":"oferta","Contract":"contract","Proiectare":"proiectare","Execuție":"executie","Recepție":"receptie","Facturat":"facturat","Mentenanță":"mentenanta"};
+    var sm={"Lead":"lead","Ofertă":"oferta","Contract":"contract","Proiectare":"proiectare","Execuție":"executie","Intervenție":"interventie","Recepție":"receptie","Facturat":"facturat","Mentenanță":"mentenanta"};
+    var SRC_INFO={contract:{ic:'✅',lbl:'contract'},acceptata:{ic:'🤝',lbl:'oferte acceptate'},pipeline:{ic:'📤',lbl:'oferte trimise'},oferta:{ic:'📝',lbl:'cea mai mare ofertă'},estimata:{ic:'~',lbl:'estimat'}};
     STATUSES.forEach(function(st){
         var prj=PROJECTS.filter(function(p){return sm[p.status]===st.id});
+        var sumaCol=prj.reduce(function(s,p){return s+(p.valoare||0);},0);
         var col=document.createElement('div');col.className='kanban-col';
-        col.innerHTML='<div class="kcol-head '+st.cls+'"><span class="kcol-name">'+st.icon+' '+st.name+'</span><span class="kcol-count">'+prj.length+'</span></div>';
+        var sumaHtml=sumaCol>0?'<div class="kcol-suma">'+fmtRONShort(sumaCol)+'</div>':'';
+        col.innerHTML='<div class="kcol-head '+st.cls+'"><span class="kcol-name">'+st.icon+' '+st.name+'</span><span class="kcol-count">'+prj.length+'</span></div>'+sumaHtml;
         var body=document.createElement('div');body.className='kcol-body';
         if(!prj.length){body.innerHTML='<div class="kanban-empty">—</div>'}
         else{prj.forEach(function(p){
@@ -539,18 +743,24 @@ function renderKanban(){
                 if(p.preluat_de){preluatHtml='<div class="preluat-badge verde">✅ Preluat: '+p.preluat_de+'</div>';}
                 else{preluatHtml='<div class="preluat-badge rosu">⚠️ Nepreluat</div><button class="preluat-badge" style="background:var(--blue);color:#fff;border:none;cursor:pointer;margin-left:4px" onclick="event.stopPropagation();preiaProiect(\''+p.id+'\')">🤚 Preia</button>';}
             }
-            c.innerHTML='<div class="kcard-id">'+p.id+'</div><div class="kcard-title">'+p.client+'</div><div class="kcard-meta"><span class="kcard-tag '+t.cls+'">'+t.s+'</span><span>📍 '+p.loc+'</span></div><div class="kcard-val">'+p.valoare.toLocaleString('ro-RO')+' RON</div>'+preluatHtml;
+            // Valoare cu indicator sursă (contract / oferte / estimat)
+            var srcInfo=SRC_INFO[p.valoareSursa]||SRC_INFO.estimata;
+            var valHtml=p.valoare>0
+                ? '<div class="kcard-val" title="Sursă: '+srcInfo.lbl+'">'+srcInfo.ic+' '+p.valoare.toLocaleString('ro-RO')+' RON</div>'
+                : '<div class="kcard-val" style="color:var(--gray-l);font-weight:500">— fără valoare —</div>';
+            c.innerHTML='<div class="kcard-id">'+p.id+'</div><div class="kcard-title">'+p.client+'</div><div class="kcard-meta"><span class="kcard-tag '+t.cls+'">'+t.s+'</span><span>📍 '+p.loc+'</span></div>'+valHtml+preluatHtml;
             body.appendChild(c);
         })}
         col.appendChild(body);b.appendChild(col);
     });
 }
+function fmtRONShort(n){var v=Number(n||0);if(v>=1e6)return (v/1e6).toFixed(1)+'M';if(v>=1e3)return Math.round(v/1e3)+'k';return v.toFixed(0);}
 
 // ═══════ ACTIVITATE RECENTA (din MySQL) ═══════
 function renderAlerts(){
-    var l=document.getElementById('alertList');
+    var l=document.getElementById('alertList');if(!l)return Promise.resolve();
     l.innerHTML='<div style="text-align:center;padding:20px;color:#94a3b8;font-size:13px">⏳ Se încarcă activitatea...</div>';
-    fetch('/admin/api.php?action=getActivitateRecenta&limit=10&_t='+Date.now())
+    return fetch('/admin/api.php?action=getActivitateRecenta&limit=10&_t='+Date.now())
     .then(function(r){return r.json()})
     .then(function(res){
         if(!res.success||!res.data||!res.data.length){
@@ -567,16 +777,52 @@ function renderAlerts(){
     });
 }
 
-// ═══════ MODULES ═══════
+// ═══════ MODULES — funcții helper (FAVORITES + CATEGORIES sunt declarate sus) ═══════
+// Modulele permise utilizatorului curent — populat din /api.php?action=getMyModules
+var MY_ALLOWED_MODULES = null;
+function userCanSee(m){
+    if(m.id==='utilizatori' && role!=='admin') return false;
+    if(role==='admin') return true;
+    // Dacă lista din DB e încărcată, folosim DOAR ea (sursa de adevăr)
+    if(MY_ALLOWED_MODULES !== null){
+        return MY_ALLOWED_MODULES.indexOf(m.id) >= 0;
+    }
+    // Fallback până se încarcă (afișăm tot ca să nu pâlpâie pagina)
+    return true;
+}
+function modById(id){for(var i=0;i<MODULES.length;i++){if(MODULES[i].id===id)return MODULES[i];}return null;}
 function renderModules(){
-    var g=document.getElementById('modGrid');g.innerHTML='';
-    var fullAccess=['admin','mihai','roxana','valentin','cristina'];
-    MODULES.forEach(function(m){
-        if(m.id==='utilizatori'&&role!=='admin')return;
-        if(fullAccess.indexOf(role)<0&&m.roles.indexOf(role)<0)return;
-        var c=document.createElement('a');c.href=m.h;c.className='mod-card'+(m.v3?' new':'');c.setAttribute('data-cat',m.cat);
-        c.innerHTML='<div class="m-icon">'+m.i+'</div><div class="m-title">'+m.t+'</div><div class="m-desc">'+m.d+'</div>';
-        g.appendChild(c);
+    // Favorite (acces rapid) — guard defensiv pentru HTML cached vechi
+    var fg=document.getElementById('favGrid');
+    if(fg){
+        fg.innerHTML='';
+        FAVORITES.forEach(function(id){
+            var m=modById(id);if(!m||!userCanSee(m))return;
+            var c=document.createElement('a');c.href=m.h;c.className='fav-card';
+            c.innerHTML='<div class="fav-icon">'+m.i+'</div><div class="fav-text"><div class="fav-title">'+m.t+'</div><div class="fav-desc">'+m.d+'</div></div><div class="fav-arrow">→</div>';
+            fg.appendChild(c);
+        });
+    }
+    // Categorii (accordion — click pe header pentru deschidere)
+    var cont=document.getElementById('modCategories');if(!cont)return;
+    cont.innerHTML='';
+    CATEGORIES.forEach(function(cat){
+        var visible=cat.mods.map(modById).filter(function(m){return m&&userCanSee(m);});
+        if(!visible.length)return;
+        var group=document.createElement('div');group.className='cat-group';
+        var header=document.createElement('button');header.type='button';header.className='cat-header';
+        header.innerHTML='<span class="cat-icon">'+cat.icon+'</span><span class="cat-name">'+cat.title+'</span><span class="cat-count">'+visible.length+'</span><span class="cat-chevron">▾</span>';
+        header.onclick=function(){group.classList.toggle('open');};
+        var body=document.createElement('div');body.className='cat-body';
+        var grid=document.createElement('div');grid.className='mod-grid';
+        visible.forEach(function(m){
+            var c=document.createElement('a');c.href=m.h;c.className='mod-card'+(m.v3?' new':'');c.setAttribute('data-cat',m.cat);
+            c.innerHTML='<div class="m-icon">'+m.i+'</div><div class="m-title">'+m.t+'</div><div class="m-desc">'+m.d+'</div>';
+            grid.appendChild(c);
+        });
+        body.appendChild(grid);
+        group.appendChild(header);group.appendChild(body);
+        cont.appendChild(group);
     });
 }
 
@@ -613,8 +859,8 @@ function addProject(e){
 
 // ═══════ ÎNCĂRCARE PROIECTE DIN MySQL ═══════
 function loadProjectsFromDB(){
-    document.getElementById('syncBadge').innerHTML='<span class="sync-dot" style="background:var(--orange);animation:pulse 1s infinite"></span>Sync...';
-    fetch(API_DB+'?action=getProiecte&_t='+Date.now()).then(function(r){return r.json()}).then(function(res){
+    var sb=document.getElementById('syncBadge');if(sb)sb.innerHTML='<span class="sync-dot" style="background:var(--orange);animation:pulse 1s infinite"></span>Sync...';
+    return fetch(API_DB+'?action=getProiecte&_t='+Date.now()).then(function(r){return r.json()}).then(function(res){
         if(res.success&&res.data){
             PROJECTS=res.data.map(function(p){
                 return {
@@ -623,8 +869,10 @@ function loadProjectsFromDB(){
                     client:p.client_nume||'',
                     serviciu:SERV_DB_TO_UI[p.serviciu]||p.serviciu||'',
                     status:STAT_DB_TO_UI[p.status]||p.status||'Lead',
-                    valoare:parseFloat(p.valoare_estimata)||0,
+                    valoare:parseFloat(p.valoare_calc||p.valoare_contract||p.valoare_estimata)||0,
                     valoareContract:parseFloat(p.valoare_contract)||0,
+                    valoareOferte:parseFloat(p.valoare_oferte_acceptate||0)+parseFloat(p.valoare_oferte_pipeline||0),
+                    valoareSursa:p.valoare_contract>0?'contract':(p.valoare_oferte_acceptate>0?'acceptata':(p.valoare_oferte_pipeline>0?'pipeline':(p.valoare_oferta_max>0?'oferta':'estimata'))),
                     loc:p.oras||p.adresa_obiectiv||'Brașov',
                     obiectiv:p.obiectiv||'',
                     note:p.note||'',
@@ -658,7 +906,7 @@ function getUsername(){return ROLES[role]?ROLES[role].name:role;}
 function toggleNotifPanel(){var p=document.getElementById('notifPanel');if(p.classList.contains('active')){p.classList.remove('active');}else{p.classList.add('active');loadNotifications();}}
 function loadNotifications(){
 var user=getUsername().toLowerCase();
-fetch(API_DB+'?action=getNotificari&user='+user+'&limit=15&_t='+Date.now())
+return fetch(API_DB+'?action=getNotificari&user='+user+'&limit=15&_t='+Date.now())
 .then(function(r){return r.json()}).then(function(res){
 if(!res.success){return;}
 var badge=document.getElementById('notifBadge');
@@ -697,11 +945,105 @@ if(res.success){toast('✅ Proiect preluat de '+user,'success');loadProjectsFrom
 // Polling notificări la fiecare 30 secunde
 setInterval(function(){if(role&&ROLES[role])loadNotifications();},30000);
 
-setTimeout(loadProjectsFromDB,300);
-setTimeout(function(){if(role)loadNotifications();},500);
+// ═══════ DASHBOARD STATS (endpoint nou — counts într-un singur request) ═══════
+function loadDashboardStats(){
+    return fetch(API_DB+'?action=getDashboardStats&_t='+Date.now())
+        .then(function(r){return r.json()})
+        .then(function(res){
+            if(!res.success||!res.data) throw new Error(res.error||'Eroare stats');
+            DASHBOARD_STATS=res.data;
+            renderKPIFromStats(res.data.rezumat||{});
+            renderKanbanCounts(res.data.board||{});
+        });
+}
+function renderKPIFromStats(s){
+    var html='';
+    var castigatLunaSub = (s.castigatLunaCount||0) + ' oferte luna asta';
+    var pipelineSub = (s.oferteInAsteptare||0) + ' oferte de urmărit';
+    var convCls = (s.conversionRate||0) >= 50 ? 'var(--green)' : (s.conversionRate||0) >= 25 ? 'var(--orange)' : 'var(--red)';
+    var expCls = (s.expirate||0) > 0 ? 'var(--red)' : 'var(--gray)';
+    html+=kpiCard('📋','#eff6ff',s.proiecteActive||0,'Proiecte active','var(--blue)');
+    html+=kpiCard('💎','#f0fdf4',fmtRON(s.valoareCastigata||0),'Valoare câștigată activă','var(--green)','contracte + acceptate');
+    html+=kpiCard('💰','#fff7ed',fmtRON(s.pipelineValoare||0),'Pipeline (în așteptare)','var(--orange)',pipelineSub);
+    html+=kpiCard('🤝','#f0fdf4',fmtRON(s.castigatLuna||0),'Câștigat luna asta','var(--green)',castigatLunaSub);
+    html+=kpiCard('🎯','#f0fdf4',(s.conversionRate||0)+'%','Rată conversie',convCls,(s.oferteAcceptateTotal||0)+' acceptate total');
+    html+=kpiCard('🔧','#fff7ed',s.inExecutie||0,'În execuție','var(--orange)');
+    html+=kpiCard('📐','#f0fdfa',s.laProiectare||0,'La proiectare','var(--teal)');
+    html+=kpiCard('⏱️','#fef2f2',s.expirate||0,'Oferte expirate',expCls,(s.expirate||0)>0?'necesită follow-up':'totul OK');
+    var g=document.getElementById('kpiGrid');if(g)g.innerHTML=html;
+}
+function renderKanbanCounts(b){
+    // Actualizează doar badge-urile cu numărul când nu avem încă proiectele complete
+    var map={lead:'lead',oferta:'oferta',contract:'contract',proiectare:'proiectare',executie:'executie',receptie:'receptie',facturat:'facturat',mentenanta:'mentenanta'};
+    Object.keys(map).forEach(function(k){
+        var cnt=b[k]||0;
+        var col=document.querySelectorAll('#kanbanBoard .kanban-col');
+        // best-effort — dacă renderKanban a populat deja DOM-ul cu counts reale, nu suprascriem
+    });
+}
+
+// ═══════ WIDGET ERROR/RETRY ═══════
+function widgetError(containerId,msg,retryFn){
+    var el=document.getElementById(containerId);if(!el)return;
+    el.innerHTML='<div style="text-align:center;padding:18px;color:var(--gray);font-size:12px"><div style="margin-bottom:8px">⚠️ '+msg+'</div><button onclick="('+retryFn.name+')()" style="padding:6px 14px;border-radius:8px;border:1px solid var(--blue);background:#eff6ff;color:var(--blue);font-size:11px;font-weight:700;cursor:pointer">↻ Reîncearcă</button></div>';
+}
+function safeLoad(name,fn,errContainerId,errMsg){
+    return Promise.resolve().then(fn).catch(function(e){
+        console.warn('[boot]',name,'failed:',e&&e.message);
+        if(errContainerId) widgetError(errContainerId,errMsg||(name+' n-a putut fi încărcat'),fn);
+        return e;
+    });
+}
+
+// ═══════ BOOT ORCHESTRATOR ═══════
+function bootLoaders(){
+    return Promise.allSettled([
+        safeLoad('stats',loadDashboardStats,'kpiGrid','Stats indisponibile'),
+        safeLoad('proiecte',loadProjectsFromDB,'kanbanBoard','Proiecte indisponibile'),
+        safeLoad('oferte',loadOferteSummaryDash,null,null),
+        safeLoad('activitate',renderAlerts,'alertList','Activitate indisponibilă'),
+        safeLoad('notificari',loadNotifications,null,null)
+    ]);
+}
+function bootDashboard(){
+    // Verifică sesiunea + încarcă modulele permise în paralel
+    Promise.all([
+        fetch('/admin/api.php?action=me',{credentials:'include'}).then(function(r){return r.json();}),
+        fetch('/admin/api.php?action=getMyModules',{credentials:'include'}).then(function(r){return r.json();}).catch(function(){return null;})
+    ]).then(function(results){
+        var meRes = results[0], modRes = results[1];
+        if(!meRes.success || !meRes.user){
+            sessionStorage.removeItem('cssi-role');
+            sessionStorage.removeItem('cssi-user');
+            showLogin(); return;
+        }
+        role = meRes.user.username;
+        sessionStorage.setItem('cssi-role', role);
+        sessionStorage.setItem('cssi-user', meRes.user.display_name || role);
+        // Încarcă lista modulelor permise (din DB user_config sau defaults per rol)
+        if(modRes && modRes.success && Array.isArray(modRes.modules)){
+            MY_ALLOWED_MODULES = modRes.modules;
+        }
+        if(!ROLES[role]){ showLogin(); return; }
+        showDashShell();
+        bootLoaders();
+    }).catch(function(){showLogin();});
+}
+document.addEventListener('DOMContentLoaded',bootDashboard);
+// Dacă DOMContentLoaded a fost deja emis (script la finalul body-ului), pornim manual:
+if(document.readyState!=='loading'){bootDashboard();}
 </script>
 <script>
-if('serviceWorker' in navigator){navigator.serviceWorker.register('/sw.js').then(function(r){console.log('[PWA] SW registered, scope:',r.scope)}).catch(function(e){console.log('[PWA] SW failed:',e)})}
+if('serviceWorker' in navigator){
+    navigator.serviceWorker.register('/sw.js').then(function(r){console.log('[PWA] SW registered, scope:',r.scope)}).catch(function(e){console.log('[PWA] SW failed:',e)});
+    // Auto-reload o singură dată când un SW nou preia controlul (cache nou)
+    var refreshed=false;
+    navigator.serviceWorker.addEventListener('controllerchange',function(){
+        if(refreshed)return;refreshed=true;
+        console.log('[PWA] SW nou activ — reload pentru cache curat');
+        window.location.reload();
+    });
+}
 </script>
 </body>
 </html>

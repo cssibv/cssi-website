@@ -63,7 +63,13 @@ a{text-decoration:none;color:inherit;}button{font-family:inherit;cursor:pointer;
 .kcol-head.facturat{border-color:var(--pink);background:#fdf2f8;}.kcol-head.mentenanta{border-color:var(--gray);background:var(--gray-bg);}
 .kcol-name{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;}
 .kcol-count{font-size:11px;font-weight:700;width:22px;height:22px;border-radius:6px;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,0.06);color:var(--gray);}
-.kcol-body{padding:8px;min-height:100px;display:flex;flex-direction:column;gap:8px;}
+.kcol-body{padding:8px;min-height:100px;max-height:700px;overflow-y:auto;overscroll-behavior:contain;display:flex;flex-direction:column;gap:8px;}
+.kcol-body::-webkit-scrollbar{width:6px;}
+.kcol-body::-webkit-scrollbar-thumb{background:var(--gray-b);border-radius:3px;}
+.kcol-body::-webkit-scrollbar-thumb:hover{background:var(--gray-l);}
+.kcol-body::-webkit-scrollbar-track{background:transparent;}
+.kcol-body{scrollbar-width:thin;scrollbar-color:var(--gray-b) transparent;}
+@media(max-width:768px){.kcol-body{max-height:480px;}}
 .kcard{background:var(--gray-bg);border-radius:var(--radius-sm);padding:12px;cursor:pointer;transition:all 0.2s;border:1px solid transparent;}
 .kcard:hover{border-color:var(--gray-b);box-shadow:var(--shadow);transform:translateY(-1px);}
 .kcard-id{font-size:10px;font-weight:700;color:var(--gray);letter-spacing:0.5px;}
@@ -177,8 +183,9 @@ a{text-decoration:none;color:inherit;}button{font-family:inherit;cursor:pointer;
 .kcard.drag-over{border-top:3px solid var(--blue);padding-top:9px;}
 .kcard.dragging{opacity:0.4;}
 </style>
+<script src="/admin/access-guard.js" defer></script>
 </head>
-<body>
+<body data-module="proiecte">
 <div class="loading-bar" id="loadBar"></div>
 <div class="toast-container" id="toastContainer"></div>
 
@@ -899,7 +906,7 @@ function deleteProject(projectId, dbId){
 function refreshProjects(){showToast('🔄 Se reîncarcă...','info');loadProjects();}
 </script>
 <script>
-if('serviceWorker' in navigator){navigator.serviceWorker.register('../sw.js').then(function(r){console.log('[PWA] SW registered, scope:',r.scope)}).catch(function(e){console.log('[PWA] SW failed:',e)})}
+if('serviceWorker' in navigator){navigator.serviceWorker.register('../sw.js').then(function(r){console.log('[PWA] SW registered, scope:',r.scope)}).catch(function(e){console.log('[PWA] SW failed:',e)});var __reloaded=false;navigator.serviceWorker.addEventListener('controllerchange',function(){if(__reloaded)return;__reloaded=true;window.location.reload();});}
 </script>
 </body>
 </html>

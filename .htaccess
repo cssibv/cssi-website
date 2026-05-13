@@ -33,6 +33,12 @@ RewriteRule ^sistem-integrat-securitate-brasov$ /blog/sistem-integrat-securitate
 # --------------------------------------------------
 RewriteRule ^admin/?$ /admin.html [L]
 
+# --------------------------------------------------
+# 2c-bis. URL SCURT pentru tehnicieni — /teren → /admin/teren.html
+# Util pentru shortcut pe ecran principal mobil
+# --------------------------------------------------
+RewriteRule ^teren/?$ /admin/teren.html [L]
+
 
 # --------------------------------------------------
 # 2d. BLOCHEAZĂ ACCES DIRECT LA /404 (trebuie servit doar via ErrorDocument)

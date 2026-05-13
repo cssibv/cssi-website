@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Proiectare — Portal CSSI 3.0</title>
+<meta name="robots" content="noindex, nofollow">
+<link rel="icon" type="image/x-icon" href="/images/favicon.ico">
+<meta name="theme-color" content="#dc2626">
+<link rel="manifest" href="../manifest.json">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+:root{--red:#dc2626;--red-d:#991b1b;--dark:#0f172a;--dark2:#1e293b;--gray:#64748b;--gray-l:#94a3b8;--gray-xl:#cbd5e1;--gray-bg:#f1f5f9;--gray-b:#e2e8f0;--blue:#3b82f6;--green:#22c55e;--orange:#f97316;--purple:#8b5cf6;--teal:#14b8a6;--yellow:#eab308;--radius:16px;--radius-sm:12px;--shadow:0 1px 3px rgba(0,0,0,0.06);--shadow-md:0 4px 12px rgba(0,0,0,0.08);--shadow-lg:0 12px 32px rgba(0,0,0,0.12);--font:'Inter',system-ui,sans-serif;}
+body{font-family:var(--font);color:var(--dark);background:var(--gray-bg);-webkit-font-smoothing:antialiased;}
+a{text-decoration:none;color:inherit;}button{font-family:inherit;cursor:pointer;}
+:focus-visible{outline:2px solid var(--blue);outline-offset:2px;border-radius:6px;}
+
+.page-header{background:linear-gradient(135deg,#0f4c81,#1e3a8a);color:#fff;padding:22px 24px;border-radius:20px;margin-bottom:16px;}
+.page-back{color:rgba(255,255,255,0.7);font-size:13px;font-weight:500;display:inline-flex;align-items:center;gap:6px;}.page-back:hover{color:#fff;}
+.page-title{font-size:24px;font-weight:800;letter-spacing:-0.5px;margin-top:4px;}
+.page-meta{font-size:13px;color:rgba(255,255,255,0.85);margin-top:6px;display:flex;flex-wrap:wrap;gap:14px;align-items:center;}
+.page-meta .pill{background:rgba(255,255,255,0.15);padding:3px 10px;border-radius:99px;font-weight:700;font-size:11px;}
+.page-meta .pill.exec{background:rgba(0,0,0,0.2);}
+
+/* Progress bar in header */
+.hdr-progress{margin-top:14px;background:rgba(0,0,0,0.18);border-radius:99px;height:14px;overflow:hidden;position:relative;}
+.hdr-progress-fill{height:100%;background:linear-gradient(90deg,#22c55e,#16a34a);border-radius:99px;transition:width 0.4s;display:flex;align-items:center;justify-content:flex-end;padding-right:8px;}
+.hdr-progress-fill.partial{background:linear-gradient(90deg,#f97316,#ea580c);}
+.hdr-progress-text{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:800;color:#fff;text-shadow:0 1px 2px rgba(0,0,0,0.5);}
+.hdr-actions{margin-top:12px;display:flex;gap:8px;flex-wrap:wrap;}
+.hdr-btn{padding:9px 16px;border-radius:10px;background:rgba(255,255,255,0.15);color:#fff;border:1px solid rgba(255,255,255,0.2);font-size:12px;font-weight:700;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;gap:6px;}
+.hdr-btn:hover{background:rgba(255,255,255,0.25);}
+.hdr-btn.go-exec{background:linear-gradient(135deg,#22c55e,#16a34a);border-color:#16a34a;}
+.hdr-btn.go-exec:hover{background:linear-gradient(135deg,#16a34a,#15803d);}
+.hdr-btn.disabled{opacity:0.4;cursor:not-allowed;}
+
+.container{max-width:1200px;margin:0 auto;padding:16px;}@media(min-width:768px){.container{padding:24px;}}
+.toast-container{position:fixed;top:20px;right:20px;z-index:300;display:flex;flex-direction:column;gap:8px;}
+.toast{padding:12px 18px;border-radius:12px;color:#fff;font-size:13px;font-weight:600;box-shadow:0 8px 24px rgba(0,0,0,0.15);animation:slideIn 0.3s ease;max-width:380px;}
+.toast.success{background:var(--green);}.toast.error{background:var(--red);}.toast.info{background:var(--blue);}
+@keyframes slideIn{from{transform:translateX(100%);opacity:0}to{transform:translateX(0);opacity:1}}
+.loading-bar{position:fixed;top:0;left:0;right:0;height:3px;z-index:400;display:none;}
+.loading-bar.active{display:block;}.loading-bar::after{content:'';display:block;width:30%;height:100%;background:#1e3a8a;border-radius:2px;animation:loadSlide 1.2s infinite ease-in-out;}
+@keyframes loadSlide{0%{margin-left:-30%}100%{margin-left:100%}}
+
+/* Tabs */
+.tabs{display:flex;background:#fff;border-radius:var(--radius);padding:4px;margin-bottom:14px;box-shadow:var(--shadow);overflow-x:auto;}
+.tab{flex:1;min-width:140px;padding:11px 14px;border:none;background:transparent;color:var(--gray);font-size:13px;font-weight:700;border-radius:var(--radius-sm);cursor:pointer;transition:all 0.15s;display:inline-flex;align-items:center;justify-content:center;gap:6px;font-family:inherit;}
+.tab:hover{background:var(--gray-bg);color:var(--dark);}
+.tab.active{background:#1e3a8a;color:#fff;}
+.tab .badge{background:rgba(255,255,255,0.25);color:#fff;padding:1px 7px;border-radius:99px;font-size:10px;font-weight:800;}
+.tab:not(.active) .badge{background:var(--gray-b);color:var(--gray);}
+.tab-panel{display:none;}.tab-panel.active{display:block;}
+
+/* Toolbar checklist */
+.check-toolbar{background:#fff;border-radius:var(--radius);padding:10px 12px;box-shadow:var(--shadow);margin-bottom:12px;display:flex;flex-wrap:wrap;gap:8px;align-items:center;position:sticky;top:8px;z-index:50;}
+.check-search{padding:8px 14px 8px 36px;border-radius:99px;font-size:12px;border:1px solid var(--gray-b);outline:none;background:#fff url('data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%2214%22 height=%2214%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22%2364748b%22 stroke-width=%222%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22><circle cx=%2211%22 cy=%2211%22 r=%228%22></circle><line x1=%2221%22 y1=%2221%22 x2=%2216.65%22 y2=%2216.65%22></line></svg>') no-repeat 12px center;flex:1;min-width:180px;max-width:280px;font-family:inherit;}
+.check-search:focus{border-color:#1e3a8a;}
+.filter-chips{display:flex;gap:5px;flex-wrap:wrap;}
+.f-chip{padding:6px 11px;border-radius:99px;border:1px solid var(--gray-b);background:#fff;color:var(--gray);font-size:11px;font-weight:700;cursor:pointer;transition:all 0.15s;font-family:inherit;display:inline-flex;align-items:center;gap:4px;}
+.f-chip:hover{border-color:#1e3a8a;color:#1e3a8a;}
+.f-chip.active{background:#1e3a8a;color:#fff;border-color:#1e3a8a;}
+.f-chip .num{background:rgba(0,0,0,0.12);padding:1px 6px;border-radius:99px;font-size:10px;font-weight:800;}
+.f-chip.active .num{background:rgba(255,255,255,0.25);}
+
+/* Categorii checklist */
+.cat-block{background:#fff;border-radius:var(--radius);box-shadow:var(--shadow);margin-bottom:12px;overflow:hidden;border:1px solid var(--gray-b);scroll-margin-top:80px;}
+.cat-head{padding:14px 18px;background:linear-gradient(135deg,#fff,#f8fafc);display:flex;align-items:center;gap:12px;cursor:pointer;border:none;width:100%;text-align:left;font-family:inherit;transition:background 0.15s;}
+.cat-head:hover{background:var(--gray-bg);}
+.cat-bulk{display:flex;gap:4px;flex-shrink:0;}
+.cat-bulk-btn{padding:5px 10px;border-radius:6px;border:1px solid var(--gray-b);background:#fff;color:var(--gray);font-size:10px;font-weight:700;cursor:pointer;transition:all 0.15s;font-family:inherit;text-transform:uppercase;letter-spacing:0.3px;}
+.cat-bulk-btn:hover{border-color:var(--green);color:var(--green);background:#f0fdf4;}
+.cat-bulk-btn.na:hover{border-color:#ca8a04;color:#ca8a04;background:#fef9c3;}
+.item.hidden-by-filter{display:none;}
+.cat-empty{padding:14px;text-align:center;color:var(--gray-l);font-size:11px;font-style:italic;}
+.cat-icon{width:36px;height:36px;border-radius:10px;background:linear-gradient(135deg,#dbeafe,#bfdbfe);color:#1e3a8a;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:800;flex-shrink:0;}
+.cat-info{flex:1;min-width:0;}
+.cat-title{font-size:14px;font-weight:800;color:var(--dark);}
+.cat-sub{font-size:11px;color:var(--gray);margin-top:2px;}
+.cat-stat{display:flex;align-items:center;gap:8px;flex-shrink:0;}
+.cat-progress-mini{width:90px;height:6px;background:var(--gray-bg);border-radius:99px;overflow:hidden;border:1px solid var(--gray-b);}
+.cat-progress-mini-fill{height:100%;background:var(--orange);border-radius:99px;transition:width 0.3s;}
+.cat-progress-mini-fill.complete{background:var(--green);}
+.cat-stat-text{font-size:11px;font-weight:700;color:var(--gray);font-variant-numeric:tabular-nums;min-width:38px;text-align:right;}
+.cat-stat-text.complete{color:var(--green);}
+.cat-chevron{width:28px;height:28px;border-radius:50%;background:var(--gray-bg);color:var(--gray);font-size:14px;font-weight:800;display:flex;align-items:center;justify-content:center;transition:all 0.25s;flex-shrink:0;}
+.cat-block.open .cat-chevron{transform:rotate(180deg);background:#dbeafe;color:#1e3a8a;}
+.cat-body{display:none;padding:6px 12px 12px;border-top:1px solid var(--gray-bg);}
+.cat-block.open .cat-body{display:block;animation:fadeIn 0.25s ease;}
+@keyframes fadeIn{from{opacity:0;transform:translateY(-4px);}to{opacity:1;transform:translateY(0);}}
+
+/* Items */
+.item{display:flex;align-items:flex-start;gap:10px;padding:10px 12px;border-radius:8px;margin-top:6px;background:#fafbfc;transition:background 0.15s;}
+.item:hover{background:#f1f5f9;}
+.item.done{background:#f0fdf4;}
+.item.na{background:#fef9c3;opacity:0.85;}
+.item-checkbox{display:flex;align-items:center;justify-content:center;width:32px;height:32px;border-radius:8px;border:2px solid var(--gray-b);background:#fff;cursor:pointer;flex-shrink:0;font-size:14px;font-weight:800;color:transparent;transition:all 0.15s;margin-top:1px;}
+.item-checkbox:hover{border-color:var(--blue);}
+.item.done .item-checkbox{background:var(--green);border-color:var(--green);color:#fff;}
+.item.na .item-checkbox{background:var(--yellow);border-color:#ca8a04;color:#fff;font-size:11px;}
+.item-content{flex:1;min-width:0;}
+.item-label{font-size:13px;font-weight:600;color:var(--dark);line-height:1.4;}
+.item.done .item-label{text-decoration:line-through;color:var(--gray);}
+.item.na .item-label{color:#854d0e;}
+.item-meta{font-size:10px;color:var(--gray);margin-top:4px;display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
+.item-meta .av{display:inline-flex;align-items:center;justify-content:center;width:14px;height:14px;border-radius:50%;background:linear-gradient(135deg,#3b82f6,#1d4ed8);color:#fff;font-size:8px;font-weight:800;}
+.item-note{font-size:11px;color:var(--gray);margin-top:4px;font-style:italic;background:#fff;padding:6px 10px;border-radius:6px;border-left:2px solid var(--gray-b);}
+.item-actions{display:flex;gap:4px;flex-shrink:0;}
+.item-btn-na{padding:4px 8px;border-radius:6px;border:1px solid var(--gray-b);background:#fff;color:var(--gray);font-size:10px;font-weight:700;cursor:pointer;transition:all 0.15s;}
+.item-btn-na:hover{border-color:#ca8a04;color:#ca8a04;background:#fef9c3;}
+.item.na .item-btn-na{background:#ca8a04;color:#fff;border-color:#ca8a04;}
+.item-btn-note{padding:4px 8px;border-radius:6px;border:1px solid var(--gray-b);background:#fff;color:var(--gray);font-size:11px;cursor:pointer;}
+.item-btn-note:hover{border-color:var(--blue);color:var(--blue);}
+
+/* Documente */
+.doc-section{background:#fff;border-radius:var(--radius);padding:18px 20px;margin-bottom:14px;box-shadow:var(--shadow);}
+.doc-section-title{font-size:13px;font-weight:800;color:var(--gray);text-transform:uppercase;letter-spacing:1px;margin-bottom:12px;}
+.doc-upload-row{display:flex;gap:8px;flex-wrap:wrap;align-items:center;background:linear-gradient(135deg,#dbeafe,#bfdbfe);border-radius:10px;padding:14px;margin-bottom:14px;}
+.doc-upload-row select{padding:9px 14px;border-radius:8px;border:1px solid #93c5fd;background:#fff;font-size:13px;font-weight:600;font-family:inherit;outline:none;flex:1;min-width:200px;}
+.doc-upload-row .doc-up-btn{padding:10px 18px;border-radius:8px;background:#1e3a8a;color:#fff;border:none;font-size:13px;font-weight:700;cursor:pointer;display:inline-flex;align-items:center;gap:6px;}
+.doc-upload-row .doc-up-btn:hover{background:#1e40af;}
+.doc-upload-row input[type=file]{display:none;}
+.docs-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:10px;}
+.doc-card{background:var(--gray-bg);border-radius:var(--radius-sm);padding:12px;position:relative;cursor:pointer;transition:all 0.15s;border-left:4px solid #1e3a8a;}
+.doc-card:hover{box-shadow:var(--shadow-md);transform:translateY(-1px);}
+.doc-card .dc-tip{font-size:10px;font-weight:800;color:#1e3a8a;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:4px;}
+.doc-card .dc-name{font-size:12px;font-weight:700;color:var(--dark);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.doc-card .dc-meta{font-size:10px;color:var(--gray);margin-top:4px;}
+.doc-card .dc-del{position:absolute;top:6px;right:6px;width:24px;height:24px;border-radius:50%;background:rgba(0,0,0,0.5);color:#fff;border:none;font-size:11px;cursor:pointer;display:none;align-items:center;justify-content:center;}
+.doc-card:hover .dc-del{display:flex;}
+.doc-card .dc-del:hover{background:var(--red);}
+
+/* Modal note */
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);backdrop-filter:blur(4px);z-index:200;align-items:center;justify-content:center;padding:16px;}
+.modal-overlay.active{display:flex;}
+.modal{background:#fff;border-radius:20px;width:100%;max-width:480px;box-shadow:0 25px 60px rgba(0,0,0,0.3);}
+.modal-head{padding:18px 22px;border-bottom:1px solid var(--gray-b);display:flex;align-items:center;justify-content:space-between;}
+.modal-title{font-size:16px;font-weight:800;}
+.modal-close{width:32px;height:32px;border-radius:8px;border:none;background:var(--gray-bg);color:var(--gray);font-size:18px;display:flex;align-items:center;justify-content:center;}.modal-close:hover{background:#fef2f2;color:var(--red);}
+.modal-body{padding:20px 22px;}
+.modal-body label{display:block;font-size:11px;font-weight:700;color:var(--gray);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:6px;}
+.modal-body textarea{width:100%;padding:11px 14px;border:2px solid var(--gray-b);border-radius:10px;font-size:13px;font-family:inherit;outline:none;min-height:80px;resize:vertical;}
+.modal-body textarea:focus{border-color:#1e3a8a;}
+.modal-body .save-btn{margin-top:12px;width:100%;padding:11px;background:#1e3a8a;color:#fff;border:none;border-radius:10px;font-size:13px;font-weight:700;cursor:pointer;}
+
+.empty-state{text-align:center;padding:30px 20px;color:var(--gray-l);font-size:13px;}
+.empty-state .ei{font-size:36px;margin-bottom:6px;opacity:0.5;}
+.footer{text-align:center;color:var(--gray-xl);font-size:11px;padding:24px 0 100px;}
+</style>
+<script src="/admin/access-guard.js" defer></script>
+</head>
+<body data-module="proiectare">
+<div class="loading-bar" id="loadBar"></div>
+<div class="toast-container" id="toastContainer"></div>
+
+<div class="container">
+    <div class="page-header">
+        <a href="proiectare.html" class="page-back">← Înapoi la Proiectare</a>
+        <div class="page-title" id="pageTitle">⏳ Se încarcă...</div>
+        <div class="page-meta" id="pageMeta"></div>
+        <div class="hdr-progress" id="hdrProgress" style="display:none">
+            <div class="hdr-progress-fill" id="hdrProgressFill" style="width:0"></div>
+            <div class="hdr-progress-text" id="hdrProgressText">—</div>
+        </div>
+        <div class="hdr-actions" id="hdrActions"></div>
+    </div>
+
+    <div class="tabs">
+        <button class="tab active" data-tab="check" onclick="setTab('check')">📋 Checklist proiectare <span class="badge" id="bdgCheck">0/0</span></button>
+        <button class="tab" data-tab="docs" onclick="setTab('docs')">📁 Documente <span class="badge" id="bdgDocs">0</span></button>
+    </div>
+
+    <!-- TAB CHECKLIST -->
+    <div class="tab-panel active" id="tabCheck">
+        <div class="check-toolbar" id="checkToolbar" style="display:none">
+            <input type="text" class="check-search" id="checkSearch" placeholder="Caută în checklist..." oninput="renderChecklist()">
+            <div class="filter-chips" id="filterChips"></div>
+        </div>
+        <div id="checklistArea"><div class="empty-state"><div class="ei">⏳</div>Se încarcă checklist-ul...</div></div>
+    </div>
+
+    <!-- TAB DOCUMENTE -->
+    <div class="tab-panel" id="tabDocs">
+        <div class="doc-section">
+            <div class="doc-section-title">📤 Adaugă document tehnic</div>
+            <div class="doc-upload-row">
+                <select id="docTip">
+                    <option value="memoriu">Memoriu tehnic general</option>
+                    <option value="plan_amplasare">Plan amplasare echipamente (CAD)</option>
+                    <option value="schema_bloc">Schema bloc / funcțională</option>
+                    <option value="schema_electrica">Schema electrică desfășurată</option>
+                    <option value="lista_echipamente">Lista echipamente + certificate</option>
+                    <option value="lista_cabluri">Lista cabluri</option>
+                    <option value="caiet_sarcini">Caiet de sarcini</option>
+                    <option value="analiza_risc">Analiză de risc (L. 333)</option>
+                    <option value="scenariu_si">Scenariu securitate la incendiu</option>
+                    <option value="plan_psi">Plan PSI / evacuare</option>
+                    <option value="plan_gdpr">Plan GDPR + registru</option>
+                    <option value="aviz_ipj">Aviz IPJ</option>
+                    <option value="aviz_isu">Aviz ISU</option>
+                    <option value="foto_teren">Foto teren / releveu</option>
+                    <option value="altele">Alt document</option>
+                </select>
+                <label class="doc-up-btn">
+                    <input type="file" id="docFile" onchange="uploadDoc(this)">
+                    📎 Alege fișier
+                </label>
+            </div>
+            <div class="doc-section-title">📚 Documente uploadate</div>
+            <div class="docs-grid" id="docsGrid"><div class="empty-state"><div class="ei">📭</div>Niciun document încă</div></div>
+        </div>
+    </div>
+
+    <div class="footer">Portal CSSI 3.0 · Proiectare conform L.333/2003 + I7-2011 + P118/3-2015 + GDPR</div>
+</div>
+
+<!-- Modal notă -->
+<div id="noteModal" class="modal-overlay" onclick="if(event.target===this)closeNoteModal()">
+<div class="modal">
+    <div class="modal-head">
+        <div class="modal-title">📝 Notă pentru: <span id="noteItemLabel"></span></div>
+        <button class="modal-close" onclick="closeNoteModal()">✕</button>
+    </div>
+    <div class="modal-body">
+        <label>Notă (opțional — ex: motivul "n/a", număr aviz, observații...)</label>
+        <textarea id="noteText" placeholder="Ex: Nu este necesar aviz ISU — clădire <2500mp / fără aglomerări persoane..."></textarea>
+        <button class="save-btn" onclick="saveNote()">💾 Salvează nota</button>
+    </div>
+</div>
+</div>
+
+<script>
+var role = sessionStorage.getItem('cssi-role');
+var userName = sessionStorage.getItem('cssi-user') || role || '';
+if (!role) { window.location.href = '../admin.html'; }
+var API_DB = '/admin/api.php';
+var STATE = { id:0, proiect:null, items:[], documente:[], stats:{}, gata_predat:false, opened:{}, currentItemId:null, filter:'all' };
+
+var CATEGORII = {
+    'e1':  {icon:'1', title:'E1. Pre-analiză & clasificare obiectiv', sub:'Tip beneficiar, categorie obiectiv, avize necesare'},
+    'e2':  {icon:'2', title:'E2. Vizita teren + Releveu',             sub:'Releveu, foto, puncte acces, alimentare'},
+    'e3':  {icon:'3', title:'E3. Analiză de risc & risc incendiu',    sub:'L. 333/2003 + P118/1 + grad securitate SR EN 50131'},
+    'e4s': {icon:'4a',title:'E4a. Proiectare alarmă antiefracție',    sub:'L. 333 + SR EN 50131'},
+    'e4c': {icon:'4b',title:'E4b. Proiectare CCTV',                   sub:'SR EN 50132 + GDPR (Reg. UE 679/2016)'},
+    'e4f': {icon:'4c',title:'E4c. Proiectare detecție incendiu',      sub:'P118/3-2015 + SR EN 54 + SR EN 50200'},
+    'e4e': {icon:'4d',title:'E4d. Proiectare instalații electrice',   sub:'I7-2011 + STAS 12604 + SR EN 1838'},
+    'e5':  {icon:'5', title:'E5. Documentație tehnică finală',        sub:'Memoriu, planuri, scheme, liste, caiete sarcini'},
+    'e6':  {icon:'6', title:'E6. Verificare internă (peer review)',   sub:'Reverificare calcule, planuri, completitudine'},
+    'e7':  {icon:'7', title:'E7. Avize externe',                      sub:'IPJ, ISU, ANSPDCP/GDPR, acord vecinătate'},
+    'e8':  {icon:'8', title:'E8. Predare către execuție',             sub:'Ședință, dosar, briefing, programare'},
+};
+
+var TIP_DOC_LABEL = {
+    memoriu:'Memoriu tehnic', plan_amplasare:'Plan amplasare', schema_bloc:'Schema bloc',
+    schema_electrica:'Schema electrică', lista_echipamente:'Lista echipamente', lista_cabluri:'Lista cabluri',
+    caiet_sarcini:'Caiet sarcini', analiza_risc:'Analiză risc', scenariu_si:'Scenariu SI', plan_psi:'Plan PSI',
+    plan_gdpr:'Plan GDPR', aviz_ipj:'Aviz IPJ', aviz_isu:'Aviz ISU', foto_teren:'Foto teren', altele:'Alte'
+};
+
+function getProjId(){var qs=new URLSearchParams(window.location.search);return parseInt(qs.get('id'))||0;}
+STATE.id = getProjId();
+
+function esc(s){if(s==null)return '';var d=document.createElement('div');d.textContent=s;return d.innerHTML;}
+function showLoading(s){document.getElementById('loadBar').classList.toggle('active',s);}
+function toast(msg,type){var c=document.getElementById('toastContainer');var t=document.createElement('div');t.className='toast '+(type||'info');t.textContent=msg;c.appendChild(t);setTimeout(function(){t.style.opacity='0';t.style.transform='translateX(100px)';t.style.transition='all 0.3s'},2500);setTimeout(function(){t.remove()},3000);}
+var MONTHS=['Ian','Feb','Mar','Apr','Mai','Iun','Iul','Aug','Sep','Oct','Noi','Dec'];
+function fmtDateTime(s){if(!s)return '';var d=new Date(s.replace(' ','T'));if(isNaN(d.getTime()))return s;var pad=function(n){return n<10?'0'+n:n;};return d.getDate()+' '+MONTHS[d.getMonth()]+' '+pad(d.getHours())+':'+pad(d.getMinutes());}
+function fmtSize(b){if(b<1024)return b+' B';if(b<1048576)return Math.round(b/1024)+' KB';return (b/1048576).toFixed(1)+' MB';}
+
+function refreshData(){
+    if(!STATE.id){document.getElementById('pageTitle').textContent='⚠️ ID lipsă';return;}
+    showLoading(true);
+    fetch(API_DB+'?action=getProiectareChecklist&id='+STATE.id+'&_t='+Date.now())
+        .then(function(r){return r.json()})
+        .then(function(res){
+            if(!res.success){document.getElementById('pageTitle').textContent='⚠️ '+res.error;return;}
+            STATE.proiect = res.data.proiect;
+            STATE.items = res.data.items||[];
+            STATE.documente = res.data.documente||[];
+            STATE.stats = res.data.stats||{};
+            STATE.gata_predat = !!res.data.gata_predat;
+            renderHeader();renderChecklist();renderDocs();
+        })
+        .catch(function(e){toast('❌ '+(e.message||e),'error');})
+        .finally(function(){showLoading(false);});
+}
+
+function renderHeader(){
+    var p = STATE.proiect;
+    document.getElementById('pageTitle').textContent = '📐 '+p.client_nume;
+    var meta = '<span class="pill"><strong>'+esc(p.proiect_id)+'</strong></span>';
+    meta += '<span class="pill exec">'+esc(p.proiect_status)+'</span>';
+    if(p.serviciu) meta += '<span>· '+esc(p.serviciu)+'</span>';
+    if(p.adresa_obiectiv) meta += '<span>📍 '+esc(p.adresa_obiectiv)+'</span>';
+    if(p.client_telefon) meta += '<span><a href="tel:'+esc(p.client_telefon)+'" style="color:#fff;text-decoration:none">📞 '+esc(p.client_telefon)+'</a></span>';
+    document.getElementById('pageMeta').innerHTML = meta;
+
+    var s = STATE.stats;
+    document.getElementById('hdrProgress').style.display = '';
+    var pct = s.progres||0;
+    var fill = document.getElementById('hdrProgressFill');
+    fill.style.width = pct+'%';
+    fill.classList.toggle('partial', pct<100);
+    document.getElementById('hdrProgressText').textContent = s.done+' bifate · '+s.na+' n/a · '+s.todo+' rămase = '+pct+'%';
+    document.getElementById('bdgCheck').textContent = (s.done+s.na)+'/'+s.total;
+    document.getElementById('bdgDocs').textContent = STATE.documente.length;
+
+    // Acțiuni
+    var actHtml = '';
+    if(STATE.gata_predat){
+        actHtml += '<button class="hdr-btn go-exec" onclick="predaLaExecutie()">✅ Predă la Execuție</button>';
+    } else {
+        actHtml += '<button class="hdr-btn disabled" disabled title="Bifează toate item-urile sau marchează-le ca n/a pentru a putea preda">🔒 Predă la Execuție ('+s.todo+' nebifate)</button>';
+    }
+    document.getElementById('hdrActions').innerHTML = actHtml;
+}
+
+function renderChecklist(){
+    // Show toolbar after first load
+    document.getElementById('checkToolbar').style.display = '';
+    renderFilterChips();
+
+    var q = (document.getElementById('checkSearch')?.value || '').toLowerCase().trim();
+    var filter = STATE.filter; // all / todo / done / na
+
+    // Grupează pe categorii
+    var byCat = {};
+    STATE.items.forEach(function(it){
+        if(!byCat[it.category]) byCat[it.category] = [];
+        byCat[it.category].push(it);
+    });
+
+    function passesFilter(it){
+        if(filter === 'todo' && it.status !== 'todo') return false;
+        if(filter === 'done' && it.status !== 'done') return false;
+        if(filter === 'na' && it.status !== 'n/a') return false;
+        if(q && (it.label||'').toLowerCase().indexOf(q) === -1 && (it.note||'').toLowerCase().indexOf(q) === -1) return false;
+        return true;
+    }
+
+    var html = '';
+    var anyVisible = false;
+    Object.keys(CATEGORII).forEach(function(catKey){
+        var cat = CATEGORII[catKey];
+        var items = byCat[catKey] || [];
+        if(!items.length) return;
+        var visibleItems = items.filter(passesFilter);
+        // Categoria e ascunsă complet doar dacă search/filter filtrează tot
+        if(!visibleItems.length && (q || filter !== 'all')) return;
+        anyVisible = true;
+        var done = items.filter(function(i){return i.status==='done'||i.status==='n/a';}).length;
+        var pct = items.length ? Math.round((done/items.length)*100) : 0;
+        // Auto-deschidere când filter activ și mai sunt items vizibile
+        var forceOpen = (q || filter !== 'all') && visibleItems.length > 0;
+        var open = forceOpen || (STATE.opened[catKey] !== false);
+        var todoCount = items.filter(function(i){return i.status==='todo';}).length;
+
+        html += '<div class="cat-block'+(open?' open':'')+'" id="cat-'+catKey+'">';
+        html += '<div class="cat-head" style="cursor:pointer" onclick="if(!event.target.closest(\'button\'))toggleCat(\''+catKey+'\')">';
+        html += '<div class="cat-icon">'+cat.icon+'</div>';
+        html += '<div class="cat-info"><div class="cat-title">'+esc(cat.title)+'</div><div class="cat-sub">'+esc(cat.sub)+'</div></div>';
+        // Bulk buttons (vizibile doar dacă mai sunt items todo în categorie)
+        if(todoCount > 0){
+            html += '<div class="cat-bulk">';
+            html += '<button class="cat-bulk-btn" onclick="bulkCat(\''+catKey+'\',\'done\')" title="Bifează cele '+todoCount+' nebifate ca done">✓ Bif tot ('+todoCount+')</button>';
+            html += '<button class="cat-bulk-btn na" onclick="bulkCat(\''+catKey+'\',\'n/a\')" title="Marchează cele '+todoCount+' nebifate ca neaplicabile">⊘ N/A tot</button>';
+            html += '</div>';
+        }
+        html += '<div class="cat-stat"><div class="cat-progress-mini"><div class="cat-progress-mini-fill'+(pct>=100?' complete':'')+'" style="width:'+pct+'%"></div></div><div class="cat-stat-text'+(pct>=100?' complete':'')+'">'+done+'/'+items.length+'</div></div>';
+        html += '<div class="cat-chevron">▾</div></div>';
+        html += '<div class="cat-body">';
+        if(visibleItems.length){
+            visibleItems.forEach(function(it){
+                var cls = it.status==='done'?'done':(it.status==='n/a'?'na':'');
+                var checkSym = it.status==='done'?'✓':(it.status==='n/a'?'N/A':'');
+                html += '<div class="item '+cls+'" id="item-'+it.id+'">';
+                html += '<div class="item-checkbox" role="checkbox" tabindex="0" aria-checked="'+(it.status==='done'?'true':'false')+'" onclick="toggleStatus('+it.id+')" onkeydown="if(event.key===\' \'||event.key===\'Enter\'){event.preventDefault();toggleStatus('+it.id+')}" title="Click pentru bifa/debifa">'+checkSym+'</div>';
+                html += '<div class="item-content">';
+                html += '<div class="item-label">'+highlight(it.label, q)+'</div>';
+                if(it.checked_at){
+                    html += '<div class="item-meta">';
+                    html += '<span><span class="av">'+esc((it.checked_by||'?').charAt(0).toUpperCase())+'</span> '+esc(it.checked_by||'?')+'</span>';
+                    html += '<span>· '+fmtDateTime(it.checked_at)+'</span>';
+                    html += '</div>';
+                }
+                if(it.note) html += '<div class="item-note">📝 '+highlight(it.note, q)+'</div>';
+                html += '</div>';
+                html += '<div class="item-actions">';
+                html += '<button class="item-btn-na" onclick="markNa('+it.id+')" title="Marchează ca neaplicabil">N/A</button>';
+                html += '<button class="item-btn-note" onclick="openNote('+it.id+')" title="Adaugă/editează notă">📝</button>';
+                html += '</div>';
+                html += '</div>';
+            });
+        } else {
+            html += '<div class="cat-empty">Niciun item nu corespunde filtrului în această categorie.</div>';
+        }
+        html += '</div></div>';
+    });
+    if(!anyVisible){
+        html = '<div class="empty-state"><div class="ei">🔍</div><div class="empty-msg">Niciun item nu corespunde filtrului. <button class="cat-bulk-btn" style="margin-left:8px" onclick="setFilter(\'all\');document.getElementById(\'checkSearch\').value=\'\';renderChecklist()">Șterge filtre</button></div></div>';
+    }
+    document.getElementById('checklistArea').innerHTML = html;
+}
+
+function highlight(text, q){
+    var safe = esc(text);
+    if(!q) return safe;
+    var re = new RegExp('('+q.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')+')','gi');
+    return safe.replace(re, '<mark style="background:#fef08a;padding:0 2px;border-radius:3px">$1</mark>');
+}
+
+function renderFilterChips(){
+    var counts = {all:STATE.items.length, todo:0, done:0, na:0};
+    STATE.items.forEach(function(i){
+        if(i.status==='todo') counts.todo++;
+        else if(i.status==='done') counts.done++;
+        else if(i.status==='n/a') counts.na++;
+    });
+    var f = STATE.filter;
+    var html = '';
+    html += '<button class="f-chip'+(f==='all'?' active':'')+'" onclick="setFilter(\'all\')">Toate <span class="num">'+counts.all+'</span></button>';
+    html += '<button class="f-chip'+(f==='todo'?' active':'')+'" onclick="setFilter(\'todo\')" style="'+(f==='todo'?'background:var(--orange);border-color:var(--orange)':'')+'">⏳ Rămase <span class="num">'+counts.todo+'</span></button>';
+    html += '<button class="f-chip'+(f==='done'?' active':'')+'" onclick="setFilter(\'done\')" style="'+(f==='done'?'background:var(--green);border-color:var(--green)':'')+'">✓ Bifate <span class="num">'+counts.done+'</span></button>';
+    html += '<button class="f-chip'+(f==='na'?' active':'')+'" onclick="setFilter(\'na\')" style="'+(f==='na'?'background:#ca8a04;border-color:#ca8a04':'')+'">⊘ N/A <span class="num">'+counts.na+'</span></button>';
+    document.getElementById('filterChips').innerHTML = html;
+}
+
+function setFilter(f){STATE.filter = f; renderChecklist();}
+
+function bulkCat(catKey, status){
+    var label = status === 'done' ? 'bifezi TOATE rămase ca done' : 'marchezi TOATE rămase ca n/a';
+    if(!confirm('Sigur '+label+' în categoria asta?')) return;
+    showLoading(true);
+    fetch(API_DB+'?action=bulkSaveProiectareItems',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'bulkSaveProiectareItems',proiect_id:STATE.id,category:catKey,status:status,user:userName,only_todo:true})})
+        .then(function(r){return r.json()}).then(function(res){
+            if(!res.success) throw new Error(res.error||'Eroare');
+            toast('✅ '+res.affected+' item-uri actualizate','success');
+            refreshData();
+        }).catch(function(e){toast('❌ '+(e.message||e),'error');})
+        .finally(function(){showLoading(false);});
+}
+
+function renderDocs(){
+    var g = document.getElementById('docsGrid');
+    if(!STATE.documente.length){g.innerHTML='<div class="empty-state"><div class="ei">📭</div>Niciun document încă</div>';return;}
+    var html = '';
+    STATE.documente.forEach(function(d){
+        var label = TIP_DOC_LABEL[d.tip_doc] || d.tip_doc;
+        html += '<div class="doc-card" onclick="window.open(\''+esc(d.url).replace(/\047/g,"\\047")+'\',\'_blank\')">';
+        html += '<button class="dc-del" onclick="event.stopPropagation();deleteDoc('+d.id+')" title="Șterge">🗑️</button>';
+        html += '<div class="dc-tip">'+esc(label)+'</div>';
+        html += '<div class="dc-name" title="'+esc(d.original_name||d.filename)+'">'+esc(d.original_name||d.filename)+'</div>';
+        html += '<div class="dc-meta">'+fmtSize(d.size_bytes||0)+' · '+esc(d.uploaded_by||'?')+' · '+fmtDateTime(d.uploaded_at)+'</div>';
+        html += '</div>';
+    });
+    g.innerHTML = html;
+}
+
+function setTab(t){
+    document.querySelectorAll('.tab').forEach(function(b){b.classList.toggle('active', b.dataset.tab===t);});
+    document.querySelectorAll('.tab-panel').forEach(function(p){p.classList.toggle('active', p.id==='tab'+t.charAt(0).toUpperCase()+t.slice(1));});
+}
+function toggleCat(k){STATE.opened[k] = STATE.opened[k] === false ? true : false; renderChecklist();}
+
+function saveItem(id, status, note){
+    return fetch(API_DB+'?action=saveProiectareItem',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'saveProiectareItem',id:id,status:status,note:note||'',user:userName})})
+        .then(function(r){return r.json()}).then(function(res){
+            if(!res.success) throw new Error(res.error||'Eroare');
+            return refreshData();
+        }).catch(function(e){toast('❌ '+(e.message||e),'error');});
+}
+
+function toggleStatus(id){
+    var it = STATE.items.find(function(i){return i.id===id;});
+    if(!it) return;
+    var newStatus = it.status === 'done' ? 'todo' : 'done';
+    saveItem(id, newStatus, it.note||'').then(function(){
+        if(newStatus==='done') toast('✅ Bifat','success');
+    });
+}
+function markNa(id){
+    var it = STATE.items.find(function(i){return i.id===id;});
+    if(!it) return;
+    var newStatus = it.status === 'n/a' ? 'todo' : 'n/a';
+    if(newStatus === 'n/a' && !it.note){
+        // Cer notă opțional pentru n/a (motiv)
+        STATE.currentItemId = id;
+        document.getElementById('noteItemLabel').textContent = it.label.substring(0,50);
+        document.getElementById('noteText').value = '';
+        document.getElementById('noteText').placeholder = 'Motiv pentru "neaplicabil" (recomandat)...';
+        document.getElementById('noteModal').classList.add('active');
+        STATE.pendingNaForId = id;
+    } else {
+        saveItem(id, newStatus, it.note||'');
+    }
+}
+function openNote(id){
+    var it = STATE.items.find(function(i){return i.id===id;});
+    if(!it) return;
+    STATE.currentItemId = id;
+    STATE.pendingNaForId = null;
+    document.getElementById('noteItemLabel').textContent = it.label.substring(0,50);
+    document.getElementById('noteText').value = it.note||'';
+    document.getElementById('noteModal').classList.add('active');
+}
+function closeNoteModal(){document.getElementById('noteModal').classList.remove('active');STATE.currentItemId=null;STATE.pendingNaForId=null;}
+function saveNote(){
+    var id = STATE.currentItemId; if(!id) return;
+    var it = STATE.items.find(function(i){return i.id===id;});
+    var note = document.getElementById('noteText').value.trim();
+    var status = STATE.pendingNaForId === id ? 'n/a' : (it?it.status:'todo');
+    saveItem(id, status, note).then(function(){closeNoteModal();});
+}
+
+function uploadDoc(input){
+    if(!input.files || !input.files[0]) return;
+    var file = input.files[0];
+    var tip = document.getElementById('docTip').value;
+    var fd = new FormData();
+    fd.append('proiect_id', STATE.id);
+    fd.append('tip_doc', tip);
+    fd.append('user', userName);
+    fd.append('file', file);
+    showLoading(true);
+    fetch(API_DB+'?action=uploadProiectareDoc',{method:'POST',body:fd})
+        .then(function(r){return r.json()}).then(function(res){
+            if(!res.success) throw new Error(res.error||'Eroare');
+            toast('✅ '+file.name+' uploadat','success');
+            input.value='';
+            refreshData();
+        }).catch(function(e){toast('❌ '+(e.message||e),'error');})
+        .finally(function(){showLoading(false);});
+}
+function deleteDoc(id){
+    if(!confirm('Ștergi acest document definitiv?')) return;
+    fetch(API_DB+'?action=deleteProiectareDoc',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'deleteProiectareDoc',id:id})})
+        .then(function(r){return r.json()}).then(function(){toast('Șters','info');refreshData();});
+}
+
+function predaLaExecutie(){
+    if(!STATE.gata_predat){toast('Mai sunt item-uri nebifate','error');return;}
+    if(!confirm('Sigur predai proiectul la Execuție? Statusul se schimbă din "Proiectare" în "Execuție".')) return;
+    var dbId = STATE.proiect.proiect_db_id;
+    fetch(API_DB+'?action=updateStatus',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'updateStatus',id:dbId,status:'Executie',user:userName})})
+        .then(function(r){return r.json()}).then(function(res){
+            if(!res.success) throw new Error(res.error||'Eroare');
+            toast('✅ Predat la Execuție!','success');
+            setTimeout(function(){window.location.href='executie-proiect.html?id='+dbId;},800);
+        }).catch(function(e){toast('❌ '+(e.message||e),'error');});
+}
+
+refreshData();
+</script>
+<script>
+if('serviceWorker' in navigator){
+    navigator.serviceWorker.register('../sw.js').then(function(r){console.log('[PWA] SW registered, scope:',r.scope)}).catch(function(e){console.log('[PWA] SW failed:',e)});
+    var __reloaded=false;
+    navigator.serviceWorker.addEventListener('controllerchange',function(){
+        if(__reloaded)return;__reloaded=true;
+        window.location.reload();
+    });
+}
+</script>
+</body>
+</html>
