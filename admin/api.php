@@ -43,6 +43,9 @@ function ensureOferteColumns($db) {
             $db->exec("ALTER TABLE oferte ADD COLUMN expires_at DATE NULL DEFAULT NULL");
             try { $db->exec("ALTER TABLE oferte ADD INDEX idx_expires (expires_at)"); } catch(Exception $e){}
         }
+        if (!in_array('mentiuni', $cols)) {
+            $db->exec("ALTER TABLE oferte ADD COLUMN mentiuni TEXT NULL DEFAULT NULL");
+        }
     } catch (Exception $e) {
         // Loghez ca să pot debug (apare în error_log)
         error_log('ensureOferteColumns FAILED: ' . $e->getMessage());
@@ -1015,12 +1018,14 @@ try {
                 // View-ul redenumește clientId ca crm_client_id (text); luăm FK-urile
                 // numerice direct din tabela oferte ca să le poată folosi frontend-ul
                 // la save (păstrare legătură ofertă→client/proiect la edit)
-                $stmtFK = $db->prepare("SELECT client_id, proiect_id FROM oferte WHERE id = ?");
+                ensureOferteColumns($db);
+                $stmtFK = $db->prepare("SELECT client_id, proiect_id, mentiuni FROM oferte WHERE id = ?");
                 $stmtFK->execute([$o['id']]);
                 $fk = $stmtFK->fetch();
                 if ($fk) {
                     $o['client_id']  = $fk['client_id']  !== null ? intval($fk['client_id'])  : null;
                     $o['proiect_id'] = $fk['proiect_id'] !== null ? intval($fk['proiect_id']) : null;
+                    if (!isset($o['mentiuni']) || $o['mentiuni'] === null) $o['mentiuni'] = $fk['mentiuni'] ?? '';
                 }
                 $stmtL = $db->prepare("SELECT * FROM oferta_linii WHERE oferta_id = ? ORDER BY tip, ordine");
                 $stmtL->execute([$o['id']]);
@@ -1070,12 +1075,13 @@ try {
                     $dataOf = (isset($data['data']) ? $data['data'] : date('Y-m-d'));
                     $valabUpd = (isset($data['valab']) ? $data['valab'] : '4 zile');
                     $expUpd = calcExpiresAt($dataOf, $valabUpd);
-                    $db->prepare("UPDATE oferte SET titlu=?, data_oferta=?, valabilitate=?, obiectiv=?, client_id=?, proiect_id=?, subtotal_echip=?, subtotal_manop=?, total_fara_tva=?, tva=?, total_cu_tva=?, client_nume=?, client_cui=?, client_adresa=?, client_contact=?, status=?, expires_at=? WHERE id=?")
+                    $db->prepare("UPDATE oferte SET titlu=?, data_oferta=?, valabilitate=?, obiectiv=?, mentiuni=?, client_id=?, proiect_id=?, subtotal_echip=?, subtotal_manop=?, total_fara_tva=?, tva=?, total_cu_tva=?, client_nume=?, client_cui=?, client_adresa=?, client_contact=?, status=?, expires_at=? WHERE id=?")
                        ->execute([
                            (isset($data['titlu']) ? $data['titlu'] : ''),
                            $dataOf,
                            $valabUpd,
                            (isset($data['obiectiv']) ? $data['obiectiv'] : ''),
+                           (isset($data['mentiuni']) ? $data['mentiuni'] : ''),
                            $clientIdVal,
                            $proiectIdVal,
                            (isset($data['subtotalEchip']) ? $data['subtotalEchip'] : 0),
@@ -1105,7 +1111,7 @@ try {
                     $titlu = 'Deviz ' . $client . ($obiectiv ? ' ' . $obiectiv : '') . ' ser.BV Nr. ' . $ofertaId . ' din ' . $dataFmt;
                     ensureOferteColumns($db);
                     $expIns = calcExpiresAt($dataOf, (isset($data['valab']) ? $data['valab'] : '4 zile'));
-                    $stmt = $db->prepare("INSERT INTO oferte (oferta_id, titlu, data_oferta, valabilitate, obiectiv, client_id, proiect_id, subtotal_echip, subtotal_manop, total_fara_tva, tva, total_cu_tva, client_nume, client_cui, client_adresa, client_contact, status, expires_at) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
+                    $stmt = $db->prepare("INSERT INTO oferte (oferta_id, titlu, data_oferta, valabilitate, obiectiv, mentiuni, client_id, proiect_id, subtotal_echip, subtotal_manop, total_fara_tva, tva, total_cu_tva, client_nume, client_cui, client_adresa, client_contact, status, expires_at) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
                     // Validare FK pt INSERT
                     $clientIdValI = null;
                     if (!empty($data['client_db_id'])) {
@@ -1125,6 +1131,7 @@ try {
                         $dataOf,
                         (isset($data['valab']) ? $data['valab'] : '4 zile'),
                         (isset($data['obiectiv']) ? $data['obiectiv'] : ''),
+                        (isset($data['mentiuni']) ? $data['mentiuni'] : ''),
                         $clientIdValI,
                         $proiectIdValI,
                         (isset($data['subtotalEchip']) ? $data['subtotalEchip'] : 0),
