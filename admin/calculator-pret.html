@@ -253,11 +253,12 @@ h+='.sec-title{color:#dc2626;font-weight:900;font-size:8.5pt;text-transform:uppe
 h+='.info{display:flex;gap:20px;margin-bottom:10px;font-size:8pt}.info .col{flex:1}.info .lab{color:#64748b;font-size:7pt}.info .val{font-weight:700;border-bottom:1px dotted #cbd5e1;min-height:14px;padding:1px 0}';
 h+='table{width:100%;border-collapse:collapse;margin-bottom:4px}th{background:#0f172a;color:#fff;font-size:7.5pt;padding:5px 4px;text-align:center;font-weight:700}td{padding:4px;font-size:8pt;border-bottom:1px solid #e2e8f0}.c{text-align:center}.r{text-align:right}';
 h+='.alt{background:#f1f5f9}.sep{background:#475569;color:#fff;font-weight:700;font-size:8pt;text-align:center;padding:4px}';
-h+='.tot-row{display:flex;justify-content:space-between;padding:3px 8px;font-size:8.5pt}.tot-row.big{background:#dc2626;color:#fff;font-size:11pt;font-weight:900;padding:6px 8px;margin-top:2px}.tot-row .lab{color:#64748b}.tot-row .val{font-weight:700}.tot-row.net{border-top:2px solid #0f172a;font-weight:700;font-size:9.5pt}';
-h+='.cond{margin-top:10px;font-size:7pt;color:#64748b}.cond h4{color:#dc2626;font-size:8pt;margin-bottom:3px}.cond li{margin-bottom:1px;list-style-type:disc;margin-left:14px}';
-h+='.sig{display:flex;justify-content:space-between;margin-top:14px;font-size:8pt}.sig .s{min-width:200px}.sig .s strong{display:block;margin-bottom:6px}';
-h+='.foot{text-align:center;font-size:6.5pt;color:#94a3b8;margin-top:10px;border-top:1px solid #e2e8f0;padding-top:4px}';
-h+='@media print{body{margin:0}}</style></head><body>';
+h+='.tot-row{display:flex;justify-content:space-between;padding:3px 8px;font-size:8.5pt}.tot-row.big{background:#dc2626;color:#fff;font-size:11pt;font-weight:900;padding:6px 8px;margin-top:2px;page-break-inside:avoid;break-inside:avoid}.tot-row .lab{color:#64748b}.tot-row .val{font-weight:700}.tot-row.net{border-top:2px solid #0f172a;font-weight:700;font-size:9.5pt}';
+h+='.cond{margin-top:10px;font-size:7pt;color:#64748b;page-break-inside:avoid;break-inside:avoid}.cond h4{color:#dc2626;font-size:8pt;margin-bottom:3px;page-break-after:avoid;break-after:avoid}.cond li{margin-bottom:1px;list-style-type:disc;margin-left:14px}';
+h+='.sig{display:flex;justify-content:space-between;margin-top:14px;font-size:8pt;page-break-inside:avoid;break-inside:avoid}.sig .s{min-width:200px;page-break-inside:avoid;break-inside:avoid}.sig .s strong{display:block;margin-bottom:6px}';
+h+='.foot{text-align:center;font-size:6.5pt;color:#94a3b8;margin-top:10px;border-top:1px solid #e2e8f0;padding-top:4px;page-break-inside:avoid;break-inside:avoid}';
+h+='tr{page-break-inside:avoid;break-inside:avoid}thead{display:table-header-group}tfoot{display:table-footer-group}h1{page-break-after:avoid;break-after:avoid}';
+h+='@media print{body{margin:0}.sig,.sig .s,.cond,.foot,.tot-row.big,tr{page-break-inside:avoid;break-inside:avoid}}</style></head><body>';
 h+='<div class="hdr"><div style="flex:1"><img src="'+IMG_LOGO+'" alt="Break Sistems" style="height:65px;max-width:320px"></div><div><img src="'+IMG_CSSI+'" alt="CSSI" style="height:60px"></div></div>';
 h+='<div class="bar">BREAK SISTEMS SRL | CUI: 23576950 | J08/843/2008 | Str. Busuiocului Nr. 6 , Bra\u0219ov | Tel: 0752 288 400 | office@breaksistems.ro</div>';
 h+='<h1>OFERT\u0102 DE PRE\u021a</h1>';
@@ -266,11 +267,13 @@ h+='<table><thead><tr><th style="width:30px">Nr.</th><th>Denumire produs / servi
 h+=eqRows;
 if(labRows){h+='<tr><td colspan="6" class="sep">MANOPER\u0102 \u0218I SERVICII</td></tr>';h+=labRows;}
 h+='</tbody></table>';
+h+='<div class="totals" style="page-break-inside:avoid;break-inside:avoid">';
 h+='<div class="tot-row"><span class="lab">Subtotal echipamente (f\u0103r\u0103 TVA)</span><span class="val">'+fmt(eT)+' LEI</span></div>';
 if(mT>0)h+='<div class="tot-row"><span class="lab">Subtotal manoper\u0103 (f\u0103r\u0103 TVA)</span><span class="val">'+fmt(mT)+' LEI</span></div>';
 h+='<div class="tot-row net"><span>TOTAL F\u0102R\u0102 TVA</span><span>'+fmt(net)+' LEI</span></div>';
 h+='<div class="tot-row"><span class="lab">TVA 21%</span><span class="val">'+fmt(tva)+' LEI</span></div>';
 h+='<div class="tot-row big"><span>TOTAL CU TVA</span><span>'+fmt(total)+' LEI</span></div>';
+h+='</div>';
 h+='<div class="cond"><h4>CONDI\u021aII COMERCIALE</h4><ul>';
 h+='<li>Pre\u021burile sunt exprimate \u00een LEI \u0219i nu includ TVA (cu excep\u021bia totalului final marcate explicit).</li>';
 h+='<li>Oferta este valabil\u0103 '+esc(valab)+' de zile de la data emiterii.</li>';
