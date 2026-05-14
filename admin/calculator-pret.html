@@ -121,13 +121,27 @@ function initDragDrop(containerId,type){
 var container=document.getElementById(containerId);if(!container)return;
 var rows=container.querySelectorAll('.offer-line[draggable]');
 rows.forEach(function(row){
+var canDrag=false;
+var handle=row.querySelector('.drag-handle');
+if(handle){
+handle.style.cursor='grab';
+handle.addEventListener('mousedown',function(){canDrag=true;});
+handle.addEventListener('mouseup',function(){canDrag=false;});
+}
+// Pe restul rândului, mousedown resetează flag-ul — așa că drag-ul pornește
+// doar dacă userul a apăsat efectiv pe handle (☰).
+row.addEventListener('mousedown',function(e){
+if(!e.target.closest('.drag-handle'))canDrag=false;
+});
 row.addEventListener('dragstart',function(e){
+if(!canDrag){e.preventDefault();return;}
 _dragIdx=parseInt(row.getAttribute('data-idx'));_dragType=type;
 row.classList.add('dragging');
 e.dataTransfer.effectAllowed='move';
 e.dataTransfer.setData('text/plain',_dragIdx);
 });
 row.addEventListener('dragend',function(){
+canDrag=false;
 row.classList.remove('dragging');
 container.querySelectorAll('.offer-line').forEach(function(r){r.classList.remove('drag-over');});
 _dragIdx=null;_dragType=null;
