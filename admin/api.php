@@ -64,6 +64,32 @@ function autoExpireOferte($db) {
     } catch (Exception $e) { /* silent */ }
 }
 
+// Schema tabel drafturi oferte (autosave server-side în calculator)
+// Tabel separat — NU interferează cu /oferte.html, export CSV, stats, pipeline
+function ensureOferteDrafturiSchema($db) {
+    static $checked = false;
+    if ($checked) return;
+    $checked = true;
+    try {
+        $db->exec("CREATE TABLE IF NOT EXISTS oferte_drafturi (
+            id INT AUTO_INCREMENT PRIMARY KEY,
+            client_nume VARCHAR(255) NULL,
+            obiectiv TEXT NULL,
+            total_cu_tva DECIMAL(15,2) DEFAULT 0,
+            payload LONGTEXT,
+            created_by VARCHAR(100) NULL,
+            created_by_name VARCHAR(255) NULL,
+            updated_by VARCHAR(100) NULL,
+            created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+            updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+            INDEX idx_updated (updated_at),
+            INDEX idx_creator (created_by)
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4");
+    } catch (Exception $e) {
+        error_log('ensureOferteDrafturiSchema FAILED: ' . $e->getMessage());
+    }
+}
+
 // Schema contracte: creeaza daca nu exista + ALTER pentru coloanele lipsa
 // (idempotent — protejeaza pt cazul cand exista deja o tabela 'contracte' veche)
 function ensureContracteSchema($db) {
@@ -1142,17 +1168,93 @@ try {
                 }
                 
                 $db->commit();
-                
+
+                // Dacă oferta provine dintr-un draft autosave, șterge draftul
+                if (!empty($data['draft_id'])) {
+                    try {
+                        ensureOferteDrafturiSchema($db);
+                        $db->prepare("DELETE FROM oferte_drafturi WHERE id = ?")->execute([intval($data['draft_id'])]);
+                    } catch (Exception $e) { /* silent — draftul a fost deja consumat */ }
+                }
+
                 // Returneaza oferta completa
                 $stmt = $db->prepare("SELECT * FROM oferte WHERE id = ?");
                 $stmt->execute([$ofertaDbId]);
                 $saved = $stmt->fetch();
-                
+
                 jsonResponse(['success' => true, 'id' => $ofertaDbId, 'oferta_id' => $saved['oferta_id']]);
             } catch (Exception $e) {
                 $db->rollBack();
                 jsonResponse(['success' => false, 'error' => $e->getMessage()], 500);
             }
+            break;
+
+        // ══════════════════════════════════════
+        // OFERTE — DRAFTURI AUTOSAVE (server-side, cross-device)
+        // Salvare automată a ofertelor în lucru, fără să consume număr din secvență
+        // și fără să apară în /oferte.html
+        // ══════════════════════════════════════
+        case 'saveOfertaDraft':
+            ensureOferteDrafturiSchema($db);
+            $u = currentUser();
+            $username = $u['username'] ?? 'anonim';
+            $displayName = $u['display_name'] ?? $username;
+            $draftId = !empty($data['draft_id']) ? intval($data['draft_id']) : 0;
+            $clientNume = isset($data['client_nume']) ? mb_substr((string)$data['client_nume'], 0, 255) : '';
+            $obiectiv = isset($data['obiectiv']) ? (string)$data['obiectiv'] : '';
+            $totalCuTva = isset($data['total_cu_tva']) ? floatval($data['total_cu_tva']) : 0;
+            $payload = isset($data['payload']) ? json_encode($data['payload'], JSON_UNESCAPED_UNICODE) : '{}';
+            try {
+                if ($draftId) {
+                    // UPDATE — doar dacă draftul există (altfel cade pe INSERT)
+                    $chk = $db->prepare("SELECT id FROM oferte_drafturi WHERE id = ? LIMIT 1");
+                    $chk->execute([$draftId]);
+                    if ($chk->fetch()) {
+                        $db->prepare("UPDATE oferte_drafturi SET client_nume=?, obiectiv=?, total_cu_tva=?, payload=?, updated_by=? WHERE id=?")
+                           ->execute([$clientNume, $obiectiv, $totalCuTva, $payload, $username, $draftId]);
+                        jsonResponse(['success' => true, 'id' => $draftId, 'op' => 'update']);
+                        break;
+                    }
+                    $draftId = 0;
+                }
+                $db->prepare("INSERT INTO oferte_drafturi (client_nume, obiectiv, total_cu_tva, payload, created_by, created_by_name, updated_by) VALUES (?,?,?,?,?,?,?)")
+                   ->execute([$clientNume, $obiectiv, $totalCuTva, $payload, $username, $displayName, $username]);
+                $newId = $db->lastInsertId();
+                jsonResponse(['success' => true, 'id' => intval($newId), 'op' => 'insert']);
+            } catch (Exception $e) {
+                jsonResponse(['success' => false, 'error' => $e->getMessage()], 500);
+            }
+            break;
+
+        case 'listOferteDrafturi':
+            ensureOferteDrafturiSchema($db);
+            // Cleanup auto: șterge drafturi mai vechi de 30 zile (lazy, la fiecare list)
+            try {
+                $db->exec("DELETE FROM oferte_drafturi WHERE updated_at < DATE_SUB(NOW(), INTERVAL 30 DAY)");
+            } catch (Exception $e) { /* silent */ }
+            // Toți utilizatorii văd toate drafturile (decizie UX)
+            $rows = $db->query("SELECT id, client_nume, obiectiv, total_cu_tva, created_by, created_by_name, updated_at, created_at FROM oferte_drafturi ORDER BY updated_at DESC LIMIT 50")->fetchAll();
+            jsonResponse(['success' => true, 'data' => $rows]);
+            break;
+
+        case 'getOfertaDraft':
+            ensureOferteDrafturiSchema($db);
+            $id = isset($_GET['id']) ? intval($_GET['id']) : (isset($data['id']) ? intval($data['id']) : 0);
+            if (!$id) jsonResponse(['success' => false, 'error' => 'id obligatoriu'], 400);
+            $stmt = $db->prepare("SELECT * FROM oferte_drafturi WHERE id = ?");
+            $stmt->execute([$id]);
+            $row = $stmt->fetch();
+            if (!$row) jsonResponse(['success' => false, 'error' => 'Draft inexistent'], 404);
+            $row['payload'] = json_decode($row['payload'] ?: '{}', true);
+            jsonResponse(['success' => true, 'data' => $row]);
+            break;
+
+        case 'deleteOfertaDraft':
+            ensureOferteDrafturiSchema($db);
+            $id = isset($data['id']) ? intval($data['id']) : 0;
+            if (!$id) jsonResponse(['success' => false, 'error' => 'id obligatoriu'], 400);
+            $db->prepare("DELETE FROM oferte_drafturi WHERE id = ?")->execute([$id]);
+            jsonResponse(['success' => true]);
             break;
 
         case 'deleteOferta':
