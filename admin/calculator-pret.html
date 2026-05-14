@@ -287,7 +287,7 @@ var ment=(data.mentiuni||'').trim();
 if(ment){h+='<div class="cond" style="margin-top:8px;background:#fef3c7;border-left:3px solid #f59e0b;padding:6px 10px"><h4 style="color:#b45309">MEN\u021aIUNI</h4><div style="font-size:7.5pt;color:#0f172a;white-space:pre-wrap;line-height:1.4">'+esc(ment)+'</div></div>';}
 h+='<div class="sig"><div class="s" style="position:relative"><strong>FURNIZOR: Break Sistems SRL</strong><img src="'+IMG_STAMP+'" style="position:absolute;top:10px;left:120px;height:85px;opacity:0.9" alt="Stampila"><div style="margin-top:60px">Semn\u0103tura / \u0218tampila: ___________________</div></div><div class="s" style="text-align:right"><strong>BENEFICIAR:</strong><div style="margin-top:60px">Semn\u0103tura / \u0218tampila: ___________________</div></div></div>';
 h+='<div class="foot">Break Sistems SRL \u2022 brand CSSI \u2022 Str. Bisericii Romane 42, Bra\u0219ov \u2022 www.cssi.ro \u2022 www.breaksistems.ro \u2022 0752 288 400</div>';
-h+='<script>window.onload=function(){window.print()}</'+'script></body></html>';
+h+='<script>window.onload=function(){try{var pageH=1080;var actual=document.body.scrollHeight;if(actual>pageH){var s=Math.max(0.6,pageH/actual);document.body.style.zoom=s;document.body.setAttribute("data-pdf-scale",s.toFixed(3));}}catch(e){}setTimeout(function(){window.print();},150);}</'+'script></body></html>';
 return h;}
 function exportPDF(){
 var client=document.getElementById('oClient').value.trim()||'Client';
