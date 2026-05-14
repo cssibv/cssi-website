@@ -258,7 +258,7 @@ h+='.tot-row{display:flex;justify-content:space-between;padding:3px 8px;font-siz
 h+='.cond{margin-top:10px;font-size:7pt;color:#64748b;page-break-inside:avoid;break-inside:avoid}.cond h4{color:#dc2626;font-size:8pt;margin-bottom:3px;page-break-after:avoid;break-after:avoid}.cond li{margin-bottom:1px;list-style-type:disc;margin-left:14px}';
 h+='.sig{display:flex;justify-content:space-between;margin-top:14px;font-size:8pt;page-break-inside:avoid;break-inside:avoid}.sig .s{min-width:200px;page-break-inside:avoid;break-inside:avoid}.sig .s strong{display:block;margin-bottom:6px}';
 h+='.foot{text-align:center;font-size:6.5pt;color:#94a3b8;margin-top:10px;border-top:1px solid #e2e8f0;padding-top:4px;page-break-inside:avoid;break-inside:avoid}';
-h+='tr{page-break-inside:avoid;break-inside:avoid}thead{display:table-header-group}tfoot{display:table-footer-group}h1{page-break-after:avoid;break-after:avoid}';
+h+='tr{page-break-inside:avoid;break-inside:avoid}thead{display:table-header-group}tfoot{display:table-footer-group}h1{page-break-after:avoid;break-after:avoid}tr.sep-row{page-break-after:avoid;break-after:avoid}tr.sep-row + tr{page-break-before:avoid;break-before:avoid}';
 h+='@media print{body{margin:0}.sig,.sig .s,.cond,.foot,.tot-row.big,tr{page-break-inside:avoid;break-inside:avoid}}</style></head><body>';
 h+='<table class="pdf-page"><thead><tr><td>';
 h+='<div class="hdr"><div style="flex:1"><img src="'+IMG_LOGO+'" alt="Break Sistems" style="height:55px;max-width:320px"></div><div><img src="'+IMG_CSSI+'" alt="CSSI" style="height:50px"></div></div>';
@@ -268,7 +268,7 @@ h+='<h1>OFERT\u0102 DE PRE\u021a</h1>';
 h+='<div class="info"><div class="col"><div class="sec-title">DATE OFERT\u0102</div><div><span class="lab">Nr. ofert\u0103:</span> <span class="val">'+esc(nr)+'</span></div><div><span class="lab">Data emitere:</span> <span class="val">'+dataFmt+'</span></div><div><span class="lab">Valabilitate:</span> <span class="val">'+esc(valab)+'</span></div><div><span class="lab">Obiectiv:</span> <span class="val">'+esc(data.obiectiv||'')+'</span></div></div><div class="col" style="text-align:right"><div class="sec-title">DATE BENEFICIAR</div><div><span class="lab">Beneficiar:</span> <span class="val">'+esc(data.client)+'</span></div><div><span class="lab">CUI / CNP:</span> <span class="val">'+esc(data.cui||'')+'</span></div><div><span class="lab">Adresa:</span> <span class="val">'+esc(data.adresa||'')+'</span></div><div><span class="lab">Pers. contact:</span> <span class="val">'+esc(data.contact||'')+'</span></div></div></div>';
 h+='<table><thead><tr><th style="width:30px">Nr.</th><th>Denumire produs / serviciu</th><th style="width:35px">UM</th><th style="width:35px">Cant.</th><th style="width:70px">Pre\u021b unitar<br>(f\u0103r\u0103 TVA)</th><th style="width:75px">Valoare<br>(f\u0103r\u0103 TVA)</th></tr></thead><tbody>';
 h+=eqRows;
-if(labRows){h+='<tr><td colspan="6" class="sep">MANOPER\u0102 \u0218I SERVICII</td></tr>';h+=labRows;}
+if(labRows){h+='<tr class="sep-row"><td colspan="6" class="sep">MANOPER\u0102 \u0218I SERVICII</td></tr>';h+=labRows;}
 h+='</tbody></table>';
 h+='<div class="totals" style="page-break-inside:avoid;break-inside:avoid">';
 h+='<div class="tot-row"><span class="lab">Subtotal echipamente (f\u0103r\u0103 TVA)</span><span class="val">'+fmt(eT)+' LEI</span></div>';
