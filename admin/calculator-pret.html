@@ -245,7 +245,7 @@ labor.forEach(function(l){var c=parseFloat(l.cant)||0;var p=parseFloat(l.price)|
 labRows+='<tr class="'+(labIdx%2===0?'alt':'')+'"><td class="c">'+labIdx+'</td><td>'+esc(l.name)+'</td><td class="c">'+l.um+'</td><td class="c">'+c+'</td><td class="r">'+fmt(p)+'</td><td class="r">'+fmt(c*p)+'</td></tr>';labIdx++;});
 var eT=data.subtotalEchip||0;var mT=data.subtotalManop||0;var net=data.totalNet||0;var tva=net*0.21;var total=net+tva;
 var h='<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Deviz '+esc(data.client)+' Nr. '+nr+' din '+dataFmt+'</title>';
-h+='<style>@page{size:A4;margin:8mm 10mm 8mm 10mm}*{margin:0;padding:0;box-sizing:border-box}body{font-family:Arial,Helvetica,sans-serif;font-size:9pt;color:#0f172a;padding:0;margin:0;-webkit-print-color-adjust:exact;print-color-adjust:exact}';
+h+='<style>@page{size:A4;margin:8mm 10mm 10mm 10mm;@bottom-right{content:"Pagina " counter(page) " / " counter(pages);font-family:Arial,sans-serif;font-size:7pt;color:#94a3b8}}*{margin:0;padding:0;box-sizing:border-box}body{font-family:Arial,Helvetica,sans-serif;font-size:9pt;color:#0f172a;padding:0;margin:0;-webkit-print-color-adjust:exact;print-color-adjust:exact}';
 h+='.pdf-page{width:100%;border-collapse:collapse}.pdf-page>thead{display:table-header-group}.pdf-page>tbody{display:table-row-group}.pdf-page>tfoot{display:table-footer-group}.pdf-page>thead>tr>td{padding:0 0 6mm 0;background:#fff}.pdf-page>tbody>tr>td{padding:0}.pdf-page>tfoot>tr>td{padding:4mm 0 0 0;background:#fff}';
 h+='.hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:4px}.hdr img{height:55px}';
 h+='.bar{background:#dc2626;color:#fff;font-size:7pt;text-align:center;padding:3px 8px}';
