@@ -197,7 +197,7 @@ saveOfertaToDB(p);
 if(window._editingOfertaDbId){toast('✅ Oferta '+p.nr+' actualizată!','success');}
 else{toast('💾 Ofertă nouă salvată!','success');}
 window._editingOfertaDbId='';updateEditUI();fetchNextOfertaNr();
-setTimeout(function(){loadOffersFromDB();setTab('saved');},500);}
+setTimeout(function(){loadOffersFromDB();setTab('saved');window.scrollTo({top:0,behavior:'smooth'});},500);}
 function saveAsNew(){
 document.getElementById('oData').value=todayStr();
 var p=buildOfferPayload();if(!p)return;
@@ -206,7 +206,7 @@ p.draft_id=window._draftId||'';
 saveOfertaToDB(p);
 toast('🆕 Ofertă nouă creată!','success');
 window._editingOfertaDbId='';updateEditUI();fetchNextOfertaNr();
-setTimeout(function(){loadOffersFromDB();setTab('saved');},500);}
+setTimeout(function(){loadOffersFromDB();setTab('saved');window.scrollTo({top:0,behavior:'smooth'});},500);}
 function updateEditUI(){
 var isEdit=!!window._editingOfertaDbId;
 var banner=document.getElementById('editBanner');
