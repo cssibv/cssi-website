@@ -963,7 +963,7 @@ try {
             $sortBy = (isset($_GET['sort']) ? $_GET['sort'] : 'data_desc'); // data_desc/asc, valoare_desc/asc, client_asc, status
             $light = !empty($_GET['light']);  // true = nu adaugă linii (mult mai rapid pentru listing)
 
-            $sql = "SELECT vc.*, o2.client_id AS client_db_id, o2.proiect_id AS proiect_db_id, o2.motiv_respingere, o2.data_decizie, o2.decis_de, o2.archived_at, o2.expires_at FROM v_oferte_complete vc JOIN oferte o2 ON vc.id = o2.id WHERE 1=1";
+            $sql = "SELECT vc.*, o2.client_id AS client_db_id, o2.proiect_id AS proiect_db_id, o2.motiv_respingere, o2.data_decizie, o2.decis_de, o2.archived_at, o2.expires_at, o2.mentiuni FROM v_oferte_complete vc JOIN oferte o2 ON vc.id = o2.id WHERE 1=1";
             $params = [];
             if ($clientId) { $sql .= " AND o2.client_id = ?"; $params[] = $clientId; }
             if ($proiectId) { $sql .= " AND o2.proiect_id = ?"; $params[] = $proiectId; }
