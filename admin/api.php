@@ -660,34 +660,110 @@ try {
             $cliRow = $cli->fetch();
             if (!$cliRow) jsonResponse(['success' => false, 'error' => 'Client negăsit'], 404);
 
-            // Protecție integritate: nu permite ștergerea unui client cu date legate
-            // (proiecte / oferte / contracte) — ar lăsa înregistrări orfane în portal.
-            $countOf = function($table, $where) use ($db, $id) {
+            // ─── GARDĂ DE SIGURANȚĂ ──────────────────────────────────
+            // Ștergerea cascadă e permisă DOAR pentru clienți "morți":
+            // fără oferte acceptate și fără proiecte care au depășit faza
+            // de Lead/Ofertă (Anulat e ok). Asta protejează datele reale.
+            $cntSafe = function($table, $where) use ($db, $id) {
                 try {
                     $st = $db->prepare("SELECT COUNT(*) FROM $table WHERE $where");
                     $st->execute([$id]);
                     return intval($st->fetchColumn());
                 } catch (Exception $e) { return 0; }
             };
-            $nProiecte  = $countOf('proiecte',  'client_id = ?');
-            $nOferte    = $countOf('oferte',    'client_id = ?');
-            $nContracte = $countOf('contracte', 'client_id = ?');
-            if ($nProiecte > 0 || $nOferte > 0 || $nContracte > 0) {
-                $parti = [];
-                if ($nProiecte)  $parti[] = "$nProiecte proiect(e)";
-                if ($nOferte)    $parti[] = "$nOferte ofertă(e)";
-                if ($nContracte) $parti[] = "$nContracte contract(e)";
+            $nOferteAcceptate = $cntSafe('oferte', "client_id = ? AND status = 'Acceptata'");
+            $nProiecteActive  = $cntSafe('proiecte', "client_id = ? AND status NOT IN ('Lead','Oferta','Anulat')");
+            if ($nOferteAcceptate > 0 || $nProiecteActive > 0) {
+                $motive = [];
+                if ($nOferteAcceptate) $motive[] = "$nOferteAcceptate ofertă(e) acceptată(e)";
+                if ($nProiecteActive)  $motive[] = "$nProiecteActive proiect(e) în lucru";
                 jsonResponse([
                     'success' => false,
-                    'error'   => 'Clientul "' . $cliRow['nume'] . '" are ' . implode(', ', $parti) .
-                                 ' asociat(e). Șterge sau reasignează aceste înregistrări înainte de a șterge clientul.',
-                    'code'    => 'HAS_RELATIONS'
+                    'error'   => 'Clientul "' . $cliRow['nume'] . '" are ' . implode(' și ', $motive) .
+                                 '. Nu poate fi șters automat — gestionează manual aceste înregistrări.',
+                    'code'    => 'HAS_ACTIVITY'
                 ], 409);
             }
 
+            // ─── CASCADĂ ─────────────────────────────────────────────
+            // Best-effort per statement (unele tabele pot lipsi pe medii diferite),
+            // în ordinea dependențelor: copii → părinți → client.
+            $delIn = function($table, $col, array $ids) use ($db) {
+                if (!$ids) return 0;
+                try {
+                    $ph = implode(',', array_fill(0, count($ids), '?'));
+                    $st = $db->prepare("DELETE FROM $table WHERE $col IN ($ph)");
+                    $st->execute(array_values($ids));
+                    return $st->rowCount();
+                } catch (Exception $e) { return 0; }
+            };
+            $delEq = function($table, $col, $val) use ($db) {
+                try {
+                    $st = $db->prepare("DELETE FROM $table WHERE $col = ?");
+                    $st->execute([$val]);
+                    return $st->rowCount();
+                } catch (Exception $e) { return 0; }
+            };
+
+            // Colectează ID-urile proiectelor (numeric) + codurile (proiect_id text)
+            $proiectIds = []; $proiectCods = [];
+            try {
+                $stP = $db->prepare("SELECT id, proiect_id FROM proiecte WHERE client_id = ?");
+                $stP->execute([$id]);
+                foreach ($stP->fetchAll() as $pr) {
+                    $proiectIds[] = intval($pr['id']);
+                    if (!empty($pr['proiect_id'])) $proiectCods[] = $pr['proiect_id'];
+                }
+            } catch (Exception $e) { /* fără proiecte */ }
+
+            // Colectează ID-urile ofertelor
+            $ofertaIds = [];
+            try {
+                $stO = $db->prepare("SELECT id FROM oferte WHERE client_id = ?");
+                $stO->execute([$id]);
+                foreach ($stO->fetchAll() as $of) { $ofertaIds[] = intval($of['id']); }
+            } catch (Exception $e) { /* fără oferte */ }
+
+            $sum = ['oferte' => 0, 'proiecte' => 0, 'contracte' => 0, 'altele' => 0];
+
+            // Copii ai ofertelor
+            $sum['altele'] += $delIn('oferta_linii',   'oferta_id', $ofertaIds);
+            $sum['altele'] += $delIn('necesar_comenzi', 'oferta_id', $ofertaIds);
+
+            // Copii ai proiectelor
+            if ($proiectIds) {
+                // executie_atribuiri se leagă prin programare_id
+                try {
+                    $phP = implode(',', array_fill(0, count($proiectIds), '?'));
+                    $db->prepare("DELETE FROM executie_atribuiri WHERE programare_id IN (SELECT id FROM executie_programari WHERE proiect_id IN ($phP))")
+                       ->execute(array_values($proiectIds));
+                } catch (Exception $e) { /* tabel poate lipsi */ }
+                foreach (['executie_programari','executie_jurnal','executie_files','executie_progres_material',
+                          'proiectare','proiectare_checklist','proiectare_documente'] as $t) {
+                    $sum['altele'] += $delIn($t, 'proiect_id', $proiectIds);
+                }
+                // notificari folosește codul text al proiectului
+                $sum['altele'] += $delIn('notificari', 'proiect_id', $proiectCods);
+            }
+
+            // Mentenanță (legată prin client_id SAU proiect_id)
+            $sum['altele'] += $delEq('mentenanta', 'client_id', $id);
+            $sum['altele'] += $delIn('mentenanta', 'proiect_id', $proiectIds);
+
+            // Contracte, oferte, proiecte (părinți), apoi clientul
+            $sum['contracte'] = $delEq('contracte', 'client_id', $id);
+            $sum['oferte']    = $delEq('oferte',    'client_id', $id);
+            $sum['proiecte']  = $delEq('proiecte',  'client_id', $id);
+
             $stmt = $db->prepare("DELETE FROM clienti WHERE id = ?");
             $stmt->execute([$id]);
-            jsonResponse(['success' => true, 'deleted' => $stmt->rowCount(), 'nume' => $cliRow['nume']]);
+
+            jsonResponse([
+                'success' => true,
+                'nume'    => $cliRow['nume'],
+                'deleted' => $stmt->rowCount(),
+                'cascade' => $sum
+            ]);
             break;
 
         // ══════════════════════════════════════
