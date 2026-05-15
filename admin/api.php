@@ -650,9 +650,44 @@ try {
             break;
 
         case 'deleteClient':
-            $id = (isset($data['id']) ? $data['id'] : 0);
-            $db->prepare("DELETE FROM clienti WHERE id = ?")->execute([$id]);
-            jsonResponse(['success' => true]);
+            // Doar admin poate șterge clienți (operațiune ireversibilă)
+            requireAdmin();
+            $id = isset($data['id']) ? intval($data['id']) : 0;
+            if (!$id) jsonResponse(['success' => false, 'error' => 'id client obligatoriu'], 400);
+
+            $cli = $db->prepare("SELECT id, nume FROM clienti WHERE id = ?");
+            $cli->execute([$id]);
+            $cliRow = $cli->fetch();
+            if (!$cliRow) jsonResponse(['success' => false, 'error' => 'Client negăsit'], 404);
+
+            // Protecție integritate: nu permite ștergerea unui client cu date legate
+            // (proiecte / oferte / contracte) — ar lăsa înregistrări orfane în portal.
+            $countOf = function($table, $where) use ($db, $id) {
+                try {
+                    $st = $db->prepare("SELECT COUNT(*) FROM $table WHERE $where");
+                    $st->execute([$id]);
+                    return intval($st->fetchColumn());
+                } catch (Exception $e) { return 0; }
+            };
+            $nProiecte  = $countOf('proiecte',  'client_id = ?');
+            $nOferte    = $countOf('oferte',    'client_id = ?');
+            $nContracte = $countOf('contracte', 'client_id = ?');
+            if ($nProiecte > 0 || $nOferte > 0 || $nContracte > 0) {
+                $parti = [];
+                if ($nProiecte)  $parti[] = "$nProiecte proiect(e)";
+                if ($nOferte)    $parti[] = "$nOferte ofertă(e)";
+                if ($nContracte) $parti[] = "$nContracte contract(e)";
+                jsonResponse([
+                    'success' => false,
+                    'error'   => 'Clientul "' . $cliRow['nume'] . '" are ' . implode(', ', $parti) .
+                                 ' asociat(e). Șterge sau reasignează aceste înregistrări înainte de a șterge clientul.',
+                    'code'    => 'HAS_RELATIONS'
+                ], 409);
+            }
+
+            $stmt = $db->prepare("DELETE FROM clienti WHERE id = ?");
+            $stmt->execute([$id]);
+            jsonResponse(['success' => true, 'deleted' => $stmt->rowCount(), 'nume' => $cliRow['nume']]);
             break;
 
         // ══════════════════════════════════════
