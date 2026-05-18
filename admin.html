@@ -399,6 +399,59 @@ a{text-decoration:none;color:inherit;}button{font-family:inherit;cursor:pointer;
 </div>
 </div>
 
+<!-- CARD FULL — FIȘĂ 360° CLIENT + PROIECT -->
+<style>
+#cardFullModal .modal{max-width:760px;}
+.cf-hero{background:linear-gradient(135deg,#1e3a8a,#3b82f6);color:#fff;border-radius:14px;padding:14px 16px;margin-bottom:14px;}
+.cf-hero .cf-tip{font-size:11px;opacity:0.85;}
+.cf-hero .cf-nm{font-size:18px;font-weight:800;margin-top:2px;}
+.cf-hero .cf-contact{font-size:12px;margin-top:6px;display:flex;flex-wrap:wrap;gap:14px;}
+.cf-hero a{color:#fff;text-decoration:underline;}
+.cf-prj{background:var(--gray-bg);border-radius:12px;padding:12px 14px;margin-bottom:14px;border-left:4px solid var(--blue);}
+.cf-prj .cf-prj-top{display:flex;align-items:center;gap:8px;flex-wrap:wrap;font-size:13px;font-weight:700;color:var(--dark);}
+.cf-prj .cf-prj-nr{font-family:'Courier New',monospace;background:#fef9c3;padding:2px 7px;border-radius:5px;font-size:11px;}
+.cf-prj .cf-prj-meta{font-size:11px;color:var(--gray);margin-top:5px;}
+.cf-prj .cf-badge{font-size:10px;font-weight:800;padding:2px 8px;border-radius:99px;}
+.cf-prj .cf-badge.verde{background:#dcfce7;color:#166534;}.cf-prj .cf-badge.rosu{background:#fef2f2;color:var(--red);}
+.cf-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(104px,1fr));gap:8px;margin-bottom:14px;}
+.cf-stat{background:var(--gray-bg);border-radius:10px;padding:10px 12px;border-left:3px solid var(--blue);}
+.cf-stat .lbl{font-size:10px;color:var(--gray);font-weight:700;text-transform:uppercase;letter-spacing:0.5px;}
+.cf-stat .val{font-size:18px;font-weight:800;color:var(--dark);margin-top:3px;font-variant-numeric:tabular-nums;}
+.cf-stat.green{border-left-color:var(--green);}.cf-stat.green .val{color:var(--green);}
+.cf-stat.orange{border-left-color:var(--orange);}.cf-stat.orange .val{color:var(--orange);}
+.cf-stat.purple{border-left-color:var(--purple);}.cf-stat.purple .val{color:var(--purple);}
+.cf-actions{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:18px;}
+.cf-act{display:inline-flex;align-items:center;gap:6px;padding:9px 14px;border-radius:10px;font-size:12px;font-weight:700;border:none;cursor:pointer;transition:all 0.15s;text-decoration:none;}
+.cf-act.primary{background:linear-gradient(135deg,var(--blue),#2563eb);color:#fff;}
+.cf-act.secondary{background:var(--gray-bg);color:var(--dark);border:1px solid var(--gray-b);}
+.cf-act.preia{background:linear-gradient(135deg,var(--orange),#ea580c);color:#fff;}
+.cf-act:hover{transform:translateY(-1px);box-shadow:var(--shadow-md);}
+.cf-section{margin-bottom:18px;}
+.cf-section-title{font-size:12px;font-weight:800;color:var(--gray);text-transform:uppercase;letter-spacing:0.8px;margin-bottom:8px;display:flex;align-items:center;gap:8px;}
+.cf-section-title .badge-num{background:var(--gray-bg);color:var(--dark);border-radius:99px;padding:2px 9px;font-size:10px;font-weight:800;letter-spacing:0;}
+.cf-row{background:#fff;border:1px solid var(--gray-b);border-radius:10px;padding:10px 14px;margin-bottom:6px;display:flex;align-items:center;gap:10px;cursor:pointer;transition:all 0.15s;}
+.cf-row:hover{border-color:var(--blue);background:#eff6ff;}
+.cf-row .ico{font-size:18px;}
+.cf-row .info{flex:1;min-width:0;}
+.cf-row .nr{font-family:'Courier New',monospace;font-size:11px;background:#fef9c3;padding:2px 7px;border-radius:5px;font-weight:700;color:var(--dark);}
+.cf-row .name{font-size:13px;font-weight:700;color:var(--dark);margin-top:2px;}
+.cf-row .meta{font-size:11px;color:var(--gray);margin-top:2px;}
+.cf-row .rval{font-size:14px;font-weight:800;color:var(--green);font-variant-numeric:tabular-nums;}
+.cf-row .pill{font-size:10px;font-weight:800;padding:2px 8px;border-radius:99px;text-transform:uppercase;letter-spacing:0.3px;}
+.cf-row.archived{opacity:0.55;}
+.cf-row.current{border-color:var(--blue);background:#eff6ff;box-shadow:0 0 0 1px var(--blue);}
+.cf-empty{text-align:center;padding:16px;color:var(--gray-l);font-size:12px;font-style:italic;}
+</style>
+<div id="cardFullModal" class="modal-overlay" onclick="if(event.target===this)closeCardFullModal()">
+<div class="modal">
+    <div class="modal-head">
+        <div class="modal-title" id="cfTitle">📊 Fișă client</div>
+        <button class="modal-close" onclick="closeCardFullModal()">✕</button>
+    </div>
+    <div class="modal-body" id="cfBody"><div class="cf-empty">⏳ Se încarcă...</div></div>
+</div>
+</div>
+
 <!-- CHANGE PASSWORD MODAL -->
 <div id="changePwModal" class="modal-overlay" onclick="if(event.target===this)closeChangePwModal()">
 <div class="modal" style="max-width:420px">
@@ -749,12 +802,145 @@ function renderKanban(){
                 ? '<div class="kcard-val" title="Sursă: '+srcInfo.lbl+'">'+srcInfo.ic+' '+p.valoare.toLocaleString('ro-RO')+' RON</div>'
                 : '<div class="kcard-val" style="color:var(--gray-l);font-weight:500">— fără valoare —</div>';
             c.innerHTML='<div class="kcard-id">'+p.id+'</div><div class="kcard-title">'+p.client+'</div><div class="kcard-meta"><span class="kcard-tag '+t.cls+'">'+t.s+'</span><span>📍 '+p.loc+'</span></div>'+valHtml+preluatHtml;
+            c.title='Click pentru fișa completă client + proiect';
+            (function(prj){c.onclick=function(){openCardFull(prj);};})(p);
             body.appendChild(c);
         })}
         col.appendChild(body);b.appendChild(col);
     });
 }
 function fmtRONShort(n){var v=Number(n||0);if(v>=1e6)return (v/1e6).toFixed(1)+'M';if(v>=1e3)return Math.round(v/1e3)+'k';return v.toFixed(0);}
+
+// ═══════ FIȘĂ 360° CLIENT + PROIECT (click pe card Kanban) ═══════
+function cfEsc(s){if(s==null)return '';var d=document.createElement('div');d.textContent=s;return d.innerHTML;}
+function cfMoney(n){return Number(n||0).toLocaleString('ro-RO',{minimumFractionDigits:2,maximumFractionDigits:2})+' RON';}
+function cfMoneyShort(n){var v=Number(n||0);if(v>=1e6)return (v/1e6).toFixed(1)+'M RON';if(v>=1e3)return Math.round(v/1e3)+'k RON';return v.toFixed(0)+' RON';}
+function cfDate(s){if(!s)return '';var MO=['Ian','Feb','Mar','Apr','Mai','Iun','Iul','Aug','Sep','Oct','Noi','Dec'];var d=new Date(String(s).replace(' ','T'));if(isNaN(d.getTime()))return String(s);return d.getDate()+' '+MO[d.getMonth()]+' '+d.getFullYear();}
+function cfDaysAgo(s){if(!s)return null;var d=new Date(String(s).replace(' ','T'));if(isNaN(d.getTime()))return null;return Math.floor((Date.now()-d.getTime())/86400000);}
+
+// Acțiuni contextuale în funcție de etapa proiectului (status UI)
+function cfStageActions(prj){
+    var dbId=prj.dbId||'', cliQ=encodeURIComponent(prj.client||'');
+    var obQ=prj.obiectivProiect?'&obiectiv='+encodeURIComponent(prj.obiectivProiect):'';
+    var st=prj.status||'Lead', A=[];
+    if(st==='Lead'||st==='Ofertă'){
+        A.push({cls:'primary',ic:'📝',txt:'Calculator ofertă',url:'/admin/calculator-pret.html?client='+cliQ+obQ});
+        A.push({cls:'secondary',ic:'📋',txt:'Oferte client',url:'/admin/oferte.html?search='+cliQ});
+    } else if(st==='Contract'){
+        A.push({cls:'primary',ic:'📄',txt:'Contracte',url:'/admin/contracte.html'});
+        A.push({cls:'secondary',ic:'📋',txt:'Oferte client',url:'/admin/oferte.html?search='+cliQ});
+    } else if(st==='Proiectare'){
+        A.push({cls:'primary',ic:'📐',txt:'Deschide proiectare',url:dbId?'/admin/proiectare-proiect.html?id='+dbId:'/admin/proiectare.html'});
+    } else if(st==='Execuție'||st==='Intervenție'||st==='Recepție'){
+        A.push({cls:'primary',ic:'🔧',txt:'Deschide execuție',url:dbId?'/admin/executie-proiect.html?id='+dbId:'/admin/executie.html'});
+    } else if(st==='Facturat'){
+        A.push({cls:'primary',ic:'💳',txt:'Financiar',url:'/admin/financiar.html'});
+    } else if(st==='Mentenanță'){
+        A.push({cls:'primary',ic:'🔄',txt:'Mentenanță',url:'/admin/mentenanta.html'});
+    }
+    A.push({cls:'secondary',ic:'📋',txt:'Board proiecte',url:'/admin/proiecte.html'});
+    A.push({cls:'secondary',ic:'💰',txt:'CRM client',url:'/admin/crm-clienti.html'});
+    return A;
+}
+
+function openCardFull(prj){
+    document.getElementById('cfTitle').textContent='📊 '+(prj.client||'Client');
+    document.getElementById('cfBody').innerHTML='<div class="cf-empty">⏳ Se încarcă...</div>';
+    document.getElementById('cardFullModal').classList.add('active');
+    if(!prj.clientDbId){renderCardFull(null,prj);return;}
+    fetch(API_DB+'?action=getClientFull&id='+prj.clientDbId+'&_t='+Date.now(),{credentials:'include'})
+        .then(function(r){return r.json();})
+        .then(function(res){
+            if(!res.success){renderCardFull(null,prj,res.error);return;}
+            renderCardFull(res.data,prj);
+        })
+        .catch(function(e){renderCardFull(null,prj,(e&&e.message)||'eroare rețea');});
+}
+function closeCardFullModal(){document.getElementById('cardFullModal').classList.remove('active');}
+
+function renderCardFull(d,prj,err){
+    var c=(d&&d.client)||{nume:prj.client,telefon:prj.telefon,adresa:prj.loc};
+    var s=(d&&d.stat)||null;
+    document.getElementById('cfTitle').textContent='📊 '+cfEsc(c.nume||prj.client||'Client');
+    var html='';
+    html+='<div class="cf-hero">';
+    html+='<div class="cf-tip">'+cfEsc(c.tip||'Client')+(c.cui?' · CUI: '+cfEsc(c.cui):'')+'</div>';
+    html+='<div class="cf-nm">'+cfEsc(c.nume||prj.client||'—')+'</div>';
+    var cb=[], tel=c.telefon||prj.telefon;
+    if(tel) cb.push('📞 <a href="tel:'+cfEsc(tel)+'">'+cfEsc(tel)+'</a>');
+    if(c.email) cb.push('✉️ <a href="mailto:'+cfEsc(c.email)+'">'+cfEsc(c.email)+'</a>');
+    var adr=c.adresa||c.oras||prj.loc;
+    if(adr) cb.push('📍 '+cfEsc(adr));
+    if(cb.length) html+='<div class="cf-contact">'+cb.join('')+'</div>';
+    html+='</div>';
+    var days=cfDaysAgo(prj.dataCreare);
+    html+='<div class="cf-prj">';
+    html+='<div class="cf-prj-top"><span class="cf-prj-nr">'+cfEsc(prj.id)+'</span><span>'+cfEsc(prj.serviciu||'—')+'</span><span class="cf-badge" style="background:#dbeafe;color:#1d4ed8">'+cfEsc(prj.status)+'</span>';
+    if(prj.status!=='Lead'){
+        if(prj.preluat_de) html+='<span class="cf-badge verde">✅ '+cfEsc(prj.preluat_de)+'</span>';
+        else html+='<span class="cf-badge rosu">⚠️ Nepreluat</span>';
+    }
+    html+='</div>';
+    var meta=[];
+    if(prj.loc) meta.push('📍 '+cfEsc(prj.loc));
+    if(prj.valoare>0) meta.push('💰 '+cfMoney(prj.valoare));
+    if(days!=null) meta.push('🕒 '+days+' zile de la creare');
+    if(prj.obiectivProiect) meta.push(cfEsc(prj.obiectivProiect));
+    if(meta.length) html+='<div class="cf-prj-meta">'+meta.join(' · ')+'</div>';
+    html+='</div>';
+    if(s){
+        html+='<div class="cf-stats">';
+        html+='<div class="cf-stat green"><div class="lbl">LTV total</div><div class="val">'+cfMoneyShort(s.ltv_total)+'</div></div>';
+        html+='<div class="cf-stat"><div class="lbl">Oferte</div><div class="val">'+s.total_oferte+'</div></div>';
+        html+='<div class="cf-stat green"><div class="lbl">Acceptate</div><div class="val">'+s.oferte_acceptate+'</div></div>';
+        html+='<div class="cf-stat orange"><div class="lbl">Proiecte</div><div class="val">'+s.total_proiecte+'</div></div>';
+        if(s.proiecte_active) html+='<div class="cf-stat purple"><div class="lbl">Active</div><div class="val">'+s.proiecte_active+'</div></div>';
+        html+='</div>';
+    }
+    html+='<div class="cf-section-title">⚡ Acțiuni</div><div class="cf-actions">';
+    var isNepreluat=!prj.preluat_de&&prj.status!=='Lead';
+    if(isNepreluat) html+='<button class="cf-act preia" onclick="cfPreia(\''+cfEsc(prj.id)+'\')">🤚 Preia proiect</button>';
+    cfStageActions(prj).forEach(function(a){
+        html+='<a class="cf-act '+a.cls+'" href="'+a.url+'">'+a.ic+' '+cfEsc(a.txt)+'</a>';
+    });
+    html+='</div>';
+    if(err) html+='<div class="cf-empty">⚠️ Istoricul complet n-a putut fi încărcat ('+cfEsc(err)+'). Se afișează doar datele cardului.</div>';
+    if(d){
+        var sc={'Draft':'#94a3b8','Trimisa':'#3b82f6','In_discutie':'#f97316','Acceptata':'#22c55e','Refuzata':'#dc2626','Expirata':'#94a3b8'};
+        var si={'Draft':'📝','Trimisa':'📤','In_discutie':'💬','Acceptata':'✅','Refuzata':'❌','Expirata':'⏱️'};
+        html+='<div class="cf-section"><div class="cf-section-title">📋 Oferte <span class="badge-num">'+d.oferte.length+'</span></div>';
+        if(!d.oferte.length){html+='<div class="cf-empty">Nicio ofertă încă.</div>';}
+        else{d.oferte.forEach(function(o){
+            var stt=o.status||'Draft', arch=o.archived_at?' archived':'';
+            html+='<div class="cf-row'+arch+'" onclick="window.open(\'/admin/oferte.html?search='+encodeURIComponent(o.oferta_id)+'\',\'_self\')">';
+            html+='<span class="ico">'+(si[stt]||'❓')+'</span><div class="info"><span class="nr">#'+cfEsc(o.oferta_id)+'</span> <span class="meta">· '+cfDate(o.data_oferta)+'</span>';
+            if(o.obiectiv) html+='<div class="name">'+cfEsc(o.obiectiv)+'</div>';
+            html+='</div><span class="pill" style="background:'+(sc[stt]||'#94a3b8')+'22;color:'+(sc[stt]||'#94a3b8')+'">'+cfEsc(stt)+'</span><span class="rval">'+cfMoney(o.total_cu_tva)+'</span></div>';
+        });}
+        html+='</div>';
+        html+='<div class="cf-section"><div class="cf-section-title">📐 Proiecte <span class="badge-num">'+d.proiecte.length+'</span></div>';
+        if(!d.proiecte.length){html+='<div class="cf-empty">Niciun proiect încă.</div>';}
+        else{d.proiecte.forEach(function(p){
+            var cur=(p.proiect_id===prj.id)?' current':'';
+            html+='<div class="cf-row'+cur+'" onclick="window.open(\'/admin/proiecte.html\',\'_self\')">';
+            html+='<span class="ico">📐</span><div class="info"><span class="nr">'+cfEsc(p.proiect_id||('#'+p.id))+'</span> <span class="meta">· '+cfEsc(p.serviciu||'—')+'</span>';
+            if(p.adresa_obiectiv) html+='<div class="name">📍 '+cfEsc(p.adresa_obiectiv)+'</div>';
+            html+='</div><span class="pill" style="background:#dbeafe;color:#1d4ed8">'+cfEsc(p.status)+'</span>';
+            if(p.valoare_contract>0) html+='<span class="rval">'+cfMoney(p.valoare_contract)+'</span>';
+            html+='</div>';
+        });}
+        html+='</div>';
+        if(d.mentenante&&d.mentenante.length){
+            html+='<div class="cf-section"><div class="cf-section-title">🔄 Mentenanță <span class="badge-num">'+d.mentenante.length+'</span></div>';
+            d.mentenante.forEach(function(m){
+                html+='<div class="cf-row"><span class="ico">🔄</span><div class="info"><div class="name">'+cfEsc(m.tip||'Mentenanță')+'</div><div class="meta">Scadență: '+(m.data_scadenta?cfDate(m.data_scadenta):'—')+'</div></div><span class="pill" style="background:#dcfce7;color:#166534">'+cfEsc(m.status||'')+'</span></div>';
+            });
+            html+='</div>';
+        }
+    }
+    document.getElementById('cfBody').innerHTML=html;
+}
+function cfPreia(pid){closeCardFullModal();preiaProiect(pid);}
 
 // ═══════ ACTIVITATE RECENTA (din MySQL) ═══════
 function renderAlerts(){
@@ -878,7 +1064,9 @@ function loadProjectsFromDB(){
                     note:p.note||'',
                     preluat_de:p.preluat_de||null,
                     dataCreare:p.created_at||'',
-                    telefon:p.telefon||''
+                    telefon:p.telefon||'',
+                    clientDbId:p.client_db_id||'',
+                    obiectivProiect:p.obiectiv||''
                 };
             });
             projectsLoaded=true;
