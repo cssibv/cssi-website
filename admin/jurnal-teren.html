@@ -81,6 +81,43 @@ a{text-decoration:none;color:inherit;}button{font-family:inherit;cursor:pointer;
 .cal-tip{text-align:center;font-size:12px;color:var(--gray);background:#eff6ff;border-radius:10px;padding:10px;margin-bottom:12px;}
 @media(max-width:640px){.cal-bar{font-size:9px;padding:0 4px;gap:2px;}.cal-bar .lbl-loc{display:none;}.cal-day{min-height:26px;padding:4px;}.cal-month{min-width:120px;font-size:15px;}}
 
+/* VIEW TOGGLE */
+.view-toggle{display:inline-flex;background:var(--gray-bg);border-radius:10px;padding:3px;gap:3px;}
+.vt-btn{border:none;background:none;font-size:12px;font-weight:800;color:var(--gray);padding:7px 14px;border-radius:8px;transition:all .15s;}
+.vt-btn:hover{color:var(--dark);}
+.vt-btn.active{background:#fff;color:#1e3a8a;box-shadow:var(--shadow);}
+
+/* TEAM VIEW — grilă tehnicieni × zile */
+.tm-wrap{background:#fff;border-radius:var(--radius);box-shadow:var(--shadow);overflow-x:auto;-webkit-overflow-scrolling:touch;}
+.tm-grid{min-width:max-content;}
+.tm-row{display:flex;align-items:stretch;border-bottom:1px solid var(--gray-b);}
+.tm-row:last-child{border-bottom:none;}
+.tm-name{width:104px;min-width:104px;position:sticky;left:0;z-index:3;background:#fff;display:flex;align-items:center;gap:7px;padding:0 10px;font-size:13px;font-weight:800;color:var(--dark);border-right:2px solid var(--gray-b);}
+.tm-name .av{width:24px;height:24px;border-radius:50%;background:linear-gradient(135deg,var(--blue),#1e3a8a);color:#fff;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;flex-shrink:0;}
+.tm-row.empty .tm-name{color:var(--gray-l);}
+.tm-row.empty .tm-name .av{background:var(--gray-xl);}
+.tm-head{position:sticky;top:0;z-index:4;background:#f8fafc;border-bottom:2px solid var(--gray-b);}
+.tm-head .tm-name{background:#f8fafc;z-index:5;font-size:11px;color:var(--gray);text-transform:uppercase;letter-spacing:.5px;}
+.tm-track{flex:1;display:grid;}
+.tm-dcell{padding:6px 0;text-align:center;border-right:1px solid var(--gray-b);min-width:32px;cursor:pointer;transition:background .12s;}
+.tm-dcell:hover{background:#eff6ff;}
+.tm-dcell.we{background:#f1f5f9;}
+.tm-dcell.today{background:var(--blue);}
+.tm-dcell.today .ddn,.tm-dcell.today .dwd{color:#fff;}
+.tm-dcell.sel{box-shadow:inset 0 0 0 2px var(--blue);}
+.tm-dcell .ddn{font-size:12px;font-weight:800;color:var(--dark);display:block;}
+.tm-dcell .dwd{font-size:9px;font-weight:700;color:var(--gray-l);text-transform:uppercase;}
+.tm-stack{flex:1;display:flex;flex-direction:column;gap:2px;padding:3px 0;}
+.tm-lane{flex:1;display:grid;align-items:center;min-height:24px;}
+.tm-bar{grid-row:1;height:24px;margin:0 1px;border-radius:5px;border:none;color:#fff;font-size:10.5px;font-weight:800;padding:0 8px;display:flex;align-items:center;gap:5px;overflow:hidden;white-space:nowrap;cursor:pointer;transition:filter .12s,transform .12s;box-shadow:0 1px 2px rgba(0,0,0,.18);min-width:0;}
+.tm-bar:hover{filter:brightness(1.08);transform:translateY(-1px);}
+.tm-bar.s0{border-top-left-radius:0;border-bottom-left-radius:0;}
+.tm-bar.e0{border-top-right-radius:0;border-bottom-right-radius:0;}
+.tm-bar .lbl-loc{overflow:hidden;text-overflow:ellipsis;}
+.tm-bar .lbl-d{opacity:.85;font-size:9.5px;flex-shrink:0;}
+.tm-emptyrow{padding:7px 0;}
+@media(max-width:640px){.tm-name{width:78px;min-width:78px;font-size:11px;}.tm-bar{font-size:9px;padding:0 5px;}.tm-bar .lbl-d{display:none;}}
+
 /* DAY DETAIL */
 .day-detail{background:#fff;border-radius:var(--radius);box-shadow:var(--shadow);margin-top:14px;padding:16px 18px;}
 .dd-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:12px;flex-wrap:wrap;}
@@ -169,10 +206,14 @@ a{text-decoration:none;color:inherit;}button{font-family:inherit;cursor:pointer;
     </div>
 
     <div class="cal-nav">
+        <div class="view-toggle">
+            <button id="vbCal" class="vt-btn active" onclick="switchView('cal')">📅 Calendar</button>
+            <button id="vbTeam" class="vt-btn" onclick="switchView('team')">👷 Echipă</button>
+        </div>
         <button class="nav-btn" onclick="shiftMonth(-1)" title="Luna anterioară">◀</button>
         <div class="cal-month" id="calMonthLbl">—</div>
         <button class="nav-btn" onclick="shiftMonth(1)" title="Luna următoare">▶</button>
-        <button class="nav-today" onclick="goToday()">📅 Astăzi</button>
+        <button class="nav-today" onclick="goToday()">Astăzi</button>
         <div class="cal-legend" id="calLegend"></div>
     </div>
 
@@ -224,7 +265,7 @@ var TECHNICIANS = [
 ];
 var TECH_BY_ID = {}; TECHNICIANS.forEach(function(t){TECH_BY_ID[t.id]=t.name;});
 
-var STATE = { entries:[], proiecte:[], loaded:false, viewY:0, viewM:0, selDay:'' };
+var STATE = { entries:[], proiecte:[], loaded:false, viewY:0, viewM:0, selDay:'', view:'cal' };
 var MONTHS = ['Ian','Feb','Mar','Apr','Mai','Iun','Iul','Aug','Sep','Oct','Noi','Dec'];
 var MONTHS_FULL = ['Ianuarie','Februarie','Martie','Aprilie','Mai','Iunie','Iulie','August','Septembrie','Octombrie','Noiembrie','Decembrie'];
 var CAL_PALETTE = ['#3b82f6','#16a34a','#ea580c','#7c3aed','#db2777','#0d9488','#ca8a04','#dc2626','#0ea5e9','#65a30d'];
@@ -340,6 +381,22 @@ function goToday(){ var n=new Date(); STATE.viewY=n.getFullYear(); STATE.viewM=n
 function selectDay(dst){ STATE.selDay=(STATE.selDay===dst?'':dst); render(); var dd=document.getElementById('dayDetail'); if(dd&&STATE.selDay) dd.scrollIntoView({behavior:'smooth',block:'nearest'}); }
 
 // ═══ RENDER CALENDAR ═══
+function switchView(v){
+    STATE.view=v;
+    var a=document.getElementById('vbCal'), b=document.getElementById('vbTeam');
+    if(a) a.classList.toggle('active',v==='cal');
+    if(b) b.classList.toggle('active',v==='team');
+    render();
+}
+function escAttr(s){return esc(s).replace(/"/g,'&quot;');}
+function barTip(e){
+    var t=tehList(e.tehnicieni).map(tehName).join(', ');
+    var d=(e.descriere||'').replace(/\s+/g,' ').trim();
+    if(d.length>160) d=d.slice(0,160)+'…';
+    return fmtRange(e.data_start,e.data_end)+' ('+nDays(e.data_start,e.data_end)+'z) · '+(e.locatie||'')+(e.proiect_cod?(' ['+e.proiect_cod+']'):'')+
+           '\n👷 '+t+(d?('\n🔧 '+d):'');
+}
+
 function render(){
     renderSummary();
     var c=document.getElementById('cal');
@@ -355,15 +412,20 @@ function render(){
         return !(en<monStart || s>monEnd);
     });
 
+    var tip0='';
+    if(!STATE.entries.length){
+        tip0='<div class="cal-tip">📝 Niciun jurnal încă — apasă pe o zi sau pe „➕ Adaugă zi de teren" și notează unde au fost băieții și ce au făcut.</div>';
+    }
+    c.innerHTML = tip0 + (STATE.view==='team' ? buildTeam(monthEntries,y,m) : buildCalendar(monthEntries,y,m));
+    renderLegend(monthEntries);
+    renderDayDetail();
+}
+
+function buildCalendar(monthEntries,y,m){
     var weeks=monthWeeks(y,m);
     var todayY=ymd(new Date());
     var DOW=['Lun','Mar','Mie','Joi','Vin','Sâm','Dum'];
-    var html='';
-    if(!STATE.entries.length){
-        html+='<div class="cal-tip">📝 Niciun jurnal încă — apasă pe o zi sau pe „➕ Adaugă zi de teren" și notează unde au fost băieții și ce au făcut.</div>';
-    }
-    html+='<div class="cal"><div class="cal-dow">'+DOW.map(function(d){return '<span>'+d+'</span>';}).join('')+'</div>';
-
+    var html='<div class="cal"><div class="cal-dow">'+DOW.map(function(d){return '<span>'+d+'</span>';}).join('')+'</div>';
     weeks.forEach(function(week){
         var wStart=ymd(week[0]), wEnd=ymd(week[6]);
         html+='<div class="cal-week"><div class="cal-days">';
@@ -400,8 +462,7 @@ function render(){
                     var avs=tehs.slice(0,3).map(function(id){return '<span class="bt">'+esc(tehName(id).charAt(0).toUpperCase())+'</span>';}).join('');
                     var more=tehs.length>3?('<span class="bt">+'+(tehs.length-3)+'</span>'):'';
                     var span=sg.c1-sg.c0+1;
-                    var tip=fmtRange(e.data_start,e.data_end)+' — '+(e.locatie||'')+' — '+tehs.map(tehName).join(', ')+(e.proiect_cod?(' ['+e.proiect_cod+']'):'');
-                    html+='<button class="cal-bar'+(sg.clipL?' s0':'')+(sg.clipR?' e0':'')+'" style="grid-column:'+(sg.c0+1)+'/span '+span+';background:'+color+'" title="'+esc(tip)+'" onclick=\'event.stopPropagation();editEntry('+JSON.stringify(e.id)+')\'>'+avs+more+'<span class="lbl-loc">'+esc(e.locatie||'—')+'</span></button>';
+                    html+='<button class="cal-bar'+(sg.clipL?' s0':'')+(sg.clipR?' e0':'')+'" style="grid-column:'+(sg.c0+1)+'/span '+span+';background:'+color+'" title="'+escAttr(barTip(e))+'" onclick=\'event.stopPropagation();editEntry('+JSON.stringify(e.id)+')\'>'+avs+more+'<span class="lbl-loc">'+esc(e.locatie||'—')+'</span></button>';
                 });
                 html+='</div>';
             });
@@ -410,9 +471,59 @@ function render(){
         html+='</div>';
     });
     html+='</div>';
-    c.innerHTML=html;
-    renderLegend(monthEntries);
-    renderDayDetail();
+    return html;
+}
+
+function buildTeam(monthEntries,y,m){
+    var lastDay=new Date(y,m+1,0).getDate();
+    var monStart=ymd(new Date(y,m,1)), monEnd=ymd(new Date(y,m+1,0));
+    var todayY=ymd(new Date());
+    var colW=34;
+    var tmpl='grid-template-columns:repeat('+lastDay+',minmax('+colW+'px,1fr));';
+    var minW=104+lastDay*colW;
+    var WD=['D','L','Ma','Mi','J','V','S'];
+    var html='<div class="tm-wrap"><div class="tm-grid" style="min-width:'+minW+'px">';
+    // Header cu zilele lunii
+    html+='<div class="tm-row tm-head"><div class="tm-name">Echipă \\ Zi</div><div class="tm-track" style="'+tmpl+'">';
+    for(var d=1;d<=lastDay;d++){
+        var dt=new Date(y,m,d), ds=ymd(dt), wd=dt.getDay(), we=(wd===0||wd===6);
+        var cls='tm-dcell'+(we?' we':'')+(ds===todayY?' today':'')+(ds===STATE.selDay?' sel':'');
+        html+='<div class="'+cls+'" onclick="selectDay(\''+ds+'\')"><span class="ddn">'+d+'</span><span class="dwd">'+WD[wd]+'</span></div>';
+    }
+    html+='</div></div>';
+    // Câte un rând per tehnician
+    TECHNICIANS.forEach(function(t){
+        var mine=monthEntries.filter(function(e){return tehList(e.tehnicieni).indexOf(t.id)>=0;});
+        html+='<div class="tm-row'+(mine.length?'':' empty')+'"><div class="tm-name"><span class="av">'+esc(t.name.charAt(0))+'</span>'+esc(t.name)+'</div>';
+        if(!mine.length){ html+='<div class="tm-stack"><div class="tm-emptyrow">&nbsp;</div></div></div>'; return; }
+        var segs=mine.map(function(e){
+            var s=dstr10(e.data_start), en=dstr10(e.data_end||e.data_start);
+            var ss=s<monStart?monStart:s, se=en>monEnd?monEnd:en;
+            return { a:parseInt(ss.slice(8,10),10), b:parseInt(se.slice(8,10),10), e:e, clipL:s<monStart, clipR:en>monEnd };
+        });
+        segs.sort(function(x,z){return x.a-z.a || (z.b-z.a)-(x.b-x.a);});
+        var lanes=[];
+        segs.forEach(function(sg){
+            var li=0;
+            for(;li<lanes.length;li++){
+                var free=lanes[li].every(function(x){return sg.a>x.b || sg.b<x.a;});
+                if(free){lanes[li].push(sg);break;}
+            }
+            if(li===lanes.length) lanes.push([sg]);
+        });
+        html+='<div class="tm-stack">';
+        lanes.forEach(function(laneSegs){
+            html+='<div class="tm-lane" style="'+tmpl+'">';
+            laneSegs.forEach(function(sg){
+                var e=sg.e, color=colorFor(e), span=sg.b-sg.a+1;
+                html+='<button class="tm-bar'+(sg.clipL?' s0':'')+(sg.clipR?' e0':'')+'" style="grid-column:'+sg.a+'/span '+span+';background:'+color+'" title="'+escAttr(barTip(e))+'" onclick=\'editEntry('+JSON.stringify(e.id)+')\'><span class="lbl-loc">'+esc(e.locatie||'—')+'</span><span class="lbl-d">'+span+'z</span></button>';
+            });
+            html+='</div>';
+        });
+        html+='</div></div>';
+    });
+    html+='</div></div>';
+    return html;
 }
 
 function renderLegend(monthEntries){
