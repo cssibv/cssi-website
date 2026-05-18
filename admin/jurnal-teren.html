@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Jurnal de Teren — Portal CSSI 3.0</title>
+<meta name="robots" content="noindex, nofollow">
+<link rel="icon" type="image/x-icon" href="/images/favicon.ico">
+<meta name="theme-color" content="#dc2626">
+<link rel="manifest" href="../manifest.json">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+:root{--red:#dc2626;--red-d:#991b1b;--dark:#0f172a;--dark2:#1e293b;--gray:#64748b;--gray-l:#94a3b8;--gray-xl:#cbd5e1;--gray-bg:#f1f5f9;--gray-b:#e2e8f0;--blue:#3b82f6;--green:#22c55e;--orange:#f97316;--purple:#8b5cf6;--teal:#14b8a6;--yellow:#eab308;--radius:16px;--radius-sm:12px;--shadow:0 1px 3px rgba(0,0,0,0.06);--shadow-md:0 4px 12px rgba(0,0,0,0.08);--shadow-lg:0 12px 32px rgba(0,0,0,0.12);--font:'Inter',system-ui,sans-serif;}
+body{font-family:var(--font);color:var(--dark);background:var(--gray-bg);-webkit-font-smoothing:antialiased;}
+a{text-decoration:none;color:inherit;}button{font-family:inherit;cursor:pointer;}
+:focus-visible{outline:2px solid var(--blue);outline-offset:2px;border-radius:6px;}
+
+.page-header{background:linear-gradient(135deg,#0f4c81,#1e3a8a);color:#fff;padding:20px 24px;border-radius:20px;margin-bottom:16px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;}
+.page-back{color:rgba(255,255,255,0.7);font-size:13px;font-weight:500;display:inline-flex;align-items:center;gap:6px;}.page-back:hover{color:#fff;}
+.page-title{font-size:22px;font-weight:800;letter-spacing:-0.5px;}
+.page-subtitle{font-size:12px;color:rgba(255,255,255,0.55);margin-top:2px;display:flex;align-items:center;gap:6px;}
+.page-actions{display:flex;gap:8px;align-items:center;flex-wrap:wrap;}
+.page-btn{padding:10px 16px;border-radius:12px;font-size:13px;font-weight:700;border:none;transition:all 0.2s;display:inline-flex;align-items:center;gap:6px;}
+.page-btn.secondary{background:rgba(255,255,255,0.1);color:#fff;border:1px solid rgba(255,255,255,0.2);}.page-btn.secondary:hover{background:rgba(255,255,255,0.2);}
+.page-btn.primary{background:#fff;color:#1e3a8a;}.page-btn.primary:hover{background:#f0f9ff;}
+.sync-indicator{width:8px;height:8px;border-radius:50%;display:inline-block;margin-right:4px;}
+.sync-ok{background:var(--green);box-shadow:0 0 6px rgba(34,197,94,0.5);}.sync-off{background:var(--gray-l);}.sync-loading{background:var(--orange);animation:pulse 1s infinite;}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.4}}
+.container{max-width:1100px;margin:0 auto;padding:16px;}@media(min-width:768px){.container{padding:24px;}}
+
+.summary{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:16px;}
+.s-item{background:#fff;border-radius:var(--radius-sm);padding:14px 18px;box-shadow:var(--shadow);flex:1;min-width:150px;display:flex;align-items:center;gap:12px;}
+.s-icon{width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;}
+.s-val{font-size:22px;font-weight:900;line-height:1;}.s-label{font-size:11px;color:var(--gray);margin-top:4px;}
+
+.toolbar{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px;align-items:center;}
+.filter-search{padding:10px 16px;border-radius:99px;font-size:13px;border:1px solid var(--gray-b);outline:none;font-family:inherit;background:#fff;flex:1;min-width:200px;max-width:340px;}
+.filter-search:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(59,130,246,0.08);}
+.filter-sel{padding:9px 14px;border-radius:99px;font-size:12px;border:1px solid var(--gray-b);outline:none;font-family:inherit;background:#fff;font-weight:600;color:var(--dark);}
+.filter-sel:focus{border-color:var(--blue);}
+.filter-date{padding:8px 12px;border-radius:10px;font-size:12px;border:1px solid var(--gray-b);outline:none;font-family:inherit;background:#fff;}
+.btn-add{margin-left:auto;padding:11px 20px;border-radius:12px;font-size:13px;font-weight:800;border:none;background:linear-gradient(135deg,var(--blue),#2563eb);color:#fff;display:inline-flex;align-items:center;gap:6px;transition:all 0.2s;box-shadow:var(--shadow);}
+.btn-add:hover{transform:translateY(-1px);box-shadow:var(--shadow-md);}
+@media(max-width:600px){.btn-add{margin-left:0;width:100%;justify-content:center;}}
+
+/* TIMELINE */
+.day-group{margin-bottom:18px;}
+.day-group-head{font-size:12px;font-weight:800;color:var(--gray);text-transform:uppercase;letter-spacing:0.8px;margin:0 4px 8px;display:flex;align-items:center;gap:8px;}
+.day-group-head .ln{flex:1;height:1px;background:var(--gray-b);}
+.jt-card{background:#fff;border-radius:var(--radius);box-shadow:var(--shadow);margin-bottom:10px;padding:16px 18px;border-left:4px solid var(--blue);transition:all 0.2s;}
+.jt-card:hover{box-shadow:var(--shadow-md);}
+.jt-card.noproj{border-left-color:var(--gray-l);}
+.jt-top{display:flex;align-items:flex-start;gap:12px;flex-wrap:wrap;}
+.jt-daterange{font-size:14px;font-weight:800;color:var(--dark);background:#eff6ff;padding:5px 12px;border-radius:10px;white-space:nowrap;}
+.jt-daterange .nz{font-size:10px;font-weight:700;color:var(--blue);display:block;margin-top:1px;}
+.jt-main{flex:1;min-width:200px;}
+.jt-loc{font-size:15px;font-weight:800;color:var(--dark);display:flex;align-items:center;gap:6px;}
+.jt-proj{display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:700;background:#f5f3ff;color:var(--purple);padding:3px 9px;border-radius:99px;margin-top:6px;}
+.jt-proj.none{background:var(--gray-bg);color:var(--gray);}
+.jt-desc{font-size:13px;color:var(--dark2);line-height:1.5;margin-top:8px;white-space:pre-wrap;}
+.jt-tehs{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px;}
+.teh-badge{display:inline-flex;align-items:center;gap:5px;background:var(--gray-bg);border-radius:99px;padding:3px 10px 3px 3px;font-size:12px;font-weight:700;color:var(--dark);}
+.teh-av{width:22px;height:22px;border-radius:50%;background:linear-gradient(135deg,var(--blue),#1e3a8a);color:#fff;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;}
+.jt-foot{display:flex;align-items:center;gap:10px;margin-top:12px;padding-top:10px;border-top:1px solid var(--gray-b);font-size:11px;color:var(--gray-l);}
+.jt-foot .sp{flex:1;}
+.jt-btn{background:none;border:1px solid var(--gray-b);color:var(--gray);font-size:11px;font-weight:700;padding:5px 12px;border-radius:8px;transition:all 0.15s;}
+.jt-btn:hover{border-color:var(--blue);color:var(--blue);}
+.jt-btn.del:hover{border-color:var(--red);color:var(--red);background:#fef2f2;}
+
+/* MODAL */
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);backdrop-filter:blur(4px);z-index:200;align-items:center;justify-content:center;padding:16px;}
+.modal-overlay.active{display:flex;}
+.modal{background:#fff;border-radius:20px;width:100%;max-width:560px;max-height:92vh;overflow-y:auto;box-shadow:var(--shadow-lg);}
+.modal-head{padding:18px 22px;border-bottom:1px solid var(--gray-b);display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;background:#fff;border-radius:20px 20px 0 0;}
+.modal-title{font-size:17px;font-weight:800;color:var(--dark);}
+.modal-close{width:32px;height:32px;border-radius:8px;border:none;background:var(--gray-bg);color:var(--gray);font-size:18px;display:flex;align-items:center;justify-content:center;transition:all 0.2s;}.modal-close:hover{background:#fef2f2;color:var(--red);}
+.modal-body{padding:20px 22px;}
+.fg{margin-bottom:14px;}
+.fg label{display:block;font-size:12px;font-weight:700;color:var(--gray);margin-bottom:6px;text-transform:uppercase;letter-spacing:0.4px;}
+.fg .req{color:var(--red);}
+.fg input,.fg select,.fg textarea{width:100%;padding:11px 14px;border:1px solid var(--gray-b);border-radius:10px;font-size:14px;font-family:inherit;outline:none;transition:all 0.2s;background:#fff;}
+.fg input:focus,.fg select:focus,.fg textarea:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(59,130,246,0.08);}
+.fg textarea{min-height:90px;resize:vertical;}
+.fg-row{display:flex;gap:12px;}.fg-row .fg{flex:1;}
+.tehs-pick{display:flex;flex-wrap:wrap;gap:8px;}
+.tech-chip{display:inline-flex;align-items:center;gap:7px;padding:7px 13px 7px 7px;border:1px solid var(--gray-b);border-radius:99px;font-size:13px;font-weight:700;cursor:pointer;transition:all 0.15s;user-select:none;background:#fff;}
+.tech-chip input{display:none;}
+.tech-chip .av{width:24px;height:24px;border-radius:50%;background:var(--gray-bg);color:var(--gray);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;transition:all 0.15s;}
+.tech-chip.checked{border-color:var(--blue);background:#eff6ff;color:#1e3a8a;}
+.tech-chip.checked .av{background:linear-gradient(135deg,var(--blue),#1e3a8a);color:#fff;}
+.form-submit{width:100%;padding:14px;background:linear-gradient(135deg,var(--blue),#2563eb);color:#fff;border:none;border-radius:var(--radius-sm);font-size:15px;font-weight:800;transition:all 0.3s;}
+.form-submit:hover{filter:brightness(1.05);}.form-submit:disabled{opacity:0.6;}
+
+.toast-container{position:fixed;top:20px;right:20px;z-index:300;display:flex;flex-direction:column;gap:8px;}
+.toast{padding:12px 18px;border-radius:12px;color:#fff;font-size:13px;font-weight:600;box-shadow:0 8px 24px rgba(0,0,0,0.15);animation:slideIn 0.3s ease;max-width:380px;}
+.toast.success{background:var(--green);}.toast.error{background:var(--red);}.toast.info{background:var(--blue);}
+@keyframes slideIn{from{transform:translateX(100%);opacity:0}to{transform:translateX(0);opacity:1}}
+.loading-bar{position:fixed;top:0;left:0;right:0;height:3px;z-index:400;display:none;}
+.loading-bar.active{display:block;}.loading-bar::after{content:'';display:block;width:30%;height:100%;background:#1e3a8a;border-radius:2px;animation:loadSlide 1.2s infinite ease-in-out;}
+@keyframes loadSlide{0%{margin-left:-30%}100%{margin-left:100%}}
+.empty-state{text-align:center;padding:48px 24px;background:#fff;border-radius:var(--radius);box-shadow:var(--shadow);}
+.empty-icon{font-size:48px;margin-bottom:12px;opacity:0.5;}
+.empty-title{font-size:16px;font-weight:800;color:var(--dark);margin-bottom:6px;}
+.empty-msg{color:var(--gray-l);font-size:13px;}
+.footer{text-align:center;color:var(--gray-xl);font-size:11px;padding:24px 0 60px;}
+</style>
+<script src="/admin/access-guard.js" defer></script>
+</head>
+<body data-module="proiectare">
+<div class="loading-bar" id="loadBar"></div>
+<div class="toast-container" id="toastContainer"></div>
+
+<div class="container">
+    <div class="page-header">
+        <div>
+            <a href="proiectare.html" class="page-back">← Proiectare</a>
+            <div class="page-title">📋 Jurnal de Teren</div>
+            <div class="page-subtitle" id="syncStatus"><span class="sync-indicator sync-off"></span>Se încarcă...</div>
+        </div>
+        <div class="page-actions">
+            <a href="proiectare.html" class="page-btn secondary">📐 Proiectare</a>
+            <button class="page-btn secondary" onclick="refreshData()">🔄 Reîncarcă</button>
+        </div>
+    </div>
+
+    <div class="summary" id="summary"></div>
+
+    <div class="toolbar">
+        <input type="text" class="filter-search" id="searchInput" placeholder="🔍 Caută locație, descriere, tehnician..." oninput="render()">
+        <select class="filter-sel" id="fTeh" onchange="render()"><option value="">👷 Toți tehnicienii</option></select>
+        <select class="filter-sel" id="fProj" onchange="render()"><option value="">📐 Toate proiectele</option></select>
+        <input type="date" class="filter-date" id="fFrom" onchange="render()" title="De la data">
+        <input type="date" class="filter-date" id="fTo" onchange="render()" title="Până la data">
+        <button class="btn-add" onclick="openModal()">➕ Adaugă zi de teren</button>
+    </div>
+
+    <div id="list"></div>
+
+    <div class="footer">Portal CSSI 3.0 · Jurnal de Teren v1.0 · cine / unde / ce s-a făcut</div>
+</div>
+
+<!-- MODAL ADAUGĂ / EDITEAZĂ -->
+<div id="jtModal" class="modal-overlay" onclick="if(event.target===this)closeModal()">
+<div class="modal">
+    <div class="modal-head">
+        <div class="modal-title" id="jtModalTitle">➕ Zi de teren</div>
+        <button class="modal-close" onclick="closeModal()">✕</button>
+    </div>
+    <div class="modal-body">
+        <form id="jtForm" onsubmit="saveEntry(event)">
+            <input type="hidden" id="jtId" value="">
+            <div class="fg-row">
+                <div class="fg"><label>Data început <span class="req">*</span></label><input type="date" id="jtStart" required></div>
+                <div class="fg"><label>Data sfârșit <span class="req">*</span></label><input type="date" id="jtEnd" required></div>
+            </div>
+            <div class="fg">
+                <label>Tehnicieni prezenți <span class="req">*</span></label>
+                <div class="tehs-pick" id="jtTehs"></div>
+            </div>
+            <div class="fg"><label>Locație / Obiectiv <span class="req">*</span></label><input type="text" id="jtLoc" placeholder="Ex: Hală Logistic Park, Brașov" required></div>
+            <div class="fg">
+                <label>Proiect asociat (opțional)</label>
+                <select id="jtProj"><option value="">— Fără proiect / lucrare generală —</option></select>
+            </div>
+            <div class="fg"><label>Ce au făcut <span class="req">*</span></label><textarea id="jtDesc" placeholder="Ex: tras cablu pe traseul principal, montat 6 camere exterior, configurat NVR..." required></textarea></div>
+            <button type="submit" class="form-submit" id="jtSubmit">💾 Salvează</button>
+        </form>
+    </div>
+</div>
+</div>
+
+<script>
+var role = sessionStorage.getItem('cssi-role');
+if (!role) { window.location.href = '../admin.html'; }
+var API_DB = '/admin/api.php';
+
+// Echipa de teren (aceeași listă ca în Planificare)
+var TECHNICIANS = [
+    {id:'zoli',name:'Zoli'},{id:'sanyi',name:'Sanyi'},{id:'bogdan',name:'Bogdan'},
+    {id:'cezar',name:'Cezar'},{id:'cristi',name:'Cristi'},{id:'denes',name:'Denes'}
+];
+var TECH_BY_ID = {}; TECHNICIANS.forEach(function(t){TECH_BY_ID[t.id]=t.name;});
+
+var STATE = { entries:[], proiecte:[], loaded:false };
+var MONTHS = ['Ian','Feb','Mar','Apr','Mai','Iun','Iul','Aug','Sep','Oct','Noi','Dec'];
+
+function esc(s){if(s==null)return '';var d=document.createElement('div');d.textContent=s;return d.innerHTML;}
+function showLoading(s){document.getElementById('loadBar').classList.toggle('active',s);}
+function toast(msg,type){var c=document.getElementById('toastContainer');var t=document.createElement('div');t.className='toast '+(type||'info');t.textContent=msg;c.appendChild(t);setTimeout(function(){t.style.opacity='0';t.style.transform='translateX(100px)';t.style.transition='all 0.3s'},2800);setTimeout(function(){t.remove()},3200);}
+function todayStr(){return new Date().toISOString().split('T')[0];}
+function parseD(s){if(!s)return null;var d=new Date(String(s).replace(' ','T')+(String(s).length<=10?'T00:00:00':''));return isNaN(d.getTime())?null:d;}
+function fmtD(s){var d=parseD(s);if(!d)return s||'';return d.getDate()+' '+MONTHS[d.getMonth()]+' '+d.getFullYear();}
+function fmtRange(a,b){
+    var da=parseD(a), dbb=parseD(b);
+    if(!da)return fmtD(a);
+    if(!dbb || a===b) return fmtD(a);
+    if(da.getFullYear()===dbb.getFullYear() && da.getMonth()===dbb.getMonth())
+        return da.getDate()+'–'+dbb.getDate()+' '+MONTHS[dbb.getMonth()]+' '+dbb.getFullYear();
+    if(da.getFullYear()===dbb.getFullYear())
+        return da.getDate()+' '+MONTHS[da.getMonth()]+' – '+dbb.getDate()+' '+MONTHS[dbb.getMonth()]+' '+dbb.getFullYear();
+    return fmtD(a)+' – '+fmtD(b);
+}
+function nDays(a,b){var da=parseD(a),dbb=parseD(b);if(!da)return 1;if(!dbb)return 1;return Math.max(1,Math.round((dbb-da)/86400000)+1);}
+function tehList(s){return String(s||'').split(',').map(function(x){return x.trim();}).filter(Boolean);}
+function tehName(id){return TECH_BY_ID[id]||id;}
+
+// ═══ FETCH ═══
+function refreshData(){
+    showLoading(true);
+    document.getElementById('syncStatus').innerHTML='<span class="sync-indicator sync-loading"></span>Se încarcă...';
+    var p1=fetch(API_DB+'?action=getJurnalTeren&_t='+Date.now(),{credentials:'include'}).then(function(r){return r.json();});
+    var p2=STATE.proiecte.length?Promise.resolve(null):fetch(API_DB+'?action=getProiecte&_t='+Date.now(),{credentials:'include'}).then(function(r){return r.json();});
+    Promise.all([p1,p2]).then(function(res){
+        var jr=res[0];
+        if(!jr.success) throw new Error(jr.error||'Eroare');
+        STATE.entries=jr.data||[];
+        if(res[1]&&res[1].success){
+            STATE.proiecte=(res[1].data||[]).slice().sort(function(a,b){return String(b.proiect_id||'').localeCompare(String(a.proiect_id||''));});
+            populateProjSelects();
+        }
+        STATE.loaded=true;
+        populateTehFilter();
+        document.getElementById('syncStatus').innerHTML='<span class="sync-indicator sync-ok"></span>MySQL · '+STATE.entries.length+' intrări';
+        render();
+    }).catch(function(e){
+        document.getElementById('syncStatus').innerHTML='<span class="sync-indicator sync-off"></span>Indisponibil';
+        toast('❌ '+(e.message||e),'error');
+    }).finally(function(){showLoading(false);});
+}
+
+function populateTehFilter(){
+    var sel=document.getElementById('fTeh');
+    var cur=sel.value;
+    sel.innerHTML='<option value="">👷 Toți tehnicienii</option>'+TECHNICIANS.map(function(t){
+        return '<option value="'+t.id+'">'+esc(t.name)+'</option>';
+    }).join('');
+    sel.value=cur;
+}
+function populateProjSelects(){
+    var opts='<option value="">— Fără proiect / lucrare generală —</option>'+STATE.proiecte.map(function(p){
+        return '<option value="'+p.id+'">'+esc((p.proiect_id||('#'+p.id))+' · '+(p.client_nume||'?'))+'</option>';
+    }).join('');
+    document.getElementById('jtProj').innerHTML=opts;
+    var f=document.getElementById('fProj'), cur=f.value;
+    f.innerHTML='<option value="">📐 Toate proiectele</option>'+STATE.proiecte.map(function(p){
+        return '<option value="'+p.id+'">'+esc((p.proiect_id||('#'+p.id))+' · '+(p.client_nume||'?'))+'</option>';
+    }).join('');
+    f.value=cur;
+}
+
+// ═══ RENDER ═══
+function applyFilters(){
+    var q=(document.getElementById('searchInput').value||'').toLowerCase().trim();
+    var fTeh=document.getElementById('fTeh').value;
+    var fProj=document.getElementById('fProj').value;
+    var fFrom=document.getElementById('fFrom').value;
+    var fTo=document.getElementById('fTo').value;
+    return STATE.entries.filter(function(e){
+        if(fTeh && tehList(e.tehnicieni).indexOf(fTeh)<0) return false;
+        if(fProj && String(e.proiect_id||'')!==String(fProj)) return false;
+        if(fFrom && (e.data_end||e.data_start) < fFrom) return false;
+        if(fTo && (e.data_start||'') > fTo) return false;
+        if(q){
+            var hay=((e.locatie||'')+' '+(e.descriere||'')+' '+(e.proiect_cod||'')+' '+(e.client_nume||'')+' '+tehList(e.tehnicieni).map(tehName).join(' ')).toLowerCase();
+            if(hay.indexOf(q)<0) return false;
+        }
+        return true;
+    });
+}
+
+function render(){
+    renderSummary();
+    var c=document.getElementById('list');
+    if(!STATE.loaded){c.innerHTML='<div class="empty-state"><div class="empty-icon">⏳</div><div class="empty-msg">Se încarcă...</div></div>';return;}
+    var rows=applyFilters();
+    if(!STATE.entries.length){
+        c.innerHTML='<div class="empty-state"><div class="empty-icon">📝</div><div class="empty-title">Niciun jurnal încă</div><div class="empty-msg">Apasă „➕ Adaugă zi de teren" și notează unde au fost băieții și ce au făcut.</div></div>';
+        return;
+    }
+    if(!rows.length){c.innerHTML='<div class="empty-state"><div class="empty-icon">🔍</div><div class="empty-msg">Niciun rezultat pentru filtrele selectate.</div></div>';return;}
+
+    // Grupare pe luni (pe baza data_start)
+    var groups={}, order=[];
+    rows.forEach(function(e){
+        var d=parseD(e.data_start);
+        var key=d?(d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')):'—';
+        var lbl=d?(['Ianuarie','Februarie','Martie','Aprilie','Mai','Iunie','Iulie','August','Septembrie','Octombrie','Noiembrie','Decembrie'][d.getMonth()]+' '+d.getFullYear()):'Fără dată';
+        if(!groups[key]){groups[key]={lbl:lbl,items:[]};order.push(key);}
+        groups[key].items.push(e);
+    });
+
+    var html='';
+    order.forEach(function(k){
+        var g=groups[k];
+        html+='<div class="day-group"><div class="day-group-head"><span>'+esc(g.lbl)+'</span><span class="ln"></span><span>'+g.items.length+' intrări</span></div>';
+        g.items.forEach(function(e){
+            var tehs=tehList(e.tehnicieni);
+            var hasProj=!!e.proiect_id;
+            html+='<div class="jt-card'+(hasProj?'':' noproj')+'">';
+            html+='<div class="jt-top">';
+            html+='<div class="jt-daterange">'+esc(fmtRange(e.data_start,e.data_end))+'<span class="nz">'+nDays(e.data_start,e.data_end)+' zile</span></div>';
+            html+='<div class="jt-main">';
+            html+='<div class="jt-loc">📍 '+esc(e.locatie||'—')+'</div>';
+            if(hasProj){
+                var purl=(e.proiect_id?('proiectare-proiect.html?id='+e.proiect_id):'proiecte.html');
+                html+='<a href="'+purl+'" class="jt-proj">📐 '+esc((e.proiect_cod||('#'+e.proiect_id))+(e.client_nume?(' · '+e.client_nume):''))+'</a>';
+            } else {
+                html+='<span class="jt-proj none">⚙️ Lucrare generală (fără proiect)</span>';
+            }
+            html+='<div class="jt-desc">'+esc(e.descriere||'')+'</div>';
+            html+='<div class="jt-tehs">'+tehs.map(function(id){
+                var nm=tehName(id);
+                return '<span class="teh-badge"><span class="teh-av">'+esc(nm.charAt(0).toUpperCase())+'</span>'+esc(nm)+'</span>';
+            }).join('')+'</div>';
+            html+='</div>';
+            html+='</div>';
+            html+='<div class="jt-foot"><span>✍️ '+esc(e.created_by||'—')+'</span><span class="sp"></span>';
+            html+='<button class="jt-btn" onclick=\'editEntry('+JSON.stringify(e.id)+')\'>✏️ Editează</button>';
+            html+='<button class="jt-btn del" onclick=\'delEntry('+JSON.stringify(e.id)+')\'>🗑️ Șterge</button>';
+            html+='</div>';
+            html+='</div>';
+        });
+        html+='</div>';
+    });
+    c.innerHTML=html;
+}
+
+function renderSummary(){
+    var es=STATE.entries;
+    var now=new Date();
+    var weekAgo=new Date(now.getTime()-7*86400000).toISOString().split('T')[0];
+    var mKey=now.getFullYear()+'-'+String(now.getMonth()+1).padStart(2,'0');
+    var thisWeek=es.filter(function(e){return (e.data_end||e.data_start)>=weekAgo;}).length;
+    var manDaysMonth=0, tehSet={}, projSet={};
+    es.forEach(function(e){
+        var d=parseD(e.data_start);
+        var k=d?(d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')):'';
+        if(k===mKey) manDaysMonth+=nDays(e.data_start,e.data_end)*Math.max(1,tehList(e.tehnicieni).length);
+        tehList(e.tehnicieni).forEach(function(t){tehSet[t]=1;});
+        if(e.proiect_id) projSet[e.proiect_id]=1;
+    });
+    document.getElementById('summary').innerHTML=
+        '<div class="s-item"><div class="s-icon" style="background:#dbeafe">📋</div><div><div class="s-val" style="color:#1e3a8a">'+es.length+'</div><div class="s-label">Total intrări</div></div></div>'+
+        '<div class="s-item"><div class="s-icon" style="background:#fff7ed">📅</div><div><div class="s-val" style="color:var(--orange)">'+thisWeek+'</div><div class="s-label">Ultimele 7 zile</div></div></div>'+
+        '<div class="s-item"><div class="s-icon" style="background:#f0fdf4">👷</div><div><div class="s-val" style="color:var(--green)">'+manDaysMonth+'</div><div class="s-label">Zile-om luna asta</div></div></div>'+
+        '<div class="s-item"><div class="s-icon" style="background:#f5f3ff">📐</div><div><div class="s-val" style="color:var(--purple)">'+Object.keys(projSet).length+'</div><div class="s-label">Proiecte acoperite</div></div></div>';
+}
+
+// ═══ MODAL ═══
+function renderTehChips(selected){
+    var sel=selected||[];
+    document.getElementById('jtTehs').innerHTML=TECHNICIANS.map(function(t){
+        var on=sel.indexOf(t.id)>=0;
+        return '<label class="tech-chip'+(on?' checked':'')+'"><input type="checkbox" value="'+t.id+'"'+(on?' checked':'')+' onchange="this.parentElement.classList.toggle(\'checked\',this.checked)"><span class="av">'+esc(t.name.charAt(0))+'</span>'+esc(t.name)+'</label>';
+    }).join('');
+}
+function openModal(){
+    document.getElementById('jtModalTitle').textContent='➕ Zi de teren';
+    document.getElementById('jtId').value='';
+    document.getElementById('jtStart').value=todayStr();
+    document.getElementById('jtEnd').value=todayStr();
+    document.getElementById('jtLoc').value='';
+    document.getElementById('jtProj').value='';
+    document.getElementById('jtDesc').value='';
+    renderTehChips([]);
+    document.getElementById('jtSubmit').textContent='💾 Salvează';
+    document.getElementById('jtModal').classList.add('active');
+}
+function closeModal(){document.getElementById('jtModal').classList.remove('active');}
+function editEntry(id){
+    var e=STATE.entries.find(function(x){return x.id==id;});
+    if(!e){toast('⚠️ Intrare negăsită','error');return;}
+    document.getElementById('jtModalTitle').textContent='✏️ Editează ziua de teren';
+    document.getElementById('jtId').value=e.id;
+    document.getElementById('jtStart').value=(e.data_start||'').slice(0,10);
+    document.getElementById('jtEnd').value=(e.data_end||e.data_start||'').slice(0,10);
+    document.getElementById('jtLoc').value=e.locatie||'';
+    document.getElementById('jtProj').value=e.proiect_id||'';
+    document.getElementById('jtDesc').value=e.descriere||'';
+    renderTehChips(tehList(e.tehnicieni));
+    document.getElementById('jtSubmit').textContent='💾 Salvează modificările';
+    document.getElementById('jtModal').classList.add('active');
+}
+// auto-aliniere: dacă data sfârșit < data început, o aducem la egalitate
+document.getElementById('jtStart').addEventListener('change',function(){
+    var en=document.getElementById('jtEnd');
+    if(!en.value || en.value<this.value) en.value=this.value;
+});
+
+function saveEntry(ev){
+    ev.preventDefault();
+    var id=document.getElementById('jtId').value;
+    var tehs=Array.prototype.slice.call(document.querySelectorAll('#jtTehs input:checked')).map(function(i){return i.value;});
+    if(!tehs.length){toast('⚠️ Selectează cel puțin un tehnician','error');return;}
+    var payload={
+        action:id?'updateJurnalTeren':'addJurnalTeren',
+        id:id?parseInt(id):undefined,
+        data_start:document.getElementById('jtStart').value,
+        data_end:document.getElementById('jtEnd').value||document.getElementById('jtStart').value,
+        tehnicieni:tehs.join(','),
+        locatie:document.getElementById('jtLoc').value.trim(),
+        proiect_id:document.getElementById('jtProj').value||null,
+        descriere:document.getElementById('jtDesc').value.trim()
+    };
+    var btn=document.getElementById('jtSubmit');btn.disabled=true;var ot=btn.textContent;btn.textContent='⏳ Se salvează...';
+    fetch(API_DB+'?action='+payload.action,{method:'POST',credentials:'include',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)})
+    .then(function(r){return r.json();})
+    .then(function(res){
+        if(!res.success) throw new Error(res.error||'Eroare salvare');
+        toast(id?'✅ Modificări salvate':'✅ Zi de teren adăugată','success');
+        closeModal();refreshData();
+    }).catch(function(e){toast('❌ '+(e.message||e),'error');})
+    .finally(function(){btn.disabled=false;btn.textContent=ot;});
+}
+function delEntry(id){
+    var e=STATE.entries.find(function(x){return x.id==id;});
+    if(!e)return;
+    if(!confirm('Ștergi intrarea din '+fmtRange(e.data_start,e.data_end)+' — '+(e.locatie||'')+' ?\n\nAcțiunea nu poate fi anulată.')) return;
+    fetch(API_DB+'?action=deleteJurnalTeren',{method:'POST',credentials:'include',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'deleteJurnalTeren',id:parseInt(id)})})
+    .then(function(r){return r.json();})
+    .then(function(res){
+        if(!res.success) throw new Error(res.error||'Eroare ștergere');
+        toast('🗑️ Intrare ștearsă','success');refreshData();
+    }).catch(function(e){toast('❌ '+(e.message||e),'error');});
+}
+
+refreshData();
+</script>
+<script>
+if('serviceWorker' in navigator){
+    navigator.serviceWorker.register('../sw.js').then(function(r){console.log('[PWA] SW registered, scope:',r.scope)}).catch(function(e){console.log('[PWA] SW failed:',e)});
+    var __reloaded=false;
+    navigator.serviceWorker.addEventListener('controllerchange',function(){
+        if(__reloaded)return;__reloaded=true;window.location.reload();
+    });
+}
+</script>
+</body>
+</html>

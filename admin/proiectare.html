@@ -23,6 +23,7 @@ a{text-decoration:none;color:inherit;}button{font-family:inherit;cursor:pointer;
 .page-actions{display:flex;gap:8px;align-items:center;}
 .page-btn{padding:10px 16px;border-radius:12px;font-size:13px;font-weight:700;border:none;transition:all 0.2s;display:inline-flex;align-items:center;gap:6px;}
 .page-btn.secondary{background:rgba(255,255,255,0.1);color:#fff;border:1px solid rgba(255,255,255,0.2);}.page-btn.secondary:hover{background:rgba(255,255,255,0.2);}
+.page-btn.primary{background:#fff;color:#1e3a8a;}.page-btn.primary:hover{background:#f0f9ff;}
 .sync-indicator{width:8px;height:8px;border-radius:50%;display:inline-block;margin-right:4px;}
 .sync-ok{background:var(--green);box-shadow:0 0 6px rgba(34,197,94,0.5);}.sync-off{background:var(--gray-l);}.sync-loading{background:var(--orange);animation:pulse 1s infinite;}
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:0.4}}
@@ -90,6 +91,7 @@ a{text-decoration:none;color:inherit;}button{font-family:inherit;cursor:pointer;
             <div class="page-subtitle" id="syncStatus"><span class="sync-indicator sync-off"></span>Se încarcă...</div>
         </div>
         <div class="page-actions">
+            <a href="jurnal-teren.html" class="page-btn primary">📋 Jurnal de teren</a>
             <a href="executie.html" class="page-btn secondary">🔧 Execuție</a>
             <button class="page-btn secondary" onclick="refreshData()">🔄 Reîncarcă</button>
         </div>

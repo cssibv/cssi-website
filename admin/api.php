@@ -739,7 +739,7 @@ try {
                        ->execute(array_values($proiectIds));
                 } catch (Exception $e) { /* tabel poate lipsi */ }
                 foreach (['executie_programari','executie_jurnal','executie_files','executie_progres_material',
-                          'proiectare','proiectare_checklist','proiectare_documente'] as $t) {
+                          'proiectare','proiectare_checklist','proiectare_documente','jurnal_teren'] as $t) {
                     $sum['altele'] += $delIn($t, 'proiect_id', $proiectIds);
                 }
                 // notificari folosește codul text al proiectului
@@ -954,6 +954,8 @@ try {
             if (!$id) { jsonResponse(['success' => false, 'error' => 'ID obligatoriu'], 400); break; }
             // Șterge proiectarea asociată
             $db->prepare("DELETE FROM proiectare WHERE proiect_id = ?")->execute([$id]);
+            // Șterge intrările din jurnalul de teren (best-effort — tabelul poate lipsi)
+            try { $db->prepare("DELETE FROM jurnal_teren WHERE proiect_id = ?")->execute([$id]); } catch (Exception $e) {}
             // Șterge notificările
             $stmtPid = $db->prepare("SELECT proiect_id FROM proiecte WHERE id = ?");
             $stmtPid->execute([$id]);
@@ -2386,6 +2388,106 @@ astăzi data semnării.</p>
                 jsonResponse(['success' => true, 'jurnal' => $jurnal]);
             } else {
                 jsonResponse(['success' => false, 'error' => 'Record negăsit'], 404);
+            }
+            break;
+
+        // ══════════════════════════════════════
+        // JURNAL DE TEREN — pontaj zilnic echipă (cine / unde / ce a făcut)
+        // ══════════════════════════════════════
+        case 'getJurnalTeren':
+        case 'addJurnalTeren':
+        case 'updateJurnalTeren':
+        case 'deleteJurnalTeren':
+            $db->exec("CREATE TABLE IF NOT EXISTS jurnal_teren (
+                id INT AUTO_INCREMENT PRIMARY KEY,
+                data_start DATE NOT NULL,
+                data_end DATE NOT NULL,
+                tehnicieni VARCHAR(255) NOT NULL DEFAULT '',
+                locatie VARCHAR(255) NOT NULL DEFAULT '',
+                proiect_id INT NULL,
+                descriere TEXT,
+                created_by VARCHAR(80) DEFAULT '',
+                created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+                updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+                INDEX idx_jt_data (data_start),
+                INDEX idx_jt_proiect (proiect_id)
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4");
+            $jtUser = currentUser();
+            $jtBy = $jtUser ? (($jtUser['display_name'] ?? '') ?: $jtUser['username']) : 'Admin';
+
+            if ($action === 'getJurnalTeren') {
+                $where = "1=1"; $params = [];
+                if (!empty($_GET['proiect_id'])) { $where .= " AND jt.proiect_id = ?"; $params[] = intval($_GET['proiect_id']); }
+                if (!empty($_GET['tehnician']))  { $where .= " AND jt.tehnicieni LIKE ?"; $params[] = '%' . $_GET['tehnician'] . '%'; }
+                if (!empty($_GET['from']))       { $where .= " AND jt.data_end >= ?";   $params[] = $_GET['from']; }
+                if (!empty($_GET['to']))         { $where .= " AND jt.data_start <= ?"; $params[] = $_GET['to']; }
+                if (!empty($_GET['search']))     {
+                    $where .= " AND (jt.locatie LIKE ? OR jt.descriere LIKE ? OR jt.tehnicieni LIKE ?)";
+                    $s = '%' . $_GET['search'] . '%'; $params[] = $s; $params[] = $s; $params[] = $s;
+                }
+                $stmt = $db->prepare("SELECT jt.*, p.proiect_id AS proiect_cod, c.nume AS client_nume
+                    FROM jurnal_teren jt
+                    LEFT JOIN proiecte p ON jt.proiect_id = p.id
+                    LEFT JOIN clienti c ON p.client_id = c.id
+                    WHERE $where
+                    ORDER BY jt.data_start DESC, jt.id DESC
+                    LIMIT 500");
+                $stmt->execute($params);
+                jsonResponse(['success' => true, 'data' => $stmt->fetchAll()]);
+                break;
+            }
+
+            if ($action === 'deleteJurnalTeren') {
+                $jid = isset($data['id']) ? intval($data['id']) : 0;
+                if (!$jid) jsonResponse(['success' => false, 'error' => 'id obligatoriu'], 400);
+                $own = $db->prepare("SELECT created_by FROM jurnal_teren WHERE id = ?");
+                $own->execute([$jid]);
+                $jr = $own->fetch();
+                if (!$jr) jsonResponse(['success' => false, 'error' => 'Intrare negăsită'], 404);
+                $isAdm = $jtUser && (($jtUser['role'] ?? '') === 'admin');
+                if (!$isAdm && $jr['created_by'] !== $jtBy) {
+                    jsonResponse(['success' => false, 'error' => 'Poți șterge doar intrările proprii (sau ești admin)'], 403);
+                }
+                $db->prepare("DELETE FROM jurnal_teren WHERE id = ?")->execute([$jid]);
+                jsonResponse(['success' => true]);
+                break;
+            }
+
+            // add / update — validare comună
+            $ds  = isset($data['data_start']) ? trim($data['data_start']) : '';
+            $de  = isset($data['data_end'])   ? trim($data['data_end'])   : '';
+            $teh = isset($data['tehnicieni']) ? trim($data['tehnicieni']) : '';
+            $loc = isset($data['locatie'])    ? trim($data['locatie'])    : '';
+            $desc= isset($data['descriere'])  ? trim($data['descriere'])  : '';
+            $jpid= (isset($data['proiect_id']) && $data['proiect_id'] !== '' && $data['proiect_id'] !== null)
+                   ? intval($data['proiect_id']) : null;
+            if (!$ds) $ds = date('Y-m-d');
+            if (!$de) $de = $ds;
+            if ($de < $ds) jsonResponse(['success' => false, 'error' => 'Data sfârșit nu poate fi înainte de data început'], 400);
+            if (!$teh)  jsonResponse(['success' => false, 'error' => 'Selectează cel puțin un tehnician'], 400);
+            if (!$loc)  jsonResponse(['success' => false, 'error' => 'Locația este obligatorie'], 400);
+            if (!$desc) jsonResponse(['success' => false, 'error' => 'Descrierea (ce au făcut) este obligatorie'], 400);
+
+            if ($action === 'addJurnalTeren') {
+                $stmt = $db->prepare("INSERT INTO jurnal_teren
+                    (data_start, data_end, tehnicieni, locatie, proiect_id, descriere, created_by)
+                    VALUES (?,?,?,?,?,?,?)");
+                $stmt->execute([$ds, $de, $teh, $loc, $jpid, $desc, $jtBy]);
+                jsonResponse(['success' => true, 'id' => $db->lastInsertId()]);
+            } else { // updateJurnalTeren
+                $jid = isset($data['id']) ? intval($data['id']) : 0;
+                if (!$jid) jsonResponse(['success' => false, 'error' => 'id obligatoriu'], 400);
+                $own = $db->prepare("SELECT created_by FROM jurnal_teren WHERE id = ?");
+                $own->execute([$jid]);
+                $jr = $own->fetch();
+                if (!$jr) jsonResponse(['success' => false, 'error' => 'Intrare negăsită'], 404);
+                $isAdm = $jtUser && (($jtUser['role'] ?? '') === 'admin');
+                if (!$isAdm && $jr['created_by'] !== $jtBy) {
+                    jsonResponse(['success' => false, 'error' => 'Poți edita doar intrările proprii (sau ești admin)'], 403);
+                }
+                $db->prepare("UPDATE jurnal_teren SET data_start=?, data_end=?, tehnicieni=?, locatie=?, proiect_id=?, descriere=? WHERE id=?")
+                   ->execute([$ds, $de, $teh, $loc, $jpid, $desc, $jid]);
+                jsonResponse(['success' => true]);
             }
             break;
 
