@@ -39,32 +39,67 @@ a{text-decoration:none;color:inherit;}button{font-family:inherit;cursor:pointer;
 .filter-search:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(59,130,246,0.08);}
 .filter-sel{padding:9px 14px;border-radius:99px;font-size:12px;border:1px solid var(--gray-b);outline:none;font-family:inherit;background:#fff;font-weight:600;color:var(--dark);}
 .filter-sel:focus{border-color:var(--blue);}
-.filter-date{padding:8px 12px;border-radius:10px;font-size:12px;border:1px solid var(--gray-b);outline:none;font-family:inherit;background:#fff;}
 .btn-add{margin-left:auto;padding:11px 20px;border-radius:12px;font-size:13px;font-weight:800;border:none;background:linear-gradient(135deg,var(--blue),#2563eb);color:#fff;display:inline-flex;align-items:center;gap:6px;transition:all 0.2s;box-shadow:var(--shadow);}
 .btn-add:hover{transform:translateY(-1px);box-shadow:var(--shadow-md);}
 @media(max-width:600px){.btn-add{margin-left:0;width:100%;justify-content:center;}}
 
-/* TIMELINE */
-.day-group{margin-bottom:18px;}
-.day-group-head{font-size:12px;font-weight:800;color:var(--gray);text-transform:uppercase;letter-spacing:0.8px;margin:0 4px 8px;display:flex;align-items:center;gap:8px;}
-.day-group-head .ln{flex:1;height:1px;background:var(--gray-b);}
-.jt-card{background:#fff;border-radius:var(--radius);box-shadow:var(--shadow);margin-bottom:10px;padding:16px 18px;border-left:4px solid var(--blue);transition:all 0.2s;}
-.jt-card:hover{box-shadow:var(--shadow-md);}
+/* CALENDAR NAV */
+.cal-nav{display:flex;align-items:center;gap:10px;margin-bottom:12px;flex-wrap:wrap;background:#fff;border-radius:var(--radius-sm);box-shadow:var(--shadow);padding:10px 14px;}
+.nav-btn{width:34px;height:34px;border-radius:9px;border:1px solid var(--gray-b);background:#fff;color:var(--dark);font-size:14px;font-weight:800;display:flex;align-items:center;justify-content:center;transition:all .15s;}
+.nav-btn:hover{border-color:var(--blue);color:var(--blue);background:#eff6ff;}
+.cal-month{font-size:17px;font-weight:900;color:var(--dark);min-width:170px;text-align:center;}
+.nav-today{padding:8px 15px;border-radius:9px;border:1px solid var(--gray-b);background:#fff;font-size:12px;font-weight:800;color:var(--gray);transition:all .15s;}
+.nav-today:hover{border-color:var(--blue);color:var(--blue);background:#eff6ff;}
+.cal-legend{display:flex;flex-wrap:wrap;gap:6px;margin-left:auto;align-items:center;}
+.lg-chip{display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:700;color:var(--gray);background:var(--gray-bg);padding:3px 9px 3px 6px;border-radius:99px;}
+.lg-dot{width:10px;height:10px;border-radius:3px;flex-shrink:0;}
+
+/* CALENDAR GRID */
+.cal{background:#fff;border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden;}
+.cal-dow{display:grid;grid-template-columns:repeat(7,1fr);background:#f8fafc;border-bottom:1px solid var(--gray-b);}
+.cal-dow span{padding:9px 6px;text-align:center;font-size:11px;font-weight:800;color:var(--gray);text-transform:uppercase;letter-spacing:.5px;}
+.cal-week{border-bottom:1px solid var(--gray-b);}
+.cal-week:last-child{border-bottom:none;}
+.cal-days{display:grid;grid-template-columns:repeat(7,1fr);}
+.cal-day{min-height:32px;padding:5px 7px;border-right:1px solid var(--gray-b);cursor:pointer;transition:background .12s;position:relative;}
+.cal-day:last-child{border-right:none;}
+.cal-day:hover{background:#eff6ff;}
+.cal-day .dn{font-size:12px;font-weight:800;color:var(--dark);display:inline-flex;align-items:center;justify-content:center;min-width:22px;height:22px;}
+.cal-day.out{background:#fcfcfd;}.cal-day.out .dn{color:var(--gray-xl);}
+.cal-day.today .dn{background:var(--blue);color:#fff;border-radius:50%;}
+.cal-day.sel{background:#dbeafe;box-shadow:inset 0 0 0 2px var(--blue);}
+.cal-day .add-hint{position:absolute;top:6px;right:8px;font-size:15px;line-height:1;color:var(--blue);opacity:0;transition:opacity .12s;font-weight:800;}
+.cal-day:hover .add-hint{opacity:.65;}
+.cal-lanes{display:flex;flex-direction:column;gap:3px;padding:0 4px 6px;}
+.cal-lane{display:grid;grid-template-columns:repeat(7,1fr);column-gap:3px;}
+.cal-bar{grid-row:1;height:21px;border-radius:6px;border:none;color:#fff;font-size:10.5px;font-weight:800;padding:0 7px;display:flex;align-items:center;gap:4px;overflow:hidden;white-space:nowrap;cursor:pointer;transition:filter .12s,transform .12s;box-shadow:0 1px 2px rgba(0,0,0,.15);min-width:0;}
+.cal-bar:hover{filter:brightness(1.08);transform:translateY(-1px);}
+.cal-bar.s0{border-top-left-radius:0;border-bottom-left-radius:0;}
+.cal-bar.e0{border-top-right-radius:0;border-bottom-right-radius:0;}
+.cal-bar .bt{width:15px;height:15px;border-radius:50%;background:rgba(255,255,255,.30);display:inline-flex;align-items:center;justify-content:center;font-size:9px;flex-shrink:0;}
+.cal-bar .lbl-loc{overflow:hidden;text-overflow:ellipsis;}
+.cal-tip{text-align:center;font-size:12px;color:var(--gray);background:#eff6ff;border-radius:10px;padding:10px;margin-bottom:12px;}
+@media(max-width:640px){.cal-bar{font-size:9px;padding:0 4px;gap:2px;}.cal-bar .lbl-loc{display:none;}.cal-day{min-height:26px;padding:4px;}.cal-month{min-width:120px;font-size:15px;}}
+
+/* DAY DETAIL */
+.day-detail{background:#fff;border-radius:var(--radius);box-shadow:var(--shadow);margin-top:14px;padding:16px 18px;}
+.dd-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:12px;flex-wrap:wrap;}
+.dd-title{font-size:15px;font-weight:900;color:var(--dark);}
+.dd-add{padding:8px 14px;border-radius:9px;border:none;background:linear-gradient(135deg,var(--blue),#2563eb);color:#fff;font-size:12px;font-weight:800;}
+.dd-empty{color:var(--gray-l);font-size:13px;font-style:italic;padding:8px 0;}
+.jt-card{background:var(--gray-bg);border-radius:12px;margin-bottom:8px;padding:13px 15px;border-left:4px solid var(--blue);}
 .jt-card.noproj{border-left-color:var(--gray-l);}
-.jt-top{display:flex;align-items:flex-start;gap:12px;flex-wrap:wrap;}
-.jt-daterange{font-size:14px;font-weight:800;color:var(--dark);background:#eff6ff;padding:5px 12px;border-radius:10px;white-space:nowrap;}
-.jt-daterange .nz{font-size:10px;font-weight:700;color:var(--blue);display:block;margin-top:1px;}
-.jt-main{flex:1;min-width:200px;}
-.jt-loc{font-size:15px;font-weight:800;color:var(--dark);display:flex;align-items:center;gap:6px;}
+.jt-loc{font-size:14px;font-weight:800;color:var(--dark);}
+.jt-range{font-size:11px;font-weight:700;color:var(--blue);margin-left:6px;}
 .jt-proj{display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:700;background:#f5f3ff;color:var(--purple);padding:3px 9px;border-radius:99px;margin-top:6px;}
-.jt-proj.none{background:var(--gray-bg);color:var(--gray);}
+.jt-proj.none{background:#e2e8f0;color:var(--gray);}
 .jt-desc{font-size:13px;color:var(--dark2);line-height:1.5;margin-top:8px;white-space:pre-wrap;}
 .jt-tehs{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px;}
-.teh-badge{display:inline-flex;align-items:center;gap:5px;background:var(--gray-bg);border-radius:99px;padding:3px 10px 3px 3px;font-size:12px;font-weight:700;color:var(--dark);}
+.teh-badge{display:inline-flex;align-items:center;gap:5px;background:#fff;border:1px solid var(--gray-b);border-radius:99px;padding:3px 10px 3px 3px;font-size:12px;font-weight:700;color:var(--dark);}
 .teh-av{width:22px;height:22px;border-radius:50%;background:linear-gradient(135deg,var(--blue),#1e3a8a);color:#fff;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;}
-.jt-foot{display:flex;align-items:center;gap:10px;margin-top:12px;padding-top:10px;border-top:1px solid var(--gray-b);font-size:11px;color:var(--gray-l);}
+.jt-foot{display:flex;align-items:center;gap:8px;margin-top:10px;padding-top:9px;border-top:1px solid var(--gray-b);font-size:11px;color:var(--gray-l);}
 .jt-foot .sp{flex:1;}
-.jt-btn{background:none;border:1px solid var(--gray-b);color:var(--gray);font-size:11px;font-weight:700;padding:5px 12px;border-radius:8px;transition:all 0.15s;}
+.jt-btn{background:#fff;border:1px solid var(--gray-b);color:var(--gray);font-size:11px;font-weight:700;padding:5px 11px;border-radius:8px;}
 .jt-btn:hover{border-color:var(--blue);color:var(--blue);}
 .jt-btn.del:hover{border-color:var(--red);color:var(--red);background:#fef2f2;}
 
@@ -130,12 +165,19 @@ a{text-decoration:none;color:inherit;}button{font-family:inherit;cursor:pointer;
         <input type="text" class="filter-search" id="searchInput" placeholder="🔍 Caută locație, descriere, tehnician..." oninput="render()">
         <select class="filter-sel" id="fTeh" onchange="render()"><option value="">👷 Toți tehnicienii</option></select>
         <select class="filter-sel" id="fProj" onchange="render()"><option value="">📐 Toate proiectele</option></select>
-        <input type="date" class="filter-date" id="fFrom" onchange="render()" title="De la data">
-        <input type="date" class="filter-date" id="fTo" onchange="render()" title="Până la data">
         <button class="btn-add" onclick="openModal()">➕ Adaugă zi de teren</button>
     </div>
 
-    <div id="list"></div>
+    <div class="cal-nav">
+        <button class="nav-btn" onclick="shiftMonth(-1)" title="Luna anterioară">◀</button>
+        <div class="cal-month" id="calMonthLbl">—</div>
+        <button class="nav-btn" onclick="shiftMonth(1)" title="Luna următoare">▶</button>
+        <button class="nav-today" onclick="goToday()">📅 Astăzi</button>
+        <div class="cal-legend" id="calLegend"></div>
+    </div>
+
+    <div id="cal"></div>
+    <div id="dayDetail"></div>
 
     <div class="footer">Portal CSSI 3.0 · Jurnal de Teren v1.0 · cine / unde / ce s-a făcut</div>
 </div>
@@ -182,8 +224,10 @@ var TECHNICIANS = [
 ];
 var TECH_BY_ID = {}; TECHNICIANS.forEach(function(t){TECH_BY_ID[t.id]=t.name;});
 
-var STATE = { entries:[], proiecte:[], loaded:false };
+var STATE = { entries:[], proiecte:[], loaded:false, viewY:0, viewM:0, selDay:'' };
 var MONTHS = ['Ian','Feb','Mar','Apr','Mai','Iun','Iul','Aug','Sep','Oct','Noi','Dec'];
+var MONTHS_FULL = ['Ianuarie','Februarie','Martie','Aprilie','Mai','Iunie','Iulie','August','Septembrie','Octombrie','Noiembrie','Decembrie'];
+var CAL_PALETTE = ['#3b82f6','#16a34a','#ea580c','#7c3aed','#db2777','#0d9488','#ca8a04','#dc2626','#0ea5e9','#65a30d'];
 
 function esc(s){if(s==null)return '';var d=document.createElement('div');d.textContent=s;return d.innerHTML;}
 function showLoading(s){document.getElementById('loadBar').classList.toggle('active',s);}
@@ -249,18 +293,14 @@ function populateProjSelects(){
     f.value=cur;
 }
 
-// ═══ RENDER ═══
+// ═══ FILTRE ═══
 function applyFilters(){
     var q=(document.getElementById('searchInput').value||'').toLowerCase().trim();
     var fTeh=document.getElementById('fTeh').value;
     var fProj=document.getElementById('fProj').value;
-    var fFrom=document.getElementById('fFrom').value;
-    var fTo=document.getElementById('fTo').value;
     return STATE.entries.filter(function(e){
         if(fTeh && tehList(e.tehnicieni).indexOf(fTeh)<0) return false;
         if(fProj && String(e.proiect_id||'')!==String(fProj)) return false;
-        if(fFrom && (e.data_end||e.data_start) < fFrom) return false;
-        if(fTo && (e.data_start||'') > fTo) return false;
         if(q){
             var hay=((e.locatie||'')+' '+(e.descriere||'')+' '+(e.proiect_cod||'')+' '+(e.client_nume||'')+' '+tehList(e.tehnicieni).map(tehName).join(' ')).toLowerCase();
             if(hay.indexOf(q)<0) return false;
@@ -269,61 +309,161 @@ function applyFilters(){
     });
 }
 
+// ═══ CALENDAR — helperi ═══
+function ymd(d){return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');}
+function dstr10(s){return String(s||'').slice(0,10);}
+function monIdx(d){return (d.getDay()+6)%7;} // Luni=0 ... Duminică=6
+function monthWeeks(y,m){
+    var first=new Date(y,m,1);
+    var start=new Date(y,m,1-monIdx(first));
+    var weeks=[];
+    for(var w=0;w<6;w++){
+        var row=[];
+        for(var i=0;i<7;i++){ row.push(new Date(start.getFullYear(),start.getMonth(),start.getDate()+w*7+i)); }
+        weeks.push(row);
+    }
+    return weeks.filter(function(row){ return row.some(function(dt){return dt.getMonth()===m;}); });
+}
+function dayIdxInWeek(dst,week){ for(var i=0;i<7;i++){ if(ymd(week[i])===dst) return i; } return 0; }
+function colorFor(e){
+    if(!e.proiect_id) return '#94a3b8';
+    var k=String(e.proiect_id), h=0;
+    for(var i=0;i<k.length;i++) h=(h*31+k.charCodeAt(i))>>>0;
+    return CAL_PALETTE[h%CAL_PALETTE.length];
+}
+function shiftMonth(d){
+    var m=STATE.viewM+d, y=STATE.viewY;
+    if(m<0){m=11;y--;} if(m>11){m=0;y++;}
+    STATE.viewY=y; STATE.viewM=m; render();
+}
+function goToday(){ var n=new Date(); STATE.viewY=n.getFullYear(); STATE.viewM=n.getMonth(); STATE.selDay=ymd(n); render(); }
+function selectDay(dst){ STATE.selDay=(STATE.selDay===dst?'':dst); render(); var dd=document.getElementById('dayDetail'); if(dd&&STATE.selDay) dd.scrollIntoView({behavior:'smooth',block:'nearest'}); }
+
+// ═══ RENDER CALENDAR ═══
 function render(){
     renderSummary();
-    var c=document.getElementById('list');
+    var c=document.getElementById('cal');
     if(!STATE.loaded){c.innerHTML='<div class="empty-state"><div class="empty-icon">⏳</div><div class="empty-msg">Se încarcă...</div></div>';return;}
-    var rows=applyFilters();
-    if(!STATE.entries.length){
-        c.innerHTML='<div class="empty-state"><div class="empty-icon">📝</div><div class="empty-title">Niciun jurnal încă</div><div class="empty-msg">Apasă „➕ Adaugă zi de teren" și notează unde au fost băieții și ce au făcut.</div></div>';
-        return;
-    }
-    if(!rows.length){c.innerHTML='<div class="empty-state"><div class="empty-icon">🔍</div><div class="empty-msg">Niciun rezultat pentru filtrele selectate.</div></div>';return;}
+    if(!STATE.viewY){ var n0=new Date(); STATE.viewY=n0.getFullYear(); STATE.viewM=n0.getMonth(); }
+    var y=STATE.viewY, m=STATE.viewM;
+    document.getElementById('calMonthLbl').textContent=MONTHS_FULL[m]+' '+y;
 
-    // Grupare pe luni (pe baza data_start)
-    var groups={}, order=[];
-    rows.forEach(function(e){
-        var d=parseD(e.data_start);
-        var key=d?(d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')):'—';
-        var lbl=d?(['Ianuarie','Februarie','Martie','Aprilie','Mai','Iunie','Iulie','August','Septembrie','Octombrie','Noiembrie','Decembrie'][d.getMonth()]+' '+d.getFullYear()):'Fără dată';
-        if(!groups[key]){groups[key]={lbl:lbl,items:[]};order.push(key);}
-        groups[key].items.push(e);
+    var rows=applyFilters();
+    var monStart=ymd(new Date(y,m,1)), monEnd=ymd(new Date(y,m+1,0));
+    var monthEntries=rows.filter(function(e){
+        var s=dstr10(e.data_start), en=dstr10(e.data_end||e.data_start);
+        return !(en<monStart || s>monEnd);
     });
 
+    var weeks=monthWeeks(y,m);
+    var todayY=ymd(new Date());
+    var DOW=['Lun','Mar','Mie','Joi','Vin','Sâm','Dum'];
     var html='';
-    order.forEach(function(k){
-        var g=groups[k];
-        html+='<div class="day-group"><div class="day-group-head"><span>'+esc(g.lbl)+'</span><span class="ln"></span><span>'+g.items.length+' intrări</span></div>';
-        g.items.forEach(function(e){
-            var tehs=tehList(e.tehnicieni);
-            var hasProj=!!e.proiect_id;
-            html+='<div class="jt-card'+(hasProj?'':' noproj')+'">';
-            html+='<div class="jt-top">';
-            html+='<div class="jt-daterange">'+esc(fmtRange(e.data_start,e.data_end))+'<span class="nz">'+nDays(e.data_start,e.data_end)+' zile</span></div>';
-            html+='<div class="jt-main">';
-            html+='<div class="jt-loc">📍 '+esc(e.locatie||'—')+'</div>';
+    if(!STATE.entries.length){
+        html+='<div class="cal-tip">📝 Niciun jurnal încă — apasă pe o zi sau pe „➕ Adaugă zi de teren" și notează unde au fost băieții și ce au făcut.</div>';
+    }
+    html+='<div class="cal"><div class="cal-dow">'+DOW.map(function(d){return '<span>'+d+'</span>';}).join('')+'</div>';
+
+    weeks.forEach(function(week){
+        var wStart=ymd(week[0]), wEnd=ymd(week[6]);
+        html+='<div class="cal-week"><div class="cal-days">';
+        week.forEach(function(dt){
+            var ds=ymd(dt), out=dt.getMonth()!==m;
+            var cls='cal-day'+(out?' out':'')+(ds===todayY?' today':'')+(ds===STATE.selDay?' sel':'');
+            html+='<div class="'+cls+'" onclick="selectDay(\''+ds+'\')"><span class="dn">'+dt.getDate()+'</span><span class="add-hint">＋</span></div>';
+        });
+        html+='</div>';
+
+        var segs=[];
+        monthEntries.forEach(function(e){
+            var s=dstr10(e.data_start), en=dstr10(e.data_end||e.data_start);
+            if(en<wStart || s>wEnd) return;
+            var ss=s<wStart?wStart:s, se=en>wEnd?wEnd:en;
+            segs.push({c0:dayIdxInWeek(ss,week), c1:dayIdxInWeek(se,week), e:e, clipL:s<wStart, clipR:en>wEnd});
+        });
+        segs.sort(function(a,b){return a.c0-b.c0 || (b.c1-b.c0)-(a.c1-a.c0);});
+        var lanes=[];
+        segs.forEach(function(sg){
+            var li=0;
+            for(;li<lanes.length;li++){
+                var free=lanes[li].every(function(x){return sg.c0>x.c1 || sg.c1<x.c0;});
+                if(free){lanes[li].push(sg);break;}
+            }
+            if(li===lanes.length) lanes.push([sg]);
+        });
+        if(lanes.length){
+            html+='<div class="cal-lanes">';
+            lanes.forEach(function(laneSegs){
+                html+='<div class="cal-lane">';
+                laneSegs.forEach(function(sg){
+                    var e=sg.e, color=colorFor(e), tehs=tehList(e.tehnicieni);
+                    var avs=tehs.slice(0,3).map(function(id){return '<span class="bt">'+esc(tehName(id).charAt(0).toUpperCase())+'</span>';}).join('');
+                    var more=tehs.length>3?('<span class="bt">+'+(tehs.length-3)+'</span>'):'';
+                    var span=sg.c1-sg.c0+1;
+                    var tip=fmtRange(e.data_start,e.data_end)+' — '+(e.locatie||'')+' — '+tehs.map(tehName).join(', ')+(e.proiect_cod?(' ['+e.proiect_cod+']'):'');
+                    html+='<button class="cal-bar'+(sg.clipL?' s0':'')+(sg.clipR?' e0':'')+'" style="grid-column:'+(sg.c0+1)+'/span '+span+';background:'+color+'" title="'+esc(tip)+'" onclick=\'event.stopPropagation();editEntry('+JSON.stringify(e.id)+')\'>'+avs+more+'<span class="lbl-loc">'+esc(e.locatie||'—')+'</span></button>';
+                });
+                html+='</div>';
+            });
+            html+='</div>';
+        }
+        html+='</div>';
+    });
+    html+='</div>';
+    c.innerHTML=html;
+    renderLegend(monthEntries);
+    renderDayDetail();
+}
+
+function renderLegend(monthEntries){
+    var el=document.getElementById('calLegend'); if(!el) return;
+    var seen={}, chips=[], hasGen=false;
+    monthEntries.forEach(function(e){
+        if(!e.proiect_id){ hasGen=true; return; }
+        var k=String(e.proiect_id);
+        if(seen[k]) return; seen[k]=1;
+        chips.push('<span class="lg-chip"><span class="lg-dot" style="background:'+colorFor(e)+'"></span>'+esc(e.proiect_cod||('#'+e.proiect_id))+'</span>');
+    });
+    if(hasGen) chips.push('<span class="lg-chip"><span class="lg-dot" style="background:#94a3b8"></span>Lucrare generală</span>');
+    el.innerHTML=chips.join('');
+}
+
+function renderDayDetail(){
+    var el=document.getElementById('dayDetail'); if(!el) return;
+    if(!STATE.selDay){ el.innerHTML=''; return; }
+    var ds=STATE.selDay;
+    var items=applyFilters().filter(function(e){
+        return dstr10(e.data_start)<=ds && dstr10(e.data_end||e.data_start)>=ds;
+    });
+    var html='<div class="day-detail"><div class="dd-head"><div class="dd-title">📅 '+esc(fmtD(ds))+' · '+items.length+' '+(items.length===1?'intrare':'intrări')+'</div>'+
+             '<button class="dd-add" onclick="openModalForDate(\''+ds+'\')">➕ Adaugă în această zi</button></div>';
+    if(!items.length){
+        html+='<div class="dd-empty">Nicio activitate de teren înregistrată în această zi. Apasă „➕ Adaugă în această zi".</div>';
+    } else {
+        items.forEach(function(e){
+            var tehs=tehList(e.tehnicieni), hasProj=!!e.proiect_id;
+            html+='<div class="jt-card'+(hasProj?'':' noproj')+'" style="border-left-color:'+colorFor(e)+'">';
+            html+='<div><span class="jt-loc">📍 '+esc(e.locatie||'—')+'</span><span class="jt-range">'+esc(fmtRange(e.data_start,e.data_end))+' · '+nDays(e.data_start,e.data_end)+' zile</span></div>';
             if(hasProj){
-                var purl=(e.proiect_id?('proiectare-proiect.html?id='+e.proiect_id):'proiecte.html');
-                html+='<a href="'+purl+'" class="jt-proj">📐 '+esc((e.proiect_cod||('#'+e.proiect_id))+(e.client_nume?(' · '+e.client_nume):''))+'</a>';
+                html+='<a href="proiectare-proiect.html?id='+e.proiect_id+'" class="jt-proj">📐 '+esc((e.proiect_cod||('#'+e.proiect_id))+(e.client_nume?(' · '+e.client_nume):''))+'</a>';
             } else {
                 html+='<span class="jt-proj none">⚙️ Lucrare generală (fără proiect)</span>';
             }
             html+='<div class="jt-desc">'+esc(e.descriere||'')+'</div>';
-            html+='<div class="jt-tehs">'+tehs.map(function(id){
-                var nm=tehName(id);
-                return '<span class="teh-badge"><span class="teh-av">'+esc(nm.charAt(0).toUpperCase())+'</span>'+esc(nm)+'</span>';
-            }).join('')+'</div>';
-            html+='</div>';
-            html+='</div>';
+            html+='<div class="jt-tehs">'+tehs.map(function(id){var nm=tehName(id);return '<span class="teh-badge"><span class="teh-av">'+esc(nm.charAt(0).toUpperCase())+'</span>'+esc(nm)+'</span>';}).join('')+'</div>';
             html+='<div class="jt-foot"><span>✍️ '+esc(e.created_by||'—')+'</span><span class="sp"></span>';
             html+='<button class="jt-btn" onclick=\'editEntry('+JSON.stringify(e.id)+')\'>✏️ Editează</button>';
-            html+='<button class="jt-btn del" onclick=\'delEntry('+JSON.stringify(e.id)+')\'>🗑️ Șterge</button>';
-            html+='</div>';
+            html+='<button class="jt-btn del" onclick=\'delEntry('+JSON.stringify(e.id)+')\'>🗑️ Șterge</button></div>';
             html+='</div>';
         });
-        html+='</div>';
-    });
-    c.innerHTML=html;
+    }
+    html+='</div>';
+    el.innerHTML=html;
+}
+function openModalForDate(ds){
+    openModal();
+    document.getElementById('jtStart').value=ds;
+    document.getElementById('jtEnd').value=ds;
 }
 
 function renderSummary(){
