@@ -334,7 +334,32 @@ function toggleAccordion(id) {
         allIds.forEach(function(aid) {
             document.getElementById('content-'+aid).style.display = 'none';
             document.getElementById('icon-'+aid).textContent = '👆';
-            document.getEl
+            document.getElementById('icon-'+aid).style.transform = '';
+        });
+        document.getElementById('content-'+id).style.display = 'block';
+        document.getElementById('icon-'+id).textContent = '👇';
+        document.getElementById('icon-'+id).style.transform = 'rotate(180deg)';
+        openId = id;
+    }
+}
+</script>
+
+<script>
+document.querySelectorAll('.faq-item').forEach(function(item){
+    item.querySelector('.faq-q').addEventListener('click',function(){
+        var wasOpen=item.classList.contains('open');
+        document.querySelectorAll('.faq-item').forEach(function(i){
+            i.classList.remove('open');
+            i.querySelector('.faq-a').style.maxHeight=null;
+        });
+        if(!wasOpen){
+            item.classList.add('open');
+            var a=item.querySelector('.faq-a');
+            a.style.maxHeight=a.scrollHeight+'px';
+        }
+    });
+});
+</script>
 
 <script>
 async function submitForm(e) {
@@ -359,7 +384,6 @@ async function submitForm(e) {
     document.getElementById('contactForm').style.display = 'none';
     document.getElementById('contactSuccess').style.display = 'block';
 }
-});
 </script>
 
 <script type="application/ld+json">
