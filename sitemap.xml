@@ -278,4 +278,41 @@
         <changefreq>monthly</changefreq>
         <priority>0.8</priority>
     </url>
+  <!-- LOCALIZED LANDING PAGES - May 2026 -->
+  <url>
+    <loc>https://cssi.ro/sistem-integrat-securitate-brasov</loc>
+    <lastmod>2026-05-20</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://cssi.ro/camere-supraveghere-sibiu</loc>
+    <lastmod>2026-05-20</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://cssi.ro/alarma-antiefractie-sibiu</loc>
+    <lastmod>2026-05-20</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://cssi.ro/camere-supraveghere-targu-mures</loc>
+    <lastmod>2026-05-20</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://cssi.ro/alarma-antiefractie-ploiesti</loc>
+    <lastmod>2026-05-20</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://cssi.ro/contract</loc>
+    <lastmod>2026-05-20</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
 </urlset>
