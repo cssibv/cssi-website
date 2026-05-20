@@ -43,6 +43,9 @@ function ensureOferteColumns($db) {
             $db->exec("ALTER TABLE oferte ADD COLUMN expires_at DATE NULL DEFAULT NULL");
             try { $db->exec("ALTER TABLE oferte ADD INDEX idx_expires (expires_at)"); } catch(Exception $e){}
         }
+        if (!in_array('mentiuni', $cols)) {
+            $db->exec("ALTER TABLE oferte ADD COLUMN mentiuni TEXT NULL DEFAULT NULL");
+        }
     } catch (Exception $e) {
         // Loghez ca să pot debug (apare în error_log)
         error_log('ensureOferteColumns FAILED: ' . $e->getMessage());
@@ -647,9 +650,120 @@ try {
             break;
 
         case 'deleteClient':
-            $id = (isset($data['id']) ? $data['id'] : 0);
-            $db->prepare("DELETE FROM clienti WHERE id = ?")->execute([$id]);
-            jsonResponse(['success' => true]);
+            // Doar admin poate șterge clienți (operațiune ireversibilă)
+            requireAdmin();
+            $id = isset($data['id']) ? intval($data['id']) : 0;
+            if (!$id) jsonResponse(['success' => false, 'error' => 'id client obligatoriu'], 400);
+
+            $cli = $db->prepare("SELECT id, nume FROM clienti WHERE id = ?");
+            $cli->execute([$id]);
+            $cliRow = $cli->fetch();
+            if (!$cliRow) jsonResponse(['success' => false, 'error' => 'Client negăsit'], 404);
+
+            // ─── GARDĂ DE SIGURANȚĂ ──────────────────────────────────
+            // Ștergerea cascadă e permisă DOAR pentru clienți "morți":
+            // fără oferte acceptate și fără proiecte care au depășit faza
+            // de Lead/Ofertă (Anulat e ok). Asta protejează datele reale.
+            $cntSafe = function($table, $where) use ($db, $id) {
+                try {
+                    $st = $db->prepare("SELECT COUNT(*) FROM $table WHERE $where");
+                    $st->execute([$id]);
+                    return intval($st->fetchColumn());
+                } catch (Exception $e) { return 0; }
+            };
+            $nOferteAcceptate = $cntSafe('oferte', "client_id = ? AND status = 'Acceptata'");
+            $nProiecteActive  = $cntSafe('proiecte', "client_id = ? AND status NOT IN ('Lead','Oferta','Anulat')");
+            if ($nOferteAcceptate > 0 || $nProiecteActive > 0) {
+                $motive = [];
+                if ($nOferteAcceptate) $motive[] = "$nOferteAcceptate ofertă(e) acceptată(e)";
+                if ($nProiecteActive)  $motive[] = "$nProiecteActive proiect(e) în lucru";
+                jsonResponse([
+                    'success' => false,
+                    'error'   => 'Clientul "' . $cliRow['nume'] . '" are ' . implode(' și ', $motive) .
+                                 '. Nu poate fi șters automat — gestionează manual aceste înregistrări.',
+                    'code'    => 'HAS_ACTIVITY'
+                ], 409);
+            }
+
+            // ─── CASCADĂ ─────────────────────────────────────────────
+            // Best-effort per statement (unele tabele pot lipsi pe medii diferite),
+            // în ordinea dependențelor: copii → părinți → client.
+            $delIn = function($table, $col, array $ids) use ($db) {
+                if (!$ids) return 0;
+                try {
+                    $ph = implode(',', array_fill(0, count($ids), '?'));
+                    $st = $db->prepare("DELETE FROM $table WHERE $col IN ($ph)");
+                    $st->execute(array_values($ids));
+                    return $st->rowCount();
+                } catch (Exception $e) { return 0; }
+            };
+            $delEq = function($table, $col, $val) use ($db) {
+                try {
+                    $st = $db->prepare("DELETE FROM $table WHERE $col = ?");
+                    $st->execute([$val]);
+                    return $st->rowCount();
+                } catch (Exception $e) { return 0; }
+            };
+
+            // Colectează ID-urile proiectelor (numeric) + codurile (proiect_id text)
+            $proiectIds = []; $proiectCods = [];
+            try {
+                $stP = $db->prepare("SELECT id, proiect_id FROM proiecte WHERE client_id = ?");
+                $stP->execute([$id]);
+                foreach ($stP->fetchAll() as $pr) {
+                    $proiectIds[] = intval($pr['id']);
+                    if (!empty($pr['proiect_id'])) $proiectCods[] = $pr['proiect_id'];
+                }
+            } catch (Exception $e) { /* fără proiecte */ }
+
+            // Colectează ID-urile ofertelor
+            $ofertaIds = [];
+            try {
+                $stO = $db->prepare("SELECT id FROM oferte WHERE client_id = ?");
+                $stO->execute([$id]);
+                foreach ($stO->fetchAll() as $of) { $ofertaIds[] = intval($of['id']); }
+            } catch (Exception $e) { /* fără oferte */ }
+
+            $sum = ['oferte' => 0, 'proiecte' => 0, 'contracte' => 0, 'altele' => 0];
+
+            // Copii ai ofertelor
+            $sum['altele'] += $delIn('oferta_linii',   'oferta_id', $ofertaIds);
+            $sum['altele'] += $delIn('necesar_comenzi', 'oferta_id', $ofertaIds);
+
+            // Copii ai proiectelor
+            if ($proiectIds) {
+                // executie_atribuiri se leagă prin programare_id
+                try {
+                    $phP = implode(',', array_fill(0, count($proiectIds), '?'));
+                    $db->prepare("DELETE FROM executie_atribuiri WHERE programare_id IN (SELECT id FROM executie_programari WHERE proiect_id IN ($phP))")
+                       ->execute(array_values($proiectIds));
+                } catch (Exception $e) { /* tabel poate lipsi */ }
+                foreach (['executie_programari','executie_jurnal','executie_files','executie_progres_material',
+                          'proiectare','proiectare_checklist','proiectare_documente','jurnal_teren'] as $t) {
+                    $sum['altele'] += $delIn($t, 'proiect_id', $proiectIds);
+                }
+                // notificari folosește codul text al proiectului
+                $sum['altele'] += $delIn('notificari', 'proiect_id', $proiectCods);
+            }
+
+            // Mentenanță (legată prin client_id SAU proiect_id)
+            $sum['altele'] += $delEq('mentenanta', 'client_id', $id);
+            $sum['altele'] += $delIn('mentenanta', 'proiect_id', $proiectIds);
+
+            // Contracte, oferte, proiecte (părinți), apoi clientul
+            $sum['contracte'] = $delEq('contracte', 'client_id', $id);
+            $sum['oferte']    = $delEq('oferte',    'client_id', $id);
+            $sum['proiecte']  = $delEq('proiecte',  'client_id', $id);
+
+            $stmt = $db->prepare("DELETE FROM clienti WHERE id = ?");
+            $stmt->execute([$id]);
+
+            jsonResponse([
+                'success' => true,
+                'nume'    => $cliRow['nume'],
+                'deleted' => $stmt->rowCount(),
+                'cascade' => $sum
+            ]);
             break;
 
         // ══════════════════════════════════════
@@ -840,6 +954,8 @@ try {
             if (!$id) { jsonResponse(['success' => false, 'error' => 'ID obligatoriu'], 400); break; }
             // Șterge proiectarea asociată
             $db->prepare("DELETE FROM proiectare WHERE proiect_id = ?")->execute([$id]);
+            // Șterge intrările din jurnalul de teren (best-effort — tabelul poate lipsi)
+            try { $db->prepare("DELETE FROM jurnal_teren WHERE proiect_id = ?")->execute([$id]); } catch (Exception $e) {}
             // Șterge notificările
             $stmtPid = $db->prepare("SELECT proiect_id FROM proiecte WHERE id = ?");
             $stmtPid->execute([$id]);
@@ -960,7 +1076,7 @@ try {
             $sortBy = (isset($_GET['sort']) ? $_GET['sort'] : 'data_desc'); // data_desc/asc, valoare_desc/asc, client_asc, status
             $light = !empty($_GET['light']);  // true = nu adaugă linii (mult mai rapid pentru listing)
 
-            $sql = "SELECT vc.*, o2.client_id AS client_db_id, o2.proiect_id AS proiect_db_id, o2.motiv_respingere, o2.data_decizie, o2.decis_de, o2.archived_at, o2.expires_at FROM v_oferte_complete vc JOIN oferte o2 ON vc.id = o2.id WHERE 1=1";
+            $sql = "SELECT vc.*, o2.client_id AS client_db_id, o2.proiect_id AS proiect_db_id, o2.motiv_respingere, o2.data_decizie, o2.decis_de, o2.archived_at, o2.expires_at, o2.mentiuni FROM v_oferte_complete vc JOIN oferte o2 ON vc.id = o2.id WHERE 1=1";
             $params = [];
             if ($clientId) { $sql .= " AND o2.client_id = ?"; $params[] = $clientId; }
             if ($proiectId) { $sql .= " AND o2.proiect_id = ?"; $params[] = $proiectId; }
@@ -1015,12 +1131,14 @@ try {
                 // View-ul redenumește clientId ca crm_client_id (text); luăm FK-urile
                 // numerice direct din tabela oferte ca să le poată folosi frontend-ul
                 // la save (păstrare legătură ofertă→client/proiect la edit)
-                $stmtFK = $db->prepare("SELECT client_id, proiect_id FROM oferte WHERE id = ?");
+                ensureOferteColumns($db);
+                $stmtFK = $db->prepare("SELECT client_id, proiect_id, mentiuni FROM oferte WHERE id = ?");
                 $stmtFK->execute([$o['id']]);
                 $fk = $stmtFK->fetch();
                 if ($fk) {
                     $o['client_id']  = $fk['client_id']  !== null ? intval($fk['client_id'])  : null;
                     $o['proiect_id'] = $fk['proiect_id'] !== null ? intval($fk['proiect_id']) : null;
+                    if (!isset($o['mentiuni']) || $o['mentiuni'] === null) $o['mentiuni'] = $fk['mentiuni'] ?? '';
                 }
                 $stmtL = $db->prepare("SELECT * FROM oferta_linii WHERE oferta_id = ? ORDER BY tip, ordine");
                 $stmtL->execute([$o['id']]);
@@ -1070,12 +1188,13 @@ try {
                     $dataOf = (isset($data['data']) ? $data['data'] : date('Y-m-d'));
                     $valabUpd = (isset($data['valab']) ? $data['valab'] : '4 zile');
                     $expUpd = calcExpiresAt($dataOf, $valabUpd);
-                    $db->prepare("UPDATE oferte SET titlu=?, data_oferta=?, valabilitate=?, obiectiv=?, client_id=?, proiect_id=?, subtotal_echip=?, subtotal_manop=?, total_fara_tva=?, tva=?, total_cu_tva=?, client_nume=?, client_cui=?, client_adresa=?, client_contact=?, status=?, expires_at=? WHERE id=?")
+                    $db->prepare("UPDATE oferte SET titlu=?, data_oferta=?, valabilitate=?, obiectiv=?, mentiuni=?, client_id=?, proiect_id=?, subtotal_echip=?, subtotal_manop=?, total_fara_tva=?, tva=?, total_cu_tva=?, client_nume=?, client_cui=?, client_adresa=?, client_contact=?, status=?, expires_at=? WHERE id=?")
                        ->execute([
                            (isset($data['titlu']) ? $data['titlu'] : ''),
                            $dataOf,
                            $valabUpd,
                            (isset($data['obiectiv']) ? $data['obiectiv'] : ''),
+                           (isset($data['mentiuni']) ? $data['mentiuni'] : ''),
                            $clientIdVal,
                            $proiectIdVal,
                            (isset($data['subtotalEchip']) ? $data['subtotalEchip'] : 0),
@@ -1105,7 +1224,7 @@ try {
                     $titlu = 'Deviz ' . $client . ($obiectiv ? ' ' . $obiectiv : '') . ' ser.BV Nr. ' . $ofertaId . ' din ' . $dataFmt;
                     ensureOferteColumns($db);
                     $expIns = calcExpiresAt($dataOf, (isset($data['valab']) ? $data['valab'] : '4 zile'));
-                    $stmt = $db->prepare("INSERT INTO oferte (oferta_id, titlu, data_oferta, valabilitate, obiectiv, client_id, proiect_id, subtotal_echip, subtotal_manop, total_fara_tva, tva, total_cu_tva, client_nume, client_cui, client_adresa, client_contact, status, expires_at) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
+                    $stmt = $db->prepare("INSERT INTO oferte (oferta_id, titlu, data_oferta, valabilitate, obiectiv, mentiuni, client_id, proiect_id, subtotal_echip, subtotal_manop, total_fara_tva, tva, total_cu_tva, client_nume, client_cui, client_adresa, client_contact, status, expires_at) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
                     // Validare FK pt INSERT
                     $clientIdValI = null;
                     if (!empty($data['client_db_id'])) {
@@ -1125,6 +1244,7 @@ try {
                         $dataOf,
                         (isset($data['valab']) ? $data['valab'] : '4 zile'),
                         (isset($data['obiectiv']) ? $data['obiectiv'] : ''),
+                        (isset($data['mentiuni']) ? $data['mentiuni'] : ''),
                         $clientIdValI,
                         $proiectIdValI,
                         (isset($data['subtotalEchip']) ? $data['subtotalEchip'] : 0),
@@ -2268,6 +2388,106 @@ astăzi data semnării.</p>
                 jsonResponse(['success' => true, 'jurnal' => $jurnal]);
             } else {
                 jsonResponse(['success' => false, 'error' => 'Record negăsit'], 404);
+            }
+            break;
+
+        // ══════════════════════════════════════
+        // JURNAL DE TEREN — pontaj zilnic echipă (cine / unde / ce a făcut)
+        // ══════════════════════════════════════
+        case 'getJurnalTeren':
+        case 'addJurnalTeren':
+        case 'updateJurnalTeren':
+        case 'deleteJurnalTeren':
+            $db->exec("CREATE TABLE IF NOT EXISTS jurnal_teren (
+                id INT AUTO_INCREMENT PRIMARY KEY,
+                data_start DATE NOT NULL,
+                data_end DATE NOT NULL,
+                tehnicieni VARCHAR(255) NOT NULL DEFAULT '',
+                locatie VARCHAR(255) NOT NULL DEFAULT '',
+                proiect_id INT NULL,
+                descriere TEXT,
+                created_by VARCHAR(80) DEFAULT '',
+                created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+                updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+                INDEX idx_jt_data (data_start),
+                INDEX idx_jt_proiect (proiect_id)
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4");
+            $jtUser = currentUser();
+            $jtBy = $jtUser ? (($jtUser['display_name'] ?? '') ?: $jtUser['username']) : 'Admin';
+
+            if ($action === 'getJurnalTeren') {
+                $where = "1=1"; $params = [];
+                if (!empty($_GET['proiect_id'])) { $where .= " AND jt.proiect_id = ?"; $params[] = intval($_GET['proiect_id']); }
+                if (!empty($_GET['tehnician']))  { $where .= " AND jt.tehnicieni LIKE ?"; $params[] = '%' . $_GET['tehnician'] . '%'; }
+                if (!empty($_GET['from']))       { $where .= " AND jt.data_end >= ?";   $params[] = $_GET['from']; }
+                if (!empty($_GET['to']))         { $where .= " AND jt.data_start <= ?"; $params[] = $_GET['to']; }
+                if (!empty($_GET['search']))     {
+                    $where .= " AND (jt.locatie LIKE ? OR jt.descriere LIKE ? OR jt.tehnicieni LIKE ?)";
+                    $s = '%' . $_GET['search'] . '%'; $params[] = $s; $params[] = $s; $params[] = $s;
+                }
+                $stmt = $db->prepare("SELECT jt.*, p.proiect_id AS proiect_cod, c.nume AS client_nume
+                    FROM jurnal_teren jt
+                    LEFT JOIN proiecte p ON jt.proiect_id = p.id
+                    LEFT JOIN clienti c ON p.client_id = c.id
+                    WHERE $where
+                    ORDER BY jt.data_start DESC, jt.id DESC
+                    LIMIT 500");
+                $stmt->execute($params);
+                jsonResponse(['success' => true, 'data' => $stmt->fetchAll()]);
+                break;
+            }
+
+            if ($action === 'deleteJurnalTeren') {
+                $jid = isset($data['id']) ? intval($data['id']) : 0;
+                if (!$jid) jsonResponse(['success' => false, 'error' => 'id obligatoriu'], 400);
+                $own = $db->prepare("SELECT created_by FROM jurnal_teren WHERE id = ?");
+                $own->execute([$jid]);
+                $jr = $own->fetch();
+                if (!$jr) jsonResponse(['success' => false, 'error' => 'Intrare negăsită'], 404);
+                $isAdm = $jtUser && (($jtUser['role'] ?? '') === 'admin');
+                if (!$isAdm && $jr['created_by'] !== $jtBy) {
+                    jsonResponse(['success' => false, 'error' => 'Poți șterge doar intrările proprii (sau ești admin)'], 403);
+                }
+                $db->prepare("DELETE FROM jurnal_teren WHERE id = ?")->execute([$jid]);
+                jsonResponse(['success' => true]);
+                break;
+            }
+
+            // add / update — validare comună
+            $ds  = isset($data['data_start']) ? trim($data['data_start']) : '';
+            $de  = isset($data['data_end'])   ? trim($data['data_end'])   : '';
+            $teh = isset($data['tehnicieni']) ? trim($data['tehnicieni']) : '';
+            $loc = isset($data['locatie'])    ? trim($data['locatie'])    : '';
+            $desc= isset($data['descriere'])  ? trim($data['descriere'])  : '';
+            $jpid= (isset($data['proiect_id']) && $data['proiect_id'] !== '' && $data['proiect_id'] !== null)
+                   ? intval($data['proiect_id']) : null;
+            if (!$ds) $ds = date('Y-m-d');
+            if (!$de) $de = $ds;
+            if ($de < $ds) jsonResponse(['success' => false, 'error' => 'Data sfârșit nu poate fi înainte de data început'], 400);
+            if (!$teh)  jsonResponse(['success' => false, 'error' => 'Selectează cel puțin un tehnician'], 400);
+            if (!$loc)  jsonResponse(['success' => false, 'error' => 'Locația este obligatorie'], 400);
+            if (!$desc) jsonResponse(['success' => false, 'error' => 'Descrierea (ce au făcut) este obligatorie'], 400);
+
+            if ($action === 'addJurnalTeren') {
+                $stmt = $db->prepare("INSERT INTO jurnal_teren
+                    (data_start, data_end, tehnicieni, locatie, proiect_id, descriere, created_by)
+                    VALUES (?,?,?,?,?,?,?)");
+                $stmt->execute([$ds, $de, $teh, $loc, $jpid, $desc, $jtBy]);
+                jsonResponse(['success' => true, 'id' => $db->lastInsertId()]);
+            } else { // updateJurnalTeren
+                $jid = isset($data['id']) ? intval($data['id']) : 0;
+                if (!$jid) jsonResponse(['success' => false, 'error' => 'id obligatoriu'], 400);
+                $own = $db->prepare("SELECT created_by FROM jurnal_teren WHERE id = ?");
+                $own->execute([$jid]);
+                $jr = $own->fetch();
+                if (!$jr) jsonResponse(['success' => false, 'error' => 'Intrare negăsită'], 404);
+                $isAdm = $jtUser && (($jtUser['role'] ?? '') === 'admin');
+                if (!$isAdm && $jr['created_by'] !== $jtBy) {
+                    jsonResponse(['success' => false, 'error' => 'Poți edita doar intrările proprii (sau ești admin)'], 403);
+                }
+                $db->prepare("UPDATE jurnal_teren SET data_start=?, data_end=?, tehnicieni=?, locatie=?, proiect_id=?, descriere=? WHERE id=?")
+                   ->execute([$ds, $de, $teh, $loc, $jpid, $desc, $jid]);
+                jsonResponse(['success' => true]);
             }
             break;
 

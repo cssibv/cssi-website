@@ -427,6 +427,10 @@ tr:hover td{background:rgba(59,130,246,0.03);}
                 <button type="button" style="flex:1;padding:14px;border-radius:12px;border:none;background:var(--gray-bg);color:var(--gray);font-weight:700;cursor:pointer;font-family:inherit;font-size:14px" onclick="closeEditModal()">Anulează</button>
                 <button type="submit" class="form-submit" style="flex:2" id="editSubmitBtn">💾 Salvează modificările</button>
             </div>
+            <div id="deleteClientRow" style="display:none;margin-top:12px;border-top:1px solid var(--gray-bg);padding-top:12px">
+                <button type="button" id="deleteClientBtn" style="width:100%;padding:12px;border-radius:12px;border:1px solid var(--red);background:#fff;color:var(--red);font-weight:700;cursor:pointer;font-family:inherit;font-size:13px" onclick="deleteClientFromEdit()">🗑️ Șterge acest client (doar admin)</button>
+                <div style="font-size:11px;color:var(--gray);text-align:center;margin-top:6px">Ireversibil. Șterge clientul împreună cu ofertele, proiectele și contractele lui. Blocat dacă există oferte acceptate sau proiecte în lucru.</div>
+            </div>
         </form>
     </div>
 </div>
@@ -1246,6 +1250,10 @@ function openEditModal(leadId) {
     f.adresa.value = '';
     f.oras.value = '';
 
+    // Buton ștergere client — doar admin + client existent (cu clientDbId)
+    var delRow = document.getElementById('deleteClientRow');
+    if (delRow) delRow.style.display = (IS_ADMIN && l.clientDbId) ? '' : 'none';
+
     // Afișează modalul imediat, apoi completează câmpurile client din MySQL
     document.getElementById('editModal').classList.add('active');
 
@@ -1353,9 +1361,64 @@ function saveEdit(e) {
     });
 }
 
+function deleteClientFromEdit() {
+    if (!IS_ADMIN) { toast('🚫 Doar adminul poate șterge clienți','error'); return; }
+    var leadId = window._editingLeadId;
+    var l = LEADS.find(function(x) { return x.id === leadId; });
+    if (!l || !l.clientDbId) { toast('⚠️ Client fără ID — nu poate fi șters','error'); return; }
+
+    var nume = l.nume || 'acest client';
+    if (!confirm('Ștergi definitiv clientul „' + nume + '" și TOT ce are în structură (oferte, proiecte, contracte, mentenanță)?\n\nAcțiunea este IREVERSIBILĂ. Operația e blocată dacă există oferte acceptate sau proiecte în lucru.')) return;
+
+    var btn = document.getElementById('deleteClientBtn');
+    var origLabel = '🗑️ Șterge acest client (doar admin)';
+    btn.disabled = true;
+    btn.textContent = '⏳ Se șterge...';
+
+    fetch(API_DB + '?action=deleteClient', {
+        method: 'POST',
+        credentials: 'include',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({action: 'deleteClient', id: l.clientDbId})
+    })
+    .then(function(r){ return r.json(); })
+    .then(function(res) {
+        btn.disabled = false;
+        btn.textContent = origLabel;
+        if (res.success) {
+            closeEditModal();
+            var c = res.cascade || {};
+            var extra = [];
+            if (c.oferte)    extra.push(c.oferte + ' oferte');
+            if (c.proiecte)  extra.push(c.proiecte + ' proiecte');
+            if (c.contracte) extra.push(c.contracte + ' contracte');
+            toast('✅ Client șters: ' + (res.nume || nume) + (extra.length ? ' (+ ' + extra.join(', ') + ')' : ''),'success');
+            refreshData();
+        } else {
+            toast('⚠️ ' + (res.error || 'Nu s-a putut șterge clientul'),'error');
+        }
+    })
+    .catch(function() {
+        btn.disabled = false;
+        btn.textContent = origLabel;
+        toast('⚠️ Eroare rețea','error');
+    });
+}
+
 
 // ═══════ INIT ═══════
 LEADS = [];
+// Aflăm rolul real (server-side) — cssi-role e doar username-ul.
+// Doar admin vede butonul de ștergere client.
+var IS_ADMIN = false;
+fetch(API_DB + '?action=me', {credentials:'include'})
+    .then(function(r){ return r.json(); })
+    .then(function(res){
+        if (res && res.success && res.user && res.user.role === 'admin') {
+            IS_ADMIN = true;
+        }
+    })
+    .catch(function(){ /* fără rol → butonul rămâne ascuns */ });
 render();
 refreshData();
 </script>
