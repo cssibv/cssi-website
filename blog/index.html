@@ -126,6 +126,7 @@
     .cat-cloud{display:flex;flex-wrap:wrap;gap:8px}
     .cat-chip{display:flex;align-items:center;gap:5px;background:var(--brand-light);border:1px solid var(--border);border-radius:100px;padding:5px 12px;font-family:var(--ff-head);font-size:12px;font-weight:600;color:var(--text-muted)}
     .cat-chip .n{background:var(--white);border-radius:100px;padding:1px 6px;font-size:10px;color:var(--text-light)}
+    .cat-chip:hover{background:rgba(26,75,140,.1);border-color:var(--brand-blue);color:var(--brand-blue)}
     .contact-cta{background:linear-gradient(135deg,var(--brand-dark),var(--brand-navy));border-radius:var(--radius);padding:22px 18px;color:var(--white);text-align:center}
     .contact-cta .cta-icon{font-size:36px;margin-bottom:10px}
     .contact-cta h3{font-family:var(--ff-head);font-size:15px;font-weight:700;margin-bottom:8px}
@@ -270,15 +271,13 @@
 
   <nav class="filter-bar">
     <div class="inner">
-      <button class="filter-btn active">📰 Toate <span class="count">16</span></button>
-      <button class="filter-btn" style="opacity:.45;cursor:default;">🛡 Securitate <span class="count">5</span></button>
-      <button class="filter-btn" style="opacity:.45;cursor:default;">🔥 Incendiu &amp; ISU <span class="count">1</span></button>
-      <button class="filter-btn" style="opacity:.45;cursor:default;">📹 Camere <span class="count">3</span></button>
-      <button class="filter-btn" style="opacity:.45;cursor:default;">⏱️ Pontaj <span class="count">1</span></button>
-      <button class="filter-btn" style="opacity:.45;cursor:default;">⚙️ Automatizări <span class="count">2</span></button>
-      <button class="filter-btn" style="opacity:.45;cursor:default;">📋 Legislație <span class="count">3</span></button>
-      <button class="filter-btn" style="opacity:.45;cursor:default;">📱 Smart Home <span class="count">1</span></button>
-      <button class="filter-btn" style="opacity:.45;cursor:default;">🔧 Instalații <span class="count">2</span></button>
+      <button class="filter-btn active" data-cat="all" onclick="filterArticles('all',this)">📰 Toate <span class="count">20</span></button>
+      <button class="filter-btn" data-cat="cat-securitate" onclick="filterArticles('cat-securitate',this)">🛡 Securitate <span class="count">9</span></button>
+      <button class="filter-btn" data-cat="cat-incendiu" onclick="filterArticles('cat-incendiu',this)">🔥 Incendiu &amp; ISU <span class="count">1</span></button>
+      <button class="filter-btn" data-cat="cat-camere" onclick="filterArticles('cat-camere',this)">📹 Camere <span class="count">4</span></button>
+      <button class="filter-btn" data-cat="cat-pontaj" onclick="filterArticles('cat-pontaj',this)">⏱️ Pontaj <span class="count">1</span></button>
+      <button class="filter-btn" data-cat="cat-automatizari" onclick="filterArticles('cat-automatizari',this)">⚙️ Automatizări <span class="count">2</span></button>
+      <button class="filter-btn" data-cat="cat-instalatii" onclick="filterArticles('cat-instalatii',this)">🔧 Instalații <span class="count">2</span></button>
     </div>
   </nav>
 
@@ -286,7 +285,7 @@
     <main>
 
       <a href="sistem-integrat-securitate-brasov" style="display:contents">
-        <article class="featured-card">
+        <article class="featured-card cat-securitate">
           <div class="featured-img">
             <div class="badge">⭐ Articol recomandat</div>
             <div class="big-icon">🛡</div>
@@ -313,10 +312,54 @@
 
       <div class="section-header" style="margin-top:48px;">
         <h2>📰 Toate articolele</h2>
-        <span style="font-family:var(--ff-head);font-size:13px;color:var(--text-light);">Aprilie 2026</span>
+        <span style="font-family:var(--ff-head);font-size:13px;color:var(--text-light);">Mai 2026</span>
       </div>
 
       <div class="articles-grid">
+        <a href="securitate-depozit-logistica-ghid-complet" style="display:contents">
+        <article class="article-card cat-securitate">
+          <div class="card-thumb"><div class="thumb-bg"></div><div class="thumb-icon">🏭</div></div>
+          <div class="card-body">
+            <div class="card-cat">Securitate B2B</div>
+            <h3>Securitate pentru Depozite și Logistică: Ghid Complet 2026</h3>
+            <p class="card-excerpt">Camere, control acces rampe, detecție incendiu P118, bariere auto și monitorizare la distanță pentru depozite.</p>
+            <div class="card-footer"><span class="meta">20 Mai 2026 <span class="dot">·</span> 14 min</span><span class="read-more" style="font-family:var(--ff-head);font-size:12px;font-weight:600;color:var(--brand-blue);">Citește →</span></div>
+          </div>
+        </article>
+        </a>
+        <a href="hikvision-vs-dahua-comparatie-completa-2026" style="display:contents">
+        <article class="article-card cat-camere">
+          <div class="card-thumb"><div class="thumb-bg"></div><div class="thumb-icon">📹</div></div>
+          <div class="card-body">
+            <div class="card-cat">Camere Supraveghere</div>
+            <h3>Hikvision vs Dahua: Comparație Completă pentru Afaceri 2026</h3>
+            <p class="card-excerpt">AcuSense vs SMD, ColorVu vs Full-Color, prețuri și recomandări pe tipuri de obiective. Ghid de alegere.</p>
+            <div class="card-footer"><span class="meta">20 Mai 2026 <span class="dot">·</span> 10 min</span><span class="read-more" style="font-family:var(--ff-head);font-size:12px;font-weight:600;color:var(--brand-blue);">Citește →</span></div>
+          </div>
+        </article>
+        </a>
+        <a href="mentenanta-sisteme-securitate-de-ce-conteaza" style="display:contents">
+        <article class="article-card cat-securitate">
+          <div class="card-thumb"><div class="thumb-bg"></div><div class="thumb-icon">🔧</div></div>
+          <div class="card-body">
+            <div class="card-cat">Mentenanță</div>
+            <h3>Mentenanță Sisteme de Securitate: De Ce Contează și Cât Costă?</h3>
+            <p class="card-excerpt">Obligativitate legală, frecvențe ISU, ce include o verificare și prețuri orientative pentru contracte de mentenanță.</p>
+            <div class="card-footer"><span class="meta">20 Mai 2026 <span class="dot">·</span> 10 min</span><span class="read-more" style="font-family:var(--ff-head);font-size:12px;font-weight:600;color:var(--brand-blue);">Citește →</span></div>
+          </div>
+        </article>
+        </a>
+        <a href="control-acces-firma-ghid-alegere-2026" style="display:contents">
+        <article class="article-card cat-securitate">
+          <div class="card-thumb"><div class="thumb-bg"></div><div class="thumb-icon">🔐</div></div>
+          <div class="card-body">
+            <div class="card-cat">Control Acces</div>
+            <h3>Control Acces pentru Firme: Ghid Complet de Alegere 2026</h3>
+            <p class="card-excerpt">Card vs biometric vs PIN, branduri Hikvision/ZKTeco/Dahua, integrare pontaj și prețuri orientative.</p>
+            <div class="card-footer"><span class="meta">20 Mai 2026 <span class="dot">·</span> 12 min</span><span class="read-more" style="font-family:var(--ff-head);font-size:12px;font-weight:600;color:var(--brand-blue);">Citește →</span></div>
+          </div>
+        </article>
+        </a>
         <a href="pontaj-electronic-ghid-complet" style="display:contents">
         <article class="article-card cat-pontaj">
           <div class="card-thumb"><div class="thumb-bg"></div><div class="thumb-icon">⏱️</div></div>
@@ -564,14 +607,12 @@
         <div class="sidebar-card-head">📂 Categorii</div>
         <div class="sidebar-card-body">
           <div class="cat-cloud">
-            <div class="cat-chip">🛡 Securitate <span class="n">5</span></div>
-            <div class="cat-chip">🔥 ISU &amp; Incendiu <span class="n">1</span></div>
-            <div class="cat-chip">📹 Camere <span class="n">3</span></div>
-            <div class="cat-chip">⏱️ Pontaj <span class="n">1</span></div>
-            <div class="cat-chip">⚙️ Automatizări <span class="n">2</span></div>
-            <div class="cat-chip">📋 Legislație <span class="n">3</span></div>
-            <div class="cat-chip">📱 Smart Home <span class="n">1</span></div>
-            <div class="cat-chip">🔧 Instalații <span class="n">2</span></div>
+            <div class="cat-chip" style="cursor:pointer" onclick="filterArticles('cat-securitate')">🛡 Securitate <span class="n">9</span></div>
+            <div class="cat-chip" style="cursor:pointer" onclick="filterArticles('cat-incendiu')">🔥 ISU &amp; Incendiu <span class="n">1</span></div>
+            <div class="cat-chip" style="cursor:pointer" onclick="filterArticles('cat-camere')">📹 Camere <span class="n">4</span></div>
+            <div class="cat-chip" style="cursor:pointer" onclick="filterArticles('cat-pontaj')">⏱️ Pontaj <span class="n">1</span></div>
+            <div class="cat-chip" style="cursor:pointer" onclick="filterArticles('cat-automatizari')">⚙️ Automatizări <span class="n">2</span></div>
+            <div class="cat-chip" style="cursor:pointer" onclick="filterArticles('cat-instalatii')">🔧 Instalații <span class="n">2</span></div>
           </div>
         </div>
       </div>
@@ -670,6 +711,59 @@
       "item": "https://cssi.ro/blog/"
     }
   ]
+}
+</script>
+<script>
+function filterArticles(cat, btn) {
+    // Update filter bar buttons
+    document.querySelectorAll('.filter-btn').forEach(function(b) { b.classList.remove('active'); });
+    if (btn) {
+        btn.classList.add('active');
+    } else {
+        // Called from sidebar — activate matching filter-bar button
+        document.querySelectorAll('.filter-btn').forEach(function(b) {
+            if (b.getAttribute('data-cat') === cat) b.classList.add('active');
+        });
+    }
+
+    // Get all article cards (in grid) and featured
+    var cards = document.querySelectorAll('.articles-grid > a');
+    var featured = document.querySelector('.featured-card');
+    var featuredLink = featured ? featured.parentElement : null;
+    var sectionHeader = document.querySelector('.section-header');
+
+    if (cat === 'all') {
+        // Show everything
+        cards.forEach(function(a) { a.style.display = ''; });
+        if (featuredLink) featuredLink.style.display = '';
+        if (sectionHeader) sectionHeader.style.display = '';
+        return;
+    }
+
+    // Hide featured if not matching
+    if (featuredLink) {
+        var featuredArticle = featuredLink.querySelector('article');
+        if (featuredArticle && featuredArticle.classList.contains(cat)) {
+            featuredLink.style.display = '';
+        } else {
+            featuredLink.style.display = 'none';
+        }
+    }
+    if (sectionHeader) sectionHeader.style.display = '';
+
+    // Filter grid cards
+    cards.forEach(function(a) {
+        var article = a.querySelector('article');
+        if (article && article.classList.contains(cat)) {
+            a.style.display = '';
+        } else {
+            a.style.display = 'none';
+        }
+    });
+
+    // Scroll to grid
+    var grid = document.querySelector('.articles-grid');
+    if (grid) grid.scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
 </script>
 </body>
