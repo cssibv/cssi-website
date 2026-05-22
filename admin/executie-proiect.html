@@ -498,123 +498,197 @@ function renderMateriale(){
 function fmtN(n){var v=Number(n||0);return v%1===0?v.toString():v.toFixed(2).replace(/\.?0+$/,'');}
 function toggleMaterial(lid){STATE.materialeOpen[lid] = !STATE.materialeOpen[lid]; renderMateriale();}
 
-// ═══ LISTĂ MATERIALE PDF (predare către tehnicieni) ═══
+// ═══ PDF: proces verbal original (pag. 1) + listă materiale (pag. 2) ═══
+var PDF_LIBS_READY = false;
+function loadScriptOnce(src){
+    return new Promise(function(resolve,reject){
+        var s = document.createElement('script');
+        s.src = src;
+        s.onload = function(){ resolve(); };
+        s.onerror = function(){ reject(new Error('Nu s-a putut încărca biblioteca PDF')); };
+        document.head.appendChild(s);
+    });
+}
+function ensurePdfLibs(){
+    if(PDF_LIBS_READY && window.PDFLib && window.fontkit) return Promise.resolve();
+    return loadScriptOnce('https://cdn.jsdelivr.net/npm/pdf-lib@1.17.1/dist/pdf-lib.min.js')
+        .then(function(){ return loadScriptOnce('https://cdn.jsdelivr.net/npm/@pdf-lib/fontkit@1.1.1/dist/fontkit.umd.min.js'); })
+        .then(function(){ PDF_LIBS_READY = true; });
+}
+
 function printMaterialeList(){
     var p = STATE.proiect || {};
     var oferte = (STATE.materiale && STATE.materiale.oferte) || [];
     if(!oferte.length){ toast('⚠️ Nicio ofertă cu materiale de listat','error'); return; }
 
-    var nr = 0, totalLinii = 0;
-    var rowsHtml = '';
-    oferte.forEach(function(o){
-        if(oferte.length > 1){
-            rowsHtml += '<tr class="grp"><td colspan="6">Ofertă '+esc(o.oferta_id||'')+(o.obiectiv?' — '+esc(o.obiectiv):'')+'</td></tr>';
+    var btn = document.querySelector('.btn-print-mat');
+    var origTxt = btn ? btn.innerHTML : '';
+    if(btn){ btn.disabled = true; btn.innerHTML = '⏳ Generez PDF...'; }
+    showLoading(true);
+
+    ensurePdfLibs()
+      .then(function(){
+          return Promise.all([
+              fetch('/admin/Proces_verbal.pdf').then(function(r){ if(!r.ok) throw new Error('Lipsește /admin/Proces_verbal.pdf'); return r.arrayBuffer(); }),
+              fetch('/admin/fonts/Roboto-Regular.ttf').then(function(r){ if(!r.ok) throw new Error('Lipsește fontul Roboto-Regular'); return r.arrayBuffer(); }),
+              fetch('/admin/fonts/Roboto-Bold.ttf').then(function(r){ if(!r.ok) throw new Error('Lipsește fontul Roboto-Bold'); return r.arrayBuffer(); })
+          ]);
+      })
+      .then(function(res){ return buildMaterialePdf(res[0], res[1], res[2], p, oferte); })
+      .then(function(bytes){
+          var blob = new Blob([bytes], {type:'application/pdf'});
+          var url = URL.createObjectURL(blob);
+          var w = window.open(url, '_blank');
+          if(!w) toast('⚠️ Permite ferestrele pop-up pentru a deschide PDF-ul','error');
+          else toast('✅ PDF generat','success');
+          setTimeout(function(){ URL.revokeObjectURL(url); }, 120000);
+      })
+      .catch(function(e){ toast('❌ '+(e.message||e),'error'); })
+      .finally(function(){
+          showLoading(false);
+          if(btn){ btn.disabled = false; btn.innerHTML = origTxt; }
+      });
+}
+
+// Construiește PDF-ul: documentul original neatins + pagina(ile) cu lista de materiale
+async function buildMaterialePdf(pvBytes, fontRegBytes, fontBoldBytes, p, oferte){
+    var L = window.PDFLib, rgb = L.rgb;
+    var pdfDoc = await L.PDFDocument.load(pvBytes);   // procesul verbal original — rămâne neschimbat
+    pdfDoc.registerFontkit(window.fontkit);
+    var font  = await pdfDoc.embedFont(fontRegBytes,  {subset:true});
+    var fontB = await pdfDoc.embedFont(fontBoldBytes, {subset:true});
+
+    var pv = pdfDoc.getPage(0);
+    var PW = pv.getWidth(), PH = pv.getHeight();
+    var M = 45, tableW = PW - 2*M;
+    var col = {
+        nr:  {x:M,          w:30},
+        cod: {x:M+30,       w:92},
+        cant:{x:PW-M-86,    w:86}
+    };
+    col.den = {x:M+30+92, w:(PW-M-86)-(M+30+92)};
+
+    var DARK=rgb(0.06,0.09,0.16), MUT=rgb(0.39,0.45,0.55),
+        BORDER=rgb(0.78,0.82,0.87), GRAY=rgb(0.93,0.95,0.97),
+        OR=rgb(1,0.96,0.90), ORD=rgb(0.60,0.20,0.07);
+
+    var page, y;
+    function newPage(){ page = pdfDoc.addPage([PW,PH]); y = PH - M; }
+    function txt(s,x,baseY,size,f,c){ page.drawText(s==null?'':String(s),{x:x,y:baseY,size:size,font:f||font,color:c||DARK}); }
+    function hline(yy,x1,x2,c){ page.drawLine({start:{x:x1,y:yy},end:{x:x2,y:yy},thickness:0.7,color:c||BORDER}); }
+    function vline(xx,y1,y2,c){ page.drawLine({start:{x:xx,y:y1},end:{x:xx,y:y2},thickness:0.7,color:c||BORDER}); }
+    function rect(x,yy,w,h,c){ page.drawRectangle({x:x,y:yy,width:w,height:h,color:c}); }
+    function wrap(s,f,size,maxW){
+        s = String(s||''); if(!s) return [''];
+        var parts = s.split(/\s+/), lines=[], cur='';
+        for(var i=0;i<parts.length;i++){
+            var t = cur ? cur+' '+parts[i] : parts[i];
+            if(cur && f.widthOfTextAtSize(t,size) > maxW){ lines.push(cur); cur = parts[i]; }
+            else cur = t;
         }
+        if(cur) lines.push(cur);
+        var out=[];
+        for(var j=0;j<lines.length;j++){
+            var ln = lines[j];
+            while(f.widthOfTextAtSize(ln,size) > maxW && ln.length>1){
+                var cut = ln.length;
+                while(cut>1 && f.widthOfTextAtSize(ln.slice(0,cut),size) > maxW) cut--;
+                out.push(ln.slice(0,cut)); ln = ln.slice(cut);
+            }
+            out.push(ln);
+        }
+        return out.length ? out : [''];
+    }
+    function fit(s,f,size,maxW){
+        var lines = wrap(s,f,size,maxW);
+        if(lines.length<=1) return lines[0];
+        var t = lines[0];
+        while(t && f.widthOfTextAtSize(t+'…',size) > maxW) t = t.slice(0,-1);
+        return t+'…';
+    }
+
+    var HEADH=20, LH=11;
+    function tableHead(){
+        rect(M, y-HEADH, tableW, HEADH, GRAY);
+        txt('Nr', col.nr.x+5, y-13, 9, fontB);
+        txt('Cod', col.cod.x+6, y-13, 9, fontB);
+        txt('Denumire material', col.den.x+6, y-13, 9, fontB);
+        txt('Cantitate', col.cant.x+6, y-13, 9, fontB);
+        hline(y,M,M+tableW); hline(y-HEADH,M,M+tableW);
+        [M,col.cod.x,col.den.x,col.cant.x,M+tableW].forEach(function(xx){ vline(xx,y,y-HEADH); });
+        y -= HEADH;
+    }
+    function groupRow(label){
+        var h=18;
+        if(y-h < M+95){ newPage(); tableHead(); }
+        rect(M, y-h, tableW, h, OR);
+        txt(fit(label,fontB,9,tableW-12), M+6, y-12, 9, fontB, ORD);
+        hline(y,M,M+tableW); hline(y-h,M,M+tableW);
+        vline(M,y,y-h); vline(M+tableW,y,y-h);
+        y -= h;
+    }
+    function dataRow(it){
+        var denLines = wrap(it.den, font, 9, col.den.w-12);
+        var rowH = Math.max(denLines.length,1)*LH + 8;
+        if(y-rowH < M+95){ newPage(); tableHead(); }
+        var top=y, bot=y-rowH;
+        txt(it.nr, col.nr.x+5, top-14, 9, font, MUT);
+        txt(fit(it.cod,fontB,9,col.cod.w-10), col.cod.x+6, top-14, 9, fontB);
+        for(var i=0;i<denLines.length;i++){ txt(denLines[i], col.den.x+6, top-13-i*LH, 9, font); }
+        txt(it.cant, col.cant.x+6, top-14, 9, fontB);
+        hline(bot,M,M+tableW);
+        [M,col.cod.x,col.den.x,col.cant.x,M+tableW].forEach(function(xx){ vline(xx,top,bot); });
+        y = bot;
+    }
+
+    newPage();
+    // ── Antet pagina materiale ──
+    y -= 12;
+    txt('LISTĂ MATERIALE / CANTITĂȚI DE INSTALAT', M, y, 15, fontB);
+    y -= 16;
+    txt('Cantitățile de echipamente de pregătit pentru montaj la locație', M, y, 9, font, MUT);
+    y -= 13;
+    txt('Generat din Portal CSSI 3.0 · '+fmtDate(todayStr()), M, y, 8.5, font, MUT);
+    y -= 24;
+    // ── Info proiect ──
+    txt('Client', M, y, 9, font, MUT);
+    txt(fit(p.client_nume||'—', fontB, 10, 248), M+58, y, 10, fontB);
+    txt('Proiect', M+318, y, 9, font, MUT);
+    txt(fit(p.proiect_id||'—', fontB, 10, tableW-(318+48)), M+366, y, 10, fontB);
+    y -= 15;
+    txt('Serviciu', M, y, 9, font, MUT);
+    txt(fit(p.serviciu||'—', font, 9, 248), M+58, y, 9, font);
+    txt('Telefon', M+318, y, 9, font, MUT);
+    txt(fit(p.client_telefon||'—', fontB, 9, tableW-(318+48)), M+366, y, 9, fontB);
+    y -= 15;
+    txt('Adresă', M, y, 9, font, MUT);
+    var addrLines = wrap(p.adresa_obiectiv||'—', font, 9, tableW-58);
+    for(var ai=0;ai<addrLines.length;ai++){ txt(addrLines[ai], M+58, y-ai*12, 9, font); }
+    y -= Math.max(addrLines.length,1)*12 + 10;
+
+    // ── Tabel materiale ──
+    tableHead();
+    var total = 0;
+    oferte.forEach(function(o){
+        if(oferte.length > 1){ groupRow('Ofertă '+(o.oferta_id||'')+(o.obiectiv ? '   —   '+o.obiectiv : '')); }
         o.linii.forEach(function(l){
-            nr++; totalLinii++;
-            var ramas = Math.max(0, (l.cant_planificata||0) - (l.cant_montata||0));
-            rowsHtml += '<tr'+(ramas<=0?' class="done"':'')+'>'+
-                '<td class="c">'+nr+'</td>'+
-                '<td class="cod">'+esc(l.cod||'—')+'</td>'+
-                '<td>'+esc(l.denumire||'')+'</td>'+
-                '<td class="c">'+fmtN(l.cant_planificata)+' '+esc(l.um||'buc')+'</td>'+
-                '<td class="c">'+(ramas>0?fmtN(ramas)+' '+esc(l.um||'buc'):'✓ montat')+'</td>'+
-                '<td class="chk"></td>'+
-            '</tr>';
+            total++;
+            dataRow({ nr:total, cod:l.cod||'—', den:l.denumire||'—', cant:fmtN(l.cant_planificata)+' '+(l.um||'buc') });
         });
     });
 
-    // Tabelul de instructaj — 2 rânduri goale, ca în documentul original
-    var pvRows = '<tr><td></td><td></td><td></td><td></td></tr>'+
-                 '<tr><td></td><td></td><td></td><td></td></tr>';
+    // ── Total + semnături predare/primire ──
+    y -= 8;
+    txt(total+' poziții de materiale', M, y, 9, fontB, MUT);
+    y -= 44;
+    if(y < M+24){ newPage(); y = PH - M - 70; }
+    var sw = 215;
+    hline(y, M, M+sw, DARK);
+    hline(y, PW-M-sw, PW-M, DARK);
+    txt('Predat de (depozit) — nume, semnătură', M, y-12, 8.5, font, MUT);
+    txt('Primit de (tehnician) — nume, semnătură', PW-M-sw, y-12, 8.5, font, MUT);
 
-    var doc = '<!DOCTYPE html><html lang="ro"><head><meta charset="UTF-8">'+
-        '<title>Proces verbal + listă materiale '+esc(p.proiect_id||'')+'</title><style>'+
-        '*{margin:0;padding:0;box-sizing:border-box;}'+
-        'body{font-family:Arial,Helvetica,sans-serif;color:#0f172a;padding:22px;font-size:12px;}'+
-        'h1{font-size:16px;margin-bottom:2px;}'+
-        '.sub{color:#64748b;font-size:11px;margin-bottom:14px;}'+
-        /* — Procesul verbal (pagina 1) — */
-        '.pv{page-break-after:always;}'+
-        '.pv-ref{font-size:9px;color:#94a3b8;text-align:right;margin-bottom:4px;}'+
-        '.pv-title{font-size:14px;font-weight:bold;text-align:center;margin-bottom:10px;}'+
-        '.pv p{font-size:10.5px;line-height:1.5;margin-bottom:5px;text-align:left;overflow-wrap:break-word;}'+
-        '.pv-cap{font-size:10.5px;font-weight:bold;text-align:center;margin:8px 0 4px;}'+
-        'table.pv-tbl{width:100%;border-collapse:collapse;margin-bottom:8px;}'+
-        'table.pv-tbl th,table.pv-tbl td{border:1px solid #0f172a;padding:5px 6px;font-size:10px;height:30px;}'+
-        'table.pv-tbl th{background:#f1f5f9;}'+
-        /* — Listă materiale (pagina 2 / verso) — */
-        'table.info{width:100%;border-collapse:collapse;margin-bottom:14px;font-size:11px;}'+
-        'table.info td{padding:3px 6px;vertical-align:top;}'+
-        'table.info td.k{color:#64748b;width:80px;}'+
-        'table.mat{width:100%;border-collapse:collapse;font-size:11px;}'+
-        'table.mat th,table.mat td{border:1px solid #cbd5e1;padding:5px 7px;text-align:left;}'+
-        'table.mat th{background:#f1f5f9;font-size:10px;text-transform:uppercase;letter-spacing:0.4px;}'+
-        'table.mat td.c{text-align:center;}'+
-        'table.mat td.cod{font-family:"Courier New",monospace;font-weight:bold;}'+
-        'table.mat td.chk{width:38px;}'+
-        'table.mat tr.grp td{background:#fff7ed;font-weight:bold;color:#9a3412;}'+
-        'table.mat tr.done td{color:#94a3b8;}'+
-        '.sign{margin-top:34px;display:flex;justify-content:space-between;}'+
-        '.sign div{width:46%;}'+
-        '.sign .line{border-top:1px solid #0f172a;margin-top:38px;padding-top:4px;font-size:10px;color:#64748b;text-align:center;}'+
-        '.foot{margin-top:22px;font-size:9px;color:#94a3b8;text-align:center;}'+
-        '@media print{body{padding:0;}}'+
-        '</style></head><body>'+
-        // ─── PAGINA 1: PROCES VERBAL (text exact din Proces_verbal.docx) ───
-        '<div class="pv">'+
-        '<div class="pv-ref">Proiect '+esc(p.proiect_id||'—')+' · '+esc(p.client_nume||'')+'</div>'+
-        '<div class="pv-title">PROCES VERBAL DE RECEPŢIE FINALĂ ȘI INSTRUIRE</div>'+
-        '<p>Încheiat astăzi ______________________ între:</p>'+
-        '<p>C. BREAK SISTEMS S.R.L, în calitate de executant  reprezentată prin ___________________________, si</p>'+
-        '<p>_________________________, în calitate de beneficiar  reprezentată prin __________________________</p>'+
-        '<p>Privind produsele/ lucrările: _______________________________________________ fost livrate/ executate în  localitatea ______________________________, Str. _______________________________, nr. ______, județul  ____________________________, în baza contractului nr __________ din data ________________ încheiat intre BREAK SISTEMS SRL în calitate de  executant si ____________________________________ în calitate de beneficiar</p>'+
-        '<p>În urma examinării lucrării, comisia de recepție a constatat următoarele:</p>'+
-        '<p>Lucrările sunt terminate, nu necesită completări și sunt conforme cu cerințele si așteptările beneficiarului.</p>'+
-        '<p>Toate modificările aduse asupra proprietății beneficiarului au fost efectuate cu acordul acestuia si renunță la orice drept de a reclama si cere eventuale daune.</p>'+
-        '<p>S-au făcut probe cu utilizarea sistemului, iar acesta funcționează in parametri și conform cu așteptările beneficiarului.</p>'+
-        '<p>Alte eventuale observații se menționează în câmpul special de mai jos.</p>'+
-        '<p>Cu ocazia recepției se confirmă predarea de executant și primirea de beneficiar a următoarelor:</p>'+
-        '<p>Instrucțiuni de utilizare ale sistemului</p>'+
-        '<p>Software necesar utilizării sistemului</p>'+
-        '<p>Jurnal de service al sistemului (opțional – dacă e necesar)</p>'+
-        '<p>Observaţii: _____________________________________________________________________________</p>'+
-        '<p>În baza constatărilor făcute, comisia propune admiterea recepției lucrării</p>'+
-        '<p>În procesul de instruire în vederea utilizării sistemului s-a prezentat detaliat modul de utilizare al sistemului (armare/ dezarmare, verificare și salvare înregistrări, înrolare coduri/ cartele, etc ...).</p>'+
-        '<p>Lista cu personalul desemnat de beneficiar se regăsește în tabelul de mai jos, iar acesta confirmă că a învățat să utilizeze corespunzător sistemul instalat</p>'+
-        '<div class="pv-cap">Tabel persoane participante la instructaj</div>'+
-        '<table class="pv-tbl"><tr><th style="width:54px">Nr crt</th><th>Nume Prenume</th><th style="width:150px">Funcție</th><th style="width:130px">Semnătura</th></tr>'+pvRows+'</table>'+
-        '<p>Prezentul proces verbal se încheie in 2 exemplare, cate 1 exemplar pentru fiecare parte și este semnat de următorii membri ai comisiei de recepție.</p>'+
-        '</div>'+
-        // ─── PAGINA 2 (VERSO): LISTĂ MATERIALE ───
-        '<h1>Listă materiale / cantități de instalat la locație</h1>'+
-        '<div class="sub">Portal CSSI 3.0 · generat '+esc(fmtDate(todayStr()))+'</div>'+
-        '<table class="info">'+
-          '<tr><td class="k">Client</td><td><strong>'+esc(p.client_nume||'—')+'</strong></td>'+
-              '<td class="k">Proiect</td><td><strong>'+esc(p.proiect_id||'—')+'</strong></td></tr>'+
-          '<tr><td class="k">Serviciu</td><td>'+esc(p.serviciu||'—')+'</td>'+
-              '<td class="k">Status</td><td>'+esc(p.proiect_status||'—')+'</td></tr>'+
-          '<tr><td class="k">Adresă</td><td colspan="3">'+esc(p.adresa_obiectiv||'—')+'</td></tr>'+
-          '<tr><td class="k">Telefon</td><td colspan="3"><strong>'+esc(p.client_telefon||'—')+'</strong></td></tr>'+
-        '</table>'+
-        '<table class="mat"><thead><tr>'+
-          '<th>#</th><th>Cod</th><th>Denumire material</th>'+
-          '<th>Cant. ofertă</th><th>Rămas de montat</th><th>Luat</th>'+
-        '</tr></thead><tbody>'+rowsHtml+'</tbody></table>'+
-        '<div class="sign">'+
-          '<div><div class="line">Predat de (depozit) — nume, semnătură</div></div>'+
-          '<div><div class="line">Primit de (tehnician) — nume, semnătură</div></div>'+
-        '</div>'+
-        '<div class="foot">'+totalLinii+' poziții materiale · Document generat din Portal CSSI 3.0</div>'+
-        '</body></html>';
-
-    var w = window.open('', '_blank');
-    if(!w){ toast('⚠️ Permite ferestrele pop-up pentru a genera PDF-ul','error'); return; }
-    w.document.open();
-    w.document.write(doc);
-    w.document.close();
-    w.focus();
-    setTimeout(function(){ try{ w.print(); }catch(e){} }, 400);
+    return await pdfDoc.save();
 }
 
 // Helper: dezactivează button pe durata unui Promise + arată spinner + warning dacă > 3s
