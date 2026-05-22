@@ -524,11 +524,9 @@ function printMaterialeList(){
         });
     });
 
-    // Rânduri goale pentru tabelul de instructaj din procesul verbal
-    var pvRows = '';
-    for(var pr=1; pr<=5; pr++){
-        pvRows += '<tr><td class="c">'+pr+'</td><td></td><td></td><td></td></tr>';
-    }
+    // Tabelul de instructaj — 2 rânduri goale, ca în documentul original
+    var pvRows = '<tr><td></td><td></td><td></td><td></td></tr>'+
+                 '<tr><td></td><td></td><td></td><td></td></tr>';
 
     var doc = '<!DOCTYPE html><html lang="ro"><head><meta charset="UTF-8">'+
         '<title>Proces verbal + listă materiale '+esc(p.proiect_id||'')+'</title><style>'+
@@ -539,20 +537,12 @@ function printMaterialeList(){
         /* — Procesul verbal (pagina 1) — */
         '.pv{page-break-after:always;}'+
         '.pv-ref{font-size:9px;color:#94a3b8;text-align:right;margin-bottom:4px;}'+
-        '.pv-title{font-size:14px;font-weight:bold;text-align:center;text-transform:uppercase;margin-bottom:10px;}'+
-        '.pv p{font-size:10.5px;line-height:1.45;margin-bottom:5px;text-align:justify;}'+
-        '.pv ul{margin:0 0 6px 22px;}'+
-        '.pv li{font-size:10.5px;line-height:1.4;margin-bottom:2px;}'+
-        '.fill{display:inline-block;border-bottom:1px solid #0f172a;min-width:90px;padding:0 4px;font-weight:bold;}'+
-        '.fill.lg{min-width:190px;}.fill.xl{min-width:99%;}'+
+        '.pv-title{font-size:14px;font-weight:bold;text-align:center;margin-bottom:10px;}'+
+        '.pv p{font-size:10.5px;line-height:1.5;margin-bottom:5px;text-align:left;overflow-wrap:break-word;}'+
         '.pv-cap{font-size:10.5px;font-weight:bold;text-align:center;margin:8px 0 4px;}'+
         'table.pv-tbl{width:100%;border-collapse:collapse;margin-bottom:8px;}'+
-        'table.pv-tbl th,table.pv-tbl td{border:1px solid #0f172a;padding:5px 6px;font-size:10px;height:24px;}'+
+        'table.pv-tbl th,table.pv-tbl td{border:1px solid #0f172a;padding:5px 6px;font-size:10px;height:30px;}'+
         'table.pv-tbl th{background:#f1f5f9;}'+
-        'table.pv-tbl td.c{text-align:center;}'+
-        '.pv-sign{margin-top:24px;display:flex;justify-content:space-between;}'+
-        '.pv-sign div{width:46%;}'+
-        '.pv-sign .line{border-top:1px solid #0f172a;margin-top:40px;padding-top:4px;font-size:10px;color:#64748b;text-align:center;}'+
         /* — Listă materiale (pagina 2 / verso) — */
         'table.info{width:100%;border-collapse:collapse;margin-bottom:14px;font-size:11px;}'+
         'table.info td{padding:3px 6px;vertical-align:top;}'+
@@ -571,38 +561,30 @@ function printMaterialeList(){
         '.foot{margin-top:22px;font-size:9px;color:#94a3b8;text-align:center;}'+
         '@media print{body{padding:0;}}'+
         '</style></head><body>'+
-        // ─── PAGINA 1: PROCES VERBAL ───
+        // ─── PAGINA 1: PROCES VERBAL (text exact din Proces_verbal.docx) ───
         '<div class="pv">'+
         '<div class="pv-ref">Proiect '+esc(p.proiect_id||'—')+' · '+esc(p.client_nume||'')+'</div>'+
-        '<div class="pv-title">Proces verbal de recepţie finală și instruire</div>'+
-        '<p>Încheiat astăzi <span class="fill lg"></span> între:</p>'+
-        '<p>C. BREAK SISTEMS S.R.L., în calitate de executant, reprezentată prin <span class="fill lg"></span>, și</p>'+
-        '<p><span class="fill lg">'+esc(p.client_nume||'')+'</span>, în calitate de beneficiar, reprezentată prin <span class="fill lg"></span>.</p>'+
-        '<p>Privind produsele / lucrările: <span class="fill xl">'+esc(p.serviciu||'')+'</span> ce au fost livrate / executate în localitatea <span class="fill"></span>, Str. <span class="fill"></span>, nr. <span class="fill"></span>, județul <span class="fill"></span>, în baza contractului nr. <span class="fill"></span> din data <span class="fill"></span> încheiat între BREAK SISTEMS S.R.L. în calitate de executant și <span class="fill lg">'+esc(p.client_nume||'')+'</span> în calitate de beneficiar.</p>'+
+        '<div class="pv-title">PROCES VERBAL DE RECEPŢIE FINALĂ ȘI INSTRUIRE</div>'+
+        '<p>Încheiat astăzi ______________________ între:</p>'+
+        '<p>C. BREAK SISTEMS S.R.L, în calitate de executant  reprezentată prin ___________________________, si</p>'+
+        '<p>_________________________, în calitate de beneficiar  reprezentată prin __________________________</p>'+
+        '<p>Privind produsele/ lucrările: _______________________________________________ fost livrate/ executate în  localitatea ______________________________, Str. _______________________________, nr. ______, județul  ____________________________, în baza contractului nr __________ din data ________________ încheiat intre BREAK SISTEMS SRL în calitate de  executant si ____________________________________ în calitate de beneficiar</p>'+
         '<p>În urma examinării lucrării, comisia de recepție a constatat următoarele:</p>'+
-        '<ul>'+
-          '<li>Lucrările sunt terminate, nu necesită completări și sunt conforme cu cerințele și așteptările beneficiarului.</li>'+
-          '<li>Toate modificările aduse asupra proprietății beneficiarului au fost efectuate cu acordul acestuia și renunță la orice drept de a reclama și cere eventuale daune.</li>'+
-          '<li>S-au făcut probe cu utilizarea sistemului, iar acesta funcționează în parametri și conform cu așteptările beneficiarului.</li>'+
-          '<li>Alte eventuale observații se menționează în câmpul special de mai jos.</li>'+
-        '</ul>'+
+        '<p>Lucrările sunt terminate, nu necesită completări și sunt conforme cu cerințele si așteptările beneficiarului.</p>'+
+        '<p>Toate modificările aduse asupra proprietății beneficiarului au fost efectuate cu acordul acestuia si renunță la orice drept de a reclama si cere eventuale daune.</p>'+
+        '<p>S-au făcut probe cu utilizarea sistemului, iar acesta funcționează in parametri și conform cu așteptările beneficiarului.</p>'+
+        '<p>Alte eventuale observații se menționează în câmpul special de mai jos.</p>'+
         '<p>Cu ocazia recepției se confirmă predarea de executant și primirea de beneficiar a următoarelor:</p>'+
-        '<ul>'+
-          '<li>Instrucțiuni de utilizare ale sistemului</li>'+
-          '<li>Software necesar utilizării sistemului</li>'+
-          '<li>Jurnal de service al sistemului (opțional – dacă e necesar)</li>'+
-        '</ul>'+
-        '<p>Observaţii: <span class="fill xl"></span></p>'+
-        '<p>În baza constatărilor făcute, comisia propune admiterea recepției lucrării.</p>'+
-        '<p>În procesul de instruire în vederea utilizării sistemului s-a prezentat detaliat modul de utilizare al sistemului (armare / dezarmare, verificare și salvare înregistrări, înrolare coduri / cartele etc.).</p>'+
-        '<p>Lista cu personalul desemnat de beneficiar se regăsește în tabelul de mai jos, iar acesta confirmă că a învățat să utilizeze corespunzător sistemul instalat.</p>'+
+        '<p>Instrucțiuni de utilizare ale sistemului</p>'+
+        '<p>Software necesar utilizării sistemului</p>'+
+        '<p>Jurnal de service al sistemului (opțional – dacă e necesar)</p>'+
+        '<p>Observaţii: _____________________________________________________________________________</p>'+
+        '<p>În baza constatărilor făcute, comisia propune admiterea recepției lucrării</p>'+
+        '<p>În procesul de instruire în vederea utilizării sistemului s-a prezentat detaliat modul de utilizare al sistemului (armare/ dezarmare, verificare și salvare înregistrări, înrolare coduri/ cartele, etc ...).</p>'+
+        '<p>Lista cu personalul desemnat de beneficiar se regăsește în tabelul de mai jos, iar acesta confirmă că a învățat să utilizeze corespunzător sistemul instalat</p>'+
         '<div class="pv-cap">Tabel persoane participante la instructaj</div>'+
-        '<table class="pv-tbl"><tr><th style="width:46px">Nr. crt.</th><th>Nume și prenume</th><th style="width:160px">Funcție</th><th style="width:130px">Semnătura</th></tr>'+pvRows+'</table>'+
-        '<p>Prezentul proces verbal se încheie în 2 exemplare, câte 1 exemplar pentru fiecare parte, și este semnat de următorii membri ai comisiei de recepție.</p>'+
-        '<div class="pv-sign">'+
-          '<div><div class="line">Executant — C. BREAK SISTEMS S.R.L.</div></div>'+
-          '<div><div class="line">Beneficiar — '+esc(p.client_nume||'')+'</div></div>'+
-        '</div>'+
+        '<table class="pv-tbl"><tr><th style="width:54px">Nr crt</th><th>Nume Prenume</th><th style="width:150px">Funcție</th><th style="width:130px">Semnătura</th></tr>'+pvRows+'</table>'+
+        '<p>Prezentul proces verbal se încheie in 2 exemplare, cate 1 exemplar pentru fiecare parte și este semnat de următorii membri ai comisiei de recepție.</p>'+
         '</div>'+
         // ─── PAGINA 2 (VERSO): LISTĂ MATERIALE ───
         '<h1>Listă materiale / cantități de instalat la locație</h1>'+
