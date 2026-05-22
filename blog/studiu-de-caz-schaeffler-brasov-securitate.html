@@ -1,0 +1,739 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Studiu de Caz: Schaeffler România — Securitate Perimetrală & Control Acces Industrial | CSSI</title>
+  <meta name="description" content="Studiu de caz: securitate perimetrală și control acces industrial pentru Schaeffler România, Brașov — 64 camere CCTV Hikvision, control acces 12 puncte, bariere auto BFT cu LPR, automatizări porți Nice, pontaj electronic 2000+ angajați. Implementare CSSI." />
+  <link rel="canonical" href="https://cssi.ro/blog/studiu-de-caz-schaeffler-brasov-securitate" />
+  <meta property="og:title" content="Studiu de Caz: Schaeffler România — Securitate Perimetrală & Control Acces Industrial" />
+  <meta property="og:description" content="Cum a securizat CSSI campusul industrial Schaeffler România din Brașov: CCTV, control acces, bariere auto, automatizări porți, pontaj electronic." />
+  <meta property="og:type" content="article" />
+  <meta property="og:url" content="https://cssi.ro/blog/studiu-de-caz-schaeffler-brasov-securitate" />
+  <meta property="og:site_name" content="CSSI Brașov" />
+  <meta property="article:published_time" content="2026-05-20" />
+  <meta property="article:author" content="CSSI Brașov" />
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"Studiu de Caz: Schaeffler România — Securitate Perimetrală & Control Acces Industrial","author":{"@type":"Organization","name":"CSSI Brașov","url":"https://cssi.ro"},"publisher":{"@type":"Organization","name":"CSSI — Confort, Securitate, Siguranță, Imobil","url":"https://cssi.ro"},"datePublished":"2026-05-20","dateModified":"2026-05-20","mainEntityOfPage":"https://cssi.ro/blog/studiu-de-caz-schaeffler-brasov-securitate"}</script>
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Acasă","item":"https://cssi.ro/"},{"@type":"ListItem","position":2,"name":"Blog","item":"https://cssi.ro/blog/"},{"@type":"ListItem","position":3,"name":"Studiu de Caz Schaeffler România","item":"https://cssi.ro/blog/studiu-de-caz-schaeffler-brasov-securitate"}]}</script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;600;700;800&family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,400;0,8..60,600;1,8..60,400&display=swap" rel="stylesheet" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.js"></script>
+  <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}</script>
+  <script src="/tracking.js" defer></script>
+  <style>
+    @keyframes subtle-pulse-n { 0%,100%{transform:scale(1)}50%{transform:scale(.92)} }
+    @keyframes badge-pulse-n { 0%,100%{box-shadow:0 0 0 0 rgba(34,197,94,.4)}50%{box-shadow:0 0 0 8px rgba(34,197,94,0)} }
+    .animate-subtle-pulse{animation:subtle-pulse-n 2.5s ease-in-out infinite}
+    .animate-badge-pulse{animation:badge-pulse-n 2s ease-in-out infinite}
+    .dropdown-menu{display:none!important}
+    .dropdown:hover .dropdown-menu{display:block!important}
+    #mobileMenu{display:none}
+    #mobileMenu.open{display:block}
+    #servicesSubmenu{display:none}
+    #servicesSubmenu.open{display:block}
+    .dropdown-scroll::-webkit-scrollbar{width:4px}
+    .dropdown-scroll::-webkit-scrollbar-track{background:#f1f1f1}
+    .dropdown-scroll::-webkit-scrollbar-thumb{background:#cbd5e1;border-radius:4px}
+    @media(min-width:640px){.sm\:block{display:block}.sm\:hidden{display:none}.sm\:px-6{padding-left:24px;padding-right:24px}}
+    @media(min-width:1024px){.lg\:flex{display:flex}.lg\:hidden{display:none}}
+    #mainHeader, #mainHeader a, #mainHeader button, #mainHeader span, #mainHeader div { font-family: 'Sora', sans-serif !important; }
+  </style>
+  <style>
+    :root{--brand-dark:#0b1a2e;--brand-navy:#102a4c;--brand-blue:#1a4b8c;--brand-accent:#e63022;--brand-gold:#f5a623;--brand-light:#f0f4f9;--text-main:#1c2b3a;--text-muted:#5a6e82;--text-light:#8fa0b3;--border:#dce6f0;--white:#ffffff;--ff-head:'Sora',sans-serif;--ff-body:'Source Serif 4',Georgia,serif;--radius:10px;--shadow-sm:0 2px 8px rgba(11,26,46,.08);--shadow-md:0 6px 24px rgba(11,26,46,.13);--shadow-lg:0 16px 48px rgba(11,26,46,.18);--max-w:1080px}
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    html{scroll-behavior:smooth}
+    body{font-family:var(--ff-body);font-size:18px;line-height:1.75;color:var(--text-main);background:var(--white);-webkit-font-smoothing:antialiased}
+    img{max-width:100%;height:auto;display:block}
+    a{color:var(--brand-blue);text-decoration:none}
+    a:hover{text-decoration:underline}
+    .breadcrumb{background:var(--brand-dark);border-bottom:none;padding:12px 0;padding-top:104px;font-family:var(--ff-head);font-size:13px;color:rgba(255,255,255,.55)}
+    .breadcrumb .inner{max-width:1280px;margin:0 auto;padding:0 0 12px 24px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+    .breadcrumb a{color:rgba(255,255,255,.7)}
+    .breadcrumb .sep{color:rgba(255,255,255,.3)}
+    .hero{background:var(--brand-dark);background-image:radial-gradient(ellipse 70% 60% at 80% 50%,rgba(26,75,140,.45) 0%,transparent 70%),radial-gradient(ellipse 40% 50% at 10% 80%,rgba(230,48,34,.15) 0%,transparent 60%);color:var(--white);padding:48px 24px 64px;position:relative;overflow:hidden}
+    .hero::before{content:'';position:absolute;inset:0;background-image:url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23ffffff' fill-opacity='0.025'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/svg%3E")}
+        .hero .inner{max-width:var(--max-w);margin:0 auto;position:relative;z-index:1;display:flex;align-items:center;gap:40px}
+    .hero-content{flex:1;min-width:0}
+    .hero-img-wrap{flex:0 0 280px;display:flex;align-items:center;justify-content:center}
+    .hero-img-wrap img{width:280px;height:auto;border-radius:14px;box-shadow:0 8px 32px rgba(0,0,0,.35);border:1px solid rgba(255,255,255,.1);opacity:.92;transition:opacity .3s}
+    .hero-img-wrap img:hover{opacity:1}
+    @media(max-width:900px){.hero .inner{flex-direction:column;gap:24px}.hero-img-wrap{flex:0 0 auto;order:-1}.hero-img-wrap img{width:220px}}
+    @media(max-width:700px){.hero-img-wrap{display:none}}
+    .hero-badge{display:inline-flex;align-items:center;gap:6px;background:rgba(230,48,34,.2);border:1px solid rgba(230,48,34,.4);color:#ff8a80;font-family:var(--ff-head);font-size:12px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;padding:5px 12px;border-radius:100px;margin-bottom:20px}
+    .hero h1{font-family:var(--ff-head);font-size:clamp(26px,4vw,40px);font-weight:800;line-height:1.2;margin-bottom:20px;letter-spacing:-.02em}
+    .hero h1 em{font-style:normal;color:var(--brand-gold)}
+    .hero .lead{font-size:clamp(16px,2vw,19px);line-height:1.65;color:rgba(255,255,255,.82);max-width:620px;margin-bottom:32px}
+    .hero-meta{display:flex;align-items:center;gap:20px;flex-wrap:wrap;font-family:var(--ff-head);font-size:13px;color:rgba(255,255,255,.55)}
+    .hero-meta span{display:flex;align-items:center;gap:5px}
+    .hero-meta .dot{color:rgba(255,255,255,.25)}
+    .topic-pills{display:flex;gap:10px;flex-wrap:wrap;margin-top:28px}
+    .pill{display:flex;align-items:center;gap:8px;padding:8px 16px;border-radius:100px;font-family:var(--ff-head);font-size:13px;font-weight:600;border:1px solid}
+    .pill-red{background:rgba(230,48,34,.15);border-color:rgba(230,48,34,.35);color:#ff8a80}
+    .pill-amber{background:rgba(245,166,35,.12);border-color:rgba(245,166,35,.3);color:#ffd180}
+    .pill-blue{background:rgba(26,75,140,.25);border-color:rgba(26,75,140,.5);color:#82b4ff}
+    .pill-green{background:rgba(39,174,96,.15);border-color:rgba(39,174,96,.35);color:#81c995}
+    .article-wrap{max-width:1280px;margin:0 auto;padding:0 24px;display:grid;grid-template-columns:1fr 280px;gap:48px;align-items:start}
+    .article-body{padding:56px 0}
+    .article-body h2{font-family:var(--ff-head);font-size:clamp(20px,2.5vw,26px);font-weight:700;color:var(--brand-dark);margin:52px 0 16px;padding-top:8px;border-top:3px solid var(--brand-accent);line-height:1.3}
+    .article-body h3{font-family:var(--ff-head);font-size:clamp(17px,2vw,20px);font-weight:600;color:var(--brand-navy);margin:32px 0 12px}
+    .article-body p{margin-bottom:20px;color:var(--text-main)}
+    .article-body ul,.article-body ol{padding-left:24px;margin-bottom:20px}
+    .article-body li{margin-bottom:8px}
+    .article-body strong{color:var(--brand-dark)}
+    .intro-p{font-size:19px;line-height:1.7}
+    .box{border-radius:var(--radius);padding:22px 26px;margin:28px 0;border-left:4px solid}
+    .box-red{background:#fef2f2;border-color:var(--brand-accent)}
+    .box-blue{background:#eff6ff;border-color:var(--brand-blue)}
+    .box-amber{background:#fffbeb;border-color:var(--brand-gold)}
+    .box-green{background:#f0fdf4;border-color:#27ae60}
+    .box h4{font-family:var(--ff-head);font-size:15px;font-weight:700;margin-bottom:8px}
+    .box p{font-size:15px;margin-bottom:8px}
+    .check-list{list-style:none;padding:0}
+    .check-list li{display:flex;gap:10px;padding:6px 0;font-size:16px}
+    .chk{color:#27ae60;font-weight:700;flex-shrink:0}
+    .price-table{width:100%;border-collapse:collapse;margin:24px 0;font-size:15px}
+    .price-table th{background:var(--brand-navy);color:var(--white);font-family:var(--ff-head);font-size:13px;font-weight:600;text-transform:uppercase;letter-spacing:.04em;padding:12px 16px;text-align:left}
+    .price-table td{padding:12px 16px;border-bottom:1px solid var(--border)}
+    .price-table tr:nth-child(even) td{background:var(--brand-light)}
+    .price-table .highlight td{background:#fffbeb;font-weight:600}
+    .cta-banner{background:linear-gradient(135deg,var(--brand-dark),var(--brand-navy));border-radius:var(--radius);padding:28px 32px;color:var(--white);display:flex;align-items:center;justify-content:space-between;gap:20px;flex-wrap:wrap}
+    .cta-banner h3{font-family:var(--ff-head);font-size:18px;font-weight:700;margin-bottom:4px}
+    .cta-banner p{font-size:14px;color:rgba(255,255,255,.7);margin:0}
+    .cta-buttons{display:flex;gap:10px;flex-wrap:wrap}
+    .btn{display:inline-flex;align-items:center;gap:7px;padding:10px 18px;border-radius:8px;font-family:var(--ff-head);font-size:13px;font-weight:600;cursor:pointer;border:none;text-decoration:none!important}
+    .btn-primary{background:var(--brand-accent);color:var(--white)!important;box-shadow:0 4px 14px rgba(230,48,34,.3)}
+    .btn-secondary{background:rgba(255,255,255,.12);color:var(--white)!important;border:1px solid rgba(255,255,255,.25)}
+    .faq-section{margin:48px 0 32px}
+    .faq-item{border:1px solid var(--border);border-radius:var(--radius);margin-bottom:10px;overflow:hidden}
+    .faq-q{display:flex;align-items:center;justify-content:space-between;padding:16px 20px;cursor:pointer;background:var(--white);font-family:var(--ff-head);font-size:15px;font-weight:600;color:var(--brand-dark);border:none;width:100%;text-align:left;gap:12px}
+    .faq-q:hover{background:var(--brand-light)}
+    .faq-a{display:none;padding:0 20px 16px;font-size:15px;color:var(--text-muted);line-height:1.7}
+    .faq-item.open .faq-a{display:block}
+    .faq-item.open .faq-q{background:var(--brand-light);color:var(--brand-blue)}
+    .faq-chevron{transition:transform .2s;flex-shrink:0}
+    .faq-item.open .faq-chevron{transform:rotate(180deg)}
+    .sidebar{position:sticky;top:104px}
+    .sidebar-card{border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;margin-bottom:20px;background:var(--white);box-shadow:var(--shadow-sm)}
+    .sidebar-card-head{background:var(--brand-navy);color:var(--white);font-family:var(--ff-head);font-size:12px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;padding:12px 18px}
+    .sidebar-card-body{padding:16px 18px}
+    .toc-list{list-style:none;padding:0;counter-reset:toc}
+    .toc-list li{counter-increment:toc}
+    .toc-list a{display:flex;align-items:baseline;gap:8px;padding:7px 0;font-family:var(--ff-head);font-size:13px;color:var(--text-muted);border-bottom:1px solid var(--border);text-decoration:none}
+    .toc-list a::before{content:counter(toc,decimal-leading-zero);font-size:11px;font-weight:700;color:var(--text-light)}
+    .toc-list li:last-child a{border-bottom:none}
+    .toc-list a:hover{color:var(--brand-blue)}
+    .contact-info{list-style:none;padding:0}
+    .contact-info li{display:flex;gap:12px;padding:10px 0;border-bottom:1px solid var(--border);align-items:flex-start}
+    .contact-info li:last-child{border-bottom:none}
+    .ci-icon{font-size:20px;flex-shrink:0;margin-top:2px}
+    .contact-info strong{font-family:var(--ff-head);font-size:14px;display:block;color:var(--brand-dark)}
+    .contact-info span{font-size:12px;color:var(--text-light)}
+    .article-footer{background:var(--brand-light);border-top:1px solid var(--border);padding:40px 24px;text-align:center}
+    .article-footer p{font-size:14px;color:var(--text-muted);max-width:500px;margin:0 auto 16px}
+    .tags{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-top:12px}
+    .tag{background:var(--white);border:1px solid var(--border);padding:4px 12px;border-radius:100px;font-family:var(--ff-head);font-size:11px;color:var(--text-muted)}
+    .quick-facts{list-style:none;padding:0}
+    .quick-facts li{display:flex;justify-content:space-between;padding:9px 0;border-bottom:1px solid var(--border);font-family:var(--ff-head);font-size:13px}
+    .quick-facts li:last-child{border-bottom:none}
+    .quick-facts .qf-label{color:var(--text-muted)}
+    .quick-facts .qf-value{color:var(--brand-dark);font-weight:600;text-align:right}
+    .testimonial-box{background:var(--brand-light);border-radius:var(--radius);padding:28px 30px;margin:28px 0;position:relative}
+    .testimonial-box::before{content:'\201C';font-size:64px;font-family:Georgia,serif;color:var(--brand-accent);opacity:.3;position:absolute;top:8px;left:16px;line-height:1}
+    .testimonial-box blockquote{font-size:17px;font-style:italic;line-height:1.7;color:var(--text-main);margin:0 0 16px;padding-left:8px}
+    .testimonial-box cite{font-family:var(--ff-head);font-size:13px;font-style:normal;font-weight:600;color:var(--brand-navy);display:block}
+    .testimonial-box cite span{font-weight:400;color:var(--text-muted)}
+    @media(max-width:768px){.article-wrap{grid-template-columns:1fr;gap:32px}.sidebar{position:static;order:2}.cta-banner{flex-direction:column;text-align:center}}
+  </style>
+</head>
+<body>
+
+<header id="mainHeader" style="position:fixed;top:0;left:0;right:0;z-index:50;transition:all 0.3s;">
+    <div class="hidden sm:block" style="background:#0f172a;color:#fff;font-size:12px;padding:6px 0;">
+        <div style="max-width:1280px;margin:0 auto;padding:0 24px;display:flex;justify-content:space-between;align-items:center;">
+            <span>⭐ <span style="color:#4ade80;font-weight:600;">Peste 20 ani de experiență</span></span>
+            <div style="display:flex;align-items:center;gap:16px;">
+                <span class="animate-badge-pulse" style="display:inline-flex;align-items:center;gap:6px;padding:2px 8px;background:rgba(34,197,94,0.2);border-radius:999px;">
+                    <span style="color:#facc15;">⭐</span>
+                    <span style="font-weight:600;">4.9/5</span>
+                    <span style="color:#94a3b8;">•</span>
+                    <span>127 recenzii</span>
+                </span>
+                <span>⭐ <span style="font-weight:600;">8.700+ proiecte</span></span>
+            </div>
+        </div>
+    </div>
+    <div class="sm:hidden" style="background:#0f172a;color:#fff;font-size:12px;padding:6px 0;">
+        <div style="max-width:1280px;margin:0 auto;padding:0 12px;display:flex;justify-content:space-between;align-items:center;">
+            <span>⭐ <span style="color:#4ade80;font-weight:600;">Peste 20 ani de experiență</span></span>
+            <a href="tel:0752288400" style="display:flex;align-items:center;gap:4px;font-weight:600;color:#4ade80;">📞 Sună acum</a>
+        </div>
+    </div>
+    <div id="navBg" style="transition:all 0.3s;">
+        <div style="max-width:1280px;margin:0 auto;padding:0 12px;display:flex;justify-content:space-between;align-items:center;height:64px;" class="sm:px-6">
+            <a href="../">
+                <img src="https://eu.chat-img.sintra.ai/32c1b29c-0c86-4833-a031-e7c45e21a11e/983d52bb-2eb6-42f1-bed4-f94d769bb634/Logo_CSSI.png" alt="CSSI Logo" id="logoImg" style="height:56px;width:auto;transition:all 0.3s;filter:brightness(0) invert(1) drop-shadow(0 0 1px rgba(255,255,255,0.8));">
+            </a>
+            <nav class="hidden lg:flex" style="align-items:center;gap:4px;">
+                <a href="../index.html" id="navLink1" style="padding:6px 12px;font-size:14px;font-weight:500;color:#fff;transition:all 0.2s;border-radius:8px;" onmouseover="this.style.color='#f87171'" onmouseout="this.style.color=navTextColor">🏠 Acasă</a>
+                <div class="dropdown" style="position:relative;">
+                    <button id="navLink2" style="padding:6px 12px;font-size:14px;font-weight:500;color:#fff;transition:all 0.2s;border-radius:8px;background:none;border:none;cursor:pointer;display:flex;align-items:center;font-family:inherit;">
+                        🛠️ Servicii
+                        <svg style="margin-left:4px;width:16px;height:16px;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+                    </button>
+                    <div class="dropdown-menu dropdown-scroll" style="position:absolute;top:100%;left:0;width:280px;background:#fff;box-shadow:0 10px 15px -3px rgba(0,0,0,0.1);border-radius:12px;padding:8px;border:1px solid #f1f5f9;max-height:384px;overflow-y:auto;z-index:100;">
+                        <a href="../detectie-incendiu-isu" style="display:block;padding:10px 16px;font-size:13px;color:#334155;border-radius:8px;" onmouseover="this.style.background='#fef2f2';this.style.color='#dc2626'" onmouseout="this.style.background='';this.style.color='#334155'">🔥 Detecție Incendiu ISU</a>
+                        <a href="../camere-supraveghere" style="display:block;padding:10px 16px;font-size:13px;color:#334155;border-radius:8px;" onmouseover="this.style.background='#fef2f2';this.style.color='#dc2626'" onmouseout="this.style.background='';this.style.color='#334155'">📹 Camere Supraveghere</a>
+                        <a href="../alarma-antiefractie" style="display:block;padding:10px 16px;font-size:13px;color:#334155;border-radius:8px;" onmouseover="this.style.background='#fef2f2';this.style.color='#dc2626'" onmouseout="this.style.background='';this.style.color='#334155'">🚨 Alarmă Antiefracție</a>
+                        <a href="../control-acces" style="display:block;padding:10px 16px;font-size:13px;color:#334155;border-radius:8px;" onmouseover="this.style.background='#fef2f2';this.style.color='#dc2626'" onmouseout="this.style.background='';this.style.color='#334155'">🚪 Control Acces</a>
+                        <a href="../pontaj-electronic" style="display:block;padding:10px 16px;font-size:13px;color:#334155;border-radius:8px;" onmouseover="this.style.background='#fef2f2';this.style.color='#dc2626'" onmouseout="this.style.background='';this.style.color='#334155'">⏱️ Pontaj Electronic</a>
+                        <a href="../bariere-auto" style="display:block;padding:10px 16px;font-size:13px;color:#334155;border-radius:8px;" onmouseover="this.style.background='#fef2f2';this.style.color='#dc2626'" onmouseout="this.style.background='';this.style.color='#334155'">🚧 Bariere Auto</a>
+                        <a href="../interfoane-videointerfoane" style="display:block;padding:10px 16px;font-size:13px;color:#334155;border-radius:8px;" onmouseover="this.style.background='#fef2f2';this.style.color='#dc2626'" onmouseout="this.style.background='';this.style.color='#334155'">🔔 Interfoane &amp; Videointerfoane</a>
+                        <a href="../sonorizare" style="display:block;padding:10px 16px;font-size:13px;color:#334155;border-radius:8px;" onmouseover="this.style.background='#fef2f2';this.style.color='#dc2626'" onmouseout="this.style.background='';this.style.color='#334155'">🔊 Sonorizare</a>
+                        <a href="../automatizari-porti" style="display:block;padding:10px 16px;font-size:13px;color:#334155;border-radius:8px;" onmouseover="this.style.background='#fef2f2';this.style.color='#dc2626'" onmouseout="this.style.background='';this.style.color='#334155'">🚗 Automatizări Porți</a>
+                        <a href="../usi-garaj" style="display:block;padding:10px 16px;font-size:13px;color:#334155;border-radius:8px;" onmouseover="this.style.background='#fef2f2';this.style.color='#dc2626'" onmouseout="this.style.background='';this.style.color='#334155'">🏠 Uși Garaj</a>
+                        <a href="../aer-conditionat" style="display:block;padding:10px 16px;font-size:13px;color:#334155;border-radius:8px;" onmouseover="this.style.background='#fef2f2';this.style.color='#dc2626'" onmouseout="this.style.background='';this.style.color='#334155'">❄️ Aer Condiționat</a>
+                        <a href="../ventilatie" style="display:block;padding:10px 16px;font-size:13px;color:#334155;border-radius:8px;" onmouseover="this.style.background='#fef2f2';this.style.color='#dc2626'" onmouseout="this.style.background='';this.style.color='#334155'">💨 Ventilație</a>
+                        <a href="../instalatii-electrice" style="display:block;padding:10px 16px;font-size:13px;color:#334155;border-radius:8px;" onmouseover="this.style.background='#fef2f2';this.style.color='#dc2626'" onmouseout="this.style.background='';this.style.color='#334155'">⚡ Instalații Electrice</a>
+                        <a href="../instalatii-termice-sanitare" style="display:block;padding:10px 16px;font-size:13px;color:#334155;border-radius:8px;" onmouseover="this.style.background='#fef2f2';this.style.color='#dc2626'" onmouseout="this.style.background='';this.style.color='#334155'">🔧 Instalații Termice &amp; Sanitare</a>
+                    </div>
+                </div>
+                <a href="../despre-noi" id="navLink3" style="padding:6px 12px;font-size:14px;font-weight:500;color:#fff;transition:all 0.2s;border-radius:8px;" onmouseover="this.style.color='#f87171'" onmouseout="this.style.color=navTextColor">ℹ️ Despre Noi</a>
+                <a href="../portofoliu" id="navLink4" style="padding:6px 12px;font-size:14px;font-weight:500;color:#fff;transition:all 0.2s;border-radius:8px;" onmouseover="this.style.color='#f87171'" onmouseout="this.style.color=navTextColor">📁 Portofoliu</a>
+                <a href="index.html" style="padding:6px 12px;font-size:14px;font-weight:600;color:#16a34a;border-radius:8px;">📝 Blog</a>
+                <a href="../contact" id="navLink5" style="padding:6px 12px;font-size:14px;font-weight:500;color:#fff;transition:all 0.2s;border-radius:8px;" onmouseover="this.style.color='#f87171'" onmouseout="this.style.color=navTextColor">📍 Contact</a>
+            </nav>
+            <div class="hidden lg:flex" style="align-items:center;gap:12px;">
+                <a href="tel:0752288400" id="phoneLink" style="display:flex;align-items:center;font-size:14px;font-weight:500;color:#fff;transition:all 0.2s;">
+                    <svg style="width:16px;height:16px;margin-right:6px;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/></svg>
+                    0752 288 400
+                </a>
+                <a href="../contact.html" style="background:linear-gradient(to right,#dc2626,#b91c1c);color:#fff;padding:8px 20px;border-radius:8px;font-size:14px;font-weight:600;box-shadow:0 4px 6px -1px rgba(0,0,0,0.1);transition:all 0.2s;" onmouseover="this.style.background='linear-gradient(to right,#b91c1c,#991b1b)'" onmouseout="this.style.background='linear-gradient(to right,#dc2626,#b91c1c)'">Cere Ofertă</a>
+            </div>
+            <div class="lg:hidden" style="display:flex;align-items:center;gap:8px;">
+                <span class="animate-badge-pulse" style="display:inline-flex;align-items:center;gap:4px;padding:2px 6px;border-radius:999px;font-size:10px;background:rgba(255,255,255,0.2);color:#fff;">
+                    <span style="color:#facc15;font-size:9px;">⭐</span>
+                    <span style="font-weight:600;">4.9</span>
+                </span>
+                <button onclick="toggleMobileMenu()" id="menuBtn" class="animate-subtle-pulse" style="padding:4px;border-radius:6px;border:none;cursor:pointer;background:linear-gradient(to right,#ef4444,#dc2626);color:#fff;">
+                    <svg id="menuIcon" style="width:20px;height:20px;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
+                    <svg id="closeIcon" style="width:20px;height:20px;display:none;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+                </button>
+            </div>
+        </div>
+        <div id="mobileMenu" style="background:#fff;border-radius:16px;box-shadow:0 20px 25px -5px rgba(0,0,0,0.1);margin:8px 12px;padding:8px;max-height:80vh;overflow-y:auto;">
+            <nav style="display:flex;flex-direction:column;gap:4px;">
+                <a href="../index.html" style="padding:10px 16px;font-size:16px;font-weight:500;color:#334155;border-radius:8px;">🏠 Acasă</a>
+                <button onclick="toggleServicesSubmenu()" style="padding:10px 16px;font-size:16px;font-weight:500;color:#334155;border-radius:8px;background:none;border:none;cursor:pointer;display:flex;justify-content:space-between;align-items:center;width:100%;font-family:inherit;text-align:left;">
+                    🛠️ Servicii
+                    <svg id="servicesArrow" style="width:16px;height:16px;transition:transform 0.2s;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+                </button>
+                <div id="servicesSubmenu" style="padding-left:16px;overflow-y:auto;">
+                    <a href="../detectie-incendiu-isu.html" onclick="closeMobile()" style="display:block;padding:8px 16px;font-size:14px;color:#475569;border-radius:8px;">🔥 Detecție Incendiu ISU</a>
+                    <a href="../camere-supraveghere.html" onclick="closeMobile()" style="display:block;padding:8px 16px;font-size:14px;color:#475569;border-radius:8px;">📹 Camere Supraveghere</a>
+                    <a href="../alarma-antiefractie.html" onclick="closeMobile()" style="display:block;padding:8px 16px;font-size:14px;color:#475569;border-radius:8px;">🚨 Alarmă Antiefracție</a>
+                    <a href="../control-acces.html" onclick="closeMobile()" style="display:block;padding:8px 16px;font-size:14px;color:#475569;border-radius:8px;">🚪 Control Acces</a>
+                    <a href="../pontaj-electronic.html" onclick="closeMobile()" style="display:block;padding:8px 16px;font-size:14px;color:#475569;border-radius:8px;">⏱️ Pontaj Electronic</a>
+                    <a href="../bariere-auto.html" onclick="closeMobile()" style="display:block;padding:8px 16px;font-size:14px;color:#475569;border-radius:8px;">🚧 Bariere Auto</a>
+                    <a href="../interfoane-videointerfoane.html" onclick="closeMobile()" style="display:block;padding:8px 16px;font-size:14px;color:#475569;border-radius:8px;">🔔 Interfoane &amp; Videointerfoane</a>
+                    <a href="../sonorizare.html" onclick="closeMobile()" style="display:block;padding:8px 16px;font-size:14px;color:#475569;border-radius:8px;">🔊 Sonorizare</a>
+                    <a href="../automatizari-porti.html" onclick="closeMobile()" style="display:block;padding:8px 16px;font-size:14px;color:#475569;border-radius:8px;">🚗 Automatizări Porți</a>
+                    <a href="../usi-garaj.html" onclick="closeMobile()" style="display:block;padding:8px 16px;font-size:14px;color:#475569;border-radius:8px;">🏠 Uși Garaj</a>
+                    <a href="../aer-conditionat.html" onclick="closeMobile()" style="display:block;padding:8px 16px;font-size:14px;color:#475569;border-radius:8px;">❄️ Aer Condiționat</a>
+                    <a href="../ventilatie.html" onclick="closeMobile()" style="display:block;padding:8px 16px;font-size:14px;color:#475569;border-radius:8px;">💨 Ventilație</a>
+                    <a href="../instalatii-electrice.html" onclick="closeMobile()" style="display:block;padding:8px 16px;font-size:14px;color:#475569;border-radius:8px;">⚡ Instalații Electrice</a>
+                    <a href="../instalatii-termice-sanitare.html" onclick="closeMobile()" style="display:block;padding:8px 16px;font-size:14px;color:#475569;border-radius:8px;">🔧 Instalații Termice &amp; Sanitare</a>
+                </div>
+                <a href="../despre-noi.html" onclick="closeMobile()" style="padding:10px 16px;font-size:16px;font-weight:500;color:#334155;border-radius:8px;">ℹ️ Despre Noi</a>
+                <a href="../portofoliu.html" onclick="closeMobile()" style="padding:10px 16px;font-size:16px;font-weight:500;color:#334155;border-radius:8px;">📁 Portofoliu</a>
+                <a href="index.html" onclick="closeMobile()" style="padding:10px 16px;font-size:16px;font-weight:600;color:#16a34a;border-radius:8px;">📝 Blog</a>
+                <a href="../contact.html" onclick="closeMobile()" style="padding:10px 16px;font-size:16px;font-weight:500;color:#334155;border-radius:8px;">📍 Contact</a>
+                <div style="padding:12px 8px;">
+                    <a href="../contact.html" onclick="closeMobile()" style="display:block;text-align:center;background:linear-gradient(to right,#dc2626,#b91c1c);color:#fff;padding:10px 16px;border-radius:12px;font-weight:600;">Cere Ofertă</a>
+                </div>
+            </nav>
+        </div>
+    </div>
+</header>
+
+
+  <nav class="breadcrumb" aria-label="Breadcrumb">
+    <div class="inner">
+      <a href="/">Acasă</a><span class="sep">›</span>
+      <a href="/blog/">Blog</a><span class="sep">›</span>
+      <span style="color:rgba(255,255,255,.9)">Studiu de Caz Schaeffler România</span>
+    </div>
+  </nav>
+
+  <header class="hero">
+    <div class="inner">
+      <div class="hero-content">
+      <div class="hero-badge">STUDIU DE CAZ</div>
+      <h1>Securitate Perimetrală și Control Acces pentru <em>Schaeffler România</em></h1>
+      <p class="lead">Soluție completă de securitate industrial-grade pentru una dintre cele mai mari fabrici de componente auto din zona Brașov: supraveghere video perimetrală, control acces multi-nivel, bariere auto cu recunoaștere numere, automatizări porți industriale și pontaj electronic pentru peste 2.000 de angajați.</p>
+      <div class="hero-meta">
+        <span>✍ CSSI Brașov</span><span class="dot">·</span>
+        <span>📅 20 Mai 2026</span><span class="dot">·</span>
+        <span>⏱ 14 min lectură</span>
+      </div>
+      <div class="topic-pills">
+        <span class="pill pill-red">📹 CCTV Industrial</span>
+        <span class="pill pill-blue">🔐 Control Acces</span>
+        <span class="pill pill-amber">🚧 Bariere Auto</span>
+        <span class="pill pill-green">🚗 Automatizări Porți</span>
+      </div>
+    </div>
+    </div>
+  </header>
+
+  <div class="article-wrap">
+    <main class="article-body" id="articol">
+
+      <p class="intro-p">Securizarea unui campus industrial de dimensiuni mari, cu mii de angajați, flux continuu de vehicule și cerințe stricte impuse de standardele corporative internaționale, reprezintă una dintre cele mai complexe provocări din domeniul securității fizice. Schaeffler România, parte a grupului german Schaeffler — unul dintre liderii mondiali în producția de rulmenți și componente de precizie pentru industria auto — a ales CSSI pentru proiectarea și implementarea unui sistem complet de securitate perimetrală și control acces la fabrica din zona Brașov-Cristian.</p>
+
+      <h2 id="despre-client">Despre Client — Schaeffler România</h2>
+
+      <p><strong>Grupul Schaeffler</strong> este un furnizor global de tehnologie pentru industria auto și industrială, cu sediul central în Herzogenaurach, Germania. Cu peste 80.000 de angajați la nivel mondial și o prezență în peste 50 de țări, Schaeffler produce rulmenți, componente de transmisie, sisteme de direcție și soluții de mobilitate electrică pentru principalii producători auto din lume.</p>
+
+      <p>Fabrica din zona <strong>Brașov-Cristian</strong> este una dintre cele mai importante unități de producție ale Schaeffler din Europa de Est. Inaugurată în anii 2000 și extinsă semnificativ de-a lungul ultimelor două decenii, unitatea brașoveană produce rulmenți de precizie și componente pentru transmisii auto, fiind un furnizor direct pentru mărci precum Volkswagen, BMW, Mercedes-Benz și Stellantis. Cu peste <strong>2.000 de angajați</strong> repartizați în trei schimburi de producție, fabrica funcționează practic non-stop, 24 de ore pe zi, 6 zile pe săptămână.</p>
+
+      <p>Campusul industrial cuprinde <strong>patru hale de producție</strong> interconectate, un depozit central de materii prime și produse finite, o clădire administrativă cu birouri pe trei niveluri, un centru de training pentru angajați, o stație de transformare electrică și o parcare cu peste 500 de locuri. Perimetrul total al incintei depășește 1,2 kilometri, cu multiple puncte de acces pentru personal, vehicule de aprovizionare și camioane de expediere.</p>
+
+      <p>Departamentul de Facility Management al Schaeffler România a inițiat proiectul de modernizare a securității perimetrale în contextul unei extinderi a capacității de producție, care a implicat adăugarea unei noi hale și reorganizarea fluxurilor logistice. Sistemele existente — o combinație de echipamente instalate la momente diferite, de la furnizori diferiți — nu mai corespundeau cerințelor de securitate ale grupului și nici standardelor interne impuse de sediul central din Germania.</p>
+
+      <h2 id="provocarea">Provocarea</h2>
+
+      <p>Evaluarea inițială realizată de echipa CSSI, împreună cu departamentul de securitate Schaeffler, a identificat o serie de provocări specifice unui campus industrial de mari dimensiuni, aflat în proces de extindere:</p>
+
+      <h3>Campus extins cu multiple puncte de acces</h3>
+      <p>Incinta Schaeffler avea <strong>șapte puncte de acces</strong> active: intrarea principală pentru angajați (auto și pietonal), intrarea secundară pentru schimbul de noapte, două porți pentru camioane și livrări, o poartă de urgență, accesul la stația de transformare și o intrare de serviciu. Fiecare punct avea nevoi diferite de control — de la verificare rapidă pentru angajații în schimb, la proceduri mai elaborate pentru vizitatori și transportatori externi. Sistemul existent nu oferea o gestionare unitară a tuturor acestor puncte.</p>
+
+      <h3>Fluctuație ridicată de personal și accese temporare</h3>
+      <p>Cu peste 2.000 de angajați permanenți și un flux constant de personal temporar (agenții de muncă temporară, subcontractori de mentenanță, consultanți tehnici, auditori), gestionarea drepturilor de acces era o provocare permanentă. Departamentul HR raporta că, în medie, <strong>40-60 de carduri de acces noi</strong> trebuiau emise sau dezactivate în fiecare lună. Sistemul vechi nu permitea gestionarea eficientă a acestui volum și nu oferea o integrare cu procesele HR de angajare și dezactivare a conturilor.</p>
+
+      <h3>Securitate perimetrală insuficientă</h3>
+      <p>Gardul perimetral de 1,2 km era monitorizat de doar 14 camere analogice, majoritatea instalate cu peste 8 ani în urmă. Rezoluția redusă, combinată cu degradarea iluminării infraroșu, făcea ca zonele de perimetru să fie practic nevizibile noaptea pe monitoare. Existau <strong>puncte moarte semnificative</strong> — în special la colțurile campusului, în zona depozitului și de-a lungul gardului dinspre câmpurile agricole adiacente. Mai mult, nu exista niciun sistem de detecție perimetrală — camerele înregistrau pasiv, fără alerte automate la intruziune.</p>
+
+      <h3>Probleme la managementul vehiculelor</h3>
+      <p>Parcarea angajaților și accesul vehiculelor în incintă erau gestionate manual, prin verificare vizuală de către personalul de pază. La schimbarea turelor — în special dimineața la ora 6:00 și după-amiaza la 14:00 — se formau <strong>cozi de 15-20 de minute</strong> la intrare, generând frustrare în rândul angajaților și blocând parțial traficul pe drumul de acces. Nu exista un sistem automat de recunoaștere a vehiculelor autorizate, iar camioanele de livrare trebuiau verificate manual la fiecare intrare.</p>
+
+      <h3>Pontaj bazat pe foi volante</h3>
+      <p>Deși exista un sistem parțial de pontaj electronic la intrarea principală, acesta nu acoperea toate punctele de acces și nu era integrat cu software-ul HR. Angajații care intrau pe la intrarea secundară sau pe la poarta de serviciu nu erau înregistrați automat, ceea ce genera <strong>discrepanțe frecvente</strong> între datele de prezență și realitate. Calculul orelor suplimentare și al sporurilor de noapte se baza parțial pe foi completate manual de șefii de tură.</p>
+
+      <h3>Cerințe corporative stricte</h3>
+      <p>Ca parte a unui grup multinațional, Schaeffler România trebuia să respecte <strong>standardele globale de securitate</strong> ale grupului. Acestea includeau cerințe specifice privind retenția înregistrărilor video (minimum 90 de zile), niveluri diferențiate de acces pe zone de securitate, audit trail complet pentru toate evenimentele de acces, raportare periodică către sediul central și compatibilitate cu platforma de security management a grupului.</p>
+
+      <div class="box box-red">
+        <h4>Provocări principale identificate</h4>
+        <p>Campus industrial extins (1,2 km perimetru) cu acoperire video insuficientă, 7 puncte de acces neunificate, management vehicular manual generând cozi la schimbul de tură, și cerințe corporative stricte de conformitate și retenție a datelor pe 90 de zile.</p>
+      </div>
+
+      <h2 id="solutia">Soluția CSSI</h2>
+
+      <p>CSSI a proiectat o soluție integrată de securitate industrială, dimensionată pentru nevoile specifice ale unui campus de producție de mari dimensiuni. Soluția acoperă patru componente majore — supraveghere video perimetrală și interioară, control acces multi-nivel, management vehicular automatizat și pontaj electronic — toate interconectate printr-o infrastructură de rețea dedicată și gestionate dintr-un centru de monitorizare centralizat.</p>
+
+      <h3>Sistem CCTV Industrial — 64 camere Hikvision</h3>
+      <p>Întregul sistem de supraveghere video a fost proiectat de la zero, utilizând echipamente <strong>Hikvision</strong> din gama profesională și industrială. Au fost instalate 64 de camere, distribuite strategic pe trei categorii funcționale:</p>
+
+      <p><strong>Camere perimetrale — 24 buc.</strong></p>
+      <ul>
+        <li><strong>20 camere bullet 4MP</strong> (Hikvision DS-2CD2T43G2-4I) cu IR până la 80m — montate pe stâlpi de-a lungul gardului perimetral, la intervale de 50-60m, pentru acoperirea completă a celor 1,2 km de perimetru</li>
+        <li><strong>4 camere termice</strong> (Hikvision DS-2TD2137-7/P) — poziționate în cele patru colțuri ale incintei, pentru detecție perimetrală avansată indiferent de condiții meteo, noapte totală sau ceață</li>
+      </ul>
+
+      <p><strong>Camere interioare — 28 buc.</strong></p>
+      <ul>
+        <li><strong>16 camere dome 2MP</strong> (Hikvision DS-2CD2123G2-IU) — în holurile de acces, coridoarele principale ale halelor de producție, zona de recepție și centrul de training</li>
+        <li><strong>8 camere dome anti-vandal 4MP</strong> (Hikvision DS-2CD2143G2-IU) — în zonele de depozitare de mare valoare, camera serverelor și zona de expediere</li>
+        <li><strong>4 camere PTZ 4MP</strong> (Hikvision DS-2DE4425IW-DE) — câte una per hală de producție, cu zoom optic 25x, pentru urmărire activă a incidentelor</li>
+      </ul>
+
+      <p><strong>Camere la punctele de acces — 12 buc.</strong></p>
+      <ul>
+        <li><strong>8 camere bullet 4MP wide-angle</strong> — la fiecare punct de acces pietonal, pentru identificare facială</li>
+        <li><strong>4 camere LPR</strong> (Hikvision DS-2CD4A26FWD-IZS/P) — camere dedicate recunoașterii automate a numerelor de înmatriculare, montate la fiecare barieră auto</li>
+      </ul>
+
+      <p>Înregistrarea se realizează pe un <strong>cluster de 4 NVR-uri Hikvision cu 16 canale fiecare</strong> (DS-7716NI-K4/16P), cu o capacitate totală de stocare de <strong>96TB</strong> (6 x HDD 4TB per NVR), suficientă pentru <strong>90+ zile de retenție</strong> la rezoluție maximă pe toate camerele — conform cerințelor corporative Schaeffler. NVR-urile sunt instalate în rack-uri climatizate, cu alimentare redundantă prin UPS-uri dedicate.</p>
+
+      <p>Au fost configurate <strong>scenarii inteligente de alertare</strong>: detecție de mișcare pe linie virtuală de-a lungul perimetrului, detecție de intruziune în zone restricționate în afara orelor de lucru, alertă la pierderea semnalului de la orice cameră, alertă la acoperirea sau sabotarea unei camere. Camerele termice generează alerte suplimentare bazate pe semnătura termică, funcționale și în condiții de vizibilitate zero.</p>
+
+      <h3>Control Acces Multi-Nivel — 12 puncte</h3>
+      <p>Sistemul de control acces a fost proiectat cu <strong>trei niveluri de securitate</strong>, adaptate cerințelor fiecărei zone din campus:</p>
+
+      <p><strong>Nivel 1 — Acces general (4 puncte)</strong></p>
+      <ul>
+        <li>Intrarea principală pietonală — turnichete tripod cu cititor de card RFID</li>
+        <li>Intrarea secundară pietonală — turnichete cu cititor de card</li>
+        <li>Accesul la cantină și centrul de training — cititoare de card pe uși</li>
+        <li>Ieșirea de urgență — bară de panică cu alarmă, monitorizată prin CCTV</li>
+      </ul>
+
+      <p><strong>Nivel 2 — Acces restricționat (5 puncte)</strong></p>
+      <ul>
+        <li>Accesul în fiecare din cele 4 hale de producție — cititor card + PIN</li>
+        <li>Accesul la depozitul central — cititor card + PIN, cu program orar restricționat</li>
+      </ul>
+
+      <p><strong>Nivel 3 — Acces de înaltă securitate (3 puncte)</strong></p>
+      <ul>
+        <li>Camera serverelor — cititor card + PIN + jurnalizare extinsă</li>
+        <li>Biroul de securitate și centrul de monitorizare — cititor card + PIN</li>
+        <li>Laboratorul de calitate (mostre confidențiale) — cititor card + PIN, acces limitat la persoane nominalizate</li>
+      </ul>
+
+      <p>Fiecare angajat a primit un <strong>card de proximitate RFID</strong> cu chip dual-frequency, programat cu nivelul de acces corespunzător departamentului, funcției și turei de lucru. Sistemul permite definirea unor reguli granulare: un operator din hala 2 are acces doar în hala 2 și doar în intervalul turei sale (de exemplu, 06:00-14:30, cu 30 de minute marjă). Managerii de producție au acces extins la toate halele, dar nu și la laboratorul de calitate, unde accesul este strict nominalizat.</p>
+
+      <p>Pentru vizitatori, s-a implementat un <strong>sistem de management al vizitatorilor</strong>: la recepție, vizitatorii primesc un card temporar pre-programat cu acces exclusiv la zona de birouri și sala de ședințe, cu expirare automată la sfârșitul zilei. Cardurile de vizitator sunt colorate diferit (verde) față de cele ale angajaților (albastre) pentru identificare vizuală rapidă.</p>
+
+      <h3>Bariere Auto BFT cu Recunoaștere Numere (LPR)</h3>
+      <p>Managementul vehiculelor a fost automatizat complet prin instalarea a <strong>3 bariere auto BFT Maxima Ultra 36</strong> la cele trei puncte de acces vehicular:</p>
+      <ul>
+        <li><strong>Bariera 1 — Intrarea principală auto</strong> — pentru angajați, cu deschidere automată prin LPR pentru vehiculele înregistrate în baza de date</li>
+        <li><strong>Bariera 2 — Ieșirea principală auto</strong> — cu LPR și jurnalizare a orei de ieșire</li>
+        <li><strong>Bariera 3 — Accesul camioane/livrări</strong> — cu LPR + verificare manuală de către personalul de pază pentru vehiculele neînregistrate</li>
+      </ul>
+
+      <p>Sistemul de <strong>recunoaștere automată a numerelor de înmatriculare (LPR)</strong> funcționează prin camerele Hikvision dedicate, care citesc plăcuța de înmatriculare și o compară cu baza de date a vehiculelor autorizate. Pentru angajații cu mașini înregistrate, bariera se deschide automat în sub 2 secunde — eliminând complet cozile la schimbul de tură. Vehiculele nerecunoscute sunt oprite la barieră, iar operatorul din centrul de monitorizare poate verifica vizual și acorda acces manual dacă este cazul.</p>
+
+      <p>Barierele BFT Maxima Ultra 36 au fost selectate pentru <strong>fiabilitatea industrială</strong>: brațul de 3,6 metri acoperă lățimea completă a benzii de acces, motorul cu funcționare continuă suportă peste 5.000 de cicluri pe zi, iar sistemul de siguranță cu fotocelule și bandă de protecție previne coborârea brațului peste un vehicul aflat în zona de acces.</p>
+
+      <h3>Automatizări Porți Industriale Nice</h3>
+      <p>Cele două porți culisante de la intrarea de camioane și livrări au fost echipate cu <strong>motoare Nice RUN2500I</strong>, proiectate pentru porți industriale grele de până la 2.500 kg. Porțile, cu deschidere de 6 metri fiecare, se deschid și se închid complet în aproximativ 30 de secunde.</p>
+
+      <p>Automatizările Nice sunt integrate cu sistemul de control acces și barierele BFT: la identificarea unui camion autorizat prin LPR, poarta culisantă se deschide automat simultan cu bariera. La ieșire, procesul este inversat — bariera și poarta se deschid la detectarea vehiculului prin bucla inductivă îngropată în asfalt. Sistemul include <strong>semnalizare luminoasă și sonoră</strong> de avertizare în timpul mișcării porții, conform normativelor de securitate a muncii.</p>
+
+      <h3>Pontaj Electronic pentru 2.000+ Angajați</h3>
+      <p>Toate punctele de acces pietonal au fost echipate cu <strong>terminale de pontaj integrate</strong> în cititoarele de control acces. La fiecare trecere prin turnichet, sistemul înregistrează automat identitatea angajatului, ora exactă, punctul de acces și direcția (intrare sau ieșire). Aceste date sunt agregate într-un <strong>modul de management al prezenței</strong> care:</p>
+      <ul>
+        <li>Calculează automat orele lucrate per angajat, per zi, per lună</li>
+        <li>Identifică automat tura de lucru (dimineață, după-amiază, noapte) pe baza orei de intrare</li>
+        <li>Marchează automat întârzierile (sosire după ora de început a turei + toleranță de 5 minute)</li>
+        <li>Calculează orele suplimentare și sporul de noapte conform legislației muncii</li>
+        <li>Generează rapoarte lunare de prezență exportabile în format CSV/Excel, compatibile cu software-ul de salarizare al Schaeffler</li>
+        <li>Oferă vizualizare în timp real a numărului de angajați prezenți în fiecare zonă — funcție utilă pentru evacuare în caz de urgență</li>
+      </ul>
+
+      <p>Funcția de <strong>numărare în timp real a persoanelor</strong> prezente în incintă a fost o cerință specială a departamentului de securitate. În cazul unei evacuări de urgență, responsabilul de securitate poate vedea instant câți angajați se află în fiecare hală și poate verifica dacă toți au ieșit din incintă, prin compararea numărului de intrări cu cel de ieșiri.</p>
+
+      <h3>Centru de Monitorizare cu Video Wall</h3>
+      <p>S-a amenajat un centru de monitorizare dedicat, echipat cu un <strong>video wall format din 4 monitoare profesionale de 55"</strong> (Hikvision DS-D5055UC), montate într-o matrice 2x2. Configurația permite afișarea simultană a până la 64 de imagini live, sau comutarea pe vizualizare selectivă a zonelor critice. Operatorul de serviciu dispune de o <strong>stație de lucru dedicată</strong> cu acces la toate subsistemele:</p>
+      <ul>
+        <li>Vizualizare live și playback înregistrări de la cele 64 de camere</li>
+        <li>Jurnalul de acces în timp real de la toate cele 12 puncte de control acces</li>
+        <li>Starea barierelor auto și porților — deschis/închis, ultimul eveniment</li>
+        <li>Dashboard-ul de pontaj — număr de angajați prezenți, pe zone</li>
+        <li>Panoul de alarme — alertele de la toate subsistemele, cu prioritizare și escalare automată</li>
+      </ul>
+
+      <div class="box box-blue">
+        <h4>Integrare completă între subsisteme</h4>
+        <p>Toate componentele sunt interconectate: la o tentativă de acces neautorizat, camera de la punctul respectiv comută automat pe video wall, iar evenimentul este logat cu captură de imagine. La ridicarea barierei pentru un vehicul neautorizat, sistemul solicită confirmarea operatorului. La activarea unei alarme perimetrale de pe camerele termice, camerele PTZ din proximitate se orientează automat către zona de alertă.</p>
+      </div>
+
+      <h2 id="implementare">Implementare</h2>
+
+      <p>Proiectul a fost implementat în <strong>4 faze pe parcursul a 12 săptămâni</strong>, într-o coordonare strânsă cu departamentele de producție, logistică și HSE (Health, Safety & Environment) ale Schaeffler. Cerința absolută a fost <strong>zero impact asupra producției</strong> — nicio secundă de oprire a liniilor de producție nu era acceptabilă.</p>
+
+      <h3>Faza 1 — Survey, proiectare, aprobare (Săptămânile 1-2)</h3>
+      <p>Prima fază a inclus:</p>
+      <ul>
+        <li>Survey detaliat al campusului — măsurători perimetru, identificarea tuturor punctelor de acces, evaluarea infrastructurii electrice existente</li>
+        <li>Proiectarea detaliată a sistemului — planuri de amplasare camere, puncte de acces, trasee de cablu, calcul de stocare video</li>
+        <li>Prezentarea și aprobarea proiectului de către departamentul de securitate Schaeffler și Facility Management</li>
+        <li>Obținerea avizelor interne — departamentul HSE (trasee de cablu, siguranță la foc), IT (integrare rețea), HR (specificații pontaj)</li>
+        <li>Planificarea detaliată a fazelor de execuție — coordonare cu programul de producție pentru a evita interferențele</li>
+      </ul>
+
+      <h3>Faza 2 — Infrastructură și cablare (Săptămânile 3-5)</h3>
+      <p>Faza de infrastructură a fost cea mai intensivă și a inclus:</p>
+      <ul>
+        <li>Instalarea <strong>rețelei backbone de fibră optică</strong> — 1.800m de fibră optică single-mode, conectând cele patru hale de producție, depozitul, clădirea administrativă și centrul de monitorizare</li>
+        <li>Trasarea a peste <strong>8.000 de metri de cablu UTP Cat6A</strong> pentru camerele IP și cititoarele de acces</li>
+        <li>Montarea a <strong>12 stâlpi metalici</strong> de susținere de-a lungul perimetrului, pentru camerele bullet perimetrale și cele termice</li>
+        <li>Instalarea a 5 rack-uri de comunicații (19", 42U) în puncte strategice ale campusului</li>
+        <li>Montarea switch-urilor PoE industriale și a surselor de alimentare neîntreruptibilă (UPS)</li>
+        <li>Săparea și turnarea fundațiilor pentru bariere și porți, plus canalele subterane pentru cabluri la punctele de acces vehicular</li>
+      </ul>
+      <p>Lucrările de săpat și foraj au fost realizate exclusiv în weekend și în turele de noapte, pentru a nu afecta traficul de camioane și angajați. Toate traseele de cablu din interiorul halelor au fost realizate pe jgheaburi metalice montate la peste 4 metri înălțime, fără a interfera cu echipamentele de producție sau cu podurile rulante.</p>
+
+      <h3>Faza 3 — Instalare echipamente active (Săptămânile 6-9)</h3>
+      <p>A treia fază a acoperit instalarea propriu-zisă a tuturor echipamentelor:</p>
+      <ul>
+        <li>Montarea și orientarea celor 64 de camere — cu ajustare individuală a unghiului, focalizării, sensibilității la mișcare și zonelor de detecție</li>
+        <li>Instalarea celor 4 NVR-uri și configurarea înregistrării pe toate canalele</li>
+        <li>Montarea cititoarelor de acces, turnichetelor, yalelor electromagnetice și controllerelor de acces</li>
+        <li>Instalarea celor 3 bariere BFT și a sistemului LPR</li>
+        <li>Montarea motoarelor Nice pe cele 2 porți culisante industriale</li>
+        <li>Amenajarea centrului de monitorizare — rack-uri, video wall, stație de lucru</li>
+      </ul>
+
+      <h3>Faza 4 — Integrare, testare, training (Săptămânile 10-12)</h3>
+      <p>Faza finală a inclus:</p>
+      <ul>
+        <li>Integrarea tuturor subsistemelor — scenarii automate de corelare alarme, sincronizare LPR-bariere-porți</li>
+        <li>Configurarea software-ului de control acces — crearea bazei de date cu cei 2.000+ angajați, definirea nivelurilor de acces pe zone și ture</li>
+        <li>Programarea a peste <strong>2.200 de carduri de acces</strong> — 2.000+ pentru angajații permanenți, 150 pentru personal temporar, 50 carduri de vizitator</li>
+        <li>Înregistrarea vehiculelor angajaților în baza de date LPR — peste 1.400 de numere de înmatriculare</li>
+        <li>Testarea completă a fiecărui dispozitiv și a fiecărui scenariu de integrare</li>
+        <li>Testarea de penetrare perimetrală — simularea tentativelor de intruziune pentru validarea acoperirii camerelor termice și a alertelor</li>
+        <li>Training personalizat — 4 sesiuni: (1) operatorii centrului de monitorizare, (2) personalul de pază, (3) departamentul HR (pontaj), (4) departamentul de securitate (administrare generală sistem)</li>
+        <li>Documentația completă — predarea dosarelor as-built, a manualelor de operare și a procedurilor de escalare</li>
+      </ul>
+
+      <div class="box box-green">
+        <h4>Zero opriri de producție</h4>
+        <p>Pe toată durata celor 12 săptămâni de implementare, nicio linie de producție nu a fost oprită și niciun flux logistic nu a fost întrerupt. Toate lucrările cu potențial impact au fost realizate în weekend, în turele de noapte sau în perioadele de oprire planificată a producției. Coordonarea zilnică cu departamentul de producție a fost realizată prin întâlniri scurte de 15 minute la începutul fiecărei zile de lucru.</p>
+      </div>
+
+      <h2 id="rezultate">Rezultate</h2>
+
+      <p>La trei luni de la finalizarea proiectului și punerea în funcțiune a tuturor subsistemelor, rezultatele sunt cuantificabile și depășesc așteptările inițiale:</p>
+
+      <ul class="check-list">
+        <li><span class="chk">✓</span><span><strong>Acoperire perimetrală 100%, fără puncte moarte</strong> — cele 24 de camere perimetrale (inclusiv cele 4 termice) asigură vizibilitate completă pe cei 1,2 km de perimetru, 24/7, indiferent de condiții meteo. Camerele termice au detectat deja cu succes 3 tentative de acces neautorizat pe timp de noapte.</span></li>
+        <li><span class="chk">✓</span><span><strong>Reducerea timpului de acces vehicular cu 60%</strong> — sistemul LPR deschide automat bariera în sub 2 secunde pentru vehiculele înregistrate. Cozile de la schimbul de tură au fost eliminate complet — de la 15-20 minute anterior, la flux continuu.</span></li>
+        <li><span class="chk">✓</span><span><strong>Pontaj electronic precis pentru 2.000+ angajați</strong> — eliminarea completă a foilor de pontaj manuale și a discrepanțelor de prezență. Departamentul HR economisește aproximativ 40 de ore de muncă pe lună prin generarea automată a rapoartelor de prezență.</span></li>
+        <li><span class="chk">✓</span><span><strong>Conformitate cu standardele globale Schaeffler</strong> — retenție video de 90+ zile, audit trail complet pentru toate evenimentele de acces, rapoarte de securitate în format compatibil cu platforma grupului.</span></li>
+        <li><span class="chk">✓</span><span><strong>Retenție video 90+ zile</strong> — cele 96TB de stocare pe cluster-ul de NVR-uri asigură peste 90 de zile de înregistrare continuă la rezoluție maximă pe toate cele 64 de camere, cu o marjă de siguranță confortabilă.</span></li>
+        <li><span class="chk">✓</span><span><strong>Numărare în timp real a persoanelor în incintă</strong> — funcția de muster point permite știerea exactă, în orice moment, a numărului de persoane aflate în fiecare zonă a campusului — funcție critică pentru procedurile de evacuare.</span></li>
+        <li><span class="chk">✓</span><span><strong>Contract SLA de mentenanță cu timp de răspuns de 4 ore</strong> — CSSI asigură mentenanță preventivă trimestrială și intervenție corectivă cu timp de răspuns garantat de maximum 4 ore pentru defecte critice, 24 de ore pentru defecte necritice.</span></li>
+      </ul>
+
+      <div class="box box-amber">
+        <h4>Impact operațional măsurabil</h4>
+        <p>Eliminarea cozilor la schimbul de tură a îmbunătățit semnificativ satisfacția angajaților — un factor menționat explicit în sondajul intern de satisfacție Schaeffler. Automatizarea pontajului a redus erorile de salarizare cu un procent estimat de peste 95%, eliminând practic reclamațiile angajaților legate de pontaj incorect. Departamentul de securitate raportează o îmbunătățire dramatică a capacității de investigare a incidentelor, datorită calității superioare a imaginilor și perioadei extinse de retenție.</p>
+      </div>
+
+      <h2 id="echipamente">Echipamente Utilizate</h2>
+
+      <table class="price-table">
+        <thead><tr><th>Echipament</th><th>Brand / Model</th><th>Cantitate</th></tr></thead>
+        <tbody>
+          <tr><td>Camera IP bullet perimetru 4MP IR 80m</td><td>Hikvision DS-2CD2T43G2-4I</td><td>20</td></tr>
+          <tr><td>Camera termică detecție perimetrală</td><td>Hikvision DS-2TD2137-7/P</td><td>4</td></tr>
+          <tr><td>Camera IP dome interior 2MP</td><td>Hikvision DS-2CD2123G2-IU</td><td>16</td></tr>
+          <tr><td>Camera IP dome anti-vandal 4MP</td><td>Hikvision DS-2CD2143G2-IU</td><td>8</td></tr>
+          <tr><td>Camera IP PTZ 4MP zoom 25x</td><td>Hikvision DS-2DE4425IW-DE</td><td>4</td></tr>
+          <tr><td>Camera IP bullet wide-angle 4MP</td><td>Hikvision DS-2CD2T43G2-2I</td><td>8</td></tr>
+          <tr><td>Camera LPR recunoaștere numere</td><td>Hikvision DS-2CD4A26FWD-IZS/P</td><td>4</td></tr>
+          <tr><td>NVR 16 canale cu PoE</td><td>Hikvision DS-7716NI-K4/16P</td><td>4</td></tr>
+          <tr><td>HDD Surveillance 4TB</td><td>Seagate SkyHawk ST4000VX013</td><td>24</td></tr>
+          <tr><td>Switch PoE industrial 24 porturi</td><td>Hikvision DS-3E1326P-EI</td><td>5</td></tr>
+          <tr><td>Monitor profesional video wall 55"</td><td>Hikvision DS-D5055UC</td><td>4</td></tr>
+          <tr><td>Controller video wall</td><td>Hikvision DS-C12L-0204H</td><td>1</td></tr>
+          <tr><td>Cititor control acces card RFID</td><td>ZKTeco ProRF-T</td><td>12</td></tr>
+          <tr><td>Controller acces 4 uși</td><td>ZKTeco inBio460</td><td>3</td></tr>
+          <tr><td>Turnichete tripod</td><td>ZKTeco TS2022</td><td>4</td></tr>
+          <tr><td>Yală electromagnetică 280kg</td><td>YM-280N</td><td>8</td></tr>
+          <tr><td>Carduri proximitate RFID dual-frequency</td><td>ZKTeco MF+EM</td><td>2.200</td></tr>
+          <tr><td>Barieră auto industrială 3,6m</td><td>BFT Maxima Ultra 36</td><td>3</td></tr>
+          <tr><td>Automatizare poartă culisantă 2500kg</td><td>Nice RUN2500I</td><td>2</td></tr>
+          <tr><td>Buclă inductivă detecție vehicul</td><td>BFT RME 2</td><td>4</td></tr>
+          <tr><td>Fotocelule siguranță barieră</td><td>BFT Desme A15</td><td>6</td></tr>
+          <tr><td>Semnalizare luminoasă cu flash</td><td>BFT Radius LED BT</td><td>5</td></tr>
+          <tr><td>UPS rack 3000VA online</td><td>APC Smart-UPS SRT3000</td><td>3</td></tr>
+          <tr><td>Rack comunicații 42U</td><td>Triton 42U 800x800</td><td>5</td></tr>
+          <tr><td>Fibră optică single-mode (m)</td><td>Corning OS2 12 fibre</td><td>1.800</td></tr>
+          <tr><td>Cablu UTP Cat6A (m)</td><td>Datwyler Cat6A U/FTP</td><td>8.000</td></tr>
+          <tr class="highlight"><td><strong>Total echipamente principale</strong></td><td></td><td><strong>12.150+ buc/m</strong></td></tr>
+        </tbody>
+      </table>
+
+      <h2 id="testimonial">Ce Spune Clientul</h2>
+
+      <div class="testimonial-box">
+        <blockquote>Am evaluat mai mulți furnizori de securitate înainte de a alege CSSI. Ce a făcut diferența a fost abordarea lor inginerească — nu au venit cu o soluție generică, ci au proiectat sistemul specific pentru nevoile noastre industriale. Implementarea în 12 săptămâni, fără nicio secundă de downtime în producție, a fost impresionantă. Sistemul LPR a rezolvat complet problema cozilor la schimbul de tură, iar pontajul electronic ne-a simplificat enorm procesele HR. Colaborăm acum prin contractul de mentenanță și suntem foarte mulțumiți de timpul lor de reacție. Recomand CSSI oricărei companii industriale din zonă.</blockquote>
+        <cite>D. Müller <span>— Facility Manager, Schaeffler România</span></cite>
+      </div>
+
+      <p>Colaborarea dintre CSSI și Schaeffler România continuă prin <strong>contractul SLA de mentenanță</strong>, care include verificări trimestriale ale tuturor subsistemelor, curățarea și reorientarea camerelor exterioare (afectate de condiții meteo), actualizări de firmware, testarea periodică a barierelor și porților, verificarea capacității de stocare și a integrității înregistrărilor, precum și rapoarte trimestriale de stare pentru departamentul de securitate. Timpul de răspuns garantat de 4 ore pentru defecte critice asigură continuitatea operațională fără compromisuri.</p>
+
+
+      <div class="cta-banner" style="margin-top:48px">
+        <div>
+          <h3>Aveți un proiect industrial similar?</h3>
+          <p>CSSI proiectează și implementează sisteme de securitate pentru fabrici, depozite, parcuri logistice și campusuri industriale. Consultanță gratuită și evaluare la fața locului.</p>
+        </div>
+        <div class="cta-buttons">
+          <a href="../contact.html" class="btn btn-primary">📍 Contactați-ne</a>
+          <a href="../portofoliu.html" class="btn btn-secondary">📁 Vezi Portofoliu</a>
+        </div>
+      </div>
+
+
+      <div class="box box-blue" style="margin-top:32px">
+        <h4>Servicii CSSI implicate în acest proiect</h4>
+        <p><a href="/camere-supraveghere" style="font-weight:600">Camere Supraveghere</a> · <a href="/control-acces" style="font-weight:600">Control Acces</a> · <a href="/pontaj-electronic" style="font-weight:600">Pontaj Electronic</a> · <a href="/bariere-auto" style="font-weight:600">Bariere Auto</a> · <a href="/automatizari-porti" style="font-weight:600">Automatizări Porți</a></p>
+      </div>
+
+
+      <div style="margin:48px 0 32px;padding:32px 0;border-top:2px solid var(--border)">
+        <h2 id="citeste-si" style="border-top:none;padding-top:0;margin-top:0">Citește și</h2>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px;margin-top:16px">
+          <a href="studiu-de-caz-cfr-brasov-securitate" style="display:block;padding:16px;border:1px solid var(--border);border-radius:var(--radius);text-decoration:none;transition:box-shadow .2s">
+            <strong style="font-family:var(--ff-head);font-size:14px;color:var(--brand-dark);display:block;margin-bottom:4px">Studiu de Caz: CFR Brașov — Securitate Integrată</strong>
+            <span style="font-family:var(--ff-head);font-size:12px;color:var(--brand-blue)">Citește →</span>
+          </a>
+          <a href="bariere-auto-parcari-ghid-complet-2026" style="display:block;padding:16px;border:1px solid var(--border);border-radius:var(--radius);text-decoration:none;transition:box-shadow .2s">
+            <strong style="font-family:var(--ff-head);font-size:14px;color:var(--brand-dark);display:block;margin-bottom:4px">Bariere Auto pentru Parcări: Ghid Complet 2026</strong>
+            <span style="font-family:var(--ff-head);font-size:12px;color:var(--brand-blue)">Citește →</span>
+          </a>
+          <a href="analiza-risc-securitate-fizica-ghid-complet" style="display:block;padding:16px;border:1px solid var(--border);border-radius:var(--radius);text-decoration:none;transition:box-shadow .2s">
+            <strong style="font-family:var(--ff-head);font-size:14px;color:var(--brand-dark);display:block;margin-bottom:4px">Analiza de Risc la Securitate Fizică</strong>
+            <span style="font-family:var(--ff-head);font-size:12px;color:var(--brand-blue)">Citește →</span>
+          </a>
+        </div>
+      </div>
+
+      <div class="cta-banner">
+        <div>
+          <h3>Ai nevoie de consultanță?</h3>
+          <p>Specialiștii CSSI te ajută să alegi soluția potrivită — evaluare gratuită.</p>
+        </div>
+        <div class="cta-buttons">
+          <a href="tel:0752288400" class="btn btn-primary">📞 0752 288 400</a>
+          <a target="_blank" rel="noopener" href="https://wa.me/40752288400" class="btn btn-secondary">💬 WhatsApp</a>
+        </div>
+      </div>
+
+    </main>
+
+    <aside class="sidebar">
+      <div class="sidebar-card">
+        <div class="sidebar-card-head">📑 Cuprins</div>
+        <div class="sidebar-card-body" style="padding:10px 18px">
+          <ol class="toc-list">
+            <li><a href="#despre-client">Despre Client — Schaeffler România</a></li>
+            <li><a href="#provocarea">Provocarea</a></li>
+            <li><a href="#solutia">Soluția CSSI</a></li>
+            <li><a href="#implementare">Implementare</a></li>
+            <li><a href="#rezultate">Rezultate</a></li>
+            <li><a href="#echipamente">Echipamente Utilizate</a></li>
+            <li><a href="#testimonial">Ce Spune Clientul</a></li>
+            <li><a href="#citeste-si">Citește și</a></li>
+          </ol>
+        </div>
+      </div>
+      <div class="sidebar-card">
+        <div class="sidebar-card-head">📋 Date Proiect</div>
+        <div class="sidebar-card-body">
+          <ul class="quick-facts">
+            <li><span class="qf-label">Client</span><span class="qf-value">Schaeffler România</span></li>
+            <li><span class="qf-label">Proiect</span><span class="qf-value">Securitate Industrială</span></li>
+            <li><span class="qf-label">Durată</span><span class="qf-value">12 săptămâni</span></li>
+            <li><span class="qf-label">Camere</span><span class="qf-value">64 Hikvision</span></li>
+            <li><span class="qf-label">Angajați</span><span class="qf-value">2.000+</span></li>
+            <li><span class="qf-label">Puncte acces</span><span class="qf-value">12 buc</span></li>
+            <li><span class="qf-label">Bariere auto</span><span class="qf-value">3 BFT</span></li>
+            <li><span class="qf-label">Valoare</span><span class="qf-value">Confidențială</span></li>
+          </ul>
+        </div>
+      </div>
+      <div class="sidebar-card">
+        <div class="sidebar-card-head">📞 Contact CSSI Brașov</div>
+        <div class="sidebar-card-body">
+          <ul class="contact-info">
+            <li><div class="ci-icon">📞</div><div><strong>0752 288 400</strong><span>Lun–Vin 08:00–18:00</span></div></li>
+            <li><div class="ci-icon">💬</div><div><strong>WhatsApp</strong><span><a href="https://wa.me/40752288400" target="_blank" rel="noopener">Scrie pe WhatsApp</a></span></div></li>
+            <li><div class="ci-icon">📧</div><div><strong>office@cssi.ro</strong><span>Răspuns în max 24h</span></div></li>
+            <li><div class="ci-icon">📍</div><div><strong>Brașov</strong><span>și județele înconjurătoare</span></div></li>
+          </ul>
+          <a target="_blank" rel="noopener" href="https://wa.me/40752288400" class="btn btn-primary" style="margin-top:12px">💬 Scrie pe WhatsApp</a>
+        </div>
+      </div>
+    </aside>
+  </div>
+
+  <footer class="article-footer">
+    <p>Articol scris de echipa <strong>CSSI Brașov</strong> — firmă autorizată IGPR și ISU, cu peste 20 de ani de experiență în sisteme de securitate și instalații.</p>
+    <div class="tags">
+      <span class="tag">Schaeffler</span>
+      <span class="tag">securitate industrială</span>
+      <span class="tag">CCTV</span>
+      <span class="tag">control acces</span>
+      <span class="tag">bariere auto</span>
+      <span class="tag">automatizări porți</span>
+      <span class="tag">pontaj electronic</span>
+      <span class="tag">Brașov</span>
+    </div>
+    <p style="font-size:12px;color:#aaa;margin-top:8px">© 2026 CSSI — Confort, Securitate, Siguranță, Imobil | <a href="/">cssi.ro</a></p>
+  </footer>
+
+  <script>
+    const headings = document.querySelectorAll('h2[id]');
+    const tocLinks = document.querySelectorAll('.toc-list a');
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          tocLinks.forEach(a => a.style.color = '');
+          const active = document.querySelector(`.toc-list a[href="#${entry.target.id}"]`);
+          if (active) active.style.color = 'var(--brand-blue)';
+        }
+      });
+    }, { rootMargin: '-20% 0px -70% 0px' });
+    headings.forEach(h => observer.observe(h));
+  </script>
+  <script>
+    let navTextColor = '#fff';
+    window.addEventListener('scroll', function() {
+        const navBg = document.getElementById('navBg');
+        const logo = document.getElementById('logoImg');
+        const scrolled = window.scrollY > 50;
+        if (scrolled) {
+            navBg.style.background = '#ffffff';
+            navBg.style.backdropFilter = 'blur(12px)';
+            navBg.style.boxShadow = '0 1px 2px rgba(0,0,0,0.05)';
+            if (logo) logo.style.filter = '';
+            navTextColor = '#334155';
+        } else {
+            navBg.style.background = 'transparent';
+            navBg.style.backdropFilter = '';
+            navBg.style.boxShadow = '';
+            if (logo) logo.style.filter = 'brightness(0) invert(1) drop-shadow(0 0 1px rgba(255,255,255,0.8))';
+            navTextColor = '#fff';
+        }
+        ['navLink1','navLink2','navLink3','navLink4','navLink5','phoneLink'].forEach(id=>{
+            const el=document.getElementById(id);
+            if(el) el.style.color=navTextColor;
+        });
+    });
+    function toggleMobileMenu(){
+        const menu=document.getElementById('mobileMenu');
+        const menuIcon=document.getElementById('menuIcon');
+        const closeIcon=document.getElementById('closeIcon');
+        const btn=document.getElementById('menuBtn');
+        if(menu.classList.contains('open')){
+            menu.classList.remove('open');
+            menuIcon.style.display='';
+            closeIcon.style.display='none';
+            btn.style.background='linear-gradient(to right,#ef4444,#dc2626)';
+            btn.classList.add('animate-subtle-pulse');
+        } else {
+            menu.classList.add('open');
+            menuIcon.style.display='none';
+            closeIcon.style.display='';
+            btn.style.background='#6b7280';
+            btn.classList.remove('animate-subtle-pulse');
+        }
+    }
+    function closeMobile(){
+        document.getElementById('mobileMenu').classList.remove('open');
+        document.getElementById('menuIcon').style.display='';
+        document.getElementById('closeIcon').style.display='none';
+    }
+    function toggleServicesSubmenu(){
+        const sub=document.getElementById('servicesSubmenu');
+        const arrow=document.getElementById('servicesArrow');
+        if(sub.classList.contains('open')){
+            sub.classList.remove('open');
+            arrow.style.transform='';
+        } else {
+            sub.classList.add('open');
+            arrow.style.transform='rotate(180deg)';
+        }
+    }
+  </script>
+  <script src="/cookie-consent.js" defer></script>
+</body>
+</html>
