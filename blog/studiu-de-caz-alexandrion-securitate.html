@@ -1,0 +1,664 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Studiu de Caz: Alexandrion Group — CCTV și Control Patrulă | CSSI</title>
+  <meta name="description" content="Studiu de caz: sistem de supraveghere video CCTV și control patrulă electronică pentru Alexandrion Group — securizarea facilităților de producție și depozitare. Implementare CSSI." />
+  <link rel="canonical" href="https://cssi.ro/blog/studiu-de-caz-alexandrion-securitate" />
+  <meta property="og:title" content="Studiu de Caz: Alexandrion Group — CCTV și Control Patrulă" />
+  <meta property="og:description" content="Cum a implementat CSSI un sistem integrat de supraveghere video și control patrulă electronică pentru Alexandrion Group." />
+  <meta property="og:type" content="article" />
+  <meta property="og:url" content="https://cssi.ro/blog/studiu-de-caz-alexandrion-securitate" />
+  <meta property="og:site_name" content="CSSI Brașov" />
+  <meta property="article:published_time" content="2026-05-22" />
+  <meta property="article:author" content="CSSI Brașov" />
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"Studiu de Caz: Alexandrion Group — CCTV și Control Patrulă","author":{"@type":"Organization","name":"CSSI Brașov","url":"https://cssi.ro"},"publisher":{"@type":"Organization","name":"CSSI — Confort, Securitate, Siguranță, Imobil","url":"https://cssi.ro"},"datePublished":"2026-05-22","dateModified":"2026-05-22","mainEntityOfPage":"https://cssi.ro/blog/studiu-de-caz-alexandrion-securitate"}</script>
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Acasă","item":"https://cssi.ro/"},{"@type":"ListItem","position":2,"name":"Blog","item":"https://cssi.ro/blog/"},{"@type":"ListItem","position":3,"name":"Studiu de Caz Alexandrion","item":"https://cssi.ro/blog/studiu-de-caz-alexandrion-securitate"}]}</script>
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Ce este un sistem de control patrulă electronică?","acceptedAnswer":{"@type":"Answer","text":"Controlul patrulă electronică este un sistem prin care agenții de pază scanează puncte de control NFC sau RFID amplasate pe trasee prestabilite în incintă. Fiecare scanare este înregistrată cu oră exactă și locație, iar un software centralizat monitorizează completarea rondurilor conform programului stabilit."}},{"@type":"Question","name":"De ce are nevoie o companie de producție de supraveghere video CCTV?","acceptedAnswer":{"@type":"Answer","text":"Facilitățile de producție și depozitare conțin materii prime valoroase, produse finite și echipamente industriale. Supravegherea video CCTV asigură monitorizarea în timp real a zonelor critice, descurajează tentativele de sustragere, oferă dovezi video în cazul incidentelor și contribuie la respectarea normelor de securitate a muncii."}},{"@type":"Question","name":"Cum funcționează monitorizarea rondurilor de pază?","acceptedAnswer":{"@type":"Answer","text":"Pe traseul de patrulare sunt amplasate puncte de control (checkpoints) echipate cu tag-uri NFC sau RFID. Agentul de pază poartă un dispozitiv portabil cu care scanează fiecare punct la trecere. Toate scanările sunt transmise în timp real către un software de monitorizare care alertează automat dacă un rond nu este completat la timp."}},{"@type":"Question","name":"Ce avantaje oferă integrarea CCTV cu controlul patrulă?","acceptedAnswer":{"@type":"Answer","text":"Integrarea celor două sisteme oferă o acoperire completă a securității: camerele video asigură supraveghere permanentă a zonelor fixe, iar controlul patrulă garantează prezența fizică a agenților pe teren. Împreună, cele două sisteme elimină punctele moarte și asigură trasabilitate completă a activității de securitate."}},{"@type":"Question","name":"CSSI oferă și mentenanță pentru sistemele de securitate instalate?","acceptedAnswer":{"@type":"Answer","text":"Da, CSSI oferă contracte de mentenanță preventivă care includ verificări periodice ale camerelor de supraveghere, curățarea lentilelor, verificarea funcționării punctelor de control patrulă, actualizări de software și intervenție rapidă în caz de defecțiune. Mentenanța regulată prelungește durata de viață a echipamentelor și asigură funcționarea optimă."}}]}</script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;600;700;800&family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,400;0,8..60,600;1,8..60,400&display=swap" rel="stylesheet" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.js"></script>
+  <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}</script>
+  <script src="/tracking.js" defer></script>
+  <style>
+    @keyframes subtle-pulse-n { 0%,100%{transform:scale(1)}50%{transform:scale(.92)} }
+    @keyframes badge-pulse-n { 0%,100%{box-shadow:0 0 0 0 rgba(34,197,94,.4)}50%{box-shadow:0 0 0 8px rgba(34,197,94,0)} }
+    .animate-subtle-pulse{animation:subtle-pulse-n 2.5s ease-in-out infinite}
+    .animate-badge-pulse{animation:badge-pulse-n 2s ease-in-out infinite}
+    .dropdown-menu{display:none!important}
+    .dropdown:hover .dropdown-menu{display:block!important}
+    #mobileMenu{display:none}
+    #mobileMenu.open{display:block}
+    #servicesSubmenu{display:none}
+    #servicesSubmenu.open{display:block}
+    .dropdown-scroll::-webkit-scrollbar{width:4px}
+    .dropdown-scroll::-webkit-scrollbar-track{background:#f1f1f1}
+    .dropdown-scroll::-webkit-scrollbar-thumb{background:#cbd5e1;border-radius:4px}
+    @media(min-width:640px){.sm\:block{display:block}.sm\:hidden{display:none}.sm\:px-6{padding-left:24px;padding-right:24px}}
+    @media(min-width:1024px){.lg\:flex{display:flex}.lg\:hidden{display:none}}
+    #mainHeader, #mainHeader a, #mainHeader button, #mainHeader span, #mainHeader div { font-family: 'Sora', sans-serif !important; }
+  </style>
+  <style>
+    :root{--brand-dark:#0b1a2e;--brand-navy:#102a4c;--brand-blue:#1a4b8c;--brand-accent:#e63022;--brand-gold:#f5a623;--brand-light:#f0f4f9;--text-main:#1c2b3a;--text-muted:#5a6e82;--text-light:#8fa0b3;--border:#dce6f0;--white:#ffffff;--ff-head:'Sora',sans-serif;--ff-body:'Source Serif 4',Georgia,serif;--radius:10px;--shadow-sm:0 2px 8px rgba(11,26,46,.08);--shadow-md:0 6px 24px rgba(11,26,46,.13);--shadow-lg:0 16px 48px rgba(11,26,46,.18);--max-w:1080px}
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    html{scroll-behavior:smooth}
+    body{font-family:var(--ff-body);font-size:18px;line-height:1.75;color:var(--text-main);background:var(--white);-webkit-font-smoothing:antialiased}
+    img{max-width:100%;height:auto;display:block}
+    a{color:var(--brand-blue);text-decoration:none}
+    a:hover{text-decoration:underline}
+    .breadcrumb{background:var(--brand-dark);border-bottom:none;padding:12px 0;padding-top:104px;font-family:var(--ff-head);font-size:13px;color:rgba(255,255,255,.55)}
+    .breadcrumb .inner{max-width:1280px;margin:0 auto;padding:0 0 12px 24px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+    .breadcrumb a{color:rgba(255,255,255,.7)}
+    .breadcrumb .sep{color:rgba(255,255,255,.3)}
+    .hero{background:var(--brand-dark);background-image:radial-gradient(ellipse 70% 60% at 80% 50%,rgba(26,75,140,.45) 0%,transparent 70%),radial-gradient(ellipse 40% 50% at 10% 80%,rgba(230,48,34,.15) 0%,transparent 60%);color:var(--white);padding:48px 24px 64px;position:relative;overflow:hidden}
+    .hero::before{content:'';position:absolute;inset:0;background-image:url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23ffffff' fill-opacity='0.025'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/svg%3E")}
+        .hero .inner{max-width:var(--max-w);margin:0 auto;position:relative;z-index:1;display:flex;align-items:center;gap:40px}
+    .hero-content{flex:1;min-width:0}
+    .hero-img-wrap{flex:0 0 280px;display:flex;align-items:center;justify-content:center}
+    .hero-img-wrap img{width:280px;height:auto;border-radius:14px;box-shadow:0 8px 32px rgba(0,0,0,.35);border:1px solid rgba(255,255,255,.1);opacity:.92;transition:opacity .3s}
+    .hero-img-wrap img:hover{opacity:1}
+    @media(max-width:900px){.hero .inner{flex-direction:column;gap:24px}.hero-img-wrap{flex:0 0 auto;order:-1}.hero-img-wrap img{width:220px}}
+    @media(max-width:700px){.hero-img-wrap{display:none}}
+    .hero-badge{display:inline-flex;align-items:center;gap:6px;background:rgba(230,48,34,.2);border:1px solid rgba(230,48,34,.4);color:#ff8a80;font-family:var(--ff-head);font-size:12px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;padding:5px 12px;border-radius:100px;margin-bottom:20px}
+    .hero h1{font-family:var(--ff-head);font-size:clamp(26px,4vw,40px);font-weight:800;line-height:1.2;margin-bottom:20px;letter-spacing:-.02em}
+    .hero h1 em{font-style:normal;color:var(--brand-gold)}
+    .hero .lead{font-size:clamp(16px,2vw,19px);line-height:1.65;color:rgba(255,255,255,.82);max-width:620px;margin-bottom:32px}
+    .hero-meta{display:flex;align-items:center;gap:20px;flex-wrap:wrap;font-family:var(--ff-head);font-size:13px;color:rgba(255,255,255,.55)}
+    .hero-meta span{display:flex;align-items:center;gap:5px}
+    .hero-meta .dot{color:rgba(255,255,255,.25)}
+    .topic-pills{display:flex;gap:10px;flex-wrap:wrap;margin-top:28px}
+    .pill{display:flex;align-items:center;gap:8px;padding:8px 16px;border-radius:100px;font-family:var(--ff-head);font-size:13px;font-weight:600;border:1px solid}
+    .pill-red{background:rgba(230,48,34,.15);border-color:rgba(230,48,34,.35);color:#ff8a80}
+    .pill-amber{background:rgba(245,166,35,.12);border-color:rgba(245,166,35,.3);color:#ffd180}
+    .pill-blue{background:rgba(26,75,140,.25);border-color:rgba(26,75,140,.5);color:#82b4ff}
+    .pill-green{background:rgba(39,174,96,.15);border-color:rgba(39,174,96,.35);color:#81c995}
+    .article-wrap{max-width:1280px;margin:0 auto;padding:0 24px;display:grid;grid-template-columns:1fr 280px;gap:48px;align-items:start}
+    .article-body{padding:56px 0}
+    .article-body h2{font-family:var(--ff-head);font-size:clamp(20px,2.5vw,26px);font-weight:700;color:var(--brand-dark);margin:52px 0 16px;padding-top:8px;border-top:3px solid var(--brand-accent);line-height:1.3}
+    .article-body h3{font-family:var(--ff-head);font-size:clamp(17px,2vw,20px);font-weight:600;color:var(--brand-navy);margin:32px 0 12px}
+    .article-body p{margin-bottom:20px;color:var(--text-main)}
+    .article-body ul,.article-body ol{padding-left:24px;margin-bottom:20px}
+    .article-body li{margin-bottom:8px}
+    .article-body strong{color:var(--brand-dark)}
+    .intro-p{font-size:19px;line-height:1.7}
+    .box{border-radius:var(--radius);padding:22px 26px;margin:28px 0;border-left:4px solid}
+    .box-red{background:#fef2f2;border-color:var(--brand-accent)}
+    .box-blue{background:#eff6ff;border-color:var(--brand-blue)}
+    .box-amber{background:#fffbeb;border-color:var(--brand-gold)}
+    .box-green{background:#f0fdf4;border-color:#27ae60}
+    .box h4{font-family:var(--ff-head);font-size:15px;font-weight:700;margin-bottom:8px}
+    .box p{font-size:15px;margin-bottom:8px}
+    .check-list{list-style:none;padding:0}
+    .check-list li{display:flex;gap:10px;padding:6px 0;font-size:16px}
+    .chk{color:#27ae60;font-weight:700;flex-shrink:0}
+    .price-table{width:100%;border-collapse:collapse;margin:24px 0;font-size:15px}
+    .price-table th{background:var(--brand-navy);color:var(--white);font-family:var(--ff-head);font-size:13px;font-weight:600;text-transform:uppercase;letter-spacing:.04em;padding:12px 16px;text-align:left}
+    .price-table td{padding:12px 16px;border-bottom:1px solid var(--border)}
+    .price-table tr:nth-child(even) td{background:var(--brand-light)}
+    .price-table .highlight td{background:#fffbeb;font-weight:600}
+    .cta-banner{background:linear-gradient(135deg,var(--brand-dark),var(--brand-navy));border-radius:var(--radius);padding:28px 32px;color:var(--white);display:flex;align-items:center;justify-content:space-between;gap:20px;flex-wrap:wrap}
+    .cta-banner h3{font-family:var(--ff-head);font-size:18px;font-weight:700;margin-bottom:4px}
+    .cta-banner p{font-size:14px;color:rgba(255,255,255,.7);margin:0}
+    .cta-buttons{display:flex;gap:10px;flex-wrap:wrap}
+    .btn{display:inline-flex;align-items:center;gap:7px;padding:10px 18px;border-radius:8px;font-family:var(--ff-head);font-size:13px;font-weight:600;cursor:pointer;border:none;text-decoration:none!important}
+    .btn-primary{background:var(--brand-accent);color:var(--white)!important;box-shadow:0 4px 14px rgba(230,48,34,.3)}
+    .btn-secondary{background:rgba(255,255,255,.12);color:var(--white)!important;border:1px solid rgba(255,255,255,.25)}
+    .faq-section{margin:48px 0 32px}
+    .faq-item{border:1px solid var(--border);border-radius:var(--radius);margin-bottom:10px;overflow:hidden}
+    .faq-q{display:flex;align-items:center;justify-content:space-between;padding:16px 20px;cursor:pointer;background:var(--white);font-family:var(--ff-head);font-size:15px;font-weight:600;color:var(--brand-dark);border:none;width:100%;text-align:left;gap:12px}
+    .faq-q:hover{background:var(--brand-light)}
+    .faq-a{display:none;padding:0 20px 16px;font-size:15px;color:var(--text-muted);line-height:1.7}
+    .faq-item.open .faq-a{display:block}
+    .faq-item.open .faq-q{background:var(--brand-light);color:var(--brand-blue)}
+    .faq-chevron{transition:transform .2s;flex-shrink:0}
+    .faq-item.open .faq-chevron{transform:rotate(180deg)}
+    .sidebar{position:sticky;top:104px}
+    .sidebar-card{border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;margin-bottom:20px;background:var(--white);box-shadow:var(--shadow-sm)}
+    .sidebar-card-head{background:var(--brand-navy);color:var(--white);font-family:var(--ff-head);font-size:12px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;padding:12px 18px}
+    .sidebar-card-body{padding:16px 18px}
+    .toc-list{list-style:none;padding:0;counter-reset:toc}
+    .toc-list li{counter-increment:toc}
+    .toc-list a{display:flex;align-items:baseline;gap:8px;padding:7px 0;font-family:var(--ff-head);font-size:13px;color:var(--text-muted);border-bottom:1px solid var(--border);text-decoration:none}
+    .toc-list a::before{content:counter(toc,decimal-leading-zero);font-size:11px;font-weight:700;color:var(--text-light)}
+    .toc-list li:last-child a{border-bottom:none}
+    .toc-list a:hover{color:var(--brand-blue)}
+    .contact-info{list-style:none;padding:0}
+    .contact-info li{display:flex;gap:12px;padding:10px 0;border-bottom:1px solid var(--border);align-items:flex-start}
+    .contact-info li:last-child{border-bottom:none}
+    .ci-icon{font-size:20px;flex-shrink:0;margin-top:2px}
+    .contact-info strong{font-family:var(--ff-head);font-size:14px;display:block;color:var(--brand-dark)}
+    .contact-info span{font-size:12px;color:var(--text-light)}
+    .article-footer{background:var(--brand-light);border-top:1px solid var(--border);padding:40px 24px;text-align:center}
+    .article-footer p{font-size:14px;color:var(--text-muted);max-width:500px;margin:0 auto 16px}
+    .tags{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-top:12px}
+    .tag{background:var(--white);border:1px solid var(--border);padding:4px 12px;border-radius:100px;font-family:var(--ff-head);font-size:11px;color:var(--text-muted)}
+    .quick-facts{list-style:none;padding:0}
+    .quick-facts li{display:flex;justify-content:space-between;padding:9px 0;border-bottom:1px solid var(--border);font-family:var(--ff-head);font-size:13px}
+    .quick-facts li:last-child{border-bottom:none}
+    .quick-facts .qf-label{color:var(--text-muted)}
+    .quick-facts .qf-value{color:var(--brand-dark);font-weight:600;text-align:right}
+    .testimonial-box{background:var(--brand-light);border-radius:var(--radius);padding:28px 30px;margin:28px 0;position:relative}
+    .testimonial-box::before{content:'\201C';font-size:64px;font-family:Georgia,serif;color:var(--brand-accent);opacity:.3;position:absolute;top:8px;left:16px;line-height:1}
+    .testimonial-box blockquote{font-size:17px;font-style:italic;line-height:1.7;color:var(--text-main);margin:0 0 16px;padding-left:8px}
+    .testimonial-box cite{font-family:var(--ff-head);font-size:13px;font-style:normal;font-weight:600;color:var(--brand-navy);display:block}
+    .testimonial-box cite span{font-weight:400;color:var(--text-muted)}
+    @media(max-width:768px){.article-wrap{grid-template-columns:1fr;gap:32px}.sidebar{position:static;order:2}.cta-banner{flex-direction:column;text-align:center}}
+  </style>
+</head>
+<body>
+
+<header id="mainHeader" style="position:fixed;top:0;left:0;right:0;z-index:50;transition:all 0.3s;">
+    <div class="hidden sm:block" style="background:#0f172a;color:#fff;font-size:12px;padding:6px 0;">
+        <div style="max-width:1280px;margin:0 auto;padding:0 24px;display:flex;justify-content:space-between;align-items:center;">
+            <span>⭐ <span style="color:#4ade80;font-weight:600;">Peste 20 ani de experiență</span></span>
+            <div style="display:flex;align-items:center;gap:16px;">
+                <span class="animate-badge-pulse" style="display:inline-flex;align-items:center;gap:6px;padding:2px 8px;background:rgba(34,197,94,0.2);border-radius:999px;">
+                    <span style="color:#facc15;">⭐</span>
+                    <span style="font-weight:600;">4.9/5</span>
+                    <span style="color:#94a3b8;">•</span>
+                    <span>127 recenzii</span>
+                </span>
+                <span>⭐ <span style="font-weight:600;">8.700+ proiecte</span></span>
+            </div>
+        </div>
+    </div>
+    <div class="sm:hidden" style="background:#0f172a;color:#fff;font-size:12px;padding:6px 0;">
+        <div style="max-width:1280px;margin:0 auto;padding:0 12px;display:flex;justify-content:space-between;align-items:center;">
+            <span>⭐ <span style="color:#4ade80;font-weight:600;">Peste 20 ani de experiență</span></span>
+            <a href="tel:0752288400" style="display:flex;align-items:center;gap:4px;font-weight:600;color:#4ade80;">📞 Sună acum</a>
+        </div>
+    </div>
+    <div id="navBg" style="transition:all 0.3s;">
+        <div style="max-width:1280px;margin:0 auto;padding:0 12px;display:flex;justify-content:space-between;align-items:center;height:64px;" class="sm:px-6">
+            <a href="../">
+                <img src="https://eu.chat-img.sintra.ai/32c1b29c-0c86-4833-a031-e7c45e21a11e/983d52bb-2eb6-42f1-bed4-f94d769bb634/Logo_CSSI.png" alt="CSSI Logo" id="logoImg" style="height:56px;width:auto;transition:all 0.3s;filter:brightness(0) invert(1) drop-shadow(0 0 1px rgba(255,255,255,0.8));">
+            </a>
+            <nav class="hidden lg:flex" style="align-items:center;gap:4px;">
+                <a href="../index.html" id="navLink1" style="padding:6px 12px;font-size:14px;font-weight:500;color:#fff;transition:all 0.2s;border-radius:8px;" onmouseover="this.style.color='#f87171'" onmouseout="this.style.color=navTextColor">🏠 Acasă</a>
+                <div class="dropdown" style="position:relative;">
+                    <button id="navLink2" style="padding:6px 12px;font-size:14px;font-weight:500;color:#fff;transition:all 0.2s;border-radius:8px;background:none;border:none;cursor:pointer;display:flex;align-items:center;font-family:inherit;">
+                        🛠️ Servicii
+                        <svg style="margin-left:4px;width:16px;height:16px;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+                    </button>
+                    <div class="dropdown-menu dropdown-scroll" style="position:absolute;top:100%;left:0;width:280px;background:#fff;box-shadow:0 10px 15px -3px rgba(0,0,0,0.1);border-radius:12px;padding:8px;border:1px solid #f1f5f9;max-height:384px;overflow-y:auto;z-index:100;">
+                        <a href="../detectie-incendiu-isu" style="display:block;padding:10px 16px;font-size:13px;color:#334155;border-radius:8px;" onmouseover="this.style.background='#fef2f2';this.style.color='#dc2626'" onmouseout="this.style.background='';this.style.color='#334155'">🔥 Detecție Incendiu ISU</a>
+                        <a href="../camere-supraveghere" style="display:block;padding:10px 16px;font-size:13px;color:#334155;border-radius:8px;" onmouseover="this.style.background='#fef2f2';this.style.color='#dc2626'" onmouseout="this.style.background='';this.style.color='#334155'">📹 Camere Supraveghere</a>
+                        <a href="../alarma-antiefractie" style="display:block;padding:10px 16px;font-size:13px;color:#334155;border-radius:8px;" onmouseover="this.style.background='#fef2f2';this.style.color='#dc2626'" onmouseout="this.style.background='';this.style.color='#334155'">🚨 Alarmă Antiefracție</a>
+                        <a href="../control-acces" style="display:block;padding:10px 16px;font-size:13px;color:#334155;border-radius:8px;" onmouseover="this.style.background='#fef2f2';this.style.color='#dc2626'" onmouseout="this.style.background='';this.style.color='#334155'">🚪 Control Acces</a>
+                        <a href="../pontaj-electronic" style="display:block;padding:10px 16px;font-size:13px;color:#334155;border-radius:8px;" onmouseover="this.style.background='#fef2f2';this.style.color='#dc2626'" onmouseout="this.style.background='';this.style.color='#334155'">⏱️ Pontaj Electronic</a>
+                        <a href="../bariere-auto" style="display:block;padding:10px 16px;font-size:13px;color:#334155;border-radius:8px;" onmouseover="this.style.background='#fef2f2';this.style.color='#dc2626'" onmouseout="this.style.background='';this.style.color='#334155'">🚧 Bariere Auto</a>
+                        <a href="../interfoane-videointerfoane" style="display:block;padding:10px 16px;font-size:13px;color:#334155;border-radius:8px;" onmouseover="this.style.background='#fef2f2';this.style.color='#dc2626'" onmouseout="this.style.background='';this.style.color='#334155'">🔔 Interfoane &amp; Videointerfoane</a>
+                        <a href="../sonorizare" style="display:block;padding:10px 16px;font-size:13px;color:#334155;border-radius:8px;" onmouseover="this.style.background='#fef2f2';this.style.color='#dc2626'" onmouseout="this.style.background='';this.style.color='#334155'">🔊 Sonorizare</a>
+                        <a href="../automatizari-porti" style="display:block;padding:10px 16px;font-size:13px;color:#334155;border-radius:8px;" onmouseover="this.style.background='#fef2f2';this.style.color='#dc2626'" onmouseout="this.style.background='';this.style.color='#334155'">🚗 Automatizări Porți</a>
+                        <a href="../usi-garaj" style="display:block;padding:10px 16px;font-size:13px;color:#334155;border-radius:8px;" onmouseover="this.style.background='#fef2f2';this.style.color='#dc2626'" onmouseout="this.style.background='';this.style.color='#334155'">🏠 Uși Garaj</a>
+                        <a href="../aer-conditionat" style="display:block;padding:10px 16px;font-size:13px;color:#334155;border-radius:8px;" onmouseover="this.style.background='#fef2f2';this.style.color='#dc2626'" onmouseout="this.style.background='';this.style.color='#334155'">❄️ Aer Condiționat</a>
+                        <a href="../ventilatie" style="display:block;padding:10px 16px;font-size:13px;color:#334155;border-radius:8px;" onmouseover="this.style.background='#fef2f2';this.style.color='#dc2626'" onmouseout="this.style.background='';this.style.color='#334155'">💨 Ventilație</a>
+                        <a href="../instalatii-electrice" style="display:block;padding:10px 16px;font-size:13px;color:#334155;border-radius:8px;" onmouseover="this.style.background='#fef2f2';this.style.color='#dc2626'" onmouseout="this.style.background='';this.style.color='#334155'">⚡ Instalații Electrice</a>
+                        <a href="../instalatii-termice-sanitare" style="display:block;padding:10px 16px;font-size:13px;color:#334155;border-radius:8px;" onmouseover="this.style.background='#fef2f2';this.style.color='#dc2626'" onmouseout="this.style.background='';this.style.color='#334155'">🔧 Instalații Termice &amp; Sanitare</a>
+                    </div>
+                </div>
+                <a href="../despre-noi" id="navLink3" style="padding:6px 12px;font-size:14px;font-weight:500;color:#fff;transition:all 0.2s;border-radius:8px;" onmouseover="this.style.color='#f87171'" onmouseout="this.style.color=navTextColor">ℹ️ Despre Noi</a>
+                <a href="../portofoliu" id="navLink4" style="padding:6px 12px;font-size:14px;font-weight:500;color:#fff;transition:all 0.2s;border-radius:8px;" onmouseover="this.style.color='#f87171'" onmouseout="this.style.color=navTextColor">📁 Portofoliu</a>
+                <a href="index.html" style="padding:6px 12px;font-size:14px;font-weight:600;color:#16a34a;border-radius:8px;">📝 Blog</a>
+                <a href="../contact" id="navLink5" style="padding:6px 12px;font-size:14px;font-weight:500;color:#fff;transition:all 0.2s;border-radius:8px;" onmouseover="this.style.color='#f87171'" onmouseout="this.style.color=navTextColor">📍 Contact</a>
+            </nav>
+            <div class="hidden lg:flex" style="align-items:center;gap:12px;">
+                <a href="tel:0752288400" id="phoneLink" style="display:flex;align-items:center;font-size:14px;font-weight:500;color:#fff;transition:all 0.2s;">
+                    <svg style="width:16px;height:16px;margin-right:6px;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/></svg>
+                    0752 288 400
+                </a>
+                <a href="../contact.html" style="background:linear-gradient(to right,#dc2626,#b91c1c);color:#fff;padding:8px 20px;border-radius:8px;font-size:14px;font-weight:600;box-shadow:0 4px 6px -1px rgba(0,0,0,0.1);transition:all 0.2s;" onmouseover="this.style.background='linear-gradient(to right,#b91c1c,#991b1b)'" onmouseout="this.style.background='linear-gradient(to right,#dc2626,#b91c1c)'">Cere Ofertă</a>
+            </div>
+            <div class="lg:hidden" style="display:flex;align-items:center;gap:8px;">
+                <span class="animate-badge-pulse" style="display:inline-flex;align-items:center;gap:4px;padding:2px 6px;border-radius:999px;font-size:10px;background:rgba(255,255,255,0.2);color:#fff;">
+                    <span style="color:#facc15;font-size:9px;">⭐</span>
+                    <span style="font-weight:600;">4.9</span>
+                </span>
+                <button onclick="toggleMobileMenu()" id="menuBtn" class="animate-subtle-pulse" style="padding:4px;border-radius:6px;border:none;cursor:pointer;background:linear-gradient(to right,#ef4444,#dc2626);color:#fff;">
+                    <svg id="menuIcon" style="width:20px;height:20px;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
+                    <svg id="closeIcon" style="width:20px;height:20px;display:none;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+                </button>
+            </div>
+        </div>
+        <div id="mobileMenu" style="background:#fff;border-radius:16px;box-shadow:0 20px 25px -5px rgba(0,0,0,0.1);margin:8px 12px;padding:8px;max-height:80vh;overflow-y:auto;">
+            <nav style="display:flex;flex-direction:column;gap:4px;">
+                <a href="../index.html" style="padding:10px 16px;font-size:16px;font-weight:500;color:#334155;border-radius:8px;">🏠 Acasă</a>
+                <button onclick="toggleServicesSubmenu()" style="padding:10px 16px;font-size:16px;font-weight:500;color:#334155;border-radius:8px;background:none;border:none;cursor:pointer;display:flex;justify-content:space-between;align-items:center;width:100%;font-family:inherit;text-align:left;">
+                    🛠️ Servicii
+                    <svg id="servicesArrow" style="width:16px;height:16px;transition:transform 0.2s;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+                </button>
+                <div id="servicesSubmenu" style="padding-left:16px;overflow-y:auto;">
+                    <a href="../detectie-incendiu-isu.html" onclick="closeMobile()" style="display:block;padding:8px 16px;font-size:14px;color:#475569;border-radius:8px;">🔥 Detecție Incendiu ISU</a>
+                    <a href="../camere-supraveghere.html" onclick="closeMobile()" style="display:block;padding:8px 16px;font-size:14px;color:#475569;border-radius:8px;">📹 Camere Supraveghere</a>
+                    <a href="../alarma-antiefractie.html" onclick="closeMobile()" style="display:block;padding:8px 16px;font-size:14px;color:#475569;border-radius:8px;">🚨 Alarmă Antiefracție</a>
+                    <a href="../control-acces.html" onclick="closeMobile()" style="display:block;padding:8px 16px;font-size:14px;color:#475569;border-radius:8px;">🚪 Control Acces</a>
+                    <a href="../pontaj-electronic.html" onclick="closeMobile()" style="display:block;padding:8px 16px;font-size:14px;color:#475569;border-radius:8px;">⏱️ Pontaj Electronic</a>
+                    <a href="../bariere-auto.html" onclick="closeMobile()" style="display:block;padding:8px 16px;font-size:14px;color:#475569;border-radius:8px;">🚧 Bariere Auto</a>
+                    <a href="../interfoane-videointerfoane.html" onclick="closeMobile()" style="display:block;padding:8px 16px;font-size:14px;color:#475569;border-radius:8px;">🔔 Interfoane &amp; Videointerfoane</a>
+                    <a href="../sonorizare.html" onclick="closeMobile()" style="display:block;padding:8px 16px;font-size:14px;color:#475569;border-radius:8px;">🔊 Sonorizare</a>
+                    <a href="../automatizari-porti.html" onclick="closeMobile()" style="display:block;padding:8px 16px;font-size:14px;color:#475569;border-radius:8px;">🚗 Automatizări Porți</a>
+                    <a href="../usi-garaj.html" onclick="closeMobile()" style="display:block;padding:8px 16px;font-size:14px;color:#475569;border-radius:8px;">🏠 Uși Garaj</a>
+                    <a href="../aer-conditionat.html" onclick="closeMobile()" style="display:block;padding:8px 16px;font-size:14px;color:#475569;border-radius:8px;">❄️ Aer Condiționat</a>
+                    <a href="../ventilatie.html" onclick="closeMobile()" style="display:block;padding:8px 16px;font-size:14px;color:#475569;border-radius:8px;">💨 Ventilație</a>
+                    <a href="../instalatii-electrice.html" onclick="closeMobile()" style="display:block;padding:8px 16px;font-size:14px;color:#475569;border-radius:8px;">⚡ Instalații Electrice</a>
+                    <a href="../instalatii-termice-sanitare.html" onclick="closeMobile()" style="display:block;padding:8px 16px;font-size:14px;color:#475569;border-radius:8px;">🔧 Instalații Termice &amp; Sanitare</a>
+                </div>
+                <a href="../despre-noi.html" onclick="closeMobile()" style="padding:10px 16px;font-size:16px;font-weight:500;color:#334155;border-radius:8px;">ℹ️ Despre Noi</a>
+                <a href="../portofoliu.html" onclick="closeMobile()" style="padding:10px 16px;font-size:16px;font-weight:500;color:#334155;border-radius:8px;">📁 Portofoliu</a>
+                <a href="index.html" onclick="closeMobile()" style="padding:10px 16px;font-size:16px;font-weight:600;color:#16a34a;border-radius:8px;">📝 Blog</a>
+                <a href="../contact.html" onclick="closeMobile()" style="padding:10px 16px;font-size:16px;font-weight:500;color:#334155;border-radius:8px;">📍 Contact</a>
+                <div style="padding:12px 8px;">
+                    <a href="../contact.html" onclick="closeMobile()" style="display:block;text-align:center;background:linear-gradient(to right,#dc2626,#b91c1c);color:#fff;padding:10px 16px;border-radius:12px;font-weight:600;">Cere Ofertă</a>
+                </div>
+            </nav>
+        </div>
+    </div>
+</header>
+
+
+  <nav class="breadcrumb" aria-label="Breadcrumb">
+    <div class="inner">
+      <a href="/">Acasă</a><span class="sep">›</span>
+      <a href="/blog/">Blog</a><span class="sep">›</span>
+      <span style="color:rgba(255,255,255,.9)">Studiu de Caz Alexandrion</span>
+    </div>
+  </nav>
+
+  <header class="hero">
+    <div class="inner">
+      <div class="hero-content">
+      <div class="hero-badge">STUDIU DE CAZ</div>
+      <h1>Supraveghere Video și Control Patrulă pentru <em>Alexandrion Group</em></h1>
+      <p class="lead">Alexandrion Group, unul dintre cei mai importanți producători de băuturi spirtoase din România, a ales CSSI pentru implementarea unui sistem integrat de supraveghere video CCTV și control patrulă electronică — securizând facilitățile de producție și depozitare cu soluții profesionale.</p>
+      <div class="hero-meta">
+        <span>✍ CSSI Brașov</span><span class="dot">·</span>
+        <span>📅 22 Mai 2026</span><span class="dot">·</span>
+        <span>⏱ 12 min lectură</span>
+      </div>
+      <div class="topic-pills">
+        <span class="pill pill-blue">📹 CCTV</span>
+        <span class="pill pill-amber">🔐 Control Patrulă</span>
+        <span class="pill pill-green">🏭 Alexandrion Group</span>
+      </div>
+    </div>
+    </div>
+  </header>
+
+  <div class="article-wrap">
+    <main class="article-body" id="articol">
+
+      <p class="intro-p">Securitatea facilităților industriale de producție și depozitare reprezintă o provocare complexă, cu atât mai mult pentru o companie de talia Alexandrion Group, care operează cu materii prime valoroase, linii de producție sofisticate și produse finite cu valoare ridicată. CSSI a fost ales ca partener pentru proiectarea și implementarea unui sistem integrat de supraveghere video (CCTV) și control patrulă electronică, menit să aducă trasabilitate completă și o protecție eficientă a întregului perimetru.</p>
+
+      <h2 id="despre-client">Despre Client — Alexandrion Group</h2>
+
+      <p><strong>Alexandrion Group</strong> este unul dintre cei mai mari producători și distribuitori de băuturi spirtoase din România și din Europa de Sud-Est. Portofoliul companiei include branduri consacrate precum Alexandrion, Brâncoveanu și SABER, produse care sunt comercializate atât pe piața internă, cât și la export. Compania operează facilități de producție, îmbuteliere și depozitare de mari dimensiuni, unde se desfășoară activități industriale continue.</p>
+
+      <p>Datorită specificului activității — producție de băuturi alcoolice sub regim de accize, stocuri semnificative de materii prime și produse finite, echipamente de producție cu valoare ridicată — securitatea fizică a obiectivelor Alexandrion Group este o prioritate strategică. Orice incident de securitate, de la sustragere de produse la acces neautorizat în zonele de producție, poate genera pierderi financiare semnificative și implicații legale.</p>
+
+      <p>Conducerea companiei a decis modernizarea sistemului de securitate prin implementarea unor soluții profesionale de supraveghere video și monitorizare a rondurilor de pază, selectând CSSI ca integrator de sisteme de securitate pentru acest proiect.</p>
+
+      <h2 id="provocarea">Provocarea</h2>
+
+      <p>Evaluarea inițială realizată de echipa CSSI a identificat mai multe provocări specifice securizării unor facilități industriale de producție și depozitare de băuturi:</p>
+
+      <h3>Perimetru extins și zone diverse</h3>
+      <p>Facilitățile Alexandrion Group includ zone cu cerințe de securitate diferite: hale de producție, depozite de materii prime, depozite de produse finite, zone de încărcare/descărcare, perimetrul exterior și căile de acces. Fiecare zonă prezintă riscuri specifice și necesită o abordare diferențiată a supravegherii. Zonele exterioare sunt expuse condițiilor meteorologice variabile, iar iluminarea pe timp de noapte era insuficientă pentru o supraveghere eficientă.</p>
+
+      <h3>Lipsa vizibilității centralizate</h3>
+      <p>Fără un sistem profesional de supraveghere video, echipa de securitate nu avea posibilitatea de a monitoriza simultan toate zonele critice. Reacția la incidente depindea exclusiv de prezența fizică a agenților de pază, ceea ce lăsa inevitabil zone neacoperite, în special pe timp de noapte sau în perioadele cu activitate redusă.</p>
+
+      <h3>Monitorizarea efectivității rondurilor de pază</h3>
+      <p>Rondurile de patrulare ale agenților de securitate se bazau pe raportare manuală, fără posibilitatea de verificare obiectivă a traseului parcurs, a punctelor vizitate și a orei exacte la care agentul a trecut prin fiecare zonă. Aceasta făcea imposibilă evaluarea reală a calității serviciului de pază și identificarea eventualelor neglijențe.</p>
+
+      <div class="box box-red">
+        <h4>Riscuri identificate</h4>
+        <p>Facilitățile de producție și depozitare de băuturi spirtoase sunt ținte atractive pentru sustrageri, dată fiind valoarea ridicată a produselor finite. Lipsa supravegherii video continue și imposibilitatea de a verifica obiectiv rondurile de pază reprezentau vulnerabilități majore de securitate ce necesitau soluții profesionale integrate.</p>
+      </div>
+
+      <h2 id="solutia">Soluția CSSI</h2>
+
+      <p>CSSI a proiectat o soluție de securitate bazată pe două componente complementare: un <strong>sistem de supraveghere video CCTV</strong> pentru monitorizare vizuală permanentă și un <strong>sistem de control patrulă electronică</strong> pentru verificarea obiectivă a rondurilor de pază. Cele două sisteme funcționează integrat, oferind o acoperire completă a securității.</p>
+
+      <h3>Sistem de supraveghere video CCTV</h3>
+      <p>CSSI a proiectat și implementat un sistem de supraveghere video profesional, adaptat specificului fiecărei zone din incinta Alexandrion Group. Camerele de supraveghere au fost poziționate strategic pentru a asigura acoperirea zonelor critice: intrările și ieșirile, zonele de depozitare, căile de acces, perimetrul exterior și punctele de încărcare/descărcare.</p>
+
+      <p>Sistemul include echipamente profesionale de supraveghere video, selectate pentru performanțele necesare în mediul industrial: rezoluție ridicată pentru identificarea clară a persoanelor și evenimentelor, funcție de vedere pe timp de noapte (infraroșu) pentru zonele slab iluminate, rezistență la condiții meteorologice pentru camerele exterioare și capacitate de stocare adecvată pentru păstrarea înregistrărilor pe perioada necesară.</p>
+
+      <p>Toate camerele sunt conectate la un <strong>sistem centralizat de înregistrare și monitorizare</strong>, accesibil din dispeceratul de securitate. Operatorii pot vizualiza în timp real fluxurile video de la toate camerele, pot revizui înregistrările anterioare și pot exporta secvențe video pentru investigații sau evidențe.</p>
+
+      <div class="box box-blue">
+        <h4>Supraveghere adaptată mediului industrial</h4>
+        <p>Proiectarea unui sistem CCTV pentru o facilitate industrială de producție diferă semnificativ de supravegherea unui spațiu comercial sau rezidențial. Trebuie luate în calcul distanțele mari, variațiile de iluminare, condițiile de umiditate și temperatură, precum și necesitatea de a acoperi atât zonele interioare, cât și perimetrul exterior extins.</p>
+      </div>
+
+      <h3>Sistem de control patrulă electronică</h3>
+      <p>Complementar sistemului CCTV, CSSI a implementat un <strong>sistem de control patrulă electronică</strong> (guard tour system) care permite monitorizarea obiectivă și în timp real a rondurilor efectuate de agenții de securitate.</p>
+
+      <p>Sistemul funcționează pe baza unor <strong>puncte de control (checkpoints)</strong> amplasate pe trasee prestabilite în întreaga incintă. Aceste puncte de control sunt echipate cu tag-uri NFC/RFID, rezistente la intemperii, montate în locații strategice de-a lungul traseelor de patrulare: la intrări, în depozite, în jurul perimetrului, la punctele vulnerabile identificate în analiza de risc.</p>
+
+      <p>Fiecare agent de securitate este echipat cu un <strong>dispozitiv portabil de scanare</strong>. La trecerea prin fiecare punct de control, agentul scanează tag-ul, iar sistemul înregistrează automat: identitatea agentului, locația punctului de control și ora exactă a scanării. Toate datele sunt transmise către un <strong>software centralizat de monitorizare</strong> care permite:</p>
+
+      <ul>
+        <li>Vizualizarea în timp real a poziției și progresului agentului pe traseu</li>
+        <li>Alertarea automată dacă un rond nu este completat la timp sau dacă un checkpoint este omis</li>
+        <li>Generarea de rapoarte detaliate privind completarea rondurilor pe zile, ture și agenți</li>
+        <li>Evidența istorică a tuturor patrulărilor pentru audit și verificare</li>
+      </ul>
+
+      <div class="box box-amber">
+        <h4>De ce control patrulă electronică?</h4>
+        <p>Rondurile de pază reprezintă prima linie de apărare pentru un obiectiv industrial. Controlul patrulă electronică transformă o activitate greu de verificat într-un proces complet transparent și măsurabil. Conducerea știe în orice moment dacă agenții de securitate își îndeplinesc atribuțiile conform programului stabilit.</p>
+      </div>
+
+      <h2 id="implementare">Implementare</h2>
+
+      <p>Implementarea proiectului a fost realizată de echipa CSSI într-o manieră etapizată, cu atenție deosebită pentru a nu perturba activitățile de producție și logistică ale Alexandrion Group.</p>
+
+      <h3>Faza 1 — Evaluare și proiectare</h3>
+      <ul>
+        <li>Analiza detaliată a planului facilităților și identificarea zonelor critice de securitate</li>
+        <li>Stabilirea punctelor optime de montaj pentru camerele de supraveghere</li>
+        <li>Definirea traseelor de patrulare și a locațiilor punctelor de control</li>
+        <li>Proiectarea infrastructurii de cablare și comunicații</li>
+        <li>Selectarea echipamentelor adecvate specificului fiecărei zone</li>
+      </ul>
+
+      <h3>Faza 2 — Instalare infrastructură și echipamente CCTV</h3>
+      <ul>
+        <li>Trasarea cablurilor de comunicație și alimentare către fiecare punct de montaj</li>
+        <li>Montarea camerelor de supraveghere în pozițiile proiectate</li>
+        <li>Instalarea și configurarea sistemului de înregistrare video</li>
+        <li>Configurarea vizualizării în timp real în dispeceratul de securitate</li>
+        <li>Testarea completă a fiecărei camere: unghi de vizualizare, calitate imagine diurnă și nocturnă</li>
+      </ul>
+
+      <h3>Faza 3 — Instalare sistem control patrulă</h3>
+      <ul>
+        <li>Montarea punctelor de control NFC/RFID pe traseele de patrulare stabilite</li>
+        <li>Configurarea dispozitivelor portabile de scanare pentru agenți</li>
+        <li>Instalarea și configurarea software-ului de monitorizare a rondurilor</li>
+        <li>Definirea programului de ronduri, intervalelor și alertelor automate</li>
+      </ul>
+
+      <h3>Faza 4 — Testare, integrare și instruire</h3>
+      <ul>
+        <li>Testarea integrală a ambelor sisteme în condiții reale de operare</li>
+        <li>Verificarea acoperirii CCTV pe întregul perimetru, ziua și noaptea</li>
+        <li>Simularea de ronduri complete cu verificarea funcționării alertelor</li>
+        <li>Instruirea personalului de securitate privind utilizarea ambelor sisteme</li>
+        <li>Instruirea personalului de conducere privind accesarea rapoartelor și monitorizarea</li>
+      </ul>
+
+      <div class="box box-green">
+        <h4>Implementare fără impact operațional</h4>
+        <p>Lucrările de instalare au fost planificate și executate astfel încât să nu afecteze programul de producție și activitățile logistice ale Alexandrion Group. Echipa CSSI a coordonat fiecare fază cu departamentul de operațiuni al clientului pentru a minimiza orice potențială perturbare.</p>
+      </div>
+
+      <h2 id="rezultate">Rezultate</h2>
+
+      <p>Implementarea sistemului integrat de supraveghere video și control patrulă a adus rezultate concrete și măsurabile:</p>
+
+      <ul class="check-list">
+        <li><span class="chk">✓</span><span><strong>Monitorizare video permanentă</strong> — toate zonele critice ale facilităților sunt acum supravegheate video 24/7, cu înregistrare continuă și posibilitate de vizualizare în timp real din dispecerat.</span></li>
+        <li><span class="chk">✓</span><span><strong>Vedere nocturnă eficientă</strong> — camerele cu funcție infraroșu asigură calitate video corespunzătoare și pe timp de noapte, eliminând punctele moarte din perioadele cu iluminare redusă.</span></li>
+        <li><span class="chk">✓</span><span><strong>Trasabilitate completă a rondurilor de pază</strong> — fiecare rond este înregistrat electronic cu oră exactă și puncte de control vizitate, oferind dovadă obiectivă a activității de patrulare.</span></li>
+        <li><span class="chk">✓</span><span><strong>Alertare automată</strong> — sistemul notifică imediat dacă un rond nu este completat conform programului sau dacă un punct de control este omis, permițând intervenție rapidă.</span></li>
+        <li><span class="chk">✓</span><span><strong>Descurajarea tentativelor de sustragere</strong> — prezența vizibilă a camerelor de supraveghere și conștientizarea monitorizării electronice a rondurilor au un efect puternic de descurajare.</span></li>
+        <li><span class="chk">✓</span><span><strong>Dovezi video pentru investigații</strong> — în cazul oricărui incident, înregistrările video oferă evidențe clare pentru investigațiile interne sau colaborarea cu autoritățile.</span></li>
+        <li><span class="chk">✓</span><span><strong>Rapoarte de securitate automate</strong> — conducerea primește rapoarte periodice privind activitatea de supraveghere și completarea rondurilor, fără efort manual de raportare.</span></li>
+      </ul>
+
+      <div class="box box-amber">
+        <h4>Securitate integrată, nu izolată</h4>
+        <p>Combinația dintre supravegherea video continuă și verificarea electronică a rondurilor de pază oferă un nivel de securitate semnificativ superior față de oricare dintre cele două sisteme utilizate separat. Camerele „văd" permanent, iar controlul patrulă confirmă prezența fizică a agenților pe teren — o abordare complementară care elimină vulnerabilitățile fiecărui sistem individual.</p>
+      </div>
+
+      <div class="cta-banner" style="margin-top:48px">
+        <div>
+          <h3>Securizați-vă facilitățile industriale</h3>
+          <p>CSSI proiectează și implementează sisteme de supraveghere video și control patrulă pentru companii de producție și logistică. Evaluare gratuită la fața locului.</p>
+        </div>
+        <div class="cta-buttons">
+          <a href="../contact.html" class="btn btn-primary">📍 Contactați-ne</a>
+          <a href="../portofoliu.html" class="btn btn-secondary">📁 Vezi Portofoliu</a>
+        </div>
+      </div>
+
+      <h2 id="de-ce-cssi">De Ce CSSI pentru Companii Private</h2>
+
+      <p>Alexandrion Group a ales CSSI ca integrator de securitate dintr-un motiv simplu: experiența dovedită în proiecte de complexitate similară și capacitatea de a livra soluții complete, de la proiectare la implementare și mentenanță. Iată ce diferențiază CSSI în lucrul cu companii private de producție:</p>
+
+      <h3>Experiență în mediul industrial</h3>
+      <p>CSSI are experiență în securizarea obiectivelor industriale, unde cerințele sunt fundamental diferite față de securitatea rezidențială sau comercială. Distanțe mari, condiții de mediu solicitante, necesitatea de funcționare continuă — toate acestea necesită expertiză specifică în proiectarea și implementarea sistemelor de securitate.</p>
+
+      <h3>Soluții integrate, nu produse izolate</h3>
+      <p>CSSI nu vinde echipamente — proiectează soluții. Diferența este fundamentală: o soluție integrată presupune analiza riscurilor specifice, proiectarea unui sistem coerent în care componentele lucrează împreună și implementarea profesionistă care asigură funcționarea optimă pe termen lung.</p>
+
+      <h3>Mentenanță și suport continuu</h3>
+      <p>Relația cu CSSI nu se încheie la predarea proiectului. Contractele de mentenanță preventivă includ verificări periodice ale echipamentelor, curățarea și reglarea camerelor, verificarea funcționării punctelor de control, actualizări software și intervenție rapidă în cazul defecțiunilor. Aceasta asigură funcționarea optimă a sistemelor pe întreaga durată de viață.</p>
+
+      <h3>Autorizații și conformitate</h3>
+      <p>CSSI este firmă autorizată IGPR pentru sisteme de securitate, ceea ce garantează că proiectele sunt realizate în conformitate cu legislația în vigoare și standardele de securitate aplicabile. Pentru companiile care operează sub regim de accize, conformitatea documentației de securitate este esențială.</p>
+
+      <div class="box box-blue" style="margin-top:32px">
+        <h4>Servicii CSSI implicate în acest proiect</h4>
+        <p><a href="/camere-supraveghere" style="font-weight:600">Camere Supraveghere (CCTV)</a> · <a href="/control-patrula" style="font-weight:600">Control Patrulă</a></p>
+      </div>
+
+      <h2 id="faq">Întrebări Frecvente (FAQ)</h2>
+
+      <div class="faq-section">
+        <div class="faq-item">
+          <button class="faq-q" onclick="this.parentElement.classList.toggle('open')">
+            Ce este un sistem de control patrulă electronică?
+            <svg class="faq-chevron" width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+          </button>
+          <div class="faq-a">
+            <p>Controlul patrulă electronică este un sistem prin care agenții de pază scanează puncte de control NFC sau RFID amplasate pe trasee prestabilite în incintă. Fiecare scanare este înregistrată cu oră exactă și locație, iar un software centralizat monitorizează completarea rondurilor conform programului stabilit. Sistemul oferă trasabilitate completă și alertează automat în cazul neconformităților.</p>
+          </div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q" onclick="this.parentElement.classList.toggle('open')">
+            De ce are nevoie o companie de producție de supraveghere video CCTV?
+            <svg class="faq-chevron" width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+          </button>
+          <div class="faq-a">
+            <p>Facilitățile de producție și depozitare conțin materii prime valoroase, produse finite și echipamente industriale. Supravegherea video CCTV asigură monitorizarea în timp real a zonelor critice, descurajează tentativele de sustragere, oferă dovezi video în cazul incidentelor și contribuie la respectarea normelor de securitate a muncii. Pentru companiile din industria băuturilor alcoolice, unde produsele au valoare ridicată și sunt sub regim de accize, supravegherea video este o componentă esențială a securității.</p>
+          </div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q" onclick="this.parentElement.classList.toggle('open')">
+            Cum funcționează monitorizarea rondurilor de pază?
+            <svg class="faq-chevron" width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+          </button>
+          <div class="faq-a">
+            <p>Pe traseul de patrulare sunt amplasate puncte de control (checkpoints) echipate cu tag-uri NFC sau RFID. Agentul de pază poartă un dispozitiv portabil cu care scanează fiecare punct la trecere. Toate scanările sunt transmise în timp real către un software de monitorizare care alertează automat dacă un rond nu este completat la timp sau dacă un punct de control este omis. Rapoartele detaliate permit evaluarea obiectivă a calității serviciului de pază.</p>
+          </div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q" onclick="this.parentElement.classList.toggle('open')">
+            Ce avantaje oferă integrarea CCTV cu controlul patrulă?
+            <svg class="faq-chevron" width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+          </button>
+          <div class="faq-a">
+            <p>Integrarea celor două sisteme oferă o acoperire completă a securității: camerele video asigură supraveghere permanentă a zonelor fixe, iar controlul patrulă garantează prezența fizică a agenților pe teren. Împreună, cele două sisteme elimină punctele moarte și asigură trasabilitate completă a activității de securitate. Un incident detectat pe cameră poate fi corelat cu poziția agentului de pază, iar un rond omis poate fi verificat prin înregistrările video.</p>
+          </div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q" onclick="this.parentElement.classList.toggle('open')">
+            CSSI oferă și mentenanță pentru sistemele de securitate instalate?
+            <svg class="faq-chevron" width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+          </button>
+          <div class="faq-a">
+            <p>Da, CSSI oferă contracte de mentenanță preventivă care includ verificări periodice ale camerelor de supraveghere, curățarea lentilelor, verificarea funcționării punctelor de control patrulă, actualizări de software și intervenție rapidă în caz de defecțiune. Mentenanța regulată prelungește durata de viață a echipamentelor și asigură funcționarea optimă a sistemelor de securitate pe termen lung.</p>
+          </div>
+        </div>
+      </div>
+
+
+      <div style="margin:48px 0 32px;padding:32px 0;border-top:2px solid var(--border)">
+        <h2 id="citeste-si" style="border-top:none;padding-top:0;margin-top:0">Citește și</h2>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px;margin-top:16px">
+          <a href="studiu-de-caz-cfr-brasov-securitate" style="display:block;padding:16px;border:1px solid var(--border);border-radius:var(--radius);text-decoration:none;transition:box-shadow .2s">
+            <strong style="font-family:var(--ff-head);font-size:14px;color:var(--brand-dark);display:block;margin-bottom:4px">Studiu de Caz: CFR Brașov — Control Acces și Pontaj</strong>
+            <span style="font-family:var(--ff-head);font-size:12px;color:var(--brand-blue)">Citește →</span>
+          </a>
+          <a href="analiza-risc-securitate-fizica-ghid-complet" style="display:block;padding:16px;border:1px solid var(--border);border-radius:var(--radius);text-decoration:none;transition:box-shadow .2s">
+            <strong style="font-family:var(--ff-head);font-size:14px;color:var(--brand-dark);display:block;margin-bottom:4px">Analiza de Risc la Securitate Fizică</strong>
+            <span style="font-family:var(--ff-head);font-size:12px;color:var(--brand-blue)">Citește →</span>
+          </a>
+          <a href="smart-home-securitate-control-telefon" style="display:block;padding:16px;border:1px solid var(--border);border-radius:var(--radius);text-decoration:none;transition:box-shadow .2s">
+            <strong style="font-family:var(--ff-head);font-size:14px;color:var(--brand-dark);display:block;margin-bottom:4px">Smart Home & Securitate: Control de pe Telefon</strong>
+            <span style="font-family:var(--ff-head);font-size:12px;color:var(--brand-blue)">Citește →</span>
+          </a>
+        </div>
+      </div>
+
+      <div class="cta-banner">
+        <div>
+          <h3>Ai nevoie de consultanță?</h3>
+          <p>Specialiștii CSSI te ajută să alegi soluția potrivită — evaluare gratuită.</p>
+        </div>
+        <div class="cta-buttons">
+          <a href="tel:0752288400" class="btn btn-primary">📞 0752 288 400</a>
+          <a target="_blank" rel="noopener" href="https://wa.me/40752288400" class="btn btn-secondary">💬 WhatsApp</a>
+        </div>
+      </div>
+
+    </main>
+
+    <aside class="sidebar">
+      <div class="sidebar-card">
+        <div class="sidebar-card-head">📑 Cuprins</div>
+        <div class="sidebar-card-body" style="padding:10px 18px">
+          <ol class="toc-list">
+            <li><a href="#despre-client">Despre Client — Alexandrion Group</a></li>
+            <li><a href="#provocarea">Provocarea</a></li>
+            <li><a href="#solutia">Soluția CSSI</a></li>
+            <li><a href="#implementare">Implementare</a></li>
+            <li><a href="#rezultate">Rezultate</a></li>
+            <li><a href="#de-ce-cssi">De Ce CSSI pentru Companii Private</a></li>
+            <li><a href="#faq">FAQ</a></li>
+            <li><a href="#citeste-si">Citește și</a></li>
+          </ol>
+        </div>
+      </div>
+      <div class="sidebar-card">
+        <div class="sidebar-card-head">📋 Date Proiect</div>
+        <div class="sidebar-card-body">
+          <ul class="quick-facts">
+            <li><span class="qf-label">Client</span><span class="qf-value">Alexandrion Group</span></li>
+            <li><span class="qf-label">Proiect</span><span class="qf-value">CCTV + Control Patrulă</span></li>
+            <li><span class="qf-label">Locație</span><span class="qf-value">România</span></li>
+            <li><span class="qf-label">Servicii</span><span class="qf-value">Supraveghere video, Control patrulă</span></li>
+            <li><span class="qf-label">Mentenanță</span><span class="qf-value">Contract periodic</span></li>
+          </ul>
+        </div>
+      </div>
+      <div class="sidebar-card">
+        <div class="sidebar-card-head">📞 Contact CSSI Brașov</div>
+        <div class="sidebar-card-body">
+          <ul class="contact-info">
+            <li><div class="ci-icon">📞</div><div><strong>0752 288 400</strong><span>Lun–Vin 08:00–18:00</span></div></li>
+            <li><div class="ci-icon">💬</div><div><strong>WhatsApp</strong><span><a href="https://wa.me/40752288400" target="_blank" rel="noopener">Scrie pe WhatsApp</a></span></div></li>
+            <li><div class="ci-icon">📧</div><div><strong>office@cssi.ro</strong><span>Răspuns în max 24h</span></div></li>
+            <li><div class="ci-icon">📍</div><div><strong>Brașov</strong><span>și județele înconjurătoare</span></div></li>
+          </ul>
+          <a target="_blank" rel="noopener" href="https://wa.me/40752288400" class="btn btn-primary" style="margin-top:12px">💬 Scrie pe WhatsApp</a>
+        </div>
+      </div>
+    </aside>
+  </div>
+
+  <footer class="article-footer">
+    <p>Articol scris de echipa <strong>CSSI Brașov</strong> — firmă autorizată IGPR și ISU, cu peste 20 de ani de experiență în sisteme de securitate și instalații.</p>
+    <div class="tags">
+      <span class="tag">Alexandrion</span>
+      <span class="tag">CCTV</span>
+      <span class="tag">control patrulă</span>
+      <span class="tag">supraveghere video</span>
+      <span class="tag">securitate industrială</span>
+      <span class="tag">România</span>
+    </div>
+    <p style="font-size:12px;color:#aaa;margin-top:8px">© 2026 CSSI — Confort, Securitate, Siguranță, Imobil | <a href="/">cssi.ro</a></p>
+  </footer>
+
+  <script>
+    const headings = document.querySelectorAll('h2[id]');
+    const tocLinks = document.querySelectorAll('.toc-list a');
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          tocLinks.forEach(a => a.style.color = '');
+          const active = document.querySelector(`.toc-list a[href="#${entry.target.id}"]`);
+          if (active) active.style.color = 'var(--brand-blue)';
+        }
+      });
+    }, { rootMargin: '-20% 0px -70% 0px' });
+    headings.forEach(h => observer.observe(h));
+  </script>
+  <script>
+    let navTextColor = '#fff';
+    window.addEventListener('scroll', function() {
+        const navBg = document.getElementById('navBg');
+        const logo = document.getElementById('logoImg');
+        const scrolled = window.scrollY > 50;
+        if (scrolled) {
+            navBg.style.background = '#ffffff';
+            navBg.style.backdropFilter = 'blur(12px)';
+            navBg.style.boxShadow = '0 1px 2px rgba(0,0,0,0.05)';
+            if (logo) logo.style.filter = '';
+            navTextColor = '#334155';
+        } else {
+            navBg.style.background = 'transparent';
+            navBg.style.backdropFilter = '';
+            navBg.style.boxShadow = '';
+            if (logo) logo.style.filter = 'brightness(0) invert(1) drop-shadow(0 0 1px rgba(255,255,255,0.8))';
+            navTextColor = '#fff';
+        }
+        ['navLink1','navLink2','navLink3','navLink4','navLink5','phoneLink'].forEach(id=>{
+            const el=document.getElementById(id);
+            if(el) el.style.color=navTextColor;
+        });
+    });
+    function toggleMobileMenu(){
+        const menu=document.getElementById('mobileMenu');
+        const menuIcon=document.getElementById('menuIcon');
+        const closeIcon=document.getElementById('closeIcon');
+        const btn=document.getElementById('menuBtn');
+        if(menu.classList.contains('open')){
+            menu.classList.remove('open');
+            menuIcon.style.display='';
+            closeIcon.style.display='none';
+            btn.style.background='linear-gradient(to right,#ef4444,#dc2626)';
+            btn.classList.add('animate-subtle-pulse');
+        } else {
+            menu.classList.add('open');
+            menuIcon.style.display='none';
+            closeIcon.style.display='';
+            btn.style.background='#6b7280';
+            btn.classList.remove('animate-subtle-pulse');
+        }
+    }
+    function closeMobile(){
+        document.getElementById('mobileMenu').classList.remove('open');
+        document.getElementById('menuIcon').style.display='';
+        document.getElementById('closeIcon').style.display='none';
+    }
+    function toggleServicesSubmenu(){
+        const sub=document.getElementById('servicesSubmenu');
+        const arrow=document.getElementById('servicesArrow');
+        if(sub.classList.contains('open')){
+            sub.classList.remove('open');
+            arrow.style.transform='';
+        } else {
+            sub.classList.add('open');
+            arrow.style.transform='rotate(180deg)';
+        }
+    }
+  </script>
+  <script src="/cookie-consent.js" defer></script>
+</body>
+</html>
