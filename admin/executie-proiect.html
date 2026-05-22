@@ -147,6 +147,10 @@ a{text-decoration:none;color:inherit;}button{font-family:inherit;cursor:pointer;
 .mat-row.complete .mat-quick-btn{opacity:0.55;}
 .mat-row.complete .mat-quick-btn.ghost{opacity:1;}
 
+/* Buton listă PDF materiale */
+.btn-print-mat{margin-left:auto;padding:8px 14px;border-radius:10px;border:1.5px solid var(--orange);background:#fff;color:var(--orange);font-size:12px;font-weight:800;cursor:pointer;font-family:inherit;transition:all 0.15s;white-space:nowrap;text-transform:none;letter-spacing:0;}
+.btn-print-mat:hover,.btn-print-mat:active{background:var(--orange);color:#fff;}
+
 /* Panel extins (custom + istoric) — doar la cerere */
 .mat-row-actions{display:none;padding:12px;background:#fff;border-radius:8px;margin-top:10px;border:1px solid var(--gray-b);}
 .mat-row.open .mat-row-actions{display:block;animation:fadeIn 0.2s ease;}
@@ -234,7 +238,7 @@ a{text-decoration:none;color:inherit;}button{font-family:inherit;cursor:pointer;
     <!-- TAB MATERIALE -->
     <div class="tab-panel" id="tabMateriale">
         <div class="section">
-            <div class="section-title">📦 <span>Cuantificare montaj</span> <span style="color:var(--gray-l);font-weight:600;text-transform:none;letter-spacing:0;font-size:11px;margin-left:8px">— bifează ce ai montat din ofertă</span></div>
+            <div class="section-title">📦 <span>Cuantificare montaj</span> <span style="color:var(--gray-l);font-weight:600;text-transform:none;letter-spacing:0;font-size:11px;margin-left:8px">— bifează ce ai montat din ofertă</span><button class="btn-print-mat" onclick="printMaterialeList()" title="Generează listă materiale (PDF) pentru tehnicieni">🖨️ Listă PDF</button></div>
             <div id="materialeList"><div class="empty-state"><div class="ei">⏳</div>Se încarcă...</div></div>
         </div>
     </div>
@@ -493,6 +497,85 @@ function renderMateriale(){
 }
 function fmtN(n){var v=Number(n||0);return v%1===0?v.toString():v.toFixed(2).replace(/\.?0+$/,'');}
 function toggleMaterial(lid){STATE.materialeOpen[lid] = !STATE.materialeOpen[lid]; renderMateriale();}
+
+// ═══ LISTĂ MATERIALE PDF (predare către tehnicieni) ═══
+function printMaterialeList(){
+    var p = STATE.proiect || {};
+    var oferte = (STATE.materiale && STATE.materiale.oferte) || [];
+    if(!oferte.length){ toast('⚠️ Nicio ofertă cu materiale de listat','error'); return; }
+
+    var nr = 0, totalLinii = 0;
+    var rowsHtml = '';
+    oferte.forEach(function(o){
+        if(oferte.length > 1){
+            rowsHtml += '<tr class="grp"><td colspan="6">Ofertă '+esc(o.oferta_id||'')+(o.obiectiv?' — '+esc(o.obiectiv):'')+'</td></tr>';
+        }
+        o.linii.forEach(function(l){
+            nr++; totalLinii++;
+            var ramas = Math.max(0, (l.cant_planificata||0) - (l.cant_montata||0));
+            rowsHtml += '<tr'+(ramas<=0?' class="done"':'')+'>'+
+                '<td class="c">'+nr+'</td>'+
+                '<td class="cod">'+esc(l.cod||'—')+'</td>'+
+                '<td>'+esc(l.denumire||'')+'</td>'+
+                '<td class="c">'+fmtN(l.cant_planificata)+' '+esc(l.um||'buc')+'</td>'+
+                '<td class="c">'+(ramas>0?fmtN(ramas)+' '+esc(l.um||'buc'):'✓ montat')+'</td>'+
+                '<td class="chk"></td>'+
+            '</tr>';
+        });
+    });
+
+    var doc = '<!DOCTYPE html><html lang="ro"><head><meta charset="UTF-8">'+
+        '<title>Listă materiale '+esc(p.proiect_id||'')+'</title><style>'+
+        '*{margin:0;padding:0;box-sizing:border-box;}'+
+        'body{font-family:Arial,Helvetica,sans-serif;color:#0f172a;padding:24px;font-size:12px;}'+
+        'h1{font-size:17px;margin-bottom:2px;}'+
+        '.sub{color:#64748b;font-size:11px;margin-bottom:14px;}'+
+        'table.info{width:100%;border-collapse:collapse;margin-bottom:14px;font-size:11px;}'+
+        'table.info td{padding:3px 6px;vertical-align:top;}'+
+        'table.info td.k{color:#64748b;width:80px;}'+
+        'table.mat{width:100%;border-collapse:collapse;font-size:11px;}'+
+        'table.mat th,table.mat td{border:1px solid #cbd5e1;padding:5px 7px;text-align:left;}'+
+        'table.mat th{background:#f1f5f9;font-size:10px;text-transform:uppercase;letter-spacing:0.4px;}'+
+        'table.mat td.c{text-align:center;}'+
+        'table.mat td.cod{font-family:"Courier New",monospace;font-weight:bold;}'+
+        'table.mat td.chk{width:38px;}'+
+        'table.mat tr.grp td{background:#fff7ed;font-weight:bold;color:#9a3412;}'+
+        'table.mat tr.done td{color:#94a3b8;}'+
+        '.sign{margin-top:34px;display:flex;justify-content:space-between;}'+
+        '.sign div{width:46%;}'+
+        '.sign .line{border-top:1px solid #0f172a;margin-top:38px;padding-top:4px;font-size:10px;color:#64748b;text-align:center;}'+
+        '.foot{margin-top:22px;font-size:9px;color:#94a3b8;text-align:center;}'+
+        '@media print{body{padding:0;}}'+
+        '</style></head><body>'+
+        '<h1>📦 Listă materiale — predare către tehnicieni</h1>'+
+        '<div class="sub">Portal CSSI 3.0 · generat '+esc(fmtDate(todayStr()))+'</div>'+
+        '<table class="info">'+
+          '<tr><td class="k">Client</td><td><strong>'+esc(p.client_nume||'—')+'</strong></td>'+
+              '<td class="k">Proiect</td><td><strong>'+esc(p.proiect_id||'—')+'</strong></td></tr>'+
+          '<tr><td class="k">Serviciu</td><td>'+esc(p.serviciu||'—')+'</td>'+
+              '<td class="k">Status</td><td>'+esc(p.proiect_status||'—')+'</td></tr>'+
+          '<tr><td class="k">Adresă</td><td colspan="3">'+esc(p.adresa_obiectiv||'—')+'</td></tr>'+
+          '<tr><td class="k">Telefon</td><td colspan="3"><strong>'+esc(p.client_telefon||'—')+'</strong></td></tr>'+
+        '</table>'+
+        '<table class="mat"><thead><tr>'+
+          '<th>#</th><th>Cod</th><th>Denumire material</th>'+
+          '<th>Cant. ofertă</th><th>Rămas de montat</th><th>Luat</th>'+
+        '</tr></thead><tbody>'+rowsHtml+'</tbody></table>'+
+        '<div class="sign">'+
+          '<div><div class="line">Predat de (depozit) — nume, semnătură</div></div>'+
+          '<div><div class="line">Primit de (tehnician) — nume, semnătură</div></div>'+
+        '</div>'+
+        '<div class="foot">'+totalLinii+' poziții materiale · Document generat din Portal CSSI 3.0</div>'+
+        '</body></html>';
+
+    var w = window.open('', '_blank');
+    if(!w){ toast('⚠️ Permite ferestrele pop-up pentru a genera PDF-ul','error'); return; }
+    w.document.open();
+    w.document.write(doc);
+    w.document.close();
+    w.focus();
+    setTimeout(function(){ try{ w.print(); }catch(e){} }, 400);
+}
 
 // Helper: dezactivează button pe durata unui Promise + arată spinner + warning dacă > 3s
 function withBusy(btn, busyText, promise){
