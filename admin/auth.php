@@ -120,9 +120,9 @@ function defaultModulesForUser($u) {
     if (($u['role'] ?? '') === 'admin') return allModules();
     if (!empty($u['is_tehnician'])) return ['executie','planificare','necesar','mentenanta'];
     switch ($u['role'] ?? '') {
-        case 'sales': return ['calculator','contracte','crm','proiecte','financiar','marketing','social','documente'];
-        case 'org':   return ['proiecte','contracte','planificare','financiar','mentenanta','documente','crm'];
-        case 'mkt':   return ['marketing','social','documente'];
+        case 'sales': return ['calculator','contracte','crm','proiecte','financiar','marketing','social','recenzii','documente'];
+        case 'org':   return ['proiecte','contracte','planificare','financiar','mentenanta','documente','crm','recenzii'];
+        case 'mkt':   return ['marketing','social','recenzii','documente'];
         case 'tech':  return ['proiecte','proiectare','executie','planificare','materiale','necesar','mentenanta','documente'];
         default:      return [];
     }
@@ -143,6 +143,10 @@ function getAllowedModules($db, $u) {
             if (is_array($custom) && !empty($custom)) {
                 // utilizatori e mereu admin-only, nu suprascriem
                 $custom = array_diff($custom, ['utilizatori']);
+                // Auto-inject recenzii pentru oricine are marketing
+                if (in_array('marketing', $custom) && !in_array('recenzii', $custom)) {
+                    $custom[] = 'recenzii';
+                }
                 return array_values($custom);
             }
         }
