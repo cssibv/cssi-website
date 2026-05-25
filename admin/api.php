@@ -3935,6 +3935,142 @@ astăzi data semnării.</p>
             }
             break;
 
+        // ═══════ SMS CERERE RECENZIE GOOGLE ═══════
+        case 'sendReviewSMS':
+            requireAuth();
+            $proiectId = isset($data['proiect_id']) ? $data['proiect_id'] : '';
+            if (!$proiectId) { jsonResponse(['success' => false, 'error' => 'proiect_id obligatoriu'], 400); break; }
+
+            // Creare tabel sms_recenzii daca nu exista
+            $db->exec("CREATE TABLE IF NOT EXISTS sms_recenzii (
+                id INT PRIMARY KEY AUTO_INCREMENT,
+                proiect_id INT NOT NULL,
+                client_id INT NOT NULL,
+                telefon VARCHAR(20) NOT NULL,
+                mesaj TEXT NOT NULL,
+                status VARCHAR(20) DEFAULT 'trimis',
+                sms_provider_id VARCHAR(100) DEFAULT NULL,
+                trimis_de VARCHAR(60) DEFAULT 'Admin',
+                trimis_la DATETIME DEFAULT CURRENT_TIMESTAMP,
+                KEY idx_proiect (proiect_id),
+                KEY idx_client (client_id)
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4");
+
+            // Citeste proiect + client
+            $stmt = $db->prepare("
+                SELECT p.id, p.proiect_id, p.serviciu, p.status,
+                       c.id AS cid, c.nume, c.telefon, c.email
+                FROM proiecte p
+                JOIN clienti c ON p.client_id = c.id
+                WHERE p.id = ? OR p.proiect_id = ?
+            ");
+            $stmt->execute([$proiectId, $proiectId]);
+            $row = $stmt->fetch();
+            if (!$row) { jsonResponse(['success' => false, 'error' => 'Proiect negăsit'], 404); break; }
+            if (!$row['telefon']) { jsonResponse(['success' => false, 'error' => 'Clientul nu are număr de telefon salvat'], 400); break; }
+
+            // Verifică dacă s-a trimis deja
+            $chk = $db->prepare("SELECT id, trimis_la FROM sms_recenzii WHERE proiect_id = ?");
+            $chk->execute([$row['id']]);
+            $existing = $chk->fetch();
+            if ($existing) {
+                jsonResponse(['success' => false, 'error' => 'SMS-ul a fost deja trimis pe ' . $existing['trimis_la'], 'already_sent' => true], 409);
+                break;
+            }
+
+            // Normalizare telefon
+            $phone = preg_replace('/[\s\-\.\(\)]/', '', $row['telefon']);
+            if (strpos($phone, '0') === 0) {
+                $phone = '+4' . $phone;
+            } elseif (strpos($phone, '4') === 0 && strpos($phone, '+') !== 0) {
+                $phone = '+' . $phone;
+            }
+
+            // Construiește mesajul SMS
+            $prenume = explode(' ', trim($row['nume']))[0];
+            $serviciu = $row['serviciu'] ?: 'lucrarea';
+            $reviewUrl = 'https://g.page/r/Cc6-SGKZeP5wEBM/review';
+            $mesaj = 'Bună ziua, ' . $prenume . '! Mulțumim că ați ales CSSI pentru ' . mb_strtolower($serviciu) . '. Ne-ar bucura o recenzie pe Google: ' . $reviewUrl . ' Echipa CSSI';
+
+            // Trimite SMS via SMSLink API (sau simulare dacă nu e configurat)
+            $smsKey = defined('SMSLINK_KEY') ? SMSLINK_KEY : (getenv('CSSI_SMSLINK_KEY') ?: '');
+            $smsSenderId = defined('SMSLINK_SENDER') ? SMSLINK_SENDER : (getenv('CSSI_SMSLINK_SENDER') ?: 'CSSI');
+            $smsProviderId = null;
+            $smsStatus = 'simulat';
+
+            if ($smsKey) {
+                // SMSLink.ro API v2
+                $smsPayload = [
+                    'to' => $phone,
+                    'message' => $mesaj,
+                    'sender_id' => $smsSenderId
+                ];
+                $ch = curl_init('https://www.smslink.ro/sms/gateway/communicate/json.php');
+                curl_setopt_array($ch, [
+                    CURLOPT_POST => true,
+                    CURLOPT_HTTPHEADER => [
+                        'Authorization: Bearer ' . $smsKey,
+                        'Content-Type: application/json'
+                    ],
+                    CURLOPT_POSTFIELDS => json_encode($smsPayload),
+                    CURLOPT_RETURNTRANSFER => true,
+                    CURLOPT_TIMEOUT => 15
+                ]);
+                $response = curl_exec($ch);
+                $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+                curl_close($ch);
+
+                $result = json_decode($response, true);
+                if ($httpCode >= 200 && $httpCode < 300 && isset($result['message_id'])) {
+                    $smsProviderId = $result['message_id'];
+                    $smsStatus = 'trimis';
+                } else {
+                    $smsStatus = 'eroare';
+                    // Salvăm oricum în DB cu status eroare, dar trimitem eroarea la client
+                    $db->prepare("INSERT INTO sms_recenzii (proiect_id, client_id, telefon, mesaj, status, sms_provider_id, trimis_de) VALUES (?,?,?,?,?,?,?)")
+                       ->execute([$row['id'], $row['cid'], $phone, $mesaj, 'eroare', $response, $data['user'] ?? 'Admin']);
+                    jsonResponse(['success' => false, 'error' => 'Eroare trimitere SMS. Verificați cheia API SMSLink.', 'details' => $response], 500);
+                    break;
+                }
+            }
+
+            // Salvează în DB
+            $user = $data['user'] ?? 'Admin';
+            $db->prepare("INSERT INTO sms_recenzii (proiect_id, client_id, telefon, mesaj, status, sms_provider_id, trimis_de) VALUES (?,?,?,?,?,?,?)")
+               ->execute([$row['id'], $row['cid'], $phone, $mesaj, $smsStatus, $smsProviderId, $user]);
+
+            // Adaugă notificare
+            $notifMsg = '📱 SMS recenzie trimis către ' . $row['nume'] . ' (' . $phone . ') — ' . $row['proiect_id'];
+            $db->prepare("INSERT INTO notificari (proiect_id, mesaj, tip, de_la) VALUES (?,?,?,?)")
+               ->execute([$row['id'], $notifMsg, 'sms_recenzie', $user]);
+
+            jsonResponse([
+                'success' => true,
+                'status' => $smsStatus,
+                'telefon' => $phone,
+                'mesaj' => $mesaj,
+                'nota' => $smsStatus === 'simulat' ? 'SMS simulat — configurați SMSLINK_KEY în secrets.php pentru trimitere reală' : 'SMS trimis cu succes'
+            ]);
+            break;
+
+        // ═══════ VERIFICARE STATUS SMS RECENZIE ═══════
+        case 'getReviewSMSStatus':
+            requireAuth();
+            $proiectId = isset($_GET['proiect_id']) ? $_GET['proiect_id'] : '';
+            if (!$proiectId) { jsonResponse(['success' => false, 'error' => 'proiect_id obligatoriu'], 400); break; }
+
+            // Verifică dacă tabelul există
+            try {
+                $stmt = $db->prepare("SELECT id, telefon, status, trimis_de, trimis_la FROM sms_recenzii WHERE proiect_id = (SELECT id FROM proiecte WHERE id = ? OR proiect_id = ? LIMIT 1) ORDER BY trimis_la DESC LIMIT 1");
+                $stmt->execute([$proiectId, $proiectId]);
+                $sms = $stmt->fetch();
+            } catch (Exception $e) {
+                $sms = null;
+            }
+
+            jsonResponse(['success' => true, 'sent' => !!$sms, 'data' => $sms ?: null]);
+            break;
+
         default:
             jsonResponse(['success' => false, 'error' => 'Actiune necunoscuta: ' . $action], 400);
     }

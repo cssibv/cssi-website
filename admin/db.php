@@ -23,6 +23,10 @@ define('ZERNIO_KEY', getenv('CSSI_ZERNIO_KEY') ?: ($SECRETS['ZERNIO_KEY'] ?? '')
 // Recovery token — pentru endpoint-uri de recuperare admin (ex: deblocare cont)
 define('RECOVERY_TOKEN', getenv('CSSI_RECOVERY_TOKEN') ?: ($SECRETS['RECOVERY_TOKEN'] ?? ''));
 
+// SMSLink.ro — trimitere SMS automat (cereri recenzii, notificări)
+define('SMSLINK_KEY', getenv('CSSI_SMSLINK_KEY') ?: ($SECRETS['SMSLINK_KEY'] ?? ''));
+define('SMSLINK_SENDER', getenv('CSSI_SMSLINK_SENDER') ?: ($SECRETS['SMSLINK_SENDER'] ?? 'CSSI'));
+
 // Upload paths
 define('UPLOAD_DIR', __DIR__ . '/uploads/');
 define('UPLOAD_URL', '/admin/uploads/');

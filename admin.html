@@ -425,6 +425,9 @@ a{text-decoration:none;color:inherit;}button{font-family:inherit;cursor:pointer;
 .cf-act.primary{background:linear-gradient(135deg,var(--blue),#2563eb);color:#fff;}
 .cf-act.secondary{background:var(--gray-bg);color:var(--dark);border:1px solid var(--gray-b);}
 .cf-act.preia{background:linear-gradient(135deg,var(--orange),#ea580c);color:#fff;}
+.cf-act.sms-review{background:linear-gradient(135deg,#059669,#047857);color:#fff;}
+.cf-act.sms-review.sent{background:#d1fae5;color:#065f46;cursor:default;pointer-events:none;}
+.cf-act.sms-review:disabled{opacity:0.7;cursor:wait;}
 .cf-act:hover{transform:translateY(-1px);box-shadow:var(--shadow-md);}
 .cf-section{margin-bottom:18px;}
 .cf-section-title{font-size:12px;font-weight:800;color:var(--gray);text-transform:uppercase;letter-spacing:0.8px;margin-bottom:8px;display:flex;align-items:center;gap:8px;}
@@ -833,8 +836,10 @@ function cfStageActions(prj){
         A.push({cls:'primary',ic:'📐',txt:'Deschide proiectare',url:dbId?'/admin/proiectare-proiect.html?id='+dbId:'/admin/proiectare.html'});
     } else if(st==='Execuție'||st==='Intervenție'||st==='Recepție'){
         A.push({cls:'primary',ic:'🔧',txt:'Deschide execuție',url:dbId?'/admin/executie-proiect.html?id='+dbId:'/admin/executie.html'});
+        if(st==='Recepție') A.push({cls:'sms-review',ic:'📱',txt:'Cerere recenzie SMS',action:'sendReviewSMS',pid:dbId||prj.id});
     } else if(st==='Facturat'){
         A.push({cls:'primary',ic:'💳',txt:'Financiar',url:'/admin/financiar.html'});
+        A.push({cls:'sms-review',ic:'📱',txt:'Cerere recenzie SMS',action:'sendReviewSMS',pid:dbId||prj.id});
     } else if(st==='Mentenanță'){
         A.push({cls:'primary',ic:'🔄',txt:'Mentenanță',url:'/admin/mentenanta.html'});
     }
@@ -901,7 +906,11 @@ function renderCardFull(d,prj,err){
     var isNepreluat=!prj.preluat_de&&prj.status!=='Lead';
     if(isNepreluat) html+='<button class="cf-act preia" onclick="cfPreia(\''+cfEsc(prj.id)+'\')">🤚 Preia proiect</button>';
     cfStageActions(prj).forEach(function(a){
-        html+='<a class="cf-act '+a.cls+'" href="'+a.url+'">'+a.ic+' '+cfEsc(a.txt)+'</a>';
+        if(a.action==='sendReviewSMS'){
+            html+='<button class="cf-act '+a.cls+'" id="btnSmsReview" onclick="cfSendReviewSMS(\''+cfEsc(a.pid)+'\',this)">'+a.ic+' '+cfEsc(a.txt)+'</button>';
+        } else {
+            html+='<a class="cf-act '+a.cls+'" href="'+a.url+'">'+a.ic+' '+cfEsc(a.txt)+'</a>';
+        }
     });
     html+='</div>';
     if(err) html+='<div class="cf-empty">⚠️ Istoricul complet n-a putut fi încărcat ('+cfEsc(err)+'). Se afișează doar datele cardului.</div>';
@@ -939,8 +948,75 @@ function renderCardFull(d,prj,err){
         }
     }
     document.getElementById('cfBody').innerHTML=html;
+    // Verifică status SMS recenzie dacă butonul există
+    if(document.getElementById('btnSmsReview') && (prj.dbId||prj.id)){
+        cfCheckReviewSMS(prj.dbId||prj.id);
+    }
 }
 function cfPreia(pid){closeCardFullModal();preiaProiect(pid);}
+
+// ═══════ SMS CERERE RECENZIE GOOGLE ═══════
+function cfSendReviewSMS(pid, btn) {
+    if (!pid) { alert('Eroare: ID proiect lipsă'); return; }
+    if (!confirm('Trimiteți SMS cu cerere de recenzie Google către client?')) return;
+
+    btn.disabled = true;
+    btn.innerHTML = '⏳ Se trimite...';
+    var user = window.CURRENT_USER || 'Admin';
+
+    fetch(API_DB + '?action=sendReviewSMS', {
+        method: 'POST',
+        credentials: 'include',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ proiect_id: pid, user: user })
+    })
+    .then(function(r) { return r.json(); })
+    .then(function(res) {
+        if (res.success) {
+            btn.classList.add('sent');
+            btn.innerHTML = '✅ SMS trimis';
+            btn.disabled = true;
+            if (res.nota) {
+                var note = document.createElement('div');
+                note.style.cssText = 'font-size:11px;color:#f59e0b;margin-top:4px;padding:4px 8px;background:#fef3c7;border-radius:6px;';
+                note.textContent = res.nota;
+                btn.parentNode.insertBefore(note, btn.nextSibling);
+            }
+        } else {
+            btn.disabled = false;
+            btn.innerHTML = '📱 Cerere recenzie SMS';
+            if (res.already_sent) {
+                btn.classList.add('sent');
+                btn.innerHTML = '✅ Deja trimis';
+                btn.disabled = true;
+            }
+            alert(res.error || 'Eroare la trimitere SMS');
+        }
+    })
+    .catch(function(e) {
+        btn.disabled = false;
+        btn.innerHTML = '📱 Cerere recenzie SMS';
+        alert('Eroare de rețea: ' + (e.message || e));
+    });
+}
+
+// Verifică status SMS recenzie la deschiderea cardului
+function cfCheckReviewSMS(pid) {
+    if (!pid) return;
+    fetch(API_DB + '?action=getReviewSMSStatus&proiect_id=' + encodeURIComponent(pid) + '&_t=' + Date.now(), { credentials: 'include' })
+    .then(function(r) { return r.json(); })
+    .then(function(res) {
+        if (res.success && res.sent) {
+            var btn = document.getElementById('btnSmsReview');
+            if (btn) {
+                btn.classList.add('sent');
+                btn.innerHTML = '✅ SMS trimis ' + (res.data && res.data.trimis_la ? '(' + res.data.trimis_la.substring(0, 10) + ')' : '');
+                btn.disabled = true;
+            }
+        }
+    })
+    .catch(function() {});
+}
 
 // ═══════ ACTIVITATE RECENTA (din MySQL) ═══════
 function renderAlerts(){
