@@ -640,26 +640,26 @@ async function buildMaterialePdf(pvBytes, fontRegBytes, fontBoldBytes, p, oferte
         [M,col.cod.x,col.den.x,col.cant.x,M+tableW].forEach(function(xx){ vline(xx,top,bot); });
         y = bot;
     }
+    function emptyRow(h){
+        var top=y, bot=y-h;
+        hline(bot,M,M+tableW);
+        [M,col.cod.x,col.den.x,col.cant.x,M+tableW].forEach(function(xx){ vline(xx,top,bot); });
+        y = bot;
+    }
 
     newPage();
     // ── Antet pagina materiale ──
     y -= 12;
-    txt('LISTĂ MATERIALE / CANTITĂȚI DE INSTALAT', M, y, 15, fontB);
-    y -= 16;
-    txt('Cantitățile de echipamente de pregătit pentru montaj la locație', M, y, 9, font, MUT);
-    y -= 13;
-    txt('Generat din Portal CSSI 3.0 · '+fmtDate(todayStr()), M, y, 8.5, font, MUT);
-    y -= 24;
+    txt('LISTĂ MATERIALE', M, y, 16, fontB);
+    y -= 26;
     // ── Info proiect ──
     txt('Client', M, y, 9, font, MUT);
-    txt(fit(p.client_nume||'—', fontB, 10, 248), M+58, y, 10, fontB);
-    txt('Proiect', M+318, y, 9, font, MUT);
-    txt(fit(p.proiect_id||'—', fontB, 10, tableW-(318+48)), M+366, y, 10, fontB);
+    txt(fit(p.client_nume||'—', fontB, 10, 250), M+58, y, 10, fontB);
+    txt('Telefon', M+318, y, 9, font, MUT);
+    txt(fit(p.client_telefon||'—', fontB, 9, tableW-(318+50)), M+368, y, 9, fontB);
     y -= 15;
     txt('Serviciu', M, y, 9, font, MUT);
-    txt(fit(p.serviciu||'—', font, 9, 248), M+58, y, 9, font);
-    txt('Telefon', M+318, y, 9, font, MUT);
-    txt(fit(p.client_telefon||'—', fontB, 9, tableW-(318+48)), M+366, y, 9, fontB);
+    txt(fit(p.serviciu||'—', font, 9, tableW-58), M+58, y, 9, font);
     y -= 15;
     txt('Adresă', M, y, 9, font, MUT);
     var addrLines = wrap(p.adresa_obiectiv||'—', font, 9, tableW-58);
@@ -677,16 +677,21 @@ async function buildMaterialePdf(pvBytes, fontRegBytes, fontBoldBytes, p, oferte
         });
     });
 
-    // ── Total + semnături predare/primire ──
+    // ── Total poziții din ofertă ──
     y -= 8;
-    txt(total+' poziții de materiale', M, y, 9, fontB, MUT);
-    y -= 44;
-    if(y < M+24){ newPage(); y = PH - M - 70; }
-    var sw = 215;
-    hline(y, M, M+sw, DARK);
-    hline(y, PW-M-sw, PW-M, DARK);
-    txt('Predat de (depozit) — nume, semnătură', M, y-12, 8.5, font, MUT);
-    txt('Primit de (tehnician) — nume, semnătură', PW-M-sw, y-12, 8.5, font, MUT);
+    txt(total+' poziții de materiale din ofertă', M, y, 9, fontB, MUT);
+
+    // ── Materiale suplimentare folosite (necuprinse în ofertă) — de completat manual ──
+    y -= 26;
+    if(y < M+150){ newPage(); }
+    txt('Materiale suplimentare folosite (necuprinse în oferta inițială)', M, y, 10, fontB);
+    y -= 10;
+    tableHead();
+    var EXTRAROWH = 22;
+    var nExtra = Math.floor((y - M) / EXTRAROWH);
+    if(nExtra < 5){ newPage(); tableHead(); nExtra = Math.floor((y - M) / EXTRAROWH); }
+    nExtra = Math.min(nExtra, 16);
+    for(var ex=0; ex<nExtra; ex++){ emptyRow(EXTRAROWH); }
 
     return await pdfDoc.save();
 }
