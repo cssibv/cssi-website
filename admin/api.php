@@ -3986,11 +3986,14 @@ astăzi data semnării.</p>
                 $phone = '+' . $phone;
             }
 
-            // Construiește mesajul SMS
+            // Generează token unic pentru tracking click
+            $token = bin2hex(random_bytes(8)); // 16 caractere hex
+
+            // Construiește mesajul SMS cu link tracked
             $prenume = explode(' ', trim($row['nume']))[0];
             $serviciu = $row['serviciu'] ?: 'lucrarea';
-            $reviewUrl = 'https://g.page/r/Cc6-SGKZeP5wEBM/review';
-            $mesaj = 'Bună ziua, ' . $prenume . '! Mulțumim că ați ales CSSI pentru ' . mb_strtolower($serviciu) . '. Ne-ar bucura o recenzie pe Google: ' . $reviewUrl . ' Echipa CSSI';
+            $reviewUrl = 'https://cssi.ro/r/' . $token;
+            $mesaj = 'Buna ziua, ' . $prenume . '! Multumim ca ati ales CSSI pentru ' . mb_strtolower($serviciu) . '. Ne-ar bucura o recenzie pe Google: ' . $reviewUrl . ' Echipa CSSI';
 
             // Trimite SMS via SMSLink API (sau simulare dacă nu e configurat)
             $smsKey = defined('SMSLINK_KEY') ? SMSLINK_KEY : (getenv('CSSI_SMSLINK_KEY') ?: '');
@@ -4038,6 +4041,22 @@ astăzi data semnării.</p>
             $user = $data['user'] ?? 'Admin';
             $db->prepare("INSERT INTO sms_recenzii (proiect_id, client_id, telefon, mesaj, status, sms_provider_id, trimis_de) VALUES (?,?,?,?,?,?,?)")
                ->execute([$row['id'], $row['cid'], $phone, $mesaj, $smsStatus, $smsProviderId, $user]);
+            $smsId = $db->lastInsertId();
+
+            // Creare tabel sms_clicks + intrare tracking
+            $db->exec("CREATE TABLE IF NOT EXISTS sms_clicks (
+                id INT PRIMARY KEY AUTO_INCREMENT,
+                sms_id INT NOT NULL,
+                token VARCHAR(64) NOT NULL UNIQUE,
+                clicked_at DATETIME DEFAULT NULL,
+                click_count INT DEFAULT 0,
+                ip VARCHAR(45) DEFAULT NULL,
+                user_agent TEXT DEFAULT NULL,
+                KEY idx_token (token),
+                KEY idx_sms (sms_id)
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4");
+            $db->prepare("INSERT INTO sms_clicks (sms_id, token) VALUES (?, ?)")
+               ->execute([$smsId, $token]);
 
             // Adaugă notificare
             $notifMsg = '📱 SMS recenzie trimis către ' . $row['nume'] . ' (' . $phone . ') — ' . $row['proiect_id'];
@@ -4051,6 +4070,122 @@ astăzi data semnării.</p>
                 'mesaj' => $mesaj,
                 'nota' => $smsStatus === 'simulat' ? 'SMS simulat — configurați SMSLINK_KEY în secrets.php pentru trimitere reală' : 'SMS trimis cu succes'
             ]);
+            break;
+
+        // ═══════ LISTA TOATE SMS-URILE DE RECENZIE ═══════
+        case 'getRecenziiList':
+            requireAuth();
+
+            // Creare tabel daca nu exista
+            $db->exec("CREATE TABLE IF NOT EXISTS sms_recenzii (
+                id INT PRIMARY KEY AUTO_INCREMENT,
+                proiect_id INT NOT NULL,
+                client_id INT NOT NULL,
+                telefon VARCHAR(20) NOT NULL,
+                mesaj TEXT NOT NULL,
+                status VARCHAR(20) DEFAULT 'trimis',
+                sms_provider_id VARCHAR(100) DEFAULT NULL,
+                trimis_de VARCHAR(60) DEFAULT 'Admin',
+                trimis_la DATETIME DEFAULT CURRENT_TIMESTAMP,
+                delivery_status VARCHAR(20) DEFAULT NULL,
+                delivery_checked_at DATETIME DEFAULT NULL,
+                recenzie_primita TINYINT(1) DEFAULT 0,
+                recenzie_data DATE DEFAULT NULL,
+                recenzie_nota TINYINT DEFAULT NULL,
+                recenzie_text TEXT DEFAULT NULL,
+                note TEXT DEFAULT NULL,
+                KEY idx_proiect (proiect_id),
+                KEY idx_client (client_id)
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4");
+
+            // Adauga coloane noi daca lipsesc (migrare idempotenta)
+            try {
+                $cols = $db->query("SHOW COLUMNS FROM sms_recenzii")->fetchAll(PDO::FETCH_COLUMN);
+                $migrations = [
+                    'delivery_status' => "ALTER TABLE sms_recenzii ADD COLUMN delivery_status VARCHAR(20) DEFAULT NULL",
+                    'delivery_checked_at' => "ALTER TABLE sms_recenzii ADD COLUMN delivery_checked_at DATETIME DEFAULT NULL",
+                    'recenzie_primita' => "ALTER TABLE sms_recenzii ADD COLUMN recenzie_primita TINYINT(1) DEFAULT 0",
+                    'recenzie_data' => "ALTER TABLE sms_recenzii ADD COLUMN recenzie_data DATE DEFAULT NULL",
+                    'recenzie_nota' => "ALTER TABLE sms_recenzii ADD COLUMN recenzie_nota TINYINT DEFAULT NULL",
+                    'recenzie_text' => "ALTER TABLE sms_recenzii ADD COLUMN recenzie_text TEXT DEFAULT NULL",
+                    'note' => "ALTER TABLE sms_recenzii ADD COLUMN note TEXT DEFAULT NULL"
+                ];
+                foreach ($migrations as $col => $sql) {
+                    if (!in_array($col, $cols)) { try { $db->exec($sql); } catch(Exception $e){} }
+                }
+            } catch(Exception $e) {}
+
+            // Creare tabel sms_clicks daca nu exista (pt JOIN)
+            $db->exec("CREATE TABLE IF NOT EXISTS sms_clicks (
+                id INT PRIMARY KEY AUTO_INCREMENT,
+                sms_id INT NOT NULL,
+                token VARCHAR(64) NOT NULL UNIQUE,
+                clicked_at DATETIME DEFAULT NULL,
+                click_count INT DEFAULT 0,
+                ip VARCHAR(45) DEFAULT NULL,
+                user_agent TEXT DEFAULT NULL,
+                KEY idx_token (token),
+                KEY idx_sms (sms_id)
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4");
+
+            $rows = $db->query("
+                SELECT s.*, c.nume AS client_nume, c.email AS client_email,
+                       p.proiect_id AS proiect_cod, p.serviciu, p.status AS proiect_status,
+                       sc.clicked_at, sc.click_count, sc.token AS track_token
+                FROM sms_recenzii s
+                JOIN clienti c ON s.client_id = c.id
+                JOIN proiecte p ON s.proiect_id = p.id
+                LEFT JOIN sms_clicks sc ON sc.sms_id = s.id
+                ORDER BY s.trimis_la DESC
+            ")->fetchAll();
+
+            // Statistici rapide
+            $total = count($rows);
+            $livrate = 0; $recenzii = 0; $clicked = 0;
+            foreach ($rows as $r) {
+                if ($r['delivery_status'] === 'delivered' || $r['clicked_at']) $livrate++;
+                if ($r['clicked_at']) $clicked++;
+                if ($r['recenzie_primita']) $recenzii++;
+            }
+
+            jsonResponse([
+                'success' => true,
+                'data' => $rows,
+                'stats' => [
+                    'total_sms' => $total,
+                    'clicked' => $clicked,
+                    'recenzii_primite' => $recenzii,
+                    'rata_conversie' => $total > 0 ? round($recenzii / $total * 100, 1) : 0
+                ]
+            ]);
+            break;
+
+        // ═══════ UPDATE MANUAL RECENZIE PRIMITĂ ═══════
+        case 'updateRecenzie':
+            requireAuth();
+            $smsId = isset($data['id']) ? intval($data['id']) : 0;
+            if (!$smsId) { jsonResponse(['success' => false, 'error' => 'id obligatoriu'], 400); break; }
+
+            $fields = [];
+            $values = [];
+            if (isset($data['recenzie_primita'])) {
+                $fields[] = 'recenzie_primita = ?';
+                $values[] = $data['recenzie_primita'] ? 1 : 0;
+                if ($data['recenzie_primita'] && !isset($data['recenzie_data'])) {
+                    $fields[] = 'recenzie_data = ?';
+                    $values[] = date('Y-m-d');
+                }
+            }
+            if (isset($data['recenzie_data'])) { $fields[] = 'recenzie_data = ?'; $values[] = $data['recenzie_data']; }
+            if (isset($data['recenzie_nota'])) { $fields[] = 'recenzie_nota = ?'; $values[] = intval($data['recenzie_nota']); }
+            if (isset($data['recenzie_text'])) { $fields[] = 'recenzie_text = ?'; $values[] = $data['recenzie_text']; }
+            if (isset($data['note'])) { $fields[] = 'note = ?'; $values[] = $data['note']; }
+            if (isset($data['delivery_status'])) { $fields[] = 'delivery_status = ?'; $values[] = $data['delivery_status']; $fields[] = 'delivery_checked_at = NOW()'; }
+
+            if (!$fields) { jsonResponse(['success' => false, 'error' => 'Nimic de actualizat'], 400); break; }
+            $values[] = $smsId;
+            $db->prepare("UPDATE sms_recenzii SET " . implode(', ', $fields) . " WHERE id = ?")->execute($values);
+            jsonResponse(['success' => true]);
             break;
 
         // ═══════ VERIFICARE STATUS SMS RECENZIE ═══════

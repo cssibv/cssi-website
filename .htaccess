@@ -39,6 +39,11 @@ RewriteRule ^admin/?$ /admin.html [L]
 # --------------------------------------------------
 RewriteRule ^teren/?$ /admin/teren.html [L]
 
+# --------------------------------------------------
+# 2e. REDIRECT TRACKER RECENZII — /r/TOKEN → /r.php?t=TOKEN
+# --------------------------------------------------
+RewriteRule ^r/([a-f0-9]+)$ /r.php?t=$1 [L,QSA]
+
 
 # --------------------------------------------------
 # 2d. BLOCHEAZĂ ACCES DIRECT LA /404 (trebuie servit doar via ErrorDocument)

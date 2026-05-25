@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Monitorizare Recenzii — Portal CSSI 3.0</title>
+<meta name="robots" content="noindex, nofollow">
+<link rel="icon" type="image/x-icon" href="/images/favicon.ico">
+<meta name="theme-color" content="#dc2626">
+<link rel="manifest" href="../manifest.json">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Portal CSSI">
+<link rel="apple-touch-icon" sizes="180x180" href="../icons/apple-touch-icon.png">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+:root{--red:#dc2626;--red-d:#991b1b;--dark:#0f172a;--dark2:#1e293b;--gray:#64748b;--gray-l:#94a3b8;--gray-xl:#cbd5e1;--gray-bg:#f1f5f9;--gray-b:#e2e8f0;--blue:#3b82f6;--green:#22c55e;--orange:#f97316;--purple:#8b5cf6;--teal:#14b8a6;--radius:16px;--radius-sm:12px;--shadow:0 1px 3px rgba(0,0,0,0.06);--shadow-md:0 4px 12px rgba(0,0,0,0.08);--font:'Inter',system-ui,sans-serif;}
+body{font-family:var(--font);color:var(--dark);background:var(--gray-bg);-webkit-font-smoothing:antialiased;}
+a{text-decoration:none;color:inherit;}button{font-family:inherit;cursor:pointer;}
+
+.container{max-width:960px;margin:0 auto;padding:16px;}
+.page-header{background:linear-gradient(135deg,#059669,#047857);color:#fff;padding:22px 24px;border-radius:20px;margin-bottom:16px;}
+.page-back{color:rgba(255,255,255,0.7);font-size:13px;font-weight:500;display:inline-flex;align-items:center;gap:6px;}.page-back:hover{color:#fff;}
+.page-title{font-size:22px;font-weight:800;letter-spacing:-0.5px;margin-top:4px;}
+.page-subtitle{font-size:13px;color:rgba(255,255,255,0.8);margin-top:4px;}
+
+/* Stats cards */
+.stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:20px;}
+.stat-card{background:#fff;border-radius:var(--radius);padding:16px;text-align:center;box-shadow:var(--shadow);}
+.stat-card .num{font-size:28px;font-weight:900;letter-spacing:-1px;}
+.stat-card .lbl{font-size:11px;font-weight:700;color:var(--gray);text-transform:uppercase;letter-spacing:0.5px;margin-top:2px;}
+.stat-card.green .num{color:var(--green);}
+.stat-card.blue .num{color:var(--blue);}
+.stat-card.orange .num{color:var(--orange);}
+.stat-card.purple .num{color:var(--purple);}
+
+/* Table */
+.section{background:#fff;border-radius:var(--radius);padding:20px;box-shadow:var(--shadow);margin-bottom:16px;}
+.section-title{font-size:14px;font-weight:800;color:var(--dark);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:14px;display:flex;align-items:center;gap:8px;}
+.sms-list{display:flex;flex-direction:column;gap:10px;}
+.sms-row{background:var(--gray-bg);border-radius:var(--radius-sm);padding:14px 16px;display:grid;grid-template-columns:1fr auto;gap:10px;align-items:start;transition:all 0.15s;}
+.sms-row:hover{box-shadow:var(--shadow-md);}
+.sms-row .top{display:flex;flex-wrap:wrap;align-items:center;gap:8px;}
+.sms-row .client{font-weight:800;font-size:14px;}
+.sms-row .pill{display:inline-block;padding:2px 10px;border-radius:99px;font-size:11px;font-weight:700;}
+.pill.trimis{background:#dbeafe;color:#1d4ed8;}
+.pill.simulat{background:#fef3c7;color:#92400e;}
+.pill.eroare{background:#fecaca;color:#991b1b;}
+.pill.livrat{background:#d1fae5;color:#065f46;}
+.pill.nelivrat{background:#fecaca;color:#991b1b;}
+.pill.asteptare{background:#e2e8f0;color:#475569;}
+.pill.clicked{background:#dbeafe;color:#1d4ed8;}
+.sms-row .meta{font-size:12px;color:var(--gray);margin-top:4px;display:flex;flex-wrap:wrap;gap:12px;}
+.sms-row .meta span{display:inline-flex;align-items:center;gap:4px;}
+.sms-row .actions{display:flex;flex-direction:column;align-items:flex-end;gap:6px;}
+
+/* Review toggle */
+.review-toggle{display:flex;align-items:center;gap:8px;padding:6px 12px;border-radius:10px;border:1.5px solid var(--gray-b);background:#fff;font-size:12px;font-weight:700;color:var(--gray);cursor:pointer;transition:all 0.15s;white-space:nowrap;}
+.review-toggle:hover{border-color:var(--green);color:var(--green);}
+.review-toggle.received{background:#d1fae5;border-color:#059669;color:#065f46;pointer-events:none;}
+.review-toggle .check{width:18px;height:18px;border-radius:50%;border:2px solid var(--gray-xl);display:flex;align-items:center;justify-content:center;font-size:11px;transition:all 0.15s;}
+.review-toggle.received .check{border-color:#059669;background:#059669;color:#fff;}
+
+/* Star rating */
+.star-row{display:flex;align-items:center;gap:2px;margin-top:4px;}
+.star-row .star{font-size:16px;cursor:pointer;transition:transform 0.1s;}
+.star-row .star:hover{transform:scale(1.3);}
+.star-row .star.active{color:#f59e0b;}
+.star-row .star.inactive{color:#e2e8f0;}
+
+/* Note input */
+.note-input{margin-top:6px;width:100%;max-width:280px;padding:6px 10px;border:1px solid var(--gray-b);border-radius:8px;font-size:12px;font-family:inherit;resize:none;}
+.note-input:focus{outline:none;border-color:var(--blue);}
+
+/* SMS preview */
+.sms-preview{font-size:11px;color:var(--gray);margin-top:6px;padding:8px 10px;background:#fff;border-radius:8px;border:1px solid var(--gray-b);max-width:500px;line-height:1.5;display:none;}
+.sms-row.expanded .sms-preview{display:block;}
+.btn-expand{padding:4px 10px;border-radius:8px;border:1px solid var(--gray-b);background:#fff;font-size:11px;color:var(--gray);cursor:pointer;font-family:inherit;}
+.btn-expand:hover{border-color:var(--blue);color:var(--blue);}
+
+/* Empty state */
+.empty-state{text-align:center;padding:40px 20px;color:var(--gray-l);}
+.empty-state .ei{font-size:40px;margin-bottom:12px;}
+.empty-state .et{font-size:14px;font-weight:600;}
+
+/* Toast */
+.toast-container{position:fixed;top:16px;right:16px;z-index:10000;display:flex;flex-direction:column;gap:8px;}
+.toast{background:var(--dark);color:#fff;padding:10px 18px;border-radius:10px;font-size:13px;font-weight:600;box-shadow:var(--shadow-lg);transition:all 0.3s;}
+.toast.success{background:#059669;}.toast.error{background:#dc2626;}
+
+/* Loading */
+.loading-bar{height:3px;background:linear-gradient(90deg,transparent,var(--green),transparent);position:fixed;top:0;left:0;right:0;z-index:9999;opacity:0;transition:opacity 0.2s;}
+.loading-bar.active{opacity:1;animation:loadSlide 1s ease infinite;}
+@keyframes loadSlide{0%{transform:translateX(-100%)}100%{transform:translateX(100%)}}
+
+@media(max-width:640px){
+    .stats-grid{grid-template-columns:repeat(2,1fr);}
+    .sms-row{grid-template-columns:1fr;}
+    .sms-row .actions{flex-direction:row;flex-wrap:wrap;}
+}
+</style>
+<script src="/admin/access-guard.js" defer></script>
+</head>
+<body data-module="executie">
+<div class="loading-bar" id="loadBar"></div>
+<div class="toast-container" id="toastContainer"></div>
+
+<div class="container">
+    <div class="page-header">
+        <a href="/admin" class="page-back">← Portal CSSI</a>
+        <div class="page-title">⭐ Monitorizare Recenzii Google</div>
+        <div class="page-subtitle">Urmărește SMS-urile trimise, livrarea și recenziile primite</div>
+    </div>
+
+    <div class="stats-grid" id="statsGrid">
+        <div class="stat-card blue"><div class="num" id="stTotal">-</div><div class="lbl">SMS trimise</div></div>
+        <div class="stat-card green"><div class="num" id="stClicked">-</div><div class="lbl">Link accesat</div></div>
+        <div class="stat-card orange"><div class="num" id="stRecenzii">-</div><div class="lbl">Recenzii primite</div></div>
+        <div class="stat-card purple"><div class="num" id="stRata">-</div><div class="lbl">Rată conversie</div></div>
+    </div>
+
+    <div class="section">
+        <div class="section-title">📱 Toate cererile de recenzie</div>
+        <div class="sms-list" id="smsList">
+            <div class="empty-state"><div class="ei">⏳</div><div class="et">Se încarcă...</div></div>
+        </div>
+    </div>
+</div>
+
+<script>
+var API_DB = '/admin/api.php';
+
+function esc(s){if(s==null)return '';var d=document.createElement('div');d.textContent=s;return d.innerHTML;}
+function toast(msg,type){var c=document.getElementById('toastContainer');var t=document.createElement('div');t.className='toast '+(type||'info');t.textContent=msg;c.appendChild(t);setTimeout(function(){t.style.opacity='0';t.style.transform='translateX(100px)'},2500);setTimeout(function(){t.remove()},3000);}
+function showLoading(s){document.getElementById('loadBar').classList.toggle('active',s);}
+var MONTHS=['Ian','Feb','Mar','Apr','Mai','Iun','Iul','Aug','Sep','Oct','Noi','Dec'];
+function fmtDateTime(s){if(!s)return '';var d=new Date(s.replace(' ','T'));if(isNaN(d.getTime()))return s;var pad=function(n){return n<10?'0'+n:n;};return d.getDate()+' '+MONTHS[d.getMonth()]+' '+d.getFullYear()+', '+pad(d.getHours())+':'+pad(d.getMinutes());}
+function fmtDate(s){if(!s)return '';var d=new Date(s.replace(' ','T'));if(isNaN(d.getTime()))return s;return d.getDate()+' '+MONTHS[d.getMonth()]+' '+d.getFullYear();}
+
+var DATA = [];
+
+function loadData(){
+    showLoading(true);
+    fetch(API_DB+'?action=getRecenziiList&_t='+Date.now(),{credentials:'include'})
+    .then(function(r){return r.json()})
+    .then(function(res){
+        if(!res.success){toast(res.error||'Eroare','error');return;}
+        DATA = res.data || [];
+        renderStats(res.stats);
+        renderList();
+    })
+    .catch(function(e){toast('Eroare: '+(e.message||e),'error');})
+    .finally(function(){showLoading(false);});
+}
+
+function renderStats(s){
+    document.getElementById('stTotal').textContent = s.total_sms;
+    document.getElementById('stClicked').textContent = s.clicked;
+    document.getElementById('stRecenzii').textContent = s.recenzii_primite;
+    document.getElementById('stRata').textContent = s.rata_conversie + '%';
+}
+
+function renderList(){
+    var el = document.getElementById('smsList');
+    if(!DATA.length){
+        el.innerHTML = '<div class="empty-state"><div class="ei">📭</div><div class="et">Niciun SMS de recenzie trimis încă</div><div style="color:#94a3b8;font-size:12px;margin-top:6px">Trimite primul SMS din pagina unui proiect aflat în Execuție, Recepție sau Facturat</div></div>';
+        return;
+    }
+    var html = '';
+    DATA.forEach(function(row, idx){
+        var smsStatus = row.status || 'trimis';
+        var deliveryPill = '';
+        if(smsStatus === 'simulat') deliveryPill = '<span class="pill simulat">🧪 Simulat</span>';
+        else if(smsStatus === 'eroare') deliveryPill = '<span class="pill eroare">❌ Eroare</span>';
+        else deliveryPill = '<span class="pill asteptare">📨 Trimis</span>';
+
+        // Click tracking
+        var clickPill = '';
+        if(row.clicked_at){
+            clickPill = '<span class="pill livrat">👆 Link accesat ('+fmtDateTime(row.clicked_at)+')</span>';
+            if(row.click_count > 1) clickPill = '<span class="pill livrat">👆 Accesat de '+row.click_count+'x</span>';
+        } else {
+            clickPill = '<span class="pill asteptare">⏳ Neaccesat</span>';
+        }
+
+        var reviewClass = row.recenzie_primita ? ' received' : '';
+        var reviewLabel = row.recenzie_primita ? '✅ Recenzie primită' : 'Marchează recenzie';
+        var stars = '';
+        if(row.recenzie_primita && row.recenzie_nota){
+            stars = ' · ';
+            for(var i=1;i<=5;i++) stars += (i<=row.recenzie_nota?'⭐':'☆');
+        }
+
+        html += '<div class="sms-row" id="smsRow'+row.id+'">';
+        html += '<div>';
+        html += '<div class="top">';
+        html += '<span class="client">'+esc(row.client_nume)+'</span>';
+        html += '<span class="pill trimis">'+esc(row.proiect_cod)+'</span>';
+        html += deliveryPill;
+        html += clickPill;
+        if(row.recenzie_primita) html += '<span class="pill livrat">⭐ Recenzie'+stars+'</span>';
+        html += '</div>';
+        html += '<div class="meta">';
+        html += '<span>📞 '+esc(row.telefon)+'</span>';
+        html += '<span>🔧 '+esc(row.serviciu)+'</span>';
+        html += '<span>📅 '+fmtDateTime(row.trimis_la)+'</span>';
+        html += '<span>👤 '+esc(row.trimis_de)+'</span>';
+        html += '</div>';
+        html += '<div class="sms-preview" id="smsPreview'+row.id+'">💬 '+esc(row.mesaj)+'</div>';
+        if(row.recenzie_text) html += '<div style="font-size:12px;color:var(--dark2);margin-top:6px;padding:6px 10px;background:#fef3c7;border-radius:8px;border-left:3px solid #f59e0b;">💬 "'+esc(row.recenzie_text)+'"</div>';
+        html += '</div>';
+
+        html += '<div class="actions">';
+        html += '<button class="review-toggle'+reviewClass+'" onclick="toggleReview('+row.id+',this)">';
+        html += '<span class="check">'+(row.recenzie_primita?'✓':'')+'</span> '+reviewLabel+'</button>';
+        if(!row.recenzie_primita){
+            html += '<div class="star-row" id="stars'+row.id+'">';
+            for(var s=1;s<=5;s++){
+                html += '<span class="star inactive" data-v="'+s+'" onclick="setStars('+row.id+','+s+')">★</span>';
+            }
+            html += '</div>';
+            html += '<textarea class="note-input" id="note'+row.id+'" placeholder="Text recenzie (opțional)..." rows="2"></textarea>';
+        }
+        html += '<button class="btn-expand" onclick="togglePreview('+row.id+')">👁️ Vezi SMS</button>';
+        html += '</div>';
+        html += '</div>';
+    });
+    el.innerHTML = html;
+}
+
+function togglePreview(id){
+    var row = document.getElementById('smsRow'+id);
+    if(row) row.classList.toggle('expanded');
+}
+
+function setStars(smsId, nota){
+    var container = document.getElementById('stars'+smsId);
+    if(!container) return;
+    var stars = container.querySelectorAll('.star');
+    stars.forEach(function(s){
+        var v = parseInt(s.getAttribute('data-v'));
+        s.className = 'star ' + (v <= nota ? 'active' : 'inactive');
+    });
+    container.setAttribute('data-selected', nota);
+}
+
+function toggleReview(smsId, btn){
+    if(btn.classList.contains('received')) return;
+    var starsEl = document.getElementById('stars'+smsId);
+    var noteEl = document.getElementById('note'+smsId);
+    var nota = starsEl ? parseInt(starsEl.getAttribute('data-selected')) || 0 : 0;
+    var text = noteEl ? noteEl.value.trim() : '';
+
+    if(!confirm('Confirmi că ai primit recenzie de la acest client?')) return;
+
+    btn.disabled = true;
+    var payload = { id: smsId, recenzie_primita: true };
+    if(nota) payload.recenzie_nota = nota;
+    if(text) payload.recenzie_text = text;
+
+    fetch(API_DB+'?action=updateRecenzie',{
+        method:'POST', credentials:'include',
+        headers:{'Content-Type':'application/json'},
+        body:JSON.stringify(payload)
+    })
+    .then(function(r){return r.json()})
+    .then(function(res){
+        if(res.success){
+            toast('Recenzie marcată cu succes!','success');
+            loadData();
+        } else {
+            btn.disabled = false;
+            toast(res.error||'Eroare','error');
+        }
+    })
+    .catch(function(e){btn.disabled=false;toast('Eroare: '+(e.message||e),'error');});
+}
+
+// INIT
+loadData();
+</script>
+<script>
+if('serviceWorker' in navigator){
+    navigator.serviceWorker.register('../sw.js').then(function(r){console.log('[PWA] SW registered, scope:',r.scope)}).catch(function(e){console.log('[PWA] SW failed:',e)});
+}
+</script>
+</body>
+</html>
