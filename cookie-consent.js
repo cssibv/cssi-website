@@ -25,7 +25,9 @@
 
     // ── Google Ads Conversion Tracking ──
     var AW_ID = 'AW-17987940313';
-    gtag('config', AW_ID);
+    gtag('config', AW_ID, {
+        'allow_enhanced_conversions': true
+    });
 
     // ── 2. Load gtag.js ──
     var gtagScript = document.createElement('script');

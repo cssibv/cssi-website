@@ -1,17 +1,23 @@
 /* ============================================================
    CSSI.RO — Tracking Events (Meta Pixel + GA4)
-   Fișier: /tracking.js
-   Încărcat pe toate paginile site-ului
+   Fisier: /tracking.js
+   Incarcat pe toate paginile site-ului
 
    CONFIGURARE:
-   - Meta Pixel: se incarcă inline din <head> (vezi fiecare pagină)
-   - GA4 gtag: se incarcă inline din <head>
-   - Acest fișier: adaugă evenimentele de conversie
-   
+   - Meta Pixel: se incarca inline din <head> (vezi fiecare pagina)
+   - GA4 gtag: se incarca inline din <head>
+   - Acest fisier: adauga evenimentele de conversie
+
    ACTUALIZARE 31.03.2026:
-   - Adăugat Enhanced Conversions for Leads
+   - Adaugat Enhanced Conversions for Leads
    - Trimite user_data (email, telefon, nume) hash-uit automat
      de gtag la Google Ads pentru conversii optimizate
+
+   ACTUALIZARE 25.05.2026:
+   - Adaugat valori monetare (RON) pe toate evenimentele GA4
+   - Activat allow_enhanced_conversions in cookie-consent.js
+   - Valori estimate pe baza cost mediu servicii CSSI:
+     phone_call=150, whatsapp=150, form_lead=300, email=50, cta=25
    ============================================================ */
 
 document.addEventListener('DOMContentLoaded', function() {
@@ -23,11 +29,12 @@ document.addEventListener('DOMContentLoaded', function() {
                 gtag('event', 'phone_call', {
                     event_category: 'contact',
                     event_label: this.href.replace('tel:', ''),
-                    value: 1
+                    currency: 'RON',
+                    value: 150
                 });
             }
             if (typeof fbq === 'function') {
-                fbq('track', 'Contact', { content_name: 'phone_call' });
+                fbq('track', 'Contact', { content_name: 'phone_call', currency: 'RON', value: 150.00 });
             }
         });
     });
@@ -39,11 +46,12 @@ document.addEventListener('DOMContentLoaded', function() {
                 gtag('event', 'whatsapp_click', {
                     event_category: 'contact',
                     event_label: 'WhatsApp',
-                    value: 1
+                    currency: 'RON',
+                    value: 150
                 });
             }
             if (typeof fbq === 'function') {
-                fbq('track', 'Lead', { content_name: 'whatsapp' });
+                fbq('track', 'Lead', { content_name: 'whatsapp', currency: 'RON', value: 150.00 });
             }
         });
     });
@@ -103,24 +111,28 @@ document.addEventListener('DOMContentLoaded', function() {
                 gtag('event', 'generate_lead', {
                     event_category: 'conversion',
                     event_label: 'form_whatsapp',
-                    value: 1
+                    currency: 'RON',
+                    value: 300
                 });
 
                 /* Eveniment form_submit pentru Google Ads Conversion */
                 gtag('event', 'form_submit', {
                     event_category: 'conversion',
                     event_label: 'form_whatsapp',
-                    value: 1
+                    currency: 'RON',
+                    value: 300
                 });
 
-                /* Google Ads Conversion — "Solicitați o ofertă" */
+                /* Google Ads Conversion — "Solicitati o oferta" */
                 gtag('event', 'conversion', {
-                    'send_to': 'AW-17987940313/WVuaCJnH1YEcENnfqIFD'
+                    'send_to': 'AW-17987940313/WVuaCJnH1YEcENnfqIFD',
+                    'currency': 'RON',
+                    'value': 300
                 });
             }
 
             if (typeof fbq === 'function') {
-                fbq('track', 'Lead', { content_name: 'form_submit' });
+                fbq('track', 'Lead', { content_name: 'form_submit', currency: 'RON', value: 300.00 });
             }
         }
         return originalOpen.apply(this, arguments);
@@ -132,7 +144,9 @@ document.addEventListener('DOMContentLoaded', function() {
             if (typeof gtag === 'function') {
                 gtag('event', 'email_click', {
                     event_category: 'contact',
-                    event_label: this.href.replace('mailto:', '')
+                    event_label: this.href.replace('mailto:', ''),
+                    currency: 'RON',
+                    value: 50
                 });
             }
         });
@@ -146,7 +160,9 @@ document.addEventListener('DOMContentLoaded', function() {
                 if (typeof gtag === 'function') {
                     gtag('event', 'cta_click', {
                         event_category: 'engagement',
-                        event_label: 'cere_oferta'
+                        event_label: 'cere_oferta',
+                        currency: 'RON',
+                        value: 25
                     });
                 }
                 if (typeof fbq === 'function') {
