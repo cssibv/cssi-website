@@ -80,6 +80,12 @@ a{text-decoration:none;color:inherit;}button{font-family:inherit;cursor:pointer;
 .btn-expand{padding:4px 10px;border-radius:8px;border:1px solid var(--gray-b);background:#fff;font-size:11px;color:var(--gray);cursor:pointer;font-family:inherit;}
 .btn-expand:hover{border-color:var(--blue);color:var(--blue);}
 
+/* Delete button */
+.btn-delete{padding:4px 10px;border-radius:8px;border:1px solid #fecaca;background:#fff;font-size:11px;color:#dc2626;cursor:pointer;font-family:inherit;font-weight:600;}
+.btn-delete:hover{background:#fef2f2;border-color:#dc2626;}
+.btn-reset-all{padding:8px 14px;border-radius:10px;border:1px solid #fecaca;background:#fff;font-size:12px;color:#dc2626;cursor:pointer;font-family:inherit;font-weight:700;float:right;margin-top:-4px;}
+.btn-reset-all:hover{background:#fef2f2;}
+
 /* Empty state */
 .empty-state{text-align:center;padding:40px 20px;color:var(--gray-l);}
 .empty-state .ei{font-size:40px;margin-bottom:12px;}
@@ -122,7 +128,7 @@ a{text-decoration:none;color:inherit;}button{font-family:inherit;cursor:pointer;
     </div>
 
     <div class="section">
-        <div class="section-title">💬 Toate cererile de recenzie</div>
+        <div class="section-title">💬 Toate cererile de recenzie <button class="btn-reset-all" onclick="resetAll()" title="Șterge toate cererile (reset complet)">🗑️ Șterge tot</button></div>
         <div class="sms-list" id="smsList">
             <div class="empty-state"><div class="ei">⏳</div><div class="et">Se încarcă...</div></div>
         </div>
@@ -225,6 +231,7 @@ function renderList(){
             html += '<textarea class="note-input" id="note'+row.id+'" placeholder="Text recenzie (opțional)..." rows="2"></textarea>';
         }
         html += '<button class="btn-expand" onclick="togglePreview('+row.id+')">👁️ Vezi mesaj</button>';
+        html += '<button class="btn-delete" onclick="deleteRecenzie('+row.id+',\''+esc(row.client_nume).replace(/\x27/g,'\\\x27')+'\')" title="Șterge (permite retrimitere)">🗑️ Șterge</button>';
         html += '</div>';
         html += '</div>';
     });
@@ -277,6 +284,38 @@ function toggleReview(smsId, btn){
         }
     })
     .catch(function(e){btn.disabled=false;toast('Eroare: '+(e.message||e),'error');});
+}
+
+function deleteRecenzie(smsId, clientNume){
+    if(!confirm('Ștergi cererea pentru "'+clientNume+'"? Vei putea retrimite mesajul pentru același proiect.')) return;
+    fetch(API_DB+'?action=deleteRecenzie',{
+        method:'POST', credentials:'include',
+        headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({id:smsId})
+    })
+    .then(function(r){return r.json()})
+    .then(function(res){
+        if(res.success){ toast('Cerere ștearsă','success'); loadData(); }
+        else toast(res.error||'Eroare','error');
+    })
+    .catch(function(e){toast('Eroare: '+(e.message||e),'error');});
+}
+
+function resetAll(){
+    if(!DATA.length){ toast('Nimic de șters','info'); return; }
+    if(!confirm('ATENȚIE: Ștergi TOATE cele '+DATA.length+' cereri de recenzie? Acțiunea nu poate fi anulată.')) return;
+    if(!confirm('Confirmi din nou — chiar vrei să ștergi tot istoricul de cereri?')) return;
+    fetch(API_DB+'?action=deleteRecenzie',{
+        method:'POST', credentials:'include',
+        headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({all:true})
+    })
+    .then(function(r){return r.json()})
+    .then(function(res){
+        if(res.success){ toast('Toate cererile au fost șterse ('+(res.deleted||0)+')','success'); loadData(); }
+        else toast(res.error||'Eroare','error');
+    })
+    .catch(function(e){toast('Eroare: '+(e.message||e),'error');});
 }
 
 // INIT

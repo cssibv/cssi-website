@@ -4176,6 +4176,27 @@ astăzi data semnării.</p>
             jsonResponse(['success' => true]);
             break;
 
+        // ═══════ STERGE CERERE RECENZIE (reset, ca sa se poata retrimite) ═══════
+        case 'deleteRecenzie':
+            requireAuth();
+            $smsId = isset($data['id']) ? intval($data['id']) : 0;
+            $deleteAll = isset($data['all']) && $data['all'] === true;
+
+            if ($deleteAll) {
+                // Reset complet — pentru cleanup masiv
+                $db->exec("DELETE FROM sms_clicks WHERE sms_id IN (SELECT id FROM sms_recenzii)");
+                $deleted = $db->exec("DELETE FROM sms_recenzii");
+                jsonResponse(['success' => true, 'deleted' => $deleted, 'mode' => 'all']);
+                break;
+            }
+
+            if (!$smsId) { jsonResponse(['success' => false, 'error' => 'id obligatoriu'], 400); break; }
+            $db->prepare("DELETE FROM sms_clicks WHERE sms_id = ?")->execute([$smsId]);
+            $stmt = $db->prepare("DELETE FROM sms_recenzii WHERE id = ?");
+            $stmt->execute([$smsId]);
+            jsonResponse(['success' => true, 'deleted' => $stmt->rowCount()]);
+            break;
+
         // ═══════ VERIFICARE STATUS SMS RECENZIE ═══════
         case 'getReviewSMSStatus':
             requireAuth();
