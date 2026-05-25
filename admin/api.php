@@ -3978,69 +3978,36 @@ astăzi data semnării.</p>
                 break;
             }
 
-            // Normalizare telefon
-            $phone = preg_replace('/[\s\-\.\(\)]/', '', $row['telefon']);
-            if (strpos($phone, '0') === 0) {
-                $phone = '+4' . $phone;
-            } elseif (strpos($phone, '4') === 0 && strpos($phone, '+') !== 0) {
-                $phone = '+' . $phone;
+            // Normalizare telefon — wa.me cere format internațional FĂRĂ +
+            $phoneRaw = preg_replace('/[\s\-\.\(\)\+]/', '', $row['telefon']);
+            if (strpos($phoneRaw, '0') === 0) {
+                $phoneIntl = '4' . $phoneRaw; // 0712... → 40712...
+            } elseif (strpos($phoneRaw, '4') === 0) {
+                $phoneIntl = $phoneRaw; // deja 40...
+            } else {
+                $phoneIntl = '4' . $phoneRaw; // fallback
             }
+            $phoneDisplay = '+' . $phoneIntl;
 
             // Generează token unic pentru tracking click
             $token = bin2hex(random_bytes(8)); // 16 caractere hex
 
-            // Construiește mesajul SMS cu link tracked
+            // Construiește mesajul WhatsApp cu link tracked
             $prenume = explode(' ', trim($row['nume']))[0];
             $serviciu = $row['serviciu'] ?: 'lucrarea';
             $reviewUrl = 'https://cssi.ro/r/' . $token;
-            $mesaj = 'Buna ziua, ' . $prenume . '! Multumim ca ati ales CSSI pentru ' . mb_strtolower($serviciu) . '. Ne-ar bucura o recenzie pe Google: ' . $reviewUrl . ' Echipa CSSI';
+            $mesaj = "Bună ziua, " . $prenume . "! 👋\n"
+                   . "Mulțumim că ai ales CSSI pentru " . mb_strtolower($serviciu) . ". Ne-ar bucura enorm o recenzie pe Google ⭐ — durează 30 de secunde și ne ajută foarte mult:\n"
+                   . $reviewUrl . "\n"
+                   . "Echipa CSSI";
 
-            // Trimite SMS via SMSLink API (sau simulare dacă nu e configurat)
-            $smsKey = defined('SMSLINK_KEY') ? SMSLINK_KEY : (getenv('CSSI_SMSLINK_KEY') ?: '');
-            $smsSenderId = defined('SMSLINK_SENDER') ? SMSLINK_SENDER : (getenv('CSSI_SMSLINK_SENDER') ?: 'CSSI');
-            $smsProviderId = null;
-            $smsStatus = 'simulat';
+            // Construiește link WhatsApp (wa.me) cu mesaj pre-completat
+            $whatsappUrl = 'https://wa.me/' . $phoneIntl . '?text=' . rawurlencode($mesaj);
 
-            if ($smsKey) {
-                // SMSLink.ro API v2
-                $smsPayload = [
-                    'to' => $phone,
-                    'message' => $mesaj,
-                    'sender_id' => $smsSenderId
-                ];
-                $ch = curl_init('https://www.smslink.ro/sms/gateway/communicate/json.php');
-                curl_setopt_array($ch, [
-                    CURLOPT_POST => true,
-                    CURLOPT_HTTPHEADER => [
-                        'Authorization: Bearer ' . $smsKey,
-                        'Content-Type: application/json'
-                    ],
-                    CURLOPT_POSTFIELDS => json_encode($smsPayload),
-                    CURLOPT_RETURNTRANSFER => true,
-                    CURLOPT_TIMEOUT => 15
-                ]);
-                $response = curl_exec($ch);
-                $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-                curl_close($ch);
-
-                $result = json_decode($response, true);
-                if ($httpCode >= 200 && $httpCode < 300 && isset($result['message_id'])) {
-                    $smsProviderId = $result['message_id'];
-                    $smsStatus = 'trimis';
-                } else {
-                    $smsStatus = 'eroare';
-                    // Salvăm oricum în DB cu status eroare, dar trimitem eroarea la client
-                    $db->prepare("INSERT INTO sms_recenzii (proiect_id, client_id, telefon, mesaj, status, sms_provider_id, trimis_de) VALUES (?,?,?,?,?,?,?)")
-                       ->execute([$row['id'], $row['cid'], $phone, $mesaj, 'eroare', $response, $data['user'] ?? 'Admin']);
-                    jsonResponse(['success' => false, 'error' => 'Eroare trimitere SMS. Verificați cheia API SMSLink.', 'details' => $response], 500);
-                    break;
-                }
-            }
-
-            // Salvează în DB
+            // Salvează în DB cu status 'whatsapp'
             $user = $data['user'] ?? 'Admin';
             $db->prepare("INSERT INTO sms_recenzii (proiect_id, client_id, telefon, mesaj, status, sms_provider_id, trimis_de) VALUES (?,?,?,?,?,?,?)")
-               ->execute([$row['id'], $row['cid'], $phone, $mesaj, $smsStatus, $smsProviderId, $user]);
+               ->execute([$row['id'], $row['cid'], $phoneDisplay, $mesaj, 'whatsapp', null, $user]);
             $smsId = $db->lastInsertId();
 
             // Creare tabel sms_clicks + intrare tracking
@@ -4059,16 +4026,17 @@ astăzi data semnării.</p>
                ->execute([$smsId, $token]);
 
             // Adaugă notificare
-            $notifMsg = '📱 SMS recenzie trimis către ' . $row['nume'] . ' (' . $phone . ') — ' . $row['proiect_id'];
+            $notifMsg = '💬 Cerere recenzie WhatsApp pregătită pentru ' . $row['nume'] . ' (' . $phoneDisplay . ') — ' . $row['proiect_id'];
             $db->prepare("INSERT INTO notificari (proiect_id, mesaj, tip, de_la) VALUES (?,?,?,?)")
                ->execute([$row['id'], $notifMsg, 'sms_recenzie', $user]);
 
             jsonResponse([
                 'success' => true,
-                'status' => $smsStatus,
-                'telefon' => $phone,
+                'status' => 'whatsapp',
+                'telefon' => $phoneDisplay,
                 'mesaj' => $mesaj,
-                'nota' => $smsStatus === 'simulat' ? 'SMS simulat — configurați SMSLINK_KEY în secrets.php pentru trimitere reală' : 'SMS trimis cu succes'
+                'whatsapp_url' => $whatsappUrl,
+                'nota' => 'WhatsApp se deschide cu mesajul pre-completat — apasă SEND pentru a trimite'
             ]);
             break;
 
