@@ -3959,7 +3959,7 @@ astăzi data semnării.</p>
             // Citeste proiect + client
             $stmt = $db->prepare("
                 SELECT p.id, p.proiect_id, p.serviciu, p.status,
-                       c.id AS cid, c.nume, c.telefon, c.email
+                       c.id AS cid, c.nume, c.telefon, c.email, c.tip, c.persoana_contact
                 FROM proiecte p
                 JOIN clienti c ON p.client_id = c.id
                 WHERE p.id = ? OR p.proiect_id = ?
@@ -3992,13 +3992,33 @@ astăzi data semnării.</p>
             // Generează token unic pentru tracking click
             $token = bin2hex(random_bytes(8)); // 16 caractere hex
 
-            // Construiește mesajul WhatsApp cu link tracked
-            $prenume = explode(' ', trim($row['nume']))[0];
-            $serviciu = $row['serviciu'] ?: 'lucrarea';
+            // Extragere prenume — diferit pentru PJ (firma) vs PF (persoana fizica)
+            $tip = $row['tip'] ?? '';
+            $persoanaContact = trim($row['persoana_contact'] ?? '');
+            $nume = trim($row['nume'] ?? '');
+            $prenume = '';
+
+            if ($tip === 'PJ') {
+                // Firma: folosim persoana de contact (ultimul cuvant = prenume conventional)
+                if ($persoanaContact !== '') {
+                    $parts = preg_split('/\s+/', $persoanaContact);
+                    $prenume = count($parts) >= 2 ? end($parts) : ($parts[0] ?? '');
+                }
+            } else {
+                // PF sau necunoscut: extragem din nume. Convenția RO: "NUME Prenume" → ultimul cuvant
+                $parts = preg_split('/\s+/', $nume);
+                if (count($parts) >= 2) {
+                    $prenume = end($parts);
+                }
+                // dacă e un singur cuvant, nu știm dacă-i prenume sau nume → nu riscăm
+            }
+
+            $salutare = $prenume !== '' ? 'Bună ziua, ' . $prenume . '!' : 'Bună ziua!';
             $reviewUrl = 'https://cssi.ro/r/' . $token;
-            $mesaj = "Bună ziua, " . $prenume . "! 👋\n"
-                   . "Mulțumim că ai ales CSSI pentru " . mb_strtolower($serviciu) . ". Ne-ar bucura enorm o recenzie pe Google ⭐ — durează 30 de secunde și ne ajută foarte mult:\n"
-                   . $reviewUrl . "\n"
+            $mesaj = $salutare . "\n"
+                   . "Vă mulțumim pentru încrederea acordată echipei CSSI. Dacă a fost totul în regulă, am aprecia mult o recenzie pe Google — durează mai puțin de un minut:\n"
+                   . $reviewUrl . "\n\n"
+                   . "Cu stimă,\n"
                    . "Echipa CSSI";
 
             // Construiește link WhatsApp (wa.me) cu mesaj pre-completat
