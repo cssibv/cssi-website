@@ -45,11 +45,8 @@
     fbq('init', META_PIXEL_ID);
     fbq('track', 'PageView');
 
-    // ── 2c. Load tracking events (phone, WhatsApp, form, CTA) ──
-    var trackScript = document.createElement('script');
-    trackScript.src = '/tracking.js';
-    trackScript.defer = true;
-    document.head.appendChild(trackScript);
+    // ── 2c. tracking.js se încarcă din HTML (pe fiecare pagină) ──
+    // NU mai încărcăm dinamic aici pentru a evita dubla execuție
 
     // ── 3. Check saved consent ──
     var saved = getCookie('cssi_consent');
