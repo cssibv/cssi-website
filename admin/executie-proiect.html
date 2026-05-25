@@ -33,6 +33,11 @@ a{text-decoration:none;color:inherit;}button{font-family:inherit;cursor:pointer;
 .btn-waze:hover{transform:translateY(-1px);box-shadow:0 4px 14px rgba(51,204,255,0.5);background:linear-gradient(135deg,#1ab8ff,#0080b3);}
 .btn-waze .wz-ic{font-size:14px;}
 .btn-waze.lg{padding:9px 16px;font-size:13px;}
+/* Buton cerere recenzie SMS */
+.btn-sms-review{display:inline-flex;align-items:center;gap:6px;padding:9px 16px;border-radius:99px;background:linear-gradient(135deg,#059669,#047857);color:#fff;font-size:12px;font-weight:800;text-decoration:none;border:none;cursor:pointer;transition:all 0.2s;box-shadow:0 2px 8px rgba(5,150,105,0.3);font-family:inherit;}
+.btn-sms-review:hover{transform:translateY(-1px);box-shadow:0 4px 14px rgba(5,150,105,0.5);}
+.btn-sms-review:disabled{opacity:0.6;cursor:wait;transform:none;}
+.btn-sms-review.sent{background:#d1fae5;color:#065f46;cursor:default;pointer-events:none;box-shadow:none;}
 
 .container{max-width:1100px;margin:0 auto;padding:16px;}@media(min-width:768px){.container{padding:24px;}}
 .toast-container{position:fixed;top:20px;right:20px;z-index:300;display:flex;flex-direction:column;gap:8px;}
@@ -216,6 +221,7 @@ a{text-decoration:none;color:inherit;}button{font-family:inherit;cursor:pointer;
         <button class="tab" data-tab="materiale" onclick="setTab('materiale')">📦 Materiale <span class="badge" id="bdgMat">0/0</span></button>
         <button class="tab" data-tab="pv" onclick="setTab('pv')">📄 Procese verbale <span class="badge" id="bdgPv">0</span></button>
         <button class="tab" data-tab="poze" onclick="setTab('poze')">📷 Poze lucrare <span class="badge" id="bdgPoze">0</span></button>
+        <button class="btn-sms-review" id="btnSmsReview" onclick="sendReviewSMS(this)" title="Trimite SMS cu cerere recenzie Google" style="display:none">📱 Cerere recenzie</button>
     </div>
 
     <!-- TAB JURNAL -->
@@ -351,6 +357,9 @@ function renderHeader(){
     if(p.client_telefon) html += '<span><a href="tel:'+esc(p.client_telefon)+'" style="color:#fff;text-decoration:none">📞 '+esc(p.client_telefon)+'</a></span>';
     if(p.adresa_obiectiv) html += '<a href="'+wazeUrl(p.adresa_obiectiv)+'" target="_blank" rel="noopener" class="btn-waze lg" title="Deschide în Waze pentru navigație"><span class="wz-ic">🚗</span> Navighează (Waze)</a>';
     document.getElementById('pageMeta').innerHTML = html;
+    // Afișează butonul SMS recenzie din bara de tab-uri
+    var smsBtn = document.getElementById('btnSmsReview');
+    if(smsBtn){ smsBtn.style.display='inline-flex'; checkReviewSMSStatus(); }
 }
 function renderProgramari(){
     var sec = document.getElementById('programariSection');
@@ -866,6 +875,34 @@ function deleteFile(id){
         });
     });
 });
+
+// ═══ SMS CERERE RECENZIE GOOGLE ═══
+function sendReviewSMS(btn){
+    if(!STATE.id){toast('ID proiect lipsă','error');return;}
+    if(!confirm('Trimiteți SMS cu cerere de recenzie Google către client?'))return;
+    btn.disabled=true; btn.innerHTML='⏳ Se trimite...';
+    postJSON('sendReviewSMS',{proiect_id:STATE.id,user:window._authUser||'Admin'})
+    .then(function(res){
+        if(res.success){
+            btn.classList.add('sent'); btn.innerHTML='✅ SMS trimis'; btn.disabled=true;
+            toast(res.nota||'SMS trimis cu succes','success');
+        } else {
+            btn.disabled=false; btn.innerHTML='📱 Cerere recenzie';
+            if(res.already_sent){btn.classList.add('sent');btn.innerHTML='✅ Deja trimis';btn.disabled=true;}
+            toast(res.error||'Eroare trimitere','error');
+        }
+    }).catch(function(e){btn.disabled=false;btn.innerHTML='📱 Cerere recenzie';toast('Eroare: '+(e.message||e),'error');});
+}
+function checkReviewSMSStatus(){
+    fetch(API_DB+'?action=getReviewSMSStatus&proiect_id='+STATE.id+'&_t='+Date.now(),{credentials:'include'})
+    .then(function(r){return r.json()})
+    .then(function(res){
+        if(res.success&&res.sent){
+            var btn=document.getElementById('btnSmsReview');
+            if(btn){btn.classList.add('sent');btn.innerHTML='✅ SMS trimis'+(res.data&&res.data.trimis_la?' ('+res.data.trimis_la.substring(0,10)+')':'');btn.disabled=true;}
+        }
+    }).catch(function(){});
+}
 
 // ═══ INIT ═══
 document.getElementById('jData').value = todayStr();
