@@ -45,6 +45,7 @@ a{text-decoration:none;color:inherit;}button{font-family:inherit;cursor:pointer;
 .sms-row .client{font-weight:800;font-size:14px;}
 .sms-row .pill{display:inline-block;padding:2px 10px;border-radius:99px;font-size:11px;font-weight:700;}
 .pill.trimis{background:#dbeafe;color:#1d4ed8;}
+.pill.whatsapp{background:#dcfce7;color:#15803d;}
 .pill.simulat{background:#fef3c7;color:#92400e;}
 .pill.eroare{background:#fecaca;color:#991b1b;}
 .pill.livrat{background:#d1fae5;color:#065f46;}
@@ -74,10 +75,16 @@ a{text-decoration:none;color:inherit;}button{font-family:inherit;cursor:pointer;
 .note-input:focus{outline:none;border-color:var(--blue);}
 
 /* SMS preview */
-.sms-preview{font-size:11px;color:var(--gray);margin-top:6px;padding:8px 10px;background:#fff;border-radius:8px;border:1px solid var(--gray-b);max-width:500px;line-height:1.5;display:none;}
+.sms-preview{font-size:11px;color:var(--gray);margin-top:6px;padding:8px 10px;background:#fff;border-radius:8px;border:1px solid var(--gray-b);max-width:500px;line-height:1.5;display:none;white-space:pre-line;}
 .sms-row.expanded .sms-preview{display:block;}
 .btn-expand{padding:4px 10px;border-radius:8px;border:1px solid var(--gray-b);background:#fff;font-size:11px;color:var(--gray);cursor:pointer;font-family:inherit;}
 .btn-expand:hover{border-color:var(--blue);color:var(--blue);}
+
+/* Delete button */
+.btn-delete{padding:4px 10px;border-radius:8px;border:1px solid #fecaca;background:#fff;font-size:11px;color:#dc2626;cursor:pointer;font-family:inherit;font-weight:600;}
+.btn-delete:hover{background:#fef2f2;border-color:#dc2626;}
+.btn-reset-all{padding:8px 14px;border-radius:10px;border:1px solid #fecaca;background:#fff;font-size:12px;color:#dc2626;cursor:pointer;font-family:inherit;font-weight:700;float:right;margin-top:-4px;}
+.btn-reset-all:hover{background:#fef2f2;}
 
 /* Empty state */
 .empty-state{text-align:center;padding:40px 20px;color:var(--gray-l);}
@@ -110,18 +117,18 @@ a{text-decoration:none;color:inherit;}button{font-family:inherit;cursor:pointer;
     <div class="page-header">
         <a href="/admin" class="page-back">← Portal CSSI</a>
         <div class="page-title">⭐ Monitorizare Recenzii Google</div>
-        <div class="page-subtitle">Urmărește SMS-urile trimise, livrarea și recenziile primite</div>
+        <div class="page-subtitle">Urmărește cererile trimise pe WhatsApp, click-urile și recenziile primite</div>
     </div>
 
     <div class="stats-grid" id="statsGrid">
-        <div class="stat-card blue"><div class="num" id="stTotal">-</div><div class="lbl">SMS trimise</div></div>
+        <div class="stat-card blue"><div class="num" id="stTotal">-</div><div class="lbl">Cereri trimise</div></div>
         <div class="stat-card green"><div class="num" id="stClicked">-</div><div class="lbl">Link accesat</div></div>
         <div class="stat-card orange"><div class="num" id="stRecenzii">-</div><div class="lbl">Recenzii primite</div></div>
         <div class="stat-card purple"><div class="num" id="stRata">-</div><div class="lbl">Rată conversie</div></div>
     </div>
 
     <div class="section">
-        <div class="section-title">📱 Toate cererile de recenzie</div>
+        <div class="section-title">💬 Toate cererile de recenzie <button class="btn-reset-all" onclick="resetAll()" title="Șterge toate cererile (reset complet)">🗑️ Șterge tot</button></div>
         <div class="sms-list" id="smsList">
             <div class="empty-state"><div class="ei">⏳</div><div class="et">Se încarcă...</div></div>
         </div>
@@ -164,14 +171,15 @@ function renderStats(s){
 function renderList(){
     var el = document.getElementById('smsList');
     if(!DATA.length){
-        el.innerHTML = '<div class="empty-state"><div class="ei">📭</div><div class="et">Niciun SMS de recenzie trimis încă</div><div style="color:#94a3b8;font-size:12px;margin-top:6px">Trimite primul SMS din pagina unui proiect aflat în Execuție, Recepție sau Facturat</div></div>';
+        el.innerHTML = '<div class="empty-state"><div class="ei">📭</div><div class="et">Nicio cerere de recenzie trimisă încă</div><div style="color:#94a3b8;font-size:12px;margin-top:6px">Trimite prima cerere din pagina unui proiect aflat în Execuție, Recepție sau Facturat</div></div>';
         return;
     }
     var html = '';
     DATA.forEach(function(row, idx){
-        var smsStatus = row.status || 'trimis';
+        var smsStatus = row.status || 'whatsapp';
         var deliveryPill = '';
-        if(smsStatus === 'simulat') deliveryPill = '<span class="pill simulat">🧪 Simulat</span>';
+        if(smsStatus === 'whatsapp') deliveryPill = '<span class="pill whatsapp">💬 WhatsApp</span>';
+        else if(smsStatus === 'simulat') deliveryPill = '<span class="pill simulat">🧪 Simulat</span>';
         else if(smsStatus === 'eroare') deliveryPill = '<span class="pill eroare">❌ Eroare</span>';
         else deliveryPill = '<span class="pill asteptare">📨 Trimis</span>';
 
@@ -222,7 +230,8 @@ function renderList(){
             html += '</div>';
             html += '<textarea class="note-input" id="note'+row.id+'" placeholder="Text recenzie (opțional)..." rows="2"></textarea>';
         }
-        html += '<button class="btn-expand" onclick="togglePreview('+row.id+')">👁️ Vezi SMS</button>';
+        html += '<button class="btn-expand" onclick="togglePreview('+row.id+')">👁️ Vezi mesaj</button>';
+        html += '<button class="btn-delete" onclick="deleteRecenzie('+row.id+',\''+esc(row.client_nume).replace(/\x27/g,'\\\x27')+'\')" title="Șterge (permite retrimitere)">🗑️ Șterge</button>';
         html += '</div>';
         html += '</div>';
     });
@@ -275,6 +284,38 @@ function toggleReview(smsId, btn){
         }
     })
     .catch(function(e){btn.disabled=false;toast('Eroare: '+(e.message||e),'error');});
+}
+
+function deleteRecenzie(smsId, clientNume){
+    if(!confirm('Ștergi cererea pentru "'+clientNume+'"? Vei putea retrimite mesajul pentru același proiect.')) return;
+    fetch(API_DB+'?action=deleteRecenzie',{
+        method:'POST', credentials:'include',
+        headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({id:smsId})
+    })
+    .then(function(r){return r.json()})
+    .then(function(res){
+        if(res.success){ toast('Cerere ștearsă','success'); loadData(); }
+        else toast(res.error||'Eroare','error');
+    })
+    .catch(function(e){toast('Eroare: '+(e.message||e),'error');});
+}
+
+function resetAll(){
+    if(!DATA.length){ toast('Nimic de șters','info'); return; }
+    if(!confirm('ATENȚIE: Ștergi TOATE cele '+DATA.length+' cereri de recenzie? Acțiunea nu poate fi anulată.')) return;
+    if(!confirm('Confirmi din nou — chiar vrei să ștergi tot istoricul de cereri?')) return;
+    fetch(API_DB+'?action=deleteRecenzie',{
+        method:'POST', credentials:'include',
+        headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({all:true})
+    })
+    .then(function(r){return r.json()})
+    .then(function(res){
+        if(res.success){ toast('Toate cererile au fost șterse ('+(res.deleted||0)+')','success'); loadData(); }
+        else toast(res.error||'Eroare','error');
+    })
+    .catch(function(e){toast('Eroare: '+(e.message||e),'error');});
 }
 
 // INIT

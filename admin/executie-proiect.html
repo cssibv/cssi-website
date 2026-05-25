@@ -221,7 +221,7 @@ a{text-decoration:none;color:inherit;}button{font-family:inherit;cursor:pointer;
         <button class="tab" data-tab="materiale" onclick="setTab('materiale')">📦 Materiale <span class="badge" id="bdgMat">0/0</span></button>
         <button class="tab" data-tab="pv" onclick="setTab('pv')">📄 Procese verbale <span class="badge" id="bdgPv">0</span></button>
         <button class="tab" data-tab="poze" onclick="setTab('poze')">📷 Poze lucrare <span class="badge" id="bdgPoze">0</span></button>
-        <button class="btn-sms-review" id="btnSmsReview" onclick="sendReviewSMS(this)" title="Trimite SMS cu cerere recenzie Google" style="display:none">📱 Cerere recenzie</button>
+        <button class="btn-sms-review" id="btnSmsReview" onclick="sendReviewSMS(this)" title="Deschide WhatsApp cu mesajul de cerere recenzie Google pre-completat" style="display:none">💬 Cerere recenzie</button>
     </div>
 
     <!-- TAB JURNAL -->
@@ -876,22 +876,31 @@ function deleteFile(id){
     });
 });
 
-// ═══ SMS CERERE RECENZIE GOOGLE ═══
+// ═══ CERERE RECENZIE GOOGLE (via WhatsApp) ═══
 function sendReviewSMS(btn){
     if(!STATE.id){toast('ID proiect lipsă','error');return;}
-    if(!confirm('Trimiteți SMS cu cerere de recenzie Google către client?'))return;
-    btn.disabled=true; btn.innerHTML='⏳ Se trimite...';
+    if(!confirm('Pregătim mesajul de cerere recenzie pe WhatsApp și îl deschidem pentru trimitere către client?'))return;
+    btn.disabled=true; btn.innerHTML='⏳ Se pregătește...';
+    // Deschidem o fereastră goală IMEDIAT (sincron cu click-ul) ca să nu fie blocată de popup blocker
+    var waWin = window.open('about:blank','_blank');
     postJSON('sendReviewSMS',{proiect_id:STATE.id,user:window._authUser||'Admin'})
     .then(function(res){
-        if(res.success){
-            btn.classList.add('sent'); btn.innerHTML='✅ SMS trimis'; btn.disabled=true;
-            toast(res.nota||'SMS trimis cu succes','success');
+        if(res.success && res.whatsapp_url){
+            if(waWin){ waWin.location.href = res.whatsapp_url; }
+            else { window.location.href = res.whatsapp_url; }
+            btn.classList.add('sent'); btn.innerHTML='✅ WhatsApp deschis'; btn.disabled=true;
+            toast(res.nota||'WhatsApp deschis — apasă SEND pentru a trimite','success');
         } else {
-            btn.disabled=false; btn.innerHTML='📱 Cerere recenzie';
+            if(waWin) try{ waWin.close(); }catch(e){}
+            btn.disabled=false; btn.innerHTML='💬 Cerere recenzie';
             if(res.already_sent){btn.classList.add('sent');btn.innerHTML='✅ Deja trimis';btn.disabled=true;}
-            toast(res.error||'Eroare trimitere','error');
+            toast(res.error||'Eroare pregătire mesaj','error');
         }
-    }).catch(function(e){btn.disabled=false;btn.innerHTML='📱 Cerere recenzie';toast('Eroare: '+(e.message||e),'error');});
+    }).catch(function(e){
+        if(waWin) try{ waWin.close(); }catch(_){}
+        btn.disabled=false; btn.innerHTML='💬 Cerere recenzie';
+        toast('Eroare: '+(e.message||e),'error');
+    });
 }
 function checkReviewSMSStatus(){
     fetch(API_DB+'?action=getReviewSMSStatus&proiect_id='+STATE.id+'&_t='+Date.now(),{credentials:'include'})
@@ -899,7 +908,7 @@ function checkReviewSMSStatus(){
     .then(function(res){
         if(res.success&&res.sent){
             var btn=document.getElementById('btnSmsReview');
-            if(btn){btn.classList.add('sent');btn.innerHTML='✅ SMS trimis'+(res.data&&res.data.trimis_la?' ('+res.data.trimis_la.substring(0,10)+')':'');btn.disabled=true;}
+            if(btn){btn.classList.add('sent');btn.innerHTML='✅ WhatsApp trimis'+(res.data&&res.data.trimis_la?' ('+res.data.trimis_la.substring(0,10)+')':'');btn.disabled=true;}
         }
     }).catch(function(){});
 }
