@@ -17,6 +17,7 @@
 ### Config:
 - **`robots.txt`** ← blocat /admin/ și /contract.html
 - **`sitemap.xml`** ← toate 119 URL-uri actualizate
+- **`favicon.ico`** ← **NOU în rădăcină** — necesar pentru sigla CSSI în Google Ads/Search
 
 ---
 
