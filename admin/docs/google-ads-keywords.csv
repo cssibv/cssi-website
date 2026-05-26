@@ -1,0 +1,23 @@
+﻿Campaign,Ad Group,Keyword,Match Type
+CSSI - Control Acces + Pontaj,Control Acces Brasov,[control acces brasov],Exact
+CSSI - Control Acces + Pontaj,Control Acces Brasov,[sistem control acces brasov],Exact
+CSSI - Control Acces + Pontaj,Control Acces Brasov,[control acces firma brasov],Exact
+CSSI - Control Acces + Pontaj,Control Acces Brasov,"""control acces fabrica""",Phrase
+CSSI - Control Acces + Pontaj,Pontaj Electronic,[pontaj electronic brasov],Exact
+CSSI - Control Acces + Pontaj,Pontaj Electronic,"""sistem pontaj angajati""",Phrase
+CSSI - Control Acces + Pontaj,Pontaj Electronic,"""cititor amprenta brasov""",Phrase
+CSSI - Control Acces + Pontaj,Pontaj Electronic,"""rfid cititor brasov""",Phrase
+CSSI - Camere Supraveghere B2B,Camere Supraveghere Brasov,[camere supraveghere brasov],Exact
+CSSI - Camere Supraveghere B2B,Camere Supraveghere Brasov,[montaj camere supraveghere brasov],Exact
+CSSI - Camere Supraveghere B2B,Camere Supraveghere Brasov,[sistem supraveghere brasov],Exact
+CSSI - Camere Supraveghere B2B,Camere Supraveghere Brasov,"""camere supraveghere firma brasov""",Phrase
+CSSI - Camere Supraveghere B2B,Camere Supraveghere Brasov,"""camere supraveghere hala""",Phrase
+CSSI - Camere Supraveghere B2B,Camere Supraveghere Brasov,"""sistem cctv brasov""",Phrase
+CSSI - Camere Supraveghere B2B,Camere Localitati,[camere supraveghere codlea],Exact
+CSSI - Camere Supraveghere B2B,Camere Localitati,[camere supraveghere rasnov],Exact
+CSSI - Automatizari Porti + Bariere,Automatizari Porti,[automatizare poarta brasov],Exact
+CSSI - Automatizari Porti + Bariere,Automatizari Porti,"""motor poarta culisanta brasov""",Phrase
+CSSI - Automatizari Porti + Bariere,Automatizari Porti,"""motor poarta batanta brasov""",Phrase
+CSSI - Automatizari Porti + Bariere,Automatizari Porti,"""automatizare poarta industriala""",Phrase
+CSSI - Automatizari Porti + Bariere,Bariere Auto,[bariera auto brasov],Exact
+CSSI - Automatizari Porti + Bariere,Bariere Auto,"""bariera parcare brasov""",Phrase

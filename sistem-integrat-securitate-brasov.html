@@ -557,53 +557,6 @@
     }, { rootMargin: '-20% 0px -70% 0px' });
     headings.forEach(h => observer.observe(h));
   </script>
-  <script>
-    /* ===== CSSI NAVBAR JS ===== */
-    let navTextColor = '#fff';
-    window.addEventListener('scroll', function() {
-        const navBg = document.getElementById('navBg');
-        const logo = document.getElementById('logoImg');
-        const scrolled = window.scrollY > 50;
-        if (scrolled) {
-            navBg.style.background = '#ffffff';
-            navBg.style.backdropFilter = 'blur(12px)';
-            navBg.style.boxShadow = '0 1px 2px rgba(0,0,0,0.05)';
-            if (logo) logo.style.filter = '';
-            navTextColor = '#334155';
-        } else {
-            navBg.style.background = 'transparent';
-            navBg.style.backdropFilter = '';
-            navBg.style.boxShadow = '';
-            if (logo) logo.style.filter = 'brightness(0) invert(1) drop-shadow(0 0 1px rgba(255,255,255,0.8))';
-            navTextColor = '#fff';
-        }
-        ['navLink1','navLink2','navLink3','navLink4','navLink5','phoneLink'].forEach(id=>{
-            const el=document.getElementById(id);
-            if(el) el.style.color=navTextColor;
-        });
-    });
-    function toggleMobileMenu(){
-        const menu=document.getElementById('mobileMenu');
-        const menuIcon=document.getElementById('menuIcon');
-        const closeIcon=document.getElementById('closeIcon');
-        const btn=document.getElementById('menuBtn');
-        if(menu.classList.contains('open')){
-            menu.classList.remove('open');
-            menuIcon.style.display='';
-            closeIcon.style.display='none';
-            btn.style.background='linear-gradient(to right,#ef4444,#dc2626)';
-            btn.classList.add('animate-subtle-pulse');
-        } else {
-            menu.classList.add('open');
-            menuIcon.style.display='none';
-            closeIcon.style.display='';
-            btn.style.background='#6b7280';
-            btn.classList.remove('animate-subtle-pulse');
-        }
-    }
-    function closeMobile(){
-        document.getElementById('mobileMenu').classList.remove('open');
-        document.getElementById('menuIcon').style.display='';
-        document.getElementById('closeIcon').style.display='none';
-    }
-    function to
+<script src="/tawk-chat.js" defer></script>
+</body>
+</html>

@@ -302,11 +302,6 @@ var chatR={'servicii':'Oferim o gamă completă de servicii:\n\n🔥 Detecție i
 function toggleChat(){var p=document.getElementById('chatPanel'),a=document.getElementById('chatOpenIcon'),b=document.getElementById('chatCloseIcon'),c=document.getElementById('chatBtn');if(p.classList.contains('open')){p.classList.remove('open');a.style.display='';b.style.display='none';c.style.background='linear-gradient(to right,#06b6d4,#10b981)';c.classList.add('animate-subtle-pulse');}else{p.classList.add('open');a.style.display='none';b.style.display='';c.style.background='#6b7280';c.classList.remove('animate-subtle-pulse');}}
 function sendChat(){var i=document.getElementById('chatInput'),t=i.value.trim();if(!t)return;var m=document.getElementById('chatMessages');m.innerHTML+='<div style="display:flex;justify-content:flex-end;"><div style="max-width:80%;padding:12px;border-radius:16px;border-top-right-radius:0;background:#dc2626;color:#fff;font-size:14px;">'+t+'</div></div>';i.value='';var l=t.toLowerCase(),r=chatR.default;for(var k in chatR){if(k!=='default'&&l.includes(k)){r=chatR[k];break;}}setTimeout(function(){m.innerHTML+='<div style="display:flex;justify-content:flex-start;"><div style="max-width:80%;padding:12px;border-radius:16px;border-top-left-radius:0;background:#fff;color:#374151;font-size:14px;box-shadow:0 1px 2px rgba(0,0,0,0.05);white-space:pre-line;">'+r+'</div></div>';m.scrollTop=m.scrollHeight;},500);m.scrollTop=m.scrollHeight;}
 </script>
-
-<script>
-var openId = null;
-function toggleAccordion(id) {
-    var allIds = ['proiectare', 'instalare', 'mentenanta', 'legislatie'];
-    if (openId === id) {
-        document.getElementById('content-'+id).style.display = 'none';
-        doc
+<script src="/tawk-chat.js" defer></script>
+</body>
+</html>
