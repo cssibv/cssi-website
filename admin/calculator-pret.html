@@ -312,8 +312,14 @@ if(data.includeAnexa && lines.length){
     h+='<div style="display:grid;grid-template-columns:1fr 1fr;gap:6mm">';
     anxItems.forEach(function(l,i){
       var hasImg=l.image && typeof l.image==='string' && l.image.indexOf('http')===0;
-      // Pentru poze de pe shop-security.ro, rutez prin proxy ca s\u0103 evit blocaj referer/hotlink \u00een print window
-      var imgSrc = hasImg ? (l.image.indexOf('shop-security.ro')>=0 ? '/admin/shop-proxy.php?mode=image&img='+encodeURIComponent(l.image) : l.image) : '';
+      // Imaginile sunt pre-fetched ca data URI \u00een _preloadAnexaImages \u2192 apar GARANTAT \u00een PDF.
+      // Fallback: dac\u0103 r\u0103m\u00e2ne URL net (rar \u2014 pre-fetch a e\u0219uat), rutez prin proxy pentru shop-security.ro
+      var imgSrc = '';
+      if(hasImg){
+        if(l.image.indexOf('data:')===0) imgSrc = l.image;
+        else if(l.image.indexOf('shop-security.ro')>=0) imgSrc = '/admin/shop-proxy.php?mode=image&img='+encodeURIComponent(l.image);
+        else imgSrc = l.image;
+      }
       var imgHtml=hasImg
         ? '<img src="'+imgSrc+'" style="width:100%;height:55mm;object-fit:contain;background:linear-gradient(135deg,#f8fafc,#f1f5f9);border-radius:6px;padding:3mm;box-sizing:border-box" onerror="this.style.display=\'none\';if(this.nextElementSibling)this.nextElementSibling.style.display=\'flex\'">'
             +'<div style="display:none;width:100%;height:55mm;background:linear-gradient(135deg,#f8fafc,#f1f5f9);border-radius:6px;align-items:center;justify-content:center;color:#cbd5e1;font-size:38pt;box-sizing:border-box">\ud83d\udcf7</div>'
@@ -359,6 +365,31 @@ function _enrichLinesWithCatalog(lines){
     return l;
   });
 }
+// Pre-fetch URL imagine si o convertesc in data URI base64 (asa apare GARANTAT in PDF,
+// fara probleme de timing/referer/cross-origin la window.print).
+function _fetchImageAsDataUri(url){
+  if(!url||typeof url!=='string') return Promise.resolve('');
+  var proxied = url.indexOf('shop-security.ro')>=0 ? '/admin/shop-proxy.php?mode=image&img='+encodeURIComponent(url) : url;
+  return fetch(proxied,{credentials:'include'})
+    .then(function(r){if(!r.ok)throw new Error('http '+r.status);return r.blob();})
+    .then(function(blob){return new Promise(function(resolve){
+      var reader=new FileReader();
+      reader.onloadend=function(){resolve(reader.result||'');};
+      reader.onerror=function(){resolve('');};
+      reader.readAsDataURL(blob);
+    });})
+    .catch(function(){return '';});
+}
+// Pre-fetch toate imaginile in paralel; modifica direct lines (atribuie image = data URI).
+function _preloadAnexaImages(lines){
+  var jobs=(lines||[]).map(function(l){
+    if(!l.image || typeof l.image!=='string' || l.image.indexOf('http')!==0) return Promise.resolve();
+    return _fetchImageAsDataUri(l.image).then(function(dataUri){
+      if(dataUri && dataUri.indexOf('data:')===0) l.image=dataUri;
+    });
+  });
+  return Promise.all(jobs);
+}
 function exportPDF(){
 var client=document.getElementById('oClient').value.trim()||'Client';
 var nr=document.getElementById('oNr').value.trim()||'';
@@ -368,16 +399,28 @@ var data={nr:nr,data:document.getElementById('oData').value||todayStr(),valab:do
 offerLines.forEach(function(l){data.subtotalEchip+=(l.cant||0)*(l.pAchiz*(1+(l.adaos||0)/100));});
 data.labor.forEach(function(l){data.subtotalManop+=(parseFloat(l.cant)||0)*(parseFloat(l.price)||0);});
 data.totalNet=data.subtotalEchip+data.subtotalManop;
-var w=window.open('','_blank');w.document.write(buildPDFHtml(data));w.document.close();}
+function _openPDF(){var w=window.open('','_blank');w.document.write(buildPDFHtml(data));w.document.close();}
+if(includeAnexa){
+  toast('⏳ Se descarcă pozele pentru anexă...','info');
+  _preloadAnexaImages(enrichedLines).then(_openPDF);
+}else{_openPDF();}}
 function exportPDFSaved(oid){
 var o=offers.find(function(x){return String(x.id)===String(oid);});if(!o)return;
 // Întreb dacă vrea anexa; hidratez liniile cu image+spec din catalog dacă da
 var includeAnexa=confirm('Generezi PDF cu anexă (poze + descrieri produse)?\n\n• OK = include anexa\n• Anulare = doar PDF standard');
-if(includeAnexa){o=JSON.parse(JSON.stringify(o));o.lines=_enrichLinesWithCatalog(o.lines||[]);o.includeAnexa=true;}
+if(includeAnexa){o=JSON.parse(JSON.stringify(o));o.lines=_enrichLinesWithCatalog(o.lines||[]);o.includeAnexa=true;toast('⏳ Se descarcă pozele pentru anexă...','info');}
 // Hidratez datele clientului din tabela clienti — snapshot-ul din `offers` poate fi învechit
 // sau incomplet (ex: oferta veche salvată înainte ca clientul să aibă CUI/adresă completate).
 // Același comportament ca în calea ?pdf_offer= și fillClientFromDB: preferă snapshot dacă există.
-function _doPDF(){var w=window.open('','_blank');w.document.write(buildPDFHtml(o));w.document.close();}
+function _doPDF(){
+  if(includeAnexa){
+    _preloadAnexaImages(o.lines||[]).then(function(){
+      var w=window.open('','_blank');w.document.write(buildPDFHtml(o));w.document.close();
+    });
+  } else {
+    var w=window.open('','_blank');w.document.write(buildPDFHtml(o));w.document.close();
+  }
+}
 if(o.client_db_id){
 fetch(API_LOCAL+'?action=getClient&id='+o.client_db_id+'&_t='+Date.now())
 .then(function(r){return r.json()})
@@ -448,12 +491,20 @@ fetchNextOfertaNr();
             function _runAction(){
             if(actionType==='pdf'){
                 // Deschide PDF direct — întreb dacă vrea anexa
-                if(confirm('Generezi PDF cu anexă (poze + descrieri produse)?\n\n• OK = include anexa\n• Anulare = doar PDF standard')){
+                var wantAnexa=confirm('Generezi PDF cu anexă (poze + descrieri produse)?\n\n• OK = include anexa\n• Anulare = doar PDF standard');
+                if(wantAnexa){
                     mapped.lines=_enrichLinesWithCatalog(mapped.lines||[]);
                     mapped.includeAnexa=true;
                 }
                 var w=window;
-                w.document.write(buildPDFHtml(mapped));w.document.close();
+                if(wantAnexa){
+                    toast('⏳ Se descarcă pozele pentru anexă...','info');
+                    _preloadAnexaImages(mapped.lines||[]).then(function(){
+                        w.document.write(buildPDFHtml(mapped));w.document.close();
+                    });
+                } else {
+                    w.document.write(buildPDFHtml(mapped));w.document.close();
+                }
             } else if(actionType==='view'){
                 // Vizualizare readonly în tab nou
                 var html='<html><head><meta charset="UTF-8"><title>Ofertă '+mapped.nr+'</title>';
