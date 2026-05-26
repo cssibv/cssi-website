@@ -209,18 +209,27 @@ if (empty($images)) {
 }
 
 // === EXTRAGE DESCRIERE LUNGĂ (din pagina de detaliu, după <!-- Tab Prodcut Section -->) ===
+// Structura tipica shop-security:
+//   <!-- Tab Prodcut Section -->
+//     <ul class="nav-tabs">...butoane...</ul>
+//     <div class="tab-content" id="pills-tabContent">
+//       <div class="tab-pane fade show active" id="pills-one-example1">  ← DESCRIERE aici
+//       <div class="tab-pane fade" id="pills-two-example1">              ← Specificatii
+//       <div class="tab-pane fade" id="product-tab-reviews">             ← Recenzii
+//     </div>
 $description = '';
 if (!empty($detailHtml)) {
-    // Metoda A: blocul dintre comentariul Tab Product si End
-    if (preg_match('/<!--\s*Tab\s+Pro?dcut\s+Section\s*-->(.*?)(?:<!--\s*End|<\/section)/si', $detailHtml, $dA)) {
+    // Metoda A (cea mai sigura): primul tab-pane cu „show active" (= Descriere)
+    //   captura cuprinde tot pana la urmatorul tab-pane (Specificatii)
+    if (preg_match('/<div[^>]*class="[^"]*tab-pane[^"]*\bshow\s+active\b[^"]*"[^>]*>(.*?)<div[^>]*class="[^"]*tab-pane\b/si', $detailHtml, $dA)) {
         $description = $dA[1];
     }
-    // Metoda B: div cu id description / tab-description
-    if (empty($description) && preg_match('/<div[^>]*(?:id|class)="[^"]*(?:tab-description|description-tab|product-description)[^"]*"[^>]*>(.*?)<\/div>/si', $detailHtml, $dB)) {
+    // Metoda B: explicit pe id pills-one-example1
+    if (empty($description) && preg_match('/<div[^>]*id="pills-one-example1"[^>]*>(.*?)<div[^>]*id="pills-two-example1"/si', $detailHtml, $dB)) {
         $description = $dB[1];
     }
-    // Metoda C: primul tab-pane active
-    if (empty($description) && preg_match('/<div[^>]*class="[^"]*tab-pane[^"]*active[^"]*"[^>]*>(.*?)<\/div>\s*<\/div>/si', $detailHtml, $dC)) {
+    // Metoda C fallback: id-uri uzuale (tab-description, product-description)
+    if (empty($description) && preg_match('/<div[^>]*(?:id|class)="[^"]*(?:tab-description|description-tab|product-description)[^"]*"[^>]*>(.*?)<\/div>\s*<\/div>/si', $detailHtml, $dC)) {
         $description = $dC[1];
     }
     // Curățare HTML → text simplu
