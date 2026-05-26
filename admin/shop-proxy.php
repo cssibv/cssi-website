@@ -115,30 +115,51 @@ if (preg_match_all('/Cod:\s*<[^>]*>\s*([^<]+)/u', $html, $cm)) {
     $codes = array_map('trim', $cm[1]);
 }
 
-// === EXTRAGE IMAGINI (primul URL de imagine din cardul produsului) ===
+// === EXTRAGE IMAGINI ===
+// Strategia primară: dacă avem un produs cu URL, facem un al doilea request la
+// pagina de detaliu și scoatem imaginea HD din slick carousel (better quality).
+// Fallback: imagine din pagina de search (thumbnail, mai mic).
 $images = [];
-// Metoda 1: <img class="...product-item__image..." src="..." />
-if (preg_match_all('/<img[^>]*class="[^"]*product-item__image[^"]*"[^>]*src="([^"]+)"/si', $html, $im1, PREG_SET_ORDER)) {
-    foreach ($im1 as $m) $images[] = $m[1];
+
+// PRIMARY — fetch detail page și extrage din slick carousel
+if (!empty($products) && !empty($products[0]['url'])) {
+    $detailUrl = $products[0]['url'];
+    $ch2 = curl_init();
+    curl_setopt_array($ch2, [
+        CURLOPT_URL => $detailUrl,
+        CURLOPT_RETURNTRANSFER => true,
+        CURLOPT_FOLLOWLOCATION => true,
+        CURLOPT_TIMEOUT => 10,
+        CURLOPT_SSL_VERIFYPEER => false,
+        CURLOPT_USERAGENT => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+    ]);
+    $detailHtml = curl_exec($ch2);
+    $detailHttp = curl_getinfo($ch2, CURLINFO_HTTP_CODE);
+    curl_close($ch2);
+
+    if ($detailHtml && $detailHttp === 200) {
+        // Metoda A: exact div-ul slick-current din carusel (cea mai sigură)
+        if (preg_match('/<div[^>]*class="[^"]*slick-slide\s+slick-current[^"]*"[^>]*>\s*<img[^>]*class="img-fluid"[^>]*src="([^"]+)"/si', $detailHtml, $mA)) {
+            $images[] = $mA[1];
+        }
+        // Metoda B: orice <img class="img-fluid" src="..."> care e în /upload/img/products/
+        if (empty($images) && preg_match_all('/<img[^>]*class="[^"]*img-fluid[^"]*"[^>]*src="(https?:\/\/[^"]*shop-security\.ro\/upload\/img\/products\/[^"]+)"/si', $detailHtml, $mB, PREG_SET_ORDER)) {
+            foreach ($mB as $m) $images[] = $m[1];
+        }
+        // Metoda C: orice <img src=...> care e în /upload/img/products/
+        if (empty($images) && preg_match_all('/<img[^>]*src="(https?:\/\/[^"]*shop-security\.ro\/upload\/img\/products\/[^"]+\.(?:jpg|jpeg|png|webp))"/si', $detailHtml, $mC, PREG_SET_ORDER)) {
+            foreach ($mC as $m) $images[] = $m[1];
+        }
+    }
 }
-// Metoda 2: <img class="..." src="..." > unde src conține /uploads/ sau /products/ pe shop-security.ro
-if (empty($images) && preg_match_all('/<img[^>]*src="(https?:\/\/[^"]*shop-security\.ro\/[^"]*\.(?:jpg|jpeg|png|webp))"/si', $html, $im2, PREG_SET_ORDER)) {
-    foreach ($im2 as $m) $images[] = $m[1];
-}
-// Metoda 3 fallback: orice <img src=...> cu .jpg/.png/.webp în pagină (exclud logo-uri/icoane mici)
-if (empty($images) && preg_match_all('/<img[^>]*src="([^"]+\.(?:jpg|jpeg|png|webp))"/si', $html, $im3, PREG_SET_ORDER)) {
-    foreach ($im3 as $m) {
-        $u = $m[1];
-        // Exclud logo-uri, iconițe, social, etc
-        if (stripos($u, 'logo') !== false) continue;
-        if (stripos($u, 'icon') !== false) continue;
-        if (stripos($u, 'social') !== false) continue;
-        if (stripos($u, 'placeholder') !== false) continue;
-        // Acceptă URL absolut sau face relativ → absolut pe shop-security.ro
-        if (strpos($u, '//') === false) $u = 'https://www.shop-security.ro' . (strpos($u, '/') === 0 ? '' : '/') . $u;
-        elseif (strpos($u, '//') === 0) $u = 'https:' . $u;
-        $images[] = $u;
-        if (count($images) >= 3) break;  // primele 3
+
+// FALLBACK — imagine din pagina de search dacă detaliu a eșuat
+if (empty($images)) {
+    if (preg_match_all('/<img[^>]*class="[^"]*product-item__image[^"]*"[^>]*src="([^"]+)"/si', $html, $im1, PREG_SET_ORDER)) {
+        foreach ($im1 as $m) $images[] = $m[1];
+    }
+    if (empty($images) && preg_match_all('/<img[^>]*src="(https?:\/\/[^"]*shop-security\.ro\/upload\/img\/products\/[^"]+\.(?:jpg|jpeg|png|webp))"/si', $html, $im2, PREG_SET_ORDER)) {
+        foreach ($im2 as $m) $images[] = $m[1];
     }
 }
 

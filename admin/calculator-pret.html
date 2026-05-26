@@ -294,25 +294,50 @@ h+='</td></tr></tbody></table>';
 if(data.includeAnexa && lines.length){
   var anxItems=lines.filter(function(l){return l.name;});
   if(anxItems.length){
-    h+='<div style="page-break-before:always;break-before:page;padding:4mm 0">';
-    h+='<div style="text-align:center;margin-bottom:8mm"><img src="'+IMG_LOGO+'" style="height:42px;max-width:240px"></div>';
-    h+='<h1 style="text-align:center;font-size:14pt;color:#dc2626;margin:0 0 4mm">ANEX\u0102 \u2014 ECHIPAMENTE OFERTATE</h1>';
-    h+='<div style="text-align:center;font-size:8pt;color:#64748b;margin-bottom:6mm">Oferta '+esc(nr)+' din '+dataFmt+' \u2022 Beneficiar: '+esc(data.client||'')+'</div>';
-    h+='<div style="display:grid;grid-template-columns:1fr 1fr;gap:5mm">';
+    h+='<div style="page-break-before:always;break-before:page;padding:0">';
+    // Header anex\u0103 (logo st\u00e2nga, titlu dreapta, linie ro\u0219ie sub)
+    h+='<div style="display:flex;justify-content:space-between;align-items:center;padding-bottom:4mm;margin-bottom:5mm;border-bottom:3px solid #dc2626">';
+    h+='<div><img src="'+IMG_LOGO+'" style="height:46px;max-width:280px"></div>';
+    h+='<div style="text-align:right">';
+    h+='<div style="font-size:7pt;color:#94a3b8;text-transform:uppercase;letter-spacing:1.5px;font-weight:700">ANEX\u0102</div>';
+    h+='<div style="font-size:12pt;font-weight:800;color:#0f172a;margin-top:1mm">Echipamente ofertate</div>';
+    h+='<div style="font-size:7.5pt;color:#64748b;margin-top:1mm">Oferta '+esc(nr)+' \u2022 '+dataFmt+'</div>';
+    h+='</div></div>';
+    // Bar info beneficiar
+    h+='<div style="background:#f1f5f9;border-radius:6px;padding:3mm 5mm;margin-bottom:6mm;display:flex;justify-content:space-between;align-items:center;font-size:8pt">';
+    h+='<div><span style="color:#64748b">Beneficiar:</span> <strong style="color:#0f172a">'+esc(data.client||'\u2014')+'</strong></div>';
+    h+='<div style="color:#64748b">'+anxItems.length+' produs'+(anxItems.length===1?'':'e')+'</div>';
+    h+='</div>';
+    // Grid produse (2 coloane, cards aerisite)
+    h+='<div style="display:grid;grid-template-columns:1fr 1fr;gap:6mm">';
     anxItems.forEach(function(l,i){
       var hasImg=l.image && typeof l.image==='string' && l.image.indexOf('http')===0;
-      var img=hasImg?'<img src="'+esc(l.image)+'" style="width:100%;height:42mm;object-fit:contain;background:#f8fafc;border-radius:4px;margin-bottom:3mm" onerror="this.style.display=\'none\';this.nextElementSibling&&(this.nextElementSibling.style.display=\'flex\')">'+'<div style="display:none;width:100%;height:42mm;background:#f8fafc;border-radius:4px;margin-bottom:3mm;align-items:center;justify-content:center;color:#cbd5e1;font-size:32pt">\ud83d\udcf7</div>':'<div style="display:flex;width:100%;height:42mm;background:#f8fafc;border-radius:4px;margin-bottom:3mm;align-items:center;justify-content:center;color:#cbd5e1;font-size:32pt">\ud83d\udcf7</div>';
-      var codeBadge=l.code?'<span style="font-family:Courier New,monospace;font-size:7.5pt;background:#fef9c3;padding:2px 6px;border-radius:3px;font-weight:700;color:#854d0e">'+esc(l.code)+'</span>':'';
-      var specHtml=l.spec?'<div style="font-size:7pt;color:#64748b;line-height:1.4;margin-top:3mm">'+esc(l.spec)+'</div>':'';
-      h+='<div style="border:1px solid #e2e8f0;border-radius:6px;padding:4mm;page-break-inside:avoid;break-inside:avoid;background:#fff">';
-      h+=img;
-      h+='<div style="display:flex;justify-content:space-between;align-items:center;gap:4mm;margin-bottom:2mm">'+codeBadge+'<span style="font-size:7pt;color:#94a3b8">Cant: '+l.cant+'</span></div>';
-      h+='<div style="font-size:8.5pt;font-weight:700;color:#0f172a;line-height:1.3">'+esc(l.name)+'</div>';
+      var imgHtml=hasImg
+        ? '<img src="'+esc(l.image)+'" style="width:100%;height:55mm;object-fit:contain;background:linear-gradient(135deg,#f8fafc,#f1f5f9);border-radius:6px;padding:3mm;box-sizing:border-box" onerror="this.style.display=\'none\';if(this.nextElementSibling)this.nextElementSibling.style.display=\'flex\'">'
+            +'<div style="display:none;width:100%;height:55mm;background:linear-gradient(135deg,#f8fafc,#f1f5f9);border-radius:6px;align-items:center;justify-content:center;color:#cbd5e1;font-size:38pt;box-sizing:border-box">\ud83d\udcf7</div>'
+        : '<div style="display:flex;width:100%;height:55mm;background:linear-gradient(135deg,#f8fafc,#f1f5f9);border-radius:6px;align-items:center;justify-content:center;color:#cbd5e1;font-size:38pt;box-sizing:border-box">\ud83d\udcf7</div>';
+      var codeBadge=l.code
+        ? '<span style="font-family:Courier New,monospace;font-size:8pt;background:#fef9c3;padding:2px 8px;border-radius:4px;font-weight:700;color:#854d0e;border:1px solid #fde68a">'+esc(l.code)+'</span>'
+        : '<span style="font-size:7.5pt;color:#cbd5e1;font-style:italic">f\u0103r\u0103 cod</span>';
+      var specHtml=l.spec ? '<div style="font-size:7pt;color:#64748b;line-height:1.5;margin-top:3mm;padding-top:3mm;border-top:1px dashed #e2e8f0">'+esc(l.spec)+'</div>' : '';
+      h+='<div style="position:relative;border:1px solid #e2e8f0;border-radius:8px;padding:4mm;page-break-inside:avoid;break-inside:avoid;background:#fff">';
+      // Num\u0103r produs \u00een col\u021b
+      h+='<div style="position:absolute;top:-3mm;left:-3mm;width:8mm;height:8mm;background:#dc2626;color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:9pt;font-weight:800;box-shadow:0 1px 3px rgba(220,38,38,0.4);z-index:2">'+(i+1)+'</div>';
+      h+=imgHtml;
+      // Cod + cantitate
+      h+='<div style="display:flex;justify-content:space-between;align-items:center;gap:4mm;margin:3mm 0 2mm">'+codeBadge+'<span style="font-size:7.5pt;color:#1e40af;background:#dbeafe;padding:2px 8px;border-radius:4px;font-weight:700;white-space:nowrap">'+l.cant+' '+esc(l.um||'buc.')+'</span></div>';
+      // Denumire
+      h+='<div style="font-size:9pt;font-weight:700;color:#0f172a;line-height:1.35;min-height:11mm">'+esc(l.name)+'</div>';
       h+=specHtml;
       h+='</div>';
     });
     h+='</div>';
-    h+='<div style="text-align:center;font-size:6.5pt;color:#94a3b8;margin-top:8mm;border-top:1px solid #e2e8f0;padding-top:3mm">Break Sistems SRL \u2022 brand CSSI \u2022 www.cssi.ro \u2022 0752 288 400</div>';
+    // Footer anex\u0103
+    h+='<div style="margin-top:8mm;padding-top:3mm;border-top:1px solid #e2e8f0;display:flex;justify-content:space-between;align-items:center;font-size:6.5pt;color:#94a3b8">';
+    h+='<span>Break Sistems SRL \u2022 brand CSSI</span>';
+    h+='<span>www.cssi.ro \u2022 0752 288 400</span>';
+    h+='<span>Anex\u0103 la oferta '+esc(nr)+'</span>';
+    h+='</div>';
     h+='</div>';
   }
 }
