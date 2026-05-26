@@ -1,9 +1,54 @@
 <?php
 /**
- * Shop-Security.ro Product Proxy v2
+ * Shop-Security.ro Product Proxy v3 — desc extraction via tab-pane show-active
  * Caută un produs după cod pe shop-security.ro și returnează JSON
- * Folosit de Generator Oferte CSSI (calculator-pret.html)
+ * mode=image — proxy imagine binara (rezolva hotlink/referer in print PDF)
+ * Versiune: 2026-05-26 15:25 GMT+3 — fix regex descriere
  */
+
+// ─── MODE: image (proxy binar) ───────────────────────────────────
+// Apelat ca: shop-proxy.php?mode=image&img=https://www.shop-security.ro/upload/img/products/...
+// Browser-ul face request same-origin → fără probleme de CORS/Referer/hotlink
+if (isset($_GET['mode']) && $_GET['mode'] === 'image') {
+    $imgUrl = isset($_GET['img']) ? $_GET['img'] : '';
+    if (!$imgUrl || !preg_match('#^https?://(www\.)?shop-security\.ro/#i', $imgUrl)) {
+        http_response_code(400);
+        header('Content-Type: text/plain');
+        echo 'Invalid img URL (only shop-security.ro permitted)';
+        exit;
+    }
+    $chi = curl_init();
+    curl_setopt_array($chi, [
+        CURLOPT_URL => $imgUrl,
+        CURLOPT_RETURNTRANSFER => true,
+        CURLOPT_FOLLOWLOCATION => true,
+        CURLOPT_TIMEOUT => 15,
+        CURLOPT_SSL_VERIFYPEER => false,
+        CURLOPT_USERAGENT => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+        CURLOPT_REFERER => 'https://www.shop-security.ro/',
+        CURLOPT_HTTPHEADER => ['Accept: image/avif,image/webp,image/png,image/jpeg,image/*,*/*;q=0.8'],
+    ]);
+    $imgData = curl_exec($chi);
+    $imgCt   = curl_getinfo($chi, CURLINFO_CONTENT_TYPE);
+    $imgHttp = curl_getinfo($chi, CURLINFO_HTTP_CODE);
+    curl_close($chi);
+    if (!$imgData || $imgHttp !== 200) {
+        http_response_code(404);
+        header('Content-Type: text/plain');
+        echo 'Image fetch failed (HTTP ' . $imgHttp . ')';
+        exit;
+    }
+    if (!$imgCt) {
+        $ext = strtolower(pathinfo(parse_url($imgUrl, PHP_URL_PATH) ?: '', PATHINFO_EXTENSION));
+        $imgCt = ['jpg'=>'image/jpeg','jpeg'=>'image/jpeg','png'=>'image/png','webp'=>'image/webp','gif'=>'image/gif'][$ext] ?? 'image/jpeg';
+    }
+    header('Content-Type: ' . $imgCt);
+    header('Cache-Control: public, max-age=604800, immutable');
+    header('Access-Control-Allow-Origin: *');
+    echo $imgData;
+    exit;
+}
+
 header('Content-Type: application/json; charset=utf-8');
 header('Access-Control-Allow-Origin: *');
 header('Cache-Control: no-cache');
@@ -115,6 +160,103 @@ if (preg_match_all('/Cod:\s*<[^>]*>\s*([^<]+)/u', $html, $cm)) {
     $codes = array_map('trim', $cm[1]);
 }
 
+// === EXTRAGE IMAGINI ===
+// Strategia primară: dacă avem un produs cu URL, facem un al doilea request la
+// pagina de detaliu și scoatem imaginea HD din slick carousel (better quality).
+// Fallback: imagine din pagina de search (thumbnail, mai mic).
+$images = [];
+
+// PRIMARY — fetch detail page și extrage din slick carousel
+if (!empty($products) && !empty($products[0]['url'])) {
+    $detailUrl = $products[0]['url'];
+    $ch2 = curl_init();
+    curl_setopt_array($ch2, [
+        CURLOPT_URL => $detailUrl,
+        CURLOPT_RETURNTRANSFER => true,
+        CURLOPT_FOLLOWLOCATION => true,
+        CURLOPT_TIMEOUT => 10,
+        CURLOPT_SSL_VERIFYPEER => false,
+        CURLOPT_USERAGENT => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+    ]);
+    $detailHtml = curl_exec($ch2);
+    $detailHttp = curl_getinfo($ch2, CURLINFO_HTTP_CODE);
+    curl_close($ch2);
+
+    if ($detailHtml && $detailHttp === 200) {
+        // Metoda A: exact div-ul slick-current din carusel (cea mai sigură)
+        if (preg_match('/<div[^>]*class="[^"]*slick-slide\s+slick-current[^"]*"[^>]*>\s*<img[^>]*class="img-fluid"[^>]*src="([^"]+)"/si', $detailHtml, $mA)) {
+            $images[] = $mA[1];
+        }
+        // Metoda B: orice <img class="img-fluid" src="..."> care e în /upload/img/products/
+        if (empty($images) && preg_match_all('/<img[^>]*class="[^"]*img-fluid[^"]*"[^>]*src="(https?:\/\/[^"]*shop-security\.ro\/upload\/img\/products\/[^"]+)"/si', $detailHtml, $mB, PREG_SET_ORDER)) {
+            foreach ($mB as $m) $images[] = $m[1];
+        }
+        // Metoda C: orice <img src=...> care e în /upload/img/products/
+        if (empty($images) && preg_match_all('/<img[^>]*src="(https?:\/\/[^"]*shop-security\.ro\/upload\/img\/products\/[^"]+\.(?:jpg|jpeg|png|webp))"/si', $detailHtml, $mC, PREG_SET_ORDER)) {
+            foreach ($mC as $m) $images[] = $m[1];
+        }
+    }
+}
+
+// FALLBACK — imagine din pagina de search dacă detaliu a eșuat
+if (empty($images)) {
+    if (preg_match_all('/<img[^>]*class="[^"]*product-item__image[^"]*"[^>]*src="([^"]+)"/si', $html, $im1, PREG_SET_ORDER)) {
+        foreach ($im1 as $m) $images[] = $m[1];
+    }
+    if (empty($images) && preg_match_all('/<img[^>]*src="(https?:\/\/[^"]*shop-security\.ro\/upload\/img\/products\/[^"]+\.(?:jpg|jpeg|png|webp))"/si', $html, $im2, PREG_SET_ORDER)) {
+        foreach ($im2 as $m) $images[] = $m[1];
+    }
+}
+
+// === EXTRAGE DESCRIERE LUNGĂ (din pagina de detaliu, după <!-- Tab Prodcut Section -->) ===
+// Structura tipica shop-security:
+//   <!-- Tab Prodcut Section -->
+//     <ul class="nav-tabs">...butoane...</ul>
+//     <div class="tab-content" id="pills-tabContent">
+//       <div class="tab-pane fade show active" id="pills-one-example1">  ← DESCRIERE aici
+//       <div class="tab-pane fade" id="pills-two-example1">              ← Specificatii
+//       <div class="tab-pane fade" id="product-tab-reviews">             ← Recenzii
+//     </div>
+$description = '';
+if (!empty($detailHtml)) {
+    // Metoda A (cea mai sigura): primul tab-pane cu „show active" (= Descriere)
+    //   captura cuprinde tot pana la urmatorul tab-pane (Specificatii)
+    if (preg_match('/<div[^>]*class="[^"]*tab-pane[^"]*\bshow\s+active\b[^"]*"[^>]*>(.*?)<div[^>]*class="[^"]*tab-pane\b/si', $detailHtml, $dA)) {
+        $description = $dA[1];
+    }
+    // Metoda B: explicit pe id pills-one-example1
+    if (empty($description) && preg_match('/<div[^>]*id="pills-one-example1"[^>]*>(.*?)<div[^>]*id="pills-two-example1"/si', $detailHtml, $dB)) {
+        $description = $dB[1];
+    }
+    // Metoda C fallback: id-uri uzuale (tab-description, product-description)
+    if (empty($description) && preg_match('/<div[^>]*(?:id|class)="[^"]*(?:tab-description|description-tab|product-description)[^"]*"[^>]*>(.*?)<\/div>\s*<\/div>/si', $detailHtml, $dC)) {
+        $description = $dC[1];
+    }
+    // Curățare HTML → text simplu
+    if ($description) {
+        // Scot tag-uri script/style cu tot conținutul
+        $description = preg_replace('/<(script|style|noscript)\b[^>]*>.*?<\/\1>/si', '', $description);
+        // Convertesc <br> și </p> în newline-uri ca să păstrez structura
+        $description = preg_replace('/<br\s*\/?>/i', "\n", $description);
+        $description = preg_replace('/<\/p>/i', "\n\n", $description);
+        $description = preg_replace('/<\/li>/i', "\n", $description);
+        $description = preg_replace('/<li[^>]*>/i', '• ', $description);
+        // Scot toate tag-urile
+        $description = strip_tags($description);
+        // Decodez entități HTML
+        $description = html_entity_decode($description, ENT_QUOTES | ENT_HTML5, 'UTF-8');
+        // Normalizez spațiile (păstrez newline-urile)
+        $description = preg_replace('/[ \t]+/', ' ', $description);
+        $description = preg_replace('/\n[ \t]+/', "\n", $description);
+        $description = preg_replace('/\n{3,}/', "\n\n", $description);
+        $description = trim($description);
+        // Limitez la 2000 caractere ca să nu intre conținut imens
+        if (mb_strlen($description) > 2000) {
+            $description = mb_substr($description, 0, 1997) . '...';
+        }
+    }
+}
+
 // === CONSTRUIEȘTE RĂSPUNS ===
 if (!empty($products) && !empty($prices)) {
     // Elimină codul SKU din denumire dacă e prezent
@@ -132,6 +274,8 @@ if (!empty($products) && !empty($prices)) {
         'price' => $prices[0],
         'url' => $products[0]['url'],
         'code' => !empty($codes) ? $codes[0] : $code,
+        'image' => !empty($images) ? $images[0] : '',
+        'description' => $description,
         'total_results' => count($products),
     ];
 
