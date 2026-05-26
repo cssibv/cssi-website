@@ -302,7 +302,25 @@ data.totalNet=data.subtotalEchip+data.subtotalManop;
 var w=window.open('','_blank');w.document.write(buildPDFHtml(data));w.document.close();}
 function exportPDFSaved(oid){
 var o=offers.find(function(x){return String(x.id)===String(oid);});if(!o)return;
-var w=window.open('','_blank');w.document.write(buildPDFHtml(o));w.document.close();}
+// Hidratez datele clientului din tabela clienti — snapshot-ul din `offers` poate fi învechit
+// sau incomplet (ex: oferta veche salvată înainte ca clientul să aibă CUI/adresă completate).
+// Același comportament ca în calea ?pdf_offer= și fillClientFromDB: preferă snapshot dacă există.
+function _doPDF(){var w=window.open('','_blank');w.document.write(buildPDFHtml(o));w.document.close();}
+if(o.client_db_id){
+fetch(API_LOCAL+'?action=getClient&id='+o.client_db_id+'&_t='+Date.now())
+.then(function(r){return r.json()})
+.then(function(cres){
+if(cres&&cres.success&&cres.data){
+var c=cres.data;
+if(!o.client)  o.client  = c.nume||'';
+if(!o.cui)     o.cui     = c.cui_cnp||'';
+if(!o.adresa)  o.adresa  = c.adresa||c.oras||'';
+if(!o.contact) o.contact = ((c.persoana_contact||'')+(c.telefon?' '+c.telefon:'')).trim();
+}
+_doPDF();
+})
+.catch(_doPDF);
+}else{_doPDF();}}
 function addFromCode(){var name=document.getElementById('codeResName').value.trim();var price=parseFloat(document.getElementById('codeResPrice').value);var code=document.getElementById('codeInput').value.trim();if(!name||!price){toast('⚠️ Completează denumirea și prețul','error');return;}
 if(window._replaceLineId){var rid=String(window._replaceLineId);var idx=offerLines.findIndex(function(l){return String(l.id)===rid;});if(idx>=0){var oldCant=offerLines[idx].cant||1;offerLines[idx].name=name;offerLines[idx].code=code;offerLines[idx].pAchiz=price;offerLines[idx].prodId=null;offerLines[idx].cant=oldCant;}window._replaceLineId=null;renderOfferLines();recalcOffer();closeCodeModal();setTab('offer');toast('🔄 Înlocuit cu '+name,'success');return;}
 offerLines.push({id:genId(),name:name,code:code,um:'buc.',cant:1,pAchiz:price,adaos:DEFAULT_ADAOS,prodId:null});renderOfferLines();recalcOffer();closeCodeModal();setTab('offer');toast('✅ '+name+' adăugat în ofertă','success');}
