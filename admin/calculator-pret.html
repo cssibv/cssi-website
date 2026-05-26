@@ -353,6 +353,9 @@ fetchNextOfertaNr();
                 lines:(o.lines||[]).map(function(l){return{id:l.id,name:l.denumire||l.name||'',code:l.cod||l.code||'',um:l.um||'buc.',cant:parseFloat(l.cantitate||l.cant)||0,pAchiz:parseFloat(l.pret_achizitie||l.pAchiz)||0,adaos:parseFloat(l.adaos_procent||l.adaos)||0}}),
                 labor:(o.labor||[]).map(function(l){return{id:l.id,name:l.denumire||l.name||'',um:l.um||'ore',cant:parseFloat(l.cantitate||l.cant)||0,price:parseFloat(l.pret_achizitie||l.pret_unitar||l.price)||0}})
             };
+            // Hidratez datele clientului din tabela clienti (snapshot-ul pe ofertă poate fi învechit/incomplet)
+            // — apelat doar pentru pdf/view (la edit, formularul completează singur via fillClientFromDB)
+            function _runAction(){
             if(actionType==='pdf'){
                 // Deschide PDF direct
                 var w=window;
@@ -415,6 +418,25 @@ fetchNextOfertaNr();
                 updateEditUI();
                 fillClientFromDB(o.client_id);
                 toast('✏️ Editezi oferta #'+mapped.nr,'info');
+            }
+            } // end _runAction
+            if((actionType==='pdf'||actionType==='view') && o.client_id){
+                fetch(API_LOCAL+'?action=getClient&id='+o.client_id+'&_t='+Date.now())
+                .then(function(r){return r.json()})
+                .then(function(cres){
+                    if(cres&&cres.success&&cres.data){
+                        var c=cres.data;
+                        // Completez doar câmpurile goale/lipsă din snapshot (preferă datele explicite din ofertă)
+                        if(!mapped.client)  mapped.client  = c.nume||'';
+                        if(!mapped.cui)     mapped.cui     = c.cui_cnp||'';
+                        if(!mapped.adresa)  mapped.adresa  = c.adresa||c.oras||'';
+                        if(!mapped.contact) mapped.contact = ((c.persoana_contact||'')+(c.telefon?' '+c.telefon:'')).trim();
+                    }
+                    _runAction();
+                })
+                .catch(_runAction);
+            } else {
+                _runAction();
             }
         })
         .catch(function(err){toast('⚠️ Eroare: '+err.message,'error');});
