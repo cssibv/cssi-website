@@ -102,6 +102,10 @@ Upload în `/admin/docs/`. Acestea sunt ghiduri de referință:
 - `google-ads-keywords.csv` ← 22 keywords
 - `google-ads-negative-keywords.csv` ← 90 negative keywords
 - `google-ads-anunturi-rsa.csv` ← 6 anunțuri RSA
+- `google-ads-expansion-campanii.csv` ← **NOU** — 3 campanii expansion (Alarme, Electrice, AC)
+- `google-ads-expansion-keywords.csv` ← **NOU** — 27 keywords expansion
+- `google-ads-expansion-negative-keywords.csv` ← **NOU** — 57 negative keywords expansion
+- `google-ads-expansion-anunturi-rsa.csv` ← **NOU** — 6 anunțuri RSA expansion
 
 ---
 

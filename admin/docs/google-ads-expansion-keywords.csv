@@ -1,0 +1,28 @@
+Campaign,Ad Group,Keyword,Match Type
+CSSI - Alarme Antiefractie,Alarme Brasov,[alarma antiefractie brasov],Exact
+CSSI - Alarme Antiefractie,Alarme Brasov,[sistem alarma brasov],Exact
+CSSI - Alarme Antiefractie,Alarme Brasov,[montaj alarma brasov],Exact
+CSSI - Alarme Antiefractie,Alarme Brasov,"""alarma casa brasov""",Phrase
+CSSI - Alarme Antiefractie,Alarme Brasov,"""alarma firma brasov""",Phrase
+CSSI - Alarme Antiefractie,Alarme Brasov,"""alarma ajax brasov""",Phrase
+CSSI - Alarme Antiefractie,Alarme Brasov,"""alarma paradox brasov""",Phrase
+CSSI - Alarme Antiefractie,Alarme Localitati,[alarma antiefractie codlea],Exact
+CSSI - Alarme Antiefractie,Alarme Localitati,[alarma antiefractie rasnov],Exact
+CSSI - Alarme Antiefractie,Alarme Localitati,[alarma antiefractie predeal],Exact
+CSSI - Instalatii Electrice,Electrician Brasov,[electrician brasov],Exact
+CSSI - Instalatii Electrice,Electrician Brasov,[instalatii electrice brasov],Exact
+CSSI - Instalatii Electrice,Electrician Brasov,[firma instalatii electrice brasov],Exact
+CSSI - Instalatii Electrice,Electrician Brasov,"""electrician autorizat brasov""",Phrase
+CSSI - Instalatii Electrice,Electrician Brasov,"""tablou electric brasov""",Phrase
+CSSI - Instalatii Electrice,Electrician Brasov,"""instalatie electrica hala""",Phrase
+CSSI - Instalatii Electrice,Electrician Industrial,[instalatii electrice industriale brasov],Exact
+CSSI - Instalatii Electrice,Electrician Industrial,"""electrician industrial brasov""",Phrase
+CSSI - Instalatii Electrice,Electrician Industrial,"""proiect electric brasov""",Phrase
+CSSI - Aer Conditionat,AC Brasov,[aer conditionat brasov],Exact
+CSSI - Aer Conditionat,AC Brasov,[montaj aer conditionat brasov],Exact
+CSSI - Aer Conditionat,AC Brasov,[instalare aer conditionat brasov],Exact
+CSSI - Aer Conditionat,AC Brasov,"""climatizare brasov""",Phrase
+CSSI - Aer Conditionat,AC Brasov,"""aer conditionat firma brasov""",Phrase
+CSSI - Aer Conditionat,AC Localitati,[aer conditionat codlea],Exact
+CSSI - Aer Conditionat,AC Localitati,[aer conditionat rasnov],Exact
+CSSI - Aer Conditionat,AC Localitati,[aer conditionat ghimbav],Exact
