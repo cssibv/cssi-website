@@ -312,8 +312,10 @@ if(data.includeAnexa && lines.length){
     h+='<div style="display:grid;grid-template-columns:1fr 1fr;gap:6mm">';
     anxItems.forEach(function(l,i){
       var hasImg=l.image && typeof l.image==='string' && l.image.indexOf('http')===0;
+      // Pentru poze de pe shop-security.ro, rutez prin proxy ca s\u0103 evit blocaj referer/hotlink \u00een print window
+      var imgSrc = hasImg ? (l.image.indexOf('shop-security.ro')>=0 ? '/admin/shop-proxy.php?mode=image&img='+encodeURIComponent(l.image) : l.image) : '';
       var imgHtml=hasImg
-        ? '<img src="'+esc(l.image)+'" style="width:100%;height:55mm;object-fit:contain;background:linear-gradient(135deg,#f8fafc,#f1f5f9);border-radius:6px;padding:3mm;box-sizing:border-box" onerror="this.style.display=\'none\';if(this.nextElementSibling)this.nextElementSibling.style.display=\'flex\'">'
+        ? '<img src="'+imgSrc+'" style="width:100%;height:55mm;object-fit:contain;background:linear-gradient(135deg,#f8fafc,#f1f5f9);border-radius:6px;padding:3mm;box-sizing:border-box" onerror="this.style.display=\'none\';if(this.nextElementSibling)this.nextElementSibling.style.display=\'flex\'">'
             +'<div style="display:none;width:100%;height:55mm;background:linear-gradient(135deg,#f8fafc,#f1f5f9);border-radius:6px;align-items:center;justify-content:center;color:#cbd5e1;font-size:38pt;box-sizing:border-box">\ud83d\udcf7</div>'
         : '<div style="display:flex;width:100%;height:55mm;background:linear-gradient(135deg,#f8fafc,#f1f5f9);border-radius:6px;align-items:center;justify-content:center;color:#cbd5e1;font-size:38pt;box-sizing:border-box">\ud83d\udcf7</div>';
       var codeBadge=l.code
@@ -341,7 +343,7 @@ if(data.includeAnexa && lines.length){
     h+='</div>';
   }
 }
-h+='<script>window.onload=function(){try{var pageH=1050;var actual=document.body.scrollHeight;var ROW_THRESHOLD=20;var itemsTbl=document.querySelector(".pdf-page > tbody > tr > td > table");var itemRows=itemsTbl?itemsTbl.querySelectorAll("tbody > tr"):[];var rowCount=itemRows.length;if(rowCount>ROW_THRESHOLD){var splitAt=Math.floor(rowCount/2+7);splitAt=Math.max(2,Math.min(rowCount-1,splitAt));if(itemRows[splitAt]){itemRows[splitAt].style.pageBreakBefore="always";itemRows[splitAt].style.breakBefore="page";}document.body.setAttribute("data-pdf-split","row="+splitAt+"/"+rowCount);}else if(actual>pageH){var s=Math.max(0.6,pageH/actual);document.body.style.zoom=s;document.body.setAttribute("data-pdf-scale",s.toFixed(3));}}catch(e){}setTimeout(function(){window.print();},200);}</'+'script></body></html>';
+h+='<script>function _waitImgsThenPrint(){var imgs=document.images;if(!imgs||!imgs.length){setTimeout(function(){window.print();},200);return;}var pending=imgs.length;var done=function(){if(--pending<=0){setTimeout(function(){window.print();},250);}};for(var i=0;i<imgs.length;i++){if(imgs[i].complete&&imgs[i].naturalHeight!==0){done();}else{imgs[i].addEventListener("load",done,{once:true});imgs[i].addEventListener("error",done,{once:true});}}setTimeout(function(){if(pending>0){pending=0;window.print();}},10000);}window.onload=function(){try{var pageH=1050;var actual=document.body.scrollHeight;var ROW_THRESHOLD=20;var itemsTbl=document.querySelector(".pdf-page > tbody > tr > td > table");var itemRows=itemsTbl?itemsTbl.querySelectorAll("tbody > tr"):[];var rowCount=itemRows.length;if(rowCount>ROW_THRESHOLD){var splitAt=Math.floor(rowCount/2+7);splitAt=Math.max(2,Math.min(rowCount-1,splitAt));if(itemRows[splitAt]){itemRows[splitAt].style.pageBreakBefore="always";itemRows[splitAt].style.breakBefore="page";}document.body.setAttribute("data-pdf-split","row="+splitAt+"/"+rowCount);}else if(actual>pageH){var s=Math.max(0.6,pageH/actual);document.body.style.zoom=s;document.body.setAttribute("data-pdf-scale",s.toFixed(3));}}catch(e){}_waitImgsThenPrint();}</'+'script></body></html>';
 return h;}
 // Hidratez fiecare line cu image + spec din catalog (lookup by prodId sau code)
 // — folosit la generare PDF cand bifa „Include anexa" e activa

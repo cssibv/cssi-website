@@ -3,7 +3,52 @@
  * Shop-Security.ro Product Proxy v2
  * Caută un produs după cod pe shop-security.ro și returnează JSON
  * Folosit de Generator Oferte CSSI (calculator-pret.html)
+ * mode=image — proxy imagine binara (rezolva hotlink/referer in print PDF)
  */
+
+// ─── MODE: image (proxy binar) ───────────────────────────────────
+// Apelat ca: shop-proxy.php?mode=image&img=https://www.shop-security.ro/upload/img/products/...
+// Browser-ul face request same-origin → fără probleme de CORS/Referer/hotlink
+if (isset($_GET['mode']) && $_GET['mode'] === 'image') {
+    $imgUrl = isset($_GET['img']) ? $_GET['img'] : '';
+    if (!$imgUrl || !preg_match('#^https?://(www\.)?shop-security\.ro/#i', $imgUrl)) {
+        http_response_code(400);
+        header('Content-Type: text/plain');
+        echo 'Invalid img URL (only shop-security.ro permitted)';
+        exit;
+    }
+    $chi = curl_init();
+    curl_setopt_array($chi, [
+        CURLOPT_URL => $imgUrl,
+        CURLOPT_RETURNTRANSFER => true,
+        CURLOPT_FOLLOWLOCATION => true,
+        CURLOPT_TIMEOUT => 15,
+        CURLOPT_SSL_VERIFYPEER => false,
+        CURLOPT_USERAGENT => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+        CURLOPT_REFERER => 'https://www.shop-security.ro/',
+        CURLOPT_HTTPHEADER => ['Accept: image/avif,image/webp,image/png,image/jpeg,image/*,*/*;q=0.8'],
+    ]);
+    $imgData = curl_exec($chi);
+    $imgCt   = curl_getinfo($chi, CURLINFO_CONTENT_TYPE);
+    $imgHttp = curl_getinfo($chi, CURLINFO_HTTP_CODE);
+    curl_close($chi);
+    if (!$imgData || $imgHttp !== 200) {
+        http_response_code(404);
+        header('Content-Type: text/plain');
+        echo 'Image fetch failed (HTTP ' . $imgHttp . ')';
+        exit;
+    }
+    if (!$imgCt) {
+        $ext = strtolower(pathinfo(parse_url($imgUrl, PHP_URL_PATH) ?: '', PATHINFO_EXTENSION));
+        $imgCt = ['jpg'=>'image/jpeg','jpeg'=>'image/jpeg','png'=>'image/png','webp'=>'image/webp','gif'=>'image/gif'][$ext] ?? 'image/jpeg';
+    }
+    header('Content-Type: ' . $imgCt);
+    header('Cache-Control: public, max-age=604800, immutable');
+    header('Access-Control-Allow-Origin: *');
+    echo $imgData;
+    exit;
+}
+
 header('Content-Type: application/json; charset=utf-8');
 header('Access-Control-Allow-Origin: *');
 header('Cache-Control: no-cache');
