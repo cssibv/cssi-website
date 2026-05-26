@@ -392,19 +392,27 @@ function _preloadAnexaImages(lines){
 }
 
 // ═══ ANEXĂ MATERIALE — pagină separată pentru printare frumoasă ═══
-// Pentru fiecare line fără imagine (catalog vechi / produs manual), fac un fetch
-// live la shop-proxy după code și updatez și catalogul ca să fie persistat.
+// Pentru fiecare line fără imagine SAU descriere (catalog vechi / produs manual),
+// fac un fetch live la shop-proxy după code și updatez și catalogul ca să fie persistat.
 function _fillMissingImages(lines){
   var jobs=(lines||[]).map(function(l){
-    if(l.image || !l.code) return Promise.resolve();
+    var needsImg = !l.image;
+    var needsSpec = !l.spec;
+    if((!needsImg && !needsSpec) || !l.code) return Promise.resolve();
     return fetch('/admin/shop-proxy.php?q='+encodeURIComponent(l.code))
       .then(function(r){return r.json();})
       .then(function(d){
-        if(d && d.found && d.image){
-          l.image = d.image;
-          // Persist în catalog dacă există produs cu același cod fără imagine
+        if(d && d.found){
+          if(needsImg && d.image) l.image = d.image;
+          if(needsSpec && d.description) l.spec = d.description;
+          // Persist în catalog (dacă există produs cu același cod)
           var p = catalog.find(function(x){return (x.code||'').toLowerCase()===String(l.code).toLowerCase();});
-          if(p && !p.image){ p.image = d.image; saveCatalog(); }
+          if(p){
+            var changed = false;
+            if(!p.image && d.image){ p.image = d.image; changed = true; }
+            if(!p.spec && d.description){ p.spec = d.description; changed = true; }
+            if(changed) saveCatalog();
+          }
         }
       })
       .catch(function(){});
@@ -446,39 +454,47 @@ function buildAnexaPageHtml(lines,info){
   var h='<!DOCTYPE html><html lang="ro"><head><meta charset="UTF-8">';
   h+='<title>Anexă materiale — Oferta '+esc(info.nr)+'</title>';
   h+='<style>';
-  h+='@page{size:A4;margin:10mm 8mm;}';
+  h+='@page{size:A4;margin:10mm 10mm 12mm 10mm}';
   h+='*{margin:0;padding:0;box-sizing:border-box;font-family:"Segoe UI",Tahoma,sans-serif}';
-  h+='body{background:#f1f5f9;color:#0f172a;padding:20px;-webkit-print-color-adjust:exact;print-color-adjust:exact}';
-  h+='.no-print{position:sticky;top:0;background:#0f172a;color:#fff;padding:14px 20px;border-radius:14px;margin-bottom:24px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;box-shadow:0 8px 24px rgba(0,0,0,0.15);z-index:10}';
-  h+='.no-print h1{font-size:16px;font-weight:700;letter-spacing:0.3px}';
+  h+='body{background:#f1f5f9;color:#0f172a;padding:18px;-webkit-print-color-adjust:exact;print-color-adjust:exact}';
+  h+='.no-print{position:sticky;top:0;background:#0f172a;color:#fff;padding:12px 18px;border-radius:12px;margin-bottom:18px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;box-shadow:0 8px 24px rgba(0,0,0,0.15);z-index:10;max-width:1100px;margin-left:auto;margin-right:auto}';
+  h+='.no-print h1{font-size:15px;font-weight:700;letter-spacing:0.2px}';
   h+='.no-print h1 small{display:block;font-size:11px;opacity:0.7;font-weight:500;margin-top:2px}';
-  h+='.no-print button{padding:10px 18px;border-radius:10px;border:none;cursor:pointer;font-weight:700;font-size:13px;display:inline-flex;align-items:center;gap:6px}';
+  h+='.no-print button{padding:9px 16px;border-radius:9px;border:none;cursor:pointer;font-weight:700;font-size:12px;display:inline-flex;align-items:center;gap:5px}';
   h+='.btn-print{background:#dc2626;color:#fff}.btn-print:hover{background:#991b1b}';
   h+='.btn-close{background:rgba(255,255,255,0.1);color:#fff;border:1px solid rgba(255,255,255,0.2)!important}.btn-close:hover{background:rgba(255,255,255,0.2)}';
-  h+='.sheet{background:#fff;border-radius:14px;padding:24px;max-width:1100px;margin:0 auto 24px;box-shadow:0 1px 3px rgba(0,0,0,0.05)}';
-  h+='.hdr{display:flex;justify-content:space-between;align-items:center;padding-bottom:14px;margin-bottom:18px;border-bottom:3px solid #dc2626}';
-  h+='.hdr img{height:48px;max-width:280px}';
+  h+='.sheet{background:#fff;border-radius:12px;padding:22px;max-width:1100px;margin:0 auto 18px;box-shadow:0 1px 3px rgba(0,0,0,0.05)}';
+  // Header
+  h+='.hdr{display:flex;justify-content:space-between;align-items:center;padding-bottom:12px;margin-bottom:14px;border-bottom:3px solid #dc2626}';
+  h+='.hdr img{height:46px;max-width:260px}';
   h+='.hdr .right{text-align:right}';
   h+='.hdr .right .tag{font-size:9px;color:#94a3b8;text-transform:uppercase;letter-spacing:2px;font-weight:700}';
-  h+='.hdr .right .title{font-size:18px;font-weight:800;color:#0f172a;margin-top:2px}';
+  h+='.hdr .right .title{font-size:17px;font-weight:800;color:#0f172a;margin-top:2px}';
   h+='.hdr .right .sub{font-size:11px;color:#64748b;margin-top:3px}';
-  h+='.bar{background:#f1f5f9;border-radius:8px;padding:10px 16px;margin-bottom:22px;display:flex;justify-content:space-between;align-items:center;font-size:13px;flex-wrap:wrap;gap:10px}';
+  // Info bar
+  h+='.bar{background:#f1f5f9;border-radius:7px;padding:9px 14px;margin-bottom:16px;display:flex;justify-content:space-between;align-items:center;font-size:12px;flex-wrap:wrap;gap:8px}';
   h+='.bar strong{color:#0f172a}';
   h+='.bar .count{color:#dc2626;font-weight:700}';
-  h+='.grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}';
-  h+='@media(max-width:680px){.grid{grid-template-columns:1fr}}';
-  h+='.card{position:relative;border:1px solid #e2e8f0;border-radius:10px;padding:14px;background:#fff;page-break-inside:avoid;break-inside:avoid}';
-  h+='.card .num{position:absolute;top:-12px;left:-12px;width:28px;height:28px;background:#dc2626;color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:800;box-shadow:0 2px 6px rgba(220,38,38,0.4)}';
-  h+='.card .imgwrap{width:100%;height:200px;background:linear-gradient(135deg,#f8fafc,#f1f5f9);border-radius:8px;display:flex;align-items:center;justify-content:center;padding:10px;margin-bottom:12px;overflow:hidden}';
-  h+='.card .imgwrap img{max-width:100%;max-height:100%;object-fit:contain}';
-  h+='.card .imgwrap .ph{font-size:48px;color:#cbd5e1}';
-  h+='.card .meta{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:8px;flex-wrap:wrap}';
-  h+='.code{font-family:"Courier New",monospace;font-size:11px;background:#fef9c3;padding:3px 10px;border-radius:5px;font-weight:700;color:#854d0e;border:1px solid #fde68a}';
-  h+='.qty{font-size:11px;color:#1e40af;background:#dbeafe;padding:3px 10px;border-radius:5px;font-weight:700;white-space:nowrap}';
-  h+='.name{font-size:13px;font-weight:700;color:#0f172a;line-height:1.35;margin-bottom:6px}';
-  h+='.spec{font-size:11px;color:#64748b;line-height:1.5;margin-top:8px;padding-top:8px;border-top:1px dashed #e2e8f0}';
-  h+='.foot{text-align:center;font-size:10px;color:#94a3b8;margin-top:18px;padding-top:14px;border-top:1px solid #e2e8f0}';
-  h+='@media print{body{background:#fff;padding:0}.no-print{display:none!important}.sheet{box-shadow:none;border-radius:0;padding:0;margin:0}.card{page-break-inside:avoid;break-inside:avoid}}';
+  // Table
+  h+='.tbl{width:100%;border-collapse:collapse;font-size:11px}';
+  h+='.tbl thead th{background:#0f172a;color:#fff;padding:9px 8px;text-align:left;font-size:10px;text-transform:uppercase;letter-spacing:0.5px;font-weight:700}';
+  h+='.tbl thead th.c{text-align:center}';
+  h+='.tbl tbody td{padding:10px 8px;border-bottom:1px solid #e2e8f0;vertical-align:top}';
+  h+='.tbl tbody tr{page-break-inside:avoid;break-inside:avoid}';
+  h+='.tbl tbody tr:hover{background:#f8fafc}';
+  h+='.tbl .idx{text-align:center;font-weight:700;color:#64748b;font-size:11px;width:34px}';
+  h+='.tbl .img{width:90px;text-align:center}';
+  h+='.tbl .img .wrap{width:80px;height:80px;background:linear-gradient(135deg,#f8fafc,#f1f5f9);border-radius:6px;display:flex;align-items:center;justify-content:center;padding:4px;margin:0 auto;overflow:hidden}';
+  h+='.tbl .img img{max-width:100%;max-height:100%;object-fit:contain}';
+  h+='.tbl .img .ph{font-size:28px;color:#cbd5e1}';
+  h+='.tbl .name{font-size:12px;font-weight:700;color:#0f172a;line-height:1.35;margin-bottom:4px}';
+  h+='.tbl .spec{font-size:10px;color:#64748b;line-height:1.5;white-space:pre-wrap}';
+  h+='.tbl .qty{text-align:center;width:70px;font-weight:700;color:#1e40af;white-space:nowrap}';
+  h+='.tbl .qty .pill{display:inline-block;background:#dbeafe;padding:3px 9px;border-radius:5px;font-size:11px}';
+  // Footer
+  h+='.foot{text-align:center;font-size:9px;color:#94a3b8;margin-top:14px;padding-top:10px;border-top:1px solid #e2e8f0}';
+  // Print rules
+  h+='@media print{body{background:#fff;padding:0}.no-print{display:none!important}.sheet{box-shadow:none;border-radius:0;padding:0;margin:0;max-width:100%}.tbl thead{display:table-header-group}.tbl tbody tr{page-break-inside:avoid;break-inside:avoid}}';
   h+='</style></head><body>';
   // Toolbar (ascuns la print)
   h+='<div class="no-print"><h1>📎 Anexă materiale<small>Oferta '+esc(info.nr)+' • '+esc(info.client)+'</small></h1>';
@@ -495,26 +511,29 @@ function buildAnexaPageHtml(lines,info){
   // Bar info
   h+='<div class="bar"><div><strong>Beneficiar:</strong> '+esc(info.client)+(info.obiectiv?' · <span style="color:#64748b">'+esc(info.obiectiv)+'</span>':'')+'</div>';
   h+='<div class="count">'+items.length+' produs'+(items.length===1?'':'e')+'</div></div>';
-  // Grid produse
-  h+='<div class="grid">';
+  // Tabel produse
+  h+='<table class="tbl"><thead><tr>';
+  h+='<th class="c" style="width:34px">#</th>';
+  h+='<th class="c" style="width:90px">Imagine</th>';
+  h+='<th>Denumire & descriere</th>';
+  h+='<th class="c" style="width:70px">Cant.</th>';
+  h+='</tr></thead><tbody>';
   items.forEach(function(l,i){
     var hasImg=l.image && typeof l.image==='string' && l.image.indexOf('http')===0;
     var imgSrc=hasImg?(l.image.indexOf('shop-security.ro')>=0?'/admin/shop-proxy.php?mode=image&img='+encodeURIComponent(l.image):l.image):'';
-    h+='<div class="card">';
-    h+='<div class="num">'+(i+1)+'</div>';
-    h+='<div class="imgwrap">';
+    h+='<tr>';
+    h+='<td class="idx">'+(i+1)+'</td>';
+    h+='<td class="img"><div class="wrap">';
     if(hasImg) h+='<img src="'+esc(imgSrc)+'" alt="" onerror="this.style.display=\'none\';this.nextElementSibling.style.display=\'block\'"><span class="ph" style="display:none">📷</span>';
     else h+='<span class="ph">📷</span>';
-    h+='</div>';
-    h+='<div class="meta">';
-    h+=(l.code?'<span class="code">'+esc(l.code)+'</span>':'<span style="font-size:11px;color:#cbd5e1;font-style:italic">fără cod</span>');
-    h+='<span class="qty">'+l.cant+' '+esc(l.um||'buc.')+'</span>';
-    h+='</div>';
-    h+='<div class="name">'+esc(l.name)+'</div>';
+    h+='</div></td>';
+    h+='<td><div class="name">'+esc(l.name)+'</div>';
     if(l.spec) h+='<div class="spec">'+esc(l.spec)+'</div>';
-    h+='</div>';
+    h+='</td>';
+    h+='<td class="qty"><span class="pill">'+l.cant+' '+esc(l.um||'buc.')+'</span></td>';
+    h+='</tr>';
   });
-  h+='</div>';
+  h+='</tbody></table>';
   // Footer
   h+='<div class="foot">Break Sistems SRL • brand CSSI • www.cssi.ro • 0752 288 400 • Anexă la oferta '+esc(info.nr)+'</div>';
   h+='</div></body></html>';

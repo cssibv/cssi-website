@@ -208,6 +208,46 @@ if (empty($images)) {
     }
 }
 
+// === EXTRAGE DESCRIERE LUNGĂ (din pagina de detaliu, după <!-- Tab Prodcut Section -->) ===
+$description = '';
+if (!empty($detailHtml)) {
+    // Metoda A: blocul dintre comentariul Tab Product si End
+    if (preg_match('/<!--\s*Tab\s+Pro?dcut\s+Section\s*-->(.*?)(?:<!--\s*End|<\/section)/si', $detailHtml, $dA)) {
+        $description = $dA[1];
+    }
+    // Metoda B: div cu id description / tab-description
+    if (empty($description) && preg_match('/<div[^>]*(?:id|class)="[^"]*(?:tab-description|description-tab|product-description)[^"]*"[^>]*>(.*?)<\/div>/si', $detailHtml, $dB)) {
+        $description = $dB[1];
+    }
+    // Metoda C: primul tab-pane active
+    if (empty($description) && preg_match('/<div[^>]*class="[^"]*tab-pane[^"]*active[^"]*"[^>]*>(.*?)<\/div>\s*<\/div>/si', $detailHtml, $dC)) {
+        $description = $dC[1];
+    }
+    // Curățare HTML → text simplu
+    if ($description) {
+        // Scot tag-uri script/style cu tot conținutul
+        $description = preg_replace('/<(script|style|noscript)\b[^>]*>.*?<\/\1>/si', '', $description);
+        // Convertesc <br> și </p> în newline-uri ca să păstrez structura
+        $description = preg_replace('/<br\s*\/?>/i', "\n", $description);
+        $description = preg_replace('/<\/p>/i', "\n\n", $description);
+        $description = preg_replace('/<\/li>/i', "\n", $description);
+        $description = preg_replace('/<li[^>]*>/i', '• ', $description);
+        // Scot toate tag-urile
+        $description = strip_tags($description);
+        // Decodez entități HTML
+        $description = html_entity_decode($description, ENT_QUOTES | ENT_HTML5, 'UTF-8');
+        // Normalizez spațiile (păstrez newline-urile)
+        $description = preg_replace('/[ \t]+/', ' ', $description);
+        $description = preg_replace('/\n[ \t]+/', "\n", $description);
+        $description = preg_replace('/\n{3,}/', "\n\n", $description);
+        $description = trim($description);
+        // Limitez la 2000 caractere ca să nu intre conținut imens
+        if (mb_strlen($description) > 2000) {
+            $description = mb_substr($description, 0, 1997) . '...';
+        }
+    }
+}
+
 // === CONSTRUIEȘTE RĂSPUNS ===
 if (!empty($products) && !empty($prices)) {
     // Elimină codul SKU din denumire dacă e prezent
@@ -226,6 +266,7 @@ if (!empty($products) && !empty($prices)) {
         'url' => $products[0]['url'],
         'code' => !empty($codes) ? $codes[0] : $code,
         'image' => !empty($images) ? $images[0] : '',
+        'description' => $description,
         'total_results' => count($products),
     ];
 
