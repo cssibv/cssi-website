@@ -290,7 +290,8 @@ var ment=(data.mentiuni||'').trim();
 if(ment){h+='<div class="cond" style="margin-top:8px;background:#fef3c7;border-left:3px solid #f59e0b;padding:6px 10px"><h4 style="color:#b45309">MEN\u021aIUNI</h4><div style="font-size:7.5pt;color:#0f172a;white-space:pre-wrap;line-height:1.4">'+esc(ment)+'</div></div>';}
 h+='<div class="sig"><div class="s" style="position:relative"><strong>FURNIZOR: Break Sistems SRL</strong><img src="'+IMG_STAMP+'" style="position:absolute;top:10px;left:120px;height:85px;opacity:0.9" alt="Stampila"><div style="margin-top:60px">Semn\u0103tura / \u0218tampila: ___________________</div></div><div class="s" style="text-align:right"><strong>BENEFICIAR:</strong><div style="margin-top:60px">Semn\u0103tura / \u0218tampila: ___________________</div></div></div>';
 h+='</td></tr></tbody></table>';
-h+='<script>window.onload=function(){try{var pageH=1050;var actual=document.body.scrollHeight;var ROW_THRESHOLD=20;var itemsTbl=document.querySelector(".pdf-page > tbody > tr > td > table");var itemRows=itemsTbl?itemsTbl.querySelectorAll("tbody > tr"):[];var rowCount=itemRows.length;if(rowCount>ROW_THRESHOLD){var splitAt=Math.floor(rowCount/2+7);splitAt=Math.max(2,Math.min(rowCount-1,splitAt));if(itemRows[splitAt]){itemRows[splitAt].style.pageBreakBefore="always";itemRows[splitAt].style.breakBefore="page";}document.body.setAttribute("data-pdf-split","row="+splitAt+"/"+rowCount);}else if(actual>pageH){var s=Math.max(0.6,pageH/actual);document.body.style.zoom=s;document.body.setAttribute("data-pdf-scale",s.toFixed(3));}}catch(e){}setTimeout(function(){window.print();},200);}</'+'script></body></html>';
+h+='<script>window.onload=function(){try{var pageH=1050;var actual=document.body.scrollHeight;var ROW_THRESHOLD=20;var itemsTbl=document.querySelector(".pdf-page > tbody > tr > td > table");var itemRows=itemsTbl?itemsTbl.querySelectorAll("tbody > tr"):[];var rowCount=itemRows.length;if(rowCount>ROW_THRESHOLD){var splitAt=Math.floor(rowCount/2+7);splitAt=Math.max(2,Math.min(rowCount-1,splitAt));if(itemRows[splitAt]){itemRows[splitAt].style.pageBreakBefore="always";itemRows[splitAt].style.breakBefore="page";}document.body.setAttribute("data-pdf-split","row="+splitAt+"/"+rowCount);}else if(actual>pageH){var s=Math.max(0.6,pageH/actual);document.body.style.zoom=s;document.body.setAttribute("data-pdf-scale",s.toFixed(3));}}catch(e){}setTimeout(function(){window.print();},200);}</'+'script><script src="/admin/notifications.js" defer></script>
+</body></html>';
 return h;}
 function exportPDF(){
 var client=document.getElementById('oClient').value.trim()||'Client';
@@ -392,7 +393,8 @@ fetchNextOfertaNr();
                 html+='<button class="btn-edit" onclick="window.location.href=\'calculator-pret.html?edit_offer='+offerId+'\'">✏️ Editează</button>';
                 html+='<button class="btn-pdf" onclick="window.location.href=\'calculator-pret.html?pdf_offer='+offerId+'\'">PDF</button>';
                 html+='<button class="btn-back" onclick="window.close()">Închide</button>';
-                html+='</div></body></html>';
+                html+='</div><script src="/admin/notifications.js" defer></script>
+</body></html>';
                 document.open();document.write(html);document.close();
             } else {
                 // Edit — încarcă în formular
@@ -725,5 +727,6 @@ if(!__isEditUrl){
 })();
 </script>
 <script>if('serviceWorker' in navigator){navigator.serviceWorker.register('../sw.js').then(function(r){console.log('[PWA] SW registered, scope:',r.scope)}).catch(function(e){console.log('[PWA] SW failed:',e)});var __reloaded=false;navigator.serviceWorker.addEventListener('controllerchange',function(){if(__reloaded)return;__reloaded=true;window.location.reload();});}</script>
+<script src="/admin/notifications.js" defer></script>
 </body>
 </html>

@@ -8,7 +8,7 @@
 require_once __DIR__ . '/admin/db.php';
 
 $token = isset($_GET['t']) ? trim($_GET['t']) : '';
-$reviewUrl = 'https://search.google.com/local/writereview?placeid=ChIJ4wsfwhHRISkRzf58ZZIo6HA';
+$reviewUrl = 'https://g.page/r/Cc6-fGWZaOhwEAE/review';
 
 if (!$token) {
     header('Location: https://cssi.ro');
