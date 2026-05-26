@@ -115,6 +115,33 @@ if (preg_match_all('/Cod:\s*<[^>]*>\s*([^<]+)/u', $html, $cm)) {
     $codes = array_map('trim', $cm[1]);
 }
 
+// === EXTRAGE IMAGINI (primul URL de imagine din cardul produsului) ===
+$images = [];
+// Metoda 1: <img class="...product-item__image..." src="..." />
+if (preg_match_all('/<img[^>]*class="[^"]*product-item__image[^"]*"[^>]*src="([^"]+)"/si', $html, $im1, PREG_SET_ORDER)) {
+    foreach ($im1 as $m) $images[] = $m[1];
+}
+// Metoda 2: <img class="..." src="..." > unde src conține /uploads/ sau /products/ pe shop-security.ro
+if (empty($images) && preg_match_all('/<img[^>]*src="(https?:\/\/[^"]*shop-security\.ro\/[^"]*\.(?:jpg|jpeg|png|webp))"/si', $html, $im2, PREG_SET_ORDER)) {
+    foreach ($im2 as $m) $images[] = $m[1];
+}
+// Metoda 3 fallback: orice <img src=...> cu .jpg/.png/.webp în pagină (exclud logo-uri/icoane mici)
+if (empty($images) && preg_match_all('/<img[^>]*src="([^"]+\.(?:jpg|jpeg|png|webp))"/si', $html, $im3, PREG_SET_ORDER)) {
+    foreach ($im3 as $m) {
+        $u = $m[1];
+        // Exclud logo-uri, iconițe, social, etc
+        if (stripos($u, 'logo') !== false) continue;
+        if (stripos($u, 'icon') !== false) continue;
+        if (stripos($u, 'social') !== false) continue;
+        if (stripos($u, 'placeholder') !== false) continue;
+        // Acceptă URL absolut sau face relativ → absolut pe shop-security.ro
+        if (strpos($u, '//') === false) $u = 'https://www.shop-security.ro' . (strpos($u, '/') === 0 ? '' : '/') . $u;
+        elseif (strpos($u, '//') === 0) $u = 'https:' . $u;
+        $images[] = $u;
+        if (count($images) >= 3) break;  // primele 3
+    }
+}
+
 // === CONSTRUIEȘTE RĂSPUNS ===
 if (!empty($products) && !empty($prices)) {
     // Elimină codul SKU din denumire dacă e prezent
@@ -132,6 +159,7 @@ if (!empty($products) && !empty($prices)) {
         'price' => $prices[0],
         'url' => $products[0]['url'],
         'code' => !empty($codes) ? $codes[0] : $code,
+        'image' => !empty($images) ? $images[0] : '',
         'total_results' => count($products),
     ];
 
