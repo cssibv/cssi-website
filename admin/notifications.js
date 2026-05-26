@@ -31,6 +31,8 @@
 '.cssi-notif-item:hover{background:#f1f5f9;}' +
 '.cssi-notif-item.unread{background:#fef2f2;border-left:3px solid #dc2626;}' +
 '.cssi-notif-item .time{font-size:10px;color:#94a3b8;margin-top:3px;font-weight:600;}' +
+'.cssi-notif-call{display:inline-flex;align-items:center;gap:4px;margin-top:6px;padding:5px 10px;background:#16a34a;color:#fff;font-size:11px;font-weight:700;border-radius:6px;text-decoration:none;border:none;cursor:pointer;font-family:inherit;}' +
+'.cssi-notif-call:hover{background:#15803d;}' +
 '.cssi-notif-empty{text-align:center;padding:40px 20px;color:#94a3b8;font-size:13px;}' +
 '.cssi-notif-empty .icon{font-size:32px;margin-bottom:8px;opacity:0.5;}' +
 '@media(max-width:500px){.cssi-notif-bell{top:10px;right:10px;width:38px;height:38px;font-size:17px;}.cssi-notif-panel{top:56px;right:10px;width:calc(100vw - 20px);}}';
@@ -58,6 +60,8 @@
 
     // Ruteaza notificarea spre pagina de detaliu in functie de status proiect
     function getNotifUrl(n){
+        // Daca backend-ul a setat un action_url explicit (ex. oferte expirate), il folosesc
+        if (n.action_url) return n.action_url;
         if (!n.proiect_id && !n.cod_proiect) return null;
         var pid = encodeURIComponent(n.proiect_id || n.cod_proiect);
         var s = (n.status_proiect || '').toLowerCase();
@@ -70,6 +74,13 @@
         if (s === 'cotatie' || s.indexOf('coti') >= 0 || s.indexOf('oferta') >= 0)
             return '/admin/oferte.html';
         return '/admin/proiecte.html';
+    }
+
+    // Normalizeaza telefon pentru tel: (scoate spatii/puncte/paranteze, pastreaza +)
+    function telHref(t){
+        if (!t) return '';
+        var clean = String(t).replace(/[\s\-\.\(\)]/g, '');
+        return 'tel:' + clean;
     }
 
     function injectMarkup(){
@@ -134,12 +145,23 @@
             if (n.cod_proiect) html += ' · ' + escHtml(n.cod_proiect);
             if (n.preluat_de) html += ' · ✅ ' + escHtml(n.preluat_de);
             html += '</div>';
+            if (n.telefon) {
+                html += '<a class="cssi-notif-call" href="' + escHtml(telHref(n.telefon)) + '" data-tel="1">📞 Sună ' + escHtml(n.telefon) + '</a>';
+            }
             html += '</div></div>';
         });
         body.innerHTML = html;
 
         body.querySelectorAll('.cssi-notif-item').forEach(function(el){
             el.addEventListener('click', function(ev){
+                // Daca s-a apasat exact butonul "Sună", las link-ul tel: sa preia
+                // (markez ca citit dar NU navighez catre URL-ul ofertei)
+                var tgt = ev.target;
+                if (tgt && tgt.closest && tgt.closest('.cssi-notif-call')) {
+                    var id = el.getAttribute('data-id');
+                    if (id) markRead(id);
+                    return; // permit comportamentul implicit al <a href="tel:...">
+                }
                 ev.stopPropagation();
                 var id = el.getAttribute('data-id');
                 var url = el.getAttribute('data-url');

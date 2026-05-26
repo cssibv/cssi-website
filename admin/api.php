@@ -46,10 +46,26 @@ function ensureOferteColumns($db) {
         if (!in_array('mentiuni', $cols)) {
             $db->exec("ALTER TABLE oferte ADD COLUMN mentiuni TEXT NULL DEFAULT NULL");
         }
+        if (!in_array('notificat_expirare_la', $cols)) {
+            $db->exec("ALTER TABLE oferte ADD COLUMN notificat_expirare_la DATETIME NULL DEFAULT NULL");
+        }
+        if (!in_array('notificat_pre_expirare_la', $cols)) {
+            $db->exec("ALTER TABLE oferte ADD COLUMN notificat_pre_expirare_la DATETIME NULL DEFAULT NULL");
+        }
     } catch (Exception $e) {
         // Loghez ca să pot debug (apare în error_log)
         error_log('ensureOferteColumns FAILED: ' . $e->getMessage());
     }
+    // Coloane optionale in notificari pentru actiuni rapide (tel: + url)
+    try {
+        $nc = $db->query("SHOW COLUMNS FROM notificari")->fetchAll(PDO::FETCH_COLUMN);
+        if (!in_array('action_url', $nc)) {
+            $db->exec("ALTER TABLE notificari ADD COLUMN action_url VARCHAR(255) NULL DEFAULT NULL");
+        }
+        if (!in_array('telefon', $nc)) {
+            $db->exec("ALTER TABLE notificari ADD COLUMN telefon VARCHAR(30) NULL DEFAULT NULL");
+        }
+    } catch (Exception $e) { /* silent — tabela poate lipsi in dev */ }
 }
 // Debug helper: returneaza listă coloane oferte (admin only — pentru troubleshoot)
 function debugOferteColumns($db) {
@@ -58,13 +74,104 @@ function debugOferteColumns($db) {
 }
 
 // Auto-expire oferte: Trimisa/In_discutie cu expires_at < azi → Expirata
+// + insereaza notificari pentru: (a) oferte care expira maine, (b) oferte care tocmai au expirat
+// Idempotent: foloseste notificat_*_la pe oferte pentru a nu duplica notificarile
 function autoExpireOferte($db) {
     static $done = false;
     if ($done) return;
     $done = true;
     try {
+        // ── (1) Pre-expirare: oferte active care expira MAINE ─────────────
+        // Le selectez INAINTE de UPDATE-ul de expirare ca sa nu ratez nimic
+        $stmtPre = $db->prepare(
+            "SELECT o.id, o.oferta_id, o.total_cu_tva, o.client_nume, o.client_contact,
+                    o.proiect_id, p.proiect_id AS cod_proiect,
+                    c.nume AS client_db_nume, c.telefon AS client_telefon
+             FROM oferte o
+             LEFT JOIN proiecte p ON o.proiect_id = p.id
+             LEFT JOIN clienti  c ON o.client_id  = c.id
+             WHERE o.status IN ('Draft','Trimisa','In_discutie')
+               AND o.expires_at IS NOT NULL
+               AND o.expires_at = DATE_ADD(CURDATE(), INTERVAL 1 DAY)
+               AND o.archived_at IS NULL
+               AND o.notificat_pre_expirare_la IS NULL"
+        );
+        $stmtPre->execute();
+        $preList = $stmtPre->fetchAll();
+        if ($preList) {
+            $insN = $db->prepare("INSERT INTO notificari (proiect_id, mesaj, tip, de_la, action_url, telefon) VALUES (?,?,?,?,?,?)");
+            $markPre = $db->prepare("UPDATE oferte SET notificat_pre_expirare_la = NOW() WHERE id = ?");
+            foreach ($preList as $o) {
+                $tel = trim((string)($o['client_telefon'] ?? ''));
+                if (!$tel) $tel = extractPhoneFromContact($o['client_contact'] ?? '');
+                $clientLbl = $o['client_db_nume'] ?: ($o['client_nume'] ?: '—');
+                $sumLbl = number_format((float)$o['total_cu_tva'], 0, ',', '.') . ' lei';
+                $mesaj = '⏰ Sună mâine ' . $clientLbl . ' — oferta ' . ($o['oferta_id'] ?: '#'.$o['id']) . ' (' . $sumLbl . ') expiră mâine'
+                       . ($tel ? ' · 📞 ' . $tel : '');
+                $insN->execute([
+                    $o['cod_proiect'] ?: null,
+                    $mesaj,
+                    'oferta_pre_exp',
+                    'Sistem',
+                    '/admin/oferte.html',
+                    $tel ?: null
+                ]);
+                $markPre->execute([$o['id']]);
+            }
+        }
+
+        // ── (2) Selectez ofertele care urmeaza sa fie marcate ca Expirata ─
+        $stmtExp = $db->prepare(
+            "SELECT o.id, o.oferta_id, o.total_cu_tva, o.client_nume, o.client_contact,
+                    o.proiect_id, p.proiect_id AS cod_proiect,
+                    c.nume AS client_db_nume, c.telefon AS client_telefon
+             FROM oferte o
+             LEFT JOIN proiecte p ON o.proiect_id = p.id
+             LEFT JOIN clienti  c ON o.client_id  = c.id
+             WHERE o.status IN ('Draft','Trimisa','In_discutie')
+               AND o.expires_at IS NOT NULL
+               AND o.expires_at < CURDATE()
+               AND o.archived_at IS NULL
+               AND o.notificat_expirare_la IS NULL"
+        );
+        $stmtExp->execute();
+        $expList = $stmtExp->fetchAll();
+
+        // ── (3) UPDATE-ul propriu-zis (acelasi comportament ca inainte) ──
         $db->exec("UPDATE oferte SET status='Expirata' WHERE status IN ('Draft','Trimisa','In_discutie') AND expires_at IS NOT NULL AND expires_at < CURDATE() AND archived_at IS NULL");
+
+        // ── (4) Notificari pentru cele expirate ───────────────────────────
+        if ($expList) {
+            $insN = $db->prepare("INSERT INTO notificari (proiect_id, mesaj, tip, de_la, action_url, telefon) VALUES (?,?,?,?,?,?)");
+            $markExp = $db->prepare("UPDATE oferte SET notificat_expirare_la = NOW() WHERE id = ?");
+            foreach ($expList as $o) {
+                $tel = trim((string)($o['client_telefon'] ?? ''));
+                if (!$tel) $tel = extractPhoneFromContact($o['client_contact'] ?? '');
+                $clientLbl = $o['client_db_nume'] ?: ($o['client_nume'] ?: '—');
+                $sumLbl = number_format((float)$o['total_cu_tva'], 0, ',', '.') . ' lei';
+                $mesaj = '📞 Resună ' . $clientLbl . ' — oferta ' . ($o['oferta_id'] ?: '#'.$o['id']) . ' (' . $sumLbl . ') a expirat — întreabă dacă o mai vrea'
+                       . ($tel ? ' · 📞 ' . $tel : '');
+                $insN->execute([
+                    $o['cod_proiect'] ?: null,
+                    $mesaj,
+                    'oferta_expirata',
+                    'Sistem',
+                    '/admin/oferte.html',
+                    $tel ?: null
+                ]);
+                $markExp->execute([$o['id']]);
+            }
+        }
     } catch (Exception $e) { /* silent */ }
+}
+
+// Extrage un numar de telefon dintr-un text liber (ex. "Ion Popescu, ion@x.ro, 0712 345 678")
+function extractPhoneFromContact($txt) {
+    if (!$txt) return '';
+    if (preg_match('/(\+?\d[\d\s\-\.\(\)]{7,}\d)/', $txt, $m)) {
+        return trim($m[1]);
+    }
+    return '';
 }
 
 // Schema tabel drafturi oferte (autosave server-side în calculator)
