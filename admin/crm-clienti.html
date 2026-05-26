@@ -1112,6 +1112,9 @@ function renderClientFull(d){
     if(c.email)   contactBits.push('✉️ <a href="mailto:'+esc(c.email)+'" style="color:#fff;text-decoration:underline">'+esc(c.email)+'</a>');
     if(c.adresa)  contactBits.push('📍 ' + esc(c.adresa));
     if(contactBits.length) html += '<div style="font-size:12px;margin-top:6px;display:flex;flex-wrap:wrap;gap:14px">' + contactBits.join('') + '</div>';
+    html += '<div style="margin-top:10px;display:flex;gap:8px;flex-wrap:wrap">';
+    html += '<a href="dosar.html?client=' + c.id + '" style="background:rgba(255,255,255,0.18);color:#fff;padding:6px 12px;border-radius:8px;text-decoration:none;font-size:12px;font-weight:700">📁 Vezi dosar complet →</a>';
+    html += '</div>';
     html += '</div>';
     // Stats
     html += '<div class="cf-stats">';
@@ -1145,7 +1148,7 @@ function renderClientFull(d){
     if(!d.proiecte.length){ html += '<div class="empty-msg" style="padding:16px">Niciun proiect încă.</div>'; }
     else {
         d.proiecte.forEach(function(p){
-            html += '<div class="cf-row" onclick="window.open(\'proiecte.html\',\'_self\')">';
+            html += '<div class="cf-row" onclick="window.open(\'dosar.html?proiect='+p.id+'\',\'_self\')" title="Vezi dosar complet">';
             html += '<span class="ico">📐</span>';
             html += '<div class="info">';
             html += '<span class="nr">'+esc(p.proiect_id||'#'+p.id)+'</span> <span class="meta">· '+esc(p.serviciu||'—')+'</span>';

@@ -271,6 +271,113 @@ function ensureContracteSchema($db) {
     }
 }
 
+// ─── Schema dosar_evenimente (audit log unificat la nivel dosar) ──
+// Folosit de pagina /admin/dosar.html — orice schimbare de stage,
+// notă manuală, blocaj, marcare „pierdut" se scrie aici.
+function ensureDosarEvenimenteSchema($db) {
+    static $checked = false;
+    if ($checked) return;
+    $checked = true;
+    try {
+        $db->exec("CREATE TABLE IF NOT EXISTS dosar_evenimente (
+            id INT AUTO_INCREMENT PRIMARY KEY,
+            proiect_id INT NULL,
+            client_id INT NULL,
+            tip VARCHAR(30) NOT NULL,
+            stage_de_la VARCHAR(40) NULL,
+            stage_la VARCHAR(40) NULL,
+            mesaj TEXT NULL,
+            creat_de VARCHAR(60) NULL,
+            created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+            INDEX idx_proiect (proiect_id),
+            INDEX idx_client (client_id),
+            INDEX idx_created (created_at),
+            INDEX idx_tip (tip)
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4");
+    } catch (Exception $e) {
+        error_log('ensureDosarEvenimenteSchema FAILED: ' . $e->getMessage());
+    }
+}
+
+// ─── Helper: calculează stage canonic pentru un dosar ─────────────
+// Stage canonic e un string scurt (max 20 chars) folosit la UI + audit log.
+// Mapează din proiecte.status (master) cu fallback pe ofertă/contract.
+// Returns: ['stage' => 'Executie', 'sub' => 'In_lucru', 'pct' => 5, 'total' => 8, 'pct_pct' => 62]
+function dosarComputeStage($proiect, $oferte = [], $contracte = []) {
+    $stages = ['Lead','Oferta','Acceptat','Contract','Proiectare','Executie','Receptie','Facturare','Finalizat'];
+    $stagesLbl = [
+        'Lead'       => '📋 Lead',
+        'Oferta'     => '📤 Ofertă',
+        'Acceptat'   => '🤝 Acceptat',
+        'Contract'   => '📑 Contract',
+        'Proiectare' => '📐 Proiectare',
+        'Executie'   => '🔧 Execuție',
+        'Receptie'   => '📋 Recepție',
+        'Facturare'  => '💰 Facturare',
+        'Finalizat'  => '✅ Finalizat',
+        'Anulat'     => '✕ Anulat',
+        'Pierdut'    => '✕ Pierdut',
+    ];
+
+    $stage = 'Lead';
+    $sub   = '';
+
+    // 1) Status pe proiect (master)
+    if ($proiect && !empty($proiect['status'])) {
+        $s = strtolower($proiect['status']);
+        if ($s === 'anulat')                                          { $stage = 'Anulat'; }
+        elseif (strpos($s,'finaliz') !== false)                       { $stage = 'Finalizat'; }
+        elseif (strpos($s,'factur') !== false)                        { $stage = 'Facturare'; }
+        elseif (strpos($s,'recep') !== false)                         { $stage = 'Receptie'; }
+        elseif (strpos($s,'execu') !== false)                         { $stage = 'Executie'; }
+        elseif (strpos($s,'proiectare') !== false)                    { $stage = 'Proiectare'; }
+        elseif (strpos($s,'contract') !== false)                      { $stage = 'Contract'; }
+        elseif (strpos($s,'oferta') !== false || strpos($s,'cotat') !== false) { $stage = 'Oferta'; }
+        elseif (strpos($s,'lead') !== false)                          { $stage = 'Lead'; }
+    }
+
+    // 2) Refine cu starea ofertelor — dacă proiectul e încă „Oferta" dar
+    //    avem ofertă acceptată, urcăm la „Acceptat"
+    if ($stage === 'Oferta' && $oferte) {
+        foreach ($oferte as $o) {
+            if (($o['status'] ?? '') === 'Acceptata') { $stage = 'Acceptat'; break; }
+        }
+    }
+
+    // 3) Refine cu contractul — dacă avem contract semnat/completat, urcăm
+    if (in_array($stage, ['Acceptat','Oferta']) && $contracte) {
+        foreach ($contracte as $c) {
+            $cs = strtolower($c['status'] ?? '');
+            if (strpos($cs,'completat') !== false || strpos($cs,'semnat') !== false || strpos($cs,'final') !== false) {
+                $stage = 'Contract'; break;
+            }
+        }
+    }
+
+    // 4) Pierdut (motiv refuz pe ofertă, fără proiect activ)
+    if (!$proiect && $oferte) {
+        $anyAccept = false; $allRefuz = true;
+        foreach ($oferte as $o) {
+            if (($o['status'] ?? '') === 'Acceptata') $anyAccept = true;
+            if (!in_array($o['status'] ?? '', ['Refuzata','Expirata'])) $allRefuz = false;
+        }
+        if (!$anyAccept && $allRefuz) $stage = 'Pierdut';
+    }
+
+    $idx = array_search($stage, $stages);
+    if ($idx === false) $idx = -1;
+
+    return [
+        'stage'    => $stage,
+        'label'    => $stagesLbl[$stage] ?? $stage,
+        'idx'      => $idx,
+        'total'    => count($stages),
+        'pct'      => $idx >= 0 ? round(($idx + 1) / count($stages) * 100) : 0,
+        'all'      => $stages,
+        'all_lbl'  => $stagesLbl,
+    ];
+}
+
 // ─── ENCRYPTION pt date sensibile (CNP, CI seria/nr) ─────────────
 // Folosim AES-256-GCM cu cheie din secrets.php (CONTRACT_ENCRYPTION_KEY)
 // Fallback graceful: daca cheia lipseste, storage in clar (cu log warning)
@@ -3753,6 +3860,248 @@ astăzi data semnării.</p>
             $db->exec("UPDATE notificari SET $col = 1 WHERE $col = 0");
             jsonResponse(['success' => true]);
             break;
+
+        // ════════ DOSAR (vedere agregată pe client/proiect) ════════
+        case 'getDosar': {
+            ensureDosarEvenimenteSchema($db);
+            ensureOferteColumns($db);
+
+            $pid = isset($_GET['proiect']) ? intval($_GET['proiect']) : 0;
+            $cid = isset($_GET['client']) ? intval($_GET['client']) : 0;
+            $cod = isset($_GET['cod']) ? trim((string)$_GET['cod']) : '';
+
+            // Resolve cod text → id numeric
+            if ($cod && !$pid) {
+                $st = $db->prepare("SELECT id, client_id FROM proiecte WHERE proiect_id = ?");
+                $st->execute([$cod]);
+                if ($row = $st->fetch()) { $pid = intval($row['id']); $cid = intval($row['client_id']); }
+            }
+
+            $proiect = null;
+            if ($pid) {
+                $st = $db->prepare("SELECT * FROM proiecte WHERE id = ?");
+                $st->execute([$pid]);
+                $proiect = $st->fetch() ?: null;
+                if ($proiect && !$cid) $cid = intval($proiect['client_id']);
+            }
+
+            if (!$cid) { jsonResponse(['success'=>false,'error'=>'proiect sau client obligatoriu'], 400); break; }
+
+            $st = $db->prepare("SELECT * FROM clienti WHERE id = ?");
+            $st->execute([$cid]);
+            $client = $st->fetch();
+            if (!$client) { jsonResponse(['success'=>false,'error'=>'client negăsit'], 404); break; }
+
+            // Ofertele
+            if ($pid) {
+                $stO = $db->prepare("SELECT * FROM oferte WHERE proiect_id = ? ORDER BY data_oferta DESC, id DESC");
+                $stO->execute([$pid]);
+            } else {
+                $stO = $db->prepare("SELECT * FROM oferte WHERE client_id = ? AND proiect_id IS NULL ORDER BY data_oferta DESC, id DESC");
+                $stO->execute([$cid]);
+            }
+            $oferte = $stO->fetchAll();
+
+            // Contracte
+            $contracte = [];
+            if ($pid) {
+                try {
+                    $stC = $db->prepare("SELECT id, contract_nr, oferta_id, status, valoare_total, completat_la, generat_la, created_at, generat_pdf_path FROM contracte WHERE proiect_id = ? ORDER BY created_at DESC");
+                    $stC->execute([$pid]);
+                    $contracte = $stC->fetchAll();
+                } catch (Exception $e) {}
+            }
+
+            // Proiectare
+            $proiectare = null;
+            if ($pid) {
+                try {
+                    $stP = $db->prepare("SELECT id, status, termen, data_start, progres, proiectant, updated_at FROM proiectare WHERE proiect_id = ? ORDER BY id DESC LIMIT 1");
+                    $stP->execute([$pid]);
+                    $proiectare = $stP->fetch() ?: null;
+                } catch (Exception $e) {}
+            }
+
+            // Programări execuție
+            $execProgr = [];
+            if ($pid) {
+                try {
+                    $stE = $db->prepare("SELECT id, data_start, data_end, status, echipa, note, created_at FROM executie_programari WHERE proiect_id = ? ORDER BY data_start DESC");
+                    $stE->execute([$pid]);
+                    $execProgr = $stE->fetchAll();
+                } catch (Exception $e) {}
+            }
+
+            // Jurnal teren (ultimele 10)
+            $jurnal = [];
+            if ($pid) {
+                try {
+                    $stJ = $db->prepare("SELECT id, data_pontaj, descriere, ore, persoane, created_at, creat_de FROM jurnal_teren WHERE proiect_id = ? ORDER BY data_pontaj DESC, id DESC LIMIT 10");
+                    $stJ->execute([$pid]);
+                    $jurnal = $stJ->fetchAll();
+                } catch (Exception $e) {}
+            }
+
+            // Mentenanță (post-finalizare, paralelă)
+            $mentenanta = [];
+            try {
+                $sqlM = $pid
+                    ? "SELECT * FROM mentenanta WHERE proiect_id = ? OR client_id = ? ORDER BY data_urmatoare ASC, id DESC"
+                    : "SELECT * FROM mentenanta WHERE client_id = ? ORDER BY data_urmatoare ASC, id DESC";
+                $stM = $db->prepare($sqlM);
+                $stM->execute($pid ? [$pid, $cid] : [$cid]);
+                $mentenanta = $stM->fetchAll();
+            } catch (Exception $e) {}
+
+            // Evenimente custom (note, blocaje, audit avansări)
+            $evenimente = [];
+            try {
+                $sqlEv = $pid
+                    ? "SELECT * FROM dosar_evenimente WHERE proiect_id = ? OR client_id = ? ORDER BY created_at DESC LIMIT 50"
+                    : "SELECT * FROM dosar_evenimente WHERE client_id = ? ORDER BY created_at DESC LIMIT 50";
+                $stEv = $db->prepare($sqlEv);
+                $stEv->execute($pid ? [$pid, $cid] : [$cid]);
+                $evenimente = $stEv->fetchAll();
+            } catch (Exception $e) {}
+
+            // Stage canonic
+            $stageInfo = dosarComputeStage($proiect, $oferte, $contracte);
+
+            // Sumar financiar
+            $sumar = ['oferte_total' => 0, 'oferte_acc' => 0, 'contracte_total' => 0];
+            foreach ($oferte as $o) {
+                $sumar['oferte_total'] += floatval($o['total_cu_tva'] ?? 0);
+                if (($o['status'] ?? '') === 'Acceptata') $sumar['oferte_acc'] += floatval($o['total_cu_tva']);
+            }
+            foreach ($contracte as $c) $sumar['contracte_total'] += floatval($c['valoare_total'] ?? 0);
+
+            jsonResponse([
+                'success'     => true,
+                'client'      => $client,
+                'proiect'     => $proiect,
+                'stage'       => $stageInfo,
+                'oferte'      => $oferte,
+                'contracte'   => $contracte,
+                'proiectare'  => $proiectare,
+                'executie'    => $execProgr,
+                'jurnal'      => $jurnal,
+                'mentenanta'  => $mentenanta,
+                'evenimente' => $evenimente,
+                'sumar'       => $sumar,
+            ]);
+            break;
+        }
+
+        case 'getDosareClienti': {
+            // Listează dosarele (proiectele) unui client + sumar fiecare
+            $cid = isset($_GET['client']) ? intval($_GET['client']) : 0;
+            if (!$cid) { jsonResponse(['success'=>false,'error'=>'client obligatoriu'], 400); break; }
+
+            $st = $db->prepare("SELECT id, proiect_id, status, obiectiv, adresa_obiectiv, serviciu, valoare_contract, responsabil, updated_at, created_at FROM proiecte WHERE client_id = ? ORDER BY updated_at DESC, id DESC");
+            $st->execute([$cid]);
+            $proiecte = $st->fetchAll();
+
+            // Adaug stage + sumar pe fiecare
+            foreach ($proiecte as &$p) {
+                $stO = $db->prepare("SELECT status, total_cu_tva FROM oferte WHERE proiect_id = ?");
+                $stO->execute([$p['id']]);
+                $oo = $stO->fetchAll();
+                $p['stage'] = dosarComputeStage($p, $oo, []);
+                $p['nr_oferte'] = count($oo);
+            }
+            unset($p);
+
+            // Oferte fără proiect (lead-uri pure cu doar ofertă)
+            $stOnoP = $db->prepare("SELECT id, oferta_id, status, total_cu_tva, data_oferta, obiectiv FROM oferte WHERE client_id = ? AND proiect_id IS NULL ORDER BY data_oferta DESC");
+            $stOnoP->execute([$cid]);
+            $oferteFaraProiect = $stOnoP->fetchAll();
+
+            jsonResponse([
+                'success'              => true,
+                'proiecte'             => $proiecte,
+                'oferte_fara_proiect'  => $oferteFaraProiect,
+            ]);
+            break;
+        }
+
+        case 'addDosarNota': {
+            ensureDosarEvenimenteSchema($db);
+            $sessUser = currentUser();
+            $pid = isset($data['proiect_id']) ? intval($data['proiect_id']) : 0;
+            $cid = isset($data['client_id']) ? intval($data['client_id']) : 0;
+            $mesaj = isset($data['mesaj']) ? trim((string)$data['mesaj']) : '';
+            if (!$mesaj) { jsonResponse(['success'=>false,'error'=>'mesaj obligatoriu'], 400); break; }
+            if (!$pid && !$cid) { jsonResponse(['success'=>false,'error'=>'proiect_id sau client_id obligatoriu'], 400); break; }
+            $db->prepare("INSERT INTO dosar_evenimente (proiect_id, client_id, tip, mesaj, creat_de) VALUES (?,?,?,?,?)")
+               ->execute([$pid ?: null, $cid ?: null, 'nota', $mesaj, $sessUser['username']]);
+            jsonResponse(['success'=>true, 'id'=>$db->lastInsertId()]);
+            break;
+        }
+
+        case 'dosarMarcheazaBlocaj': {
+            ensureDosarEvenimenteSchema($db);
+            $sessUser = currentUser();
+            $pid = isset($data['proiect_id']) ? intval($data['proiect_id']) : 0;
+            $motiv = isset($data['motiv']) ? trim((string)$data['motiv']) : '';
+            if (!$pid || !$motiv) { jsonResponse(['success'=>false,'error'=>'proiect_id si motiv obligatorii'], 400); break; }
+            $db->prepare("INSERT INTO dosar_evenimente (proiect_id, tip, mesaj, creat_de) VALUES (?,?,?,?)")
+               ->execute([$pid, 'blocaj', $motiv, $sessUser['username']]);
+            jsonResponse(['success'=>true]);
+            break;
+        }
+
+        case 'dosarDezblocheaza': {
+            ensureDosarEvenimenteSchema($db);
+            $sessUser = currentUser();
+            $pid = isset($data['proiect_id']) ? intval($data['proiect_id']) : 0;
+            $nota = isset($data['nota']) ? trim((string)$data['nota']) : '';
+            if (!$pid) { jsonResponse(['success'=>false,'error'=>'proiect_id obligatoriu'], 400); break; }
+            $db->prepare("INSERT INTO dosar_evenimente (proiect_id, tip, mesaj, creat_de) VALUES (?,?,?,?)")
+               ->execute([$pid, 'deblocare', $nota ?: 'Blocaj rezolvat', $sessUser['username']]);
+            jsonResponse(['success'=>true]);
+            break;
+        }
+
+        case 'dosarMarcheazaPierdut': {
+            ensureDosarEvenimenteSchema($db);
+            $sessUser = currentUser();
+            $pid = isset($data['proiect_id']) ? intval($data['proiect_id']) : 0;
+            $cid = isset($data['client_id']) ? intval($data['client_id']) : 0;
+            $motiv = isset($data['motiv']) ? trim((string)$data['motiv']) : '';
+            if (!$motiv) { jsonResponse(['success'=>false,'error'=>'motiv obligatoriu'], 400); break; }
+            if (!$pid && !$cid) { jsonResponse(['success'=>false,'error'=>'proiect_id sau client_id obligatoriu'], 400); break; }
+
+            $stage_de_la = '';
+            if ($pid) {
+                $st = $db->prepare("SELECT status FROM proiecte WHERE id = ?");
+                $st->execute([$pid]);
+                $stage_de_la = (string)$st->fetchColumn();
+                $db->prepare("UPDATE proiecte SET status = 'Anulat', updated_at = NOW() WHERE id = ?")->execute([$pid]);
+            }
+            $db->prepare("INSERT INTO dosar_evenimente (proiect_id, client_id, tip, stage_de_la, stage_la, mesaj, creat_de) VALUES (?,?,?,?,?,?,?)")
+               ->execute([$pid ?: null, $cid ?: null, 'pierdut', $stage_de_la, 'Anulat', $motiv, $sessUser['username']]);
+            jsonResponse(['success'=>true]);
+            break;
+        }
+
+        case 'dosarAvanseazaStage': {
+            ensureDosarEvenimenteSchema($db);
+            $sessUser = currentUser();
+            $pid = isset($data['proiect_id']) ? intval($data['proiect_id']) : 0;
+            $newStatus = isset($data['status_nou']) ? trim((string)$data['status_nou']) : '';
+            $nota = isset($data['nota']) ? trim((string)$data['nota']) : '';
+            if (!$pid || !$newStatus) { jsonResponse(['success'=>false,'error'=>'proiect_id si status_nou obligatorii'], 400); break; }
+
+            $st = $db->prepare("SELECT status FROM proiecte WHERE id = ?");
+            $st->execute([$pid]);
+            $stOld = (string)$st->fetchColumn();
+
+            $db->prepare("UPDATE proiecte SET status = ?, updated_at = NOW() WHERE id = ?")->execute([$newStatus, $pid]);
+            $db->prepare("INSERT INTO dosar_evenimente (proiect_id, tip, stage_de_la, stage_la, mesaj, creat_de) VALUES (?,?,?,?,?,?)")
+               ->execute([$pid, 'avansare', $stOld, $newStatus, $nota ?: null, $sessUser['username']]);
+            jsonResponse(['success'=>true, 'status_vechi' => $stOld, 'status_nou' => $newStatus]);
+            break;
+        }
 
         case 'preiaProiect':
             // SECURITATE: user-ul e DIN SESIUNE — nu poate cineva să atribuie altcuiva

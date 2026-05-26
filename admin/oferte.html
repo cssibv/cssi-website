@@ -512,6 +512,8 @@ function renderCard(o){
     html += '<button class="status-pill s-'+st+'" onclick="event.stopPropagation();openStatusModal('+o.id+',\''+esc((o.client_nume||'').replace(/\047/g,'')).replace(/'/g,"\\'")+'\')" title="Click pentru a schimba status">'+statusInfo(st).ic+' '+statusInfo(st).lbl+'</button>';
     html += '<div class="oc-actions">';
     html += '<button class="oc-btn primary" onclick="event.stopPropagation();openOfertaView('+o.id+')" title="Vezi detalii ofertă">👁️</button>';
+    var dosarUrl = o.proiect_db_id ? ('dosar.html?proiect='+o.proiect_db_id) : (o.client_db_id ? ('dosar.html?client='+o.client_db_id) : '');
+    if (dosarUrl) html += '<a class="oc-btn" href="'+dosarUrl+'" onclick="event.stopPropagation()" title="Vezi dosar complet">📁</a>';
     html += '<a class="oc-btn" href="calculator-pret.html?edit='+esc(o.oferta_id)+'" onclick="event.stopPropagation()" title="Editează în calculator">✏️</a>';
     if(o.archived_at){
         html += '<button class="oc-btn warn" onclick="event.stopPropagation();doUnarchive('+o.id+')" title="Dezarhivează">📤</button>';

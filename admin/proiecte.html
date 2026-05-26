@@ -526,12 +526,13 @@ function renderKanban(){
             c.ondragend=function(){c.classList.remove('dragging');document.getElementById('kanbanBoard').classList.remove('dragging-active');};
             c.onclick=function(){openProjectDetail(p.id);};
             var phoneHtml=p.telefon?'<a href="tel:'+esc(p.telefon)+'" onclick="event.stopPropagation()" style="display:inline-flex;align-items:center;gap:3px;padding:2px 8px;border-radius:6px;background:#eff6ff;color:var(--blue);font-size:10px;font-weight:700;margin-top:4px;text-decoration:none" title="'+esc(p.telefon)+'">📞 Sună</a>':'';
+            var dosarBadge='<a href="dosar.html?cod='+encodeURIComponent(p.id)+'" onclick="event.stopPropagation()" style="display:inline-flex;align-items:center;gap:3px;padding:2px 8px;border-radius:6px;background:#f1f5f9;color:var(--dark);font-size:10px;font-weight:700;margin-top:4px;margin-left:4px;text-decoration:none" title="Vezi dosar complet">📁 Dosar</a>';
             c.innerHTML='<div class="kcard-id">'+p.id+' '+ageBadge+'</div>'+
                 '<div class="kcard-title">'+esc(p.client)+'</div>'+
                 '<div class="kcard-meta"><span class="kcard-tag '+t.cls+'">'+t.s+'</span><span>📍 '+(p.loc||'Brașov')+'</span></div>'+
                 '<div class="kcard-val">'+valHtml+'</div>'+
                 oferteBadge+
-                respHtml+phoneHtml+preiaHtml;
+                respHtml+phoneHtml+dosarBadge+preiaHtml;
             body.appendChild(c);
         });}
         col.appendChild(body);b.appendChild(col);
@@ -572,7 +573,7 @@ function renderTable(){
             '<td>'+ageHtml+'</td>'+
             '<td style="font-size:12px">'+(respIcon?respIcon+' ':'')+esc(respName)+'</td>'+
             '<td><select class="status-select" onclick="event.stopPropagation()" onchange="changeStatus('+Q+p.id+Q+',this.value)">'+opts+'</select></td>'+
-            '<td><button onclick="event.stopPropagation();openEditModal('+Q+p.id+Q+')" style="padding:5px 10px;border-radius:6px;border:none;background:var(--blue);color:#fff;font-size:11px;font-weight:700;cursor:pointer" title="Editare">✏️</button></td>';
+            '<td><a href="dosar.html?cod='+encodeURIComponent(p.id)+'" onclick="event.stopPropagation()" style="padding:5px 8px;border-radius:6px;background:#f1f5f9;color:var(--dark);font-size:11px;font-weight:700;text-decoration:none;margin-right:4px" title="Vezi dosar">📁</a><button onclick="event.stopPropagation();openEditModal('+Q+p.id+Q+')" style="padding:5px 10px;border-radius:6px;border:none;background:var(--blue);color:#fff;font-size:11px;font-weight:700;cursor:pointer" title="Editare">✏️</button></td>';
         tb.appendChild(tr);
     });
 }
