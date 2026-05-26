@@ -778,17 +778,23 @@ try {
                     return intval($st->fetchColumn());
                 } catch (Exception $e) { return 0; }
             };
+            // Force-delete: ocoleste garda DOAR daca admin a confirmat explicit
+            // (frontend cere confirmare dubla inainte de a seta force=true).
+            $force = !empty($data['force']);
             $nOferteAcceptate = $cntSafe('oferte', "client_id = ? AND status = 'Acceptata'");
             $nProiecteActive  = $cntSafe('proiecte', "client_id = ? AND status NOT IN ('Lead','Oferta','Anulat')");
-            if ($nOferteAcceptate > 0 || $nProiecteActive > 0) {
+            if (($nOferteAcceptate > 0 || $nProiecteActive > 0) && !$force) {
                 $motive = [];
                 if ($nOferteAcceptate) $motive[] = "$nOferteAcceptate ofertă(e) acceptată(e)";
                 if ($nProiecteActive)  $motive[] = "$nProiecteActive proiect(e) în lucru";
                 jsonResponse([
-                    'success' => false,
-                    'error'   => 'Clientul "' . $cliRow['nume'] . '" are ' . implode(' și ', $motive) .
-                                 '. Nu poate fi șters automat — gestionează manual aceste înregistrări.',
-                    'code'    => 'HAS_ACTIVITY'
+                    'success'         => false,
+                    'error'           => 'Clientul "' . $cliRow['nume'] . '" are ' . implode(' și ', $motive) .
+                                         '. Nu poate fi șters automat — gestionează manual aceste înregistrări.',
+                    'code'            => 'HAS_ACTIVITY',
+                    'oferte_acceptate'=> $nOferteAcceptate,
+                    'proiecte_active' => $nProiecteActive,
+                    'allow_force'     => true
                 ], 409);
             }
 

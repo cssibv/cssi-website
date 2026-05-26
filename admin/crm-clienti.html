@@ -1372,37 +1372,56 @@ function deleteClientFromEdit() {
 
     var btn = document.getElementById('deleteClientBtn');
     var origLabel = '🗑️ Șterge acest client (doar admin)';
-    btn.disabled = true;
-    btn.textContent = '⏳ Se șterge...';
 
-    fetch(API_DB + '?action=deleteClient', {
-        method: 'POST',
-        credentials: 'include',
-        headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify({action: 'deleteClient', id: l.clientDbId})
-    })
-    .then(function(r){ return r.json(); })
-    .then(function(res) {
-        btn.disabled = false;
-        btn.textContent = origLabel;
-        if (res.success) {
-            closeEditModal();
-            var c = res.cascade || {};
-            var extra = [];
-            if (c.oferte)    extra.push(c.oferte + ' oferte');
-            if (c.proiecte)  extra.push(c.proiecte + ' proiecte');
-            if (c.contracte) extra.push(c.contracte + ' contracte');
-            toast('✅ Client șters: ' + (res.nume || nume) + (extra.length ? ' (+ ' + extra.join(', ') + ')' : ''),'success');
-            refreshData();
-        } else {
+    function doDelete(force) {
+        btn.disabled = true;
+        btn.textContent = force ? '⏳ Se forțează ștergerea...' : '⏳ Se șterge...';
+        var body = {action: 'deleteClient', id: l.clientDbId};
+        if (force) body.force = true;
+        fetch(API_DB + '?action=deleteClient', {
+            method: 'POST',
+            credentials: 'include',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify(body)
+        })
+        .then(function(r){ return r.json(); })
+        .then(function(res) {
+            btn.disabled = false;
+            btn.textContent = origLabel;
+            if (res.success) {
+                closeEditModal();
+                var c = res.cascade || {};
+                var extra = [];
+                if (c.oferte)    extra.push(c.oferte + ' oferte');
+                if (c.proiecte)  extra.push(c.proiecte + ' proiecte');
+                if (c.contracte) extra.push(c.contracte + ' contracte');
+                toast('✅ Client șters: ' + (res.nume || nume) + (extra.length ? ' (+ ' + extra.join(', ') + ')' : ''),'success');
+                refreshData();
+                return;
+            }
+            // Bypass cu force? Cer confirmare dubla, apoi retry.
+            if (res.code === 'HAS_ACTIVITY' && res.allow_force && !force) {
+                var detalii = [];
+                if (res.oferte_acceptate) detalii.push(res.oferte_acceptate + ' ofertă/e acceptată/e');
+                if (res.proiecte_active)  detalii.push(res.proiecte_active + ' proiect/e în lucru');
+                var msg1 = '⚠️ ATENȚIE — clientul "' + nume + '" are:\n  · ' + detalii.join('\n  · ') +
+                           '\n\nDacă continui, vei ȘTERGE DEFINITIV clientul + TOATE ofertele, proiectele, contractele, mentenanța lui.\n\nFolosește această opțiune DOAR pentru clienți de test. Continui?';
+                if (!confirm(msg1)) return;
+                var msg2 = 'Confirmă încă o dată: ștergi forțat clientul „' + nume + '" cu tot istoricul lui?\n\nAcțiunea nu poate fi anulată.';
+                if (!confirm(msg2)) return;
+                doDelete(true);
+                return;
+            }
             toast('⚠️ ' + (res.error || 'Nu s-a putut șterge clientul'),'error');
-        }
-    })
-    .catch(function() {
-        btn.disabled = false;
-        btn.textContent = origLabel;
-        toast('⚠️ Eroare rețea','error');
-    });
+        })
+        .catch(function() {
+            btn.disabled = false;
+            btn.textContent = origLabel;
+            toast('⚠️ Eroare rețea','error');
+        });
+    }
+
+    doDelete(false);
 }
 
 
