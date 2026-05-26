@@ -1,9 +1,9 @@
 <?php
 /**
- * Shop-Security.ro Product Proxy v2
+ * Shop-Security.ro Product Proxy v3 — desc extraction via tab-pane show-active
  * Caută un produs după cod pe shop-security.ro și returnează JSON
- * Folosit de Generator Oferte CSSI (calculator-pret.html)
  * mode=image — proxy imagine binara (rezolva hotlink/referer in print PDF)
+ * Versiune: 2026-05-26 15:25 GMT+3 — fix regex descriere
  */
 
 // ─── MODE: image (proxy binar) ───────────────────────────────────
