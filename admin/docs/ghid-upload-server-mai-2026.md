@@ -129,9 +129,24 @@ Upload în `/admin/docs/`. Acestea sunt ghiduri de referință:
 
 ---
 
+## PRIORITATE 2c — Pagini actualizate 26 mai (rădăcina site-ului)
+
+Acestea au primit fix-uri de conformitate, conversie și SEO:
+- **`contact.html`** ← Fix bug formular + GA4 tracking + trust badges + eliminat detecție incendiu
+- **`index.html`** ← GA4 tracking formular + eliminat detecție incendiu din chatbot + link zone-deservite
+- **`despre-noi.html`** ← Copyright 2026
+- **`pentru-firme.html`** ← Copyright 2026
+- **`instalatii-termice-sanitare.html`** ← Copyright 2026
+- **`detectie-incendiu-isu.html`** ← noindex + copyright 2026
+- **`securitate/brasov/index.html`** ← Eliminat detecție incendiu complet + GA4 + tawk-chat.js + link-uri clean
+
+---
+
 ## După upload — verificare:
 1. Deschide https://cssi.ro → verifică homepage
 2. Deschide https://cssi.ro/servicii → verifică pagina servicii
-3. Deschide https://cssi.ro/contact → verifică chat (dacă Tawk.to e configurat)
+3. Deschide https://cssi.ro/contact → verifică formularul (trimite test) + trust badges sub formular
 4. Deschide https://cssi.ro/camere-supraveghere-brasov → verifică pagina refăcută
-5. Deschide view-source pe orice pagină → caută `tawk-chat.js` înainte de `</body>`
+5. Deschide https://cssi.ro/zone-deservite → verifică hub-ul local
+6. Deschide view-source pe orice pagină → caută `tawk-chat.js` înainte de `</body>`
+7. Verifică GA4 Realtime → trimite formular test → apare eveniment generate_lead?

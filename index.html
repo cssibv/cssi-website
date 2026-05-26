@@ -937,8 +937,13 @@ Cum vă pot ajuta? Scrieți: servicii, prețuri sau contact.</div>
         if (service && service !== 'Selectează serviciul') msg += '🛠️ *Serviciu:* ' + service + '\n';
         if (message) msg += '📝 *Mesaj:* ' + message + '\n';
         
+        if(typeof gtag==='function'){
+            gtag('event','generate_lead',{event_category:'Contact',event_label:service||'Homepage',value:150,currency:'RON'});
+            gtag('event','conversion',{send_to:'AW-17987940313/WVuaCJnH1YEcENnfqIFD',value:150,currency:'RON'});
+        }
+
         window.open('https://wa.me/40752288400?text=' + encodeURIComponent(msg), '_blank');
-        
+
         document.getElementById('contactForm').style.display = 'none';
         document.getElementById('contactSuccess').style.display = 'block';
         return false;
@@ -946,7 +951,7 @@ Cum vă pot ajuta? Scrieți: servicii, prețuri sau contact.</div>
 
     // ===== CHATBOT =====
     const chatResponses = {
-        'servicii': 'Oferim o gamă completă de servicii:\n\n🔥 Detecție incendiu ISU\n📹 Camere supraveghere\n🚨 Alarme antiefracție\n🚪 Control acces\n⏱️ Pontaj electronic\n🚧 Bariere auto\n🔔 Interfoane\n🔊 Sonorizare\n🚗 Automatizări porți\n🏠 Uși garaj\n❄️ Aer condiționat\n💨 Ventilație\n⚡ Instalații electrice\n🔧 Instalații termice\n\nPentru detalii, contactați-ne!',
+        'servicii': 'Oferim o gamă completă de servicii:\n\n📹 Camere supraveghere\n🚨 Alarme antiefracție\n🚪 Control acces\n⏱️ Pontaj electronic\n🚧 Bariere auto\n🔔 Interfoane\n🔊 Sonorizare\n🚗 Automatizări porți\n🏠 Uși garaj\n❄️ Aer condiționat\n💨 Ventilație\n⚡ Instalații electrice\n🔧 Instalații termice\n\nPentru detalii, contactați-ne!',
         'preturi': 'Prețurile variază în funcție de complexitatea proiectului. Pentru o ofertă personalizată:\n\n📞 Sunați: 0268 414 740\n💬 WhatsApp: 0752 288 400\n📧 Email: office@cssi.ro',
         'contact': 'Ne puteți contacta prin:\n\n📞 Telefon: 0268 414 740\n💬 WhatsApp: 0752 288 400\n📧 Email: office@cssi.ro\n📍 Locație: Brașov\n\nProgram: Luni-Vineri, 08:00-17:00',
         'default': 'Vă mulțumim pentru mesaj! 😊\n\nPentru asistență rapidă:\n📞 0268 414 740\n💬 WhatsApp: 0752 288 400\n\nSau scrieți: servicii, prețuri, contact'
