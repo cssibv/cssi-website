@@ -392,9 +392,25 @@ function _preloadAnexaImages(lines){
 }
 
 // ═══ ANEXĂ MATERIALE — pagină separată pentru printare frumoasă ═══
-// Solutie diferita fata de embed in PDF (care avea probleme de timing/referer):
-// deschidem o pagina noua HTML completa, imaginile se incarca natural in browser,
-// utilizatorul apasa „Printează" cand vrea.
+// Pentru fiecare line fără imagine (catalog vechi / produs manual), fac un fetch
+// live la shop-proxy după code și updatez și catalogul ca să fie persistat.
+function _fillMissingImages(lines){
+  var jobs=(lines||[]).map(function(l){
+    if(l.image || !l.code) return Promise.resolve();
+    return fetch('/admin/shop-proxy.php?q='+encodeURIComponent(l.code))
+      .then(function(r){return r.json();})
+      .then(function(d){
+        if(d && d.found && d.image){
+          l.image = d.image;
+          // Persist în catalog dacă există produs cu același cod fără imagine
+          var p = catalog.find(function(x){return (x.code||'').toLowerCase()===String(l.code).toLowerCase();});
+          if(p && !p.image){ p.image = d.image; saveCatalog(); }
+        }
+      })
+      .catch(function(){});
+  });
+  return Promise.all(jobs);
+}
 function openAnexaCurrent(){
   if(!offerLines.length){toast('⚠️ Adaugă produse mai întâi','error');return;}
   var enriched=_enrichLinesWithCatalog(JSON.parse(JSON.stringify(offerLines)));
@@ -404,18 +420,24 @@ function openAnexaCurrent(){
     client: document.getElementById('oClient').value.trim()||'—',
     obiectiv: document.getElementById('oObiectiv').value.trim()||''
   };
-  var w=window.open('','_blank');
-  w.document.write(buildAnexaPageHtml(enriched,info));
-  w.document.close();
+  toast('⏳ Se caută pozele produselor...','info');
+  _fillMissingImages(enriched).then(function(){
+    var w=window.open('','_blank');
+    w.document.write(buildAnexaPageHtml(enriched,info));
+    w.document.close();
+  });
 }
 function openAnexaSaved(oid){
   var o=offers.find(function(x){return String(x.id)===String(oid);});if(!o)return;
   var enriched=_enrichLinesWithCatalog(JSON.parse(JSON.stringify(o.lines||[])));
   if(!enriched.length){toast('⚠️ Oferta nu are produse','error');return;}
   var info={nr:o.nr||'—',data:o.data||'',client:o.client||'—',obiectiv:o.obiectiv||''};
-  var w=window.open('','_blank');
-  w.document.write(buildAnexaPageHtml(enriched,info));
-  w.document.close();
+  toast('⏳ Se caută pozele produselor...','info');
+  _fillMissingImages(enriched).then(function(){
+    var w=window.open('','_blank');
+    w.document.write(buildAnexaPageHtml(enriched,info));
+    w.document.close();
+  });
 }
 function buildAnexaPageHtml(lines,info){
   var dp=(info.data||'').split('-');
