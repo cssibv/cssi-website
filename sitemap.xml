@@ -8,6 +8,12 @@
   </url>
   <!-- detectie-incendiu-isu exclus din marketing CSSI — promovat pe breaksistems.ro -->
   <url>
+    <loc>https://cssi.ro/zone-deservite</loc>
+    <lastmod>2026-05-26</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
     <loc>https://cssi.ro/camere-supraveghere</loc>
     <lastmod>2026-05-26</lastmod>
     <changefreq>monthly</changefreq>

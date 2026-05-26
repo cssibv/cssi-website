@@ -93,10 +93,21 @@ Tot conținutul din folderul `blog/` (31 articole + index.html).
 Upload în `/admin/docs/`. Acestea sunt ghiduri de referință:
 - `ghid-integrare-tawk-to.md` ← Pașii pentru activare Tawk.to
 - `ghid-import-google-ads-editor.md` ← Import campanii noi Ads
+- `ghid-listare-directoare.md` ← **NOU** — Pași concreți pentru 10 directoare online
+- `ghid-upload-server-mai-2026.md` ← Acest ghid
+- `template-outreach-backlinks.md` ← **NOU** — Template-uri email pentru link building
+- `plan-actiuni-mihai-saptamana-1.md` ← Plan acțiuni săptămâna 1
+- `plan-activare-recenzii-google.md` ← Proces SMS cerere recenzii
 - `google-ads-campanii.csv` ← 3 campanii noi
 - `google-ads-keywords.csv` ← 22 keywords
 - `google-ads-negative-keywords.csv` ← 90 negative keywords
 - `google-ads-anunturi-rsa.csv` ← 6 anunțuri RSA
+
+---
+
+## PRIORITATE 2b — Pagină NOUĂ (rădăcina site-ului)
+
+- **`zone-deservite.html`** ← **PAGINĂ NOUĂ** — Hub SEO local cu toate cele 11 localități deservite
 
 ---
 

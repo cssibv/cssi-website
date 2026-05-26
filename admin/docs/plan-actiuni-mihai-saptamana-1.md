@@ -127,6 +127,22 @@ Apoi `admin/docs/` (ghiduri și CSV-uri).
 
 ## Bonus (dacă ai timp):
 
-- [ ] Creează pagina LinkedIn CSSI (ghid în admin/docs)
-- [ ] Înregistrare pe Pagini Aurii (ghid în admin/docs/ghid-listare-directoare.md)
-- [ ] Configurează Meta Pixel ID real în cookie-consent.js (linia cu `XXXXXXXXXXXXXXXXX`)
+- [ ] Creează pagina LinkedIn CSSI (ghid în `admin/docs/linkedin-optimizare-cssi.md`)
+- [ ] Înregistrare pe primele 5 directoare (ghid detaliat: `admin/docs/ghid-listare-directoare.md`)
+- [ ] Configurează Meta Pixel ID real în `cookie-consent.js` (linia cu `XXXXXXXXXXXXXXXXX`)
+- [ ] Trimite primele 2-3 email-uri outreach (template-uri: `admin/docs/template-outreach-backlinks.md`)
+
+---
+
+## Ghiduri disponibile în admin/docs:
+
+| Ghid | Ce conține |
+|------|-----------|
+| `ghid-upload-server-mai-2026.md` | Checklist upload complet pe server |
+| `ghid-integrare-tawk-to.md` | Activare chat Tawk.to |
+| `ghid-import-google-ads-editor.md` | Import campanii noi Google Ads |
+| `ghid-listare-directoare.md` | **NOU** — 10 directoare pas cu pas |
+| `template-outreach-backlinks.md` | **NOU** — Email-uri pentru link building |
+| `plan-activare-recenzii-google.md` | Proces cerere recenzii |
+| `linkedin-optimizare-cssi.md` | Optimizare pagină LinkedIn |
+| `linkedin-calendar-postari.md` | Calendar 16 postări LinkedIn |
