@@ -484,15 +484,21 @@ function buildAnexaPageHtml(lines,info){
   h+='.tbl tbody tr:hover{background:#f8fafc}';
   h+='.tbl .sel{width:38px;text-align:center}';
   h+='.tbl .sel input{width:17px;height:17px;cursor:pointer;accent-color:#dc2626}';
-  h+='.tbl .idx{text-align:center;font-weight:700;color:#64748b;font-size:11px;width:34px}';
-  h+='.tbl .img{width:90px;text-align:center}';
-  h+='.tbl .img .wrap{width:80px;height:80px;background:linear-gradient(135deg,#f8fafc,#f1f5f9);border-radius:6px;display:flex;align-items:center;justify-content:center;padding:4px;margin:0 auto;overflow:hidden}';
-  h+='.tbl .img img{max-width:100%;max-height:100%;object-fit:contain}';
-  h+='.tbl .img .ph{font-size:28px;color:#cbd5e1}';
-  h+='.tbl .name{font-size:12px;font-weight:700;color:#0f172a;line-height:1.35;margin-bottom:4px}';
-  h+='.tbl .spec{font-size:10px;color:#64748b;line-height:1.5;white-space:pre-wrap}';
-  h+='.tbl .qty{text-align:center;width:70px;font-weight:700;color:#1e40af;white-space:nowrap}';
-  h+='.tbl .qty .pill{display:inline-block;background:#dbeafe;padding:3px 9px;border-radius:5px;font-size:11px}';
+  h+='.tbl .idx{text-align:center;font-weight:700;color:#64748b;font-size:13px;width:34px}';
+  // Imagine ocupă 40% din lățimea rândului, text 60%
+  h+='.tbl .img{width:40%;text-align:center;padding:12px 10px}';
+  h+='.tbl .img .wrap{width:100%;min-height:200px;background:linear-gradient(135deg,#f8fafc,#f1f5f9);border-radius:8px;display:flex;align-items:center;justify-content:center;padding:10px;overflow:hidden;border:1px solid #e2e8f0}';
+  h+='.tbl .img img{max-width:100%;max-height:240px;object-fit:contain;display:block}';
+  h+='.tbl .img .ph{font-size:64px;color:#cbd5e1}';
+  h+='.tbl .txt{width:60%;padding:12px 12px}';
+  h+='.tbl .name{font-size:14px;font-weight:700;color:#0f172a;line-height:1.35;margin-bottom:8px;outline:none}';
+  h+='.tbl .spec{font-size:11px;color:#475569;line-height:1.55;white-space:pre-wrap;outline:none}';
+  h+='.tbl .qty{text-align:center;width:75px;font-weight:700;color:#1e40af;white-space:nowrap}';
+  h+='.tbl .qty .pill{display:inline-block;background:#dbeafe;padding:5px 11px;border-radius:6px;font-size:13px;outline:none;min-width:48px}';
+  // Editare inline: indicii vizuale doar pe ecran (focus + hover)
+  h+='[contenteditable="true"]{cursor:text;border-radius:4px;transition:background 0.12s,box-shadow 0.12s;padding:2px 4px;margin:-2px -4px}';
+  h+='[contenteditable="true"]:hover{background:#fff7ed;box-shadow:inset 0 0 0 1px #fdba74}';
+  h+='[contenteditable="true"]:focus{background:#fffbeb;box-shadow:inset 0 0 0 2px #f59e0b;outline:none}';
   // Stare „debifat" pe ecran: rândul devine gri/estompat + label vizual
   h+='.tbl tbody tr.row-off{background:#fef2f2;opacity:0.55}';
   h+='.tbl tbody tr.row-off .name::after{content:" • ascuns la print";color:#dc2626;font-style:italic;font-size:10px;font-weight:500}';
@@ -500,6 +506,8 @@ function buildAnexaPageHtml(lines,info){
   h+='.tbl tbody{counter-reset:rownum}';
   h+='.tbl tbody tr:not(.row-off){counter-increment:rownum}';
   h+='.num-print{display:none}';
+  // Hint editare (doar ecran)
+  h+='.edit-hint{text-align:center;font-size:11px;color:#64748b;margin:10px 0 4px;padding:6px;background:#fffbeb;border-radius:6px;border:1px dashed #fcd34d}';
   // Footer
   h+='.foot{text-align:center;font-size:9px;color:#94a3b8;margin-top:14px;padding-top:10px;border-top:1px solid #e2e8f0}';
   // Print rules
@@ -508,6 +516,9 @@ function buildAnexaPageHtml(lines,info){
   h+='.tbl .sel{display:none!important}';
   h+='.num-orig{display:none}.num-print{display:inline}';
   h+='.tbl .num-print::before{content:counter(rownum)}';
+  // La print: scoatem toate indiciile de editare
+  h+='[contenteditable="true"]{background:transparent!important;box-shadow:none!important;padding:0!important;margin:0!important}';
+  h+='.edit-hint{display:none!important}';
   h+='}';
   h+='</style></head><body>';
   // Toolbar (ascuns la print)
@@ -533,9 +544,9 @@ function buildAnexaPageHtml(lines,info){
   h+='<table class="tbl"><thead><tr>';
   h+='<th class="c sel" style="width:38px" title="Bifează produsele care apar la print">✓</th>';
   h+='<th class="c" style="width:34px">#</th>';
-  h+='<th class="c" style="width:90px">Imagine</th>';
-  h+='<th>Denumire & descriere</th>';
-  h+='<th class="c" style="width:70px">Cant.</th>';
+  h+='<th class="c" style="width:40%">Imagine</th>';
+  h+='<th style="width:60%">Denumire & descriere</th>';
+  h+='<th class="c" style="width:75px">Cant.</th>';
   h+='</tr></thead><tbody>';
   items.forEach(function(l,i){
     var hasImg=l.image && typeof l.image==='string' && l.image.indexOf('http')===0;
@@ -547,13 +558,15 @@ function buildAnexaPageHtml(lines,info){
     if(hasImg) h+='<img src="'+esc(imgSrc)+'" alt="" onerror="this.style.display=\'none\';this.nextElementSibling.style.display=\'block\'"><span class="ph" style="display:none">📷</span>';
     else h+='<span class="ph">📷</span>';
     h+='</div></td>';
-    h+='<td><div class="name">'+esc(l.name)+'</div>';
-    if(l.spec) h+='<div class="spec">'+esc(l.spec)+'</div>';
+    h+='<td class="txt"><div class="name" contenteditable="true" spellcheck="false" title="Click pentru a edita">'+esc(l.name)+'</div>';
+    h+='<div class="spec" contenteditable="true" spellcheck="false" title="Click pentru a edita descrierea">'+(l.spec?esc(l.spec):'')+'</div>';
     h+='</td>';
-    h+='<td class="qty"><span class="pill">'+l.cant+' '+esc(l.um||'buc.')+'</span></td>';
+    h+='<td class="qty"><span class="pill" contenteditable="true" spellcheck="false" title="Click pentru a edita cantitatea">'+l.cant+' '+esc(l.um||'buc.')+'</span></td>';
     h+='</tr>';
   });
   h+='</tbody></table>';
+  // Mic hint pentru utilizator (vizibil doar pe ecran)
+  h+='<div class="edit-hint">💡 Click pe orice text pentru a-l edita înainte de print. Modificările nu se salvează în ofertă.</div>';
   // Script de selecție (toggle row + count + select-all)
   h+='<script>';
   h+='function _updCount(){var rows=document.querySelectorAll(".tbl tbody tr");var on=document.querySelectorAll(".tbl tbody tr:not(.row-off)").length;var el=document.getElementById("selCount");if(el)el.textContent=on+" din "+rows.length+" selectate";}';
