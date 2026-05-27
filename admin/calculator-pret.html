@@ -482,6 +482,8 @@ function buildAnexaPageHtml(lines,info){
   h+='.tbl tbody td{padding:10px 8px;border-bottom:1px solid #e2e8f0;vertical-align:top}';
   h+='.tbl tbody tr{page-break-inside:avoid;break-inside:avoid}';
   h+='.tbl tbody tr:hover{background:#f8fafc}';
+  h+='.tbl .sel{width:38px;text-align:center}';
+  h+='.tbl .sel input{width:17px;height:17px;cursor:pointer;accent-color:#dc2626}';
   h+='.tbl .idx{text-align:center;font-weight:700;color:#64748b;font-size:11px;width:34px}';
   h+='.tbl .img{width:90px;text-align:center}';
   h+='.tbl .img .wrap{width:80px;height:80px;background:linear-gradient(135deg,#f8fafc,#f1f5f9);border-radius:6px;display:flex;align-items:center;justify-content:center;padding:4px;margin:0 auto;overflow:hidden}';
@@ -491,15 +493,31 @@ function buildAnexaPageHtml(lines,info){
   h+='.tbl .spec{font-size:10px;color:#64748b;line-height:1.5;white-space:pre-wrap}';
   h+='.tbl .qty{text-align:center;width:70px;font-weight:700;color:#1e40af;white-space:nowrap}';
   h+='.tbl .qty .pill{display:inline-block;background:#dbeafe;padding:3px 9px;border-radius:5px;font-size:11px}';
+  // Stare „debifat" pe ecran: rândul devine gri/estompat + label vizual
+  h+='.tbl tbody tr.row-off{background:#fef2f2;opacity:0.55}';
+  h+='.tbl tbody tr.row-off .name::after{content:" • ascuns la print";color:#dc2626;font-style:italic;font-size:10px;font-weight:500}';
+  // CSS counter pentru renumerotare la print (1,2,3 doar peste rândurile bifate)
+  h+='.tbl tbody{counter-reset:rownum}';
+  h+='.tbl tbody tr:not(.row-off){counter-increment:rownum}';
+  h+='.num-print{display:none}';
   // Footer
   h+='.foot{text-align:center;font-size:9px;color:#94a3b8;margin-top:14px;padding-top:10px;border-top:1px solid #e2e8f0}';
   // Print rules
-  h+='@media print{body{background:#fff;padding:0}.no-print{display:none!important}.sheet{box-shadow:none;border-radius:0;padding:0;margin:0;max-width:100%}.tbl thead{display:table-header-group}.tbl tbody tr{page-break-inside:avoid;break-inside:avoid}}';
+  h+='@media print{body{background:#fff;padding:0}.no-print{display:none!important}.sheet{box-shadow:none;border-radius:0;padding:0;margin:0;max-width:100%}.tbl thead{display:table-header-group}.tbl tbody tr{page-break-inside:avoid;break-inside:avoid}';
+  h+='.tbl tbody tr.row-off{display:none!important}';
+  h+='.tbl .sel{display:none!important}';
+  h+='.num-orig{display:none}.num-print{display:inline}';
+  h+='.tbl .num-print::before{content:counter(rownum)}';
+  h+='}';
   h+='</style></head><body>';
   // Toolbar (ascuns la print)
   h+='<div class="no-print"><h1>📎 Anexă materiale<small>Oferta '+esc(info.nr)+' • '+esc(info.client)+'</small></h1>';
-  h+='<div style="display:flex;gap:8px"><button class="btn-print" onclick="window.print()">🖨️ Printează / Salvează PDF</button>';
-  h+='<button class="btn-close" onclick="window.close()">✕ Închide</button></div></div>';
+  h+='<div style="display:flex;gap:8px;flex-wrap:wrap">';
+  h+='<button class="btn-close" onclick="toggleAll(true)" title="Bifează toate produsele">✓ Toate</button>';
+  h+='<button class="btn-close" onclick="toggleAll(false)" title="Debifează toate produsele">✕ Niciunul</button>';
+  h+='<button class="btn-print" onclick="window.print()">🖨️ Printează / Salvează PDF</button>';
+  h+='<button class="btn-close" onclick="window.close()">✕ Închide</button>';
+  h+='</div></div>';
   // Foaie cu conținut
   h+='<div class="sheet">';
   // Header
@@ -510,9 +528,10 @@ function buildAnexaPageHtml(lines,info){
   h+='</div></div>';
   // Bar info
   h+='<div class="bar"><div><strong>Beneficiar:</strong> '+esc(info.client)+(info.obiectiv?' · <span style="color:#64748b">'+esc(info.obiectiv)+'</span>':'')+'</div>';
-  h+='<div class="count">'+items.length+' produs'+(items.length===1?'':'e')+'</div></div>';
+  h+='<div class="count" id="selCount">'+items.length+' din '+items.length+' selectate</div></div>';
   // Tabel produse
   h+='<table class="tbl"><thead><tr>';
+  h+='<th class="c sel" style="width:38px" title="Bifează produsele care apar la print">✓</th>';
   h+='<th class="c" style="width:34px">#</th>';
   h+='<th class="c" style="width:90px">Imagine</th>';
   h+='<th>Denumire & descriere</th>';
@@ -521,8 +540,9 @@ function buildAnexaPageHtml(lines,info){
   items.forEach(function(l,i){
     var hasImg=l.image && typeof l.image==='string' && l.image.indexOf('http')===0;
     var imgSrc=hasImg?(l.image.indexOf('shop-security.ro')>=0?'/admin/shop-proxy.php?mode=image&img='+encodeURIComponent(l.image):l.image):'';
-    h+='<tr>';
-    h+='<td class="idx">'+(i+1)+'</td>';
+    h+='<tr id="row'+i+'">';
+    h+='<td class="sel"><input type="checkbox" checked onchange="toggleRow('+i+',this.checked)"></td>';
+    h+='<td class="idx"><span class="num-orig">'+(i+1)+'</span><span class="num-print"></span></td>';
     h+='<td class="img"><div class="wrap">';
     if(hasImg) h+='<img src="'+esc(imgSrc)+'" alt="" onerror="this.style.display=\'none\';this.nextElementSibling.style.display=\'block\'"><span class="ph" style="display:none">📷</span>';
     else h+='<span class="ph">📷</span>';
@@ -534,6 +554,12 @@ function buildAnexaPageHtml(lines,info){
     h+='</tr>';
   });
   h+='</tbody></table>';
+  // Script de selecție (toggle row + count + select-all)
+  h+='<script>';
+  h+='function _updCount(){var rows=document.querySelectorAll(".tbl tbody tr");var on=document.querySelectorAll(".tbl tbody tr:not(.row-off)").length;var el=document.getElementById("selCount");if(el)el.textContent=on+" din "+rows.length+" selectate";}';
+  h+='function toggleRow(i,checked){var tr=document.getElementById("row"+i);if(!tr)return;if(checked)tr.classList.remove("row-off");else tr.classList.add("row-off");_updCount();}';
+  h+='function toggleAll(state){var boxes=document.querySelectorAll(".tbl tbody .sel input[type=checkbox]");boxes.forEach(function(b,i){b.checked=state;toggleRow(i,state);});}';
+  h+='<\/script>';
   // Footer
   h+='<div class="foot">Break Sistems SRL • brand CSSI • www.cssi.ro • 0752 288 400 • Anexă la oferta '+esc(info.nr)+'</div>';
   h+='</div></body></html>';
