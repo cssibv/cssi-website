@@ -182,6 +182,54 @@ a{text-decoration:none;color:inherit;}button{font-family:inherit;cursor:pointer;
 .kcard-age.old{background:#fef2f2;color:var(--red);}
 .kcard.drag-over{border-top:3px solid var(--blue);padding-top:9px;}
 .kcard.dragging{opacity:0.4;}
+/* ── Wizard FINALIZARE PROIECT ── */
+.btn-finalize{padding:5px 10px;border-radius:6px;border:none;background:#16a34a;color:#fff;font-size:11px;font-weight:700;cursor:pointer;margin-right:4px}
+.btn-finalize:hover{background:#15803d}
+.badge-final{display:inline-block;background:#dcfce7;color:#15803d;padding:3px 8px;border-radius:5px;font-size:10px;font-weight:700;margin-left:4px}
+.badge-final.maint{background:#dbeafe;color:#1e40af}
+.fin-modal{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(15,23,42,0.65);z-index:9999;align-items:flex-start;justify-content:center;overflow-y:auto;padding:20px 0}
+.fin-modal.active{display:flex}
+.fin-modal-inner{background:#fff;border-radius:12px;padding:0;max-width:720px;width:94%;box-shadow:0 20px 60px rgba(0,0,0,0.3);margin:auto;overflow:hidden}
+.fin-hdr{background:linear-gradient(135deg,#16a34a,#15803d);color:#fff;padding:18px 22px;display:flex;justify-content:space-between;align-items:center}
+.fin-hdr h2{font-size:17px;font-weight:700;margin:0}
+.fin-hdr h2 small{display:block;font-size:11px;opacity:0.85;font-weight:500;margin-top:3px}
+.fin-hdr .x{background:rgba(255,255,255,0.15);border:none;color:#fff;width:32px;height:32px;border-radius:8px;cursor:pointer;font-size:16px}
+.fin-hdr .x:hover{background:rgba(255,255,255,0.3)}
+.fin-body{padding:18px 22px;max-height:70vh;overflow-y:auto}
+.fin-sec{background:#f8fafc;border-radius:10px;padding:14px 16px;margin-bottom:12px;border-left:3px solid #16a34a}
+.fin-sec h3{font-size:12px;color:#475569;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;margin:0 0 10px}
+.fin-sec h3 .num{display:inline-block;width:20px;height:20px;background:#16a34a;color:#fff;border-radius:50%;text-align:center;line-height:20px;font-size:11px;margin-right:6px}
+.fin-row{display:flex;gap:10px;margin-bottom:8px;flex-wrap:wrap}
+.fin-row .col{flex:1;min-width:130px}
+.fin-row label{display:block;font-size:10px;color:#64748b;font-weight:600;margin-bottom:3px;text-transform:uppercase;letter-spacing:0.3px}
+.fin-row input[type=text],.fin-row input[type=number],.fin-row input[type=date],.fin-row select,.fin-row textarea{width:100%;padding:7px 10px;border:1px solid #e2e8f0;border-radius:6px;font-size:12px;font-family:inherit;background:#fff}
+.fin-row input:focus,.fin-row select:focus,.fin-row textarea:focus{outline:none;border-color:#16a34a;box-shadow:0 0 0 2px rgba(22,163,74,0.15)}
+.fin-row textarea{min-height:60px;resize:vertical}
+.fin-check{display:flex;align-items:flex-start;gap:8px;padding:7px 10px;background:#fff;border-radius:6px;margin-bottom:5px;cursor:pointer;border:1px solid #e2e8f0;transition:all 0.12s}
+.fin-check:hover{border-color:#16a34a;background:#f0fdf4}
+.fin-check input{margin-top:2px;width:15px;height:15px;accent-color:#16a34a}
+.fin-check span{font-size:12px;color:#334155;line-height:1.4}
+.fin-radio{display:inline-flex;align-items:center;gap:6px;padding:6px 12px;background:#fff;border-radius:6px;cursor:pointer;border:1px solid #e2e8f0;font-size:12px;font-weight:600}
+.fin-radio input{accent-color:#16a34a}
+.fin-radio.on{border-color:#16a34a;background:#f0fdf4;color:#15803d}
+.fin-mentenanta-fields{display:none;margin-top:10px;padding:10px;background:#fff;border-radius:7px;border:1px dashed #cbd5e1}
+.fin-mentenanta-fields.on{display:block}
+.fin-summary{background:#fffbeb;border:1px solid #fcd34d;border-radius:7px;padding:9px 12px;font-size:11px;color:#92400e;margin-top:8px}
+.fin-poze-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(80px,1fr));gap:6px;margin-top:8px}
+.fin-poze-grid .item{position:relative;background:#f1f5f9;border-radius:6px;overflow:hidden;aspect-ratio:1}
+.fin-poze-grid .item img{width:100%;height:100%;object-fit:cover}
+.fin-poze-grid .item .rm{position:absolute;top:2px;right:2px;background:rgba(220,38,38,0.9);color:#fff;width:18px;height:18px;border-radius:50%;border:none;cursor:pointer;font-size:11px;line-height:1}
+.fin-actions{padding:14px 22px;background:#f8fafc;border-top:1px solid #e2e8f0;display:flex;gap:8px;justify-content:flex-end;flex-wrap:wrap}
+.fin-actions button{padding:9px 16px;border-radius:7px;border:none;cursor:pointer;font-weight:700;font-size:12px}
+.fin-actions .cancel{background:#f1f5f9;color:#475569}
+.fin-actions .cancel:hover{background:#e2e8f0}
+.fin-actions .pv{background:#3b82f6;color:#fff}
+.fin-actions .pv:hover{background:#2563eb}
+.fin-actions .email{background:#8b5cf6;color:#fff}
+.fin-actions .email:hover{background:#7c3aed}
+.fin-actions .submit{background:#16a34a;color:#fff;padding-left:22px;padding-right:22px}
+.fin-actions .submit:hover{background:#15803d}
+.fin-actions .submit:disabled{background:#94a3b8;cursor:not-allowed}
 </style>
 <script src="/admin/access-guard.js" defer></script>
 </head>
@@ -421,7 +469,10 @@ function loadProjects(){
                     loc:p.oras||'Brașov',
                     note:p.note||'',
                     dataCreare:p.created_at||'',
-                    updatedAt:p.updated_at||''
+                    updatedAt:p.updated_at||'',
+                    dataFinalizare:p.data_finalizare||'',
+                    garantieEnd:p.garantie_end||'',
+                    finalizatAt:p.finalizat_at||''
                 };
             });
         } else { PROJECTS=[]; }
@@ -573,7 +624,10 @@ function renderTable(){
             '<td>'+ageHtml+'</td>'+
             '<td style="font-size:12px">'+(respIcon?respIcon+' ':'')+esc(respName)+'</td>'+
             '<td><select class="status-select" onclick="event.stopPropagation()" onchange="changeStatus('+Q+p.id+Q+',this.value)">'+opts+'</select></td>'+
-            '<td><a href="dosar.html?cod='+encodeURIComponent(p.id)+'" onclick="event.stopPropagation()" style="padding:5px 8px;border-radius:6px;background:#f1f5f9;color:var(--dark);font-size:11px;font-weight:700;text-decoration:none;margin-right:4px" title="Vezi dosar">📁</a><button onclick="event.stopPropagation();openEditModal('+Q+p.id+Q+')" style="padding:5px 10px;border-radius:6px;border:none;background:var(--blue);color:#fff;font-size:11px;font-weight:700;cursor:pointer" title="Editare">✏️</button></td>';
+            '<td><a href="dosar.html?cod='+encodeURIComponent(p.id)+'" onclick="event.stopPropagation()" style="padding:5px 8px;border-radius:6px;background:#f1f5f9;color:var(--dark);font-size:11px;font-weight:700;text-decoration:none;margin-right:4px" title="Vezi dosar">📁</a>'+
+            ((p.status==='Execuție'||p.status==='Recepție')?'<button class="btn-finalize" onclick="event.stopPropagation();openFinalizareModal('+Q+p.id+Q+')" title="Finalizează proiect">🏁</button>':'')+
+            ((p.status==='Finalizat'||p.status==='Mentenanță')&&p.dataFinalizare?'<span class="badge-final'+(p.status==='Mentenanță'?' maint':'')+'" title="Finalizat la '+p.dataFinalizare+(p.garantieEnd?' • Garanție până '+p.garantieEnd:'')+'">✅ '+(p.dataFinalizare||'').slice(0,10)+'</span>':'')+
+            '<button onclick="event.stopPropagation();openEditModal('+Q+p.id+Q+')" style="padding:5px 10px;border-radius:6px;border:none;background:var(--blue);color:#fff;font-size:11px;font-weight:700;cursor:pointer" title="Editare">✏️</button></td>';
         tb.appendChild(tr);
     });
 }
@@ -905,7 +959,400 @@ function deleteProject(projectId, dbId){
 }
 
 function refreshProjects(){showToast('🔄 Se reîncarcă...','info');loadProjects();}
+
+// ═══════════════════════════════════════════════════════════════
+// ═══════ WIZARD FINALIZARE PROIECT (F1 + F2 + F4) ═══════════════
+// ═══════════════════════════════════════════════════════════════
+var _finalizeCtx={projectId:'',dbId:'',clientNume:'',valoareContract:0,clientEmail:'',poze:[]};
+
+function openFinalizareModal(projectId){
+    var p=PROJECTS.find(function(x){return x.id===projectId});
+    if(!p){showToast('❌ Proiect negăsit','error');return;}
+    _finalizeCtx={projectId:projectId,dbId:p.dbId,clientNume:p.client,valoareContract:p.valoareContract||p.valoare||0,clientEmail:p.email||'',poze:[]};
+    document.getElementById('finModal').classList.add('active');
+    document.getElementById('finTitle').textContent='🏁 Finalizare proiect '+projectId;
+    document.getElementById('finSubtitle').textContent=p.client+' • '+(p.obiectiv||'');
+    document.getElementById('finValContract').textContent=(p.valoareContract||p.valoare||0).toLocaleString('ro-RO')+' RON';
+    var today=new Date().toISOString().slice(0,10);
+    document.getElementById('finDataFinal').value=today;
+    document.getElementById('finGarantieStart').value=today;
+    document.getElementById('finGarantieLuni').value=24;
+    _finalizareCalcGarantieEnd();
+    document.getElementById('finFactNr').value='';
+    document.getElementById('finFactData').value=today;
+    document.getElementById('finAchitat').value='Nu';
+    document.getElementById('finObs').value='';
+    document.querySelectorAll('.fin-check input').forEach(function(c){c.checked=false;});
+    document.getElementById('finMentDa').checked=true;
+    document.getElementById('finMentTip').value='Standard';
+    document.getElementById('finMentFrec').value='Trimestrial';
+    document.getElementById('finMentVal').value=Math.round((p.valoareContract||p.valoare||0)*0.02);
+    document.getElementById('finMentStart').value=new Date(Date.now()+86400000).toISOString().slice(0,10);
+    _finalizareToggleMentenanta();
+    document.getElementById('finPozeGrid').innerHTML='';
+    document.getElementById('finEmail').value=p.email||'';
+    // Pre-încarcă dacă proiectul a fost finalizat deja (re-deschidere)
+    fetch(API_DB+'?action=getDateFinalizare&id='+encodeURIComponent(p.dbId||projectId))
+        .then(function(r){return r.json()})
+        .then(function(res){
+            if(res.success && res.data){
+                var d=res.data;
+                if(d.data_finalizare){document.getElementById('finDataFinal').value=d.data_finalizare;}
+                if(d.garantie_luni){document.getElementById('finGarantieLuni').value=d.garantie_luni;}
+                if(d.garantie_start){document.getElementById('finGarantieStart').value=d.garantie_start;}
+                if(d.factura_finala_nr){document.getElementById('finFactNr').value=d.factura_finala_nr;}
+                if(d.factura_finala_data){document.getElementById('finFactData').value=d.factura_finala_data;}
+                if(d.achitat_status){document.getElementById('finAchitat').value=d.achitat_status;}
+                if(d.observatii_finalizare){document.getElementById('finObs').value=d.observatii_finalizare;}
+                if(d.checklist_parsed){
+                    Object.keys(d.checklist_parsed).forEach(function(k){
+                        var el=document.querySelector('.fin-check input[data-key="'+k+'"]');
+                        if(el)el.checked=!!d.checklist_parsed[k];
+                    });
+                }
+                if(d.poze_parsed && d.poze_parsed.length){
+                    _finalizeCtx.poze=d.poze_parsed.slice();
+                    _finalizareRenderPoze();
+                }
+                if(d.mentenanta){
+                    document.getElementById('finMentDa').checked=true;
+                    document.getElementById('finMentTip').value=d.mentenanta.tip||'Standard';
+                    document.getElementById('finMentFrec').value=d.mentenanta.frecventa||'Trimestrial';
+                    document.getElementById('finMentVal').value=d.mentenanta.valoare_lunara||0;
+                    if(d.mentenanta.data_start)document.getElementById('finMentStart').value=d.mentenanta.data_start;
+                }
+                _finalizareCalcGarantieEnd();
+                _finalizareToggleMentenanta();
+            }
+        }).catch(function(){});
+}
+
+function closeFinalizareModal(){document.getElementById('finModal').classList.remove('active');}
+
+function _finalizareCalcGarantieEnd(){
+    var start=document.getElementById('finGarantieStart').value;
+    var luni=parseInt(document.getElementById('finGarantieLuni').value)||24;
+    if(!start){document.getElementById('finGarantieEnd').textContent='—';return;}
+    var d=new Date(start);
+    d.setMonth(d.getMonth()+luni);
+    document.getElementById('finGarantieEnd').textContent=d.toISOString().slice(0,10);
+}
+
+function _finalizareToggleMentenanta(){
+    var da=document.getElementById('finMentDa').checked;
+    document.querySelectorAll('.fin-radio').forEach(function(r){
+        var inp=r.querySelector('input');
+        r.classList.toggle('on',inp&&inp.checked);
+    });
+    document.getElementById('finMentFields').classList.toggle('on',da);
+}
+
+function _finalizareUploadPoza(input){
+    if(!input.files||!input.files.length)return;
+    Array.prototype.forEach.call(input.files,function(f){
+        if(!f.type.startsWith('image/'))return;
+        var reader=new FileReader();
+        reader.onload=function(e){
+            // Comprim la max 800px width pentru a reduce dimensiunea base64
+            var img=new Image();
+            img.onload=function(){
+                var canvas=document.createElement('canvas');
+                var max=800;
+                var w=img.width,h=img.height;
+                if(w>max){h=h*(max/w);w=max;}
+                canvas.width=w;canvas.height=h;
+                canvas.getContext('2d').drawImage(img,0,0,w,h);
+                _finalizeCtx.poze.push(canvas.toDataURL('image/jpeg',0.75));
+                _finalizareRenderPoze();
+            };
+            img.src=e.target.result;
+        };
+        reader.readAsDataURL(f);
+    });
+    input.value='';
+}
+
+function _finalizareRenderPoze(){
+    var html='';
+    _finalizeCtx.poze.forEach(function(p,i){
+        html+='<div class="item"><img src="'+p+'"><button class="rm" onclick="_finalizareRemovePoza('+i+')" title="Șterge">×</button></div>';
+    });
+    document.getElementById('finPozeGrid').innerHTML=html;
+}
+
+function _finalizareRemovePoza(i){_finalizeCtx.poze.splice(i,1);_finalizareRenderPoze();}
+
+function _finalizareCollectData(){
+    var checklist={};
+    document.querySelectorAll('.fin-check input').forEach(function(c){checklist[c.dataset.key]=c.checked;});
+    return {
+        id:_finalizeCtx.dbId||_finalizeCtx.projectId,
+        data_finalizare:document.getElementById('finDataFinal').value,
+        garantie_luni:parseInt(document.getElementById('finGarantieLuni').value)||24,
+        garantie_start:document.getElementById('finGarantieStart').value,
+        factura_finala_nr:document.getElementById('finFactNr').value.trim(),
+        factura_finala_data:document.getElementById('finFactData').value||null,
+        achitat_status:document.getElementById('finAchitat').value,
+        observatii_finalizare:document.getElementById('finObs').value.trim(),
+        checklist:checklist,
+        poze_finale:_finalizeCtx.poze,
+        mentenanta_da:document.getElementById('finMentDa').checked,
+        mentenanta_tip:document.getElementById('finMentTip').value,
+        mentenanta_frecventa:document.getElementById('finMentFrec').value,
+        mentenanta_valoare:parseFloat(document.getElementById('finMentVal').value)||0,
+        mentenanta_start:document.getElementById('finMentStart').value
+    };
+}
+
+function submitFinalizare(){
+    var payload=_finalizareCollectData();
+    if(!payload.data_finalizare){showToast('⚠️ Setează data de finalizare','error');return;}
+    var allChecked=document.querySelectorAll('.fin-check input:checked').length;
+    var totalCheck=document.querySelectorAll('.fin-check input').length;
+    if(allChecked<totalCheck){
+        if(!confirm('Doar '+allChecked+' din '+totalCheck+' bife din checklist sunt marcate. Continui finalizarea?'))return;
+    }
+    var btn=document.getElementById('finSubmitBtn');
+    btn.disabled=true;btn.textContent='⏳ Se finalizează...';
+    fetch(API_DB+'?action=finalizeazaProiect',{
+        method:'POST',headers:{'Content-Type':'application/json'},
+        body:JSON.stringify(Object.assign({action:'finalizeazaProiect'},payload))
+    })
+    .then(function(r){return r.json()})
+    .then(function(res){
+        btn.disabled=false;btn.textContent='🏁 ÎNCHIDE PROIECTUL';
+        if(res.success){
+            showToast('✅ Proiect '+res.proiect_id+' finalizat! Status: '+res.status+(res.mentenanta_id?' • Contract mentenanță creat':''),'success');
+            closeFinalizareModal();
+            loadProjects();
+        } else {
+            showToast('❌ '+(res.error||'Eroare la finalizare'),'error');
+        }
+    })
+    .catch(function(err){
+        btn.disabled=false;btn.textContent='🏁 ÎNCHIDE PROIECTUL';
+        showToast('❌ Eroare rețea','error');
+    });
+}
+
+// ═══ F2: Generator PV Finalizare (pagină nouă de print) ═══
+function _finalizareOpenPV(){
+    var p=PROJECTS.find(function(x){return x.id===_finalizeCtx.projectId});
+    if(!p){showToast('❌ Proiect negăsit','error');return;}
+    var d=_finalizareCollectData();
+    var w=window.open('','_blank');
+    w.document.write(_buildPVHtml(p,d));
+    w.document.close();
+}
+
+function _buildPVHtml(p,d){
+    var checklist=d.checklist||{};
+    var checklistRows='';
+    Object.keys(checklist).forEach(function(k){
+        var lbl=document.querySelector('.fin-check input[data-key="'+k+'"]');
+        var text=lbl?lbl.parentNode.querySelector('span').textContent:k;
+        checklistRows+='<tr><td>'+(checklist[k]?'✅':'☐')+'</td><td>'+esc(text)+'</td></tr>';
+    });
+    var pozeHtml='';
+    if(d.poze_finale && d.poze_finale.length){
+        pozeHtml='<div class="sec"><h3>📷 Poze finale</h3><div class="poze">';
+        d.poze_finale.forEach(function(src){pozeHtml+='<img src="'+src+'">';});
+        pozeHtml+='</div></div>';
+    }
+    var ment=d.mentenanta_da?
+        '<tr><td>Contract mentenanță</td><td><strong>DA</strong> — '+esc(d.mentenanta_tip)+' / '+esc(d.mentenanta_frecventa)+' / '+(d.mentenanta_valoare||0).toLocaleString('ro-RO')+' RON/lună (start '+esc(d.mentenanta_start)+')</td></tr>':
+        '<tr><td>Contract mentenanță</td><td>NU</td></tr>';
+    var garEnd=document.getElementById('finGarantieEnd').textContent;
+    var h='<!DOCTYPE html><html lang="ro"><head><meta charset="UTF-8"><title>Proces Verbal Finalizare — '+esc(p.id)+'</title>';
+    h+='<style>@page{size:A4;margin:14mm 12mm}*{margin:0;padding:0;box-sizing:border-box;font-family:"Segoe UI",Tahoma,sans-serif}';
+    h+='body{padding:18px;color:#0f172a;background:#f1f5f9}';
+    h+='.no-print{position:sticky;top:0;background:#0f172a;color:#fff;padding:11px 18px;border-radius:10px;margin-bottom:16px;display:flex;justify-content:space-between;align-items:center;gap:10px;z-index:10}';
+    h+='.no-print button{padding:8px 14px;border-radius:7px;border:none;cursor:pointer;font-weight:700;font-size:12px}';
+    h+='.no-print .p{background:#16a34a;color:#fff}.no-print .c{background:rgba(255,255,255,0.1);color:#fff}';
+    h+='.sheet{background:#fff;border-radius:12px;padding:26px;max-width:780px;margin:0 auto;box-shadow:0 1px 3px rgba(0,0,0,0.05)}';
+    h+='.hdr{display:flex;justify-content:space-between;align-items:center;padding-bottom:14px;margin-bottom:16px;border-bottom:3px solid #16a34a}';
+    h+='.hdr .tag{font-size:10px;color:#94a3b8;text-transform:uppercase;letter-spacing:2px;font-weight:700}';
+    h+='.hdr .title{font-size:20px;font-weight:800;margin-top:2px;color:#0f172a}';
+    h+='.hdr .nr{font-size:12px;color:#64748b;margin-top:3px}';
+    h+='.hdr .right{text-align:right}';
+    h+='.intro{background:#f0fdf4;border-radius:8px;padding:11px 14px;margin-bottom:14px;font-size:12px;line-height:1.55;color:#15803d}';
+    h+='.sec{margin-bottom:14px}.sec h3{font-size:11px;text-transform:uppercase;letter-spacing:0.5px;color:#475569;font-weight:700;margin-bottom:7px;padding-bottom:5px;border-bottom:1px solid #e2e8f0}';
+    h+='table{width:100%;border-collapse:collapse;font-size:12px}td{padding:6px 8px;border-bottom:1px solid #f1f5f9;vertical-align:top}td:first-child{font-weight:600;color:#475569;width:35%}';
+    h+='.poze{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:6px}.poze img{width:100%;height:140px;object-fit:cover;border-radius:6px;border:1px solid #e2e8f0}';
+    h+='.sig{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-top:28px;padding-top:14px;border-top:1px dashed #cbd5e1}';
+    h+='.sig .box{text-align:center;font-size:11px}.sig .lbl{color:#94a3b8;text-transform:uppercase;font-size:9px;letter-spacing:1px;margin-bottom:30px}.sig .line{border-top:1px solid #0f172a;padding-top:5px;font-weight:600}';
+    h+='.foot{text-align:center;font-size:9px;color:#94a3b8;margin-top:18px;padding-top:10px;border-top:1px solid #e2e8f0}';
+    h+='@media print{body{background:#fff;padding:0}.no-print{display:none!important}.sheet{box-shadow:none;border-radius:0;max-width:100%}}';
+    h+='</style></head><body>';
+    h+='<div class="no-print"><div><strong>📄 Proces Verbal Finalizare</strong> — '+esc(p.id)+'</div>';
+    h+='<div><button class="p" onclick="window.print()">🖨️ Printează / PDF</button> <button class="c" onclick="window.close()">✕ Închide</button></div></div>';
+    h+='<div class="sheet">';
+    h+='<div class="hdr"><div><div class="tag">CSSI • Break Sistems SRL</div><div class="title">Proces Verbal Finalizare Lucrare</div><div class="nr">Nr. '+esc(p.id)+' / '+esc(d.data_finalizare)+'</div></div>';
+    h+='<div class="right"><div style="font-size:10px;color:#94a3b8">www.cssi.ro</div><div style="font-size:11px;color:#64748b">contact@cssi.ro • 0752 288 400</div></div></div>';
+    h+='<div class="intro">Subscrisa <strong>Break Sistems SRL</strong> (brand CSSI), prin reprezentantul său, confirmă finalizarea lucrărilor contractate cu beneficiarul <strong>'+esc(p.client)+'</strong> pentru obiectivul <strong>'+esc(p.obiectiv||p.adresa||'—')+'</strong>.</div>';
+    h+='<div class="sec"><h3>Date proiect</h3><table>';
+    h+='<tr><td>Cod proiect</td><td><strong>'+esc(p.id)+'</strong></td></tr>';
+    h+='<tr><td>Beneficiar</td><td>'+esc(p.client)+(p.cui?' (CUI '+esc(p.cui)+')':'')+'</td></tr>';
+    h+='<tr><td>Obiectiv</td><td>'+esc(p.obiectiv||'—')+'</td></tr>';
+    h+='<tr><td>Adresă</td><td>'+esc(p.adresa||'—')+'</td></tr>';
+    h+='<tr><td>Serviciu</td><td>'+esc(p.serviciu||'—')+'</td></tr>';
+    h+='<tr><td>Valoare contract</td><td><strong>'+(p.valoareContract||p.valoare||0).toLocaleString('ro-RO')+' RON</strong></td></tr>';
+    h+='<tr><td>Data finalizare</td><td><strong>'+esc(d.data_finalizare)+'</strong></td></tr>';
+    h+='</table></div>';
+    h+='<div class="sec"><h3>Checklist predare</h3><table>'+(checklistRows||'<tr><td colspan="2">—</td></tr>')+'</table></div>';
+    h+='<div class="sec"><h3>Financiar</h3><table>';
+    h+='<tr><td>Factură finală</td><td>'+(d.factura_finala_nr?esc(d.factura_finala_nr)+' / '+esc(d.factura_finala_data||'—'):'—')+'</td></tr>';
+    h+='<tr><td>Stare achitare</td><td>'+esc(d.achitat_status||'—')+'</td></tr>';
+    h+='</table></div>';
+    h+='<div class="sec"><h3>Garanție & mentenanță</h3><table>';
+    h+='<tr><td>Garanție</td><td><strong>'+d.garantie_luni+' luni</strong> (de la '+esc(d.garantie_start)+' până la '+esc(garEnd)+')</td></tr>';
+    h+=ment;
+    h+='</table></div>';
+    h+=pozeHtml;
+    if(d.observatii_finalizare){h+='<div class="sec"><h3>Observații finale</h3><div style="font-size:12px;line-height:1.55;padding:6px 8px;color:#334155">'+esc(d.observatii_finalizare)+'</div></div>';}
+    h+='<div class="sig"><div class="box"><div class="lbl">Reprezentant CSSI</div><div class="line">Nume, semnătură, ștampilă</div></div>';
+    h+='<div class="box"><div class="lbl">Reprezentant beneficiar</div><div class="line">Nume, semnătură, ștampilă</div></div></div>';
+    h+='<div class="foot">Break Sistems SRL • CUI RO46789890 • J08/1845/2023 • www.cssi.ro</div>';
+    h+='</div></body></html>';
+    return h;
+}
+
+// ═══ F4: Email PV către client ═══
+function _finalizareSendEmail(){
+    var email=document.getElementById('finEmail').value.trim();
+    if(!email){showToast('⚠️ Introdu emailul clientului','error');return;}
+    if(!/^[^@]+@[^@]+\.[^@]+$/.test(email)){showToast('⚠️ Email invalid','error');return;}
+    var p=PROJECTS.find(function(x){return x.id===_finalizeCtx.projectId});
+    var d=_finalizareCollectData();
+    var pvHtml=_buildPVHtml(p,d);
+    if(!confirm('Trimiți PV-ul de finalizare la '+email+'?'))return;
+    fetch(API_DB+'?action=sendFinalizareEmail',{
+        method:'POST',headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({action:'sendFinalizareEmail',id:_finalizeCtx.dbId||_finalizeCtx.projectId,email:email,pv_html:pvHtml})
+    })
+    .then(function(r){return r.json()})
+    .then(function(res){
+        if(res.success)showToast('📧 Email trimis către '+email,'success');
+        else showToast('❌ '+(res.error||'Eroare email'),'error');
+    })
+    .catch(function(){showToast('❌ Eroare rețea','error');});
+}
+
+// ═══ F3: Widget garanții care expiră curând ═══
+function _loadGarantiiExpiraCurand(){
+    fetch(API_DB+'?action=getGarantiiExpiraCurand&zile=30')
+    .then(function(r){return r.json()})
+    .then(function(res){
+        var w=document.getElementById('garantieWidget');
+        if(!w)return;
+        if(!res.success||!res.data||!res.data.length){w.style.display='none';return;}
+        var html='<div style="background:#fef3c7;border:1px solid #fcd34d;border-radius:10px;padding:11px 15px;margin-bottom:14px"><div style="font-size:12px;font-weight:700;color:#92400e;margin-bottom:7px">⚠️ Garanții care expiră în 30 zile ('+res.data.length+')</div><div style="display:flex;flex-wrap:wrap;gap:6px">';
+        res.data.forEach(function(g){
+            var ramase=parseInt(g.zile_ramase);
+            var clr=ramase<7?'#dc2626':ramase<15?'#ea580c':'#f59e0b';
+            html+='<a href="#" onclick="event.preventDefault();openFinalizareModal('+Q+(g.proiect_id||g.id)+Q+')" style="display:inline-block;background:#fff;border:1px solid '+clr+';color:'+clr+';padding:5px 9px;border-radius:6px;font-size:11px;font-weight:600;text-decoration:none" title="'+esc(g.client_nume||'')+' • Expiră '+g.garantie_end+'">'+esc(g.proiect_id)+' ('+ramase+' z)</a>';
+        });
+        html+='</div></div>';
+        w.innerHTML=html;w.style.display='block';
+    }).catch(function(){});
+}
+// Reapelare după loadProjects
+var _origLoadProjects=loadProjects;
+loadProjects=function(){_origLoadProjects.apply(this,arguments);setTimeout(_loadGarantiiExpiraCurand,800);};
 </script>
+
+<!-- ═══ MODAL WIZARD FINALIZARE PROIECT ═══ -->
+<div class="fin-modal" id="finModal" onclick="if(event.target===this)closeFinalizareModal()">
+<div class="fin-modal-inner">
+<div class="fin-hdr"><h2 id="finTitle">🏁 Finalizare proiect<small id="finSubtitle"></small></h2><button class="x" onclick="closeFinalizareModal()">✕</button></div>
+<div class="fin-body">
+
+<div class="fin-sec">
+<h3><span class="num">1</span>Checklist predare</h3>
+<label class="fin-check"><input type="checkbox" data-key="materiale_100"><span>Toate materialele sunt montate (100%) — verificat în tab Materiale</span></label>
+<label class="fin-check"><input type="checkbox" data-key="poze_finale"><span>Poze finale încărcate (PV, instalație, etichete)</span></label>
+<label class="fin-check"><input type="checkbox" data-key="pv_semnat"><span>PV semnat de beneficiar (uploadat în Documente proiect)</span></label>
+<label class="fin-check"><input type="checkbox" data-key="instruire"><span>Instruire beneficiar realizată (utilizare echipamente, cod alarmă, app mobile)</span></label>
+<label class="fin-check"><input type="checkbox" data-key="curatenie"><span>Curățenie post-montaj efectuată</span></label>
+<label class="fin-check"><input type="checkbox" data-key="manuale"><span>Manuale / certificate / declarații conformitate predate</span></label>
+</div>
+
+<div class="fin-sec">
+<h3><span class="num">2</span>Financiar</h3>
+<div class="fin-row">
+<div class="col" style="flex:2"><label>Valoare contract</label><div id="finValContract" style="padding:7px 10px;font-size:13px;font-weight:700;color:#15803d">—</div></div>
+<div class="col"><label>Stare achitare</label><select id="finAchitat"><option>Nu</option><option>Parțial</option><option>Da</option></select></div>
+</div>
+<div class="fin-row">
+<div class="col"><label>Factură finală nr.</label><input type="text" id="finFactNr" placeholder="ex. CSSI-2026-0042"></div>
+<div class="col"><label>Dată factură</label><input type="date" id="finFactData"></div>
+</div>
+</div>
+
+<div class="fin-sec">
+<h3><span class="num">3</span>Garanție</h3>
+<div class="fin-row">
+<div class="col"><label>Durată (luni)</label><input type="number" id="finGarantieLuni" min="0" value="24" onchange="_finalizareCalcGarantieEnd()"></div>
+<div class="col"><label>Început garanție</label><input type="date" id="finGarantieStart" onchange="_finalizareCalcGarantieEnd()"></div>
+<div class="col"><label>Expiră la</label><div id="finGarantieEnd" style="padding:7px 10px;font-size:13px;font-weight:700;color:#dc2626;background:#fef2f2;border-radius:6px">—</div></div>
+</div>
+</div>
+
+<div class="fin-sec">
+<h3><span class="num">4</span>Mentenanță</h3>
+<label class="fin-radio on"><input type="radio" name="finMent" id="finMentDa" checked onchange="_finalizareToggleMentenanta()"> Da, necesită mentenanță</label>
+<label class="fin-radio"><input type="radio" name="finMent" id="finMentNu" onchange="_finalizareToggleMentenanta()"> Nu, doar garanție</label>
+<div class="fin-mentenanta-fields on" id="finMentFields">
+<div class="fin-row">
+<div class="col"><label>Tip contract</label><select id="finMentTip"><option>Standard</option><option>Premium</option><option>Custom</option></select></div>
+<div class="col"><label>Frecvență vizite</label><select id="finMentFrec"><option>Lunar</option><option>Trimestrial</option><option>Semestrial</option><option>Anual</option></select></div>
+</div>
+<div class="fin-row">
+<div class="col"><label>Valoare lunară (RON)</label><input type="number" id="finMentVal" min="0" step="10"></div>
+<div class="col"><label>Început mentenanță</label><input type="date" id="finMentStart"></div>
+</div>
+<div class="fin-summary">💡 La salvare se va crea automat un contract de mentenanță activ, legat de acest proiect. Prima vizită va fi calculată după frecvența aleasă.</div>
+</div>
+</div>
+
+<div class="fin-sec">
+<h3><span class="num">5</span>Dată finalizare</h3>
+<div class="fin-row">
+<div class="col"><label>Data oficială de finalizare</label><input type="date" id="finDataFinal"></div>
+</div>
+</div>
+
+<div class="fin-sec">
+<h3><span class="num">6</span>Poze finale (opțional, pentru PV)</h3>
+<input type="file" id="finPozeInput" accept="image/*" multiple onchange="_finalizareUploadPoza(this)" style="font-size:12px">
+<div class="fin-poze-grid" id="finPozeGrid"></div>
+</div>
+
+<div class="fin-sec">
+<h3><span class="num">7</span>Observații finale</h3>
+<textarea id="finObs" placeholder="Note specifice acestei finalizări — situații neprevăzute, recomandări către client, etc."></textarea>
+</div>
+
+<div class="fin-sec">
+<h3>📧 Trimite PV la client</h3>
+<div class="fin-row">
+<div class="col" style="flex:3"><label>Email beneficiar</label><input type="text" id="finEmail" placeholder="client@example.com"></div>
+<div class="col"><label>&nbsp;</label><button class="email" onclick="_finalizareSendEmail()" style="padding:7px 12px;border-radius:6px;border:none;background:#8b5cf6;color:#fff;font-weight:700;font-size:12px;cursor:pointer;width:100%">📧 Trimite PV</button></div>
+</div>
+</div>
+
+</div>
+<div class="fin-actions">
+<button class="cancel" onclick="closeFinalizareModal()">✕ Anulează</button>
+<button class="pv" onclick="_finalizareOpenPV()">📄 Generează PV PDF</button>
+<button class="submit" id="finSubmitBtn" onclick="submitFinalizare()">🏁 ÎNCHIDE PROIECTUL</button>
+</div>
+</div>
+</div>
+
+<!-- Widget garanții (apare deasupra listei dacă există proiecte cu garanție aproape de expirare) -->
+<script>document.addEventListener('DOMContentLoaded',function(){var c=document.querySelector('.container, .main-content, main, body');if(c){var w=document.createElement('div');w.id='garantieWidget';w.style.display='none';c.insertBefore(w,c.firstChild);}});</script>
+
 <script>
 if('serviceWorker' in navigator){navigator.serviceWorker.register('../sw.js').then(function(r){console.log('[PWA] SW registered, scope:',r.scope)}).catch(function(e){console.log('[PWA] SW failed:',e)});var __reloaded=false;navigator.serviceWorker.addEventListener('controllerchange',function(){if(__reloaded)return;__reloaded=true;window.location.reload();});}
 </script>

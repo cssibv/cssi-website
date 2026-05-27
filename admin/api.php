@@ -73,6 +73,88 @@ function debugOferteColumns($db) {
     catch (Exception $e) { return ['ERR' => $e->getMessage()]; }
 }
 
+// ─── Helper: schemă finalizare proiecte + mentenanta (idempotent) ─
+function ensureFinalizareSchema($db) {
+    static $checked = false;
+    if ($checked) return;
+    $checked = true;
+    try {
+        $cols = $db->query("SHOW COLUMNS FROM proiecte")->fetchAll(PDO::FETCH_COLUMN);
+        $add = [
+            'data_finalizare'       => "DATE NULL DEFAULT NULL",
+            'garantie_luni'         => "INT NULL DEFAULT 24",
+            'garantie_start'        => "DATE NULL DEFAULT NULL",
+            'garantie_end'          => "DATE NULL DEFAULT NULL",
+            'factura_finala_nr'     => "VARCHAR(50) NULL DEFAULT NULL",
+            'factura_finala_data'   => "DATE NULL DEFAULT NULL",
+            'achitat_status'        => "VARCHAR(20) NULL DEFAULT NULL",
+            'observatii_finalizare' => "TEXT NULL DEFAULT NULL",
+            'finalizat_by'          => "VARCHAR(100) NULL DEFAULT NULL",
+            'finalizat_at'          => "DATETIME NULL DEFAULT NULL",
+            'checklist_predare'     => "TEXT NULL DEFAULT NULL",
+            'poze_finale'           => "TEXT NULL DEFAULT NULL",
+        ];
+        foreach ($add as $name => $def) {
+            if (!in_array($name, $cols, true)) {
+                $db->exec("ALTER TABLE proiecte ADD COLUMN $name $def");
+            }
+        }
+        try { $db->exec("ALTER TABLE proiecte ADD INDEX idx_data_finalizare (data_finalizare)"); } catch(Exception $e){}
+        try { $db->exec("ALTER TABLE proiecte ADD INDEX idx_garantie_end (garantie_end)"); } catch(Exception $e){}
+
+        // Asigura ca 'Finalizat' apare in ENUM status
+        $row = $db->query("SHOW COLUMNS FROM proiecte LIKE 'status'")->fetch(PDO::FETCH_ASSOC);
+        if ($row && stripos($row['Type'], "'Finalizat'") === false) {
+            if (preg_match("/^enum\\((.*)\\)$/i", $row['Type'], $m)) {
+                $newEnum = $m[1] . ",'Finalizat'";
+                $db->exec("ALTER TABLE proiecte MODIFY COLUMN status ENUM($newEnum) NOT NULL DEFAULT 'Lead'");
+            }
+        }
+
+        // Creeaza tabela mentenanta daca lipseste
+        $db->exec("CREATE TABLE IF NOT EXISTS mentenanta (
+            id INT PRIMARY KEY AUTO_INCREMENT,
+            proiect_id INT NOT NULL,
+            client_id INT NULL,
+            tip VARCHAR(50) NOT NULL DEFAULT 'Standard',
+            frecventa VARCHAR(30) NOT NULL DEFAULT 'Trimestrial',
+            valoare_lunara DECIMAL(10,2) NULL DEFAULT 0,
+            data_start DATE NULL,
+            data_next_visit DATE NULL,
+            status VARCHAR(20) NOT NULL DEFAULT 'Activ',
+            note TEXT NULL,
+            created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+            created_by VARCHAR(100) NULL,
+            INDEX idx_proiect (proiect_id),
+            INDEX idx_client (client_id),
+            INDEX idx_status (status),
+            INDEX idx_next_visit (data_next_visit)
+        ) DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci");
+        // Verifica si adauga coloanele lipsa daca tabela exista deja cu schema veche
+        $mcols = $db->query("SHOW COLUMNS FROM mentenanta")->fetchAll(PDO::FETCH_COLUMN);
+        $maddCols = [
+            'proiect_id'      => "INT NOT NULL",
+            'client_id'       => "INT NULL",
+            'tip'             => "VARCHAR(50) NOT NULL DEFAULT 'Standard'",
+            'frecventa'       => "VARCHAR(30) NOT NULL DEFAULT 'Trimestrial'",
+            'valoare_lunara'  => "DECIMAL(10,2) NULL DEFAULT 0",
+            'data_start'      => "DATE NULL",
+            'data_next_visit' => "DATE NULL",
+            'status'          => "VARCHAR(20) NOT NULL DEFAULT 'Activ'",
+            'note'            => "TEXT NULL",
+            'created_at'      => "DATETIME DEFAULT CURRENT_TIMESTAMP",
+            'created_by'      => "VARCHAR(100) NULL",
+        ];
+        foreach ($maddCols as $name => $def) {
+            if (!in_array($name, $mcols, true)) {
+                try { $db->exec("ALTER TABLE mentenanta ADD COLUMN $name $def"); } catch (Exception $e) {}
+            }
+        }
+    } catch (Exception $e) {
+        error_log('ensureFinalizareSchema FAILED: ' . $e->getMessage());
+    }
+}
+
 // Auto-expire oferte: Trimisa/In_discutie cu expires_at < azi → Expirata
 // + insereaza notificari pentru: (a) oferte care expira maine, (b) oferte care tocmai au expirat
 // Idempotent: foloseste notificat_*_la pe oferte pentru a nu duplica notificarile
@@ -4675,6 +4757,192 @@ astăzi data semnării.</p>
             }
 
             jsonResponse(['success' => true, 'sent' => !!$sms, 'data' => $sms ?: null]);
+            break;
+
+        // ═══════ FINALIZARE PROIECT — wizard închidere ═══════
+        // Rulează migrarea schemei (idempotent) — admin only
+        case 'runMigrationFinalizare':
+            requireAdmin();
+            ensureFinalizareSchema($db);
+            $cols = $db->query("SHOW COLUMNS FROM proiecte")->fetchAll(PDO::FETCH_COLUMN);
+            $mcols = [];
+            try { $mcols = $db->query("SHOW COLUMNS FROM mentenanta")->fetchAll(PDO::FETCH_COLUMN); } catch(Exception $e){}
+            $statusType = $db->query("SHOW COLUMNS FROM proiecte LIKE 'status'")->fetch(PDO::FETCH_ASSOC);
+            jsonResponse([
+                'success' => true,
+                'proiecte_columns' => $cols,
+                'mentenanta_columns' => $mcols,
+                'status_enum' => $statusType ? $statusType['Type'] : null,
+                'finalizat_in_enum' => $statusType && stripos($statusType['Type'], "'Finalizat'") !== false,
+            ]);
+            break;
+
+        // Citește datele de finalizare existente (pentru re-deschidere modal)
+        case 'getDateFinalizare':
+            requireAuth();
+            ensureFinalizareSchema($db);
+            $id = isset($_GET['id']) ? $_GET['id'] : 0;
+            if (!$id) { jsonResponse(['success'=>false,'error'=>'id obligatoriu'],400); break; }
+            $stmt = $db->prepare("SELECT p.id, p.proiect_id, p.status, p.client_id, p.valoare_contract, p.data_finalizare, p.garantie_luni, p.garantie_start, p.garantie_end, p.factura_finala_nr, p.factura_finala_data, p.achitat_status, p.observatii_finalizare, p.finalizat_by, p.finalizat_at, p.checklist_predare, p.poze_finale, c.nume AS client_nume FROM proiecte p LEFT JOIN clienti c ON p.client_id=c.id WHERE p.id=? OR p.proiect_id=? LIMIT 1");
+            $stmt->execute([$id, $id]);
+            $row = $stmt->fetch(PDO::FETCH_ASSOC);
+            if (!$row) { jsonResponse(['success'=>false,'error'=>'Proiect negăsit'],404); break; }
+            // Contract mentenanta asociat (daca exista)
+            $row['mentenanta'] = null;
+            try {
+                $mstmt = $db->prepare("SELECT id, tip, frecventa, valoare_lunara, data_start, data_next_visit, status, note FROM mentenanta WHERE proiect_id=? ORDER BY id DESC LIMIT 1");
+                $mstmt->execute([$row['id']]);
+                $row['mentenanta'] = $mstmt->fetch(PDO::FETCH_ASSOC) ?: null;
+            } catch (Exception $e) {}
+            $row['checklist_parsed'] = json_decode($row['checklist_predare'] ?: '{}', true);
+            $row['poze_parsed'] = json_decode($row['poze_finale'] ?: '[]', true);
+            jsonResponse(['success' => true, 'data' => $row]);
+            break;
+
+        // Finalizează un proiect (atomic): UPDATE proiect + INSERT mentenanta + INSERT jurnal + notificare
+        case 'finalizeazaProiect':
+            $u = requireAuth();
+            ensureFinalizareSchema($db);
+            $id = isset($data['id']) ? $data['id'] : 0;
+            if (!$id) { jsonResponse(['success'=>false,'error'=>'id obligatoriu'],400); break; }
+
+            // Citește proiectul
+            $stmt = $db->prepare("SELECT p.*, c.nume AS client_nume FROM proiecte p LEFT JOIN clienti c ON p.client_id=c.id WHERE p.id=? OR p.proiect_id=? LIMIT 1");
+            $stmt->execute([$id, $id]);
+            $proj = $stmt->fetch(PDO::FETCH_ASSOC);
+            if (!$proj) { jsonResponse(['success'=>false,'error'=>'Proiect negăsit'],404); break; }
+            $pid = $proj['id'];
+            $userName = isset($u['nume']) ? $u['nume'] : (isset($u['username']) ? $u['username'] : 'Admin');
+
+            $dataFinalizare = isset($data['data_finalizare']) && $data['data_finalizare'] ? $data['data_finalizare'] : date('Y-m-d');
+            $garantieLuni   = isset($data['garantie_luni']) ? (int)$data['garantie_luni'] : 24;
+            $garantieStart  = isset($data['garantie_start']) && $data['garantie_start'] ? $data['garantie_start'] : $dataFinalizare;
+            $garantieEnd    = date('Y-m-d', strtotime($garantieStart . " +$garantieLuni months"));
+            $fnNr           = isset($data['factura_finala_nr']) ? trim($data['factura_finala_nr']) : null;
+            $fnData         = isset($data['factura_finala_data']) ? $data['factura_finala_data'] : null;
+            $achitat        = isset($data['achitat_status']) ? $data['achitat_status'] : null;
+            $obs            = isset($data['observatii_finalizare']) ? $data['observatii_finalizare'] : null;
+            $checklist      = json_encode(isset($data['checklist']) ? $data['checklist'] : [], JSON_UNESCAPED_UNICODE);
+            $pozeFinale     = json_encode(isset($data['poze_finale']) ? $data['poze_finale'] : [], JSON_UNESCAPED_UNICODE);
+            $mentenantaDa   = !empty($data['mentenanta_da']);
+            $newStatus      = $mentenantaDa ? 'Mentenanta' : 'Finalizat';
+
+            try {
+                $db->beginTransaction();
+
+                // 1) Update proiect + append la istoric_status
+                $istoric = json_decode($proj['istoric_status'] ?: '[]', true);
+                $istoric[] = ['status' => $newStatus, 'data' => date('Y-m-d H:i:s'), 'user' => $userName, 'event' => 'finalizare'];
+
+                $db->prepare("UPDATE proiecte SET
+                    status=?, data_finalizare=?, garantie_luni=?, garantie_start=?, garantie_end=?,
+                    factura_finala_nr=?, factura_finala_data=?, achitat_status=?, observatii_finalizare=?,
+                    finalizat_by=?, finalizat_at=NOW(), checklist_predare=?, poze_finale=?, istoric_status=?
+                    WHERE id=?")
+                ->execute([
+                    $newStatus, $dataFinalizare, $garantieLuni, $garantieStart, $garantieEnd,
+                    $fnNr, $fnData, $achitat, $obs,
+                    $userName, $checklist, $pozeFinale, json_encode($istoric, JSON_UNESCAPED_UNICODE),
+                    $pid
+                ]);
+
+                // 2) Creare contract mentenanta automat (dacă bifat)
+                $mentId = null;
+                $mentDetails = null;
+                if ($mentenantaDa) {
+                    $tip = isset($data['mentenanta_tip']) ? $data['mentenanta_tip'] : 'Standard';
+                    $frec = isset($data['mentenanta_frecventa']) ? $data['mentenanta_frecventa'] : 'Trimestrial';
+                    $val = isset($data['mentenanta_valoare']) ? (float)$data['mentenanta_valoare'] : 0;
+                    $startMent = isset($data['mentenanta_start']) && $data['mentenanta_start'] ? $data['mentenanta_start'] : date('Y-m-d', strtotime($dataFinalizare . ' +1 day'));
+                    $months = ['Lunar'=>1,'Trimestrial'=>3,'Semestrial'=>6,'Anual'=>12];
+                    $monthsAdd = isset($months[$frec]) ? $months[$frec] : 3;
+                    $nextVisit = date('Y-m-d', strtotime($startMent . " +$monthsAdd months"));
+                    $db->prepare("INSERT INTO mentenanta
+                        (proiect_id, client_id, tip, frecventa, valoare_lunara, data_start, data_next_visit, status, created_by, note)
+                        VALUES (?,?,?,?,?,?,?,'Activ',?,?)")
+                    ->execute([$pid, $proj['client_id'], $tip, $frec, $val, $startMent, $nextVisit, $userName, 'Generat automat la finalizarea proiectului ' . $proj['proiect_id']]);
+                    $mentId = $db->lastInsertId();
+                    $mentDetails = compact('tip','frec','val','startMent','nextVisit');
+                }
+
+                // 3) Notificare în sistem
+                $msg = '🏁 ' . $proj['proiect_id'] . ' (' . $proj['client_nume'] . ') — FINALIZAT de ' . $userName . ' la ' . $dataFinalizare . ($mentenantaDa ? ' • Contract mentenanță creat' : '');
+                try {
+                    $db->prepare("INSERT INTO notificari (proiect_id, mesaj, tip, de_la, etapa_noua) VALUES (?,?,?,?,?)")
+                       ->execute([$pid, $msg, 'finalizare', $userName, $newStatus]);
+                } catch (Exception $e) {}
+
+                // 4) Intrare automată în jurnal_teren
+                try {
+                    $today = date('Y-m-d H:i:s');
+                    $descJurnal = "🏁 Proiect FINALIZAT. Status: $newStatus. Garanție: $garantieLuni luni (până la $garantieEnd)." .
+                        ($fnNr ? " Factura finală: $fnNr / $fnData." : '') .
+                        ($mentenantaDa ? " Contract mentenanță activ ($tip / $frec / " . number_format($val,2) . " RON/lună)." : '') .
+                        ($obs ? " Observații: $obs" : '');
+                    $locatie = isset($proj['adresa_obiectiv']) ? $proj['adresa_obiectiv'] : '';
+                    $db->prepare("INSERT INTO jurnal_teren (proiect_id, data_start, data_end, tehnicieni, locatie, descriere, created_by)
+                        VALUES (?, ?, ?, ?, ?, ?, ?)")
+                       ->execute([$pid, $today, $today, $userName, $locatie ?: '', $descJurnal, $userName]);
+                } catch (Exception $e) {}
+
+                $db->commit();
+
+                jsonResponse([
+                    'success' => true,
+                    'proiect_id' => $proj['proiect_id'],
+                    'status' => $newStatus,
+                    'data_finalizare' => $dataFinalizare,
+                    'garantie_end' => $garantieEnd,
+                    'mentenanta_id' => $mentId,
+                    'mentenanta' => $mentDetails,
+                ]);
+            } catch (Exception $e) {
+                if ($db->inTransaction()) $db->rollBack();
+                jsonResponse(['success' => false, 'error' => $e->getMessage()], 500);
+            }
+            break;
+
+        // Lista proiecte cu garanție care expiră în următoarele N zile (default 30)
+        case 'getGarantiiExpiraCurand':
+            requireAuth();
+            ensureFinalizareSchema($db);
+            $zile = isset($_GET['zile']) ? (int)$_GET['zile'] : 30;
+            if ($zile < 1) $zile = 30;
+            $stmt = $db->prepare("SELECT p.id, p.proiect_id, p.status, p.data_finalizare, p.garantie_luni, p.garantie_start, p.garantie_end, p.valoare_contract, c.nume AS client_nume, c.telefon AS client_tel, c.email AS client_email, DATEDIFF(p.garantie_end, CURDATE()) AS zile_ramase
+                FROM proiecte p LEFT JOIN clienti c ON p.client_id=c.id
+                WHERE p.garantie_end IS NOT NULL
+                AND p.garantie_end <= DATE_ADD(CURDATE(), INTERVAL ? DAY)
+                AND p.status IN ('Finalizat','Mentenanta')
+                ORDER BY p.garantie_end ASC");
+            $stmt->execute([$zile]);
+            jsonResponse(['success' => true, 'data' => $stmt->fetchAll(PDO::FETCH_ASSOC)]);
+            break;
+
+        // Trimite email cu PV Finalizare către client (folosește mail() ca în raport-zilnic)
+        case 'sendFinalizareEmail':
+            requireAuth();
+            $id = isset($data['id']) ? $data['id'] : 0;
+            $emailTo = isset($data['email']) ? trim($data['email']) : '';
+            $pvHtml = isset($data['pv_html']) ? $data['pv_html'] : '';
+            if (!$id || !$emailTo || !$pvHtml) { jsonResponse(['success'=>false,'error'=>'id, email si pv_html obligatorii'],400); break; }
+            if (!filter_var($emailTo, FILTER_VALIDATE_EMAIL)) { jsonResponse(['success'=>false,'error'=>'Email invalid'],400); break; }
+            $stmt = $db->prepare("SELECT p.proiect_id, c.nume AS client_nume FROM proiecte p LEFT JOIN clienti c ON p.client_id=c.id WHERE p.id=? OR p.proiect_id=? LIMIT 1");
+            $stmt->execute([$id, $id]);
+            $proj = $stmt->fetch(PDO::FETCH_ASSOC);
+            if (!$proj) { jsonResponse(['success'=>false,'error'=>'Proiect negăsit'],404); break; }
+            $subject = '✅ Proces Verbal Finalizare — ' . $proj['proiect_id'] . ' • CSSI';
+            $boundary = 'cssi-pv-' . md5(uniqid());
+            $headers = "From: CSSI <noreply@cssi.ro>\r\n";
+            $headers .= "Reply-To: contact@cssi.ro\r\n";
+            $headers .= "MIME-Version: 1.0\r\n";
+            $headers .= "Content-Type: multipart/alternative; boundary=\"$boundary\"\r\n";
+            $body  = "--$boundary\r\nContent-Type: text/plain; charset=UTF-8\r\n\r\n";
+            $body .= "Stimată/Stimate " . $proj['client_nume'] . ",\r\n\r\nVă transmitem atașat Procesul Verbal de Finalizare pentru proiectul " . $proj['proiect_id'] . ".\r\n\r\nCu stimă,\r\nEchipa CSSI\r\nwww.cssi.ro • 0752 288 400\r\n\r\n";
+            $body .= "--$boundary\r\nContent-Type: text/html; charset=UTF-8\r\n\r\n";
+            $body .= $pvHtml;
+            $body .= "\r\n--$boundary--\r\n";
+            $ok = @mail($emailTo, '=?UTF-8?B?' . base64_encode($subject) . '?=', $body, $headers, '-fnoreply@cssi.ro');
+            jsonResponse(['success' => (bool)$ok, 'email' => $emailTo, 'proiect_id' => $proj['proiect_id']]);
             break;
 
         default:
