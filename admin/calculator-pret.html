@@ -454,7 +454,15 @@ function buildAnexaPageHtml(lines,info){
   var h='<!DOCTYPE html><html lang="ro"><head><meta charset="UTF-8">';
   h+='<title>Anexă materiale — Oferta '+esc(info.nr)+'</title>';
   h+='<style>';
-  h+='@page{size:A4;margin:10mm 10mm 12mm 10mm}';
+  // Escape pentru a putea folosi info.nr / info.client in CSS content (intre ghilimele duble)
+  var cssNr=String(info.nr||'').replace(/\\/g,'\\\\').replace(/"/g,'\\"');
+  var cssCli=String(info.client||'').replace(/\\/g,'\\\\').replace(/"/g,'\\"');
+  // @page + numerotare la print (counter(page) functioneaza in Firefox / partial Chrome)
+  h+='@page{size:A4;margin:14mm 10mm 14mm 10mm;';
+  h+='@bottom-center{content:"Pagina " counter(page) " din " counter(pages);font-size:9px;color:#94a3b8;font-family:"Segoe UI",Tahoma,sans-serif}';
+  h+='@top-right{content:"Anexă materiale — Oferta '+cssNr+' — '+cssCli+'";font-size:9px;color:#94a3b8;font-family:"Segoe UI",Tahoma,sans-serif}';
+  h+='}';
+  h+='@page :first{@top-right{content:""}}';
   h+='*{margin:0;padding:0;box-sizing:border-box;font-family:"Segoe UI",Tahoma,sans-serif}';
   h+='body{background:#f1f5f9;color:#0f172a;padding:18px;-webkit-print-color-adjust:exact;print-color-adjust:exact}';
   h+='.no-print{position:sticky;top:0;background:#0f172a;color:#fff;padding:12px 18px;border-radius:12px;margin-bottom:18px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;box-shadow:0 8px 24px rgba(0,0,0,0.15);z-index:10;max-width:1100px;margin-left:auto;margin-right:auto}';
@@ -508,6 +516,43 @@ function buildAnexaPageHtml(lines,info){
   h+='.num-print{display:none}';
   // Hint editare (doar ecran)
   h+='.edit-hint{text-align:center;font-size:11px;color:#64748b;margin:10px 0 4px;padding:6px;background:#fffbeb;border-radius:6px;border:1px dashed #fcd34d}';
+  // Drag handle pe coloana #
+  h+='.tbl .idx{cursor:grab;user-select:none;position:relative}';
+  h+='.tbl .idx:active{cursor:grabbing}';
+  h+='.drag-handle{display:block;color:#cbd5e1;font-size:13px;line-height:1;margin-bottom:3px;font-weight:400;transition:color 0.12s}';
+  h+='.tbl tbody tr:hover .drag-handle{color:#f59e0b}';
+  h+='.tbl tbody tr.dragging{opacity:0.45;background:#fef3c7!important}';
+  h+='.tbl tbody tr.drag-over-above td{border-top:3px solid #f59e0b!important}';
+  h+='.tbl tbody tr.drag-over-below td{border-bottom:3px solid #f59e0b!important}';
+  // Running header thead row (doar print)
+  h+='.run-hdr{display:none}';
+  h+='@media print{.run-hdr{display:table-row}.run-hdr td{background:#fff!important;color:#0f172a!important;padding:6px 8px!important;border-bottom:2px solid #dc2626!important;font-size:9px!important;text-align:left!important;font-weight:600!important;text-transform:none!important;letter-spacing:0!important}}';
+  // Indicator imagine editabila (hover)
+  h+='.tbl .img .wrap{cursor:pointer;position:relative;transition:box-shadow 0.15s}';
+  h+='.tbl .img .wrap:hover{box-shadow:0 0 0 2px #f59e0b}';
+  h+='.tbl .img .wrap::after{content:"✎ Schimbă imagine";position:absolute;bottom:8px;right:8px;background:rgba(15,23,42,0.85);color:#fff;padding:4px 9px;border-radius:5px;font-size:10px;font-weight:600;opacity:0;transition:opacity 0.15s;pointer-events:none}';
+  h+='.tbl .img .wrap:hover::after{opacity:1}';
+  // Modal schimbare imagine
+  h+='.img-modal{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(15,23,42,0.6);z-index:9999;align-items:center;justify-content:center}';
+  h+='.img-modal.active{display:flex}';
+  h+='.img-modal-inner{background:#fff;border-radius:12px;padding:22px;max-width:480px;width:92%;box-shadow:0 20px 60px rgba(0,0,0,0.3)}';
+  h+='.img-modal-inner h3{font-size:15px;margin-bottom:14px;color:#0f172a;font-weight:700}';
+  h+='.img-modal-inner .field{margin-bottom:12px}';
+  h+='.img-modal-inner label{display:block;font-size:11px;color:#64748b;font-weight:600;margin-bottom:5px;text-transform:uppercase;letter-spacing:0.4px}';
+  h+='.img-modal-inner input[type=text],.img-modal-inner input[type=file]{width:100%;padding:9px 11px;border:1px solid #e2e8f0;border-radius:7px;font-size:12px;font-family:inherit}';
+  h+='.img-modal-inner input[type=text]:focus{outline:none;border-color:#f59e0b}';
+  h+='.img-preview{margin:10px 0;text-align:center;min-height:60px;background:#f8fafc;border-radius:7px;padding:10px;border:1px dashed #cbd5e1}';
+  h+='.img-preview img{max-width:100%;max-height:180px;object-fit:contain;border-radius:5px}';
+  h+='.img-preview:empty::before{content:"Previzualizare imagine va apărea aici";color:#94a3b8;font-size:11px;display:block;padding:30px 0}';
+  h+='.img-modal-actions{display:flex;gap:8px;margin-top:14px}';
+  h+='.img-modal-actions button{flex:1;padding:10px;border-radius:7px;border:none;cursor:pointer;font-weight:700;font-size:12px}';
+  h+='.img-modal-actions .save{background:#16a34a;color:#fff}.img-modal-actions .save:hover{background:#15803d}';
+  h+='.img-modal-actions .cancel{background:#f1f5f9;color:#475569}.img-modal-actions .cancel:hover{background:#e2e8f0}';
+  h+='.img-modal-actions .clear{background:#fef2f2;color:#dc2626;border:1px solid #fecaca!important}.img-modal-actions .clear:hover{background:#fee2e2}';
+  // Indicator modificări neprintate (badge in toolbar)
+  h+='.mod-dot{display:none;width:8px;height:8px;background:#f59e0b;border-radius:50%;margin-left:6px;animation:pulse 1.5s infinite}';
+  h+='.mod-dot.active{display:inline-block}';
+  h+='@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.4}}';
   // Footer
   h+='.foot{text-align:center;font-size:9px;color:#94a3b8;margin-top:14px;padding-top:10px;border-top:1px solid #e2e8f0}';
   // Print rules
@@ -519,13 +564,20 @@ function buildAnexaPageHtml(lines,info){
   // La print: scoatem toate indiciile de editare
   h+='[contenteditable="true"]{background:transparent!important;box-shadow:none!important;padding:0!important;margin:0!important}';
   h+='.edit-hint{display:none!important}';
+  h+='.drag-handle{display:none!important}';
+  h+='.tbl .img .wrap{cursor:default!important;box-shadow:none!important}';
+  h+='.tbl .img .wrap::after{display:none!important}';
+  h+='.img-modal{display:none!important}';
+  h+='.mod-dot{display:none!important}';
+  h+='.tbl .idx{cursor:default!important}';
   h+='}';
   h+='</style></head><body>';
   // Toolbar (ascuns la print)
-  h+='<div class="no-print"><h1>📎 Anexă materiale<small>Oferta '+esc(info.nr)+' • '+esc(info.client)+'</small></h1>';
+  h+='<div class="no-print"><h1>📎 Anexă materiale<span class="mod-dot" id="modDot" title="Există modificări neprintate"></span><small>Oferta '+esc(info.nr)+' • '+esc(info.client)+'</small></h1>';
   h+='<div style="display:flex;gap:8px;flex-wrap:wrap">';
   h+='<button class="btn-close" onclick="toggleAll(true)" title="Bifează toate produsele">✓ Toate</button>';
   h+='<button class="btn-close" onclick="toggleAll(false)" title="Debifează toate produsele">✕ Niciunul</button>';
+  h+='<button class="btn-close" onclick="resetAll()" title="Readuce toate produsele la versiunea originală">↻ Resetează</button>';
   h+='<button class="btn-print" onclick="window.print()">🖨️ Printează / Salvează PDF</button>';
   h+='<button class="btn-close" onclick="window.close()">✕ Închide</button>';
   h+='</div></div>';
@@ -541,7 +593,10 @@ function buildAnexaPageHtml(lines,info){
   h+='<div class="bar"><div><strong>Beneficiar:</strong> '+esc(info.client)+(info.obiectiv?' · <span style="color:#64748b">'+esc(info.obiectiv)+'</span>':'')+'</div>';
   h+='<div class="count" id="selCount">'+items.length+' din '+items.length+' selectate</div></div>';
   // Tabel produse
-  h+='<table class="tbl"><thead><tr>';
+  h+='<table class="tbl"><thead>';
+  // Rând running header (vizibil DOAR la print, se repetă pe fiecare pagină)
+  h+='<tr class="run-hdr"><td colspan="5">Anexă materiale • Oferta '+esc(info.nr)+' • '+esc(info.client)+'</td></tr>';
+  h+='<tr>';
   h+='<th class="c sel" style="width:38px" title="Bifează produsele care apar la print">✓</th>';
   h+='<th class="c" style="width:34px">#</th>';
   h+='<th class="c" style="width:40%">Imagine</th>';
@@ -551,27 +606,64 @@ function buildAnexaPageHtml(lines,info){
   items.forEach(function(l,i){
     var hasImg=l.image && typeof l.image==='string' && l.image.indexOf('http')===0;
     var imgSrc=hasImg?(l.image.indexOf('shop-security.ro')>=0?'/admin/shop-proxy.php?mode=image&img='+encodeURIComponent(l.image):l.image):'';
-    h+='<tr id="row'+i+'">';
+    h+='<tr id="row'+i+'" ondragover="dragRowOver(event,this)" ondragleave="dragRowLeave(event,this)" ondrop="dragRowDrop(event,this)">';
     h+='<td class="sel"><input type="checkbox" checked onchange="toggleRow('+i+',this.checked)"></td>';
-    h+='<td class="idx"><span class="num-orig">'+(i+1)+'</span><span class="num-print"></span></td>';
-    h+='<td class="img"><div class="wrap">';
-    if(hasImg) h+='<img src="'+esc(imgSrc)+'" alt="" onerror="this.style.display=\'none\';this.nextElementSibling.style.display=\'block\'"><span class="ph" style="display:none">📷</span>';
+    h+='<td class="idx" draggable="true" ondragstart="dragRowStart(event,this.parentNode)" ondragend="dragRowEnd(event,this.parentNode)" title="Trage pentru a reordona">';
+    h+='<span class="drag-handle">≡</span><span class="num-orig">'+(i+1)+'</span><span class="num-print"></span></td>';
+    h+='<td class="img"><div class="wrap" onclick="openImgModal(\'row'+i+'\')" title="Click pentru a schimba imaginea">';
+    if(hasImg) h+='<img src="'+esc(imgSrc)+'" alt="" onerror="this.style.display=\'none\';this.nextElementSibling.style.display=\'flex\'"><span class="ph" style="display:none">📷</span>';
     else h+='<span class="ph">📷</span>';
     h+='</div></td>';
-    h+='<td class="txt"><div class="name" contenteditable="true" spellcheck="false" title="Click pentru a edita">'+esc(l.name)+'</div>';
-    h+='<div class="spec" contenteditable="true" spellcheck="false" title="Click pentru a edita descrierea">'+(l.spec?esc(l.spec):'')+'</div>';
+    h+='<td class="txt"><div class="name" contenteditable="true" spellcheck="false" oninput="_markMod()" title="Click pentru a edita">'+esc(l.name)+'</div>';
+    h+='<div class="spec" contenteditable="true" spellcheck="false" oninput="_markMod()" title="Click pentru a edita descrierea">'+(l.spec?esc(l.spec):'')+'</div>';
     h+='</td>';
-    h+='<td class="qty"><span class="pill" contenteditable="true" spellcheck="false" title="Click pentru a edita cantitatea">'+l.cant+' '+esc(l.um||'buc.')+'</span></td>';
+    h+='<td class="qty"><span class="pill" contenteditable="true" spellcheck="false" oninput="_markMod()" title="Click pentru a edita cantitatea">'+l.cant+' '+esc(l.um||'buc.')+'</span></td>';
     h+='</tr>';
   });
   h+='</tbody></table>';
   // Mic hint pentru utilizator (vizibil doar pe ecran)
-  h+='<div class="edit-hint">💡 Click pe orice text pentru a-l edita înainte de print. Modificările nu se salvează în ofertă.</div>';
-  // Script de selecție (toggle row + count + select-all)
+  h+='<div class="edit-hint">💡 Click pe text/imagine pentru editare. Trage rândul de coloana <strong>#</strong> pentru reordonare. Tip: în dialogul de Print Chrome, bifează „Headers and footers" pentru numerotare pagini.</div>';
+  // Modal pentru schimbare imagine
+  h+='<div class="img-modal" id="imgModal" onclick="if(event.target===this)closeImgModal()">';
+  h+='<div class="img-modal-inner">';
+  h+='<h3>🖼️ Schimbă imaginea produsului</h3>';
+  h+='<div class="field"><label>URL imagine</label>';
+  h+='<input type="text" id="imgUrlInput" placeholder="https://..." oninput="_previewImgUrl()"></div>';
+  h+='<div class="field"><label>SAU încarcă fișier local</label>';
+  h+='<input type="file" id="imgFileInput" accept="image/*" onchange="_previewImgFile(this)"></div>';
+  h+='<div class="img-preview" id="imgPreview"></div>';
+  h+='<div class="img-modal-actions">';
+  h+='<button class="clear" onclick="clearImg()" title="Şterge imaginea (revine la placeholder)">🗑️ Şterge</button>';
+  h+='<button class="cancel" onclick="closeImgModal()">✕ Anulează</button>';
+  h+='<button class="save" onclick="saveImgChange()">💾 Salvează</button>';
+  h+='</div></div></div>';
+  // Script de selecție + drag + reset + modal imagine
   h+='<script>';
+  h+='var _origSnap={};var _imgEditRow=null;var _dragSrcRow=null;';
   h+='function _updCount(){var rows=document.querySelectorAll(".tbl tbody tr");var on=document.querySelectorAll(".tbl tbody tr:not(.row-off)").length;var el=document.getElementById("selCount");if(el)el.textContent=on+" din "+rows.length+" selectate";}';
-  h+='function toggleRow(i,checked){var tr=document.getElementById("row"+i);if(!tr)return;if(checked)tr.classList.remove("row-off");else tr.classList.add("row-off");_updCount();}';
+  h+='function _markMod(){var d=document.getElementById("modDot");if(d)d.classList.add("active");}';
+  h+='function _clearMod(){var d=document.getElementById("modDot");if(d)d.classList.remove("active");}';
+  h+='function toggleRow(i,checked){var tr=document.getElementById("row"+i);if(!tr)return;if(checked)tr.classList.remove("row-off");else tr.classList.add("row-off");_updCount();_markMod();}';
   h+='function toggleAll(state){var boxes=document.querySelectorAll(".tbl tbody .sel input[type=checkbox]");boxes.forEach(function(b,i){b.checked=state;toggleRow(i,state);});}';
+  // Snapshot pentru reset
+  h+='function _saveOrig(){var rows=document.querySelectorAll(".tbl tbody tr");rows.forEach(function(tr,idx){_origSnap[tr.id]={ord:idx,name:tr.querySelector(".name").innerHTML,spec:tr.querySelector(".spec").innerHTML,qty:tr.querySelector(".pill").innerHTML,imgHTML:tr.querySelector(".img .wrap").innerHTML};});}';
+  h+='function resetAll(){if(!confirm("Sigur resetezi TOATE modificările? (text, imagini, ordine, selecții)"))return;var tbody=document.querySelector(".tbl tbody");var entries=[];for(var k in _origSnap)entries.push([k,_origSnap[k]]);entries.sort(function(a,b){return a[1].ord-b[1].ord;});entries.forEach(function(e){var tr=document.getElementById(e[0]);if(!tr)return;var s=e[1];tr.classList.remove("row-off");var cb=tr.querySelector(".sel input");if(cb)cb.checked=true;tr.querySelector(".name").innerHTML=s.name;tr.querySelector(".spec").innerHTML=s.spec;tr.querySelector(".pill").innerHTML=s.qty;tr.querySelector(".img .wrap").innerHTML=s.imgHTML;tbody.appendChild(tr);});_updCount();_clearMod();}';
+  // Drag-and-drop reordonare
+  h+='function dragRowStart(e,tr){_dragSrcRow=tr;tr.classList.add("dragging");e.dataTransfer.effectAllowed="move";try{e.dataTransfer.setData("text/plain",tr.id);}catch(_){}}';
+  h+='function dragRowOver(e,tr){if(!_dragSrcRow||tr===_dragSrcRow)return;e.preventDefault();var r=tr.getBoundingClientRect();var mid=r.top+r.height/2;tr.classList.remove("drag-over-above","drag-over-below");if(e.clientY<mid)tr.classList.add("drag-over-above");else tr.classList.add("drag-over-below");}';
+  h+='function dragRowLeave(e,tr){tr.classList.remove("drag-over-above","drag-over-below");}';
+  h+='function dragRowDrop(e,tr){e.preventDefault();if(_dragSrcRow&&tr!==_dragSrcRow){var r=tr.getBoundingClientRect();var mid=r.top+r.height/2;if(e.clientY<mid)tr.parentNode.insertBefore(_dragSrcRow,tr);else tr.parentNode.insertBefore(_dragSrcRow,tr.nextSibling);_markMod();}tr.classList.remove("drag-over-above","drag-over-below");}';
+  h+='function dragRowEnd(e,tr){tr.classList.remove("dragging");document.querySelectorAll(".drag-over-above,.drag-over-below").forEach(function(el){el.classList.remove("drag-over-above","drag-over-below");});_dragSrcRow=null;}';
+  // Modal imagine
+  h+='function openImgModal(rowId){_imgEditRow=rowId;var tr=document.getElementById(rowId);var img=tr.querySelector(".img img");var cur=img?img.src:"";document.getElementById("imgUrlInput").value=(cur&&cur.indexOf("data:")!==0&&cur.indexOf("/admin/shop-proxy.php")!==0)?cur:"";var fi=document.getElementById("imgFileInput");fi.value="";delete fi.dataset.dataUri;document.getElementById("imgPreview").innerHTML=cur?(\'<img src="\'+cur+\'">\'):"";document.getElementById("imgModal").classList.add("active");}';
+  h+='function closeImgModal(){document.getElementById("imgModal").classList.remove("active");_imgEditRow=null;}';
+  h+='function _previewImgUrl(){var url=document.getElementById("imgUrlInput").value.trim();var fi=document.getElementById("imgFileInput");fi.value="";delete fi.dataset.dataUri;document.getElementById("imgPreview").innerHTML=url?(\'<img src="\'+url+\'">\'):"";}';
+  h+='function _previewImgFile(input){var f=input.files[0];if(!f)return;var r=new FileReader();r.onload=function(e){document.getElementById("imgUrlInput").value="";input.dataset.dataUri=e.target.result;document.getElementById("imgPreview").innerHTML=\'<img src="\'+e.target.result+\'">\';};r.readAsDataURL(f);}';
+  h+='function saveImgChange(){if(!_imgEditRow)return;var tr=document.getElementById(_imgEditRow);var wrap=tr.querySelector(".img .wrap");var fi=document.getElementById("imgFileInput");var url=document.getElementById("imgUrlInput").value.trim();var src=fi.dataset.dataUri||url;if(src){wrap.innerHTML=\'<img src="\'+src+\'" alt="" onerror="this.style.display=&#39;none&#39;;this.nextElementSibling.style.display=&#39;flex&#39;"><span class="ph" style="display:none">📷</span>\';}else{wrap.innerHTML=\'<span class="ph">📷</span>\';}_markMod();closeImgModal();}';
+  h+='function clearImg(){if(!_imgEditRow)return;var tr=document.getElementById(_imgEditRow);tr.querySelector(".img .wrap").innerHTML=\'<span class="ph">📷</span>\';_markMod();closeImgModal();}';
+  // Init: salveaza snapshot + warn la inchidere daca ai modificari
+  h+='_saveOrig();';
+  h+='window.addEventListener("beforeunload",function(e){var d=document.getElementById("modDot");if(d&&d.classList.contains("active")){e.preventDefault();e.returnValue="Ai modificări neprintate. Sigur închizi?";return e.returnValue;}});';
   h+='<\/script>';
   // Footer
   h+='<div class="foot">Break Sistems SRL • brand CSSI • www.cssi.ro • 0752 288 400 • Anexă la oferta '+esc(info.nr)+'</div>';
