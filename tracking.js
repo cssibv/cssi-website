@@ -20,6 +20,36 @@
      phone_call=150, whatsapp=150, form_lead=300, email=50, cta=25
    ============================================================ */
 
+
+/* ════════════ FIX 27.05.2026 — DUAL-FIRE GOOGLE ADS + GA4 ════════════
+   GA4 events phone_call & whatsapp_click depindeau exclusiv de import GA4->Ads.
+   Acum trimitem si o conversie Google Ads DIRECTA via send_to.
+   ATENTIE: trebuie inlocuit PHONE_CALL_LABEL_PLACEHOLDER si
+   WHATSAPP_CLICK_LABEL_PLACEHOLDER cu conversion labels reale din Google Ads UI.
+   Pana atunci, helper-ul detecteaza placeholder-urile si nu trimite (no-op). */
+var CSSI_ADS_CONVERSIONS = {
+    phone_call:     'AW-17987940313/PHONE_CALL_LABEL_PLACEHOLDER',
+    whatsapp_click: 'AW-17987940313/WHATSAPP_CLICK_LABEL_PLACEHOLDER',
+    form_submit:    'AW-17987940313/WVuaCJnH1YEcENnfqIFD'
+};
+var CSSI_DEBUG = (typeof window !== 'undefined' && window.location && window.location.search.indexOf('cssi_debug=1') !== -1);
+function cssiLog() {
+    if (CSSI_DEBUG && typeof console !== 'undefined' && console.log) {
+        console.log.apply(console, ['[CSSI tracking]'].concat(Array.prototype.slice.call(arguments)));
+    }
+}
+function cssiSendAdsConversion(name, value) {
+    var sendTo = CSSI_ADS_CONVERSIONS[name];
+    if (!sendTo || sendTo.indexOf('PLACEHOLDER') !== -1) {
+        cssiLog('Skip Ads conversion for', name, '- label not configured yet');
+        return;
+    }
+    if (typeof gtag === 'function') {
+        gtag('event', 'conversion', { send_to: sendTo, currency: 'RON', value: value || 0 });
+        cssiLog('Sent Ads conversion:', name, sendTo, value);
+    }
+}
+
 document.addEventListener('DOMContentLoaded', function() {
 
     /* --- 1. Track click pe număr de telefon --- */
@@ -32,6 +62,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     currency: 'RON',
                     value: 150
                 });
+                cssiSendAdsConversion('phone_call', 150);
             }
             if (typeof fbq === 'function') {
                 fbq('track', 'Contact', { content_name: 'phone_call', currency: 'RON', value: 150.00 });
@@ -49,6 +80,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     currency: 'RON',
                     value: 150
                 });
+                cssiSendAdsConversion('whatsapp_click', 150);
             }
             if (typeof fbq === 'function') {
                 fbq('track', 'Lead', { content_name: 'whatsapp', currency: 'RON', value: 150.00 });

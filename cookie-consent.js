@@ -32,7 +32,7 @@
     // ── 2. Load gtag.js ──
     var gtagScript = document.createElement('script');
     gtagScript.async = true;
-    gtagScript.src = 'https://www.googletagmanager.com/gtag/js?id=' + AW_ID;
+    gtagScript.src = 'https://www.googletagmanager.com/gtag/js?id=' + GA_ID; /* 2026-05-27: best practice load with GA4 ID */
     document.head.appendChild(gtagScript);
 
     // ── 2b. Meta (Facebook) Pixel ──
