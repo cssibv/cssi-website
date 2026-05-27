@@ -21,32 +21,18 @@
    ============================================================ */
 
 
-/* ════════════ FIX 27.05.2026 — DUAL-FIRE GOOGLE ADS + GA4 ════════════
-   GA4 events phone_call & whatsapp_click depindeau exclusiv de import GA4->Ads.
-   Acum trimitem si o conversie Google Ads DIRECTA via send_to.
-   ATENTIE: trebuie inlocuit PHONE_CALL_LABEL_PLACEHOLDER si
-   WHATSAPP_CLICK_LABEL_PLACEHOLDER cu conversion labels reale din Google Ads UI.
-   Pana atunci, helper-ul detecteaza placeholder-urile si nu trimite (no-op). */
-var CSSI_ADS_CONVERSIONS = {
-    phone_call:     'AW-17987940313/PHONE_CALL_LABEL_PLACEHOLDER',
-    whatsapp_click: 'AW-17987940313/WHATSAPP_CLICK_LABEL_PLACEHOLDER',
-    form_submit:    'AW-17987940313/WVuaCJnH1YEcENnfqIFD'
-};
+/* ════════════ NOTA 27.05.2026 — TRACKING phone_call & whatsapp_click ════════════
+   VERIFICAT in Google Ads UI: conversiile "CSSI.ro (web) phone_call" si
+   "CSSI.ro (web) whatsapp_click" EXISTA si se importa corect din GA4 (eveniment
+   GA4 -> conversie Ads). whatsapp_click are deja date (2 conv, 154 RON).
+   phone_call e configurat corect; 0 conversii = volum mic + consent modeling
+   inca neactivat (sub pragul de clicuri).
+   => NU adaugam fire direct catre Google Ads (ar dubla numararea peste import GA4).
+   Pastram doar debug logging pentru diagnostic viitor. */
 var CSSI_DEBUG = (typeof window !== 'undefined' && window.location && window.location.search.indexOf('cssi_debug=1') !== -1);
 function cssiLog() {
     if (CSSI_DEBUG && typeof console !== 'undefined' && console.log) {
         console.log.apply(console, ['[CSSI tracking]'].concat(Array.prototype.slice.call(arguments)));
-    }
-}
-function cssiSendAdsConversion(name, value) {
-    var sendTo = CSSI_ADS_CONVERSIONS[name];
-    if (!sendTo || sendTo.indexOf('PLACEHOLDER') !== -1) {
-        cssiLog('Skip Ads conversion for', name, '- label not configured yet');
-        return;
-    }
-    if (typeof gtag === 'function') {
-        gtag('event', 'conversion', { send_to: sendTo, currency: 'RON', value: value || 0 });
-        cssiLog('Sent Ads conversion:', name, sendTo, value);
     }
 }
 
@@ -62,7 +48,6 @@ document.addEventListener('DOMContentLoaded', function() {
                     currency: 'RON',
                     value: 150
                 });
-                cssiSendAdsConversion('phone_call', 150);
             }
             if (typeof fbq === 'function') {
                 fbq('track', 'Contact', { content_name: 'phone_call', currency: 'RON', value: 150.00 });
@@ -80,7 +65,6 @@ document.addEventListener('DOMContentLoaded', function() {
                     currency: 'RON',
                     value: 150
                 });
-                cssiSendAdsConversion('whatsapp_click', 150);
             }
             if (typeof fbq === 'function') {
                 fbq('track', 'Lead', { content_name: 'whatsapp', currency: 'RON', value: 150.00 });
