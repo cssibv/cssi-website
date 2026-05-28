@@ -2208,6 +2208,8 @@ try {
                 if (!$dateCompletate['denumire']) jsonResponse(['success' => false, 'error' => 'Denumire firmă obligatorie'], 400);
                 if (!$dateCompletate['cui'])      jsonResponse(['success' => false, 'error' => 'CUI obligatoriu'], 400);
             }
+            // Obiectul contractului (tip sistem) — apare la Art.1 în document
+            if (isset($data['obiect_sistem'])) $dateCompletate['obiect_sistem'] = $cap($data['obiect_sistem'], 200);
             $adresaInst = $cap($data['adresa_instalare'] ?? '', 500);
             $curStatus = empty($row['status']) ? 'asteapta_date' : $row['status'];
             $newStatus = ($curStatus === 'asteapta_date') ? 'completat' : $curStatus;
@@ -2459,7 +2461,7 @@ try {
             $diferentaP = 100 - $avansP;
             $durata = intval($c['durata_executie_zile'] ?? 20);
             $garantie = intval($c['garantie_luni'] ?? 24);
-            $sistem = strtolower($c['serviciu'] ?? 'supraveghere video');
+            $sistem = !empty($d['obiect_sistem']) ? $d['obiect_sistem'] : strtolower($c['serviciu'] ?? 'supraveghere video');
             $adresa = $c['adresa_instalare'] ?: ($c['adresa_obiectiv'] ?? '');
             $oferta_data = $c['data_oferta'] ? date('d.m.Y', strtotime($c['data_oferta'])) : '';
 
@@ -2481,7 +2483,11 @@ try {
             }
             $emailBenef = htmlspecialchars($d['email'] ?? '', ENT_QUOTES, 'UTF-8');
 
-            // Construim HTML-ul contractului
+            // URL absolut pentru ștampila (apare identic cu modelul Word)
+            $scheme = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? 'https' : 'http';
+            $stampilaUrl = $scheme . '://' . ($_SERVER['HTTP_HOST'] ?? 'cssi.ro') . '/images/stampila-break.jpg';
+
+            // Construim HTML-ul contractului (reproduce fidel modelul „model contract.doc")
             ob_start();
             ?><!DOCTYPE html>
 <html lang="ro">
@@ -2489,16 +2495,15 @@ try {
 <meta charset="UTF-8">
 <title>Contract <?= htmlspecialchars($contractNr) ?></title>
 <style>
-@page { margin: 2cm 1.8cm; }
-body { font-family: Calibri, 'Trebuchet MS', sans-serif; font-size: 11pt; color: #000; line-height: 1.5; max-width: 18cm; margin: 0 auto; padding: 1cm; }
-h1 { text-align: center; font-size: 16pt; font-weight: bold; margin-bottom: 8px; }
-h1 + h2 { text-align: center; font-size: 13pt; font-weight: bold; margin-bottom: 18px; }
-h3 { font-size: 12pt; font-weight: bold; margin-top: 14px; margin-bottom: 6px; }
-p { margin-bottom: 8px; text-align: justify; }
-.art { margin-bottom: 6px; }
-.semnaturi { display: table; width: 100%; margin-top: 30px; }
-.semnaturi .col { display: table-cell; width: 50%; text-align: center; vertical-align: top; padding-top: 10px; }
-.semnaturi .col strong { display: block; margin-bottom: 40px; }
+@page { size: 21cm 29.7cm; margin: 2cm 2cm 1.75cm 2cm; }
+body { font-family: 'Times New Roman', serif; font-size: 11pt; color: #000; line-height: 1.2; max-width: 17cm; margin: 0 auto; padding: 1.5cm 1.2cm; }
+p { margin: 0; }
+.c { text-align: center; }
+.j { text-align: justify; }
+.title { font-weight: bold; font-size: 14pt; }
+.box { border-left: 1pt solid silver; padding-left: 4pt; }
+.sigtbl { width: 100%; border-collapse: collapse; }
+.sigtbl td { vertical-align: top; width: 50%; padding: 0; }
 .print-btn { position: fixed; top: 20px; right: 20px; padding: 12px 20px; background: #3b82f6; color: #fff; border: none; border-radius: 8px; font-size: 14px; font-weight: 700; cursor: pointer; box-shadow: 0 4px 12px rgba(0,0,0,0.15); z-index: 1000; }
 @media print { .print-btn { display: none; } }
 </style>
@@ -2509,105 +2514,104 @@ p { margin-bottom: 8px; text-align: justify; }
 <script>setTimeout(function(){window.print();}, 800);</script>
 <?php endif; ?>
 
-<h1>CONTRACT DE PRESTĂRI SERVICII</h1>
-<h2>Nr. <?= htmlspecialchars($contractNr) ?> din <?= $dataC ?></h2>
-
-<p><strong>Încheiat între:</strong></p>
-<p><strong><?= htmlspecialchars($p['denumire']) ?></strong>, cu sediul în <?= htmlspecialchars($p['sediu']) ?>,
-înregistrată la Registrul Comerțului sub nr. <?= htmlspecialchars($p['reg_com']) ?>, având cod fiscal
-<?= htmlspecialchars($p['cif']) ?> și cont nr. <?= htmlspecialchars($p['cont_iban']) ?> deschis la
-<?= htmlspecialchars($p['banca']) ?>, în calitate de <strong>PRESTATOR</strong>, reprezentată prin
-<?= htmlspecialchars($p['reprezentant']) ?>,</p>
-<p><strong>Și</strong></p>
-<p><?= $benefBloc ?>, în calitate de <strong>BENEFICIAR</strong>, au convenit să încheie prezentul contract,
-cu respectarea următoarelor clauze:</p>
-
-<h3>I. OBIECTUL CONTRACTULUI</h3>
-<p class="art"><strong>Art.1.</strong> PRESTATORUL asigură instalarea unui sistem de <?= htmlspecialchars($sistem) ?> conform
-<?= $c['oferta_cod'] ? 'ofertei nr. <strong>' . htmlspecialchars($c['oferta_cod']) . '</strong>' . ($oferta_data ? ' din ' . $oferta_data : '') . ', atașată la contract' : 'specificațiilor agreate' ?>.</p>
-<p class="art"><strong>Art.2.</strong> Lucrarea se va efectua în <?= htmlspecialchars($adresa ?: '— adresa instalare —') ?>.</p>
-
-<h3>II. TERMENUL CONTRACTULUI</h3>
-<p class="art"><strong>Art.3.</strong> Prezentul contract se încheie pentru o durată de <strong><?= $durata ?> de zile</strong>
-și intră în vigoare la data semnării lui de către părți.</p>
-<p class="art"><strong>Art.4.</strong> Prezentul contract definește și condițiile de vânzare și montare a sistemelor și accesoriilor,
-denumite în continuare „MĂRFURI", comercializate de către prestator și achiziționate conform facturii de către beneficiar.</p>
-
-<h3>III. PREȚ ȘI MODALITĂȚI DE PLATĂ</h3>
-<p class="art"><strong>Art.5.</strong> Prețul contractului este de <strong><?= number_format($netto, 2, ',', '.') ?> lei</strong>,
-la care se adaugă TVA în valoare de <strong><?= number_format($tva, 2, ',', '.') ?> lei</strong>.
-Valoare contract cu TVA inclus: <strong><?= number_format($total, 2, ',', '.') ?> lei</strong>.</p>
-<p class="art"><strong>Art.6.</strong> Plata contractului se va efectua cu <strong>avans de <?= rtrim(rtrim(number_format($avansP, 2, ',', '.'), '0'), ',') ?>%</strong>
-la data semnării contractului, diferența de <strong><?= rtrim(rtrim(number_format($diferentaP, 2, ',', '.'), '0'), ',') ?>%</strong>
-se va achita la data finalizării lucrării și semnării procesului verbal de recepție.</p>
-<p class="art"><strong>Art.7.</strong> Beneficiarul va achita contravaloarea facturilor emise la data scadenței trecute pe facturi.
-Pentru orice întârziere de plată, Beneficiarul va fi obligat și la achitarea unei penalități de <strong>0,5% pe zi</strong>
-din soldul scadent.</p>
-
-<h3>IV. GARANȚII</h3>
-<p class="art"><strong>Art.8.</strong> PRESTATORUL are obligația ca în cadrul termenului de garanție să remedieze deficiențele
-sau viciile ascunse provenite din culpa sa (cu excepția celor care se datorează culpei Beneficiarului), semnalate de
-beneficiar pe durata perioadei de garanție, în termen de 3 zile de la data înregistrării cererii Beneficiarului.</p>
-<p class="art"><strong>Art.9.</strong> PRESTATORUL oferă garanție pentru echipamentele instalate de <strong><?= $garantie ?> luni</strong>
-de la data predării lucrării.</p>
-<p class="art"><strong>Art.10.</strong> Echipamentele instalate își vor pierde garanția în cazul în care acestea suferă
-intervenții ale unor persoane neautorizate.</p>
-<p class="art"><strong>Art.11.</strong> Garanția oferită de PRESTATOR nu acoperă daunele survenite în urma unor acte de
-vandalism, incendii, inundații, cutremure, descărcări electrice sau alte calamități naturale.</p>
-
-<h3>V. OBLIGAȚIILE PĂRȚILOR</h3>
-<p class="art"><strong>Art.12.</strong> Prestatorul de servicii se obligă: să presteze lucrările comandate de către
-BENEFICIAR în termen de maxim <?= $durata ?> zile de la data semnării contractului.</p>
-<p class="art"><strong>Art.13.</strong> Beneficiarul se obligă să:</p>
-<p style="padding-left: 20px;">a) achite contravaloarea facturilor emise de către PRESTATOR;<br>
-b) creeze front de lucru PRESTATORULUI la locația unde se va efectua lucrarea;<br>
-c) verifice, la finalul lucrărilor, calitatea acestora;<br>
-d) respecte toate indicațiile pe care le-a primit de la PRESTATOR în legătură cu modul de manipulare a instalației și să folosească instalația doar în scopul pentru care a fost executată.</p>
-
-<h3>VI. CONDIȚII ÎNCETARE CONTRACT</h3>
-<p>Contractul încetează în următoarele condiții:</p>
-<p style="padding-left: 20px;">a) în cazul în care una dintre părți nu își execută sau își execută necorespunzător oricare dintre obligațiile asumate, prezentul contract se reziliază de plin drept, fără punere în întârziere și fără intervenția instanței de judecată, cu plata de daune interese, în condițiile prevăzute de art. 1066 Cod Civil, în valoarea contractului;<br>
-b) rezilierea de către oricare dintre părțile contractante, cu un preaviz de 15 zile lucrătoare;<br>
-c) falimentul uneia dintre părți.</p>
-
-<h3>VII. FORȚA MAJORĂ</h3>
-<p>Forța majoră, așa cum este definită de lege, apără și exonerează partea care o invocă, în condițiile legii, cu condiția
-notificării, în termen de 5 (cinci) zile de la producerea evenimentului, cu viza Camerei de Comerț și Industrie a României.</p>
-
-<h3>VIII. LITIGII</h3>
-<p>Litigiile ce pot decurge din prezentul contract se vor soluționa pe cale amiabilă. În cazul în care acest lucru nu este
-posibil, litigiul va fi dedus spre soluționare instanței competente din județul prestatorului.</p>
-
-<h3>IX. PRELUCRAREA DATELOR CU CARACTER PERSONAL</h3>
-<p>1. Datele cu caracter personal furnizate de fiecare Parte cu privire la reprezentantul legal și/sau ale persoanei de
-contact (nume, prenume, email, telefon) vor fi prelucrate exclusiv în scopul încheierii și executării prezentului Contract,
-pe întreaga durată a Contractului.</p>
-<p>2. Părțile se obligă să păstreze confidențialitatea datelor cu caracter personal și să implementeze măsurile tehnice
-necesare pentru securitatea acestora, conform GDPR (Regulamentul UE 2016/679).</p>
-<p>3. La încetarea Contractului, fiecare Parte se obligă să înceteze prelucrarea datelor, cu excepția cazurilor în care o
-obligație legală impune prelucrarea în continuare sau exercitarea unor drepturi în instanță.</p>
-
-<h3>X. NOTIFICĂRI</h3>
-<p>Orice notificare, comunicare sau alte informări referitoare la prezentul Contract vor fi efectuate în scris sau trimise
-prin scrisoare recomandată cu confirmare de primire sau prin e-mail la adresele:</p>
-<p style="padding-left: 20px;">- pentru PRESTATOR: <?= htmlspecialchars($p['email']) ?><br>
-- pentru BENEFICIAR: <?= $emailBenef ?: '—' ?></p>
-
-<h3>XI. RĂSPUNDEREA CONTRACTUALĂ</h3>
-<p>Părțile, prin semnarea prezentului contract, convin asupra valabilității tuturor clauzelor înscrise, drept pentru care
-s-a încheiat prezentul contract în două exemplare, câte unul pentru fiecare parte, având aceeași valoare și forță probantă,
-astăzi data semnării.</p>
-
-<div class="semnaturi">
-    <div class="col">
-        <strong>PRESTATOR,</strong>
-        <?= htmlspecialchars($p['denumire']) ?>
-    </div>
-    <div class="col">
-        <strong>BENEFICIAR,</strong>
-        <?= $benefSemnatura ?: '—' ?>
-    </div>
+<div class="box">
+<p class="c title">CONTRACT DE PRESTARI SERVICII</p>
+<p class="c title">&nbsp;</p>
+<p class="c title">Nr. <?= htmlspecialchars($contractNr) ?>  din <?= $dataC ?></p>
+<p class="c">&nbsp;</p>
 </div>
+
+<p>Incheiat intre: </p>
+<p>&nbsp;</p>
+<p>&nbsp;<?= htmlspecialchars($p['denumire']) ?>, cu sediul in <?= htmlspecialchars($p['sediu']) ?>,  inregistrata la Registrul Comertului sub nr. <?= htmlspecialchars($p['reg_com']) ?>, avand cod fiscal <?= htmlspecialchars($p['cif']) ?> si cont nr. <?= htmlspecialchars($p['cont_iban']) ?>  deschis la <?= htmlspecialchars($p['banca']) ?> in calitate de PRESTATOR, reprezentata prin <?= htmlspecialchars($p['reprezentant']) ?>,</p>
+<p>&nbsp;</p>
+<p>Si</p>
+<p>&nbsp;</p>
+<p><?= $benefBloc ?>, in calitate de BENEFICIAR,  au convenit sa încheie prezentul contract, cu respectarea următoarelor clauze:</p>
+<p>&nbsp;</p>
+
+<p style="text-indent:9pt">I. OBIECTUL CONTRACTULUI</p>
+<p>Art.1. PRESTATORUL asigura instalarea unui sistem de <?= htmlspecialchars($sistem) ?> conform <?= $c['oferta_cod'] ? 'ofertei nr ' . htmlspecialchars($c['oferta_cod']) . ($oferta_data ? '  din ' . $oferta_data : '') . ' , atasata la contract' : 'specificatiilor agreate' ?>.</p>
+<p>&nbsp;</p>
+<p>Art.2 . Lucrarea se va efectua in <?= htmlspecialchars($adresa ?: '— adresa instalare —') ?>.</p>
+<p>&nbsp;</p>
+
+<p class="j">&nbsp;&nbsp;<b>II.</b>&nbsp;<b>TERMENUL CONTRACTULUI</b> </p>
+<p class="j">&nbsp;&nbsp;&nbsp;Art.3. Prezentul contract se incheie pentru o durata de <?= $durata ?> de zile si intra in vigoare la data semnarii lui de catre parti.</p>
+<p class="j">&nbsp;&nbsp;&nbsp;Art.4. Prezentul contract definește si condițiile de vânzare si montare a  sistemelor  si  accesoriilor , denumite în continuare „MĂRFURI", comercializate de către <b>prestator</b> și  achiziționate conform facturii de către <b>beneficiar</b>. </p>
+<p class="j">&nbsp;</p>
+
+<p>&nbsp;&nbsp;&nbsp;<b>III.</b> <b>PREȚ ȘI MODALITĂȚI DE PLATĂ</b></p>
+<p>&nbsp;&nbsp;Art.5. Prețul  contractului  este de  <?= number_format($netto, 2, ',', '.') ?> lei , la care se adauga Tva in valoare de  <?= number_format($tva, 2, ',', '.') ?> lei. Valoare contract  cu TVA inclus <?= number_format($total, 2, ',', '.') ?> lei.</p>
+<p class="j">&nbsp;&nbsp;Art.6. Plata contractului se va efectua cu avans de <?= rtrim(rtrim(number_format($avansP, 2, ',', '.'), '0'), ',') ?>% la data semnarii contractului, diferenta de <?= rtrim(rtrim(number_format($diferentaP, 2, ',', '.'), '0'), ',') ?>% se va achita  la data finalizarii lucrarii si semnarea procesului verbal de receptie. </p>
+<p>&nbsp;&nbsp;Art.7. Beneficiarul va achita contravaloarea facturilor emise la data scadenta trecuta pe facturi. Pentru orice întârziere de plată, Beneficiarul va fi obligat și la achitarea unei penalități de 0,5% pe zi din soldul scadent.</p>
+
+<p class="j"><b>&nbsp;&nbsp;IV. GARANTII </b></p>
+<p class="j">&nbsp;&nbsp;&nbsp; Art.8. PRESTATORUL are obligatia ca în cadrul termenului de garantie sa remedieze deficientele sau viciile ascunse provenite din culpa sa (cu exceptia celor care se datoreaza culpei Beneficiarului), semnalate de beneficiar pe durata perioadei de garantie, în termen de 3 de zile de la data înregistrarii cererii Beneficiarului. </p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;Art.9.  PRESTATORUL ofera garantie pentru echipamentele instalate de <?= $garantie ?> luni de la data predarii lucrarii.</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;Art.10  Echipamentele instalate isi  vor pierde garantia, in cazul in care acestea sufera interventii ale unor persoane neautorizate.</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;Art.11  Garantia oferita de PRESTATOR nu acopera  daunele survenite in urma unor acte de vandalism, ,incendii, inundatii, cutremure, descarcari electrice sau alte calamitati naturale.</p>
+<p>&nbsp;</p>
+
+<p><b>V. OBLIGAȚIILE PĂRȚILOR  </b></p>
+<p class="j">&nbsp;&nbsp;&nbsp;Art.12. Prestatorul de servicii se obliga: </p>
+<p style="margin-left:26.4pt;text-indent:-18pt">a)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; să presteze lucrările comandate de către BENEFICIAR in termen de maxim <?= $durata ?> de  zile de la data semnarii contractului.</p>
+<p style="margin-left:26.4pt">&nbsp;</p>
+<p>&nbsp;&nbsp;&nbsp;Art.13. Beneficiarul se obliga sa: </p>
+<p class="j" style="margin-left:9pt">a) să achite contravaloarea facturilor emise de catre PRESTATOR.</p>
+<p class="j">&nbsp;&nbsp;&nbsp;b) sa creeze front de lucru PRESTATORULUI la locatia unde se va efectua lucrarea.</p>
+<p class="j">&nbsp;&nbsp;&nbsp;c) să verifice, la finalul lucrărilor, calitatea acestora.</p>
+<p class="j">&nbsp;&nbsp;&nbsp;d) să respecte toate indicațiile pe care le-a primit de la PRESTATOR în legătură cu modul de manipulare a instalatiei si sa o foloseasca instalatia doar in scopul pentru care a fost executata.</p>
+<p style="margin-left:9pt">&nbsp;</p>
+
+<p>&nbsp;&nbsp;&nbsp;<b>VI.</b> <b>CONDIȚII ÎNCETARE CONTRACT </b></p>
+<p>Contractul încetează în următoarele condiții:</p>
+<p>a) in cazul în care una dintre părți nu își execută sau își execută necorespunzător oricare dintre obligațiile asumate, prezentul contract se reziliază de plin drept, fără punere în întârziere și fără intervenția instanței de judecată, cu plata de daune interese, în condițiile prevăzute de art. 1066 Cod Civil, în valoarea contractului. </p>
+<p>b) rezilierea de catre oricare dintre partile contractante, cu un preaviz de 15 zile lucratoare</p>
+<p>c) falimentul uneia dintre parti.</p>
+<p>&nbsp;</p>
+
+<p class="j">&nbsp;&nbsp;&nbsp;<b>VII.</b> <b>FORTA MAJORA</b> </p>
+<p class="j">&nbsp;&nbsp;&nbsp; Forța majoră, așa cum este definită de lege, apără și exonerează partea care o invocă, în condițiile legii, cu condiția notificării, în termen de 5 (cinci) zile de la producerea evenimentului, cu viza Camerei de Comerț și Industrie a României.</p>
+<p class="j">&nbsp;</p>
+
+<p class="j">&nbsp;&nbsp;&nbsp;<b>VIII. LITIGII </b></p>
+<p class="j">&nbsp;&nbsp;&nbsp;Litigiile ce pot decurge din prezentul contract se vor soluționa pe cale amiabilă. În cazul în care acest lucru nu este posibil, litigiul va fi dedus spre soluționare instanței competente din judetul prestatorului.</p>
+<p>&nbsp;</p>
+
+<p><b>IX. PRELUCRAREA DATELOR CU CARACTER PERSONAL ÎN SCOPUL ÎNCHEIERII ȘI EXECUTĂRII CONTRACTULUI</b></p>
+<p class="j">1. Datele cu caracter personal furnizate de fiecare Parte cu privire la reprezentantului legal si/sau ale persoanei de contact si/sau ale oricărui angajat implicat în executarea Contractului („Reprezentantul"), respectiv: nume, prenume, adresa de e-mail, număr de telefon ale Reprezentantului vor fi prelucrate de fiecare Parte, in scopul încheierii și executării prezentului Contract, pe întreaga durată a Contractului (sau, după caz, cel târziu până la data încetării colaborării dintre Părți și reprezentantul legal sau persoana de contact respectivă).</p>
+<p class="j">2. În mod specific, datele personale ale Reprezentatului pot fi prelucrate pentru: (i) comunicarea dintre Părți, (ii) lansarea și acceptarea unor comenzi, (iii) prestarea de către Prestator a serviciilor în condițiile agreate prin Contract, (iv) emiterea si plata facturilor aferente serviciilor, (v) recuperarea prin societăți specializate in recuperări creanțe, sau in justiție a sumelor datorate, (vi) transmiterea Contractului către consultanții fiecărei Părți în scop de efectuare audit financiar, sau, după caz (vii) investigarea de către autorități a fraudelor/infracțiunilor/contravențiilor, la solicitarea expresă a acestora si in conformitate cu dispozițiile legale aplicabile. Nici una dintre Părți nu va utiliza datele personale menționate la paragraful (1) în alte scopuri decât cele indicate în prezentul articol.</p>
+<p class="j">3. Părțile se obligă să păstreze confidențialitatea datelor cu caracter personal. Fiecare dintre acestea garantează că accesul la datele care fac obiectul prelucrării va fi permis doar angajaților responsabili de respectiva relație contractuală. Fiecare dintre Părți declară și garantează că are un temei legal pentru prelucrarea datelor menționate la paragraful (1) (inclusiv a obținut, dacă este cazul, consimțământul prealabil, expres, clar si specific al Reprezentantului ale cărui date sunt furnizate celeilalte Părți) in scopurile si prin mijloacele menționate mai sus. </p>
+<p class="j">4. Fiecare Parte garantează că a implementat toate măsurile tehnice și organizatorice pentru asigurarea securității datelor prelucrate de oricare dintre acestea în executarea Contractului (inclusiv, datele personale ale Reprezentatului si/sau procesele relevante), împotriva distrugerii ilegale sau a pierderii accidentale, deteriorării, modificării, divulgării sau accesului neautorizat, în special atunci când prelucrarea presupune transmiterea datelor într-o rețea, precum și împotriva oricărei alte forme ilegale de prelucrare. În eventualitatea unui incident privind protecția datelor, fiecare dintre Părți trebuie să notifice celeilalte acest lucru în termen de 24 de ore de la luarea la cunostinta despre incident precum si masurile dispuse pentru remedierea situatiei.</p>
+<p class="j">5. Datele personale ale Reprezentantului nu pot fi transferate către alte terțe părți decât cu acordul prealabil scris al celeilalte Părți, cu excepția terților către care este permisă divulgarea conform prezentului Contract sau legislației relevante (<i>e.g. </i>auditorii financiari ai Părții).</p>
+<p class="j">6. La încetarea Contractului, indiferent de motiv, fiecare Parte se obligă să înceteze prelucrarea datelor cu caracter personal, cu excepția cazurilor în care (1) o obligație legală impune prelucrarea în continuare sau (2) exercitarea unor drepturi în instanță și/sau în față autorităților statului cu atribuții de control, situații în care Părțile vor fi ținute în continuare la respectarea confidențialității.</p>
+<p>&nbsp;</p>
+
+<p><b>X.</b><b> NOTIFICARI</b></p>
+<p>Orice notificare, comunicare, alte informari referitoare la prezentul Contract, vor fi efectuate in scris sau trimise prin scrisoare recomandata cu confirmare de primire sau trimise prin e-mail ori fax la adresele indicate de către cele două părți:</p>
+<p style="text-indent:35.45pt">- pentru PRESTATOR: email: <?= htmlspecialchars($p['email']) ?></p>
+<p style="text-indent:35.45pt">- pentru BENEFICIAR: email: <?= $emailBenef ?></p>
+<p style="text-indent:35.45pt"> Notificarile verbale nu se iau in considerare de nici una dintre parti, daca nu au fost confirmate, prin intermediul uneia dintre modalitatile prevazute la alineatele precedente.</p>
+<p>&nbsp;</p>
+
+<p>&nbsp;<b>XI.</b> <b>RĂSPUNDEREA CONTRACTUALĂ</b></p>
+<p>&nbsp;&nbsp;&nbsp;Părțile, prin semnarea prezentului contract, convin asupra valabilității tuturor clauzelor înscrise, drept pentru care s-a încheiat prezentul contract în două exemplare, câte unul pentru fiecare parte, având aceeași valoare și forță probantă, astăzi data semnării.</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+
+<div class="box">
+<table class="sigtbl">
+<tr><td>&nbsp;&nbsp;&nbsp; PRESTATOR,</td><td>BENEFICIAR,</td></tr>
+<tr><td>&nbsp;</td><td>&nbsp;</td></tr>
+<tr><td>&nbsp;<?= htmlspecialchars($p['denumire']) ?></td><td><?= $benefSemnatura ?: '—' ?></td></tr>
+</table>
+</div>
+
+<p>&nbsp;</p>
+<p style="text-indent:35.45pt"><img src="<?= htmlspecialchars($stampilaUrl) ?>" width="148" height="108" alt="stampila"></p>
 
 </body>
 </html><?php

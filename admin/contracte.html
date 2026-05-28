@@ -465,7 +465,10 @@ function renderCompleteForm(c){
     html += cfField('cf_telefon','Telefon', d.telefon);
     html += cfField('cf_email','Email', d.email);
     html += '</div>';
-    html += cfField('cf_adresa','Adresa lucrării (instalare)', c.adresa_instalare);
+
+    html += '<div class="detail-h" style="margin-top:14px">📄 Obiectul contractului</div>';
+    html += cfField('cf_obiect','Tip sistem (Art.1 din contract)', d.obiect_sistem || c.serviciu);
+    html += cfField('cf_adresa','Adresa lucrării / instalare (Art.2)', c.adresa_instalare);
 
     html += '<div style="display:flex;gap:8px;margin-top:16px;padding-top:14px;border-top:1px solid var(--gray-b)">';
     html += '<button class="cc-btn primary" onclick="saveComplete()" style="padding:10px 18px;font-size:13px;background:var(--green);border-color:var(--green)">💾 Salvează date</button>';
@@ -481,7 +484,7 @@ function cfVal(id){var e=document.getElementById(id);return e?e.value.trim():'';
 function saveComplete(){
     if(!STATE.current) return;
     var tip = (document.querySelector('input[name=cf_tip]:checked')||{}).value || 'PF';
-    var payload = {action:'completeContractDate', id:STATE.current.id, tip_client:tip, adresa_instalare:cfVal('cf_adresa'), telefon:cfVal('cf_telefon'), email:cfVal('cf_email')};
+    var payload = {action:'completeContractDate', id:STATE.current.id, tip_client:tip, adresa_instalare:cfVal('cf_adresa'), obiect_sistem:cfVal('cf_obiect'), telefon:cfVal('cf_telefon'), email:cfVal('cf_email')};
     if(tip==='PF'){
         payload.nume=cfVal('cf_nume'); payload.cnp=cfVal('cf_cnp'); payload.ci_seria=cfVal('cf_ci_seria'); payload.ci_numar=cfVal('cf_ci_numar'); payload.domiciliu=cfVal('cf_domiciliu');
         if(!payload.nume){ toast('❌ Nume obligatoriu','error'); return; }
