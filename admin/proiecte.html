@@ -309,7 +309,7 @@ a{text-decoration:none;color:inherit;}button{font-family:inherit;cursor:pointer;
                 <div class="form-group"><label class="form-label">Serviciu</label>
                     <select class="form-select" name="serviciu" id="eServiciu">
                         <option>Detecție Incendiu</option><option>Alarmă Antiefracție</option>
-                        <option>Supraveghere Video</option><option>Instalații Electrice</option>
+                        <option>Supraveghere Video</option><option>Videointerfonie</option><option>Instalații Electrice</option>
                         <option>Automatizări Porți</option><option>Control Acces</option>
                         <option>Proiect Complex</option>
                     </select>
@@ -372,7 +372,7 @@ a{text-decoration:none;color:inherit;}button{font-family:inherit;cursor:pointer;
                 <select class="form-select" name="serviciu" required>
                     <option value="">— Alege —</option>
                     <option>Detecție Incendiu</option><option>Alarmă Antiefracție</option>
-                    <option>Supraveghere Video</option><option>Instalații Electrice</option>
+                    <option>Supraveghere Video</option><option>Videointerfonie</option><option>Instalații Electrice</option>
                     <option>Automatizări Porți</option><option>Control Acces</option>
                     <option>Proiect Complex</option>
                 </select>
@@ -410,8 +410,8 @@ a{text-decoration:none;color:inherit;}button{font-family:inherit;cursor:pointer;
 // ═══════ CONFIG ═══════
 var API_URL=null;
 var API_DB='/admin/api.php';
-var SERV_DB_TO_UI={'Detectie Incendiu':'Detecție Incendiu','Alarma':'Alarmă Antiefracție','Supraveghere Video':'Supraveghere Video','Electric':'Instalații Electrice','Automatizari':'Automatizări Porți','Complex':'Proiect Complex','Control Acces':'Control Acces'};
-var SERV_UI_TO_DB={'Detecție Incendiu':'Detectie Incendiu','Alarmă Antiefracție':'Alarma','Supraveghere Video':'Supraveghere Video','Instalații Electrice':'Electric','Instalații Sanitare':'Electric','Automatizări Porți':'Automatizari','Proiect Complex':'Complex','Control Acces':'Control Acces'};
+var SERV_DB_TO_UI={'Detectie Incendiu':'Detecție Incendiu','Alarma':'Alarmă Antiefracție','Supraveghere Video':'Supraveghere Video','Videointerfonie':'Videointerfonie','Electric':'Instalații Electrice','Automatizari':'Automatizări Porți','Complex':'Proiect Complex','Control Acces':'Control Acces'};
+var SERV_UI_TO_DB={'Detecție Incendiu':'Detectie Incendiu','Alarmă Antiefracție':'Alarma','Supraveghere Video':'Supraveghere Video','Videointerfonie':'Videointerfonie','Instalații Electrice':'Electric','Instalații Sanitare':'Electric','Automatizări Porți':'Automatizari','Proiect Complex':'Complex','Control Acces':'Control Acces'};
 var STAT_DB_TO_UI={'Lead':'Lead','Oferta':'Ofertă','Contract':'Contract','Proiectare':'Proiectare','Executie':'Execuție','Receptie':'Recepție','Facturat':'Facturat','Mentenanta':'Mentenanță','Finalizat':'Finalizat','Anulat':'Anulat'};
 var STAT_UI_TO_DB={'Lead':'Lead','Ofertă':'Oferta','Contract':'Contract','Proiectare':'Proiectare','Execuție':'Executie','Recepție':'Receptie','Facturat':'Facturat','Mentenanță':'Mentenanta','Finalizat':'Finalizat','Anulat':'Anulat'};
 var RESP_ICONS={'Mihai':'💰','Roxana':'📋','Valentin':'📐','Cristina':'📞','Admin':'🔑'};
@@ -424,7 +424,7 @@ var userName=sessionStorage.getItem('cssi-user')||role;
 // ═══════ CONSTANTS ═══════
 var STATUSES=[{id:'lead',name:'Lead',cls:'lead'},{id:'oferta',name:'Ofertă',cls:'oferta'},{id:'contract',name:'Contract',cls:'contract'},{id:'proiectare',name:'Proiectare',cls:'proiectare'},{id:'executie',name:'Execuție',cls:'executie'},{id:'receptie',name:'Recepție',cls:'receptie'},{id:'facturat',name:'Facturat',cls:'facturat'},{id:'mentenanta',name:'Mentenanță',cls:'mentenanta'}];
 var STATUS_MAP={'Lead':'lead','Ofertă':'oferta','Contract':'contract','Proiectare':'proiectare','Execuție':'executie','Recepție':'receptie','Facturat':'facturat','Mentenanță':'mentenanta'};
-var SERVICE_TAGS={'Detecție Incendiu':{cls:'incendiu',s:'Incendiu'},'Alarmă Antiefracție':{cls:'alarm',s:'Alarmă'},'Supraveghere Video':{cls:'camera',s:'Camere'},'Instalații Electrice':{cls:'electric',s:'Electric'},'Instalații Sanitare':{cls:'install',s:'Sanitare'},'Automatizări Porți':{cls:'auto',s:'Porți'},'Control Acces':{cls:'install',s:'Acces'},'Proiect Complex':{cls:'incendiu',s:'Complex'}};
+var SERVICE_TAGS={'Detecție Incendiu':{cls:'incendiu',s:'Incendiu'},'Alarmă Antiefracție':{cls:'alarm',s:'Alarmă'},'Supraveghere Video':{cls:'camera',s:'Camere'},'Videointerfonie':{cls:'camera',s:'Interfon'},'Instalații Electrice':{cls:'electric',s:'Electric'},'Instalații Sanitare':{cls:'install',s:'Sanitare'},'Automatizări Porți':{cls:'auto',s:'Porți'},'Control Acces':{cls:'install',s:'Acces'},'Proiect Complex':{cls:'incendiu',s:'Complex'}};
 var STATUS_ICONS={'Lead':'📞','Ofertă':'📋','Contract':'✅','Proiectare':'📐','Execuție':'🔧','Recepție':'📸','Facturat':'💳','Mentenanță':'🔄'};
 
 // ═══════ STATE ═══════

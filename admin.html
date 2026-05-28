@@ -375,6 +375,7 @@ a{text-decoration:none;color:inherit;}button{font-family:inherit;cursor:pointer;
                     <option value="Detecție Incendiu">🔥 Detecție Incendiu</option>
                     <option value="Alarmă Antiefracție">🚨 Alarmă Antiefracție</option>
                     <option value="Supraveghere Video">📹 Supraveghere Video</option>
+                    <option value="Videointerfonie">📞 Videointerfonie</option>
                     <option value="Instalații Electrice">⚡ Instalații Electrice</option>
                     <option value="Instalații Sanitare">🔧 Instalații Sanitare</option>
                     <option value="Automatizări Porți">🚪 Automatizări Porți</option>
@@ -522,7 +523,7 @@ var STATUSES=[
     {id:"receptie",name:"Recepție",icon:"📸",cls:"receptie"},
     {id:"facturat",name:"Facturat",icon:"💳",cls:"facturat"},{id:"mentenanta",name:"Mentenanță",icon:"🔄",cls:"mentenanta"}
 ];
-var SERVICE_TAGS={"Detecție Incendiu":{cls:"incendiu",s:"Incendiu"},"Alarmă Antiefracție":{cls:"alarm",s:"Alarmă"},"Supraveghere Video":{cls:"camera",s:"Camere"},"Instalații Electrice":{cls:"electric",s:"Electric"},"Instalații Sanitare":{cls:"install",s:"Sanitare"},"Automatizări Porți":{cls:"auto",s:"Porți"},"Proiect Complex":{cls:"incendiu",s:"Complex"}};
+var SERVICE_TAGS={"Detecție Incendiu":{cls:"incendiu",s:"Incendiu"},"Alarmă Antiefracție":{cls:"alarm",s:"Alarmă"},"Supraveghere Video":{cls:"camera",s:"Camere"},"Videointerfonie":{cls:"camera",s:"Interfon"},"Instalații Electrice":{cls:"electric",s:"Electric"},"Instalații Sanitare":{cls:"install",s:"Sanitare"},"Automatizări Porți":{cls:"auto",s:"Porți"},"Proiect Complex":{cls:"incendiu",s:"Complex"}};
 
 // ═══════ ALL 14 MODULES ═══════
 var MODULES=[
@@ -549,8 +550,8 @@ var MODULES=[
 var API_DB='/admin/api.php';
 
 // Mapping UI (diacritice) → DB (ENUM fără diacritice)
-var SERV_UI_TO_DB={"Detecție Incendiu":"Detectie Incendiu","Alarmă Antiefracție":"Alarma","Supraveghere Video":"Supraveghere Video","Instalații Electrice":"Electric","Instalații Sanitare":"Electric","Automatizări Porți":"Automatizari","Proiect Complex":"Complex","Control Acces":"Control Acces","Rețelistică":"Retelistică"};
-var SERV_DB_TO_UI={"Detectie Incendiu":"Detecție Incendiu","Alarma":"Alarmă Antiefracție","Supraveghere Video":"Supraveghere Video","Electric":"Instalații Electrice","Automatizari":"Automatizări Porți","Complex":"Proiect Complex","Control Acces":"Control Acces","Retelistică":"Rețelistică"};
+var SERV_UI_TO_DB={"Detecție Incendiu":"Detectie Incendiu","Alarmă Antiefracție":"Alarma","Supraveghere Video":"Supraveghere Video","Videointerfonie":"Videointerfonie","Instalații Electrice":"Electric","Instalații Sanitare":"Electric","Automatizări Porți":"Automatizari","Proiect Complex":"Complex","Control Acces":"Control Acces","Rețelistică":"Retelistică"};
+var SERV_DB_TO_UI={"Detectie Incendiu":"Detecție Incendiu","Alarma":"Alarmă Antiefracție","Supraveghere Video":"Supraveghere Video","Videointerfonie":"Videointerfonie","Electric":"Instalații Electrice","Automatizari":"Automatizări Porți","Complex":"Proiect Complex","Control Acces":"Control Acces","Retelistică":"Rețelistică"};
 var STAT_UI_TO_DB={"Lead":"Lead","Ofertă":"Oferta","Contract":"Contract","Proiectare":"Proiectare","Execuție":"Executie","Intervenție":"Interventie","Recepție":"Receptie","Facturat":"Facturat","Mentenanță":"Mentenanta","Finalizat":"Finalizat","Anulat":"Anulat"};
 var STAT_DB_TO_UI={"Lead":"Lead","Oferta":"Ofertă","Contract":"Contract","Proiectare":"Proiectare","Executie":"Execuție","Interventie":"Intervenție","Receptie":"Recepție","Facturat":"Facturat","Mentenanta":"Mentenanță","Finalizat":"Finalizat","Anulat":"Anulat"};
 
