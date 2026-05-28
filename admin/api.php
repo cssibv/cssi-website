@@ -144,6 +144,12 @@ function ensureFinalizareSchema($db) {
             'note'            => "TEXT NULL",
             'created_at'      => "DATETIME DEFAULT CURRENT_TIMESTAMP",
             'created_by'      => "VARCHAR(100) NULL",
+            'data_ultima_vizita' => "DATE NULL",
+            'istoric'         => "TEXT NULL",
+            'telefon'         => "VARCHAR(30) NULL",
+            'echipa'          => "VARCHAR(100) NULL",
+            'client_nume'     => "VARCHAR(150) NULL",
+            'proiect_cod'     => "VARCHAR(40) NULL",
         ];
         foreach ($maddCols as $name => $def) {
             if (!in_array($name, $mcols, true)) {
@@ -4114,8 +4120,8 @@ p { margin: 0; }
             $mentenanta = [];
             try {
                 $sqlM = $pid
-                    ? "SELECT * FROM mentenanta WHERE proiect_id = ? OR client_id = ? ORDER BY data_urmatoare ASC, id DESC"
-                    : "SELECT * FROM mentenanta WHERE client_id = ? ORDER BY data_urmatoare ASC, id DESC";
+                    ? "SELECT * FROM mentenanta WHERE proiect_id = ? OR client_id = ? ORDER BY data_next_visit ASC, id DESC"
+                    : "SELECT * FROM mentenanta WHERE client_id = ? ORDER BY data_next_visit ASC, id DESC";
                 $stM = $db->prepare($sqlM);
                 $stM->execute($pid ? [$pid, $cid] : [$cid]);
                 $mentenanta = $stM->fetchAll();
@@ -5029,6 +5035,115 @@ p { margin: 0; }
             $body .= "\r\n--$boundary--\r\n";
             $ok = @mail($emailTo, '=?UTF-8?B?' . base64_encode($subject) . '?=', $body, $headers, '-fnoreply@cssi.ro');
             jsonResponse(['success' => (bool)$ok, 'email' => $emailTo, 'proiect_id' => $proj['proiect_id']]);
+            break;
+
+        // ─── MENTENANTA — modulul de contracte mentenanță (admin/mentenanta.html) ───
+        // Pagina e construită stil vechi (cheie 'row' = id DB, răspuns = array brut, nu {success,data}).
+        case 'getMentenanta':
+            requireAuth();
+            ensureFinalizareSchema($db);
+            $rows = $db->query("SELECT m.*,
+                        COALESCE(c.nume, m.client_nume) AS c_nume,
+                        COALESCE(p.proiect_id, m.proiect_cod) AS p_cod,
+                        COALESCE(m.telefon, c.telefon) AS tel
+                    FROM mentenanta m
+                    LEFT JOIN proiecte p ON m.proiect_id = p.id
+                    LEFT JOIN clienti c ON m.client_id = c.id
+                    ORDER BY (m.status='Activ') DESC, m.data_next_visit ASC, m.id DESC")->fetchAll(PDO::FETCH_ASSOC);
+            $out = array_map(function($m){
+                return [
+                    'row'        => (int)$m['id'],
+                    'client'     => $m['c_nume'] ?: '',
+                    'proiectId'  => $m['p_cod'] ?: '',
+                    'tip'        => $m['tip'] ?: 'Standard',
+                    'frecventa'  => $m['frecventa'] ?: 'Trimestrial',
+                    'ultima'     => $m['data_ultima_vizita'] ?: ($m['data_start'] ?: ''),
+                    'urmatoarea' => $m['data_next_visit'] ?: '',
+                    'status'     => $m['status'] ?: 'Activ',
+                    'valoare'    => (float)$m['valoare_lunara'],
+                    'telefon'    => $m['tel'] ?: '',
+                    'echipa'     => $m['echipa'] ?: '',
+                    'note'       => $m['note'] ?: '',
+                    'history'    => $m['istoric'] ?: '[]',
+                ];
+            }, $rows);
+            jsonResponse($out);
+            break;
+
+        // Listă scurtă proiecte pentru dropdown-urile din mentenanta.html ([{id,client}])
+        case 'getProjects':
+            requireAuth();
+            $rows = $db->query("SELECT p.proiect_id AS id, COALESCE(c.nume,'') AS client
+                    FROM proiecte p LEFT JOIN clienti c ON p.client_id = c.id
+                    ORDER BY p.id DESC")->fetchAll(PDO::FETCH_ASSOC);
+            jsonResponse($rows);
+            break;
+
+        case 'updateMentenantaStatus':
+            requireAuth();
+            ensureFinalizareSchema($db);
+            $rowId = isset($data['row']) ? (int)$data['row'] : 0;
+            $st = isset($data['status']) ? trim($data['status']) : '';
+            if (!$rowId || $st === '') jsonResponse(['success'=>false,'error'=>'row si status obligatorii'],400);
+            $db->prepare("UPDATE mentenanta SET status=? WHERE id=?")->execute([$st, $rowId]);
+            jsonResponse(['success'=>true]);
+            break;
+
+        case 'markMentenantaDone':
+            requireAuth();
+            ensureFinalizareSchema($db);
+            $rowId = isset($data['row']) ? (int)$data['row'] : 0;
+            if (!$rowId) jsonResponse(['success'=>false,'error'=>'row obligatoriu'],400);
+            $ultima = isset($data['ultima']) && $data['ultima'] ? $data['ultima'] : date('Y-m-d');
+            $urm    = isset($data['urmatoarea']) && $data['urmatoarea'] ? $data['urmatoarea'] : null;
+            $hist   = isset($data['history']) ? (is_string($data['history']) ? $data['history'] : json_encode($data['history'])) : '[]';
+            $db->prepare("UPDATE mentenanta SET data_ultima_vizita=?, data_next_visit=?, istoric=? WHERE id=?")
+               ->execute([$ultima, $urm, $hist, $rowId]);
+            jsonResponse(['success'=>true]);
+            break;
+
+        case 'addMentenanta':
+            requireAuth();
+            ensureFinalizareSchema($db);
+            $ct = isset($data['contract']) && is_array($data['contract']) ? $data['contract'] : [];
+            if (empty($ct['client'])) jsonResponse(['success'=>false,'error'=>'client obligatoriu'],400);
+            $cid = null; $pidNum = null;
+            $s = $db->prepare("SELECT id FROM clienti WHERE nume = ? LIMIT 1"); $s->execute([$ct['client']]);
+            if ($r = $s->fetch()) $cid = (int)$r['id'];
+            if (!empty($ct['pid'])) {
+                $s = $db->prepare("SELECT id FROM proiecte WHERE proiect_id = ? LIMIT 1"); $s->execute([$ct['pid']]);
+                if ($r = $s->fetch()) $pidNum = (int)$r['id'];
+            }
+            $uCur = currentUser(); $by = $uCur['username'] ?? 'Admin';
+            $db->prepare("INSERT INTO mentenanta (proiect_id, client_id, client_nume, proiect_cod, tip, frecventa, valoare_lunara, data_start, data_ultima_vizita, data_next_visit, status, telefon, echipa, note, istoric, created_by)
+                    VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)")
+               ->execute([
+                    $pidNum ?: 0, $cid, $ct['client'] ?? '', $ct['pid'] ?? '',
+                    $ct['tip'] ?? 'Standard', $ct['frecventa'] ?? 'Trimestrial', (float)($ct['valoare'] ?? 0),
+                    $ct['ultima'] ?? null, $ct['ultima'] ?? null, $ct['urmatoarea'] ?? null,
+                    $ct['status'] ?? 'Activ', $ct['telefon'] ?? '', $ct['echipa'] ?? '',
+                    $ct['note'] ?? '', json_encode([$ct['ultima'] ?? date('Y-m-d')]), $by
+               ]);
+            jsonResponse(['success'=>true,'row'=>(int)$db->lastInsertId()]);
+            break;
+
+        case 'updateMentenanta':
+            requireAuth();
+            ensureFinalizareSchema($db);
+            $rowId = isset($data['row']) ? (int)$data['row'] : 0;
+            $ct = isset($data['contract']) && is_array($data['contract']) ? $data['contract'] : [];
+            if (!$rowId) jsonResponse(['success'=>false,'error'=>'row obligatoriu'],400);
+            $cid = null; $pidNum = null;
+            if (!empty($ct['client'])) { $s=$db->prepare("SELECT id FROM clienti WHERE nume=? LIMIT 1"); $s->execute([$ct['client']]); if($r=$s->fetch())$cid=(int)$r['id']; }
+            if (!empty($ct['pid'])) { $s=$db->prepare("SELECT id FROM proiecte WHERE proiect_id=? LIMIT 1"); $s->execute([$ct['pid']]); if($r=$s->fetch())$pidNum=(int)$r['id']; }
+            $db->prepare("UPDATE mentenanta SET client_id=?, client_nume=?, proiect_cod=?, tip=?, frecventa=?, valoare_lunara=?, data_ultima_vizita=?, data_next_visit=?, status=?, telefon=?, echipa=?, note=? WHERE id=?")
+               ->execute([
+                    $cid, $ct['client'] ?? '', $ct['pid'] ?? '', $ct['tip'] ?? 'Standard', $ct['frecventa'] ?? 'Trimestrial',
+                    (float)($ct['valoare'] ?? 0), $ct['ultima'] ?? null, $ct['urmatoarea'] ?? null, $ct['status'] ?? 'Activ',
+                    $ct['telefon'] ?? '', $ct['echipa'] ?? '', $ct['note'] ?? '', $rowId
+               ]);
+            if ($pidNum !== null) $db->prepare("UPDATE mentenanta SET proiect_id=? WHERE id=?")->execute([$pidNum, $rowId]);
+            jsonResponse(['success'=>true]);
             break;
 
         default:
