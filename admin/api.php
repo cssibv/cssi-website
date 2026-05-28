@@ -1163,6 +1163,18 @@ try {
             if (!empty($rows)) {
                 $clientIds = array_unique(array_filter(array_map(function($r){ return $r['client_db_id'] ?? null; }, $rows)));
                 $proiectIds = array_unique(array_filter(array_map(function($r){ return $r['id'] ?? null; }, $rows)));
+                // Data ultimei schimbări de status (din istoric_status) — pentru detecția corectă de blocaje
+                $lastStatusMap = [];
+                if ($proiectIds) {
+                    $phH = implode(',', array_fill(0, count($proiectIds), '?'));
+                    $stmtH = $db->prepare("SELECT id, istoric_status, created_at FROM proiecte WHERE id IN ($phH)");
+                    $stmtH->execute(array_values($proiectIds));
+                    foreach ($stmtH->fetchAll() as $h) {
+                        $ist = json_decode($h['istoric_status'] ?: '[]', true);
+                        $last = (is_array($ist) && count($ist)) ? end($ist) : null;
+                        $lastStatusMap[$h['id']] = ($last && !empty($last['data'])) ? $last['data'] : ($h['created_at'] ?? null);
+                    }
+                }
                 $ofData = ['by_proiect' => [], 'by_client' => []];
                 if ($proiectIds) {
                     $ph = implode(',', array_fill(0, count($proiectIds), '?'));
@@ -1209,6 +1221,7 @@ try {
                     elseif ($r['valoare_oferte_pipeline'] > 0)  $r['valoare_calc'] = $r['valoare_oferte_pipeline'];
                     elseif ($r['valoare_oferta_max'] > 0)       $r['valoare_calc'] = $r['valoare_oferta_max'];
                     else                                        $r['valoare_calc'] = $ve;
+                    $r['data_ultim_status'] = $lastStatusMap[$r['id']] ?? ($r['created_at'] ?? null);
                 }
                 unset($r);
             }

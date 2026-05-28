@@ -91,7 +91,7 @@ a{text-decoration:none;color:inherit;}button{font-family:inherit;cursor:pointer;
 .kanban-col{width:175px;flex-shrink:0;background:#fff;border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden;}
 @media(min-width:1200px){.kanban-col{width:calc((100% - 70px)/8);min-width:150px;}}
 .kcol-head{padding:10px 12px;display:flex;align-items:center;justify-content:space-between;border-bottom:2px solid transparent;}
-.kcol-head.lead{border-color:var(--blue);background:#eff6ff;}.kcol-head.oferta{border-color:var(--purple);background:#f5f3ff;}.kcol-head.contract{border-color:var(--green);background:#f0fdf4;}.kcol-head.proiectare{border-color:var(--teal);background:#f0fdfa;}.kcol-head.executie{border-color:var(--orange);background:#fff7ed;}.kcol-head.receptie{border-color:var(--yellow);background:#fefce8;}.kcol-head.facturat{border-color:var(--pink);background:#fdf2f8;}.kcol-head.mentenanta{border-color:var(--gray);background:var(--gray-bg);}
+.kcol-head.lead{border-color:var(--blue);background:#eff6ff;}.kcol-head.oferta{border-color:var(--purple);background:#f5f3ff;}.kcol-head.contract{border-color:var(--green);background:#f0fdf4;}.kcol-head.proiectare{border-color:var(--teal);background:#f0fdfa;}.kcol-head.executie{border-color:var(--orange);background:#fff7ed;}.kcol-head.receptie{border-color:var(--yellow);background:#fefce8;}.kcol-head.facturat{border-color:var(--pink);background:#fdf2f8;}.kcol-head.mentenanta{border-color:var(--gray);background:var(--gray-bg);}.kcol-head.finalizat{border-color:var(--green);background:#ecfdf5;}
 .kcol-name{font-size:10px;font-weight:700;color:var(--dark);text-transform:uppercase;letter-spacing:0.5px;}
 .kcol-count{font-size:10px;font-weight:700;width:20px;height:20px;border-radius:6px;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,0.06);color:var(--gray);}
 .kcol-suma{padding:6px 12px;font-size:11px;font-weight:800;color:var(--green);border-bottom:1px solid var(--gray-b);background:#f0fdf4;letter-spacing:0.3px;font-variant-numeric:tabular-nums;}
@@ -521,7 +521,8 @@ var STATUSES=[
     {id:"contract",name:"Contract",icon:"✅",cls:"contract"},{id:"proiectare",name:"Proiectare",icon:"📐",cls:"proiectare"},
     {id:"executie",name:"Execuție",icon:"🔧",cls:"executie"},{id:"interventie",name:"Intervenție",icon:"⚡",cls:"executie"},
     {id:"receptie",name:"Recepție",icon:"📸",cls:"receptie"},
-    {id:"facturat",name:"Facturat",icon:"💳",cls:"facturat"},{id:"mentenanta",name:"Mentenanță",icon:"🔄",cls:"mentenanta"}
+    {id:"facturat",name:"Facturat",icon:"💳",cls:"facturat"},{id:"mentenanta",name:"Mentenanță",icon:"🔄",cls:"mentenanta"},
+    {id:"finalizat",name:"Finalizate",icon:"🏁",cls:"finalizat"}
 ];
 var SERVICE_TAGS={"Detecție Incendiu":{cls:"incendiu",s:"Incendiu"},"Alarmă Antiefracție":{cls:"alarm",s:"Alarmă"},"Supraveghere Video":{cls:"camera",s:"Camere"},"Videointerfonie":{cls:"camera",s:"Interfon"},"Instalații Electrice":{cls:"electric",s:"Electric"},"Instalații Sanitare":{cls:"install",s:"Sanitare"},"Automatizări Porți":{cls:"auto",s:"Porți"},"Proiect Complex":{cls:"incendiu",s:"Complex"}};
 
@@ -692,12 +693,13 @@ function renderKPI(){
     var proiectare=PROJECTS.filter(function(p){return p.status==='Proiectare'}).length;
     var executie=PROJECTS.filter(function(p){return p.status==='Execuție'}).length;
     
-    // Proiecte blocate >14 zile fără mișcare
+    // Proiecte blocate fără mișcare (prag per etapă, pe baza ultimei schimbări de status)
     var now=Date.now();
     var blocate=PROJECTS.filter(function(p){
-        if(!p.dataCreare||['Finalizat','Anulat','Facturat','Mentenanță'].indexOf(p.status)>=0) return false;
-        var days=Math.floor((now-new Date(p.dataCreare).getTime())/86400000);
-        return days>14;
+        if(CLOSED_STATUSES.indexOf(p.status)>=0) return false;
+        var ref=p.dataUltimStatus||p.dataCreare; if(!ref) return false;
+        var days=Math.floor((now-new Date(String(ref).replace(' ','T')).getTime())/86400000);
+        return days>(STUCK_DAYS[p.status]||14);
     }).length;
     
     var html='';
@@ -745,30 +747,40 @@ function loadOferteSummaryDash(){
 }
 
 // ═══════ DE FĂCUT AZI ═══════
+// Praguri "fără mișcare" per etapă (zile de la ultima schimbare de status)
+var STUCK_DAYS={'Lead':7,'Ofertă':7,'Contract':5,'Proiectare':14,'Execuție':10,'Intervenție':5,'Recepție':3,'Facturat':7};
+var CLOSED_STATUSES=['Finalizat','Anulat','Mentenanță'];
+var EXTRA_ALERTE=[]; // alerte garanție/mentenanță (încărcate async din loadAlerte)
+
 function renderDeFacut(){
     var qs=document.getElementById('quickSection');
     var qr=document.getElementById('quickRow');
     if(!qs||!qr) return;
-    
+
     var items=[];
     var now=Date.now();
-    
-    // Proiecte neprelate
+
+    // Proiecte nepreluate (orice etapă activă, mai puțin Lead)
     PROJECTS.forEach(function(p){
-        if(!p.preluat_de&&p.status!=='Lead'&&p.status!=='Contract'&&p.status!=='Finalizat'&&p.status!=='Anulat'){
+        if(!p.preluat_de&&p.status!=='Lead'&&CLOSED_STATUSES.indexOf(p.status)<0){
             items.push({icon:'⚠️',text:p.id+' ('+p.client+') — nepreluat',color:'var(--red)',link:'/admin/proiecte.html'});
         }
     });
-    
-    // Proiecte blocate >14 zile
+
+    // Proiecte blocate — pe baza ULTIMEI schimbări de status, prag per etapă, toate etapele active
     PROJECTS.forEach(function(p){
-        if(!p.dataCreare) return;
-        var days=Math.floor((now-new Date(p.dataCreare).getTime())/86400000);
-        if(days>14&&['Lead','Ofertă','Contract'].indexOf(p.status)>=0){
-            items.push({icon:'⏰',text:p.id+' ('+p.client+') — '+days+' zile pe '+p.status,color:'var(--orange)',link:'/admin/proiecte.html'});
+        if(CLOSED_STATUSES.indexOf(p.status)>=0) return;
+        var ref=p.dataUltimStatus||p.dataCreare; if(!ref) return;
+        var days=Math.floor((now-new Date(String(ref).replace(' ','T')).getTime())/86400000);
+        var prag=STUCK_DAYS[p.status]||14;
+        if(days>prag){
+            items.push({icon:'⏰',text:p.id+' ('+p.client+') — '+days+'z fără mișcare pe '+p.status,color:'var(--orange)',link:'/admin/proiecte.html'});
         }
     });
-    
+
+    // Alerte garanție/mentenanță (populate async)
+    items=items.concat(EXTRA_ALERTE);
+
     if(!items.length){qs.classList.add('hidden');return;}
     qs.classList.remove('hidden');
     var qc=document.getElementById('quickCount');if(qc)qc.textContent=items.length;
@@ -780,10 +792,25 @@ function renderDeFacut(){
     qr.innerHTML=html;
 }
 
+// Încarcă alerte de garanție care expiră curând (și le adaugă în „De făcut")
+function loadAlerte(){
+    fetch('/admin/api.php?action=getGarantiiExpiraCurand&zile=30',{credentials:'include'})
+        .then(function(r){return r.json();})
+        .then(function(res){
+            if(!res||!res.success){ return; }
+            EXTRA_ALERTE=(res.data||[]).map(function(g){
+                var z=Number(g.zile_ramase);
+                var txt=z<0?('garanție EXPIRATĂ acum '+Math.abs(z)+'z'):('garanție expiră în '+z+'z');
+                return {icon:'🛡️',text:(g.proiect_id||'')+' ('+(g.client_nume||'')+') — '+txt,color:z<0?'var(--red)':'var(--orange)',link:'/admin/mentenanta.html'};
+            });
+            renderDeFacut();
+        }).catch(function(){});
+}
+
 // ═══════ KANBAN ═══════
 function renderKanban(){
     var b=document.getElementById('kanbanBoard');b.innerHTML='';
-    var sm={"Lead":"lead","Ofertă":"oferta","Contract":"contract","Proiectare":"proiectare","Execuție":"executie","Intervenție":"interventie","Recepție":"receptie","Facturat":"facturat","Mentenanță":"mentenanta"};
+    var sm={"Lead":"lead","Ofertă":"oferta","Contract":"contract","Proiectare":"proiectare","Execuție":"executie","Intervenție":"interventie","Recepție":"receptie","Facturat":"facturat","Mentenanță":"mentenanta","Finalizat":"finalizat"};
     var SRC_INFO={contract:{ic:'✅',lbl:'contract'},acceptata:{ic:'🤝',lbl:'oferte acceptate'},pipeline:{ic:'📤',lbl:'oferte trimise'},oferta:{ic:'📝',lbl:'cea mai mare ofertă'},estimata:{ic:'~',lbl:'estimat'}};
     STATUSES.forEach(function(st){
         var prj=PROJECTS.filter(function(p){return sm[p.status]===st.id});
@@ -1143,6 +1170,7 @@ function loadProjectsFromDB(){
                     note:p.note||'',
                     preluat_de:p.preluat_de||null,
                     dataCreare:p.created_at||'',
+                    dataUltimStatus:p.data_ultim_status||p.created_at||'',
                     telefon:p.telefon||'',
                     clientDbId:p.client_db_id||'',
                     obiectivProiect:p.obiectiv||''
@@ -1150,6 +1178,7 @@ function loadProjectsFromDB(){
             });
             projectsLoaded=true;
             renderKanban();renderKPI();
+            loadAlerte();
             loadOferteSummaryDash();
             document.getElementById('syncBadge').innerHTML='<span class="sync-dot ok"></span>MySQL · '+PROJECTS.length+' proiecte';
         }
