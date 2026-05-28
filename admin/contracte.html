@@ -109,11 +109,6 @@ a{text-decoration:none;color:inherit;}button{font-family:inherit;cursor:pointer;
 .detail-grid .val{color:var(--dark);font-weight:700;}
 .detail-grid .val.empty{color:var(--gray-l);font-style:italic;font-weight:400;}
 
-.wa-info{background:#dcfce7;border-left:4px solid #25d366;padding:12px 14px;border-radius:8px;margin-bottom:14px;font-size:12px;color:#166534;}
-.wa-link-row{display:flex;gap:6px;margin-top:8px;}
-.wa-link-row input{flex:1;padding:8px 12px;border:1px solid var(--gray-b);border-radius:8px;font-size:11px;font-family:'Courier New',monospace;background:#fff;}
-.wa-link-row button{padding:8px 14px;border-radius:8px;border:none;background:#25d366;color:#fff;font-weight:700;font-size:12px;cursor:pointer;font-family:inherit;}
-
 .foot{text-align:center;color:var(--gray-l);font-size:11px;padding:24px 0 60px;}
 </style>
 <script src="/admin/access-guard.js" defer></script>
@@ -139,7 +134,7 @@ a{text-decoration:none;color:inherit;}button{font-family:inherit;cursor:pointer;
     <div class="pipeline" id="pipeline"></div>
     <div id="mainView"></div>
 
-    <div class="foot">Portal CSSI 3.0 · Modul Contracte v1.0 · Pipeline + WhatsApp link + generare doc</div>
+    <div class="foot">Portal CSSI 3.0 · Modul Contracte v1.1 · Completare internă date + listă materiale + generare doc</div>
 </div>
 
 <!-- MODAL detalii contract -->
@@ -234,26 +229,12 @@ function renderCard(c){
     html += '<span class="val">'+fmtMoney(c.valoare_total)+'</span>';
     html += '</div>';
     if(c.obiectiv) html += '<div style="font-size:12px;color:var(--gray);margin-bottom:8px;font-style:italic">'+esc(c.obiectiv)+'</div>';
-    // Expire badge — atentioneaza daca link-ul expira curand
-    if(c.token_expires_at){
-        var expDate = new Date(c.token_expires_at.replace(' ','T'));
-        var daysLeft = Math.ceil((expDate - new Date())/86400000);
-        if(daysLeft < 0){
-            html += '<div style="font-size:11px;color:var(--red);font-weight:800;margin-bottom:8px;padding:4px 10px;background:#fef2f2;border-radius:6px;display:inline-block">⏱️ Link expirat (acum '+(-daysLeft)+' zile) — regenerează</div>';
-        } else if(daysLeft <= 7){
-            html += '<div style="font-size:11px;color:var(--orange);font-weight:800;margin-bottom:8px;padding:4px 10px;background:#fff7ed;border-radius:6px;display:inline-block">⏱️ Expiră în '+daysLeft+' zile</div>';
-        }
-    }
     html += '<div class="cc-actions">';
-    var publicUrl = window.location.origin + '/contract.html?token=' + encodeURIComponent(c.token);
     if(c.status === 'asteapta_date'){
-        var waText = encodeURIComponent('Bună ziua! Pentru întocmirea contractului CSSI, vă rugăm completați datele în formularul: ' + publicUrl);
-        var waPhone = (c.client_telefon || '').replace(/[^\d+]/g,'').replace(/^0/,'40');
-        var waUrl = waPhone ? 'https://wa.me/' + waPhone + '?text=' + waText : 'https://wa.me/?text=' + waText;
-        html += '<a class="cc-btn primary" href="'+waUrl+'" target="_blank" rel="noopener" title="Trimite link client pe WhatsApp">💬 WhatsApp client</a>';
-        html += '<button class="cc-btn" onclick="copyLink(\''+esc(publicUrl)+'\')" title="Copiază link-ul">📋 Copiază link</button>';
+        html += '<button class="cc-btn primary" onclick="openComplete('+c.id+')" title="Completează datele beneficiarului (intern)">📝 Completează date</button>';
     }
     html += '<button class="cc-btn secondary" onclick="openDetail('+c.id+')">👁️ Vezi detalii</button>';
+    html += '<button class="cc-btn" onclick="openMateriale('+c.id+')" title="Listă materiale pentru comandă">📦 Materiale</button>';
     if(c.status !== 'asteapta_date'){
         html += '<a class="cc-btn warn" href="'+API+'?action=generateContractDoc&id='+c.id+'&format=word" title="Descarcă Word editabil">📝 Word</a>';
         html += '<a class="cc-btn" href="'+API+'?action=generateContractDoc&id='+c.id+'&format=pdf" title="Descarcă PDF" target="_blank">📄 PDF</a>';
@@ -264,12 +245,12 @@ function renderCard(c){
     return html;
 }
 
-function copyLink(url){
+function copyText(txt, okMsg){
     if(navigator.clipboard){
-        navigator.clipboard.writeText(url).then(function(){ toast('📋 Link copiat în clipboard','success'); });
+        navigator.clipboard.writeText(txt).then(function(){ toast(okMsg||'📋 Copiat','success'); });
     } else {
-        var ta = document.createElement('textarea'); ta.value = url; document.body.appendChild(ta); ta.select(); document.execCommand('copy'); ta.remove();
-        toast('📋 Link copiat','success');
+        var ta = document.createElement('textarea'); ta.value = txt; document.body.appendChild(ta); ta.select(); document.execCommand('copy'); ta.remove();
+        toast(okMsg||'📋 Copiat','success');
     }
 }
 
@@ -291,14 +272,7 @@ function renderDetail(c){
     document.getElementById('dmTitle').textContent = '📄 ' + (c.contract_nr || ('#'+c.id));
     var d = c.date_completate || {};
     var p = c.prestator || {};
-    var publicUrl = window.location.origin + '/contract.html?token=' + encodeURIComponent(c.token);
     var html = '';
-
-    // WhatsApp link box (vizibil doar dacă așteaptă date sau Roxana vrea să retrimite)
-    html += '<div class="wa-info">';
-    html += '<strong>🔗 Link client</strong> — copiază sau trimite pe WhatsApp pentru completare/recompletare:';
-    html += '<div class="wa-link-row"><input type="text" readonly value="'+esc(publicUrl)+'" onclick="this.select()"><button onclick="copyLink(\''+esc(publicUrl)+'\')">📋 Copy</button></div>';
-    html += '</div>';
 
     // Status + valori
     html += '<div class="detail-section">';
@@ -317,11 +291,14 @@ function renderDetail(c){
     html += '<span class="lbl">Garanție:</span><span class="val">'+(c.garantie_luni||24)+' luni</span>';
     html += '</div></div>';
 
-    // Beneficiar (date completate)
+    // Beneficiar (date completate intern de CSSI)
     html += '<div class="detail-section">';
-    html += '<div class="detail-h">'+(c.tip_client==='PJ'?'🏢':'👤')+' Beneficiar (date completate de client)</div>';
+    html += '<div class="detail-h" style="display:flex;justify-content:space-between;align-items:center">'+
+            '<span>'+(c.tip_client==='PJ'?'🏢':'👤')+' Beneficiar</span>'+
+            '<button class="cc-btn" onclick="openComplete('+c.id+')" style="font-size:11px;padding:5px 10px">✏️ '+(Object.keys(d).length?'Editează':'Completează')+' date</button>'+
+            '</div>';
     if(!Object.keys(d).length){
-        html += '<div class="empty-msg" style="padding:14px;text-align:center;color:var(--gray-l);font-style:italic">Clientul încă nu a completat datele. Trimite-i link-ul pe WhatsApp.</div>';
+        html += '<div class="empty-msg" style="padding:14px;text-align:center;color:var(--gray-l);font-style:italic">Datele beneficiarului nu sunt completate. Apasă „Completează date".</div>';
     } else {
         html += '<div class="detail-grid">';
         if(c.tip_client === 'PJ'){
@@ -370,10 +347,7 @@ function renderDetail(c){
         html += '<a class="cc-btn" href="'+API+'?action=generateContractDoc&id='+c.id+'&format=pdf" target="_blank" style="padding:10px 16px;font-size:13px">📄 Descarcă PDF</a>';
         html += '<button class="cc-btn primary" onclick="markStatus(\'semnat\')" style="padding:10px 16px;font-size:13px;background:var(--green);border-color:var(--green)">✅ Marchează semnat</button>';
     }
-    html += '<button class="cc-btn" onclick="regenerateToken()" style="padding:10px 16px;font-size:13px">🔄 Regenerează link</button>';
-    if(c.locked_resubmit){
-        html += '<button class="cc-btn warn" onclick="unlockResubmit()" style="padding:10px 16px;font-size:13px" title="Permite clientului să re-completeze datele fără a regenera link-ul">🔓 Permite re-completare</button>';
-    }
+    html += '<button class="cc-btn" onclick="openMateriale('+c.id+')" style="padding:10px 16px;font-size:13px">📦 Listă materiale</button>';
     html += '<button class="cc-btn" onclick="openAuditLog('+c.id+')" style="padding:10px 16px;font-size:13px">📜 Audit log</button>';
     html += '</div>';
     // GDPR consent timestamp (legal evidence)
@@ -382,17 +356,6 @@ function renderDetail(c){
     }
 
     document.getElementById('dmBody').innerHTML = html;
-}
-
-function unlockResubmit(){
-    if(!STATE.current) return;
-    if(!confirm('Deblochezi formularul? Clientul va putea re-completa cu date noi (același link).')) return;
-    fetch(API+'?action=updateContract',{method:'POST',credentials:'include',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'updateContract',id:STATE.current.id,locked_resubmit:0})})
-        .then(function(r){return r.json();})
-        .then(function(res){
-            if(res.success){ toast('🔓 Re-completare permisă','success'); openDetail(STATE.current.id); }
-            else toast('❌ '+(res.error||'Eroare'),'error');
-        });
 }
 
 function openAuditLog(id){
@@ -441,15 +404,168 @@ function markStatus(st){
             else toast('❌ '+(res.error||'Eroare'),'error');
         });
 }
-function regenerateToken(){
-    if(!STATE.current) return;
-    if(!confirm('Generezi un link nou? Cel vechi nu va mai funcționa.')) return;
-    fetch(API+'?action=regenerateContractToken',{method:'POST',credentials:'include',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'regenerateContractToken',id:STATE.current.id})})
+/* ─── Completare internă date beneficiar (fără link public) ─── */
+function openComplete(id){
+    document.getElementById('dmTitle').textContent = '📝 Completează date';
+    document.getElementById('dmBody').innerHTML = '<div class="empty-msg" style="padding:30px;text-align:center">⏳ Se încarcă...</div>';
+    document.getElementById('detailModal').classList.add('active');
+    fetch(API+'?action=getContract&id='+id+'&_t='+Date.now(),{credentials:'include'})
         .then(function(r){return r.json();})
         .then(function(res){
-            if(res.success){ toast('🔄 Link nou generat','success'); openDetail(STATE.current.id); refreshData(); }
-            else toast('❌ '+(res.error||'Eroare'),'error');
+            if(!res.success){ document.getElementById('dmBody').innerHTML = '<div class="empty-msg" style="padding:30px;text-align:center">❌ '+(res.error||'Eroare')+'</div>'; return; }
+            STATE.current = res.data;
+            renderCompleteForm(res.data);
         });
+}
+function cfField(id, label, val, req){
+    return '<div style="margin-bottom:10px"><label style="display:block;font-size:12px;font-weight:600;color:var(--gray);margin-bottom:3px">'+label+(req?' <span style="color:var(--red)">*</span>':'')+'</label>'+
+           '<input id="'+id+'" type="text" value="'+esc(val||'')+'" style="width:100%;padding:9px 12px;border:1px solid var(--gray-b);border-radius:8px;font-size:13px;font-family:inherit"></div>';
+}
+function renderCompleteForm(c){
+    document.getElementById('dmTitle').textContent = '📝 ' + (c.contract_nr || ('#'+c.id)) + ' — date beneficiar';
+    var d = c.date_completate || {};
+    var tip = c.tip_client || 'PF';
+    var html = '';
+    html += '<div style="background:#eff6ff;border-left:4px solid var(--blue);padding:10px 14px;border-radius:8px;margin-bottom:16px;font-size:12px;color:#1d4ed8">ℹ️ Completează datele primite de la client. Acestea apar în contractul generat.</div>';
+    html += '<div class="detail-section"><div class="detail-h">Tip beneficiar</div>';
+    html += '<div style="display:flex;gap:14px;font-size:13px;font-weight:600">';
+    html += '<label style="display:flex;align-items:center;gap:6px;cursor:pointer"><input type="radio" name="cf_tip" value="PF" '+(tip==='PF'?'checked':'')+' onchange="switchCfTip(\'PF\')"> 👤 Persoană fizică</label>';
+    html += '<label style="display:flex;align-items:center;gap:6px;cursor:pointer"><input type="radio" name="cf_tip" value="PJ" '+(tip==='PJ'?'checked':'')+' onchange="switchCfTip(\'PJ\')"> 🏢 Persoană juridică</label>';
+    html += '</div></div>';
+
+    html += '<div id="cfPF" style="display:'+(tip==='PF'?'block':'none')+'">';
+    html += cfField('cf_nume','Nume și prenume', d.nume, true);
+    html += '<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px">';
+    html += cfField('cf_cnp','CNP', d.cnp);
+    html += cfField('cf_ci_seria','CI seria', d.ci_seria);
+    html += cfField('cf_ci_numar','CI număr', d.ci_numar);
+    html += '</div>';
+    html += cfField('cf_domiciliu','Domiciliu', d.domiciliu);
+    html += '</div>';
+
+    html += '<div id="cfPJ" style="display:'+(tip==='PJ'?'block':'none')+'">';
+    html += cfField('cf_denumire','Denumire firmă', d.denumire, true);
+    html += '<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">';
+    html += cfField('cf_cui','CUI', d.cui, true);
+    html += cfField('cf_reg_com','Reg. comerț', d.reg_com);
+    html += '</div>';
+    html += cfField('cf_sediu','Sediu social', d.sediu);
+    html += '<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">';
+    html += cfField('cf_reprezentant','Reprezentant legal', d.reprezentant);
+    html += cfField('cf_functia','Funcția', d.functia);
+    html += '</div>';
+    html += '<div style="display:grid;grid-template-columns:2fr 1fr;gap:10px">';
+    html += cfField('cf_cont_iban','Cont IBAN', d.cont_iban);
+    html += cfField('cf_banca','Banca', d.banca);
+    html += '</div>';
+    html += '</div>';
+
+    // Comune
+    html += '<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">';
+    html += cfField('cf_telefon','Telefon', d.telefon);
+    html += cfField('cf_email','Email', d.email);
+    html += '</div>';
+    html += cfField('cf_adresa','Adresa lucrării (instalare)', c.adresa_instalare);
+
+    html += '<div style="display:flex;gap:8px;margin-top:16px;padding-top:14px;border-top:1px solid var(--gray-b)">';
+    html += '<button class="cc-btn primary" onclick="saveComplete()" style="padding:10px 18px;font-size:13px;background:var(--green);border-color:var(--green)">💾 Salvează date</button>';
+    html += '<button class="cc-btn" onclick="openDetail('+c.id+')" style="padding:10px 18px;font-size:13px">Anulează</button>';
+    html += '</div>';
+    document.getElementById('dmBody').innerHTML = html;
+}
+function switchCfTip(t){
+    document.getElementById('cfPF').style.display = t==='PF'?'block':'none';
+    document.getElementById('cfPJ').style.display = t==='PJ'?'block':'none';
+}
+function cfVal(id){var e=document.getElementById(id);return e?e.value.trim():'';}
+function saveComplete(){
+    if(!STATE.current) return;
+    var tip = (document.querySelector('input[name=cf_tip]:checked')||{}).value || 'PF';
+    var payload = {action:'completeContractDate', id:STATE.current.id, tip_client:tip, adresa_instalare:cfVal('cf_adresa'), telefon:cfVal('cf_telefon'), email:cfVal('cf_email')};
+    if(tip==='PF'){
+        payload.nume=cfVal('cf_nume'); payload.cnp=cfVal('cf_cnp'); payload.ci_seria=cfVal('cf_ci_seria'); payload.ci_numar=cfVal('cf_ci_numar'); payload.domiciliu=cfVal('cf_domiciliu');
+        if(!payload.nume){ toast('❌ Nume obligatoriu','error'); return; }
+    } else {
+        payload.denumire=cfVal('cf_denumire'); payload.cui=cfVal('cf_cui'); payload.reg_com=cfVal('cf_reg_com'); payload.sediu=cfVal('cf_sediu'); payload.reprezentant=cfVal('cf_reprezentant'); payload.functia=cfVal('cf_functia'); payload.cont_iban=cfVal('cf_cont_iban'); payload.banca=cfVal('cf_banca');
+        if(!payload.denumire){ toast('❌ Denumire firmă obligatorie','error'); return; }
+        if(!payload.cui){ toast('❌ CUI obligatoriu','error'); return; }
+    }
+    showLoading(true);
+    fetch(API+'?action=completeContractDate',{method:'POST',credentials:'include',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)})
+        .then(function(r){return r.json();})
+        .then(function(res){
+            if(res.success){ toast('✅ Date salvate','success'); openDetail(STATE.current.id); refreshData(); }
+            else toast('❌ '+(res.error||'Eroare'),'error');
+        })
+        .finally(function(){ showLoading(false); });
+}
+
+/* ─── Listă materiale pentru comandă (din oferta contractului) ─── */
+var MAT_CACHE = [];
+function openMateriale(id){
+    document.getElementById('dmTitle').textContent = '📦 Listă materiale';
+    document.getElementById('dmBody').innerHTML = '<div class="empty-msg" style="padding:30px;text-align:center">⏳ Se încarcă...</div>';
+    document.getElementById('detailModal').classList.add('active');
+    fetch(API+'?action=getContractMateriale&id='+id+'&_t='+Date.now(),{credentials:'include'})
+        .then(function(r){return r.json();})
+        .then(function(res){
+            if(!res.success){ document.getElementById('dmBody').innerHTML = '<div class="empty-msg" style="padding:30px;text-align:center">❌ '+(res.error||'Eroare')+'</div>'; return; }
+            renderMateriale(res.data);
+        });
+}
+function fmtQty(n){ n=Number(n||0); return (n%1===0)?String(n):n.toLocaleString('ro-RO',{maximumFractionDigits:2}); }
+function renderMateriale(data){
+    var mats = data.materiale || [];
+    MAT_CACHE = mats;
+    var html = '';
+    if(data.oferta_cod) html += '<div style="font-size:12px;color:var(--gray);margin-bottom:12px">📋 Oferta <strong>#'+esc(data.oferta_cod)+'</strong>'+(data.oferta_titlu?' — '+esc(data.oferta_titlu):'')+'</div>';
+    if(!mats.length){
+        html += '<div class="empty-msg" style="padding:30px;text-align:center;color:var(--gray-l)">Oferta nu are linii de materiale (echipamente).</div>';
+        document.getElementById('dmBody').innerHTML = html;
+        return;
+    }
+    html += '<div style="display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap">';
+    html += '<button class="cc-btn primary" onclick="copyMateriale()" style="padding:8px 14px">📋 Copiază</button>';
+    html += '<button class="cc-btn" onclick="printMateriale()" style="padding:8px 14px">🖨️ Printează</button>';
+    html += '<span style="margin-left:auto;align-self:center;font-size:12px;color:var(--gray);font-weight:700">'+mats.length+' produse</span>';
+    html += '</div>';
+    html += '<div style="overflow-x:auto"><table style="width:100%;font-size:13px;border-collapse:collapse">';
+    html += '<thead><tr style="border-bottom:2px solid var(--gray-b)">'+
+            '<th style="text-align:left;padding:7px 6px;width:34px">#</th>'+
+            '<th style="text-align:left;padding:7px 6px">Cod produs</th>'+
+            '<th style="text-align:left;padding:7px 6px">Denumire</th>'+
+            '<th style="text-align:right;padding:7px 6px;white-space:nowrap">Cant.</th></tr></thead><tbody>';
+    mats.forEach(function(m, i){
+        html += '<tr style="border-bottom:1px solid var(--gray-b)">'+
+                '<td style="padding:7px 6px;color:var(--gray-l)">'+(i+1)+'</td>'+
+                '<td style="padding:7px 6px;font-family:\'Courier New\',monospace;font-weight:700;color:#6b21a8">'+esc(m.cod||'—')+'</td>'+
+                '<td style="padding:7px 6px">'+esc(m.denumire||'')+'</td>'+
+                '<td style="padding:7px 6px;text-align:right;font-weight:800;font-variant-numeric:tabular-nums;white-space:nowrap">'+fmtQty(m.cantitate)+' '+esc(m.um||'buc')+'</td></tr>';
+    });
+    html += '</tbody></table></div>';
+    document.getElementById('dmBody').innerHTML = html;
+}
+function matLines(){
+    return MAT_CACHE.map(function(m){
+        return (m.cod||'—')+'\t'+fmtQty(m.cantitate)+' '+(m.um||'buc')+'\t'+(m.denumire||'');
+    }).join('\n');
+}
+function copyMateriale(){
+    if(!MAT_CACHE.length){ toast('Nimic de copiat','info'); return; }
+    copyText('Cod\tCant.\tDenumire\n'+matLines(), '📋 Listă materiale copiată');
+}
+function printMateriale(){
+    if(!MAT_CACHE.length) return;
+    var rows = MAT_CACHE.map(function(m,i){
+        return '<tr><td>'+(i+1)+'</td><td style="font-family:monospace;font-weight:bold">'+esc(m.cod||'—')+'</td><td>'+esc(m.denumire||'')+'</td><td style="text-align:right">'+fmtQty(m.cantitate)+' '+esc(m.um||'buc')+'</td></tr>';
+    }).join('');
+    var w = window.open('', '_blank');
+    if(!w){ toast('Permite pop-up pentru printare','error'); return; }
+    w.document.write('<html><head><title>Listă materiale</title><style>body{font-family:Arial,sans-serif;padding:20px}h2{margin:0 0 12px}table{width:100%;border-collapse:collapse;font-size:13px}th,td{border:1px solid #ccc;padding:6px 8px;text-align:left}th{background:#f1f5f9}</style></head><body>'+
+        '<h2>Listă materiale — comandă</h2>'+
+        '<table><thead><tr><th>#</th><th>Cod produs</th><th>Denumire</th><th style="text-align:right">Cant.</th></tr></thead><tbody>'+rows+'</tbody></table>'+
+        '<scr'+'ipt>window.onload=function(){window.print();}</scr'+'ipt></body></html>');
+    w.document.close();
 }
 function doDelete(id){
     if(!confirm('Ștergi DEFINITIV contractul? Acțiunea nu se poate anula.')) return;

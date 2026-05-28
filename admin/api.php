@@ -2168,6 +2168,88 @@ try {
             jsonResponse(['success' => true]);
             break;
 
+        // Completare internă date beneficiar (CSSI întreabă clientul și completează aici,
+        // fără link public). Criptează câmpurile sensibile la fel ca submit-ul public.
+        case 'completeContractDate':
+            ensureContracteSchema($db);
+            requireAuth();
+            $id = isset($data['id']) ? intval($data['id']) : 0;
+            if (!$id) jsonResponse(['success' => false, 'error' => 'id obligatoriu'], 400);
+            $stmt = $db->prepare("SELECT id, status FROM contracte WHERE id = ?");
+            $stmt->execute([$id]);
+            $row = $stmt->fetch();
+            if (!$row) jsonResponse(['success' => false, 'error' => 'Contract inexistent'], 404);
+            $tipClient = isset($data['tip_client']) && in_array($data['tip_client'], ['PF','PJ'], true) ? $data['tip_client'] : 'PF';
+            $cap = function($s, $max = 500) { $s = trim((string)$s); return mb_strlen($s) > $max ? mb_substr($s, 0, $max) : $s; };
+            if ($tipClient === 'PF') {
+                $dateCompletate = [
+                    'nume'      => $cap($data['nume'] ?? '', 150),
+                    'cnp'       => encryptSensitive($cap($data['cnp'] ?? '', 13)),
+                    'ci_seria'  => encryptSensitive($cap($data['ci_seria'] ?? '', 5)),
+                    'ci_numar'  => encryptSensitive($cap($data['ci_numar'] ?? '', 10)),
+                    'domiciliu' => $cap($data['domiciliu'] ?? '', 500),
+                    'telefon'   => $cap($data['telefon'] ?? '', 30),
+                    'email'     => $cap($data['email'] ?? '', 150),
+                ];
+                if (!$dateCompletate['nume']) jsonResponse(['success' => false, 'error' => 'Nume obligatoriu'], 400);
+            } else {
+                $dateCompletate = [
+                    'denumire'     => $cap($data['denumire'] ?? '', 200),
+                    'cui'          => $cap($data['cui'] ?? '', 30),
+                    'reg_com'      => $cap($data['reg_com'] ?? '', 50),
+                    'sediu'        => $cap($data['sediu'] ?? '', 500),
+                    'reprezentant' => $cap($data['reprezentant'] ?? '', 150),
+                    'functia'      => $cap($data['functia'] ?? '', 100),
+                    'cont_iban'    => $cap($data['cont_iban'] ?? '', 35),
+                    'banca'        => $cap($data['banca'] ?? '', 100),
+                    'telefon'      => $cap($data['telefon'] ?? '', 30),
+                    'email'        => $cap($data['email'] ?? '', 150),
+                ];
+                if (!$dateCompletate['denumire']) jsonResponse(['success' => false, 'error' => 'Denumire firmă obligatorie'], 400);
+                if (!$dateCompletate['cui'])      jsonResponse(['success' => false, 'error' => 'CUI obligatoriu'], 400);
+            }
+            $adresaInst = $cap($data['adresa_instalare'] ?? '', 500);
+            $curStatus = empty($row['status']) ? 'asteapta_date' : $row['status'];
+            $newStatus = ($curStatus === 'asteapta_date') ? 'completat' : $curStatus;
+            $db->prepare("UPDATE contracte SET tip_client=?, date_completate=?, adresa_instalare=?, status=?, completat_la=COALESCE(completat_la, NOW()) WHERE id=?")
+               ->execute([$tipClient, json_encode($dateCompletate, JSON_UNESCAPED_UNICODE), $adresaInst, $newStatus, $id]);
+            logContractAccess($db, $id, 'admin_update', 'date completate intern (tip=' . $tipClient . ')');
+            jsonResponse(['success' => true, 'status' => $newStatus]);
+            break;
+
+        // Lista materialelor (echipamente) din oferta pe baza căreia s-a făcut contractul —
+        // pentru a face mai ușor comanda. Returnează cod, denumire, UM, cantitate.
+        case 'getContractMateriale':
+            ensureContracteSchema($db);
+            requireAuth();
+            $id = isset($_GET['id']) ? intval($_GET['id']) : 0;
+            if (!$id) jsonResponse(['success' => false, 'error' => 'id obligatoriu'], 400);
+            $stmt = $db->prepare("SELECT c.oferta_id, o.oferta_id AS oferta_cod, o.titlu AS oferta_titlu
+                                  FROM contracte c LEFT JOIN oferte o ON c.oferta_id = o.id WHERE c.id = ?");
+            $stmt->execute([$id]);
+            $row = $stmt->fetch();
+            if (!$row) jsonResponse(['success' => false, 'error' => 'Contract inexistent'], 404);
+            $ofId = intval($row['oferta_id'] ?? 0);
+            $linii = [];
+            if ($ofId) {
+                $stmtL = $db->prepare("SELECT cod, denumire, um, cantitate FROM oferta_linii WHERE oferta_id = ? AND tip = 'echipament' ORDER BY ordine, id");
+                $stmtL->execute([$ofId]);
+                $linii = array_map(function($l){
+                    return [
+                        'cod'       => $l['cod'],
+                        'denumire'  => $l['denumire'],
+                        'um'        => $l['um'],
+                        'cantitate' => floatval($l['cantitate']),
+                    ];
+                }, $stmtL->fetchAll());
+            }
+            jsonResponse(['success' => true, 'data' => [
+                'oferta_cod'   => $row['oferta_cod'] ?? null,
+                'oferta_titlu' => $row['oferta_titlu'] ?? null,
+                'materiale'    => $linii,
+            ]]);
+            break;
+
         // Endpoint nou: audit log pt un contract
         case 'getContractAccessLog':
             requireAuth();
