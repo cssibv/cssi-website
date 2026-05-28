@@ -245,7 +245,16 @@ a{text-decoration:none;color:inherit;}button{font-family:inherit;cursor:pointer;
                 </div>
             </div>
 
-            <div class="form-group"><label class="form-label">Conținut <span class="req">*</span></label><textarea class="form-textarea" id="fContent" required placeholder="Textul postării, hashtag-uri..." oninput="updateCharCount()"></textarea><div class="char-count" id="charCount">0 caractere</div>
+            <div class="form-group">
+                <label class="form-label" style="display:flex;justify-content:space-between;align-items:center">
+                    <span>Conținut <span class="req">*</span></span>
+                    <button type="button" onclick="openTemplatePicker()" style="padding:5px 12px;border-radius:8px;border:1px solid var(--purple);background:#fff;color:var(--purple);font-size:11px;font-weight:700;cursor:pointer">📚 Șabloane SEO 2026</button>
+                </label>
+                <textarea class="form-textarea" id="fContent" required placeholder="Textul postării, hashtag-uri... sau apasă „📚 Șabloane" pentru structuri optimizate" oninput="updateCharCount();updatePlatformLimits()"></textarea>
+                <div style="display:flex;justify-content:space-between;align-items:center;margin-top:4px">
+                    <div class="char-count" id="charCount">0 caractere</div>
+                    <div id="charCountPerPlat" style="font-size:11px;color:var(--gray)"></div>
+                </div>
             </div>
 
             <div class="form-group">
@@ -292,6 +301,22 @@ a{text-decoration:none;color:inherit;}button{font-family:inherit;cursor:pointer;
 <div class="modal">
     <div class="modal-head"><div class="modal-title" id="detailTitle">📋 Detalii Postare</div><button class="modal-close" onclick="closeDetailModal()">✕</button></div>
     <div class="modal-body" id="detailBody"></div>
+</div>
+</div>
+
+<!-- ȘABLOANE SEO MODAL — structuri optimizate pentru algoritmii 2026 -->
+<div id="templateModal" class="modal-overlay" onclick="if(event.target===this)closeTemplateModal()">
+<div class="modal" style="max-width:780px">
+    <div class="modal-head"><div class="modal-title">📚 Șabloane SEO 2026</div><button class="modal-close" onclick="closeTemplateModal()">✕</button></div>
+    <div class="modal-body" id="templateBody"></div>
+</div>
+</div>
+
+<!-- APROBARE MODAL (preview multi-platformă înainte de publicare) -->
+<div id="approveModal" class="modal-overlay" onclick="if(event.target===this)closeApproveModal()">
+<div class="modal" style="max-width:780px">
+    <div class="modal-head"><div class="modal-title">✅ Aprobare publicare</div><button class="modal-close" onclick="closeApproveModal()">✕</button></div>
+    <div class="modal-body" id="approveBody"></div>
 </div>
 </div>
 
@@ -554,15 +579,121 @@ function changeStatus(id,val){
 }
 
 // ═══ PUBLISH VIA ZERNIO ═══
+// Limite caractere per platformă (pentru avertismente)
+var PLAT_LIMITS={fb:63206,ig:2200,linkedin:3000,yt:5000,tiktok:2200,x:280};
+var PLAT_BG={fb:'#1877F2',ig:'linear-gradient(45deg,#F58529,#DD2A7B,#8134AF,#515BD4)',linkedin:'#0A66C2',yt:'#FF0000',tiktok:'#000',x:'#000'};
+
 function publishPost(id){
     var p=POSTS.find(function(x){return x.id===id});if(!p)return;
     if(!p.platforme.length){toast('❌ Selectează cel puțin o platformă','error');return;}
-    if(!confirm('Publici postarea pe '+p.platforme.map(function(x){return PLAT[x]||x}).join(', ')+'?'))return;
-    toast('📤 Se publică...','info');
+    openApproveModal(p);
+}
+
+function openApproveModal(p){
+    var firstMedia=(p.media&&p.media.length)?p.media[0]:(p.imagine?{type:'image',url:p.imagine,name:''}:null);
+    var brandName=p.brand==='conca-verde'?'Conca-Verde':'CSSI';
+    var avatar=p.brand==='conca-verde'?'🌲':'🛡️';
+    var html='<div style="background:linear-gradient(135deg,#fef3c7,#fde68a);border-radius:12px;padding:14px 18px;margin-bottom:18px;font-size:13px;color:#92400e;font-weight:600;display:flex;gap:10px;align-items:center">';
+    html+='<span style="font-size:22px">⚠️</span><div><strong>Verifică conținutul pe fiecare platformă</strong><br><span style="font-weight:500;font-size:12px">După aprobare, postarea va fi publicată simultan pe toate platformele selectate via Zernio API.</span></div>';
+    html+='</div>';
+
+    // Meta info bar
+    html+='<div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px;align-items:center">';
+    html+='<span class="brand-'+(p.brand==='conca-verde'?'conca':'cssi')+'">'+brandName+'</span>';
+    html+='<span style="font-size:12px;color:var(--gray);font-weight:600">📅 '+(p.data||'imediat')+(p.ora?' · '+p.ora:'')+'</span>';
+    html+='<span style="font-size:12px;color:var(--gray);font-weight:600">📝 '+p.content.length+' caractere</span>';
+    html+='<span style="font-size:12px;color:var(--gray);font-weight:600">🎯 '+p.platforme.length+' platforme</span>';
+    if(p.media&&p.media.length) html+='<span style="font-size:12px;color:var(--gray);font-weight:600">📷 '+p.media.length+' media</span>';
+    html+='</div>';
+
+    // Preview-uri per platformă (mini-mockup)
+    html+='<div style="display:grid;gap:12px;margin-bottom:18px">';
+    p.platforme.forEach(function(plat){
+        var limit=PLAT_LIMITS[plat]||0;
+        var over=limit&&p.content.length>limit;
+        var platLabel=PLAT[plat]||plat;
+        var platName=platLabel.split(' ').slice(1).join(' ');
+        var platIcon=platLabel.split(' ')[0];
+        var bg=PLAT_BG[plat]||'#64748b';
+
+        html+='<div style="border:1px solid var(--gray-b);border-radius:12px;overflow:hidden;background:#fff">';
+        // Header platformă
+        html+='<div style="padding:10px 14px;background:'+bg+';color:#fff;font-weight:800;font-size:13px;display:flex;justify-content:space-between;align-items:center">';
+        html+='<span>'+platIcon+' '+platName+'</span>';
+        html+='<span style="font-size:11px;font-weight:600;opacity:0.9">'+p.content.length+'/'+(limit||'∞')+(over?' ⚠️ peste limită':'')+'</span>';
+        html+='</div>';
+        // Mock post
+        html+='<div style="padding:14px">';
+        html+='<div style="display:flex;gap:10px;align-items:center;margin-bottom:10px">';
+        html+='<div style="width:36px;height:36px;border-radius:50%;background:var(--gray-bg);display:flex;align-items:center;justify-content:center;font-size:18px">'+avatar+'</div>';
+        html+='<div><div style="font-weight:700;font-size:13px">'+brandName+(p.brand==='cssi'?' — Securitate & Instalații':' — Camping Conca Verde')+'</div><div style="font-size:11px;color:var(--gray)">'+(p.data?p.data+(p.ora?' · '+p.ora:''):'va fi publicat acum')+' · '+platName+'</div></div>';
+        html+='</div>';
+        // Conținut (truncat la limita platformei)
+        var displayContent=over?p.content.substring(0,limit)+'…':p.content;
+        html+='<div style="font-size:13px;line-height:1.6;color:var(--dark2);white-space:pre-wrap;margin-bottom:10px'+(over?';position:relative':'')+'">'+esc(displayContent)+'</div>';
+        if(over) html+='<div style="font-size:11px;color:var(--red);font-weight:700;margin-bottom:10px">⚠️ Textul depășește '+limit+' caractere — '+platName+' îl va trunchia automat. Recomand să-l scurtezi.</div>';
+        // Media preview
+        if(firstMedia){
+            if(firstMedia.type==='video') html+='<video src="'+esc(firstMedia.url)+'" muted style="width:100%;max-height:180px;object-fit:cover;border-radius:8px;background:#000"></video>';
+            else html+='<img src="'+esc(firstMedia.url)+'" style="width:100%;max-height:180px;object-fit:cover;border-radius:8px" onerror="this.style.display=\'none\'">';
+        }
+        // Avertismente specifice platformei
+        var warnings=[];
+        if(plat==='ig'&&!firstMedia) warnings.push('Instagram necesită cel puțin o imagine sau video');
+        if(plat==='tiktok'&&(!firstMedia||firstMedia.type!=='video')) warnings.push('TikTok necesită video (nu imagine)');
+        if(plat==='yt'&&(!firstMedia||firstMedia.type!=='video')) warnings.push('YouTube necesită video');
+        if(plat==='x'&&p.content.length>280) warnings.push('Twitter/X limită 280 caractere — restul se va pierde');
+        if(warnings.length){
+            html+='<div style="margin-top:10px;padding:8px 12px;background:#fef2f2;border-left:3px solid var(--red);border-radius:6px;font-size:11px;color:var(--red);font-weight:600">';
+            warnings.forEach(function(w){html+='⚠️ '+w+'<br>';});
+            html+='</div>';
+        }
+        html+='</div></div>';
+    });
+    html+='</div>';
+
+    // Buton APROB
+    var isScheduled=p.data&&new Date(p.data+'T'+(p.ora||'10:00')+':00')>new Date();
+    var btnLabel=isScheduled?'⏰ Aprob și programează pe toate':'🚀 Aprob și publică acum pe toate';
+    var btnSub=isScheduled?'Va fi publicat la '+p.data+(p.ora?' · '+p.ora:''):'Publicat imediat pe '+p.platforme.length+' platforme';
+
+    html+='<div style="background:linear-gradient(135deg,#f0fdf4,#dcfce7);border:2px solid var(--green);border-radius:14px;padding:18px;margin-bottom:12px">';
+    html+='<div style="text-align:center;margin-bottom:12px"><div style="font-size:14px;font-weight:800;color:#166534">Ești gata să publici?</div><div style="font-size:12px;color:#15803d;margin-top:4px">'+btnSub+'</div></div>';
+    html+='<button onclick="confirmApproval('+p.id+')" id="btnApprove" style="width:100%;padding:16px;border-radius:12px;border:none;background:linear-gradient(135deg,#16a34a,#15803d);color:#fff;font-weight:800;font-size:15px;cursor:pointer;box-shadow:0 4px 12px rgba(22,163,74,0.3);transition:all 0.2s" onmouseover="this.style.transform=\'translateY(-1px)\'" onmouseout="this.style.transform=\'translateY(0)\'">'+btnLabel+'</button>';
+    html+='</div>';
+    // Butoane secundare
+    html+='<div style="display:flex;gap:8px">';
+    html+='<button onclick="closeApproveModal();openEditModal('+p.id+')" style="flex:1;padding:12px;border-radius:10px;border:1px solid var(--gray-b);background:#fff;color:var(--dark);font-weight:700;cursor:pointer">✏️ Mai am de modificat</button>';
+    html+='<button onclick="closeApproveModal()" style="padding:12px 20px;border-radius:10px;border:1px solid var(--gray-b);background:#fff;color:var(--gray);font-weight:600;cursor:pointer">Anulez</button>';
+    html+='</div>';
+
+    document.getElementById('approveBody').innerHTML=html;
+    document.getElementById('approveModal').classList.add('active');
+    closeDetailModal();
+}
+
+function closeApproveModal(){document.getElementById('approveModal').classList.remove('active');}
+
+function confirmApproval(id){
+    var btn=document.getElementById('btnApprove');
+    if(btn){btn.disabled=true;btn.innerHTML='<span class="ai-loading"></span> Se publică pe toate platformele...';btn.style.opacity='0.7';}
     apiPost('publishSocialPost',{id:id}).then(function(res){
-        if(res.success){p.status=res.status;render();toast('✅ '+res.status+' cu succes!','success');}
-        else{p.status='Eroare';render();toast('❌ '+res.error,'error');}
-    }).catch(function(){toast('❌ Eroare conexiune','error')});
+        var p=POSTS.find(function(x){return x.id===id});
+        if(res.success){
+            if(p)p.status=res.status;
+            closeApproveModal();
+            render();
+            toast('✅ '+res.status+' cu succes pe toate platformele!','success');
+        } else {
+            if(p)p.status='Eroare';
+            render();
+            if(btn){btn.disabled=false;btn.innerHTML='🚀 Reîncearcă';btn.style.opacity='1';}
+            toast('❌ '+res.error,'error');
+        }
+    }).catch(function(){
+        if(btn){btn.disabled=false;btn.innerHTML='🚀 Reîncearcă';btn.style.opacity='1';}
+        toast('❌ Eroare conexiune','error');
+    });
 }
 
 // ═══ DETAIL MODAL ═══
@@ -687,10 +818,21 @@ function savePost(e,action){
         if(res.success){
             toast('✅ Postare salvată','success');
             closeAddModal();
-            if(action==='PublicaNow'||action==='Programat'){
-                publishPost(res.id);
-            }
+            // Reîncarc lista și apoi deschid aprobarea (preview multi-platformă)
             loadPosts();
+            if(action==='PublicaNow'||action==='Programat'){
+                setTimeout(function(){
+                    // după loadPosts, găsesc postarea nouă și deschid Aprobare
+                    var newId=res.id;
+                    var tries=0;
+                    var iv=setInterval(function(){
+                        tries++;
+                        var p=POSTS.find(function(x){return x.id===newId});
+                        if(p){clearInterval(iv);publishPost(newId);}
+                        else if(tries>20){clearInterval(iv);}
+                    },100);
+                },300);
+            }
         } else {
             toast('❌ '+res.error,'error');
         }
@@ -699,7 +841,166 @@ function savePost(e,action){
 
 function setView(v){currentView=v;document.getElementById('vList').classList.toggle('active',v==='list');document.getElementById('vCal').classList.toggle('active',v==='calendar');document.getElementById('vKanban').classList.toggle('active',v==='kanban');render();}
 
+// ═══════════════════════════════════════════════════════════════════
+// ȘABLOANE SEO — structuri pre-optimizate pentru algoritmii 2026
+// LinkedIn Depth Score · IG 3-sec hook · TikTok pattern interrupt · etc.
+// ═══════════════════════════════════════════════════════════════════
+var SEO_TEMPLATES=[
+    {
+        cat:'LinkedIn B2B',icon:'💼',plat:['linkedin'],brand:'cssi',
+        title:'Lecție din 20 ani — autoritate Mihai',
+        content:'După 20 de ani și 9.000 de proiecte, am învățat un lucru:\n\nCea mai mare diferență între o instalație care durează și una care eșuează nu sunt echipamentele.\n\nEste procesul de consultanță prealabilă.\n\nIată ce verific de fiecare dată înainte de a propune o soluție:\n\n→ [punct 1 — ex: harta blind spots reali, nu „pe planuri"]\n→ [punct 2 — ex: integrare cu infrastructura existentă]\n→ [punct 3 — ex: planul de mentenanță pe 5 ani, nu doar instalare]\n\nCifrele celor care sar peste consultanță: 30-40% revin la noi în 2 ani pentru re-cablare completă.\n\nCifrele celor cu care facem consultanță corectă: zero recablări în 8 ani.\n\nCare e abordarea ta când evaluezi un sistem nou? Comentează mai jos.\n\n#B2B #Securitate #FacilityManagement #CSSI #Brasov',
+        tips:'Sweet spot 1.200-1.500 char · Primele 2 linii = hook înainte de „see more" (210 char) · CTA în final cu întrebare → comentarii 15+ cuvinte = 15x weight algoritm 2026 · Postează marți-joi 9-11 dim.'
+    },
+    {
+        cat:'LinkedIn B2B',icon:'💼',plat:['linkedin'],brand:'cssi',
+        title:'Legea 333/2003 — diferențiator legal',
+        content:'80%.\n\nAtât din instalațiile pe care le evaluăm pentru re-bid au fost făcute de firme fără autorizație IGPR.\n\nLegea 333/2003 te obligă să folosești o firmă licențiată pentru sisteme de securitate.\n\nCe înseamnă pentru afacerea ta dacă nu o respecți:\n\n• Amenzi 5.000-30.000 RON\n• Asigurarea NU plătește la incident — sistemul instalat ilegal e considerat inexistent\n• Răspundere directă pentru date personale (GDPR)\n• Riscuri penale dacă incidentul cauzează prejudiciu\n\nCSSI = firmă autorizată IGPR + ISU + ANRE. 9.000 proiecte. 20 ani.\n\nVrei un audit gratuit al sistemului actual? Comentează „audit" — îți trimit ghidul PDF cu tot ce trebuie verificat.\n\n#Compliance #Legea333 #SecuritateAfacere #IGPR #CSSI',
+        tips:'Hook cu cifră șocantă în prima linie · Listă bullets → easy scan · Lead gen prin comentariu „audit" → DM cu PDF (boost engagement) · NU pune link extern (-40% reach 2026) — pune în comentariu după primele engagement-uri.'
+    },
+    {
+        cat:'LinkedIn B2B',icon:'💼',plat:['linkedin'],brand:'cssi',
+        title:'PDF Carousel — Studiu caz Schaeffler',
+        content:'Cum am securizat 8.500 mp de hală fără să oprim producția nici 1 minut.\n\nProvocare: 1.200 angajați, 47 camere, control acces complex, 3 zile termen.\n\nÎn carusele de mai jos: planul, soluția, rezultatul.\n\n→ Swipe pentru detalii\n\n#StudiuCaz #B2B #Securitate #CSSI',
+        tips:'Format PDF carousel = 6.6% engagement (CEL MAI MARE LinkedIn 2026) · 10 slide-uri PDF: hook → context → provocare → soluție → echipament → calendar → rezultat → ROI → quote client → CTA · Saves = #1 metric algoritm. Încheie cu „Salvează pentru când vei avea nevoie."'
+    },
+    {
+        cat:'Instagram Reel',icon:'📸',plat:['ig','tiktok'],brand:'cssi',
+        title:'Time-lapse montaj cameră — 15 sec viral',
+        content:'Hala asta avea ZERO camere acum 3 ore.\n\nAcum are 12. 🎥\n\nTime-lapse complet în 15 sec ⬇️\n\n[Adaugă trending audio — +42% engagement]\n[Text overlay frame 1: „Hala 8.500 mp · 12 camere · 3 ore"]\n\n.\n.\n.\n#CSSI #CamereSupraveghere #Brasov #TimeLapse #Securitate #B2B #FirmaAutorizata',
+        tips:'Hook în primele 3 sec (50% drop-off altfel) · Text mare frame 1 (Reels watched fără sunet 50% timp) · Trending audio = +42% engagement 2026 · 15-30 sec sweet spot · CTA: „Salvează pentru când îți va trebui" → saves = #2 signal · Hashtag-uri în comentariu sau la final după 3 enter-uri.'
+    },
+    {
+        cat:'Instagram Reel',icon:'📸',plat:['ig','tiktok'],brand:'cssi',
+        title:'5 semne că ai nevoie de camere — list format',
+        content:'Dacă ai chiar și 1 din astea, e timpul. ⚠️\n\n1️⃣ Stoc care „dispare" inexplicabil\n2️⃣ Reclamații angajați nedrepte fără probă\n3️⃣ Furt de la mașini în parcare\n4️⃣ Acces neautorizat în zone sensibile\n5️⃣ Asigurarea cere camere pentru reînnoire\n\nNu aștepta să se întâmple. Trimite asta unui prieten care are firmă. 📤\n\n.\n.\n.\n#CSSI #CamereSupraveghere #Brasov #SecuritateFirma #B2B',
+        tips:'Format „list" viral 2026 · Numerotat vizual cu emojis · CTA „Trimite asta unui prieten" → sends per reach = #1 signal algoritm 2026 · 7-15 sec optim · Subtitrare auto-generată în reel.'
+    },
+    {
+        cat:'Facebook',icon:'📘',plat:['fb'],brand:'cssi',
+        title:'Studiu caz CFR Călători — social proof B2B',
+        content:'🚆 CFR Călători — 10 ani parteneriat.\n\n47 stații securizate. Zero incidente majore în ultimii 5 ani.\n\nProvocarea: rețea distribuită, 24/7 operațiuni, fără toleranță pentru downtime.\n\nSoluția noastră:\n• Sisteme CCTV integrate cu monitorizare centralizată\n• Control acces zonal pentru personal autorizat\n• Mentenanță predictivă — verificare lunară\n• SLA contractual răspuns 1-12h\n\nRezultat:\n→ Zero incidente majore în 5 ani\n→ Reducere 40% timp investigație incidente minore\n→ Renewal contract pentru încă 5 ani\n\nEști o instituție publică sau privată cu nevoi similare?\n\n📞 0752 288 400\n💬 WhatsApp: wa.me/40752288400\n\n#CSSI #B2B #StudiuCaz #SecuritateInstitutii',
+        tips:'Format lung Facebook (algoritm 2026 favorizează dwell time) · Story-driven: provocare → soluție → rezultat măsurabil · CTA dual (telefon + WhatsApp) · NU pune link extern în body — pune în comentariu primul.'
+    },
+    {
+        cat:'Facebook',icon:'📘',plat:['fb'],brand:'cssi',
+        title:'Comparativ „autorizat vs neautorizat" — diferențiator',
+        content:'⚠️ De ce contează ca firma ta de securitate să fie autorizată IGPR?\n\nFIRMĂ AUTORIZATĂ (CSSI ✅)\n✓ Asigurare profesională validă\n✓ Conformitate Legea 333/2003\n✓ GDPR compliance pentru CCTV\n✓ Răspundere clară la incident\n✓ Certificate IGPR + ISU + ANRE\n\nFIRMĂ NEAUTORIZATĂ ❌\n✗ Asigurare NU plătește la incident\n✗ Tu răspunzi penal/civil\n✗ Sistemul = inexistent legal\n✗ Risc amenzi 5.000-30.000 RON\n✗ Date personale neprotejate\n\n80% dintre concurenții cu prețuri mici NU au autorizația. Doar nu îți spun.\n\nCSSI — firmă autorizată din 2005. 20 ani. 9.000+ proiecte.\n\nCere audit gratuit: 0752 288 400\n\n#FirmaAutorizata #IGPR #Securitate #Brasov #CSSI',
+        tips:'Format comparativ → vizual scanabil · Diferențiator legal puternic (din audit) · CTA telefon · Hashtag-uri în finalul postării.'
+    },
+    {
+        cat:'GBP Post',icon:'📍',plat:['fb'],brand:'cssi',
+        title:'GBP Săptămânal — lucrare finalizată',
+        content:'✅ Săptămâna asta am finalizat instalarea sistemului CCTV pentru [tip locație — ex: depozit logistic 1.200 mp] în [localitate — ex: Codlea].\n\n📷 [număr] camere IP Hikvision 4K\n🔐 Control acces 24 angajați\n💻 Software monitorizare centralizat\n📅 Mentenanță inclusă 12 luni\n\nFirmă autorizată IGPR + ISU + ANRE.\n\nSună pentru ofertă: 0268 414 740',
+        tips:'1 post/săptămână OBLIGATORIU în GBP (semnal de activitate Google 2026) · GBP = 32% factor ranking local · Foto reală neapărat · Localitate menționată = SEO local.'
+    },
+    {
+        cat:'Blog SEO',icon:'📝',plat:['fb','linkedin'],brand:'cssi',
+        title:'Anunț blog — „Cât costă CCTV firmă 2026 Brașov"',
+        content:'💰 Cât costă un sistem CCTV pentru firma ta în 2026?\n\nAm publicat ghidul complet — cu prețuri orientative reale pe Brașov pentru 2026.\n\nÎn articol găsești:\n→ Tabel kit 4 camere casă (1.500-3.000 RON)\n→ 8 camere magazin/birou (3.500-8.000 RON)\n→ 16 camere hală industrială (12.000-25.000 RON)\n→ Factori care influențează prețul real\n→ Greșeli frecvente la achiziție\n→ Ce întreabă firma autorizată vs cea care vrea doar să vândă\n\nCitește ghidul complet: [link în comentariu]\n\n#CSSI #CCTV #Brasov #Ghid2026',
+        tips:'Anunț blog cu listă valoare clară · Link în comentariu (algoritm 2026 penalizează link în body) · Tabel prețuri → atrage căutări „cât costă X" · CTA „citește".'
+    },
+    {
+        cat:'YouTube',icon:'▶️',plat:['yt'],brand:'cssi',
+        title:'YT Title — Tutorial control acces RFID',
+        content:'TITLE OPTIMIZAT YT (max 60 char):\nCum Funcționează Controlul Acces RFID pentru Firme | CSSI\n\nDESCRIPTION (primele 100 char critice):\nGhid complet 2026 despre control acces RFID pentru fabrici și firme: cum alegi, cum instalezi, ROI real, integrare HR. Demo live + studiu caz Schaeffler.\n\n0:00 Intro\n0:45 Ce este controlul acces RFID\n2:00 Tipuri de cititoare\n4:30 Integrarea cu HR/ERP\n6:30 ROI — cazul Schaeffler\n8:00 Cum alegi pentru firma ta\n\nWebsite: cssi.ro\nWhatsApp: 0752 288 400\n\n#ControlAcces #RFID #B2B #CSSI #Brasov',
+        tips:'Title SEO YouTube cu cuvânt cheie principal + tip conținut + brand · Description first 100 char = ce arată în search · Timestamps obligatorii (boost retention) · Tag-uri în descriere + manual în YT Studio.'
+    },
+    {
+        cat:'Conca-Verde',icon:'🌲',plat:['fb','ig'],brand:'conca-verde',
+        title:'Camping — promovare sejur weekend',
+        content:'🌲 Weekend la munte fără bătăi de cap?\n\nConca Verde Camping — Râșnov\n\n🏕️ Locuri rulote/corturi cu electricitate\n🍳 Bucătărie comună + duș cald\n🌅 Hiking dimineața în Bucegi\n🐕 Animale binevenite\n📶 WiFi free în restaurant\n\nDe la 60 RON/noapte. Disponibil weekend-ul acesta!\n\nRezervare: 0752 288 400\nwww.conca-verde.ro\n\n#ConcaVerde #Camping #Brasov #Rasnov #Weekend #Bucegi #Hiking',
+        tips:'Conca Verde — voce mai casual decât CSSI · Emojis abundente OK · Hashtag-uri turism local · CTA rezervare clar.'
+    }
+];
+
+function openTemplatePicker(){
+    var html='<div style="background:linear-gradient(135deg,#f5f3ff,#ede9fe);border-radius:12px;padding:14px 18px;margin-bottom:18px;font-size:13px;color:#5b21b6;font-weight:600;display:flex;gap:10px;align-items:center">';
+    html+='<span style="font-size:22px">📚</span><div><strong>Șabloane optimizate pentru algoritmii 2026</strong><br><span style="font-weight:500;font-size:12px">Click pe orice șablon → pre-completează postarea. Modifică „[tex între paranteze]" cu detaliile lucrării tale.</span></div>';
+    html+='</div>';
+
+    // Grupare pe categorii
+    var cats={};
+    SEO_TEMPLATES.forEach(function(t){if(!cats[t.cat]) cats[t.cat]=[];cats[t.cat].push(t);});
+
+    Object.keys(cats).forEach(function(cat){
+        html+='<div style="font-weight:800;font-size:14px;color:var(--dark);margin:14px 0 8px;display:flex;align-items:center;gap:8px"><span style="font-size:20px">'+cats[cat][0].icon+'</span> '+cat+' <span style="background:var(--gray-bg);color:var(--gray);padding:2px 8px;border-radius:6px;font-size:11px">'+cats[cat].length+'</span></div>';
+        cats[cat].forEach(function(t){
+            var idx=SEO_TEMPLATES.indexOf(t);
+            html+='<div style="background:#fff;border:1px solid var(--gray-b);border-radius:12px;padding:14px;margin-bottom:8px;cursor:pointer;transition:all 0.2s" onmouseover="this.style.borderColor=\'var(--purple)\';this.style.transform=\'translateX(2px)\'" onmouseout="this.style.borderColor=\'var(--gray-b)\';this.style.transform=\'translateX(0)\'" onclick="useTemplate('+idx+')">';
+            html+='<div style="font-weight:700;font-size:14px;margin-bottom:6px;color:var(--dark)">'+esc(t.title)+'</div>';
+            html+='<div style="font-size:11px;color:var(--gray);line-height:1.6;max-height:40px;overflow:hidden;text-overflow:ellipsis;margin-bottom:8px">'+esc(t.content.substring(0,150))+'...</div>';
+            html+='<div style="display:flex;justify-content:space-between;align-items:center;font-size:11px"><div style="display:flex;gap:4px">';
+            t.plat.forEach(function(p){html+='<span style="background:'+(PLAT_COLOR[p]||'#64748b')+'20;color:'+(PLAT_COLOR[p]||'#64748b')+';padding:2px 8px;border-radius:6px;font-weight:700">'+(PLAT[p]||p).split(' ')[0]+'</span>';});
+            html+='</div>';
+            html+='<span style="color:var(--purple);font-weight:700">Folosește →</span>';
+            html+='</div>';
+            html+='<div style="margin-top:8px;padding:8px 10px;background:#fef3c7;border-radius:6px;font-size:10px;color:#92400e;line-height:1.5"><strong>💡 Algoritm 2026:</strong> '+esc(t.tips)+'</div>';
+            html+='</div>';
+        });
+    });
+
+    document.getElementById('templateBody').innerHTML=html;
+    document.getElementById('templateModal').classList.add('active');
+}
+
+function closeTemplateModal(){document.getElementById('templateModal').classList.remove('active');}
+
+function useTemplate(idx){
+    var t=SEO_TEMPLATES[idx];
+    document.getElementById('fContent').value=t.content;
+    document.getElementById('fBrand').value=t.brand;
+    setCheckedPlatforms(t.plat);
+    updateCharCount();
+    updatePlatformLimits();
+    closeTemplateModal();
+    toast('📚 Șablon „'+t.title+'" încărcat — modifică [text între paranteze]','success');
+}
+
+function updatePlatformLimits(){
+    var len=(document.getElementById('fContent').value||'').length;
+    var plats=getCheckedPlatforms();
+    if(!plats.length){document.getElementById('charCountPerPlat').innerHTML='';return;}
+    var limits={fb:63206,ig:2200,linkedin:3000,yt:5000,tiktok:2200,x:280};
+    var html='';
+    plats.forEach(function(p){
+        var lim=limits[p]||0;
+        var over=len>lim;
+        var color=over?'var(--red)':'var(--green)';
+        var label=(PLAT[p]||p).split(' ')[0];
+        html+='<span style="color:'+color+';margin-right:10px;font-weight:'+(over?'800':'600')+'">'+label+' '+len+'/'+(lim||'∞')+(over?' ⚠️':'')+'</span>';
+    });
+    document.getElementById('charCountPerPlat').innerHTML=html;
+}
+
 // ═══ INIT ═══
+// Aplic filtru din URL (ex: ?filter=Draft pentru pagina de Aprobare)
+(function(){
+    var urlParams=new URLSearchParams(window.location.search);
+    var filterStatus=urlParams.get('filter');
+    if(filterStatus){
+        var sel=document.getElementById('filterStatus');
+        if(sel){sel.value=filterStatus;}
+        // dacă filtrul e Draft, comut pe vizualizarea Listă (cea mai utilă pentru aprobare)
+        if(filterStatus==='Draft'||filterStatus==='Idee'){currentView='list';}
+    }
+    // Pre-completare din șablonul ideii din Marketing Hub
+    if(urlParams.get('template')==='idea'){
+        try{
+            var raw=sessionStorage.getItem('cssi-idea-template');
+            if(raw){
+                var d=JSON.parse(raw);
+                setTimeout(function(){
+                    openAddModal();
+                    document.getElementById('fContent').value=d.content||'';
+                    updateCharCount();updatePlatformLimits();
+                    sessionStorage.removeItem('cssi-idea-template');
+                    toast('💡 Idee încărcată — completează detaliile','info');
+                },500);
+            }
+        }catch(e){}
+    }
+})();
 loadPosts();
 </script>
 <script src="/admin/notifications.js" defer></script>

@@ -110,6 +110,7 @@ a{text-decoration:none;color:inherit;}button{font-family:inherit;cursor:pointer;
             <div class="page-subtitle" id="syncStatus"><span class="sync-indicator sync-off"></span>Date locale (demo)</div>
         </div>
         <div class="page-actions">
+            <a href="calendar-social.html?filter=Draft" class="page-btn secondary" style="background:linear-gradient(135deg,#fef3c7,#fde68a);color:#92400e;border-color:#f59e0b" title="Postări care așteaptă aprobarea ta">✅ Aprobare postări</a>
             <a href="calendar-social.html" class="page-btn secondary">📅 Calendar</a>
             <button class="page-btn secondary" onclick="refreshData()">🔄 Sync</button>
             <button class="page-btn primary" onclick="openAddModal()">+ Campanie Nouă</button>
@@ -118,13 +119,19 @@ a{text-decoration:none;color:inherit;}button{font-family:inherit;cursor:pointer;
 
     <div class="tabs">
         <button class="tab active" onclick="setTab('campanii',this)">🎯 Campanii</button>
-        <button class="tab" onclick="setTab('resurse',this)">📁 Resurse & Brand</button>
+        <button class="tab" onclick="setTab('seo',this)">🔍 SEO & Meta</button>
         <button class="tab" onclick="setTab('idei',this)">💡 Idei Conținut</button>
+        <button class="tab" onclick="setTab('hashtag',this)">🏷️ Hashtag-uri</button>
+        <button class="tab" onclick="setTab('resurse',this)">📁 Resurse & Brand</button>
+        <button class="tab" onclick="setTab('kpi',this)">📊 KPI</button>
     </div>
 
     <div id="tab-campanii"></div>
-    <div id="tab-resurse" style="display:none"></div>
+    <div id="tab-seo" style="display:none"></div>
     <div id="tab-idei" style="display:none"></div>
+    <div id="tab-hashtag" style="display:none"></div>
+    <div id="tab-resurse" style="display:none"></div>
+    <div id="tab-kpi" style="display:none"></div>
 
     <div class="footer">Portal CSSI 3.0 · Marketing Hub v3.0</div>
 </div>
@@ -168,37 +175,143 @@ var API_URL = 'https://script.google.com/macros/s/AKfycbzdM_e5DY5nmd57TmB24sXz8d
 var role = sessionStorage.getItem('cssi-role');
 if (!role) { window.location.href = '../admin.html'; }
 
+// ═══════════════════════════════════════════════════════════════════
+// CAMPANII — strategice, derivate direct din Auditul SEO 19 mai 2026
+// Prioritizare: P0 critic → P1 urgent → P2 important
+// ═══════════════════════════════════════════════════════════════════
 var CAMPAIGNS = [
-    {id:1,row:1,nume:'Lansare Servicii PRAM',desc:'Campanie de promovare a serviciilor de verificări electrice PRAM + buletin. Target: proprietari imobile comerciale din Brașov.',start:'2026-03-01',end:'2026-03-31',status:'Activă',buget:1200,platforme:'Facebook, Instagram, Google Ads',progres:40,postari:3},
-    {id:2,row:2,nume:'CSSI — 15 Ani',desc:'Campanie aniversară. Testimoniale clienți, portofoliu proiecte, behind-the-scenes cu echipa.',start:'2026-03-08',end:'2026-04-08',status:'Planificată',buget:800,platforme:'Facebook, Instagram, LinkedIn, YouTube',progres:10,postari:1},
-    {id:3,row:3,nume:'Detectie Incendiu 2026',desc:'Promovare sisteme detecție incendiu Bosch. Conținut educativ + studii de caz reale.',start:'2026-02-01',end:'2026-02-28',status:'Finalizată',buget:600,platforme:'Facebook, Instagram',progres:100,postari:8},
-    {id:4,row:4,nume:'Promo CCTV Primăvară',desc:'Ofertă specială sisteme CCTV Hikvision. Pachete complete cameră + NVR + montaj.',start:'2026-03-15',end:'2026-04-15',status:'Planificată',buget:1500,platforme:'Facebook, Instagram, Google Ads, TikTok',progres:5,postari:0},
-    {id:5,row:5,nume:'Google Business Optimization',desc:'Actualizare profil Google Business, postări regulate, răspunsuri recenzii.',start:'2026-01-01',end:'2026-12-31',status:'Activă',buget:0,platforme:'Google Business',progres:25,postari:4}
+    {id:1,row:1,nume:'P0 — Indexare Google + GBP',desc:'Verificare Search Console (cauze ne-indexare), resubmit sitemap, audit Schema.org, revendicare + optimizare 100% Google Business Profile, 20 foto-uri originale, zonă deservită Brașov + 7 localități.',start:'2026-05-28',end:'2026-06-28',status:'Activă',buget:0,platforme:'SEO, Google Business Profile',progres:15,postari:0,prio:'P0'},
+    {id:2,row:2,nume:'P0 — Recenzii GBP — viteză constantă',desc:'SMS post-lucrare cu link Google Review, răspunsuri 100% la recenzii în max 24h. Țintă: 5 recenzii noi în luna 1, 30+ cumulative la 6 luni, rating 4.7+. Algorithm 2026: review velocity > volum.',start:'2026-05-28',end:'2026-11-28',status:'Planificată',buget:0,platforme:'Google Business Profile',progres:0,postari:0,prio:'P0'},
+    {id:3,row:3,nume:'P1 — Google Ads B2B Concentrat',desc:'3 campanii Search Exact+Phrase: Control Acces+Pontaj (210 RON/lună), CCTV B2B Brașov+7 localități (180 RON), Automatizări Porți+Bariere (120 RON). Negative keywords: emag, ieftin, pret, second. CPA țintă 60 RON B2B.',start:'2026-06-15',end:'2026-08-15',status:'Planificată',buget:510,platforme:'Google Ads',progres:0,postari:0,prio:'P1'},
+    {id:4,row:4,nume:'P1 — 16 Landing Pages Localizate',desc:'CCTV × 8 localități + Alarme × 8 localități. 800-1.200 cuvinte unice/pagină (30% diferențiat), Service+AreaServed+FAQPage schema, hartă, FAQ 5-7 întrebări. Localități: Brașov, Ghimbav, Codlea, Râșnov, Bran, Predeal, Hărman, Sânpetru.',start:'2026-06-01',end:'2026-08-31',status:'Planificată',buget:0,platforme:'SEO Local',progres:0,postari:0,prio:'P1'},
+    {id:5,row:5,nume:'P1 — LinkedIn B2B Autoritate',desc:'2 posturi/săpt pagina CSSI + 1-2/săpt profil personal Mihai (thought leadership). Format: PDF carousel (6.6% engagement) + native video (5x). Sweet spot 1.200-1.500 char. CTA → comentarii 15+ cuvinte. Marți-joi dim.',start:'2026-06-01',end:'2026-11-30',status:'Planificată',buget:0,platforme:'LinkedIn',progres:0,postari:0,prio:'P1'},
+    {id:6,row:6,nume:'P1 — Pagină B2B Corporate + 2 Studii Caz',desc:'Pagină dedicată "Pentru Firme / B2B Corporate" cu studii caz CFR Călători (47 stații), Schaeffler, Spital Județean. ROI metrici, conformitate Legea 333/2003, SLA contract. Segmentul cel mai puțin disputat.',start:'2026-06-15',end:'2026-07-31',status:'Planificată',buget:0,platforme:'Site',progres:0,postari:0,prio:'P1'},
+    {id:7,row:7,nume:'P1 — Hero Homepage Redesign B2B',desc:'"Securitate completă pentru afacerea ta în Brașov" — autorizări IGPR+ISU+ANRE + 9.000 proiecte + 20 ani + 4 promisiuni (consultanță 1-12h, ofertă 24h, mentenanță inclusă, SLA garantat). 2 CTA: tradițional + B2B.',start:'2026-06-01',end:'2026-06-15',status:'Planificată',buget:0,platforme:'Site',progres:0,postari:0,prio:'P1'},
+    {id:8,row:8,nume:'P2 — Blog Conformitate Legală',desc:'4 articole/2 luni: "Legea 333/2003 explicată", "HG 301/2012", "GDPR și CCTV", "Conformitate ISU clădiri". 1.500-2.000 cuvinte/articol, FAQPage schema, CTA "Cere ghid PDF". Armă vs concurenți "negri".',start:'2026-07-01',end:'2026-10-31',status:'Planificată',buget:0,platforme:'SEO, Blog',progres:0,postari:0,prio:'P2'},
+    {id:9,row:9,nume:'P2 — Instagram Reels + TikTok',desc:'Time-lapse instalare (7-30 sec, hook în 3 sec, text overlay frame 1, trending audio +42% engagement). 1 Reel/săpt, 1 TikTok/săpt. Saves > Likes (semnal #2 algoritm 2026).',start:'2026-06-01',end:'2026-11-30',status:'Planificată',buget:0,platforme:'Instagram, TikTok',progres:0,postari:0,prio:'P2'},
+    {id:10,row:10,nume:'P2 — Listare Directoare + Backlinks',desc:'Pagini Aurii, Necesit, HomeRun, Daibau, Brașov Construct, Camera Comerț Brașov. NAP consistent (Name+Address+Phone identic peste tot). Outreach asociații profesionale.',start:'2026-06-15',end:'2026-09-30',status:'Planificată',buget:0,platforme:'SEO Off-page',progres:0,postari:0,prio:'P2'}
 ];
 
+// ═══════════════════════════════════════════════════════════════════
+// SEO META — Anexa A din audit + best practices 2026
+// Meta title max 60 char, description 150-160 char, format optimizat AI Overview
+// ═══════════════════════════════════════════════════════════════════
+var SEO_META = [
+    {pagina:'Homepage',url:'/',title:'CSSI Brașov — Sisteme Securitate, CCTV, Alarme | 20 Ani',desc:'Sisteme securitate, camere supraveghere, alarme antiefracție, control acces, automatizări porți în Brașov. Firmă autorizată IGPR + ISU. 9000+ proiecte. Ofertă în 24h.',h1:'Securitate completă pentru afacerea ta în Brașov',keywords:'sisteme securitate brasov, camere supraveghere brasov, alarma antiefractie brasov, firma autorizata IGPR'},
+    {pagina:'Camere supraveghere',url:'/camere-supraveghere',title:'Camere Supraveghere Brașov | CCTV Profesional CSSI',desc:'Sisteme camere supraveghere CCTV Brașov pentru firme, hale, magazine, case. IP / analog. Dahua, Hikvision. Firmă autorizată IGPR. Consultanță gratuită. Ofertă în 24h.',h1:'Sisteme Camere Supraveghere CCTV Brașov — Instalare, Service, Mentenanță',keywords:'camere supraveghere brasov, sistem cctv brasov, montaj camere brasov, hikvision dahua brasov, cctv firma hala magazin'},
+    {pagina:'Alarmă antiefracție',url:'/alarma-antiefractie',title:'Alarmă Antiefracție Brașov | Sisteme Profesionale CSSI',desc:'Sisteme alarmă antiefracție Brașov: Ajax, Paradox, DSC. Monitorizare 24/7. Firmă autorizată IGPR. Pentru firme, case, magazine. Cere ofertă în 24h.',h1:'Sisteme Alarmă Antiefracție Brașov — Ajax, Paradox, DSC + Monitorizare 24/7',keywords:'alarma antiefractie brasov, sistem alarma firma brasov, ajax brasov, paradox alarme'},
+    {pagina:'Control acces',url:'/control-acces',title:'Control Acces Brașov | RFID, Biometric, Pontaj | CSSI',desc:'Sisteme control acces Brașov pentru firme și clădiri: RFID, amprentă, recunoaștere facială. Integrare pontaj HR. 9000+ proiecte. Consultanță gratuită.',h1:'Sisteme Control Acces Brașov — RFID, Biometric, Integrare HR',keywords:'control acces brasov, cititor amprenta brasov, rfid brasov, control acces firma fabrica'},
+    {pagina:'Pontaj electronic',url:'/pontaj-electronic',title:'Pontaj Electronic Brașov | Sisteme Profesionale | CSSI',desc:'Sisteme pontaj electronic Brașov pentru firme: cu amprentă, card, recunoaștere facială. Integrare HR/ERP. Rapoarte automate. Ofertă personalizată în 24h.',h1:'Sisteme Pontaj Electronic Brașov — Amprentă, Card, Recunoaștere Facială',keywords:'pontaj electronic brasov, sistem pontaj firma, pontaj amprenta angajati'},
+    {pagina:'Automatizări porți',url:'/automatizari-porti',title:'Automatizări Porți Brașov | Motoare Nice, BFT, Came',desc:'Automatizări porți Brașov: batante, culisante, garaj. Nice, BFT, Came, Somfy. Instalare profesională, garanție SLA. Pentru case, firme, parcări. Ofertă rapidă.',h1:'Automatizări Porți Brașov — Nice, BFT, Came, Somfy',keywords:'automatizare poarta brasov, motor poarta culisanta brasov, motor poarta batanta brasov, nice somfy brasov'},
+    {pagina:'Uși garaj',url:'/usi-garaj',title:'Uși Garaj Brașov | Secționale, Rulou, Industriale | CSSI',desc:'Uși garaj Brașov: secționale, rulou, industriale. Hörmann, Wisniowski. Cu sau fără automatizare. Montaj profesional. Ofertă personalizată în 24h.',h1:'Uși Garaj Brașov — Secționale, Rulou, Industriale',keywords:'usi garaj brasov, usa garaj sectionala, usi industriale hala'},
+    {pagina:'Bariere auto',url:'/bariere-auto',title:'Bariere Auto Brașov | Parcări Firme, Hoteluri | CSSI',desc:'Bariere auto Brașov pentru parcări private, firme, hoteluri, instituții. Integrare LPR (recunoaștere plăcuțe). Soluții complete acces auto.',h1:'Bariere Auto Brașov — Parcări Firme, LPR Integrare',keywords:'bariera auto brasov, bariera parcare firma, lpr recunoastere placute'},
+    {pagina:'Aer condiționat',url:'/aer-conditionat',title:'Aer Condiționat Brașov | Instalare, Service | CSSI',desc:'Aer condiționat Brașov: instalare, service, mentenanță. Apartament, casă, spațiu comercial, hală. Branduri top. Calcul BTU gratuit. Ofertă în 24h.',h1:'Aer Condiționat Brașov — Instalare, Service, Mentenanță',keywords:'aer conditionat brasov, montaj clima brasov, aer conditionat industrial'},
+    {pagina:'Instalații electrice',url:'/instalatii-electrice',title:'Instalații Electrice Brașov | ANRE Autorizat | CSSI',desc:'Instalator electric Brașov: instalații case, firme, hale, smart home. Verificări PRAM, tablouri electrice. Autorizat ANRE. Echipa profesionistă. Ofertă rapidă.',h1:'Instalații Electrice Brașov — ANRE Autorizat, Verificări PRAM',keywords:'instalator electric brasov, ANRE autorizat brasov, verificare PRAM, tablou electric'},
+    {pagina:'Interfoane',url:'/interfoane-videointerfoane',title:'Interfoane Brașov | Bloc, Vilă, Firmă | CSSI',desc:'Interfoane și videointerfoane Brașov: bloc, vilă, firmă. IP sau analog. Montaj și mentenanță. Branduri profesionale. Consultanță gratuită.',h1:'Interfoane și Videointerfoane Brașov — IP, Analog',keywords:'interfoane brasov, videointerfoane bloc, interfon vila'},
+    {pagina:'Ventilație',url:'/ventilatie',title:'Sisteme Ventilație Brașov | Recuperare Căldură | CSSI',desc:'Sisteme ventilație Brașov: recuperare căldură, ventilații industriale, mecanică. Calcul debite. Pentru firme, hale, locuințe. Consultanță gratuită.',h1:'Sisteme Ventilație Brașov — Recuperare Căldură, Industrială',keywords:'ventilatie brasov, recuperare caldura, ventilatie hala'},
+    {pagina:'Instalații termice-sanitare',url:'/instalatii-termice-sanitare',title:'Instalații Termice și Sanitare Brașov | CSSI',desc:'Instalații termice și sanitare Brașov: centrale, pompe căldură, sanitare. Pentru case, firme, hale. Echipa autorizată. Ofertă personalizată în 24h.',h1:'Instalații Termice și Sanitare Brașov — Centrale, Pompe Căldură',keywords:'instalatii termice brasov, centrala termica, pompa caldura'},
+    {pagina:'Sonorizare',url:'/sonorizare',title:'Sisteme Sonorizare Brașov | Firme, Evenimente | CSSI',desc:'Sisteme sonorizare Brașov pentru firme, săli, evenimente, magazine. Profesional, cu instalare și mentenanță. Consultanță gratuită.',h1:'Sisteme Sonorizare Brașov — Firme, Săli, Evenimente',keywords:'sonorizare brasov, sistem audio firma, sonorizare eveniment'}
+];
+
+// ═══════════════════════════════════════════════════════════════════
+// HASHTAG-uri STRATEGICE per serviciu (din cuvinte cheie audit + best practice 2026)
+// Regula: 5-8 hashtag-uri (NU stuffing — penalizat de algoritm 2026)
+// Mix: 2 brand + 3-4 local + 2-3 tip serviciu
+// ═══════════════════════════════════════════════════════════════════
+var HASHTAGS_BY_CATEGORY = {
+    brand: ['#CSSI', '#CSSIBrasov', '#BreakSistems', '#SecuritateBrasov'],
+    'camere-supraveghere': ['#CCTV', '#CamereSupraveghere', '#CamereBrasov', '#Hikvision', '#Dahua', '#SistemSupraveghere', '#CCTVBrasov'],
+    'alarma-antiefractie': ['#AlarmaAntiefractie', '#Ajax', '#Paradox', '#AlarmaBrasov', '#Monitorizare247', '#SecuritateAfacere'],
+    'control-acces': ['#ControlAcces', '#RFID', '#PontajElectronic', '#Biometric', '#ControlAccesBrasov', '#SmartBusiness'],
+    'automatizari-porti': ['#AutomatizariPorti', '#Nice', '#BFT', '#Came', '#Somfy', '#PoartaCulisanta', '#PoartaBatanta'],
+    'aer-conditionat': ['#AerConditionat', '#Clima', '#AerConditionatBrasov', '#Climatizare', '#MitsubishiElectric', '#Daikin'],
+    'instalatii-electrice': ['#InstalatiiElectrice', '#ElectricianBrasov', '#ANRE', '#PRAM', '#SmartHome', '#TabloElectric'],
+    'usi-garaj': ['#UsiGaraj', '#Hormann', '#Wisniowski', '#UsaSectionala', '#UsaGarajBrasov'],
+    'bariere-auto': ['#BariereAuto', '#LPR', '#Parcare', '#AccessAuto', '#ParcareFirma'],
+    'detectie-incendiu': ['#DetectieIncendiu', '#ISU', '#ProtectieIncendiu', '#Bosch', '#P118'],
+    'B2B': ['#B2B', '#Securitate', '#FacilityManagement', '#FirmaAutorizata', '#Compliance', '#Legea333'],
+    'local': ['#Brasov', '#Codlea', '#Rasnov', '#Ghimbav', '#Bran', '#Predeal', '#Harman', '#Sanpetru', '#TaraBarsei'],
+    'industry': ['#Securitate', '#FirmaAutorizataIGPR', '#ISU', '#ANRE', '#9000Proiecte', '#20AniExperienta']
+};
+
+// ═══════════════════════════════════════════════════════════════════
+// RESURSE — link-uri concrete
+// ═══════════════════════════════════════════════════════════════════
 var RESOURCES = [
-    {icon:'🎨',title:'Brand Guidelines',desc:'Logo, culori, fonturi, reguli folosire',link:'#'},
-    {icon:'📷',title:'Galerie Proiecte',desc:'Fotografii profesionale per proiect',link:'#'},
-    {icon:'📐',title:'Template-uri Canva',desc:'Șabloane social media',link:'#'},
-    {icon:'📹',title:'Video B-roll',desc:'Clip-uri montaj, echipamente, echipă',link:'#'},
-    {icon:'📋',title:'Calendar Editorial',desc:'Planificare lunară conținut',link:'calendar-social.html'},
-    {icon:'⭐',title:'Testimoniale',desc:'Recenzii clienți pentru postări',link:'#'},
-    {icon:'📊',title:'Rapoarte Analytics',desc:'Statistici Facebook, Instagram',link:'#'},
-    {icon:'📝',title:'Copywriting Templates',desc:'Texte tip pentru fiecare serviciu',link:'#'}
+    {icon:'📊',title:'Audit SEO Complet',desc:'19 mai 2026 — roadmap 30/90/180 zile',link:'/GHID-MARKETING-HUB.md'},
+    {icon:'📱',title:'Social Media Manager',desc:'Creare postări + calendar + aprobare',link:'calendar-social.html'},
+    {icon:'✅',title:'Aprobare Postări',desc:'Drafturi care așteaptă aprobarea ta',link:'calendar-social.html?filter=Draft'},
+    {icon:'🎨',title:'Brand Guidelines',desc:'Logo, culori #dc2626, fonturi Inter',link:'#'},
+    {icon:'📷',title:'Galerie Pozele Firmei',desc:'D:\\Poze firma\\_site-final\\',link:'#'},
+    {icon:'⭐',title:'Recenzii Google',desc:'Răspuns + cerere recenzii',link:'recenzii.html'},
+    {icon:'🔗',title:'Google Business Profile',desc:'Profil GBP — link extern',link:'https://business.google.com/'},
+    {icon:'📈',title:'Search Console',desc:'Indexare + cuvinte cheie',link:'https://search.google.com/search-console'},
+    {icon:'🎯',title:'Google Ads',desc:'Campanii Search + PMax',link:'https://ads.google.com/'},
+    {icon:'💼',title:'LinkedIn CSSI',desc:'Pagină business — cel mai sub-exploatat canal B2B',link:'https://linkedin.com/'}
 ];
 
+// ═══════════════════════════════════════════════════════════════════
+// IDEI CONȚINUT — strategice, derivate din audit + best practices 2026
+// Marker: 🔴 high priority, 🟡 medium, 🟢 low
+// Format optimizat per algoritm 2026 (LinkedIn Depth Score, IG sends/saves, etc)
+// ═══════════════════════════════════════════════════════════════════
 var IDEAS = [
-    {title:'Timelapse montaj CCTV',desc:'Filmează de la gol la sistem funcțional. 30-60 sec, muzică energică.',tags:['Video','Instagram Reel','TikTok'],prio:'high'},
-    {title:'Infografic: De ce ai nevoie de alarmă?',desc:'Statistici furturi România, beneficii sistem alarmă, CTA contactare.',tags:['Foto','Facebook','Instagram'],prio:'medium'},
-    {title:'Studiu de caz: Hotel Cheile Râșnoavei',desc:'Before/after, echipamente folosite, testimonial client, rezultate.',tags:['Carusel','Facebook','LinkedIn'],prio:'high'},
-    {title:'FAQ: Întrebări frecvente CCTV',desc:'Răspunsuri la cele mai comune întrebări. Format card cu text scurt.',tags:['Carusel','Instagram'],prio:'low'},
-    {title:'Behind the scenes: Echipa CSSI',desc:'Prezentarea echipei, echipamente, depozit, mașini de lucru.',tags:['Video','Facebook','Instagram Story'],prio:'medium'},
-    {title:'Ghid: Cum alegi un sistem de alarmă?',desc:'Post educativ cu criterii de selecție, comparații, recomandări.',tags:['Text lung','Blog','Facebook'],prio:'medium'},
-    {title:'Reel: 5 semne că ai nevoie de camere',desc:'Format scurt, rapid, cu text overlay. Muzică trending.',tags:['Reel','Instagram','TikTok'],prio:'high'},
-    {title:'Post automatizări porți',desc:'BFT, NICE — avantaje automatizare vs manuală. Video demo funcționare.',tags:['Video','Facebook'],prio:'low'}
+    // ──── LINKEDIN B2B (cel mai sub-exploatat canal) ────
+    {title:'LinkedIn — 20 ani lecții: consultanță înainte de echipament',desc:'„După 20 de ani și 9.000 de proiecte, am învățat că cea mai mare diferență între o instalație care durează și una care eșuează nu sunt echipamentele — ci procesul de consultanță prealabilă. Iată ce verific de fiecare dată..." Format: text 1.500 char + 3-5 puncte concrete. Primele 2 linii = hook înainte de "see more".',tags:['LinkedIn','Mihai Personal','Thought Leadership','1500 char'],prio:'high'},
+    {title:'LinkedIn — Legea 333/2003 ca armă comercială',desc:'„Legea 333/2003 obligă proprietarii de afaceri să folosească firme autorizate IGPR. Cu toate acestea, peste 80% dintre instalațiile pe care le evaluăm pentru rebid au fost făcute de firme fără licență. Ce înseamnă pentru afacerea ta?" CTA: comentariu cu „vreau audit" → DM cu PDF ghid.',tags:['LinkedIn','Compliance','Lead Gen B2B'],prio:'high'},
+    {title:'LinkedIn PDF Carousel — Studiu Caz Schaeffler Brașov',desc:'10 slide-uri PDF: provocare → soluție → echipament → rezultat → quote client. Carusele PDF au 6.6% engagement (cel mai mare format LinkedIn 2026). 47 camere, control acces 1.200 angajați, zero impact pe producție.',tags:['LinkedIn','PDF Carousel','Studiu Caz','6.6% engagement'],prio:'high'},
+    {title:'LinkedIn — 3 greșeli sisteme CCTV hale industriale',desc:'„3 greșeli pe care le văd zilnic la sistemele CCTV pentru hale industriale. (Și cum să le eviți chiar dacă nu mă alegi pe mine.)" Format educațional → algorithm 2026 prioritizează „knowledge and advice". Termin cu întrebare → comentarii 15+ cuvinte = 15x weight.',tags:['LinkedIn','Educațional','Engagement High'],prio:'high'},
+    {title:'LinkedIn — ROI control acces B2B',desc:'„Costul real al unui sistem de control acces nu este investiția inițială — sunt rapoartele HR pe care le vei putea automatiza. Iată cum calculez ROI pentru clienții B2B." Cu tabel calcul concret (ore HR economisite/lună × cost orar = payback).',tags:['LinkedIn','ROI','B2B Decision Maker'],prio:'high'},
+    {title:'LinkedIn — De ce refuz uneori proiecte',desc:'„De ce refuz uneori proiecte. Sună contraintuitiv pentru o firmă de servicii, dar..." Hook puternic. Construiește încredere + diferențiator (calitate vs volum). Saves > Likes (semnal #2 algoritm 2026 — 5x weight).',tags:['LinkedIn','Storytelling','Saves','Trust'],prio:'medium'},
+    {title:'LinkedIn — Evoluția industriei în 20 ani',desc:'„Cum a evoluat industria securității în 20 de ani. De la cabluri groase și DVR-uri sufocante, la AI și cloud. Și ce vine în următorii 5 ani." Format: 5 puncte concrete + predictie. Establishes E-E-A-T (Experience + Expertise).',tags:['LinkedIn','Expertise','E-E-A-T'],prio:'medium'},
+
+    // ──── INSTAGRAM REELS / TIKTOK (algoritm 2026) ────
+    {title:'IG Reel — Time-lapse montaj cameră în 15 sec',desc:'Hook în primele 3 sec (50% drop-off altfel): „Hala asta avea zero camere. Acum are 12." Text overlay frame 1. Trending audio (+42% engagement 2026). Durată 15-30 sec (high completion rate). CTA în comentariu: „Vrei și tu? DM."',tags:['Instagram Reel','TikTok','Time-lapse','Hook 3s'],prio:'high'},
+    {title:'IG Reel — 5 semne că ai nevoie de camere',desc:'Format rapid 20-30 sec. Hook: „Dacă ai chiar și 1 din astea, e timpul." Numerotate vizual 1-5. Text overlay mare. Algoritm 2026: sends per reach = #1 signal — endpoint cu „trimite asta unui prieten care are firmă".',tags:['Instagram Reel','TikTok','List Format','Sends Signal'],prio:'high'},
+    {title:'IG Reel — Hală industrială înainte/după',desc:'Split-screen sau swipe before/after. Hook 3 sec: „Cum am securizat 8.500 mp în 3 zile, fără să oprim producția." Saves încurajate prin CTA: „Salvează pentru când vei avea nevoie."',tags:['Instagram Reel','Before/After','Saves'],prio:'high'},
+    {title:'IG Carousel — FAQ CCTV',desc:'Carusele au 0.55% engagement rate — cel mai mare format IG 2026. 10 slide-uri cu întrebări frecvente + răspuns scurt. Slide 1 = hook, slide 10 = CTA. Force dwell time → algorithm boost.',tags:['Instagram Carousel','FAQ','High Engagement'],prio:'medium'},
+    {title:'TikTok — „Nu pune camere ca asta" pattern',desc:'Format virale TikTok 2026: arăți greșeala comună (cameră prost montată, blind spot) → soluția corectă. 7-15 sec. Trending sound. Text overlay. CTA în descriere: „comentează Pro pentru cum se face."',tags:['TikTok','Pattern Interrupt','Educațional'],prio:'medium'},
+
+    // ──── FACEBOOK ────
+    {title:'FB — Studiu caz CFR Călători (47 stații)',desc:'Format lung Facebook (1.000+ cuvinte). Story-driven: provocare → echipa → soluție → rezultat. 5-7 poze proiect. CTA: „Ești o instituție publică / privată cu nevoi similare? Scrie-ne." Social proof real.',tags:['Facebook','Studiu Caz B2B','Social Proof'],prio:'high'},
+    {title:'FB — Comparativ „firmă licențiată vs nelicențiată"',desc:'Infografic tabel: ce înseamnă autorizația IGPR/ISU/ANRE vs riscurile cu firme „negre". Conform audit: 80% dintre instalațiile rebid sunt fără licență. Argument legal vs prețuri mici.',tags:['Facebook','Infografic','Diferențiator Legal'],prio:'high'},
+    {title:'FB — Cum alegi un sistem de alarmă (ghid lung)',desc:'Post tip ghid 800+ cuvinte: tipuri, branduri (Ajax/Paradox/DSC), monitorizare, costuri orientative, întrebări de pus. Educație → trust. Linkuri către pagina serviciu + articol blog.',tags:['Facebook','Ghid','Educațional'],prio:'medium'},
+
+    // ──── YOUTUBE ────
+    {title:'YT — Tutorial: cum funcționează controlul acces RFID',desc:'Video 3-5 min, demo live: cititor RFID, soft, raport HR. Optimizat SEO YouTube (title + description cu cuvinte cheie). Atrage căutări organice „cum funcționează control acces".',tags:['YouTube','Tutorial','SEO YouTube'],prio:'medium'},
+    {title:'YT — Walkthrough instalație Schaeffler',desc:'Video tour 8-10 min cu Mihai (autoritate personală — vezi audit). Showcase 9.000 proiecte. Optimizat pentru AI Overview (Google folosește video relevant ca sursă).',tags:['YouTube','Brand Building','E-E-A-T'],prio:'medium'},
+
+    // ──── GBP (Google Business Profile) ────
+    {title:'GBP Post — Lucrare săptămâna trecută',desc:'1 post/săpt obligatoriu (semnal de activitate Google). Foto reală + descriere scurtă serviciu + locație. Apare în Maps. GBP = 32% ranking factor local 2026.',tags:['GBP','Săptămânal','Local SEO'],prio:'high'},
+    {title:'GBP Post — Promoție 5% prima comandă',desc:'Tip „Offer" în GBP. Postări cu oferte → boost vizibilitate Maps. Valid 30 zile, reînnoiește.',tags:['GBP','Offer','Conversion'],prio:'medium'},
+
+    // ──── BLOG SEO ────
+    {title:'Blog — „Cât costă un sistem CCTV pentru firmă în 2026 [Brașov]"',desc:'Articol comercial 1.500-2.000 cuvinte. H1 cu cuvântul cheie + locație + an. Tabel prețuri orientative (kit 4 camere casă, 8 camere magazin, 16 camere hală). FAQPage schema. Intent „comparison shopping".',tags:['Blog','SEO Long-tail','Commercial Intent'],prio:'high'},
+    {title:'Blog — „Legea 333/2003 explicată: obligații firmă"',desc:'Articol B2B 2.000 cuvinte. Conformitate ca armă comercială. Audit citează: „80% concurenți ieftini nu au autorizații." Download PDF ghid → lead gen.',tags:['Blog','B2B','Legal Authority','Lead Gen'],prio:'high'},
+    {title:'Blog — „GDPR și camerele de supraveghere"',desc:'Articol informational 1.500 cuvinte. Intent B2B. Optimizat pentru AI Overview/Google AI Mode (răspuns clar, trustworthy, structured).',tags:['Blog','GDPR','AI Overview Ready'],prio:'medium'},
+    {title:'Blog — „Cum am securizat fabrica Schaeffler"',desc:'Studiu caz format SEO. 1.500 cuvinte: provocare → soluție tehnică → rezultat măsurabil → quote client (cu permisiune). Schema Article + organization markup.',tags:['Blog','Studiu Caz','E-E-A-T'],prio:'high'}
 ];
 
-var HASHTAGS_SEC = ['#securitate','#CSSI','#Brasov','#CCTV','#detectieincendiu','#alarma','#automatizari','#supraveghere','#Hikvision','#Bosch','#PRAM','#montaj','#workinprogress','#Romania','#securitatecladiri','#cameredesupraveghere','#protectieincendiu','#controlacces','#CSSIBrasov','#proiect2026'];
+// Fallback hashtag (backward compat)
+var HASHTAGS_SEC = HASHTAGS_BY_CATEGORY.brand.concat(HASHTAGS_BY_CATEGORY.local.slice(0,4)).concat(HASHTAGS_BY_CATEGORY.industry);
+
+// ═══════════════════════════════════════════════════════════════════
+// KPI ȚINTĂ — direct din audit secțiunea 6
+// ═══════════════════════════════════════════════════════════════════
+var KPI_TARGETS = [
+    {metric:'Lead-uri / săptămână',sursa:'GA4 + manual telefon',tinta:'12-18',luna:'L6',color:'green'},
+    {metric:'Cost-per-lead Google Ads',sursa:'Google Ads',tinta:'< 60 RON',luna:'L6',color:'green'},
+    {metric:'Lead-uri organice SEO / săpt',sursa:'GA4 atribuire',tinta:'5-10',luna:'L6',color:'blue'},
+    {metric:'Recenzii GBP noi / săpt',sursa:'GBP',tinta:'1-2',luna:'Continuu',color:'orange'},
+    {metric:'Rating mediu GBP',sursa:'GBP',tinta:'4.7+',luna:'L6',color:'yellow'},
+    {metric:'Cuvinte cheie top 10 Google',sursa:'Search Console',tinta:'10+',luna:'L6',color:'purple'},
+    {metric:'CTR organic Search Console',sursa:'Search Console',tinta:'> 3.5%',luna:'L6',color:'blue'},
+    {metric:'Posturi LinkedIn / săpt',sursa:'Manual',tinta:'2',luna:'Săptămânal',color:'linkedin'},
+    {metric:'Posturi IG+FB / săpt',sursa:'Manual',tinta:'3',luna:'Săptămânal',color:'pink'},
+    {metric:'Bounce rate mobil',sursa:'GA4',tinta:'< 55%',luna:'L3',color:'red'},
+    {metric:'Landing pages localizate',sursa:'Audit săpt',tinta:'40+',luna:'L6',color:'green'},
+    {metric:'Articole blog cumulative',sursa:'Audit',tinta:'12+',luna:'L6',color:'purple'}
+];
 
 var currentTab = 'campanii';
 var isLive = false;
@@ -220,28 +333,167 @@ function setTab(id,btn){
 
 function render(){
     if(currentTab==='campanii') renderCampaigns();
+    else if(currentTab==='seo') renderSeo();
+    else if(currentTab==='hashtag') renderHashtags();
     else if(currentTab==='resurse') renderResources();
+    else if(currentTab==='kpi') renderKpi();
     else renderIdeas();
 }
 
+function prioBadge(p){
+    if(!p) return '';
+    var colors={P0:'#dc2626',P1:'#f97316',P2:'#eab308',P3:'#22c55e'};
+    var labels={P0:'P0 CRITIC',P1:'P1 URGENT',P2:'P2 IMPORTANT',P3:'P3 DORIT'};
+    return '<span style="background:'+colors[p]+';color:#fff;padding:3px 10px;border-radius:6px;font-size:10px;font-weight:800;margin-right:6px">'+(labels[p]||p)+'</span>';
+}
+
 function renderCampaigns(){
-    var html='';
-    CAMPAIGNS.forEach(function(c){
+    var html='<div style="background:linear-gradient(135deg,#fef3c7,#fde68a);border-radius:14px;padding:14px 18px;margin-bottom:16px;font-size:13px;color:#92400e;font-weight:600;display:flex;gap:10px;align-items:center">';
+    html+='<span style="font-size:22px">🎯</span><div><strong>Strategia derivă direct din Auditul SEO 19 mai 2026</strong><br><span style="font-weight:500;font-size:12px">P0 = critic primele 14 zile · P1 = urgent până la 60 zile · P2 = important 60-120 zile. Țintă globală: <strong>71-120 lead-uri/lună la 6 luni (vs. 5-15 azi)</strong></span></div>';
+    html+='</div>';
+
+    // Sortez după prioritate
+    var prioOrder={P0:0,P1:1,P2:2,P3:3};
+    var sorted=CAMPAIGNS.slice().sort(function(a,b){return (prioOrder[a.prio]||9)-(prioOrder[b.prio]||9)});
+
+    html+='<div class="campaigns">';
+    sorted.forEach(function(c){
         var badgeCls=c.status==='Activă'?'badge-activa':c.status==='Planificată'?'badge-planificata':c.status==='Finalizată'?'badge-finalizata':'badge-pauza';
         var cardCls=c.status==='Activă'?'activa':c.status==='Planificată'?'planificata':c.status==='Finalizată'?'finalizata':'';
-        html+='<div class="camp-card '+cardCls+'">';
-        html+='<div class="camp-top"><div class="camp-name">'+esc(c.nume)+'</div><span class="camp-badge '+badgeCls+'">'+c.status+'</span></div>';
+        var borderColor=c.prio==='P0'?'#dc2626':c.prio==='P1'?'#f97316':c.prio==='P2'?'#eab308':'#22c55e';
+        html+='<div class="camp-card '+cardCls+'" style="border-left-color:'+borderColor+';border-left-width:5px">';
+        html+='<div class="camp-top"><div class="camp-name">'+prioBadge(c.prio)+esc(c.nume)+'</div><span class="camp-badge '+badgeCls+'">'+c.status+'</span></div>';
         html+='<div class="camp-desc">'+esc(c.desc)+'</div>';
         html+='<div class="camp-meta">';
         if(c.platforme) c.platforme.split(',').forEach(function(p){html+='<span class="camp-tag">'+p.trim()+'</span>';});
         html+='</div>';
-        html+='<div class="camp-progress"><div class="camp-bar"><div class="camp-bar-fill" style="width:'+c.progres+'%"></div></div><div class="camp-pct">'+c.progres+'% completat · '+c.postari+' postări</div></div>';
+        html+='<div class="camp-progress"><div class="camp-bar"><div class="camp-bar-fill" style="width:'+c.progres+'%;background:'+borderColor+'"></div></div><div class="camp-pct">'+c.progres+'% completat · '+c.postari+' postări</div></div>';
         html+='<div class="camp-footer"><span>📅 '+c.start+' → '+c.end+'</span>';
         if(c.buget) html+='<span>💰 '+fmt(c.buget)+' RON</span>';
+        else html+='<span style="color:var(--green);font-weight:700">💰 0 RON (doar timp)</span>';
         html+='</div>';
         html+='</div>';
     });
-    document.getElementById('tab-campanii').innerHTML='<div class="campaigns">'+html+'</div>';
+    html+='</div>';
+    document.getElementById('tab-campanii').innerHTML=html;
+}
+
+// SEO META — listă cu meta titles + descriptions optimizate
+function renderSeo(){
+    var html='<div style="background:linear-gradient(135deg,#dbeafe,#bfdbfe);border-radius:14px;padding:14px 18px;margin-bottom:16px;font-size:13px;color:#1e40af;font-weight:600;display:flex;gap:10px;align-items:center">';
+    html+='<span style="font-size:22px">🔍</span><div><strong>Meta titles și descriptions optimizate pentru Google 2026</strong><br><span style="font-weight:500;font-size:12px">Format: max 60 char title, 150-160 char description. Optimizat pentru AI Overview + Google AI Mode. Cuvintele cheie din audit, structurate cu E-E-A-T.</span></div>';
+    html+='</div>';
+
+    html+='<div style="display:grid;gap:12px">';
+    SEO_META.forEach(function(s){
+        var titleLen=s.title.length;
+        var descLen=s.desc.length;
+        var titleColor=titleLen<=60?'var(--green)':'var(--red)';
+        var descColor=descLen>=140&&descLen<=160?'var(--green)':'var(--orange)';
+        html+='<div style="background:#fff;border-radius:14px;padding:18px;box-shadow:var(--shadow);border-left:4px solid var(--blue)">';
+        html+='<div style="display:flex;justify-content:space-between;align-items:start;gap:10px;margin-bottom:12px">';
+        html+='<div><div style="font-weight:800;font-size:15px;color:var(--dark)">'+esc(s.pagina)+'</div><div style="font-size:11px;color:var(--gray);margin-top:2px"><code style="background:var(--gray-bg);padding:2px 6px;border-radius:4px">'+esc(s.url)+'</code></div></div>';
+        html+='<button onclick="copyToClipboard(\''+s.title.replace(/\'/g,"\\'")+'\',\'Meta title\')" style="padding:6px 12px;border-radius:8px;border:1px solid var(--blue);background:#fff;color:var(--blue);font-size:11px;font-weight:700;cursor:pointer">📋 Copiază tot</button>';
+        html+='</div>';
+        // Title
+        html+='<div style="margin-bottom:10px">';
+        html+='<div style="display:flex;justify-content:space-between;font-size:11px;font-weight:700;color:var(--gray);margin-bottom:4px"><span>META TITLE</span><span style="color:'+titleColor+'">'+titleLen+'/60 char</span></div>';
+        html+='<div style="background:var(--gray-bg);padding:10px 14px;border-radius:8px;font-size:13px;font-family:monospace;color:var(--dark);cursor:pointer" onclick="copyToClipboard(this.textContent,\'Title\')">'+esc(s.title)+'</div>';
+        html+='</div>';
+        // H1
+        html+='<div style="margin-bottom:10px">';
+        html+='<div style="font-size:11px;font-weight:700;color:var(--gray);margin-bottom:4px">H1 RECOMANDAT</div>';
+        html+='<div style="background:#fef3c7;padding:10px 14px;border-radius:8px;font-size:13px;color:var(--dark);cursor:pointer" onclick="copyToClipboard(this.textContent,\'H1\')">'+esc(s.h1)+'</div>';
+        html+='</div>';
+        // Description
+        html+='<div style="margin-bottom:10px">';
+        html+='<div style="display:flex;justify-content:space-between;font-size:11px;font-weight:700;color:var(--gray);margin-bottom:4px"><span>META DESCRIPTION</span><span style="color:'+descColor+'">'+descLen+'/160 char</span></div>';
+        html+='<div style="background:var(--gray-bg);padding:10px 14px;border-radius:8px;font-size:13px;color:var(--dark);line-height:1.5;cursor:pointer" onclick="copyToClipboard(this.textContent,\'Description\')">'+esc(s.desc)+'</div>';
+        html+='</div>';
+        // Keywords
+        html+='<div>';
+        html+='<div style="font-size:11px;font-weight:700;color:var(--gray);margin-bottom:4px">CUVINTE CHEIE ȚINTĂ</div>';
+        html+='<div style="display:flex;flex-wrap:wrap;gap:6px">';
+        s.keywords.split(',').forEach(function(k){html+='<span style="background:#eff6ff;color:var(--blue);padding:4px 10px;border-radius:6px;font-size:11px;font-weight:600;cursor:pointer" onclick="copyToClipboard(\''+k.trim().replace(/\'/g,"\\'")+'\',\'Keyword\')">'+esc(k.trim())+'</span>';});
+        html+='</div></div>';
+        html+='</div>';
+    });
+    html+='</div>';
+    document.getElementById('tab-seo').innerHTML=html;
+}
+
+// HASHTAGS — categorisate pe servicii
+function renderHashtags(){
+    var html='<div style="background:linear-gradient(135deg,#fce7f3,#fbcfe8);border-radius:14px;padding:14px 18px;margin-bottom:16px;font-size:13px;color:#9d174d;font-weight:600;display:flex;gap:10px;align-items:center">';
+    html+='<span style="font-size:22px">🏷️</span><div><strong>Hashtag-uri strategice — 5-8 per post (NU stuffing)</strong><br><span style="font-weight:500;font-size:12px">Algoritm 2026: hashtag stuffing penalizat. Mix recomandat: 2 brand + 3-4 local + 2-3 categorie. Click → copiezi în clipboard.</span></div>';
+    html+='</div>';
+
+    var labels={brand:'🎯 Brand CSSI',local:'📍 Local Brașov + Localități','camere-supraveghere':'📹 Camere Supraveghere','alarma-antiefractie':'🚨 Alarmă Antiefracție','control-acces':'🔐 Control Acces','automatizari-porti':'🚧 Automatizări Porți','aer-conditionat':'❄️ Aer Condiționat','instalatii-electrice':'⚡ Instalații Electrice','usi-garaj':'🏚️ Uși Garaj','bariere-auto':'🚗 Bariere Auto','detectie-incendiu':'🔥 Detecție Incendiu',B2B:'💼 B2B Corporate',industry:'🏆 Industry & Autoritate'};
+
+    html+='<div style="display:grid;gap:12px;margin-bottom:16px">';
+    Object.keys(HASHTAGS_BY_CATEGORY).forEach(function(cat){
+        var tags=HASHTAGS_BY_CATEGORY[cat];
+        var allText=tags.join(' ');
+        html+='<div class="hashtag-section" style="margin:0">';
+        html+='<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">';
+        html+='<div class="hashtag-title">'+(labels[cat]||cat)+' <span style="color:var(--gray);font-weight:500;font-size:11px">('+tags.length+')</span></div>';
+        html+='<button onclick="copyToClipboard(\''+allText.replace(/\'/g,"\\'")+'\',\'Set complet\')" style="padding:5px 12px;border-radius:8px;border:1px solid var(--pink);background:#fff;color:var(--pink);font-size:11px;font-weight:700;cursor:pointer">📋 Copiază tot</button>';
+        html+='</div>';
+        html+='<div class="hashtags">';
+        tags.forEach(function(h){html+='<span class="hashtag" onclick="copyHashtag(this)">'+h+'</span>';});
+        html+='</div></div>';
+    });
+    html+='</div>';
+
+    // Set recomandat pentru fiecare serviciu (combinație optimă)
+    html+='<div style="background:#fff;border-radius:14px;padding:18px;box-shadow:var(--shadow);border-left:4px solid var(--purple)">';
+    html+='<div style="font-weight:800;font-size:14px;margin-bottom:12px;color:var(--purple)">⭐ Combinații recomandate per post serviciu</div>';
+    html+='<div style="display:grid;gap:10px;font-size:12px">';
+    var combos=[
+        {srv:'Camere supraveghere — post local',tags:HASHTAGS_BY_CATEGORY['camere-supraveghere'].slice(0,3).concat(HASHTAGS_BY_CATEGORY.local.slice(0,2)).concat(HASHTAGS_BY_CATEGORY.brand.slice(0,2))},
+        {srv:'Alarmă — post B2B',tags:HASHTAGS_BY_CATEGORY['alarma-antiefractie'].slice(0,3).concat(HASHTAGS_BY_CATEGORY.B2B.slice(0,2)).concat(HASHTAGS_BY_CATEGORY.brand.slice(0,2))},
+        {srv:'Control acces — LinkedIn B2B',tags:HASHTAGS_BY_CATEGORY['control-acces'].slice(0,3).concat(['#FacilityManagement','#B2B','#HRTech']).concat(HASHTAGS_BY_CATEGORY.brand.slice(0,1))},
+        {srv:'Automatizări porți — IG Reel',tags:HASHTAGS_BY_CATEGORY['automatizari-porti'].slice(0,3).concat(HASHTAGS_BY_CATEGORY.local.slice(0,2)).concat(['#Brasov','#CSSI'])},
+        {srv:'Aer condiționat — FB local',tags:HASHTAGS_BY_CATEGORY['aer-conditionat'].slice(0,3).concat(HASHTAGS_BY_CATEGORY.local.slice(0,2)).concat(HASHTAGS_BY_CATEGORY.brand.slice(0,2))}
+    ];
+    combos.forEach(function(c){
+        var txt=c.tags.join(' ');
+        html+='<div style="display:flex;justify-content:space-between;gap:10px;align-items:center;padding:10px 14px;background:var(--gray-bg);border-radius:10px">';
+        html+='<div style="flex:1"><div style="font-weight:700;color:var(--dark);margin-bottom:3px">'+esc(c.srv)+'</div><div style="color:var(--gray-l);font-family:monospace;font-size:11px">'+txt+'</div></div>';
+        html+='<button onclick="copyToClipboard(\''+txt.replace(/\'/g,"\\'")+'\',\'Combinație\')" style="padding:6px 12px;border-radius:8px;border:none;background:var(--purple);color:#fff;font-size:11px;font-weight:700;cursor:pointer">📋</button>';
+        html+='</div>';
+    });
+    html+='</div></div>';
+
+    document.getElementById('tab-hashtag').innerHTML=html;
+}
+
+// KPI — dashboard țintele din audit
+function renderKpi(){
+    var html='<div style="background:linear-gradient(135deg,#dcfce7,#bbf7d0);border-radius:14px;padding:14px 18px;margin-bottom:16px;font-size:13px;color:#166534;font-weight:600;display:flex;gap:10px;align-items:center">';
+    html+='<span style="font-size:22px">📊</span><div><strong>KPI țintă luna 6 — din Auditul SEO secțiunea 6</strong><br><span style="font-weight:500;font-size:12px">Verifică săptămânal luni dimineață (15 min). Surse: GA4, Search Console, Google Ads, GBP Insights.</span></div>';
+    html+='</div>';
+
+    var colorMap={green:'#22c55e',blue:'#3b82f6',orange:'#f97316',yellow:'#eab308',purple:'#8b5cf6',linkedin:'#0A66C2',pink:'#ec4899',red:'#dc2626'};
+    html+='<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px">';
+    KPI_TARGETS.forEach(function(k){
+        var c=colorMap[k.color]||'#64748b';
+        html+='<div style="background:#fff;border-radius:14px;padding:18px;box-shadow:var(--shadow);border-left:4px solid '+c+'">';
+        html+='<div style="font-size:11px;font-weight:700;color:var(--gray);text-transform:uppercase;margin-bottom:6px">'+esc(k.metric)+'</div>';
+        html+='<div style="font-size:24px;font-weight:900;color:'+c+';margin-bottom:6px">'+esc(k.tinta)+'</div>';
+        html+='<div style="font-size:11px;color:var(--gray);display:flex;justify-content:space-between"><span>📍 '+esc(k.sursa)+'</span><span style="font-weight:700">'+esc(k.luna)+'</span></div>';
+        html+='</div>';
+    });
+    html+='</div>';
+
+    // Pierdere oportunitate (estimare audit)
+    html+='<div style="margin-top:16px;background:linear-gradient(135deg,#fee2e2,#fecaca);border-radius:14px;padding:18px;border-left:4px solid var(--red)">';
+    html+='<div style="font-weight:800;font-size:14px;color:var(--red);margin-bottom:8px">⚠️ Pierdere oportunitate actuală (per audit)</div>';
+    html+='<div style="font-size:13px;color:#7f1d1d;line-height:1.6">73 lead-uri/lună ratate × 20% conversie × 4.500 RON valoare medie = <strong>~65.700 RON/lună venit potențial nerealizat</strong>, doar din vizibilitate organică ratată pe Brașov.</div>';
+    html+='<div style="font-size:12px;color:#991b1b;margin-top:8px;font-weight:600">Soluție: P0 din tab Campanii → indexare Google + GBP optimizat (luna 1)</div>';
+    html+='</div>';
+
+    document.getElementById('tab-kpi').innerHTML=html;
 }
 
 function renderResources(){
@@ -257,16 +509,63 @@ function renderResources(){
 }
 
 function renderIdeas(){
-    var html='';
-    var prio={high:'🔴',medium:'🟡',low:'🟢'};
-    IDEAS.forEach(function(idea){
-        html+='<div class="idea-card"><div style="display:flex;justify-content:space-between;align-items:start"><div class="idea-title">'+(prio[idea.prio]||'')+' '+esc(idea.title)+'</div></div>';
+    var html='<div style="background:linear-gradient(135deg,#f5f3ff,#ede9fe);border-radius:14px;padding:14px 18px;margin-bottom:16px;font-size:13px;color:#5b21b6;font-weight:600;display:flex;gap:10px;align-items:center">';
+    html+='<span style="font-size:22px">💡</span><div><strong>Idei optimizate pentru algoritmul 2026</strong><br><span style="font-weight:500;font-size:12px">LinkedIn Depth Score · IG sends/saves > likes · Carusele PDF 6.6% engagement · Reels hook 3 sec (50% drop-off altfel) · Trending audio +42%. Click pe titlu → folosește ca template.</span></div>';
+    html+='</div>';
+
+    // Filtre rapide
+    html+='<div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px">';
+    var filters=[{key:'',label:'Toate'},{key:'LinkedIn',label:'💼 LinkedIn'},{key:'Reel',label:'📸 Reels'},{key:'TikTok',label:'🎵 TikTok'},{key:'Facebook',label:'📘 Facebook'},{key:'YouTube',label:'▶️ YouTube'},{key:'GBP',label:'📍 GBP'},{key:'Blog',label:'📝 Blog'}];
+    filters.forEach(function(f){
+        var active=(window.ideaFilter||'')===f.key;
+        html+='<button onclick="window.ideaFilter=\''+f.key+'\';renderIdeas()" style="padding:6px 14px;border-radius:99px;border:1px solid '+(active?'var(--purple)':'var(--gray-b)')+';background:'+(active?'var(--purple)':'#fff')+';color:'+(active?'#fff':'var(--gray)')+';font-size:12px;font-weight:700;cursor:pointer">'+f.label+'</button>';
+    });
+    html+='</div>';
+
+    var prio={high:'🔴 high',medium:'🟡 medium',low:'🟢 low'};
+    var prioOrder={high:0,medium:1,low:2};
+    var filtered=IDEAS.filter(function(i){
+        var f=window.ideaFilter||'';
+        if(!f) return true;
+        return i.tags.some(function(t){return t.indexOf(f)!==-1;});
+    });
+    var sorted=filtered.slice().sort(function(a,b){return (prioOrder[a.prio]||9)-(prioOrder[b.prio]||9)});
+
+    html+='<div class="ideas">';
+    sorted.forEach(function(idea,idx){
+        var prioColor=idea.prio==='high'?'#dc2626':idea.prio==='medium'?'#eab308':'#22c55e';
+        html+='<div class="idea-card" style="border-left-color:'+prioColor+';cursor:pointer" onclick="useIdeaAsTemplate('+idx+',\''+(idea.title.replace(/\'/g,"\\'"))+'\',\''+(idea.desc.replace(/\'/g,"\\'"))+'\')">';
+        html+='<div style="display:flex;justify-content:space-between;align-items:start;margin-bottom:4px"><div class="idea-title" style="flex:1">'+(prio[idea.prio]||'')+' '+esc(idea.title)+'</div></div>';
         html+='<div class="idea-desc">'+esc(idea.desc)+'</div>';
         html+='<div class="idea-tags">';
-        idea.tags.forEach(function(t){html+='<span class="camp-tag">'+t+'</span>';});
-        html+='</div></div>';
+        idea.tags.forEach(function(t){html+='<span class="camp-tag" style="background:#f5f3ff;color:var(--purple)">'+t+'</span>';});
+        html+='</div>';
+        html+='<div style="margin-top:10px;font-size:11px;color:var(--purple);font-weight:700">→ Folosește ca template pentru postare</div>';
+        html+='</div>';
     });
-    document.getElementById('tab-idei').innerHTML='<div class="ideas">'+html+'</div>';
+    html+='</div>';
+
+    if(!sorted.length) html+='<div class="empty-msg">Nicio idee pentru acest filtru. Click „Toate" sus.</div>';
+    document.getElementById('tab-idei').innerHTML=html;
+}
+
+function useIdeaAsTemplate(idx,title,desc){
+    // Trimit user-ul la calendar-social cu titlul și descrierea ideii pre-completate
+    var content=title+'\n\n'+desc;
+    sessionStorage.setItem('cssi-idea-template',JSON.stringify({title:title,content:content}));
+    window.location.href='calendar-social.html?template=idea';
+}
+
+function copyToClipboard(text,what){
+    if(navigator.clipboard){
+        navigator.clipboard.writeText(text).then(function(){
+            toast('📋 '+(what||'Text')+' copiat în clipboard','success');
+        });
+    } else {
+        var t=document.createElement('textarea');t.value=text;document.body.appendChild(t);t.select();
+        try{document.execCommand('copy');toast('📋 '+(what||'Text')+' copiat','success');}catch(e){}
+        document.body.removeChild(t);
+    }
 }
 
 function copyHashtag(el){
