@@ -99,6 +99,85 @@ a{text-decoration:none;color:inherit;}button{font-family:inherit;cursor:pointer;
 
 .algo-tip{background:linear-gradient(135deg,#fef3c7,#fde68a);border-radius:10px;padding:10px 14px;font-size:11px;color:#92400e;font-weight:600;margin-top:8px;line-height:1.5;}
 
+/* Upload zone mini in edit modal */
+.upload-zone-mini{border:2px dashed var(--gray-b);border-radius:var(--radius-sm);padding:20px;text-align:center;cursor:pointer;transition:all 0.2s;background:#fafbfc;}
+.upload-zone-mini:hover,.upload-zone-mini.drag-over{border-color:var(--teal);background:#f0fdfa;}
+
+/* Buton Preview Real */
+.btn-preview-real{width:100%;padding:14px;background:linear-gradient(135deg,#8b5cf6,#7c3aed);color:#fff;border:none;border-radius:12px;font-size:14px;font-weight:800;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;transition:all 0.2s;box-shadow:0 4px 12px rgba(139,92,246,0.3);}
+.btn-preview-real:hover{transform:translateY(-1px);box-shadow:0 6px 18px rgba(139,92,246,0.4);}
+
+/* ═══ MOCKUP-uri platforme (Facebook / Instagram / LinkedIn) ═══ */
+.mockup{background:#fff;border-radius:14px;margin-bottom:14px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,0.08);}
+.mockup-platform-bar{padding:10px 14px;color:#fff;font-weight:700;font-size:12px;display:flex;justify-content:space-between;align-items:center;}
+.mockup-platform-bar.fb{background:#1877F2;}
+.mockup-platform-bar.ig{background:linear-gradient(45deg,#F58529,#DD2A7B,#8134AF,#515BD4);}
+.mockup-platform-bar.linkedin{background:#0A66C2;}
+
+.mockup-header{padding:12px 14px;display:flex;gap:10px;align-items:center;}
+.mockup-avatar{width:44px;height:44px;border-radius:50%;background:#dc2626;color:#fff;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:20px;flex-shrink:0;}
+.mockup-name{font-weight:800;font-size:14px;color:#050505;}
+.mockup-meta{font-size:11px;color:#65676b;display:flex;align-items:center;gap:4px;margin-top:2px;}
+.mockup-meta-dot{width:3px;height:3px;border-radius:50%;background:#65676b;}
+
+.mockup-content{padding:0 14px 12px;font-size:14px;color:#050505;line-height:1.45;white-space:pre-wrap;word-wrap:break-word;}
+.mockup-content-collapsed{max-height:88px;overflow:hidden;position:relative;}
+.mockup-see-more{color:#65676b;font-weight:600;font-size:13px;cursor:pointer;display:inline;}
+.mockup-content-linkedin{color:#000000;font-size:14px;line-height:1.5;}
+
+.mockup-image{width:100%;background:#000;display:block;}
+.mockup-image-placeholder{width:100%;aspect-ratio:1.91/1;background:linear-gradient(135deg,#e4e6eb,#cbd5e1);display:flex;align-items:center;justify-content:center;flex-direction:column;color:#65676b;}
+.mockup-image-placeholder .icon{font-size:48px;opacity:0.5;margin-bottom:8px;}
+.mockup-image-placeholder .text{font-size:12px;font-weight:600;}
+
+.mockup-ig-image{width:100%;aspect-ratio:1/1;object-fit:cover;background:#000;display:block;}
+.mockup-ig-image-placeholder{width:100%;aspect-ratio:1/1;background:linear-gradient(135deg,#fbcfe8,#fef3c7);display:flex;align-items:center;justify-content:center;flex-direction:column;color:#65676b;}
+
+/* FB engagement bar */
+.mockup-engage-summary{padding:8px 14px;border-bottom:1px solid #e4e6eb;display:flex;justify-content:space-between;font-size:13px;color:#65676b;}
+.mockup-engage-likes{display:flex;align-items:center;gap:4px;}
+.mockup-engage-likes .icons{display:flex;}
+.mockup-engage-likes .icon{width:18px;height:18px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;color:#fff;font-size:10px;margin-left:-3px;border:2px solid #fff;}
+.mockup-engage-likes .icon.blue{background:#2078f4;}
+.mockup-engage-likes .icon.red{background:#f33e58;}
+
+.mockup-actions{display:flex;padding:4px;}
+.mockup-action{flex:1;padding:8px;display:flex;align-items:center;justify-content:center;gap:6px;border-radius:6px;cursor:pointer;color:#65676b;font-weight:700;font-size:13px;transition:background 0.15s;}
+.mockup-action:hover{background:#f0f2f5;}
+.mockup-action-icon{font-size:16px;}
+
+/* IG specific */
+.mockup-ig-header{padding:12px;display:flex;align-items:center;gap:10px;}
+.mockup-ig-avatar{width:32px;height:32px;border-radius:50%;background:linear-gradient(45deg,#F58529,#DD2A7B,#8134AF);padding:2px;display:flex;align-items:center;justify-content:center;}
+.mockup-ig-avatar-inner{width:100%;height:100%;border-radius:50%;background:#dc2626;color:#fff;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:14px;border:2px solid #fff;}
+.mockup-ig-name{font-weight:700;font-size:13px;}
+
+.mockup-ig-actions{padding:8px 14px;display:flex;gap:14px;align-items:center;font-size:22px;}
+.mockup-ig-actions .left{display:flex;gap:14px;flex:1;}
+.mockup-ig-likes{padding:0 14px 4px;font-weight:700;font-size:14px;}
+.mockup-ig-caption{padding:0 14px 8px;font-size:14px;line-height:1.4;color:#050505;}
+.mockup-ig-caption strong{font-weight:700;}
+.mockup-ig-tags{color:#00376b;}
+.mockup-ig-date{padding:0 14px 12px;font-size:11px;color:#8e8e8e;text-transform:uppercase;}
+
+/* LinkedIn specific */
+.mockup-linkedin-actions{display:flex;padding:4px 8px;border-top:1px solid #e4e6eb;}
+.mockup-li-action{flex:1;padding:10px 4px;display:flex;align-items:center;justify-content:center;gap:5px;border-radius:4px;cursor:pointer;color:#60707d;font-weight:600;font-size:13px;}
+.mockup-li-action:hover{background:#f3f6f8;}
+
+/* CTA blocks (calls, WhatsApp, website) */
+.mockup-cta-block{background:#f7f9fc;border-top:1px solid #e4e6eb;padding:10px 14px;display:flex;gap:8px;flex-wrap:wrap;}
+.mockup-cta-btn{padding:8px 14px;border-radius:20px;font-size:12px;font-weight:700;text-decoration:none;display:inline-flex;align-items:center;gap:6px;transition:all 0.15s;}
+.mockup-cta-call{background:#22c55e;color:#fff;}.mockup-cta-call:hover{background:#16a34a;}
+.mockup-cta-wa{background:#25d366;color:#fff;}.mockup-cta-wa:hover{background:#1ebd5a;}
+.mockup-cta-web{background:#1877F2;color:#fff;}.mockup-cta-web:hover{background:#1463cf;}
+
+/* Mockup section label */
+.mockup-label{font-size:11px;font-weight:800;color:var(--gray);text-transform:uppercase;letter-spacing:0.5px;padding:0 4px;margin-bottom:6px;}
+
+/* Empty state (no platform) */
+.mockup-empty{background:#fff;border-radius:14px;padding:30px;text-align:center;color:var(--gray);font-size:13px;}
+
 .summary-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;margin-bottom:16px;}
 .stat-card{background:#fff;border-radius:12px;padding:14px;text-align:center;box-shadow:var(--shadow);}
 .stat-val{font-size:24px;font-weight:900;color:var(--teal);}.stat-label{font-size:11px;color:var(--gray);font-weight:600;margin-top:4px;text-transform:uppercase;}
@@ -288,6 +367,24 @@ a{text-decoration:none;color:inherit;}button{font-family:inherit;cursor:pointer;
                 <div style="font-size:11px" id="editPlatLimits"></div>
             </div>
         </div>
+
+        <div class="form-group">
+            <label class="form-label">📷 Imagine pentru postare (opțional, dar recomandat)</label>
+            <div class="upload-zone-mini" id="editUploadZone" onclick="document.getElementById('editFileInput').click()" ondragover="event.preventDefault();this.classList.add('drag-over')" ondragleave="this.classList.remove('drag-over')" ondrop="event.preventDefault();this.classList.remove('drag-over');handleEditFile(event.dataTransfer.files)">
+                <input type="file" id="editFileInput" accept="image/*" style="display:none" onchange="handleEditFile(this.files)">
+                <div id="editUploadEmpty">
+                    <div style="font-size:32px;margin-bottom:4px">📁</div>
+                    <div style="font-size:13px;color:var(--gray);font-weight:600">Click sau drag&drop imagine</div>
+                    <div style="font-size:11px;color:var(--gray-l);margin-top:2px">JPG, PNG, WEBP · max 10MB</div>
+                </div>
+                <div id="editUploadPreview" style="display:none">
+                    <img id="editUploadImg" style="max-width:100%;max-height:160px;border-radius:10px;display:block;margin:0 auto">
+                    <div style="text-align:center;margin-top:8px;font-size:11px;color:var(--gray)" id="editUploadName"></div>
+                    <button type="button" onclick="event.stopPropagation();removeEditImage()" style="margin-top:8px;padding:6px 14px;border-radius:8px;border:1px solid var(--red);background:#fff;color:var(--red);font-size:11px;font-weight:700;cursor:pointer">🗑️ Elimină imaginea</button>
+                </div>
+            </div>
+        </div>
+
         <div class="form-row">
             <div class="form-group">
                 <label class="form-label">Data</label>
@@ -299,11 +396,20 @@ a{text-decoration:none;color:inherit;}button{font-family:inherit;cursor:pointer;
             </div>
         </div>
         <div class="algo-tip" id="editAlgoTip"></div>
-        <div style="display:flex;gap:8px;margin-top:16px">
-            <button class="btn-secondary" onclick="closeEditModal()" style="flex:1">Anulează</button>
-            <button class="btn-primary" onclick="saveEdit()" style="flex:1">💾 Salvează modificările</button>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:16px">
+            <button class="btn-secondary" onclick="closeEditModal()">Anulează</button>
+            <button class="btn-primary" onclick="saveEdit()">💾 Salvează</button>
         </div>
+        <button class="btn-preview-real" onclick="openRealPreview()" style="margin-top:10px">👁️ Vezi cum arată postarea pe fiecare rețea</button>
     </div>
+</div>
+</div>
+
+<!-- REAL PREVIEW MODAL — mockup vizual cu poză + CTA -->
+<div id="realPreviewModal" class="modal-overlay" onclick="if(event.target===this)closeRealPreview()">
+<div class="modal" style="max-width:520px;background:#f0f2f5;padding:0">
+    <div class="modal-head" style="background:#fff"><div class="modal-title">👁️ Cum arată postarea</div><button class="modal-close" onclick="closeRealPreview()">✕</button></div>
+    <div class="modal-body" id="realPreviewBody" style="padding:16px;background:#f0f2f5"></div>
 </div>
 </div>
 
@@ -721,9 +827,15 @@ function renderPreview(){
                 var cls='plat-'+pl+'-b';
                 html+='<span class="plat-badge '+cls+'">'+((PLAT[pl]||pl).split(' ')[0])+'</span>';
             });
-            html+='</div><div class="post-slot-meta">⏰ '+p.data_programare.substring(11,16)+' · '+p.tip+'</div></div>';
+            var imgBadge=p.imagine_url?'<span style="background:#dcfce7;color:#166534;padding:2px 8px;border-radius:6px;font-size:10px;font-weight:700;margin-left:6px">📷 cu poză</span>':'';
+            html+='</div><div class="post-slot-meta">⏰ '+p.data_programare.substring(11,16)+' · '+p.tip+imgBadge+'</div></div>';
             html+='<div class="post-slot-content"><strong style="color:var(--dark)">'+esc(p.note)+'</strong>';
-            html+='<div class="post-slot-content-preview">'+esc(p.continut.substring(0,180))+(p.continut.length>180?'…':'')+'</div></div>';
+            html+='<div style="display:flex;gap:10px;align-items:start;margin-top:4px">';
+            if(p.imagine_url){
+                html+='<img src="'+esc(p.imagine_url)+'" style="width:56px;height:56px;object-fit:cover;border-radius:8px;flex-shrink:0;border:1px solid var(--gray-b)">';
+            }
+            html+='<div class="post-slot-content-preview" style="flex:1">'+esc(p.continut.substring(0,180))+(p.continut.length>180?'…':'')+'</div>';
+            html+='</div></div>';
             html+='<button class="post-slot-edit" onclick="editPost('+item.idx+')">✏️ Editează</button>';
             html+='</div>';
         });
@@ -750,9 +862,205 @@ function editPost(idx){
     document.getElementById('editTime').value=p.data_programare.substring(11,16);
     document.getElementById('editAlgoTip').innerHTML='<strong>💡 Algoritm 2026:</strong> '+esc(p.algoTip);
     updateEditCharCount();
+    // restaurez starea imaginii (dacă există deja)
+    if(p.imagine_url){
+        showEditPreview(p.imagine_url,(p.media_json&&p.media_json[0]&&p.media_json[0].name)||'imagine.jpg');
+    } else {
+        hideEditPreview();
+    }
     document.getElementById('editModal').classList.add('active');
 }
 function closeEditModal(){document.getElementById('editModal').classList.remove('active');}
+
+// ═══ Upload imagine în edit modal ═══
+function handleEditFile(files){
+    if(!files||!files.length)return;
+    var file=files[0];
+    if(file.size>10*1024*1024){toast('❌ Fișier prea mare (max 10MB)','error');return;}
+
+    var fd=new FormData();fd.append('files[]',file);
+    toast('📤 Se încarcă imaginea...','info');
+    fetch(API+'?action=uploadSocialMedia',{method:'POST',body:fd})
+        .then(function(r){return r.json()})
+        .then(function(res){
+            if(res.success&&res.files&&res.files.length){
+                var f=res.files[0];
+                if(editingIdx>=0){
+                    generatedPosts[editingIdx].imagine_url=f.url;
+                    generatedPosts[editingIdx].media_json=[{type:'image',url:f.url,name:f.name}];
+                }
+                showEditPreview(f.url,f.name);
+                toast('✅ Imagine încărcată','success');
+            } else {
+                toast('❌ '+(res.error||'Eroare upload'),'error');
+            }
+        }).catch(function(){toast('❌ Eroare conexiune','error')});
+    document.getElementById('editFileInput').value='';
+}
+
+function showEditPreview(url,name){
+    document.getElementById('editUploadEmpty').style.display='none';
+    document.getElementById('editUploadPreview').style.display='block';
+    document.getElementById('editUploadImg').src=url;
+    document.getElementById('editUploadName').textContent=name||'';
+}
+function hideEditPreview(){
+    document.getElementById('editUploadEmpty').style.display='block';
+    document.getElementById('editUploadPreview').style.display='none';
+}
+function removeEditImage(){
+    if(editingIdx>=0){
+        generatedPosts[editingIdx].imagine_url='';
+        generatedPosts[editingIdx].media_json=[];
+    }
+    hideEditPreview();
+    toast('🗑️ Imagine eliminată','info');
+}
+
+// ═══ REAL PREVIEW — mockup vizual cum apare postarea pe fiecare rețea ═══
+function openRealPreview(){
+    if(editingIdx<0)return;
+    // Folosesc conținutul ACTUAL din textarea (poate fi modificat fără să fi apăsat „Salvează" încă)
+    var content=document.getElementById('editContent').value;
+    var dateVal=document.getElementById('editDate').value;
+    var timeVal=document.getElementById('editTime').value;
+    var p=generatedPosts[editingIdx];
+    var imgUrl=p.imagine_url||'';
+    var brand=document.getElementById('brand').value;
+    var brandName=brand==='conca-verde'?'Conca Verde Camping':'CSSI — Confort, Securitate, Siguranță';
+    var brandInitial=brand==='conca-verde'?'CV':'C';
+    var brandColor=brand==='conca-verde'?'#14b8a6':'#dc2626';
+    var dateDisplay=dateVal?fmtDate(new Date(dateVal+'T00:00:00')):'';
+    var timeDisplay=timeVal||'';
+
+    var html='';
+    p.platforme.forEach(function(plat){
+        if(plat==='fb') html+=renderFbMockup(content,imgUrl,brandName,brandInitial,brandColor,dateDisplay,timeDisplay);
+        else if(plat==='ig') html+=renderIgMockup(content,imgUrl,brandName,brandInitial,brandColor,dateDisplay);
+        else if(plat==='linkedin') html+=renderLinkedinMockup(content,imgUrl,brandName,brandInitial,brandColor,dateDisplay);
+    });
+
+    if(!html) html='<div class="mockup-empty">Nicio platformă selectată pentru această postare.</div>';
+    document.getElementById('realPreviewBody').innerHTML=html;
+    document.getElementById('realPreviewModal').classList.add('active');
+}
+function closeRealPreview(){document.getElementById('realPreviewModal').classList.remove('active');}
+
+function htmlContent(text){
+    // Convertesc # hashtag-uri și @ mențiuni în spans colorate, păstrând \n
+    var div=document.createElement('div');div.textContent=text||'';
+    var safe=div.innerHTML;
+    safe=safe.replace(/(#[\wÀ-ſ]+)/g,'<span style="color:#1877F2;font-weight:600">$1</span>');
+    safe=safe.replace(/(https?:\/\/[^\s]+)/g,'<a href="$1" target="_blank" style="color:#1877F2">$1</a>');
+    return safe;
+}
+
+function htmlContentLi(text){
+    var div=document.createElement('div');div.textContent=text||'';
+    var safe=div.innerHTML;
+    safe=safe.replace(/(#[\wÀ-ſ]+)/g,'<span style="color:#0a66c2;font-weight:600">$1</span>');
+    safe=safe.replace(/(https?:\/\/[^\s]+)/g,'<a href="$1" target="_blank" style="color:#0a66c2">$1</a>');
+    return safe;
+}
+
+function ctaBlock(brand){
+    if(brand==='conca-verde'){
+        return '<div class="mockup-cta-block">'+
+            '<a href="tel:0752288400" class="mockup-cta-btn mockup-cta-call">📞 0752 288 400</a>'+
+            '<a href="https://wa.me/40752288400" target="_blank" class="mockup-cta-btn mockup-cta-wa">💬 WhatsApp</a>'+
+            '<a href="https://www.conca-verde.ro" target="_blank" class="mockup-cta-btn mockup-cta-web">🌐 conca-verde.ro</a>'+
+            '</div>';
+    }
+    return '<div class="mockup-cta-block">'+
+        '<a href="tel:0752288400" class="mockup-cta-btn mockup-cta-call">📞 0752 288 400</a>'+
+        '<a href="https://wa.me/40752288400" target="_blank" class="mockup-cta-btn mockup-cta-wa">💬 WhatsApp</a>'+
+        '<a href="https://cssi.ro" target="_blank" class="mockup-cta-btn mockup-cta-web">🌐 cssi.ro</a>'+
+        '</div>';
+}
+
+function renderFbMockup(content,imgUrl,brandName,brandInitial,brandColor,dateDisplay,timeDisplay){
+    var truncated=content.length>280;
+    var displayContent=truncated?content.substring(0,280)+'…':content;
+    var html='<div class="mockup-label">📘 Facebook</div>';
+    html+='<div class="mockup">';
+    html+='<div class="mockup-platform-bar fb"><span>📘 FACEBOOK</span><span style="font-size:10px;opacity:0.9">Preview · Page</span></div>';
+    html+='<div class="mockup-header">';
+    html+='<div class="mockup-avatar" style="background:'+brandColor+'">'+brandInitial+'</div>';
+    html+='<div style="flex:1"><div class="mockup-name">'+esc(brandName)+'</div>';
+    html+='<div class="mockup-meta">'+(dateDisplay||'Acum')+' '+(timeDisplay?'· '+timeDisplay:'')+'<span class="mockup-meta-dot"></span>🌍</div></div>';
+    html+='<div style="font-size:20px;color:#65676b;cursor:pointer">⋯</div></div>';
+    html+='<div class="mockup-content">'+htmlContent(displayContent)+(truncated?' <span class="mockup-see-more">Vezi mai mult</span>':'')+'</div>';
+    if(imgUrl){
+        html+='<img src="'+esc(imgUrl)+'" class="mockup-image">';
+    } else {
+        html+='<div class="mockup-image-placeholder"><div class="icon">🖼️</div><div class="text">Adaugă o imagine în editor → apare aici</div></div>';
+    }
+    html+=ctaBlock(document.getElementById('brand').value);
+    html+='<div class="mockup-engage-summary"><div class="mockup-engage-likes"><div class="icons"><span class="icon blue">👍</span><span class="icon red">❤️</span></div><span>247</span></div><div>32 comentarii · 14 distribuiri</div></div>';
+    html+='<div class="mockup-actions">';
+    html+='<div class="mockup-action"><span class="mockup-action-icon">👍</span> Apreciază</div>';
+    html+='<div class="mockup-action"><span class="mockup-action-icon">💬</span> Comentează</div>';
+    html+='<div class="mockup-action"><span class="mockup-action-icon">↗️</span> Distribuie</div>';
+    html+='</div>';
+    html+='</div>';
+    return html;
+}
+
+function renderIgMockup(content,imgUrl,brandName,brandInitial,brandColor,dateDisplay){
+    var igName=brandName.split(' ')[0].toLowerCase()+'.ro';
+    var firstLine=content.split('\n')[0]||'';
+    var restContent=content.substring(firstLine.length).trim();
+
+    var html='<div class="mockup-label">📸 Instagram</div>';
+    html+='<div class="mockup">';
+    html+='<div class="mockup-platform-bar ig"><span>📸 INSTAGRAM</span><span style="font-size:10px;opacity:0.9">Preview · Business</span></div>';
+    html+='<div class="mockup-ig-header">';
+    html+='<div class="mockup-ig-avatar"><div class="mockup-ig-avatar-inner" style="background:'+brandColor+'">'+brandInitial+'</div></div>';
+    html+='<div style="flex:1"><div class="mockup-ig-name">'+esc(igName)+'</div><div style="font-size:11px;color:#8e8e8e">Brașov, România</div></div>';
+    html+='<div style="font-size:20px;color:#262626;cursor:pointer">⋯</div></div>';
+    if(imgUrl){
+        html+='<img src="'+esc(imgUrl)+'" class="mockup-ig-image">';
+    } else {
+        html+='<div class="mockup-ig-image-placeholder"><div style="font-size:60px;opacity:0.5">📷</div><div style="font-size:12px;color:#8e8e8e;margin-top:8px;font-weight:600">IG necesită imagine!</div><div style="font-size:11px;color:#8e8e8e;margin-top:4px">Adaugă una în editor</div></div>';
+    }
+    html+='<div class="mockup-ig-actions"><div class="left">❤️ 💬 ↗️</div><div>🔖</div></div>';
+    html+='<div class="mockup-ig-likes">412 aprecieri</div>';
+    html+='<div class="mockup-ig-caption"><strong>'+esc(igName)+'</strong> '+htmlContent(content.substring(0,150))+(content.length>150?'… <span style="color:#8e8e8e;cursor:pointer">mai mult</span>':'')+'</div>';
+    html+='<div class="mockup-ig-date">'+(dateDisplay||'Acum câteva minute')+'</div>';
+    html+=ctaBlock(document.getElementById('brand').value);
+    html+='</div>';
+    return html;
+}
+
+function renderLinkedinMockup(content,imgUrl,brandName,brandInitial,brandColor,dateDisplay){
+    var truncated=content.length>210;
+    var displayContent=truncated?content.substring(0,210)+'…':content;
+    var html='<div class="mockup-label">💼 LinkedIn</div>';
+    html+='<div class="mockup">';
+    html+='<div class="mockup-platform-bar linkedin"><span>💼 LINKEDIN</span><span style="font-size:10px;opacity:0.9">Preview · Company</span></div>';
+    html+='<div class="mockup-header">';
+    html+='<div class="mockup-avatar" style="background:'+brandColor+';border-radius:8px">'+brandInitial+'</div>';
+    html+='<div style="flex:1"><div class="mockup-name">'+esc(brandName)+'</div>';
+    html+='<div style="font-size:11px;color:rgba(0,0,0,0.6);margin-top:2px">Securitate & Instalații · 9.000+ proiecte</div>';
+    html+='<div class="mockup-meta">'+(dateDisplay||'Recent')+' · 🌐</div></div>';
+    html+='<div style="cursor:pointer;color:rgba(0,0,0,0.6)">⋯</div></div>';
+    html+='<div class="mockup-content mockup-content-linkedin">'+htmlContentLi(displayContent)+(truncated?' <span class="mockup-see-more" style="color:#0a66c2;font-weight:600">…vezi mai mult</span>':'')+'</div>';
+    if(imgUrl){
+        html+='<img src="'+esc(imgUrl)+'" class="mockup-image">';
+    } else {
+        html+='<div class="mockup-image-placeholder"><div class="icon">📊</div><div class="text">Recomandat: imagine, PDF carusel sau video</div></div>';
+    }
+    html+=ctaBlock(document.getElementById('brand').value);
+    html+='<div class="mockup-engage-summary" style="padding:10px 14px"><div class="mockup-engage-likes"><div class="icons"><span class="icon blue">👍</span><span class="icon" style="background:#df704d">💡</span><span class="icon" style="background:#6dae4f">🤝</span></div><span>156</span></div><div>28 comentarii</div></div>';
+    html+='<div class="mockup-linkedin-actions">';
+    html+='<div class="mockup-li-action">👍 Apreciază</div>';
+    html+='<div class="mockup-li-action">💬 Comentează</div>';
+    html+='<div class="mockup-li-action">🔁 Redistribuie</div>';
+    html+='<div class="mockup-li-action">✉️ Trimite</div>';
+    html+='</div>';
+    html+='</div>';
+    return html;
+}
 function updateEditCharCount(){
     var len=document.getElementById('editContent').value.length;
     document.getElementById('editCharCount').textContent=len+' caractere';
