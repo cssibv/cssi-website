@@ -606,6 +606,72 @@ function ensureProiecteSchema($db) {
     }
 }
 
+// ─── Sursă unică pentru schimbarea statusului unui proiect ───────────
+// Folosită de updateStatus, dosarAvanseazaStage, semnare contract etc. ca să
+// avem mereu istoric + notificare + setup proiectare consistente (anti-fragmentare).
+// $idOrCode = id numeric SAU cod proiect. Întoarce array cu detalii sau null dacă nu există.
+function advanceProiectStatus($db, $idOrCode, $newStatus, $user = 'Admin', $resetPreluat = true) {
+    $stmt = $db->prepare("SELECT p.id, p.proiect_id, p.status, p.istoric_status, c.nume AS client_nume
+                          FROM proiecte p LEFT JOIN clienti c ON p.client_id = c.id
+                          WHERE p.id = ? OR p.proiect_id = ?");
+    $stmt->execute([$idOrCode, $idOrCode]);
+    $row = $stmt->fetch();
+    if (!$row) return null;
+    $oldStatus = $row['status'];
+    $istoric = json_decode($row['istoric_status'] ?: '[]', true);
+    if (!is_array($istoric)) $istoric = [];
+    $istoric[] = ['status' => $newStatus, 'data' => date('Y-m-d H:i:s'), 'user' => $user];
+    if ($resetPreluat) {
+        $db->prepare("UPDATE proiecte SET status = ?, istoric_status = ?, preluat_de = NULL, preluat_la = NULL WHERE id = ?")
+           ->execute([$newStatus, json_encode($istoric, JSON_UNESCAPED_UNICODE), $row['id']]);
+    } else {
+        $db->prepare("UPDATE proiecte SET status = ?, istoric_status = ? WHERE id = ?")
+           ->execute([$newStatus, json_encode($istoric, JSON_UNESCAPED_UNICODE), $row['id']]);
+    }
+    $mesaj = '📌 ' . $row['proiect_id'] . ' (' . ($row['client_nume'] ?: '—') . ') — ' . $oldStatus . ' → ' . $newStatus . ' (de ' . $user . ')';
+    try {
+        $db->prepare("INSERT INTO notificari (proiect_id, mesaj, tip, de_la, etapa_noua) VALUES (?,?,?,?,?)")
+           ->execute([$row['id'], $mesaj, 'status_change', $user, $newStatus]);
+    } catch (Exception $e) {}
+    if ($newStatus === 'Proiectare') {
+        proiectareAutoSetup($db, $row['id']);
+    }
+    return ['ok' => true, 'old' => $oldStatus, 'id' => $row['id'], 'proiect_id' => $row['proiect_id'], 'client_nume' => $row['client_nume'], 'mesaj' => $mesaj];
+}
+
+// Creează (sau reactivează) recordul de proiectare cu checklist dinamic per serviciu.
+function proiectareAutoSetup($db, $numId) {
+    $chkPr = $db->prepare("SELECT id FROM proiectare WHERE proiect_id = ?");
+    $chkPr->execute([$numId]);
+    if ($chkPr->fetch()) {
+        $db->prepare("UPDATE proiectare SET termen = COALESCE(termen, DATE_ADD(CURDATE(), INTERVAL 30 DAY)), data_start = COALESCE(data_start, CURDATE()), status = 'In lucru' WHERE proiect_id = ?")
+           ->execute([$numId]);
+        return;
+    }
+    $srvS = $db->prepare("SELECT serviciu FROM proiecte WHERE id = ?");
+    $srvS->execute([$numId]);
+    $srvR = $srvS->fetch();
+    $srv = $srvR ? $srvR['serviciu'] : '';
+    $cl = [
+        ['id'=>'vizita_teren','label'=>'Vizită teren efectuată','done'=>false,'date'=>null,'user'=>null],
+        ['id'=>'schema_electrica','label'=>'Schemă electrică creată','done'=>false,'date'=>null,'user'=>null],
+        ['id'=>'plan_amplasare','label'=>'Plan amplasare echipamente','done'=>false,'date'=>null,'user'=>null],
+        ['id'=>'trasee_cabluri','label'=>'Trasee cabluri proiectate','done'=>false,'date'=>null,'user'=>null],
+        ['id'=>'necesar_materiale','label'=>'Necesar materiale verificat','done'=>false,'date'=>null,'user'=>null],
+    ];
+    if (in_array($srv, ['Supraveghere Video','Alarma','Complex'])) {
+        $cl[] = ['id'=>'aviz_igpr_depus','label'=>'👮 Aviz IGPR depus','done'=>false,'date'=>null,'user'=>null];
+        $cl[] = ['id'=>'aviz_igpr_obtinut','label'=>'👮 Aviz IGPR obținut','done'=>false,'date'=>null,'user'=>null];
+    }
+    if (in_array($srv, ['Detectie Incendiu','Complex'])) {
+        $cl[] = ['id'=>'aviz_isu_depus','label'=>'🛡️ Aviz ISU depus','done'=>false,'date'=>null,'user'=>null];
+        $cl[] = ['id'=>'aviz_isu_obtinut','label'=>'🛡️ Aviz ISU obținut','done'=>false,'date'=>null,'user'=>null];
+    }
+    $cl[] = ['id'=>'dosar_complet','label'=>'Dosar proiect complet','done'=>false,'date'=>null,'user'=>null];
+    $db->prepare("INSERT INTO proiectare (proiect_id, checklist_json, termen, data_start, status) VALUES (?, ?, DATE_ADD(CURDATE(), INTERVAL 30 DAY), CURDATE(), 'In lucru')")
+       ->execute([$numId, json_encode($cl)]);
+}
+
 // Calculează expires_at din data_oferta + valabilitate ("4 zile", "30 zile" etc)
 function calcExpiresAt($dataOferta, $valab) {
     if (!$dataOferta) return null;
@@ -1300,64 +1366,9 @@ try {
             $newStatus = (isset($data['status']) ? $data['status'] : (isset($_GET['status']) ? $_GET['status'] : ''));
             $user = (isset($data['user']) ? $data['user'] : 'Admin');
             if (!$id || !$newStatus) { jsonResponse(['success' => false, 'error' => 'id si status obligatorii'], 400); break; }
-            
-            // Citeste proiectul curent
-            $stmt = $db->prepare("SELECT p.id, p.proiect_id, p.status, p.istoric_status, c.nume AS client_nume FROM proiecte p JOIN clienti c ON p.client_id = c.id WHERE p.id = ? OR p.proiect_id = ?");
-            $stmt->execute([$id, $id]);
-            $row = $stmt->fetch();
-            if (!$row) { jsonResponse(['success' => false, 'error' => 'Proiect negăsit'], 404); break; }
-            
-            $oldStatus = $row['status'];
-            $istoric = json_decode($row['istoric_status'] ?: '[]', true);
-            $istoric[] = ['status' => $newStatus, 'data' => date('Y-m-d H:i:s'), 'user' => $user];
-            
-            // Update proiect — resetează preluat_de la schimbarea statusului
-            $db->prepare("UPDATE proiecte SET status = ?, istoric_status = ?, preluat_de = NULL, preluat_la = NULL WHERE id = ? OR proiect_id = ?")
-               ->execute([$newStatus, json_encode($istoric), $id, $id]);
-            
-            // Creează notificare
-            $mesaj = '📌 ' . $row['proiect_id'] . ' (' . $row['client_nume'] . ') — ' . $oldStatus . ' → ' . $newStatus . ' (de ' . $user . ')';
-            $db->prepare("INSERT INTO notificari (proiect_id, mesaj, tip, de_la, etapa_noua) VALUES (?,?,?,?,?)")
-               ->execute([$row['id'], $mesaj, 'status_change', $user, $newStatus]);
-            
-            // Auto-setup Proiectare: termen +30 zile, data_start, status în lucru
-            if ($newStatus === 'Proiectare') {
-                $numId = $row['id'];
-                // Verifică dacă există record proiectare
-                $chkPr = $db->prepare("SELECT id FROM proiectare WHERE proiect_id = ?");
-                $chkPr->execute([$numId]);
-                if (!$chkPr->fetch()) {
-                    // Determină serviciul pentru checklist dinamic
-                    $srvS = $db->prepare("SELECT serviciu FROM proiecte WHERE id = ?");
-                    $srvS->execute([$numId]);
-                    $srvR = $srvS->fetch();
-                    $srv = $srvR ? $srvR['serviciu'] : '';
-                    $cl = [
-                        ['id'=>'vizita_teren','label'=>'Vizită teren efectuată','done'=>false,'date'=>null,'user'=>null],
-                        ['id'=>'schema_electrica','label'=>'Schemă electrică creată','done'=>false,'date'=>null,'user'=>null],
-                        ['id'=>'plan_amplasare','label'=>'Plan amplasare echipamente','done'=>false,'date'=>null,'user'=>null],
-                        ['id'=>'trasee_cabluri','label'=>'Trasee cabluri proiectate','done'=>false,'date'=>null,'user'=>null],
-                        ['id'=>'necesar_materiale','label'=>'Necesar materiale verificat','done'=>false,'date'=>null,'user'=>null],
-                    ];
-                    if (in_array($srv, ['Supraveghere Video','Alarma','Complex'])) {
-                        $cl[] = ['id'=>'aviz_igpr_depus','label'=>'👮 Aviz IGPR depus','done'=>false,'date'=>null,'user'=>null];
-                        $cl[] = ['id'=>'aviz_igpr_obtinut','label'=>'👮 Aviz IGPR obținut','done'=>false,'date'=>null,'user'=>null];
-                    }
-                    if (in_array($srv, ['Detectie Incendiu','Complex'])) {
-                        $cl[] = ['id'=>'aviz_isu_depus','label'=>'🛡️ Aviz ISU depus','done'=>false,'date'=>null,'user'=>null];
-                        $cl[] = ['id'=>'aviz_isu_obtinut','label'=>'🛡️ Aviz ISU obținut','done'=>false,'date'=>null,'user'=>null];
-                    }
-                    $cl[] = ['id'=>'dosar_complet','label'=>'Dosar proiect complet','done'=>false,'date'=>null,'user'=>null];
-                    $db->prepare("INSERT INTO proiectare (proiect_id, checklist_json, termen, data_start, status) VALUES (?, ?, DATE_ADD(CURDATE(), INTERVAL 30 DAY), CURDATE(), 'In lucru')")
-                       ->execute([$numId, json_encode($cl)]);
-                } else {
-                    // Update termen + status dacă există deja
-                    $db->prepare("UPDATE proiectare SET termen = COALESCE(termen, DATE_ADD(CURDATE(), INTERVAL 30 DAY)), data_start = COALESCE(data_start, CURDATE()), status = 'In lucru' WHERE proiect_id = ?")
-                       ->execute([$numId]);
-                }
-            }
-            
-            jsonResponse(['success' => true, 'notificare' => $mesaj]);
+            $res = advanceProiectStatus($db, $id, $newStatus, $user);
+            if (!$res) { jsonResponse(['success' => false, 'error' => 'Proiect negăsit'], 404); break; }
+            jsonResponse(['success' => true, 'notificare' => $res['mesaj']]);
             break;
 
         // ══════════════════════════════════════
@@ -2171,7 +2182,19 @@ try {
             $values[] = $id;
             $db->prepare("UPDATE contracte SET " . implode(', ', $fields) . " WHERE id = ?")->execute($values);
             logContractAccess($db, $id, 'admin_update', implode(',', array_map(function($f){ return preg_replace('/\s*=.*/', '', $f); }, $fields)));
-            jsonResponse(['success' => true]);
+            // Handoff: contract semnat → avansează proiectul la Proiectare (dacă e încă la Contract)
+            $advancedProiect = false;
+            if (isset($data['status']) && $data['status'] === 'semnat') {
+                $cRow = $db->prepare("SELECT c.proiect_id, p.status FROM contracte c LEFT JOIN proiecte p ON c.proiect_id = p.id WHERE c.id = ?");
+                $cRow->execute([$id]);
+                $cr = $cRow->fetch();
+                if ($cr && !empty($cr['proiect_id']) && $cr['status'] === 'Contract') {
+                    $uCur = currentUser();
+                    advanceProiectStatus($db, (int)$cr['proiect_id'], 'Proiectare', $uCur['username'] ?? 'Admin');
+                    $advancedProiect = true;
+                }
+            }
+            jsonResponse(['success' => true, 'proiect_avansat' => $advancedProiect]);
             break;
 
         // Completare internă date beneficiar (CSSI întreabă clientul și completează aici,
@@ -4962,6 +4985,16 @@ p { margin: 0; }
                 try {
                     $db->prepare("INSERT INTO notificari (proiect_id, mesaj, tip, de_la, etapa_noua) VALUES (?,?,?,?,?)")
                        ->execute([$pid, $msg, 'finalizare', $userName, $newStatus]);
+                } catch (Exception $e) {}
+
+                // 3b) Nudge recenzie — dacă nu s-a cerut deja recenzie pentru acest proiect
+                try {
+                    $rChk = $db->prepare("SELECT 1 FROM sms_recenzii WHERE proiect_id = ? LIMIT 1");
+                    $rChk->execute([$pid]);
+                    if (!$rChk->fetch()) {
+                        $db->prepare("INSERT INTO notificari (proiect_id, mesaj, tip, de_la, etapa_noua) VALUES (?,?,?,?,?)")
+                           ->execute([$pid, '⭐ Trimite cerere de recenzie Google clientului ' . $proj['client_nume'] . ' (proiect finalizat)', 'recenzie', $userName, $newStatus]);
+                    }
                 } catch (Exception $e) {}
 
                 // 4) Intrare automată în jurnal_teren

@@ -356,10 +356,37 @@ function renderHeader(){
     if(p.adresa_obiectiv) html += '<span>📍 '+esc(p.adresa_obiectiv)+'</span>';
     if(p.client_telefon) html += '<span><a href="tel:'+esc(p.client_telefon)+'" style="color:#fff;text-decoration:none">📞 '+esc(p.client_telefon)+'</a></span>';
     if(p.adresa_obiectiv) html += '<a href="'+wazeUrl(p.adresa_obiectiv)+'" target="_blank" rel="noopener" class="btn-waze lg" title="Deschide în Waze pentru navigație"><span class="wz-ic">🚗</span> Navighează (Waze)</a>';
+    // Handoff Execuție → Recepție (apare doar când proiectul e în Execuție)
+    if((p.proiect_status||'')==='Executie'){
+        html += '<button onclick="predaReceptie()" class="btn-waze lg" style="background:#16a34a;border-color:#16a34a" title="Marchează lucrarea finalizată și trece la Recepție">✅ Predă la Recepție</button>';
+    }
     document.getElementById('pageMeta').innerHTML = html;
     // Afișează butonul SMS recenzie din bara de tab-uri
     var smsBtn = document.getElementById('btnSmsReview');
     if(smsBtn){ smsBtn.style.display='inline-flex'; checkReviewSMSStatus(); }
+}
+function materialeStatus(){
+    var plan=0, mont=0;
+    (STATE.materiale.oferte||[]).forEach(function(o){
+        (o.linii||[]).forEach(function(l){ plan+=Number(l.cant_planificata)||0; mont+=Number(l.cant_montata)||0; });
+    });
+    return {plan:plan, mont:mont, complet:(plan>0 && mont>=plan)};
+}
+function predaReceptie(){
+    var ms = materialeStatus();
+    var hasPV = (STATE.fisiere||[]).some(function(f){return f.tip==='pv';});
+    var warn = [];
+    if(ms.plan>0 && !ms.complet) warn.push('• materiale montate '+ms.mont+'/'+ms.plan+' (incomplet)');
+    if(!hasPV) warn.push('• niciun proces-verbal încărcat');
+    var msg = 'Predai lucrarea la Recepție?';
+    if(warn.length) msg += '\n\nAtenție:\n'+warn.join('\n')+'\n\nContinui oricum?';
+    if(!confirm(msg)) return;
+    showLoading(true);
+    fetch(API_DB+'?action=updateStatus',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'updateStatus',id:STATE.id,status:'Receptie',user:(sessionStorage.getItem('cssi-user')||sessionStorage.getItem('cssi-role')||'Admin')})})
+        .then(function(r){return r.json()}).then(function(res){
+            if(res.success){ toast('✅ Trecut la Recepție — finalizează din pagina Proiecte','success'); refreshData(); }
+            else toast('❌ '+(res.error||'Eroare'),'error');
+        }).catch(function(e){ toast('❌ '+(e.message||e),'error'); }).finally(function(){ showLoading(false); });
 }
 function renderProgramari(){
     var sec = document.getElementById('programariSection');
