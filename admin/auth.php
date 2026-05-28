@@ -112,7 +112,7 @@ function isTehnician() {
 // Lista TOATE modulele din portal (sursă unică de adevăr)
 function allModules() {
     return ['proiecte','crm','calculator','contracte','financiar','planificare','executie','proiectare',
-            'mentenanta','materiale','necesar','social','marketing','documente','utilizatori'];
+            'mentenanta','materiale','necesar','social','marketing','planificator','documente','utilizatori'];
 }
 
 // Defaults per rol — folosite când user_config.modules e gol
