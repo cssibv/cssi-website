@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Planificator Săptămânal — Portal CSSI</title>
+<title>Planificator Campanii — Portal CSSI</title>
 <meta name="robots" content="noindex, nofollow">
 <link rel="icon" type="image/x-icon" href="/images/favicon.ico">
 <meta name="theme-color" content="#dc2626">
@@ -42,6 +42,10 @@ a{text-decoration:none;color:inherit;}button{font-family:inherit;cursor:pointer;
 .form-input:focus,.form-select:focus{border-color:var(--teal);box-shadow:0 0 0 3px rgba(20,184,166,0.08);}
 
 .form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;}@media(max-width:600px){.form-row{grid-template-columns:1fr;}}
+
+.preset-btn{padding:8px 14px;border-radius:99px;border:1px solid var(--gray-b);background:#fff;color:var(--dark);font-size:12px;font-weight:700;cursor:pointer;transition:all 0.2s;}
+.preset-btn:hover{border-color:var(--teal);background:#f0fdfa;color:var(--teal);}
+.preset-btn.active{border-color:var(--teal);background:var(--teal);color:#fff;}
 
 .service-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:8px;}
 .service-pill{display:flex;align-items:center;gap:6px;padding:10px 14px;border-radius:10px;border:2px solid var(--gray-b);cursor:pointer;transition:all 0.2s;font-size:13px;font-weight:600;background:#fff;}
@@ -118,8 +122,8 @@ a{text-decoration:none;color:inherit;}button{font-family:inherit;cursor:pointer;
     <div class="page-header">
         <div>
             <a href="marketing.html" class="page-back">← Marketing Hub</a>
-            <div class="page-title">📅 Planificator Săptămânal</div>
-            <div class="page-subtitle">8 postări per săptămână · FB + IG + LinkedIn · Calendar editorial din audit</div>
+            <div class="page-title">📅 Planificator Campanii</div>
+            <div class="page-subtitle">Generează postări FB + IG + LinkedIn pentru orice interval · Calendar editorial din audit</div>
         </div>
         <div>
             <a href="calendar-social.html" class="page-btn secondary">📱 Social Manager</a>
@@ -127,21 +131,48 @@ a{text-decoration:none;color:inherit;}button{font-family:inherit;cursor:pointer;
     </div>
 
     <div class="steps">
-        <div class="step active" id="step1"><div class="step-num">1</div><div class="step-label">Configurare săptămână</div></div>
-        <div class="step" id="step2"><div class="step-num">2</div><div class="step-label">Preview 8 postări</div></div>
+        <div class="step active" id="step1"><div class="step-num">1</div><div class="step-label">Configurare campanie</div></div>
+        <div class="step" id="step2"><div class="step-num">2</div><div class="step-label">Preview postări</div></div>
         <div class="step" id="step3"><div class="step-num">3</div><div class="step-label">Salvare ca Drafts</div></div>
     </div>
 
     <!-- STEP 1 — Configurare -->
     <div id="view-step1">
         <div class="card">
-            <div class="card-title">⚙️ Configurare săptămână</div>
+            <div class="card-title">⚙️ Configurare campanie</div>
+
+            <div class="form-group">
+                <label class="form-label">Nume campanie (pentru identificare în calendar)</label>
+                <input type="text" class="form-input" id="campaignName" placeholder="ex: Lansare CCTV Codlea, Black Friday 2026, Promovare PRAM">
+                <div style="font-size:11px;color:var(--gray);margin-top:4px">Va apărea în nota fiecărei postări — poți filtra după ea în calendar.</div>
+            </div>
+
             <div class="form-row">
                 <div class="form-group">
-                    <label class="form-label">Săptămâna care începe luni</label>
-                    <input type="date" class="form-input" id="weekStart">
-                    <div style="font-size:11px;color:var(--gray);margin-top:4px" id="weekRange"></div>
+                    <label class="form-label">Data început</label>
+                    <input type="date" class="form-input" id="startDate">
                 </div>
+                <div class="form-group">
+                    <label class="form-label">Data sfârșit</label>
+                    <input type="date" class="form-input" id="endDate">
+                </div>
+            </div>
+            <div id="rangeInfo" style="background:var(--gray-bg);border-radius:10px;padding:10px 14px;font-size:12px;color:var(--gray);margin-bottom:14px;display:none"></div>
+
+            <!-- Preset-uri rapide -->
+            <div class="form-group">
+                <label class="form-label">Preset-uri rapide</label>
+                <div style="display:flex;gap:6px;flex-wrap:wrap">
+                    <button type="button" class="preset-btn" onclick="setPreset('thisWeek')">Săptămâna asta</button>
+                    <button type="button" class="preset-btn" onclick="setPreset('nextWeek')">Săptămâna viitoare</button>
+                    <button type="button" class="preset-btn" onclick="setPreset('weekend')">Weekend (sâm-dum)</button>
+                    <button type="button" class="preset-btn" onclick="setPreset('2weeks')">2 săptămâni</button>
+                    <button type="button" class="preset-btn" onclick="setPreset('month')">Toată luna</button>
+                    <button type="button" class="preset-btn" onclick="setPreset('today')">Doar azi</button>
+                </div>
+            </div>
+
+            <div class="form-row">
                 <div class="form-group">
                     <label class="form-label">Brand</label>
                     <select class="form-select" id="brand">
@@ -149,50 +180,63 @@ a{text-decoration:none;color:inherit;}button{font-family:inherit;cursor:pointer;
                         <option value="conca-verde">🟢 Conca Verde Camping</option>
                     </select>
                 </div>
-            </div>
-
-            <div class="form-group">
-                <label class="form-label">Serviciu / temă focus săptămâna asta (alege 1-3)</label>
-                <div class="service-grid" id="serviceGrid"></div>
-                <div style="font-size:11px;color:var(--gray);margin-top:6px">Postările se vor genera prioritizând serviciul ales. Tu modifici detaliile la pasul 2.</div>
-            </div>
-
-            <div class="form-row">
                 <div class="form-group">
-                    <label class="form-label">Localitate / proiect referință (opțional)</label>
-                    <input type="text" class="form-input" id="location" placeholder="ex: Codlea, Schaeffler, Hotel Cheile Râșnoavei">
-                </div>
-                <div class="form-group">
-                    <label class="form-label">Ora preferată publicare</label>
+                    <label class="form-label">Ora preferată publicare FB/IG</label>
                     <select class="form-select" id="defaultHour">
-                        <option value="09:00">09:00 — dimineață (recomandat LinkedIn)</option>
-                        <option value="10:00" selected>10:00 — mid-morning (general)</option>
+                        <option value="09:00">09:00 — dimineață</option>
+                        <option value="10:00" selected>10:00 — mid-morning</option>
                         <option value="12:00">12:00 — prânz</option>
                         <option value="17:00">17:00 — sfârșit program</option>
                         <option value="19:00">19:00 — seara (recomandat FB/IG)</option>
                     </select>
                 </div>
             </div>
+
+            <div class="form-group">
+                <label class="form-label">Serviciu / temă focus campanie (alege 1-3)</label>
+                <div class="service-grid" id="serviceGrid"></div>
+                <div style="font-size:11px;color:var(--gray);margin-top:6px">Postările se vor genera prioritizând serviciul ales. Tu modifici detaliile la pasul 2.</div>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Localitate / proiect referință (opțional)</label>
+                <input type="text" class="form-input" id="location" placeholder="ex: Codlea, Schaeffler, Hotel Cheile Râșnoavei">
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Opțiuni avansate</label>
+                <label style="display:flex;align-items:center;gap:8px;font-size:13px;cursor:pointer;padding:8px 0">
+                    <input type="checkbox" id="includeSunday">
+                    <span>Include și duminică în postări (default: skip duminică)</span>
+                </label>
+            </div>
         </div>
 
         <div class="card">
-            <div class="card-title">📋 Calendar editorial generat (din auditul SEO)</div>
-            <div style="font-size:13px;color:var(--gray);line-height:1.7">
-                Conform secțiunii 3.7 din auditul tău, vom genera <strong>8 postări</strong> distribuite pe 6 zile (luni-sâmbătă, duminică liber):
+            <div class="card-title">📋 Calendar editorial pe zile (din auditul SEO)</div>
+            <div style="font-size:13px;color:var(--gray);line-height:1.7;margin-bottom:10px">
+                Pentru fiecare zi din intervalul tău se generează automat postările specifice acelei zile:
             </div>
-            <div style="margin-top:12px;display:grid;gap:6px;font-size:12px">
-                <div>📘🟧 <strong>Luni</strong> — FB+IG „Lucrare săptămâna trecută" · 💼 LinkedIn articol tehnic educațional</div>
-                <div>💼 <strong>Marți</strong> — LinkedIn studiu caz B2B (format PDF carousel sau text 1.500 char)</div>
-                <div>📘🟧 <strong>Miercuri</strong> — FB+IG ghid scurt sau tip practic</div>
-                <div>💼 <strong>Joi</strong> — LinkedIn cultură organizațională / recrutare</div>
-                <div>📘🟧 <strong>Vineri</strong> — FB+IG behind-the-scenes echipă · 💼 LinkedIn reflecție Mihai personal</div>
-                <div>📘🟧 <strong>Sâmbătă</strong> — FB+IG foto „Lucrare frumoasă" weekend</div>
+            <div style="display:grid;gap:6px;font-size:12px">
+                <div>📘🟧 <strong>Luni</strong> — FB+IG „Lucrare săptămâna trecută" · 💼 LinkedIn articol tehnic educațional (2 posturi)</div>
+                <div>💼 <strong>Marți</strong> — LinkedIn studiu caz B2B / PDF carousel (1 post)</div>
+                <div>📘🟧 <strong>Miercuri</strong> — FB+IG ghid scurt sau tip practic (1 post)</div>
+                <div>💼 <strong>Joi</strong> — LinkedIn cultură organizațională / recrutare (1 post)</div>
+                <div>📘🟧 <strong>Vineri</strong> — FB+IG behind-the-scenes · 💼 LinkedIn reflecție Mihai personal (2 posturi)</div>
+                <div>📘🟧 <strong>Sâmbătă</strong> — FB+IG foto „Lucrare frumoasă" weekend (1 post)</div>
+                <div style="color:var(--gray-l)">⏸ <strong>Duminică</strong> — pauză (algoritm 2026: engagement scăzut zilele de odihnă)</div>
+            </div>
+            <div style="margin-top:12px;padding:10px 14px;background:#f0fdfa;border-radius:8px;font-size:11px;color:#0f766e">
+                💡 <strong>Exemple practice:</strong><br>
+                • Interval „28-29 mai" (joi-vineri) → 3 posturi (LinkedIn joi + FB+IG vineri + LinkedIn Mihai vineri)<br>
+                • Interval „1-7 iunie" (luni-duminică) → 8 posturi (calendar complet)<br>
+                • Interval „1-30 iunie" → ~32 posturi distribuite peste 4 săptămâni
             </div>
         </div>
 
         <div class="actions">
             <a href="marketing.html" class="btn-secondary">← Înapoi</a>
-            <button class="btn-primary" onclick="generatePreview()">Generează preview 8 postări →</button>
+            <button class="btn-primary" onclick="generatePreview()">Generează preview postări →</button>
         </div>
     </div>
 
@@ -202,7 +246,7 @@ a{text-decoration:none;color:inherit;}button{font-family:inherit;cursor:pointer;
         <div id="previewList"></div>
         <div class="actions">
             <button class="btn-secondary" onclick="backToStep1()">← Modific configurarea</button>
-            <button class="btn-primary" onclick="saveAllAsDrafts()" id="btnSaveAll">💾 Salvează toate 8 ca Drafts</button>
+            <button class="btn-primary" onclick="saveAllAsDrafts()" id="btnSaveAll">💾 Salvează toate ca Drafts</button>
         </div>
     </div>
 
@@ -210,13 +254,13 @@ a{text-decoration:none;color:inherit;}button{font-family:inherit;cursor:pointer;
     <div id="view-step3" style="display:none">
         <div class="card" style="text-align:center;padding:40px 20px">
             <div style="font-size:60px;margin-bottom:16px">✅</div>
-            <div style="font-size:22px;font-weight:800;color:var(--green);margin-bottom:10px">Săptămâna a fost planificată!</div>
+            <div style="font-size:22px;font-weight:800;color:var(--green);margin-bottom:10px">Campania a fost planificată!</div>
             <div style="font-size:14px;color:var(--gray);line-height:1.6;max-width:500px;margin:0 auto 24px">
-                <span id="savedCount">8</span> postări salvate ca Drafts. Acum poți să le revizuiești, să adaugi pozele potrivite și apoi să aprobi publicarea fiecăreia.
+                <span id="savedCount">0</span> postări salvate ca Drafts. Acum poți să le revizuiești, să adaugi pozele potrivite și apoi să aprobi publicarea fiecăreia.
             </div>
             <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap">
                 <a href="calendar-social.html?filter=Draft" class="btn-primary">📋 Vezi Drafturi (aprobare)</a>
-                <button class="btn-secondary" onclick="window.location.reload()">📅 Planific altă săptămână</button>
+                <button class="btn-secondary" onclick="window.location.reload()">📅 Planific altă campanie</button>
             </div>
         </div>
     </div>
@@ -331,22 +375,86 @@ function esc(s){var d=document.createElement('div');d.textContent=s||'';return d
 function loading(on){document.getElementById('loadBar').classList.toggle('active',on);}
 
 // ═══ STEP 1 — Configurare ═══
-function setMonday(){
-    var d=new Date();
-    var day=d.getDay();
-    var diff=day===0?1:(8-day);
-    d.setDate(d.getDate()+diff);
-    document.getElementById('weekStart').value=d.toISOString().substring(0,10);
-    updateWeekRange();
+var ROMANIAN_MONTHS=['ianuarie','februarie','martie','aprilie','mai','iunie','iulie','august','septembrie','octombrie','noiembrie','decembrie'];
+var DAY_NAMES_RO=['Duminică','Luni','Marți','Miercuri','Joi','Vineri','Sâmbătă'];
+var DAY_KEYS=['duminica','luni','marti','miercuri','joi','vineri','sambata'];
+
+function fmtDate(d){return d.getDate()+' '+ROMANIAN_MONTHS[d.getMonth()]+' '+d.getFullYear();}
+function isoDate(d){
+    var m=String(d.getMonth()+1).padStart(2,'0');
+    var dd=String(d.getDate()).padStart(2,'0');
+    return d.getFullYear()+'-'+m+'-'+dd;
 }
 
-function updateWeekRange(){
-    var v=document.getElementById('weekStart').value;
-    if(!v)return;
-    var start=new Date(v+'T00:00:00');
-    var end=new Date(start);end.setDate(start.getDate()+5);
-    var months=['ianuarie','februarie','martie','aprilie','mai','iunie','iulie','august','septembrie','octombrie','noiembrie','decembrie'];
-    document.getElementById('weekRange').textContent=start.getDate()+' '+months[start.getMonth()]+' → '+end.getDate()+' '+months[end.getMonth()]+' '+end.getFullYear();
+function setPreset(preset){
+    var today=new Date();today.setHours(0,0,0,0);
+    var start=new Date(today),end=new Date(today);
+
+    if(preset==='today'){
+        // start=today, end=today
+    } else if(preset==='thisWeek'){
+        // de azi până sâmbătă
+        var day=today.getDay();
+        var toSat=day===0?-1:6-day;
+        end.setDate(today.getDate()+toSat);
+    } else if(preset==='nextWeek'){
+        // luni viitoare până sâmbătă
+        var day=today.getDay();
+        var toNextMon=day===0?1:8-day;
+        start.setDate(today.getDate()+toNextMon);
+        end=new Date(start);end.setDate(start.getDate()+5);
+    } else if(preset==='weekend'){
+        // sâmbătă-duminică viitoare (sau acest weekend dacă mai are)
+        var day=today.getDay();
+        var toSat=day===0?6:(6-day+7)%7;
+        if(toSat===0&&day===6) toSat=7;
+        start.setDate(today.getDate()+toSat);
+        end=new Date(start);end.setDate(start.getDate()+1);
+        document.getElementById('includeSunday').checked=true;
+    } else if(preset==='2weeks'){
+        var day=today.getDay();
+        var toNextMon=day===0?1:8-day;
+        start.setDate(today.getDate()+toNextMon);
+        end=new Date(start);end.setDate(start.getDate()+13);
+    } else if(preset==='month'){
+        // luna asta
+        end=new Date(today.getFullYear(),today.getMonth()+1,0);
+    }
+
+    document.getElementById('startDate').value=isoDate(start);
+    document.getElementById('endDate').value=isoDate(end);
+    updateRangeInfo();
+
+    // highlight buton
+    document.querySelectorAll('.preset-btn').forEach(function(b){b.classList.remove('active')});
+    var btns=document.querySelectorAll('.preset-btn');
+    var labels=['thisWeek','nextWeek','weekend','2weeks','month','today'];
+    var idx=labels.indexOf(preset);
+    if(idx>=0&&btns[idx]) btns[idx].classList.add('active');
+}
+
+function updateRangeInfo(){
+    var s=document.getElementById('startDate').value;
+    var e=document.getElementById('endDate').value;
+    var info=document.getElementById('rangeInfo');
+    if(!s||!e){info.style.display='none';return;}
+    var start=new Date(s+'T00:00:00'),end=new Date(e+'T00:00:00');
+    if(end<start){info.innerHTML='<span style="color:var(--red);font-weight:700">⚠️ Data sfârșit e înainte de data început!</span>';info.style.display='block';return;}
+
+    var days=Math.round((end-start)/(86400000))+1;
+    var includeSun=document.getElementById('includeSunday').checked;
+    var counts={luni:2,marti:1,miercuri:1,joi:1,vineri:2,sambata:1,duminica:includeSun?1:0};
+
+    var cursor=new Date(start),posts=0,daysActive=0;
+    while(cursor<=end){
+        var dayKey=DAY_KEYS[cursor.getDay()];
+        if(counts[dayKey]>0){posts+=counts[dayKey];daysActive++;}
+        cursor.setDate(cursor.getDate()+1);
+    }
+
+    info.innerHTML='📅 <strong>'+fmtDate(start)+' → '+fmtDate(end)+'</strong> ('+days+' '+(days===1?'zi':'zile')+', '+daysActive+' active) · '+
+        '<strong style="color:var(--teal)">'+posts+' postări</strong> vor fi generate';
+    info.style.display='block';
 }
 
 function renderServiceGrid(){
@@ -373,20 +481,29 @@ function toggleService(el,key){
 
 // ═══ STEP 2 — Generare preview ═══
 function generatePreview(){
-    if(!document.getElementById('weekStart').value){toast('❌ Alege săptămâna','error');return;}
+    var sStr=document.getElementById('startDate').value;
+    var eStr=document.getElementById('endDate').value;
+    if(!sStr||!eStr){toast('❌ Alege data început și data sfârșit','error');return;}
+    var start=new Date(sStr+'T00:00:00'),end=new Date(eStr+'T00:00:00');
+    if(end<start){toast('❌ Data sfârșit e înainte de data început','error');return;}
     if(!selectedServices.length){toast('❌ Alege cel puțin 1 serviciu focus','error');return;}
 
-    var ws=new Date(document.getElementById('weekStart').value+'T00:00:00');
     var brand=document.getElementById('brand').value;
     var location=document.getElementById('location').value.trim();
     var defaultHour=document.getElementById('defaultHour').value;
+    var campaignName=document.getElementById('campaignName').value.trim();
+    var includeSunday=document.getElementById('includeSunday').checked;
 
-    // primul serviciu = focusul principal (luni FB+IG)
     var s1=selectedServices[0];
     var s2=selectedServices[1]||s1;
     var s3=selectedServices[2]||s1;
 
-    generatedPosts=buildWeeklyPlan(ws,brand,location,defaultHour,s1,s2,s3);
+    generatedPosts=buildRangePlan(start,end,brand,location,defaultHour,s1,s2,s3,campaignName,includeSunday);
+
+    if(!generatedPosts.length){
+        toast('❌ Nu sunt zile active în interval. Bifează „Include duminică" sau extinde intervalul.','error');
+        return;
+    }
 
     renderPreview();
     document.getElementById('view-step1').style.display='none';
@@ -396,17 +513,52 @@ function generatePreview(){
     window.scrollTo(0,0);
 }
 
-function dateAt(weekStart,dayOffset,hour){
-    var d=new Date(weekStart);d.setDate(d.getDate()+dayOffset);
-    return d.toISOString().substring(0,10)+' '+hour+':00';
+function dateStr(date,hour){
+    return isoDate(date)+' '+hour+':00';
 }
 
-function dateOnly(weekStart,dayOffset){
-    var d=new Date(weekStart);d.setDate(d.getDate()+dayOffset);
-    return d.toISOString().substring(0,10);
+// Generează postări pentru fiecare zi din interval pe baza pattern-ului ziei săptămânii
+function buildRangePlan(start,end,brand,location,hour,s1,s2,s3,campaignName,includeSunday){
+    var posts=[];
+    var weekIdx=0,lastWeekStart=null;
+    var cursor=new Date(start);
+
+    while(cursor<=end){
+        var dow=cursor.getDay(); // 0=duminică, 1=luni, ..., 6=sâmbătă
+        var dayKey=DAY_KEYS[dow];
+
+        // Skip duminică dacă nu e bifat
+        if(dow===0&&!includeSunday){
+            cursor.setDate(cursor.getDate()+1);
+            continue;
+        }
+
+        // Track săptămâna pentru variație (ex: dacă campania durează 3 săptămâni, fiecare luni e ușor diferit)
+        var mondayThisWeek=new Date(cursor);
+        var daysToMon=dow===0?-6:1-dow;
+        mondayThisWeek.setDate(cursor.getDate()+daysToMon);
+        var mondayKey=isoDate(mondayThisWeek);
+        if(lastWeekStart!==mondayKey){weekIdx++;lastWeekStart=mondayKey;}
+
+        // Construiește postările pentru această zi
+        var dayPosts=buildDayPosts(new Date(cursor),dow,brand,location,hour,s1,s2,s3,weekIdx,campaignName);
+        dayPosts.forEach(function(p){posts.push(p);});
+
+        cursor.setDate(cursor.getDate()+1);
+    }
+
+    return posts;
 }
 
-function buildWeeklyPlan(weekStart,brand,location,hour,s1,s2,s3){
+// Generează postările specifice unei zile (FB+IG, LinkedIn, etc.)
+function buildDayPosts(date,dow,brand,location,hour,s1,s2,s3,weekIdx,campaignName){
+    if(brand==='conca-verde') return buildConcaVerdeDayPosts(date,dow,location,hour,weekIdx,campaignName);
+    return buildCssiDayPosts(date,dow,location,hour,s1,s2,s3,weekIdx,campaignName);
+}
+
+function notePrefix(campaignName){return campaignName?'['+campaignName+'] ':'';}
+
+function buildCssiDayPosts(date,dow,location,hour,s1,s2,s3,wIdx,campaignName){
     var loc=location?' din '+location:'';
     var s1Name=SERVICE_NAMES[s1]||'sistemul instalat';
     var s2Name=SERVICE_NAMES[s2]||s1Name;
@@ -414,97 +566,123 @@ function buildWeeklyPlan(weekStart,brand,location,hour,s1,s2,s3){
     var h1=SERVICE_HASHTAGS[s1]||'';
     var h2=SERVICE_HASHTAGS[s2]||h1;
     var h3=SERVICE_HASHTAGS[s3]||h1;
-    var brandTag=brand==='conca-verde'?'#ConcaVerde':'#CSSI #CSSIBrasov #Brasov';
+    var brandTag='#CSSI #CSSIBrasov #Brasov';
+    var weekTag=wIdx>1?' (Săpt. '+wIdx+')':'';
+    var np=notePrefix(campaignName);
+    var dayLabel=DAY_NAMES_RO[dow];
+    var dayKey=DAY_KEYS[dow];
 
-    if(brand==='conca-verde'){
-        // versiune pentru Conca Verde (turism)
-        return buildConcaVerdePlan(weekStart,location,hour);
+    // LUNI = 1, MARȚI = 2, MIERCURI = 3, JOI = 4, VINERI = 5, SÂMBĂTĂ = 6, DUMINICĂ = 0
+    if(dow===1){ // LUNI
+        return [
+            {day:dayKey,dayLabel:dayLabel,platforme:['fb','ig'],tip:'Foto',data_programare:dateStr(date,hour||'10:00'),
+             continut:'✅ Săptămâna trecută am finalizat instalarea '+s1Name+(location?' '+loc:'')+'.\n\n[Adaugă 1-2 detalii tehnice — ex: numărul de echipamente, suprafața, brand-uri folosite]\n\nMulțumim clientului pentru încredere!\n\n📞 0752 288 400\n💬 wa.me/40752288400\n\n'+h1+' '+brandTag,
+             note:np+'Lucrare săpt. trecută'+weekTag+' · Atașează 2-3 poze lucrare',
+             algoTip:'FB/IG luni dim/seara · Foto este KEY · Hashtag-urile în final. Cross-post FB+IG = audiențe diferite, conținut adaptat (versiune scurtă IG opțional).'},
+            {day:dayKey,dayLabel:dayLabel,platforme:['linkedin'],tip:'Text',data_programare:dateStr(date,'09:00'),
+             continut:'3 lucruri pe care le verific de fiecare dată înainte de a propune '+s1Name+' pentru o firmă:\n\n1️⃣ [Aspect tehnic 1 — ex: integrarea cu infrastructura existentă]\n\n2️⃣ [Aspect tehnic 2 — ex: planul de mentenanță pe 5 ani]\n\n3️⃣ [Aspect tehnic 3 — ex: conformitate legală + SLA contractual]\n\nDe ce contează? Pentru că diferența între o instalație care durează 10 ani și una care eșuează în 2 ani nu sunt echipamentele — este consultanța prealabilă.\n\nCum abordezi tu evaluarea sistemelor noi? Comentează mai jos.\n\n'+h1+' #B2B #Securitate #FacilityManagement',
+             note:np+'Articol tehnic LinkedIn'+weekTag+' · Format „knowledge & advice" (algoritm 2026)',
+             algoTip:'LinkedIn luni 9-11 dim = peak engagement B2B · Primele 2 linii = hook (210 char înainte de „see more") · CTA cu întrebare → comentarii 15+ cuvinte = 15x weight algoritm 2026.'}
+        ];
     }
-
-    return [
-        // ══ LUNI — Lucrare săptămâna trecută + LinkedIn tehnic
-        {
-            day:'luni',dayNum:0,dayLabel:'Luni',
-            platforme:['fb','ig'],tip:'Foto',
-            data_programare:dateAt(weekStart,0,hour||'10:00'),
-            continut:'✅ Săptămâna trecută am finalizat instalarea '+s1Name+(location?' '+loc:'')+'.\n\n[Adaugă 1-2 detalii tehnice — ex: numărul de echipamente, suprafața, brand-uri folosite]\n\nMulțumim clientului pentru încredere!\n\n📞 0752 288 400\n💬 wa.me/40752288400\n\n'+h1+' '+brandTag,
-            note:'Lucrare săpt. trecută · Atașează 2-3 poze cu lucrarea finalizată',
-            algoTip:'FB/IG luni dim/seara · Foto este KEY · Hashtag-urile în final. Cross-post FB+IG = audiențe diferite, conținut adaptat (versiune scurtă IG opțional).'
-        },
-        {
-            day:'luni',dayNum:0,dayLabel:'Luni',
-            platforme:['linkedin'],tip:'Text',
-            data_programare:dateAt(weekStart,0,'09:00'),
-            continut:'3 lucruri pe care le verific de fiecare dată înainte de a propune '+s1Name+' pentru o firmă:\n\n1️⃣ [Aspect tehnic 1 — ex: integrarea cu infrastructura existentă]\n\n2️⃣ [Aspect tehnic 2 — ex: planul de mentenanță pe 5 ani]\n\n3️⃣ [Aspect tehnic 3 — ex: conformitate legală + SLA contractual]\n\nDe ce contează? Pentru că diferența între o instalație care durează 10 ani și una care eșuează în 2 ani nu sunt echipamentele — este consultanța prealabilă.\n\nCum abordezi tu evaluarea sistemelor noi? Comentează mai jos.\n\n'+h1+' #B2B #Securitate #FacilityManagement',
-            note:'Articol tehnic educațional · Format „knowledge & advice" (algoritm 2026)',
-            algoTip:'LinkedIn luni 9-11 dim = peak engagement B2B · Primele 2 linii = hook (210 char înainte de „see more") · CTA cu întrebare → comentarii 15+ cuvinte = 15x weight algoritm 2026.'
-        },
-        // ══ MARȚI — Studiu caz B2B LinkedIn
-        {
-            day:'marti',dayNum:1,dayLabel:'Marți',
-            platforme:['linkedin'],tip:'Carusel',
-            data_programare:dateAt(weekStart,1,'10:00'),
-            continut:'Studiu de caz: cum am implementat '+s2Name+(location?' la '+location:' pentru un client B2B')+'.\n\n📊 Provocarea:\n[Descriere scurtă a provocării — ex: 1.200 angajați, 47 puncte de acces, zero toleranță downtime]\n\n💡 Soluția noastră:\n• [Componenta 1 din sistem]\n• [Componenta 2]\n• [Integrare specifică]\n• Mentenanță inclusă · SLA contractual\n\n🎯 Rezultatul măsurabil:\n→ [Beneficiu 1 — ex: zero incidente în 5 ani]\n→ [Beneficiu 2 — ex: reducere 40% timp investigație]\n→ [Beneficiu 3 — ex: ROI calculabil în 18 luni]\n\nAi nevoie de o evaluare pentru afacerea ta? Comentează „audit" sau scrie-mi DM.\n\n'+h2+' #StudiuCaz #B2B #Securitate',
-            note:'Studiu caz B2B · Recomandare format PDF carousel (6.6% engagement — TOP LinkedIn 2026)',
-            algoTip:'PDF carousel = format cu cel mai mare engagement LinkedIn 2026 (6.6%). 10 slide-uri: hook → context → provocare → soluție → echipament → calendar → rezultat → ROI → quote client → CTA. Saves = #2 metric, încheie cu „Salvează pentru când vei avea nevoie."'
-        },
-        // ══ MIERCURI — Ghid scurt FB+IG
-        {
-            day:'miercuri',dayNum:2,dayLabel:'Miercuri',
-            platforme:['fb','ig'],tip:'Foto',
-            data_programare:dateAt(weekStart,2,hour||'10:00'),
-            continut:'💡 3 lucruri de verificat înainte să cumperi '+s2Name+':\n\n1. [Criteriu 1 — ex: certificarea brandului · brand recunoscut vs no-name]\n2. [Criteriu 2 — ex: garanție și service local · disponibilitatea pieselor]\n3. [Criteriu 3 — ex: cine te ajută dacă nu funcționează la 6 luni]\n\nDacă vrei o consultanță înainte să cumperi, sună-ne.\n\n📞 0752 288 400\n\n'+h2+' '+brandTag,
-            note:'Ghid practic format „3 lucruri" · Educațional + Trust building',
-            algoTip:'Formate „X lucruri" + numerotate vizual = scanabile pe mobil. FB+IG miercuri prânz sau 17:00 = peak audience. Carusele IG 0.55% engagement (cel mai mare format IG 2026).'
-        },
-        // ══ JOI — Cultură / recrutare LinkedIn
-        {
-            day:'joi',dayNum:3,dayLabel:'Joi',
-            platforme:['linkedin'],tip:'Foto',
-            data_programare:dateAt(weekStart,3,'09:00'),
-            continut:'De ce echipa CSSI are turnover sub 5% (vs. media de 35% în industrie)?\n\nUn răspuns scurt: [răspuns scurt — ex: investim în training continuu, nu doar în noi angajări].\n\nUn răspuns mai lung:\n\n[Punct 1 — ex: fiecare tehnician primește certificare pe brand-urile cu care lucrăm, plătită de firmă]\n\n[Punct 2 — ex: tranziție de la junior la senior structurată — cu mentori, nu doar „învață în teren"]\n\n[Punct 3 — ex: salariu peste piață + bonus pe lucrări complexe + flexibilitate teren]\n\nCăutăm acum: [poziția deschisă — ex: 2 tehnicieni sisteme securitate]\nLocație: Brașov + raza 100km · Trimite CV-ul: hr@cssi.ro\n\n#Recrutare #CulturaOrganizationala #CSSI #Brasov',
-            note:'Cultură organizațională / Recrutare · Brand building B2B + atrage talente',
-            algoTip:'LinkedIn joi dim. · Cultura organizațională = format care construiește trust + ajută la recrutare. Personal stories despre echipă > anunțuri seci „angajăm". Foto cu echipa reală obligatoriu.'
-        },
-        // ══ VINERI — Behind-the-scenes FB+IG + reflecție Mihai
-        {
-            day:'vineri',dayNum:4,dayLabel:'Vineri',
-            platforme:['fb','ig'],tip:'Foto',
-            data_programare:dateAt(weekStart,4,hour||'17:00'),
-            continut:'🎬 Behind the scenes — săptămâna asta în CSSI.\n\n[Descriere scurtă — ex: 4 lucrări finalizate, 2 mașini noi de teren, echipa în acțiune]\n\n[Foto: mașina brandată, echipa la fața locului, depozit cu echipamente, sau orice moment din teren]\n\nMulțumim pentru încredere — săptămâna viitoare continuăm.\n\n'+brandTag+' #BehindTheScenes #Echipa',
-            note:'Behind-the-scenes echipa · Authenticity + trust building',
-            algoTip:'BTS = format care umanizează brandul. Vineri 17:00 = sfârșit săptămână, audiență relaxată = bun pentru lifestyle content. Foto/video natural, nu posed.'
-        },
-        {
-            day:'vineri',dayNum:4,dayLabel:'Vineri',
-            platforme:['linkedin'],tip:'Text',
-            data_programare:dateAt(weekStart,4,'09:00'),
-            continut:'Reflecție la final de săptămână.\n\n[Observație personală din săptămâna asta — ex: o conversație cu un client B2B care m-a făcut să mă gândesc la ceva]\n\n[Insight extras — ex: cele mai bune sisteme nu sunt cele mai scumpe, sunt cele care se potrivesc nevoii reale]\n\n[Lecție aplicabilă pentru alții — ex: înainte să aprobi un proiect, întreabă „cum vom măsura succesul peste 1 an?"]\n\n— Mihai\n\n#Reflectie #B2B #Leadership',
-            note:'Reflecție Mihai personal · Thought leadership',
-            algoTip:'PROFIL PERSONAL al lui Mihai (NU pagina firmei) — generează 8x mai mult engagement decât company page (algoritm 2026). Format reflexiv „Friday thought" — autenticitate, nu vânzare directă.'
-        },
-        // ══ SÂMBĂTĂ — Lucrare frumoasă FB+IG
-        {
-            day:'sambata',dayNum:5,dayLabel:'Sâmbătă',
-            platforme:['fb','ig'],tip:'Foto',
-            data_programare:dateAt(weekStart,5,'12:00'),
-            continut:'📸 Foto de weekend.\n\n[Descriere lucrare „aesthetic" — ex: cea mai frumoasă instalație din această săptămână]\n\nLocație: '+(location||'[orașul]')+'\nServiciu: '+(SERVICE_NAMES[s3]||s1Name)+'\n\nCe părere ai? Ne motivează feedback-ul vostru. 💪\n\n'+h3+' '+brandTag,
-            note:'Foto lucrare frumoasă · Showcase calitate execuție',
-            algoTip:'Sâmbătă 12:00 = audiență mobilă, scroll lejer. Foto aesthetic (lumină bună, compoziție curată) = saves & shares. Saves > Likes pe IG (semnal #2 algoritm 2026).'
-        }
-    ];
+    if(dow===2){ // MARȚI
+        return [
+            {day:dayKey,dayLabel:dayLabel,platforme:['linkedin'],tip:'Carusel',data_programare:dateStr(date,'10:00'),
+             continut:'Studiu de caz: cum am implementat '+s2Name+(location?' la '+location:' pentru un client B2B')+'.\n\n📊 Provocarea:\n[Descriere scurtă a provocării — ex: 1.200 angajați, 47 puncte de acces, zero toleranță downtime]\n\n💡 Soluția noastră:\n• [Componenta 1 din sistem]\n• [Componenta 2]\n• [Integrare specifică]\n• Mentenanță inclusă · SLA contractual\n\n🎯 Rezultatul măsurabil:\n→ [Beneficiu 1 — ex: zero incidente în 5 ani]\n→ [Beneficiu 2 — ex: reducere 40% timp investigație]\n→ [Beneficiu 3 — ex: ROI calculabil în 18 luni]\n\nAi nevoie de o evaluare pentru afacerea ta? Comentează „audit" sau scrie-mi DM.\n\n'+h2+' #StudiuCaz #B2B #Securitate',
+             note:np+'Studiu caz B2B'+weekTag+' · Recomandat PDF carousel (6.6% engagement)',
+             algoTip:'PDF carousel = format cu cel mai mare engagement LinkedIn 2026 (6.6%). 10 slide-uri: hook → context → provocare → soluție → echipament → calendar → rezultat → ROI → quote client → CTA. Saves = #2 metric.'}
+        ];
+    }
+    if(dow===3){ // MIERCURI
+        return [
+            {day:dayKey,dayLabel:dayLabel,platforme:['fb','ig'],tip:'Foto',data_programare:dateStr(date,hour||'10:00'),
+             continut:'💡 3 lucruri de verificat înainte să cumperi '+s2Name+':\n\n1. [Criteriu 1 — ex: certificarea brandului]\n2. [Criteriu 2 — ex: garanție și service local]\n3. [Criteriu 3 — ex: cine te ajută dacă nu funcționează la 6 luni]\n\nDacă vrei o consultanță înainte să cumperi, sună-ne.\n\n📞 0752 288 400\n\n'+h2+' '+brandTag,
+             note:np+'Ghid practic'+weekTag+' · Educațional + Trust',
+             algoTip:'Format „X lucruri" + numerotat = scanabile pe mobil. FB+IG miercuri prânz sau 17:00 = peak audience. Carusele IG 0.55% engagement (cel mai mare format IG 2026).'}
+        ];
+    }
+    if(dow===4){ // JOI
+        return [
+            {day:dayKey,dayLabel:dayLabel,platforme:['linkedin'],tip:'Foto',data_programare:dateStr(date,'09:00'),
+             continut:'De ce echipa CSSI are turnover sub 5% (vs. media de 35% în industrie)?\n\nUn răspuns scurt: [răspuns scurt — ex: investim în training continuu, nu doar în noi angajări].\n\nUn răspuns mai lung:\n\n[Punct 1 — ex: fiecare tehnician primește certificare pe brand-urile cu care lucrăm, plătită de firmă]\n\n[Punct 2 — ex: tranziție de la junior la senior structurată — cu mentori]\n\n[Punct 3 — ex: salariu peste piață + bonus pe lucrări complexe]\n\nCăutăm acum: [poziția deschisă — ex: 2 tehnicieni sisteme securitate]\nLocație: Brașov + raza 100km · Trimite CV-ul: hr@cssi.ro\n\n#Recrutare #CulturaOrganizationala #CSSI #Brasov',
+             note:np+'Cultură organizațională / Recrutare'+weekTag,
+             algoTip:'LinkedIn joi dim. · Cultura organizațională = format care construiește trust + ajută la recrutare. Personal stories despre echipă > anunțuri seci „angajăm". Foto cu echipa reală obligatoriu.'}
+        ];
+    }
+    if(dow===5){ // VINERI
+        return [
+            {day:dayKey,dayLabel:dayLabel,platforme:['fb','ig'],tip:'Foto',data_programare:dateStr(date,hour||'17:00'),
+             continut:'🎬 Behind the scenes — săptămâna asta în CSSI.\n\n[Descriere scurtă — ex: 4 lucrări finalizate, 2 mașini noi de teren, echipa în acțiune]\n\n[Foto: mașina brandată, echipa la fața locului, depozit cu echipamente]\n\nMulțumim pentru încredere — săptămâna viitoare continuăm.\n\n'+brandTag+' #BehindTheScenes #Echipa',
+             note:np+'Behind-the-scenes'+weekTag+' · Authenticity + trust',
+             algoTip:'BTS = format care umanizează brandul. Vineri 17:00 = sfârșit săptămână, audiență relaxată = bun pentru lifestyle content. Foto/video natural, nu posed.'},
+            {day:dayKey,dayLabel:dayLabel,platforme:['linkedin'],tip:'Text',data_programare:dateStr(date,'09:00'),
+             continut:'Reflecție la final de săptămână.\n\n[Observație personală din săptămâna asta — ex: o conversație cu un client B2B care m-a făcut să mă gândesc la ceva]\n\n[Insight extras — ex: cele mai bune sisteme nu sunt cele mai scumpe, sunt cele care se potrivesc nevoii reale]\n\n[Lecție aplicabilă pentru alții — ex: înainte să aprobi un proiect, întreabă „cum vom măsura succesul peste 1 an?"]\n\n— Mihai\n\n#Reflectie #B2B #Leadership',
+             note:np+'Reflecție Mihai PERSONAL'+weekTag+' · Thought leadership',
+             algoTip:'PROFIL PERSONAL al lui Mihai (NU pagina firmei) — generează 8x mai mult engagement decât company page (algoritm 2026). Format reflexiv „Friday thought" — autenticitate, nu vânzare directă.'}
+        ];
+    }
+    if(dow===6){ // SÂMBĂTĂ
+        return [
+            {day:dayKey,dayLabel:dayLabel,platforme:['fb','ig'],tip:'Foto',data_programare:dateStr(date,'12:00'),
+             continut:'📸 Foto de weekend.\n\n[Descriere lucrare „aesthetic" — ex: cea mai frumoasă instalație din această săptămână]\n\nLocație: '+(location||'[orașul]')+'\nServiciu: '+(SERVICE_NAMES[s3]||s1Name)+'\n\nCe părere ai? Ne motivează feedback-ul vostru. 💪\n\n'+h3+' '+brandTag,
+             note:np+'Foto „lucrare frumoasă"'+weekTag+' · Showcase calitate',
+             algoTip:'Sâmbătă 12:00 = audiență mobilă, scroll lejer. Foto aesthetic (lumină bună, compoziție curată) = saves & shares. Saves > Likes pe IG (semnal #2 algoritm 2026).'}
+        ];
+    }
+    if(dow===0){ // DUMINICĂ (opțional, doar dacă bifat)
+        return [
+            {day:dayKey,dayLabel:dayLabel,platforme:['fb','ig'],tip:'Foto',data_programare:dateStr(date,'18:00'),
+             continut:'🌅 Început de săptămână bun!\n\n[Mesaj scurt motivațional sau preview săptămâna care vine]\n\nNe vedem luni cu noi proiecte.\n\n'+brandTag,
+             note:np+'Duminică — mesaj scurt'+weekTag+' (opțional)',
+             algoTip:'Duminică = audiență relaxată. Conținut light, fără vânzare directă. Algoritm 2026 favorizează zilele de lucru pentru reach maxim.'}
+        ];
+    }
+    return [];
 }
 
-function buildConcaVerdePlan(weekStart,location,hour){
-    return [
-        {day:'luni',dayNum:0,dayLabel:'Luni',platforme:['fb','ig'],tip:'Foto',data_programare:dateAt(weekStart,0,hour||'10:00'),continut:'🌲 Weekend la Conca Verde Camping.\n\n[Foto din camping + descriere experiență]\n\nRezervări: 0752 288 400\nwww.conca-verde.ro\n\n#ConcaVerde #Camping #Brasov #Rasnov',note:'Conca Verde — promovare camping',algoTip:'Conca Verde — voce casual, hashtag-uri turism local.'},
-        {day:'marti',dayNum:1,dayLabel:'Marți',platforme:['linkedin'],tip:'Text',data_programare:dateAt(weekStart,1,'10:00'),continut:'Companii care își aduc echipa în natură au angajați mai loiali.\n\nConca Verde Camping = perfect pentru team building corporate.\n\n[Detalii pachete corporate]\n\n#TeamBuilding #Corporate #Camping',note:'B2B corporate retreat',algoTip:'LinkedIn corporate retreat = nișă rar abordată de campings.'},
-        {day:'miercuri',dayNum:2,dayLabel:'Miercuri',platforme:['fb','ig'],tip:'Foto',data_programare:dateAt(weekStart,2,hour||'10:00'),continut:'💡 5 motive să alegi Conca Verde weekendul acesta:\n\n1. [Motiv 1]\n2. [Motiv 2]\n3. [Motiv 3]\n4. [Motiv 4]\n5. [Motiv 5]\n\nRezervări: 0752 288 400\n\n#ConcaVerde #Camping',note:'Listă format viral',algoTip:'Format listă = scanable, share-able.'},
-        {day:'joi',dayNum:3,dayLabel:'Joi',platforme:['linkedin'],tip:'Foto',data_programare:dateAt(weekStart,3,'09:00'),continut:'În spatele Conca Verde — echipa care face totul posibil.\n\n[Prezentare scurtă echipă]\n\n#ConcaVerde #Echipa',note:'Cultură organizațională',algoTip:'Personal stories despre echipă.'},
-        {day:'vineri',dayNum:4,dayLabel:'Vineri',platforme:['fb','ig'],tip:'Foto',data_programare:dateAt(weekStart,4,hour||'17:00'),continut:'🎬 Behind the scenes Conca Verde — pregătiri pentru weekend.\n\n[Foto operaționale]\n\n#ConcaVerde #BehindTheScenes',note:'Behind-the-scenes',algoTip:'BTS = authenticity.'},
-        {day:'vineri',dayNum:4,dayLabel:'Vineri',platforme:['linkedin'],tip:'Text',data_programare:dateAt(weekStart,4,'09:00'),continut:'Reflecție de weekend.\n\n[Insight din săptămână]\n\n— Mihai\n\n#Reflectie',note:'Reflecție Mihai',algoTip:'Profil personal Mihai.'},
-        {day:'sambata',dayNum:5,dayLabel:'Sâmbătă',platforme:['fb','ig'],tip:'Foto',data_programare:dateAt(weekStart,5,'12:00'),continut:'📸 Imagine de weekend de la Conca Verde.\n\n[Foto aesthetic natură]\n\n#ConcaVerde #Camping #Brasov #Weekend',note:'Foto aesthetic',algoTip:'Foto cu impact vizual.'}
-    ];
+function buildConcaVerdeDayPosts(date,dow,location,hour,wIdx,campaignName){
+    var np=notePrefix(campaignName);
+    var weekTag=wIdx>1?' (Săpt. '+wIdx+')':'';
+    var dayLabel=DAY_NAMES_RO[dow];
+    var dayKey=DAY_KEYS[dow];
+
+    if(dow===1){
+        return [
+            {day:dayKey,dayLabel:dayLabel,platforme:['fb','ig'],tip:'Foto',data_programare:dateStr(date,hour||'10:00'),continut:'🌲 Weekend la Conca Verde Camping.\n\n[Foto din camping + descriere experiență]\n\nRezervări: 0752 288 400\nwww.conca-verde.ro\n\n#ConcaVerde #Camping #Brasov #Rasnov',note:np+'Promovare camping'+weekTag,algoTip:'Conca Verde — voce casual, hashtag-uri turism local.'}
+        ];
+    }
+    if(dow===2){
+        return [
+            {day:dayKey,dayLabel:dayLabel,platforme:['linkedin'],tip:'Text',data_programare:dateStr(date,'10:00'),continut:'Companii care își aduc echipa în natură au angajați mai loiali.\n\nConca Verde Camping = perfect pentru team building corporate.\n\n[Detalii pachete corporate]\n\n#TeamBuilding #Corporate #Camping',note:np+'B2B corporate retreat'+weekTag,algoTip:'LinkedIn corporate retreat = nișă rar abordată de campings.'}
+        ];
+    }
+    if(dow===3){
+        return [
+            {day:dayKey,dayLabel:dayLabel,platforme:['fb','ig'],tip:'Foto',data_programare:dateStr(date,hour||'10:00'),continut:'💡 5 motive să alegi Conca Verde weekendul acesta:\n\n1. [Motiv 1]\n2. [Motiv 2]\n3. [Motiv 3]\n4. [Motiv 4]\n5. [Motiv 5]\n\nRezervări: 0752 288 400\n\n#ConcaVerde #Camping',note:np+'Listă format viral'+weekTag,algoTip:'Format listă = scanable, share-able.'}
+        ];
+    }
+    if(dow===4){
+        return [
+            {day:dayKey,dayLabel:dayLabel,platforme:['linkedin'],tip:'Foto',data_programare:dateStr(date,'09:00'),continut:'În spatele Conca Verde — echipa care face totul posibil.\n\n[Prezentare scurtă echipă]\n\n#ConcaVerde #Echipa',note:np+'Cultură organizațională'+weekTag,algoTip:'Personal stories despre echipă.'}
+        ];
+    }
+    if(dow===5){
+        return [
+            {day:dayKey,dayLabel:dayLabel,platforme:['fb','ig'],tip:'Foto',data_programare:dateStr(date,hour||'17:00'),continut:'🎬 Behind the scenes Conca Verde — pregătiri pentru weekend.\n\n[Foto operaționale]\n\n#ConcaVerde #BehindTheScenes',note:np+'Behind-the-scenes'+weekTag,algoTip:'BTS = authenticity.'},
+            {day:dayKey,dayLabel:dayLabel,platforme:['linkedin'],tip:'Text',data_programare:dateStr(date,'09:00'),continut:'Reflecție de weekend.\n\n[Insight din săptămână]\n\n— Mihai\n\n#Reflectie',note:np+'Reflecție Mihai'+weekTag,algoTip:'Profil personal Mihai.'}
+        ];
+    }
+    if(dow===6){
+        return [
+            {day:dayKey,dayLabel:dayLabel,platforme:['fb','ig'],tip:'Foto',data_programare:dateStr(date,'12:00'),continut:'📸 Imagine de weekend de la Conca Verde.\n\n[Foto aesthetic natură]\n\n#ConcaVerde #Camping #Brasov #Weekend',note:np+'Foto aesthetic'+weekTag,algoTip:'Foto cu impact vizual.'}
+        ];
+    }
+    if(dow===0){
+        return [
+            {day:dayKey,dayLabel:dayLabel,platforme:['fb','ig'],tip:'Foto',data_programare:dateStr(date,'18:00'),continut:'🌲 Sărbătoare la Conca Verde.\n\n[Mesaj scurt de duminică]\n\n#ConcaVerde',note:np+'Duminică light'+weekTag,algoTip:'Duminică = casual.'}
+        ];
+    }
+    return [];
 }
 
 function renderPreview(){
@@ -517,20 +695,24 @@ function renderPreview(){
         '<div class="stat-card"><div class="stat-val" style="color:#E4405F">'+(stats.ig||0)+'</div><div class="stat-label">📸 Instagram</div></div>'+
         '<div class="stat-card"><div class="stat-val" style="color:#0A66C2">'+(stats.linkedin||0)+'</div><div class="stat-label">💼 LinkedIn</div></div>';
 
-    // group by day
-    var byDay={};
+    // group by FULL date (YYYY-MM-DD) ca să suporte intervale lungi (mai multe luni etc.)
+    var byDate={};
     generatedPosts.forEach(function(p,idx){
-        if(!byDay[p.day]) byDay[p.day]={label:p.dayLabel,date:p.data_programare.substring(0,10),posts:[]};
-        byDay[p.day].posts.push({idx:idx,post:p});
+        var dateKey=p.data_programare.substring(0,10);
+        if(!byDate[dateKey]) byDate[dateKey]={label:p.dayLabel,dayKey:p.day,date:dateKey,posts:[]};
+        byDate[dateKey].posts.push({idx:idx,post:p});
     });
 
+    // Sortez datele cronologic
+    var sortedDates=Object.keys(byDate).sort();
     var html='';
-    var order=['luni','marti','miercuri','joi','vineri','sambata'];
-    order.forEach(function(d){
-        if(!byDay[d])return;
-        var day=byDay[d];
-        html+='<div class="preview-day '+d+'">';
-        html+='<div class="day-header"><div class="day-name">'+esc(day.label)+'</div><div class="day-date">📅 '+day.date+'</div></div>';
+    sortedDates.forEach(function(dateKey){
+        var day=byDate[dateKey];
+        // dateKey: 2026-05-28 → afișează „Luni · 28 mai 2026"
+        var d=new Date(dateKey+'T00:00:00');
+        var dateDisplay=fmtDate(d);
+        html+='<div class="preview-day '+day.dayKey+'">';
+        html+='<div class="day-header"><div class="day-name">'+esc(day.label)+'</div><div class="day-date">📅 '+dateDisplay+'</div></div>';
         day.posts.forEach(function(item){
             var p=item.post;
             html+='<div class="post-slot">';
@@ -599,8 +781,11 @@ function saveEdit(){
 // ═══ STEP 3 — Salvare ═══
 function saveAllAsDrafts(){
     var btn=document.getElementById('btnSaveAll');
-    btn.disabled=true;btn.innerHTML='💾 Se salvează...';
+    var total=generatedPosts.length;
+    btn.disabled=true;btn.innerHTML='💾 Se salvează 0/'+total+'...';
     var brand=document.getElementById('brand').value;
+    var done=0;
+
     var promises=generatedPosts.map(function(p){
         var payload={
             brand:brand,
@@ -613,7 +798,9 @@ function saveAllAsDrafts(){
             media_json:[],
             note:p.note
         };
-        return fetch(API+'?action=saveSocialPost',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)}).then(function(r){return r.json()});
+        return fetch(API+'?action=saveSocialPost',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)})
+            .then(function(r){return r.json()})
+            .then(function(res){done++;btn.innerHTML='💾 Se salvează '+done+'/'+total+'...';return res;});
     });
     Promise.all(promises).then(function(results){
         var ok=results.filter(function(r){return r&&r.success}).length;
@@ -627,15 +814,17 @@ function saveAllAsDrafts(){
         else toast('✅ Toate '+ok+' postările salvate!','success');
         window.scrollTo(0,0);
     }).catch(function(e){
-        btn.disabled=false;btn.innerHTML='💾 Salvează toate 8 ca Drafts';
+        btn.disabled=false;btn.innerHTML='💾 Salvează toate ca Drafts';
         toast('❌ Eroare salvare: '+e.message,'error');
     });
 }
 
 // ═══ INIT ═══
 renderServiceGrid();
-setMonday();
-document.getElementById('weekStart').addEventListener('change',updateWeekRange);
+setPreset('thisWeek');
+document.getElementById('startDate').addEventListener('change',updateRangeInfo);
+document.getElementById('endDate').addEventListener('change',updateRangeInfo);
+document.getElementById('includeSunday').addEventListener('change',updateRangeInfo);
 </script>
 <script>
 if('serviceWorker' in navigator){navigator.serviceWorker.register('../sw.js').catch(function(){})}
