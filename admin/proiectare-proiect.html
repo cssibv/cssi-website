@@ -101,6 +101,7 @@ a{text-decoration:none;color:inherit;}button{font-family:inherit;cursor:pointer;
 .item.na .item-checkbox{background:var(--yellow);border-color:#ca8a04;color:#fff;font-size:11px;}
 .item-content{flex:1;min-width:0;}
 .item-label{font-size:13px;font-weight:600;color:var(--dark);line-height:1.4;}
+.req-badge{display:inline-block;font-size:9px;font-weight:800;color:#9a3412;background:#ffedd5;border:1px solid #fdba74;padding:1px 6px;border-radius:99px;margin-left:6px;text-transform:uppercase;letter-spacing:0.3px;vertical-align:middle;white-space:nowrap;}
 .item.done .item-label{text-decoration:line-through;color:var(--gray);}
 .item.na .item-label{color:#854d0e;}
 .item-meta{font-size:10px;color:var(--gray);margin-top:4px;display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
@@ -235,7 +236,9 @@ var role = sessionStorage.getItem('cssi-role');
 var userName = sessionStorage.getItem('cssi-user') || role || '';
 if (!role) { window.location.href = '../admin.html'; }
 var API_DB = '/admin/api.php';
-var STATE = { id:0, proiect:null, items:[], documente:[], stats:{}, gata_predat:false, opened:{}, currentItemId:null, filter:'all' };
+var STATE = { id:0, proiect:null, items:[], documente:[], stats:{}, gata_predat:false, required_keys:[], block_reason:'', opened:{}, currentItemId:null, filter:'all' };
+// Itemi OBLIGATORII de conformitate — nu pot fi N/A, trebuie bifați efectiv (sincronizat cu proiectareRequiredKeys() din api.php)
+var REQUIRED_KEYS = {e6_peer_review:1, e7_aviz_ipj:1, e7_aviz_isu:1};
 
 var CATEGORII = {
     'e1':  {icon:'1', title:'E1. Pre-analiză & clasificare obiectiv', sub:'Tip beneficiar, categorie obiectiv, avize necesare'},
@@ -280,6 +283,8 @@ function refreshData(){
             STATE.documente = res.data.documente||[];
             STATE.stats = res.data.stats||{};
             STATE.gata_predat = !!res.data.gata_predat;
+            STATE.required_keys = res.data.required_keys||[];
+            STATE.block_reason = res.data.block_reason||'';
             renderHeader();renderChecklist();renderDocs();
         })
         .catch(function(e){toast('❌ '+(e.message||e),'error');})
@@ -311,7 +316,8 @@ function renderHeader(){
     if(STATE.gata_predat){
         actHtml += '<button class="hdr-btn go-exec" onclick="predaLaExecutie()">✅ Predă la Execuție</button>';
     } else {
-        actHtml += '<button class="hdr-btn disabled" disabled title="Bifează toate item-urile sau marchează-le ca n/a pentru a putea preda">🔒 Predă la Execuție ('+s.todo+' nebifate)</button>';
+        var reason = STATE.block_reason || (s.todo+' nebifate');
+        actHtml += '<button class="hdr-btn disabled" disabled title="Rezolvă toți itemii (bifat / N/A) și finalizează itemii obligatorii de conformitate (peer review + avize) pentru a putea preda">🔒 Predă la Execuție ('+esc(reason)+')</button>';
     }
     document.getElementById('hdrActions').innerHTML = actHtml;
 }
@@ -372,12 +378,13 @@ function renderChecklist(){
         html += '<div class="cat-body">';
         if(visibleItems.length){
             visibleItems.forEach(function(it){
+                var req = !!REQUIRED_KEYS[it.item_key];
                 var cls = it.status==='done'?'done':(it.status==='n/a'?'na':'');
                 var checkSym = it.status==='done'?'✓':(it.status==='n/a'?'N/A':'');
                 html += '<div class="item '+cls+'" id="item-'+it.id+'">';
                 html += '<div class="item-checkbox" role="checkbox" tabindex="0" aria-checked="'+(it.status==='done'?'true':'false')+'" onclick="toggleStatus('+it.id+')" onkeydown="if(event.key===\' \'||event.key===\'Enter\'){event.preventDefault();toggleStatus('+it.id+')}" title="Click pentru bifa/debifa">'+checkSym+'</div>';
                 html += '<div class="item-content">';
-                html += '<div class="item-label">'+highlight(it.label, q)+'</div>';
+                html += '<div class="item-label">'+highlight(it.label, q)+(req?' <span class="req-badge" title="Item obligatoriu de conformitate — trebuie bifat efectiv, nu poate fi N/A">★ obligatoriu</span>':'')+'</div>';
                 if(it.checked_at){
                     html += '<div class="item-meta">';
                     html += '<span><span class="av">'+esc((it.checked_by||'?').charAt(0).toUpperCase())+'</span> '+esc(it.checked_by||'?')+'</span>';
@@ -387,7 +394,11 @@ function renderChecklist(){
                 if(it.note) html += '<div class="item-note">📝 '+highlight(it.note, q)+'</div>';
                 html += '</div>';
                 html += '<div class="item-actions">';
-                html += '<button class="item-btn-na" onclick="markNa('+it.id+')" title="Marchează ca neaplicabil">N/A</button>';
+                if(req){
+                    html += '<span class="item-btn-na" style="opacity:0.4;cursor:not-allowed" title="Item obligatoriu — nu poate fi marcat N/A">N/A</span>';
+                } else {
+                    html += '<button class="item-btn-na" onclick="markNa('+it.id+')" title="Marchează ca neaplicabil">N/A</button>';
+                }
                 html += '<button class="item-btn-note" onclick="openNote('+it.id+')" title="Adaugă/editează notă">📝</button>';
                 html += '</div>';
                 html += '</div>';
@@ -482,6 +493,10 @@ function toggleStatus(id){
 function markNa(id){
     var it = STATE.items.find(function(i){return i.id===id;});
     if(!it) return;
+    if(REQUIRED_KEYS[it.item_key] && it.status !== 'n/a'){
+        toast('Item obligatoriu de conformitate — trebuie bifat efectiv, nu poate fi N/A','error');
+        return;
+    }
     var newStatus = it.status === 'n/a' ? 'todo' : 'n/a';
     if(newStatus === 'n/a' && !it.note){
         // Cer notă opțional pentru n/a (motiv)
