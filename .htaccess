@@ -28,6 +28,18 @@ RewriteRule ^index\.html$ / [R=301,L]
 RewriteRule ^sistem-integrat-securitate-brasov$ /blog/sistem-integrat-securitate-brasov [R=301,L]
 
 # --------------------------------------------------
+# 2b-bis. FIX 404 URL VECHI → PAGINA CORECTĂ
+# Google avea indexat un URL vechi care nu mai există
+# --------------------------------------------------
+RewriteRule ^blog/automatizari-porti-ghid-complet-2026/?$ /blog/automatizare-poarta-ghid-complet-preturi [R=301,L]
+
+# --------------------------------------------------
+# 2b-ter. BLOCHEAZĂ URL-uri MALFORMATE (tel: ca path) — return 410 Gone
+# Google a indexat /tel:0752288400 ca 404. Îi spunem să-l uite.
+# --------------------------------------------------
+RewriteRule ^tel: - [R=410,L]
+
+# --------------------------------------------------
 # 2c. PORTAL ADMIN — rezolvă conflictul /admin (director) vs admin.html
 # Fără această regulă, /admin → 403 (director fără index)
 # --------------------------------------------------
