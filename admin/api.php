@@ -144,6 +144,12 @@ function ensureFinalizareSchema($db) {
             'note'            => "TEXT NULL",
             'created_at'      => "DATETIME DEFAULT CURRENT_TIMESTAMP",
             'created_by'      => "VARCHAR(100) NULL",
+            'data_ultima_vizita' => "DATE NULL",
+            'istoric'         => "TEXT NULL",
+            'telefon'         => "VARCHAR(30) NULL",
+            'echipa'          => "VARCHAR(100) NULL",
+            'client_nume'     => "VARCHAR(150) NULL",
+            'proiect_cod'     => "VARCHAR(40) NULL",
         ];
         foreach ($maddCols as $name => $def) {
             if (!in_array($name, $mcols, true)) {
@@ -598,6 +604,252 @@ function ensureProiecteSchema($db) {
     } catch (Exception $e) {
         error_log('ensureProiecteSchema FAILED: ' . $e->getMessage());
     }
+}
+
+// ─── Sursă unică pentru schimbarea statusului unui proiect ───────────
+// Folosită de updateStatus, dosarAvanseazaStage, semnare contract etc. ca să
+// avem mereu istoric + notificare + setup proiectare consistente (anti-fragmentare).
+// $idOrCode = id numeric SAU cod proiect. Întoarce array cu detalii sau null dacă nu există.
+function advanceProiectStatus($db, $idOrCode, $newStatus, $user = 'Admin', $resetPreluat = true) {
+    $stmt = $db->prepare("SELECT p.id, p.proiect_id, p.status, p.istoric_status, c.nume AS client_nume
+                          FROM proiecte p LEFT JOIN clienti c ON p.client_id = c.id
+                          WHERE p.id = ? OR p.proiect_id = ?");
+    $stmt->execute([$idOrCode, $idOrCode]);
+    $row = $stmt->fetch();
+    if (!$row) return null;
+    $oldStatus = $row['status'];
+    $istoric = json_decode($row['istoric_status'] ?: '[]', true);
+    if (!is_array($istoric)) $istoric = [];
+    $istoric[] = ['status' => $newStatus, 'data' => date('Y-m-d H:i:s'), 'user' => $user];
+    if ($resetPreluat) {
+        $db->prepare("UPDATE proiecte SET status = ?, istoric_status = ?, preluat_de = NULL, preluat_la = NULL WHERE id = ?")
+           ->execute([$newStatus, json_encode($istoric, JSON_UNESCAPED_UNICODE), $row['id']]);
+    } else {
+        $db->prepare("UPDATE proiecte SET status = ?, istoric_status = ? WHERE id = ?")
+           ->execute([$newStatus, json_encode($istoric, JSON_UNESCAPED_UNICODE), $row['id']]);
+    }
+    $mesaj = '📌 ' . $row['proiect_id'] . ' (' . ($row['client_nume'] ?: '—') . ') — ' . $oldStatus . ' → ' . $newStatus . ' (de ' . $user . ')';
+    try {
+        $db->prepare("INSERT INTO notificari (proiect_id, mesaj, tip, de_la, etapa_noua) VALUES (?,?,?,?,?)")
+           ->execute([$row['id'], $mesaj, 'status_change', $user, $newStatus]);
+    } catch (Exception $e) {}
+    if ($newStatus === 'Proiectare') {
+        proiectareAutoSetup($db, $row['id']);
+    }
+    return ['ok' => true, 'old' => $oldStatus, 'id' => $row['id'], 'proiect_id' => $row['proiect_id'], 'client_nume' => $row['client_nume'], 'mesaj' => $mesaj];
+}
+
+// ─── PROIECTARE: template + helpers partajate (sursă UNICĂ de adevăr) ──────────
+// Template-ul de checklist (60 itemi, 11 categorii E1..E8). Folosit ATÂT la
+// generarea automată (handoff Contract→Proiectare) CÂT și la afișarea în pagină,
+// ca să nu mai existe două sisteme paralele.
+function proiectareTemplate() {
+    return [
+        // E1 — Pre-analiză
+        ['key'=>'e1_tip_beneficiar',     'cat'=>'e1', 'label'=>'Tip beneficiar identificat (PF/PJ/instituție publică)'],
+        ['key'=>'e1_categorie_obiectiv', 'cat'=>'e1', 'label'=>'Categorie obiectiv stabilită (L. 333/2003 anexa 1)'],
+        ['key'=>'e1_risc_incendiu',      'cat'=>'e1', 'label'=>'Categorie risc incendiu identificată (P118/1)'],
+        ['key'=>'e1_aviz_ipj_check',     'cat'=>'e1', 'label'=>'Verificat dacă necesită aviz IPJ'],
+        ['key'=>'e1_aviz_isu_check',     'cat'=>'e1', 'label'=>'Verificat dacă necesită aviz ISU (HG 571/2016)'],
+        // E2 — Vizita teren
+        ['key'=>'e2_intalnire',          'cat'=>'e2', 'label'=>'Întâlnire la locație efectuată cu beneficiar'],
+        ['key'=>'e2_releveu',            'cat'=>'e2', 'label'=>'Releveu construcție realizat (planuri/măsurători)'],
+        ['key'=>'e2_foto',               'cat'=>'e2', 'label'=>'Foto inventar zone critice (intrări, tablou electric, trasee)'],
+        ['key'=>'e2_acces',              'cat'=>'e2', 'label'=>'Puncte de acces identificate (uși, ferestre, lucarne)'],
+        ['key'=>'e2_alimentare',         'cat'=>'e2', 'label'=>'Alimentare electrică verificată (tablou, capacitate, RCD)'],
+        ['key'=>'e2_internet',           'cat'=>'e2', 'label'=>'Conexiune internet verificată (CCTV cloud, IP)'],
+        ['key'=>'e2_zone_gdpr',          'cat'=>'e2', 'label'=>'Zone NO-FILMARE identificate (toalete, vestiare — GDPR)'],
+        // E3 — Analize
+        ['key'=>'e3_analiza_risc',       'cat'=>'e3', 'label'=>'Analiză de risc securitate (L. 333) semnată de evaluator atestat'],
+        ['key'=>'e3_grad_securitate',    'cat'=>'e3', 'label'=>'Grad securitate stabilit (1-4 conform SR EN 50131-1)'],
+        ['key'=>'e3_calcul_risc_inc',    'cat'=>'e3', 'label'=>'Calcul risc incendiu efectuat (P118/1)'],
+        ['key'=>'e3_scenariu',           'cat'=>'e3', 'label'=>'Scenariu securitate la incendiu redactat (pentru ISU)'],
+        // E4a — Alarmă efracție
+        ['key'=>'e4s_plan',              'cat'=>'e4s','label'=>'Plan amplasare detectoare (PIR, magnetic, vibrații)'],
+        ['key'=>'e4s_centrala',          'cat'=>'e4s','label'=>'Centrală selectată conform grad securitate (SR EN 50131)'],
+        ['key'=>'e4s_autonomie',         'cat'=>'e4s','label'=>'Autonomie sursă: 12h/24h/48h conform grad'],
+        ['key'=>'e4s_comunicator',       'cat'=>'e4s','label'=>'Comunicator IP/GSM dual-path (Grad 3+)'],
+        ['key'=>'e4s_dispecerat',        'cat'=>'e4s','label'=>'Conexiune dispecerat licențiat IGPR confirmată'],
+        // E4b — CCTV
+        ['key'=>'e4c_plan',              'cat'=>'e4c','label'=>'Plan amplasare camere cu unghiuri câmp vizual'],
+        ['key'=>'e4c_rezolutie',         'cat'=>'e4c','label'=>'Rezoluție per zonă (identificare/recunoaștere/observare)'],
+        ['key'=>'e4c_retentie',          'cat'=>'e4c','label'=>'Stocare NVR ≥30 zile dimensionată'],
+        ['key'=>'e4c_avertizoare',       'cat'=>'e4c','label'=>'Avertizoare GDPR planificate la intrări'],
+        ['key'=>'e4c_registru',          'cat'=>'e4c','label'=>'Registru prelucrare date personale (GDPR L. 190/2018)'],
+        // E4c — Detecție incendiu
+        ['key'=>'e4f_plan',              'cat'=>'e4f','label'=>'Plan amplasare detectoare (P118/3 + raze acoperire)'],
+        ['key'=>'e4f_centrala',          'cat'=>'e4f','label'=>'Centrală conform SR EN 54-2 (adresabilă/convențională)'],
+        ['key'=>'e4f_butoane',           'cat'=>'e4f','label'=>'Butoane manuale alarmă (max 30m de fiecare ieșire)'],
+        ['key'=>'e4f_sirene',            'cat'=>'e4f','label'=>'Sirene + flash în zone zgomot >85dB (SR EN 54-3/23)'],
+        ['key'=>'e4f_cabluri',           'cat'=>'e4f','label'=>'Cabluri rezistente la foc PH30/PH90 (SR EN 50200)'],
+        ['key'=>'e4f_integrare',         'cat'=>'e4f','label'=>'Integrare trape fum / uși RF / oprire ventilație'],
+        // E4d — Instalații electrice (I7-2011)
+        ['key'=>'e4e_putere',            'cat'=>'e4e','label'=>'Calcul putere instalată echilibrat pe faze (I7 cap. 4)'],
+        ['key'=>'e4e_protectii',         'cat'=>'e4e','label'=>'Schemă tablou cu RCD 30mA pe prize/lumini'],
+        ['key'=>'e4e_cabluri',           'cat'=>'e4e','label'=>'Dimensionare cabluri (curent + cădere tensiune <3-5%)'],
+        ['key'=>'e4e_impamantare',       'cat'=>'e4e','label'=>'Schemă împământare TN-S/TT (priză <4Ω)'],
+        ['key'=>'e4e_iluminat_sig',     'cat'=>'e4e','label'=>'Iluminat siguranță evacuare (autonomie 1h, SR EN 1838)'],
+        ['key'=>'e4e_pram',              'cat'=>'e4e','label'=>'Verificare PRAM programată la PIF'],
+        // E5 — Documentație
+        ['key'=>'e5_memoriu',            'cat'=>'e5', 'label'=>'Memoriu tehnic general redactat'],
+        ['key'=>'e5_plan_amplasare',     'cat'=>'e5', 'label'=>'Plan amplasare echipamente (CAD: dwg/pdf)'],
+        ['key'=>'e5_schema_bloc',        'cat'=>'e5', 'label'=>'Schema bloc / funcțională'],
+        ['key'=>'e5_schema_electrica',   'cat'=>'e5', 'label'=>'Schema electrică desfășurată'],
+        ['key'=>'e5_lista_echipamente',  'cat'=>'e5', 'label'=>'Lista echipamente cu specificații + certificate CE/SR EN'],
+        ['key'=>'e5_lista_cabluri',      'cat'=>'e5', 'label'=>'Lista cabluri (tip, lungime, traseu, rezistență la foc)'],
+        ['key'=>'e5_caiet_sarcini',      'cat'=>'e5', 'label'=>'Caiet de sarcini (tehnologie execuție)'],
+        // E6 — Verificare internă
+        ['key'=>'e6_peer_review',        'cat'=>'e6', 'label'=>'Verificare peer review (alt proiectant decât autorul)'],
+        ['key'=>'e6_calcule',            'cat'=>'e6', 'label'=>'Calcule reverificate (puteri, secțiuni, autonomii)'],
+        ['key'=>'e6_planuri',            'cat'=>'e6', 'label'=>'Planuri verificate (acoperire 100%, fără zone moarte)'],
+        ['key'=>'e6_buget',              'cat'=>'e6', 'label'=>'Buget verificat vs. ofertă semnată'],
+        // E7 — Avize externe
+        ['key'=>'e7_aviz_ipj',           'cat'=>'e7', 'label'=>'Aviz IPJ obținut sau confirmat că nu e necesar'],
+        ['key'=>'e7_aviz_isu',           'cat'=>'e7', 'label'=>'Aviz ISU obținut sau confirmat că nu e necesar'],
+        ['key'=>'e7_gdpr_notif',         'cat'=>'e7', 'label'=>'Notificare ANSPDCP / DPIA realizată (CCTV)'],
+        ['key'=>'e7_acord_vecin',        'cat'=>'e7', 'label'=>'Acord vecinătate (camere ce filmează spațiu public)'],
+        // E8 — Predare execuție
+        ['key'=>'e8_sedinta',            'cat'=>'e8', 'label'=>'Ședință predare cu echipa execuție'],
+        ['key'=>'e8_dosar',              'cat'=>'e8', 'label'=>'Dosar tehnic complet predat'],
+        ['key'=>'e8_briefing',           'cat'=>'e8', 'label'=>'Briefing puncte critice cu echipa execuție'],
+        ['key'=>'e8_necesar',            'cat'=>'e8', 'label'=>'Necesar materiale validat și exportat'],
+        ['key'=>'e8_planificare',        'cat'=>'e8', 'label'=>'Programare execuție creată în Planificare'],
+    ];
+}
+
+// Itemi OBLIGATORII de conformitate: nu pot fi marcați N/A și trebuie să fie
+// efectiv 'done' înainte de predarea la Execuție (poarta de calitate).
+function proiectareRequiredKeys() {
+    return ['e6_peer_review', 'e7_aviz_ipj', 'e7_aviz_isu'];
+}
+
+// DDL consolidat — un singur loc pentru schema celor 2 tabele de proiectare.
+function ensureProiectareTables($db) {
+    static $done = false;
+    if ($done) return;
+    $db->exec("CREATE TABLE IF NOT EXISTS proiectare_checklist (
+        id INT PRIMARY KEY AUTO_INCREMENT,
+        proiect_id INT NOT NULL,
+        item_key VARCHAR(80) NOT NULL,
+        category VARCHAR(20) NOT NULL,
+        status VARCHAR(10) DEFAULT 'todo',
+        note TEXT,
+        checked_by VARCHAR(60),
+        checked_at DATETIME,
+        ordine INT DEFAULT 0,
+        UNIQUE KEY unq_proiect_item (proiect_id, item_key),
+        KEY idx_proiect (proiect_id)
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4");
+    $db->exec("CREATE TABLE IF NOT EXISTS proiectare_documente (
+        id INT PRIMARY KEY AUTO_INCREMENT,
+        proiect_id INT NOT NULL,
+        tip_doc VARCHAR(40) NOT NULL,
+        filename VARCHAR(255) NOT NULL,
+        original_name VARCHAR(255),
+        size_bytes INT,
+        mime_type VARCHAR(100),
+        uploaded_by VARCHAR(60),
+        uploaded_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+        KEY idx_proiect (proiect_id),
+        KEY idx_tip (tip_doc)
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4");
+    $done = true;
+}
+
+// Generează checklist-ul real în proiectare_checklist (idempotent).
+// Auto-marcarea N/A pe categoriile irelevante rulează DOAR la prima generare,
+// ca să nu re-marcheze itemii când template-ul crește ulterior.
+function proiectareGenerateChecklist($db, $pid, $serviciu = null) {
+    ensureProiectareTables($db);
+    if ($serviciu === null) {
+        $s = $db->prepare("SELECT serviciu FROM proiecte WHERE id = ?");
+        $s->execute([$pid]);
+        $serviciu = (string)($s->fetchColumn() ?: '');
+    }
+    $cntStmt = $db->prepare("SELECT COUNT(*) FROM proiectare_checklist WHERE proiect_id = ?");
+    $cntStmt->execute([$pid]);
+    $existingBefore = (int)$cntStmt->fetchColumn();
+
+    $stmtIns = $db->prepare("INSERT IGNORE INTO proiectare_checklist (proiect_id, item_key, category, ordine) VALUES (?,?,?,?)");
+    foreach (proiectareTemplate() as $i => $it) {
+        $stmtIns->execute([$pid, $it['key'], $it['cat'], $i]);
+    }
+
+    // Smart defaults DOAR la prima generare (existingBefore === 0)
+    if ($existingBefore === 0) {
+        $srv = strtolower($serviciu);
+        $relevante = ['e1','e2','e3','e5','e6','e7','e8','e4e']; // mereu relevante (E4d = electric)
+        if (strpos($srv,'incendiu') !== false) $relevante[] = 'e4f';
+        if (strpos($srv,'alarm') !== false || strpos($srv,'efrac') !== false) $relevante[] = 'e4s';
+        if (strpos($srv,'supraveg') !== false || strpos($srv,'video') !== false || strpos($srv,'cctv') !== false || strpos($srv,'camer') !== false) $relevante[] = 'e4c';
+        if (strpos($srv,'complex') !== false) $relevante = array_merge($relevante, ['e4s','e4c','e4f']);
+        $relevante = array_unique($relevante);
+        foreach (['e4s','e4c','e4f'] as $cat) {
+            if (!in_array($cat, $relevante)) {
+                $db->prepare("UPDATE proiectare_checklist SET status='n/a', note=?, checked_by='Sistem (auto)', checked_at=NOW() WHERE proiect_id=? AND category=? AND status='todo'")
+                   ->execute(['Auto-marcat: serviciul "'.$serviciu.'" nu necesită această categorie. Modifică manual dacă e nevoie.', $pid, $cat]);
+            }
+        }
+    }
+}
+
+// Recalculează progresul agregat din proiectare_checklist și îl scrie în tabela
+// `proiectare` (singura sursă pe care o citește dashboard-ul/dosarul). Asigură și
+// existența meta-rândului. Întoarce procentul.
+function recalcProiectareProgres($db, $pid) {
+    $row = $db->prepare("SELECT COUNT(*) AS tot, SUM(status='done') AS done, SUM(status='n/a') AS na FROM proiectare_checklist WHERE proiect_id = ?");
+    $row->execute([$pid]);
+    $r = $row->fetch() ?: [];
+    $tot  = (int)($r['tot'] ?? 0);
+    $done = (int)($r['done'] ?? 0);
+    $na   = (int)($r['na'] ?? 0);
+    $progres = $tot ? (int)round((($done + $na) / $tot) * 100) : 0;
+    $ex = $db->prepare("SELECT id FROM proiectare WHERE proiect_id = ?");
+    $ex->execute([$pid]);
+    if ($ex->fetch()) {
+        $db->prepare("UPDATE proiectare SET progres = ? WHERE proiect_id = ?")->execute([$progres, $pid]);
+    } else {
+        $db->prepare("INSERT INTO proiectare (proiect_id, checklist_json, termen, data_start, status, progres) VALUES (?, '[]', DATE_ADD(CURDATE(), INTERVAL 30 DAY), CURDATE(), 'In lucru', ?)")
+           ->execute([$pid, $progres]);
+    }
+    return $progres;
+}
+
+// Verifică dacă un proiect e gata de predat la Execuție (poarta de calitate):
+// toți itemii nebifați rezolvați (done/na) ȘI itemii obligatorii efectiv 'done'.
+// Întoarce ['ready'=>bool, 'reason'=>string].
+function proiectarePredareReady($db, $pid) {
+    ensureProiectareTables($db);
+    $st = $db->prepare("SELECT item_key, status FROM proiectare_checklist WHERE proiect_id = ?");
+    $st->execute([$pid]);
+    $rows = $st->fetchAll();
+    if (!$rows) return ['ready' => false, 'reason' => 'Checklist-ul de proiectare nu a fost generat.'];
+    $todo = 0; $reqPending = 0;
+    $required = proiectareRequiredKeys();
+    foreach ($rows as $r) {
+        if ($r['status'] === 'todo') $todo++;
+        if (in_array($r['item_key'], $required, true) && $r['status'] !== 'done') $reqPending++;
+    }
+    if ($todo > 0)        return ['ready' => false, 'reason' => "Mai sunt $todo itemi nebifați în checklist."];
+    if ($reqPending > 0)  return ['ready' => false, 'reason' => "$reqPending itemi obligatorii de conformitate nu sunt finalizați (peer review / avize)."];
+    return ['ready' => true, 'reason' => ''];
+}
+
+// Creează (sau reactivează) proiectarea la handoff Contract→Proiectare:
+// meta-rândul `proiectare` (termen/status) + checklist-ul real (60 itemi) + progres.
+function proiectareAutoSetup($db, $numId) {
+    $chkPr = $db->prepare("SELECT id FROM proiectare WHERE proiect_id = ?");
+    $chkPr->execute([$numId]);
+    if ($chkPr->fetch()) {
+        $db->prepare("UPDATE proiectare SET termen = COALESCE(termen, DATE_ADD(CURDATE(), INTERVAL 30 DAY)), data_start = COALESCE(data_start, CURDATE()), status = 'In lucru' WHERE proiect_id = ?")
+           ->execute([$numId]);
+    } else {
+        $db->prepare("INSERT INTO proiectare (proiect_id, checklist_json, termen, data_start, status) VALUES (?, '[]', DATE_ADD(CURDATE(), INTERVAL 30 DAY), CURDATE(), 'In lucru')")
+           ->execute([$numId]);
+    }
+    // Checklist-ul real (sursă unică pentru UI) + progres sincronizat din start
+    proiectareGenerateChecklist($db, $numId);
+    recalcProiectareProgres($db, $numId);
 }
 
 // Calculează expires_at din data_oferta + valabilitate ("4 zile", "30 zile" etc)
@@ -1091,6 +1343,18 @@ try {
             if (!empty($rows)) {
                 $clientIds = array_unique(array_filter(array_map(function($r){ return $r['client_db_id'] ?? null; }, $rows)));
                 $proiectIds = array_unique(array_filter(array_map(function($r){ return $r['id'] ?? null; }, $rows)));
+                // Data ultimei schimbări de status (din istoric_status) — pentru detecția corectă de blocaje
+                $lastStatusMap = [];
+                if ($proiectIds) {
+                    $phH = implode(',', array_fill(0, count($proiectIds), '?'));
+                    $stmtH = $db->prepare("SELECT id, istoric_status, created_at FROM proiecte WHERE id IN ($phH)");
+                    $stmtH->execute(array_values($proiectIds));
+                    foreach ($stmtH->fetchAll() as $h) {
+                        $ist = json_decode($h['istoric_status'] ?: '[]', true);
+                        $last = (is_array($ist) && count($ist)) ? end($ist) : null;
+                        $lastStatusMap[$h['id']] = ($last && !empty($last['data'])) ? $last['data'] : ($h['created_at'] ?? null);
+                    }
+                }
                 $ofData = ['by_proiect' => [], 'by_client' => []];
                 if ($proiectIds) {
                     $ph = implode(',', array_fill(0, count($proiectIds), '?'));
@@ -1137,6 +1401,7 @@ try {
                     elseif ($r['valoare_oferte_pipeline'] > 0)  $r['valoare_calc'] = $r['valoare_oferte_pipeline'];
                     elseif ($r['valoare_oferta_max'] > 0)       $r['valoare_calc'] = $r['valoare_oferta_max'];
                     else                                        $r['valoare_calc'] = $ve;
+                    $r['data_ultim_status'] = $lastStatusMap[$r['id']] ?? ($r['created_at'] ?? null);
                 }
                 unset($r);
             }
@@ -1272,6 +1537,17 @@ try {
 
         case 'updateProiect':
             $id = (isset($data['id']) ? $data['id'] : 0);
+            // Poarta de calitate: nu permite setarea directă status=Executie când
+            // proiectul e în Proiectare cu checklist incomplet (bypass al updateStatus)
+            if (isset($data['status']) && $data['status'] === 'Executie') {
+                $cur = $db->prepare("SELECT id, status FROM proiecte WHERE id = ? OR proiect_id = ?");
+                $cur->execute([$id, $id]);
+                $curRow = $cur->fetch();
+                if ($curRow && $curRow['status'] === 'Proiectare') {
+                    $gate = proiectarePredareReady($db, (int)$curRow['id']);
+                    if (!$gate['ready']) { jsonResponse(['success' => false, 'error' => 'Nu se poate preda la Execuție: ' . $gate['reason']], 409); break; }
+                }
+            }
             $fields = [];
             $values = [];
             foreach (['serviciu','obiectiv','status','valoare_estimata','valoare_contract','responsabil','adresa_obiectiv','note'] as $f) {
@@ -1294,64 +1570,19 @@ try {
             $newStatus = (isset($data['status']) ? $data['status'] : (isset($_GET['status']) ? $_GET['status'] : ''));
             $user = (isset($data['user']) ? $data['user'] : 'Admin');
             if (!$id || !$newStatus) { jsonResponse(['success' => false, 'error' => 'id si status obligatorii'], 400); break; }
-            
-            // Citeste proiectul curent
-            $stmt = $db->prepare("SELECT p.id, p.proiect_id, p.status, p.istoric_status, c.nume AS client_nume FROM proiecte p JOIN clienti c ON p.client_id = c.id WHERE p.id = ? OR p.proiect_id = ?");
-            $stmt->execute([$id, $id]);
-            $row = $stmt->fetch();
-            if (!$row) { jsonResponse(['success' => false, 'error' => 'Proiect negăsit'], 404); break; }
-            
-            $oldStatus = $row['status'];
-            $istoric = json_decode($row['istoric_status'] ?: '[]', true);
-            $istoric[] = ['status' => $newStatus, 'data' => date('Y-m-d H:i:s'), 'user' => $user];
-            
-            // Update proiect — resetează preluat_de la schimbarea statusului
-            $db->prepare("UPDATE proiecte SET status = ?, istoric_status = ?, preluat_de = NULL, preluat_la = NULL WHERE id = ? OR proiect_id = ?")
-               ->execute([$newStatus, json_encode($istoric), $id, $id]);
-            
-            // Creează notificare
-            $mesaj = '📌 ' . $row['proiect_id'] . ' (' . $row['client_nume'] . ') — ' . $oldStatus . ' → ' . $newStatus . ' (de ' . $user . ')';
-            $db->prepare("INSERT INTO notificari (proiect_id, mesaj, tip, de_la, etapa_noua) VALUES (?,?,?,?,?)")
-               ->execute([$row['id'], $mesaj, 'status_change', $user, $newStatus]);
-            
-            // Auto-setup Proiectare: termen +30 zile, data_start, status în lucru
-            if ($newStatus === 'Proiectare') {
-                $numId = $row['id'];
-                // Verifică dacă există record proiectare
-                $chkPr = $db->prepare("SELECT id FROM proiectare WHERE proiect_id = ?");
-                $chkPr->execute([$numId]);
-                if (!$chkPr->fetch()) {
-                    // Determină serviciul pentru checklist dinamic
-                    $srvS = $db->prepare("SELECT serviciu FROM proiecte WHERE id = ?");
-                    $srvS->execute([$numId]);
-                    $srvR = $srvS->fetch();
-                    $srv = $srvR ? $srvR['serviciu'] : '';
-                    $cl = [
-                        ['id'=>'vizita_teren','label'=>'Vizită teren efectuată','done'=>false,'date'=>null,'user'=>null],
-                        ['id'=>'schema_electrica','label'=>'Schemă electrică creată','done'=>false,'date'=>null,'user'=>null],
-                        ['id'=>'plan_amplasare','label'=>'Plan amplasare echipamente','done'=>false,'date'=>null,'user'=>null],
-                        ['id'=>'trasee_cabluri','label'=>'Trasee cabluri proiectate','done'=>false,'date'=>null,'user'=>null],
-                        ['id'=>'necesar_materiale','label'=>'Necesar materiale verificat','done'=>false,'date'=>null,'user'=>null],
-                    ];
-                    if (in_array($srv, ['Supraveghere Video','Alarma','Complex'])) {
-                        $cl[] = ['id'=>'aviz_igpr_depus','label'=>'👮 Aviz IGPR depus','done'=>false,'date'=>null,'user'=>null];
-                        $cl[] = ['id'=>'aviz_igpr_obtinut','label'=>'👮 Aviz IGPR obținut','done'=>false,'date'=>null,'user'=>null];
-                    }
-                    if (in_array($srv, ['Detectie Incendiu','Complex'])) {
-                        $cl[] = ['id'=>'aviz_isu_depus','label'=>'🛡️ Aviz ISU depus','done'=>false,'date'=>null,'user'=>null];
-                        $cl[] = ['id'=>'aviz_isu_obtinut','label'=>'🛡️ Aviz ISU obținut','done'=>false,'date'=>null,'user'=>null];
-                    }
-                    $cl[] = ['id'=>'dosar_complet','label'=>'Dosar proiect complet','done'=>false,'date'=>null,'user'=>null];
-                    $db->prepare("INSERT INTO proiectare (proiect_id, checklist_json, termen, data_start, status) VALUES (?, ?, DATE_ADD(CURDATE(), INTERVAL 30 DAY), CURDATE(), 'In lucru')")
-                       ->execute([$numId, json_encode($cl)]);
-                } else {
-                    // Update termen + status dacă există deja
-                    $db->prepare("UPDATE proiectare SET termen = COALESCE(termen, DATE_ADD(CURDATE(), INTERVAL 30 DAY)), data_start = COALESCE(data_start, CURDATE()), status = 'In lucru' WHERE proiect_id = ?")
-                       ->execute([$numId]);
+            // Poarta de calitate: Proiectare → Execuție doar dacă checklist-ul e complet
+            if ($newStatus === 'Executie') {
+                $cur = $db->prepare("SELECT id, status FROM proiecte WHERE id = ? OR proiect_id = ?");
+                $cur->execute([$id, $id]);
+                $curRow = $cur->fetch();
+                if ($curRow && $curRow['status'] === 'Proiectare') {
+                    $gate = proiectarePredareReady($db, (int)$curRow['id']);
+                    if (!$gate['ready']) { jsonResponse(['success' => false, 'error' => 'Nu se poate preda la Execuție: ' . $gate['reason']], 409); break; }
                 }
             }
-            
-            jsonResponse(['success' => true, 'notificare' => $mesaj]);
+            $res = advanceProiectStatus($db, $id, $newStatus, $user);
+            if (!$res) { jsonResponse(['success' => false, 'error' => 'Proiect negăsit'], 404); break; }
+            jsonResponse(['success' => true, 'notificare' => $res['mesaj']]);
             break;
 
         // ══════════════════════════════════════
@@ -2165,7 +2396,19 @@ try {
             $values[] = $id;
             $db->prepare("UPDATE contracte SET " . implode(', ', $fields) . " WHERE id = ?")->execute($values);
             logContractAccess($db, $id, 'admin_update', implode(',', array_map(function($f){ return preg_replace('/\s*=.*/', '', $f); }, $fields)));
-            jsonResponse(['success' => true]);
+            // Handoff: contract semnat → avansează proiectul la Proiectare (dacă e încă la Contract)
+            $advancedProiect = false;
+            if (isset($data['status']) && $data['status'] === 'semnat') {
+                $cRow = $db->prepare("SELECT c.proiect_id, p.status FROM contracte c LEFT JOIN proiecte p ON c.proiect_id = p.id WHERE c.id = ?");
+                $cRow->execute([$id]);
+                $cr = $cRow->fetch();
+                if ($cr && !empty($cr['proiect_id']) && $cr['status'] === 'Contract') {
+                    $uCur = currentUser();
+                    advanceProiectStatus($db, (int)$cr['proiect_id'], 'Proiectare', $uCur['username'] ?? 'Admin');
+                    $advancedProiect = true;
+                }
+            }
+            jsonResponse(['success' => true, 'proiect_avansat' => $advancedProiect]);
             break;
 
         // Completare internă date beneficiar (CSSI întreabă clientul și completează aici,
@@ -3438,32 +3681,7 @@ p { margin: 0; }
         // PROIECTARE — Checklist conform L. 333/2003 + I7-2011 + P118/3-2015 + GDPR
         // ══════════════════════════════════════
         case 'getProiectareChecklist':
-            $db->exec("CREATE TABLE IF NOT EXISTS proiectare_checklist (
-                id INT PRIMARY KEY AUTO_INCREMENT,
-                proiect_id INT NOT NULL,
-                item_key VARCHAR(80) NOT NULL,
-                category VARCHAR(20) NOT NULL,
-                status VARCHAR(10) DEFAULT 'todo',
-                note TEXT,
-                checked_by VARCHAR(60),
-                checked_at DATETIME,
-                ordine INT DEFAULT 0,
-                UNIQUE KEY unq_proiect_item (proiect_id, item_key),
-                KEY idx_proiect (proiect_id)
-            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4");
-            $db->exec("CREATE TABLE IF NOT EXISTS proiectare_documente (
-                id INT PRIMARY KEY AUTO_INCREMENT,
-                proiect_id INT NOT NULL,
-                tip_doc VARCHAR(40) NOT NULL,
-                filename VARCHAR(255) NOT NULL,
-                original_name VARCHAR(255),
-                size_bytes INT,
-                mime_type VARCHAR(100),
-                uploaded_by VARCHAR(60),
-                uploaded_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-                KEY idx_proiect (proiect_id),
-                KEY idx_tip (tip_doc)
-            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4");
+            ensureProiectareTables($db);
 
             $pid = isset($_GET['id']) ? intval($_GET['id']) : 0;
             if (!$pid) { jsonResponse(['success' => false, 'error' => 'id obligatoriu'], 400); break; }
@@ -3479,110 +3697,9 @@ p { margin: 0; }
             $proiect = $stmtP->fetch();
             if (!$proiect) { jsonResponse(['success' => false, 'error' => 'Proiect inexistent'], 404); break; }
 
-            // Template checklist (50 items grupate pe 11 categorii — E1..E8)
-            $TEMPLATE = [
-                // E1 — Pre-analiză
-                ['key'=>'e1_tip_beneficiar',     'cat'=>'e1', 'label'=>'Tip beneficiar identificat (PF/PJ/instituție publică)'],
-                ['key'=>'e1_categorie_obiectiv', 'cat'=>'e1', 'label'=>'Categorie obiectiv stabilită (L. 333/2003 anexa 1)'],
-                ['key'=>'e1_risc_incendiu',      'cat'=>'e1', 'label'=>'Categorie risc incendiu identificată (P118/1)'],
-                ['key'=>'e1_aviz_ipj_check',     'cat'=>'e1', 'label'=>'Verificat dacă necesită aviz IPJ'],
-                ['key'=>'e1_aviz_isu_check',     'cat'=>'e1', 'label'=>'Verificat dacă necesită aviz ISU (HG 571/2016)'],
-                // E2 — Vizita teren
-                ['key'=>'e2_intalnire',          'cat'=>'e2', 'label'=>'Întâlnire la locație efectuată cu beneficiar'],
-                ['key'=>'e2_releveu',            'cat'=>'e2', 'label'=>'Releveu construcție realizat (planuri/măsurători)'],
-                ['key'=>'e2_foto',               'cat'=>'e2', 'label'=>'Foto inventar zone critice (intrări, tablou electric, trasee)'],
-                ['key'=>'e2_acces',              'cat'=>'e2', 'label'=>'Puncte de acces identificate (uși, ferestre, lucarne)'],
-                ['key'=>'e2_alimentare',         'cat'=>'e2', 'label'=>'Alimentare electrică verificată (tablou, capacitate, RCD)'],
-                ['key'=>'e2_internet',           'cat'=>'e2', 'label'=>'Conexiune internet verificată (CCTV cloud, IP)'],
-                ['key'=>'e2_zone_gdpr',          'cat'=>'e2', 'label'=>'Zone NO-FILMARE identificate (toalete, vestiare — GDPR)'],
-                // E3 — Analize
-                ['key'=>'e3_analiza_risc',       'cat'=>'e3', 'label'=>'Analiză de risc securitate (L. 333) semnată de evaluator atestat'],
-                ['key'=>'e3_grad_securitate',    'cat'=>'e3', 'label'=>'Grad securitate stabilit (1-4 conform SR EN 50131-1)'],
-                ['key'=>'e3_calcul_risc_inc',    'cat'=>'e3', 'label'=>'Calcul risc incendiu efectuat (P118/1)'],
-                ['key'=>'e3_scenariu',           'cat'=>'e3', 'label'=>'Scenariu securitate la incendiu redactat (pentru ISU)'],
-                // E4a — Alarmă efracție
-                ['key'=>'e4s_plan',              'cat'=>'e4s','label'=>'Plan amplasare detectoare (PIR, magnetic, vibrații)'],
-                ['key'=>'e4s_centrala',          'cat'=>'e4s','label'=>'Centrală selectată conform grad securitate (SR EN 50131)'],
-                ['key'=>'e4s_autonomie',         'cat'=>'e4s','label'=>'Autonomie sursă: 12h/24h/48h conform grad'],
-                ['key'=>'e4s_comunicator',       'cat'=>'e4s','label'=>'Comunicator IP/GSM dual-path (Grad 3+)'],
-                ['key'=>'e4s_dispecerat',        'cat'=>'e4s','label'=>'Conexiune dispecerat licențiat IGPR confirmată'],
-                // E4b — CCTV
-                ['key'=>'e4c_plan',              'cat'=>'e4c','label'=>'Plan amplasare camere cu unghiuri câmp vizual'],
-                ['key'=>'e4c_rezolutie',         'cat'=>'e4c','label'=>'Rezoluție per zonă (identificare/recunoaștere/observare)'],
-                ['key'=>'e4c_retentie',          'cat'=>'e4c','label'=>'Stocare NVR ≥30 zile dimensionată'],
-                ['key'=>'e4c_avertizoare',       'cat'=>'e4c','label'=>'Avertizoare GDPR planificate la intrări'],
-                ['key'=>'e4c_registru',          'cat'=>'e4c','label'=>'Registru prelucrare date personale (GDPR L. 190/2018)'],
-                // E4c — Detecție incendiu
-                ['key'=>'e4f_plan',              'cat'=>'e4f','label'=>'Plan amplasare detectoare (P118/3 + raze acoperire)'],
-                ['key'=>'e4f_centrala',          'cat'=>'e4f','label'=>'Centrală conform SR EN 54-2 (adresabilă/convențională)'],
-                ['key'=>'e4f_butoane',           'cat'=>'e4f','label'=>'Butoane manuale alarmă (max 30m de fiecare ieșire)'],
-                ['key'=>'e4f_sirene',            'cat'=>'e4f','label'=>'Sirene + flash în zone zgomot >85dB (SR EN 54-3/23)'],
-                ['key'=>'e4f_cabluri',           'cat'=>'e4f','label'=>'Cabluri rezistente la foc PH30/PH90 (SR EN 50200)'],
-                ['key'=>'e4f_integrare',         'cat'=>'e4f','label'=>'Integrare trape fum / uși RF / oprire ventilație'],
-                // E4d — Instalații electrice (I7-2011)
-                ['key'=>'e4e_putere',            'cat'=>'e4e','label'=>'Calcul putere instalată echilibrat pe faze (I7 cap. 4)'],
-                ['key'=>'e4e_protectii',         'cat'=>'e4e','label'=>'Schemă tablou cu RCD 30mA pe prize/lumini'],
-                ['key'=>'e4e_cabluri',           'cat'=>'e4e','label'=>'Dimensionare cabluri (curent + cădere tensiune <3-5%)'],
-                ['key'=>'e4e_impamantare',       'cat'=>'e4e','label'=>'Schemă împământare TN-S/TT (priză <4Ω)'],
-                ['key'=>'e4e_iluminat_sig',     'cat'=>'e4e','label'=>'Iluminat siguranță evacuare (autonomie 1h, SR EN 1838)'],
-                ['key'=>'e4e_pram',              'cat'=>'e4e','label'=>'Verificare PRAM programată la PIF'],
-                // E5 — Documentație
-                ['key'=>'e5_memoriu',            'cat'=>'e5', 'label'=>'Memoriu tehnic general redactat'],
-                ['key'=>'e5_plan_amplasare',     'cat'=>'e5', 'label'=>'Plan amplasare echipamente (CAD: dwg/pdf)'],
-                ['key'=>'e5_schema_bloc',        'cat'=>'e5', 'label'=>'Schema bloc / funcțională'],
-                ['key'=>'e5_schema_electrica',   'cat'=>'e5', 'label'=>'Schema electrică desfășurată'],
-                ['key'=>'e5_lista_echipamente',  'cat'=>'e5', 'label'=>'Lista echipamente cu specificații + certificate CE/SR EN'],
-                ['key'=>'e5_lista_cabluri',      'cat'=>'e5', 'label'=>'Lista cabluri (tip, lungime, traseu, rezistență la foc)'],
-                ['key'=>'e5_caiet_sarcini',      'cat'=>'e5', 'label'=>'Caiet de sarcini (tehnologie execuție)'],
-                // E6 — Verificare internă
-                ['key'=>'e6_peer_review',        'cat'=>'e6', 'label'=>'Verificare peer review (alt proiectant decât autorul)'],
-                ['key'=>'e6_calcule',            'cat'=>'e6', 'label'=>'Calcule reverificate (puteri, secțiuni, autonomii)'],
-                ['key'=>'e6_planuri',            'cat'=>'e6', 'label'=>'Planuri verificate (acoperire 100%, fără zone moarte)'],
-                ['key'=>'e6_buget',              'cat'=>'e6', 'label'=>'Buget verificat vs. ofertă semnată'],
-                // E7 — Avize externe
-                ['key'=>'e7_aviz_ipj',           'cat'=>'e7', 'label'=>'Aviz IPJ obținut sau confirmat că nu e necesar'],
-                ['key'=>'e7_aviz_isu',           'cat'=>'e7', 'label'=>'Aviz ISU obținut sau confirmat că nu e necesar'],
-                ['key'=>'e7_gdpr_notif',         'cat'=>'e7', 'label'=>'Notificare ANSPDCP / DPIA realizată (CCTV)'],
-                ['key'=>'e7_acord_vecin',        'cat'=>'e7', 'label'=>'Acord vecinătate (camere ce filmează spațiu public)'],
-                // E8 — Predare execuție
-                ['key'=>'e8_sedinta',            'cat'=>'e8', 'label'=>'Ședință predare cu echipa execuție'],
-                ['key'=>'e8_dosar',              'cat'=>'e8', 'label'=>'Dosar tehnic complet predat'],
-                ['key'=>'e8_briefing',           'cat'=>'e8', 'label'=>'Briefing puncte critice cu echipa execuție'],
-                ['key'=>'e8_necesar',            'cat'=>'e8', 'label'=>'Necesar materiale validat și exportat'],
-                ['key'=>'e8_planificare',        'cat'=>'e8', 'label'=>'Programare execuție creată în Planificare'],
-            ];
-
-            // Insertăm itemii lipsă din template (idempotent)
-            $stmtIns = $db->prepare("INSERT IGNORE INTO proiectare_checklist (proiect_id, item_key, category, ordine) VALUES (?,?,?,?)");
-            $insertedAny = false;
-            foreach ($TEMPLATE as $i => $it) {
-                $stmtIns->execute([$pid, $it['key'], $it['cat'], $i]);
-                if ($stmtIns->rowCount() > 0) $insertedAny = true;
-            }
-
-            // SMART DEFAULTS: la prima generare, auto-marcăm n/a categoriile
-            // E4a/E4b/E4c/E4d care NU sunt relevante pentru tipul de serviciu
-            if ($insertedAny) {
-                $serviciu = strtolower($proiect['serviciu'] ?? '');
-                $relevante = ['e1','e2','e3','e5','e6','e7','e8']; // mereu relevante
-                if (strpos($serviciu, 'incendiu') !== false) $relevante[] = 'e4f';
-                if (strpos($serviciu, 'alarm') !== false || strpos($serviciu, 'efrac') !== false) $relevante[] = 'e4s';
-                if (strpos($serviciu, 'supraveg') !== false || strpos($serviciu, 'video') !== false || strpos($serviciu, 'cctv') !== false || strpos($serviciu, 'camer') !== false) $relevante[] = 'e4c';
-                // E4d Instalații electrice — relevante pentru orice sistem (alimentare, cabluri)
-                $relevante[] = 'e4e';
-                if (strpos($serviciu, 'complex') !== false) {
-                    $relevante = array_merge($relevante, ['e4s','e4c','e4f']);
-                }
-                $relevante = array_unique($relevante);
-
-                $allCats = ['e4s','e4c','e4f']; // categoriile candidate la auto-na (E4d e mereu relevant)
-                foreach ($allCats as $cat) {
-                    if (!in_array($cat, $relevante)) {
-                        $stmtNA = $db->prepare("UPDATE proiectare_checklist SET status='n/a', note=?, checked_by='Sistem (auto)', checked_at=NOW() WHERE proiect_id=? AND category=? AND status='todo'");
-                        $stmtNA->execute(['Auto-marcat: serviciul "'.($proiect['serviciu']??'').'" nu necesită această categorie. Modifică manual dacă e nevoie.', $pid, $cat]);
-                    }
-                }
-            }
+            // Generăm/completăm checklist-ul (idempotent) + auto-N/A la prima generare
+            proiectareGenerateChecklist($db, $pid, $proiect['serviciu'] ?? '');
+            $TEMPLATE = proiectareTemplate();
 
             // Citim toate item-urile (cu valoarea actuală)
             $stmtL = $db->prepare("SELECT * FROM proiectare_checklist WHERE proiect_id = ? ORDER BY ordine");
@@ -3620,14 +3737,33 @@ p { margin: 0; }
             $done = count(array_filter($items, function($i){return $i['status']==='done';}));
             $na   = count(array_filter($items, function($i){return $i['status']==='n/a';}));
             $todo = count(array_filter($items, function($i){return $i['status']==='todo';}));
-            $progres = $tot ? round((($done + $na) / $tot) * 100) : 0;
+            $progres = $tot ? (int)round((($done + $na) / $tot) * 100) : 0;
+
+            // Sincronizăm progresul în tabela `proiectare` (citită de dashboard/dosar)
+            recalcProiectareProgres($db, $pid);
+
+            // Poarta de calitate: itemii OBLIGATORII trebuie efectiv 'done' (nu N/A)
+            $requiredKeys = proiectareRequiredKeys();
+            $requiredPending = [];
+            foreach ($items as $it) {
+                if (in_array($it['item_key'], $requiredKeys, true) && $it['status'] !== 'done') {
+                    $requiredPending[] = $it['label'];
+                }
+            }
+            $gataPredat = ($todo === 0) && empty($requiredPending);
+            $blockReason = '';
+            if ($todo > 0)                  $blockReason = $todo . ' nebifate';
+            elseif (!empty($requiredPending)) $blockReason = count($requiredPending) . ' obligatorii nefinalizate';
 
             jsonResponse(['success' => true, 'data' => [
-                'proiect'    => $proiect,
-                'items'      => $items,
-                'documente'  => $docs,
-                'stats'      => ['total'=>$tot, 'done'=>$done, 'na'=>$na, 'todo'=>$todo, 'progres'=>$progres],
-                'gata_predat'=> $todo === 0,
+                'proiect'         => $proiect,
+                'items'           => $items,
+                'documente'       => $docs,
+                'stats'           => ['total'=>$tot, 'done'=>$done, 'na'=>$na, 'todo'=>$todo, 'progres'=>$progres],
+                'gata_predat'     => $gataPredat,
+                'required_keys'   => $requiredKeys,
+                'required_pending'=> $requiredPending,
+                'block_reason'    => $blockReason,
             ]]);
             break;
 
@@ -3635,9 +3771,18 @@ p { margin: 0; }
             $id     = isset($data['id']) ? intval($data['id']) : 0;
             $status = isset($data['status']) ? trim($data['status']) : 'todo';
             $note   = isset($data['note']) ? trim($data['note']) : '';
-            $user   = isset($data['user']) ? trim($data['user']) : '';
+            $_su    = currentUser(); $user = $_su['username']; // forțat din sesiune (anti-spoof audit trail)
             if (!$id) { jsonResponse(['success' => false, 'error' => 'id obligatoriu'], 400); break; }
             if (!in_array($status, ['todo','done','n/a'])) $status = 'todo';
+            // Verificăm itemul + dacă e obligatoriu (nu poate fi N/A)
+            $itStmt = $db->prepare("SELECT item_key, proiect_id FROM proiectare_checklist WHERE id = ?");
+            $itStmt->execute([$id]);
+            $itRow = $itStmt->fetch();
+            if (!$itRow) { jsonResponse(['success' => false, 'error' => 'Item inexistent'], 404); break; }
+            if ($status === 'n/a' && in_array($itRow['item_key'], proiectareRequiredKeys(), true)) {
+                jsonResponse(['success' => false, 'error' => 'Item obligatoriu de conformitate — trebuie bifat efectiv, nu poate fi marcat N/A.'], 400);
+                break;
+            }
             if ($status === 'todo') {
                 $db->prepare("UPDATE proiectare_checklist SET status=?, note=?, checked_by=NULL, checked_at=NULL WHERE id=?")
                    ->execute([$status, $note, $id]);
@@ -3645,6 +3790,7 @@ p { margin: 0; }
                 $db->prepare("UPDATE proiectare_checklist SET status=?, note=?, checked_by=?, checked_at=NOW() WHERE id=?")
                    ->execute([$status, $note, $user, $id]);
             }
+            recalcProiectareProgres($db, (int)$itRow['proiect_id']);
             jsonResponse(['success' => true]);
             break;
 
@@ -3653,15 +3799,24 @@ p { margin: 0; }
             $pid = isset($data['proiect_id']) ? intval($data['proiect_id']) : 0;
             $cat = isset($data['category']) ? trim($data['category']) : '';
             $status = isset($data['status']) ? trim($data['status']) : 'done';
-            $user = isset($data['user']) ? trim($data['user']) : '';
+            $_su = currentUser(); $user = $_su['username']; // forțat din sesiune (anti-spoof audit trail)
             $onlyTodo = !empty($data['only_todo']); // true = doar cele nebifate
             if (!$pid || !$cat) { jsonResponse(['success' => false, 'error' => 'proiect_id + category obligatorii'], 400); break; }
             if (!in_array($status, ['todo','done','n/a'])) $status = 'done';
             $sql = "UPDATE proiectare_checklist SET status=?, checked_by=?, checked_at=NOW() WHERE proiect_id=? AND category=?";
             $params = [$status, $user, $pid, $cat];
             if ($onlyTodo) { $sql .= " AND status='todo'"; }
+            // Itemii obligatorii NU pot fi marcați N/A nici în bulk
+            if ($status === 'n/a') {
+                $req = proiectareRequiredKeys();
+                if ($req) {
+                    $sql .= " AND item_key NOT IN (" . implode(',', array_fill(0, count($req), '?')) . ")";
+                    $params = array_merge($params, $req);
+                }
+            }
             $stmt = $db->prepare($sql);
             $stmt->execute($params);
+            recalcProiectareProgres($db, $pid);
             jsonResponse(['success' => true, 'affected' => $stmt->rowCount()]);
             break;
 
@@ -4114,8 +4269,8 @@ p { margin: 0; }
             $mentenanta = [];
             try {
                 $sqlM = $pid
-                    ? "SELECT * FROM mentenanta WHERE proiect_id = ? OR client_id = ? ORDER BY data_urmatoare ASC, id DESC"
-                    : "SELECT * FROM mentenanta WHERE client_id = ? ORDER BY data_urmatoare ASC, id DESC";
+                    ? "SELECT * FROM mentenanta WHERE proiect_id = ? OR client_id = ? ORDER BY data_next_visit ASC, id DESC"
+                    : "SELECT * FROM mentenanta WHERE client_id = ? ORDER BY data_next_visit ASC, id DESC";
                 $stM = $db->prepare($sqlM);
                 $stM->execute($pid ? [$pid, $cid] : [$cid]);
                 $mentenanta = $stM->fetchAll();
@@ -4958,6 +5113,16 @@ p { margin: 0; }
                        ->execute([$pid, $msg, 'finalizare', $userName, $newStatus]);
                 } catch (Exception $e) {}
 
+                // 3b) Nudge recenzie — dacă nu s-a cerut deja recenzie pentru acest proiect
+                try {
+                    $rChk = $db->prepare("SELECT 1 FROM sms_recenzii WHERE proiect_id = ? LIMIT 1");
+                    $rChk->execute([$pid]);
+                    if (!$rChk->fetch()) {
+                        $db->prepare("INSERT INTO notificari (proiect_id, mesaj, tip, de_la, etapa_noua) VALUES (?,?,?,?,?)")
+                           ->execute([$pid, '⭐ Trimite cerere de recenzie Google clientului ' . $proj['client_nume'] . ' (proiect finalizat)', 'recenzie', $userName, $newStatus]);
+                    }
+                } catch (Exception $e) {}
+
                 // 4) Intrare automată în jurnal_teren
                 try {
                     $today = date('Y-m-d H:i:s');
@@ -5029,6 +5194,115 @@ p { margin: 0; }
             $body .= "\r\n--$boundary--\r\n";
             $ok = @mail($emailTo, '=?UTF-8?B?' . base64_encode($subject) . '?=', $body, $headers, '-fnoreply@cssi.ro');
             jsonResponse(['success' => (bool)$ok, 'email' => $emailTo, 'proiect_id' => $proj['proiect_id']]);
+            break;
+
+        // ─── MENTENANTA — modulul de contracte mentenanță (admin/mentenanta.html) ───
+        // Pagina e construită stil vechi (cheie 'row' = id DB, răspuns = array brut, nu {success,data}).
+        case 'getMentenanta':
+            requireAuth();
+            ensureFinalizareSchema($db);
+            $rows = $db->query("SELECT m.*,
+                        COALESCE(c.nume, m.client_nume) AS c_nume,
+                        COALESCE(p.proiect_id, m.proiect_cod) AS p_cod,
+                        COALESCE(m.telefon, c.telefon) AS tel
+                    FROM mentenanta m
+                    LEFT JOIN proiecte p ON m.proiect_id = p.id
+                    LEFT JOIN clienti c ON m.client_id = c.id
+                    ORDER BY (m.status='Activ') DESC, m.data_next_visit ASC, m.id DESC")->fetchAll(PDO::FETCH_ASSOC);
+            $out = array_map(function($m){
+                return [
+                    'row'        => (int)$m['id'],
+                    'client'     => $m['c_nume'] ?: '',
+                    'proiectId'  => $m['p_cod'] ?: '',
+                    'tip'        => $m['tip'] ?: 'Standard',
+                    'frecventa'  => $m['frecventa'] ?: 'Trimestrial',
+                    'ultima'     => $m['data_ultima_vizita'] ?: ($m['data_start'] ?: ''),
+                    'urmatoarea' => $m['data_next_visit'] ?: '',
+                    'status'     => $m['status'] ?: 'Activ',
+                    'valoare'    => (float)$m['valoare_lunara'],
+                    'telefon'    => $m['tel'] ?: '',
+                    'echipa'     => $m['echipa'] ?: '',
+                    'note'       => $m['note'] ?: '',
+                    'history'    => $m['istoric'] ?: '[]',
+                ];
+            }, $rows);
+            jsonResponse($out);
+            break;
+
+        // Listă scurtă proiecte pentru dropdown-urile din mentenanta.html ([{id,client}])
+        case 'getProjects':
+            requireAuth();
+            $rows = $db->query("SELECT p.proiect_id AS id, COALESCE(c.nume,'') AS client
+                    FROM proiecte p LEFT JOIN clienti c ON p.client_id = c.id
+                    ORDER BY p.id DESC")->fetchAll(PDO::FETCH_ASSOC);
+            jsonResponse($rows);
+            break;
+
+        case 'updateMentenantaStatus':
+            requireAuth();
+            ensureFinalizareSchema($db);
+            $rowId = isset($data['row']) ? (int)$data['row'] : 0;
+            $st = isset($data['status']) ? trim($data['status']) : '';
+            if (!$rowId || $st === '') jsonResponse(['success'=>false,'error'=>'row si status obligatorii'],400);
+            $db->prepare("UPDATE mentenanta SET status=? WHERE id=?")->execute([$st, $rowId]);
+            jsonResponse(['success'=>true]);
+            break;
+
+        case 'markMentenantaDone':
+            requireAuth();
+            ensureFinalizareSchema($db);
+            $rowId = isset($data['row']) ? (int)$data['row'] : 0;
+            if (!$rowId) jsonResponse(['success'=>false,'error'=>'row obligatoriu'],400);
+            $ultima = isset($data['ultima']) && $data['ultima'] ? $data['ultima'] : date('Y-m-d');
+            $urm    = isset($data['urmatoarea']) && $data['urmatoarea'] ? $data['urmatoarea'] : null;
+            $hist   = isset($data['history']) ? (is_string($data['history']) ? $data['history'] : json_encode($data['history'])) : '[]';
+            $db->prepare("UPDATE mentenanta SET data_ultima_vizita=?, data_next_visit=?, istoric=? WHERE id=?")
+               ->execute([$ultima, $urm, $hist, $rowId]);
+            jsonResponse(['success'=>true]);
+            break;
+
+        case 'addMentenanta':
+            requireAuth();
+            ensureFinalizareSchema($db);
+            $ct = isset($data['contract']) && is_array($data['contract']) ? $data['contract'] : [];
+            if (empty($ct['client'])) jsonResponse(['success'=>false,'error'=>'client obligatoriu'],400);
+            $cid = null; $pidNum = null;
+            $s = $db->prepare("SELECT id FROM clienti WHERE nume = ? LIMIT 1"); $s->execute([$ct['client']]);
+            if ($r = $s->fetch()) $cid = (int)$r['id'];
+            if (!empty($ct['pid'])) {
+                $s = $db->prepare("SELECT id FROM proiecte WHERE proiect_id = ? LIMIT 1"); $s->execute([$ct['pid']]);
+                if ($r = $s->fetch()) $pidNum = (int)$r['id'];
+            }
+            $uCur = currentUser(); $by = $uCur['username'] ?? 'Admin';
+            $db->prepare("INSERT INTO mentenanta (proiect_id, client_id, client_nume, proiect_cod, tip, frecventa, valoare_lunara, data_start, data_ultima_vizita, data_next_visit, status, telefon, echipa, note, istoric, created_by)
+                    VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)")
+               ->execute([
+                    $pidNum ?: 0, $cid, $ct['client'] ?? '', $ct['pid'] ?? '',
+                    $ct['tip'] ?? 'Standard', $ct['frecventa'] ?? 'Trimestrial', (float)($ct['valoare'] ?? 0),
+                    $ct['ultima'] ?? null, $ct['ultima'] ?? null, $ct['urmatoarea'] ?? null,
+                    $ct['status'] ?? 'Activ', $ct['telefon'] ?? '', $ct['echipa'] ?? '',
+                    $ct['note'] ?? '', json_encode([$ct['ultima'] ?? date('Y-m-d')]), $by
+               ]);
+            jsonResponse(['success'=>true,'row'=>(int)$db->lastInsertId()]);
+            break;
+
+        case 'updateMentenanta':
+            requireAuth();
+            ensureFinalizareSchema($db);
+            $rowId = isset($data['row']) ? (int)$data['row'] : 0;
+            $ct = isset($data['contract']) && is_array($data['contract']) ? $data['contract'] : [];
+            if (!$rowId) jsonResponse(['success'=>false,'error'=>'row obligatoriu'],400);
+            $cid = null; $pidNum = null;
+            if (!empty($ct['client'])) { $s=$db->prepare("SELECT id FROM clienti WHERE nume=? LIMIT 1"); $s->execute([$ct['client']]); if($r=$s->fetch())$cid=(int)$r['id']; }
+            if (!empty($ct['pid'])) { $s=$db->prepare("SELECT id FROM proiecte WHERE proiect_id=? LIMIT 1"); $s->execute([$ct['pid']]); if($r=$s->fetch())$pidNum=(int)$r['id']; }
+            $db->prepare("UPDATE mentenanta SET client_id=?, client_nume=?, proiect_cod=?, tip=?, frecventa=?, valoare_lunara=?, data_ultima_vizita=?, data_next_visit=?, status=?, telefon=?, echipa=?, note=? WHERE id=?")
+               ->execute([
+                    $cid, $ct['client'] ?? '', $ct['pid'] ?? '', $ct['tip'] ?? 'Standard', $ct['frecventa'] ?? 'Trimestrial',
+                    (float)($ct['valoare'] ?? 0), $ct['ultima'] ?? null, $ct['urmatoarea'] ?? null, $ct['status'] ?? 'Activ',
+                    $ct['telefon'] ?? '', $ct['echipa'] ?? '', $ct['note'] ?? '', $rowId
+               ]);
+            if ($pidNum !== null) $db->prepare("UPDATE mentenanta SET proiect_id=? WHERE id=?")->execute([$pidNum, $rowId]);
+            jsonResponse(['success'=>true]);
             break;
 
         default:
