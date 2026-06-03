@@ -862,6 +862,142 @@ function calcExpiresAt($dataOferta, $valab) {
     catch (Exception $e) { return null; }
 }
 
+// ════════════════════════════════════════════════════════════
+// MARKETING AI — generare text postări cu Claude API
+// ════════════════════════════════════════════════════════════
+
+// Apel Claude API. Întoarce ['ok'=>bool, 'text'=>string] sau ['ok'=>false,'error'=>string].
+function callClaude($system, $userPrompt, $maxTokens = 3000) {
+    $key = defined('ANTHROPIC_KEY') ? ANTHROPIC_KEY : (getenv('ANTHROPIC_KEY') ?: '');
+    if (!$key) return ['ok' => false, 'error' => 'ANTHROPIC_KEY nesetat în secrets.php'];
+    $model = defined('CLAUDE_MODEL') ? CLAUDE_MODEL : 'claude-sonnet-4-6';
+    $payload = [
+        'model' => $model,
+        'max_tokens' => $maxTokens,
+        'system' => $system,
+        'messages' => [['role' => 'user', 'content' => $userPrompt]]
+    ];
+    $ch = curl_init('https://api.anthropic.com/v1/messages');
+    curl_setopt_array($ch, [
+        CURLOPT_POST => true,
+        CURLOPT_HTTPHEADER => [
+            'x-api-key: ' . $key,
+            'anthropic-version: 2023-06-01',
+            'content-type: application/json'
+        ],
+        CURLOPT_POSTFIELDS => json_encode($payload, JSON_UNESCAPED_UNICODE),
+        CURLOPT_RETURNTRANSFER => true,
+        CURLOPT_TIMEOUT => 120
+    ]);
+    $resp = curl_exec($ch);
+    $code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+    $cerr = curl_error($ch);
+    curl_close($ch);
+    if ($resp === false) return ['ok' => false, 'error' => 'Conexiune Claude eșuată: ' . $cerr];
+    $j = json_decode($resp, true);
+    if ($code < 200 || $code >= 300) {
+        $msg = isset($j['error']['message']) ? $j['error']['message'] : ('HTTP ' . $code);
+        return ['ok' => false, 'error' => 'Claude API: ' . $msg];
+    }
+    $text = '';
+    if (!empty($j['content']) && is_array($j['content'])) {
+        foreach ($j['content'] as $block) {
+            if (isset($block['type'], $block['text']) && $block['type'] === 'text') $text .= $block['text'];
+        }
+    }
+    if ($text === '') return ['ok' => false, 'error' => 'Răspuns gol de la Claude'];
+    return ['ok' => true, 'text' => $text];
+}
+
+// Catalog servicii CSSI (nume natural + hashtag) — sursa unică pentru promptul AI.
+function cssiServiceCatalog() {
+    return [
+        'camere-supraveghere' => ['nume' => 'sistemul de camere supraveghere', 'hashtag' => '#CCTV #CamereSupraveghere #CamereBrasov #Hikvision'],
+        'alarma-antiefractie' => ['nume' => 'sistemul de alarmă antiefracție', 'hashtag' => '#AlarmaAntiefractie #Ajax #Paradox #Monitorizare247'],
+        'control-acces' => ['nume' => 'sistemul de control acces', 'hashtag' => '#ControlAcces #RFID #PontajElectronic #B2B'],
+        'automatizari-porti' => ['nume' => 'automatizarea porții', 'hashtag' => '#AutomatizariPorti #Nice #BFT #Somfy'],
+        'pontaj-electronic' => ['nume' => 'sistemul de pontaj electronic', 'hashtag' => '#PontajElectronic #HR #B2B #ControlAcces'],
+        'aer-conditionat' => ['nume' => 'sistemul de aer condiționat', 'hashtag' => '#AerConditionat #Clima #Climatizare #Brasov'],
+        'instalatii-electrice' => ['nume' => 'instalația electrică', 'hashtag' => '#InstalatiiElectrice #ElectricianBrasov #ANRE #PRAM'],
+        'usi-garaj' => ['nume' => 'ușa de garaj', 'hashtag' => '#UsiGaraj #Hormann #UsaSectionala'],
+        'bariere-auto' => ['nume' => 'bariera auto', 'hashtag' => '#BariereAuto #LPR #Parcare'],
+        'detectie-incendiu' => ['nume' => 'sistemul de detecție incendiu', 'hashtag' => '#DetectieIncendiu #ISU #ProtectieIncendiu'],
+        'interfoane' => ['nume' => 'interfonul/videointerfonul', 'hashtag' => '#Interfoane #Videointerfoane #Bloc #Vila'],
+        'ventilatie' => ['nume' => 'sistemul de ventilație', 'hashtag' => '#Ventilatie #RecuperareCaldura'],
+        'instalatii-termice' => ['nume' => 'instalația termică', 'hashtag' => '#InstalatiiTermice #CentralaTermica'],
+        'sonorizare' => ['nume' => 'sistemul de sonorizare', 'hashtag' => '#Sonorizare #SistemAudio'],
+    ];
+}
+
+// Calendar editorial săptămânal — sloturi per zi (platforme/format/serviciu/oră/unghi).
+// Serviciile se rotesc în funcție de săptămână, ca să nu se repete de la o săptămână la alta.
+function cssiEditorialWeek($brand, $weekStart) {
+    if ($brand === 'conca-verde') {
+        return [
+            ['dow'=>1,'ora'=>'10:00','platforme'=>['fb','ig'],'tip'=>'Foto','serviciu'=>'','hashtag'=>'#ConcaVerde #Camping #Brasov #Rasnov','unghi'=>'Promovare weekend la Conca Verde Camping (Râșnov). Ton casual, primitor. CTA rezervare 0752 288 400 + www.conca-verde.ro.'],
+            ['dow'=>2,'ora'=>'10:00','platforme'=>['linkedin'],'tip'=>'Text','serviciu'=>'','hashtag'=>'#TeamBuilding #Corporate #Camping','unghi'=>'B2B: Conca Verde ca destinație de team building corporate / retreat în natură. Ton profesional.'],
+            ['dow'=>3,'ora'=>'10:00','platforme'=>['fb','ig'],'tip'=>'Foto','serviciu'=>'','hashtag'=>'#ConcaVerde #Camping','unghi'=>'Format listă viral: 5 motive să alegi Conca Verde weekendul acesta. Scanabil, share-able.'],
+            ['dow'=>5,'ora'=>'17:00','platforme'=>['fb','ig'],'tip'=>'Foto','serviciu'=>'','hashtag'=>'#ConcaVerde #BehindTheScenes','unghi'=>'Behind the scenes — pregătiri pentru weekend la camping. Autenticitate.'],
+            ['dow'=>6,'ora'=>'12:00','platforme'=>['fb','ig'],'tip'=>'Foto','serviciu'=>'','hashtag'=>'#ConcaVerde #Camping #Brasov #Weekend','unghi'=>'Foto aesthetic de weekend din natură. Scurt, vizual.'],
+        ];
+    }
+    $cat = cssiServiceCatalog();
+    $keys = array_keys($cat);
+    $n = count($keys);
+    $weekNo = (int)date('W', strtotime($weekStart));
+    $s1 = $keys[($weekNo * 3) % $n];
+    $s2 = $keys[($weekNo * 3 + 1) % $n];
+    $s3 = $keys[($weekNo * 3 + 2) % $n];
+    return [
+        ['dow'=>1,'ora'=>'10:00','platforme'=>['fb','ig'],'tip'=>'Foto','serviciu'=>$s1,'hashtag'=>$cat[$s1]['hashtag'].' #CSSI #CSSIBrasov #Brasov','unghi'=>'Lucrare finalizată săptămâna trecută — showcase instalare '.$cat[$s1]['nume'].'. Ton cald, mulțumește clientului pentru încredere. CTA telefon 0752 288 400 + WhatsApp.'],
+        ['dow'=>1,'ora'=>'09:00','platforme'=>['linkedin'],'tip'=>'Text','serviciu'=>$s1,'hashtag'=>$cat[$s1]['hashtag'].' #B2B #Securitate','unghi'=>'Knowledge B2B: 3 lucruri pe care le verifici înainte de a propune '.$cat[$s1]['nume'].' unei firme. Hook puternic în primele 2 linii, CTA cu întrebare la final pentru comentarii.'],
+        ['dow'=>2,'ora'=>'10:00','platforme'=>['linkedin'],'tip'=>'Carusel','serviciu'=>$s2,'hashtag'=>$cat[$s2]['hashtag'].' #StudiuCaz #B2B','unghi'=>'Studiu de caz B2B pentru '.$cat[$s2]['nume'].': provocare → soluția CSSI → rezultat măsurabil. Storytelling, încheie cu CTA „comentează audit".'],
+        ['dow'=>3,'ora'=>'10:00','platforme'=>['fb','ig'],'tip'=>'Foto','serviciu'=>$s2,'hashtag'=>$cat[$s2]['hashtag'].' #CSSI #Brasov','unghi'=>'Educațional: 3 lucruri de verificat înainte să cumperi '.$cat[$s2]['nume'].'. Numerotat, scanabil pe mobil, ton de consultant de încredere.'],
+        ['dow'=>4,'ora'=>'09:00','platforme'=>['linkedin'],'tip'=>'Foto','serviciu'=>$s1,'hashtag'=>'#CulturaOrganizationala #CSSI #Brasov','unghi'=>'Cultură organizațională / echipa CSSI. Autenticitate, nu vânzare directă. Poate include recrutare (hr@cssi.ro).'],
+        ['dow'=>5,'ora'=>'17:00','platforme'=>['fb','ig'],'tip'=>'Foto','serviciu'=>$s3,'hashtag'=>'#CSSI #BehindTheScenes #Echipa','unghi'=>'Behind the scenes — săptămâna asta în CSSI. Ton uman, relaxat, autentic.'],
+        ['dow'=>5,'ora'=>'09:00','platforme'=>['linkedin'],'tip'=>'Text','serviciu'=>$s1,'hashtag'=>'#Reflectie #B2B #Leadership','unghi'=>'Reflecție de final de săptămână pe profilul PERSONAL al lui Mihai (nu pagina firmei). Thought leadership, autentic, semnat „— Mihai".'],
+        ['dow'=>6,'ora'=>'12:00','platforme'=>['fb','ig'],'tip'=>'Foto','serviciu'=>$s3,'hashtag'=>$cat[$s3]['hashtag'].' #CSSI #Brasov','unghi'=>'Foto aesthetic de weekend — cea mai frumoasă lucrare '.$cat[$s3]['nume'].' din săptămână. Vizual, scurt, invită la feedback.'],
+    ];
+}
+
+// Data calendaristică (Y-m-d) pentru o anumită zi a săptămânii lui weekStart (luni=1..duminică=0/7).
+function dateForDow($weekStart, $dow) {
+    $ts = strtotime($weekStart);
+    $cur = (int)date('N', $ts); // 1=luni..7=duminică
+    $target = ($dow === 0) ? 7 : $dow;
+    $diff = $target - $cur;
+    return date('Y-m-d', strtotime(($diff >= 0 ? '+' : '') . $diff . ' days', $ts));
+}
+
+// Creează tabela social_posts dacă lipsește (idempotent — pentru medii noi).
+function ensureSocialPostsTable($db) {
+    static $done = false;
+    if ($done) return;
+    $done = true;
+    try {
+        $db->exec("CREATE TABLE IF NOT EXISTS social_posts (
+            id INT PRIMARY KEY AUTO_INCREMENT,
+            brand VARCHAR(60) DEFAULT 'cssi',
+            continut LONGTEXT,
+            platforme JSON,
+            tip_continut VARCHAR(60) DEFAULT 'Foto',
+            status VARCHAR(60) DEFAULT 'Draft',
+            data_programare DATETIME NULL,
+            imagine_url VARCHAR(500) DEFAULT '',
+            media_json JSON NULL,
+            note TEXT,
+            external_ids JSON NULL,
+            analytics JSON NULL,
+            creat_de VARCHAR(100) DEFAULT '',
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            KEY idx_status (status),
+            KEY idx_brand (brand)
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4");
+    } catch (Exception $e) {
+        error_log('ensureSocialPostsTable FAILED: ' . $e->getMessage());
+    }
+}
+
 try {
     $db = getDB();
 
@@ -4548,6 +4684,91 @@ p { margin: 0; }
             } else {
                 jsonResponse(['success' => false, 'error' => 'Nu s-a putut genera imaginea'], 500);
             }
+            break;
+
+        case 'generateWeekPosts':
+            // Generează o săptămână de postări complete (text gata de publicat) cu Claude AI.
+            // Calendar editorial pe servicii → fără date reale de client. Salvează ca Draft, cu slot poză gol.
+            requireAuth();
+            $brand = isset($data['brand']) ? $data['brand'] : 'cssi';
+            $weekStart = isset($data['weekStart']) ? $data['weekStart'] : date('Y-m-d');
+            $location = isset($data['location']) ? trim($data['location']) : '';
+            $campaign = isset($data['campaignName']) ? trim($data['campaignName']) : '';
+            $tsW = strtotime($weekStart);
+            if (!$tsW) { jsonResponse(['success' => false, 'error' => 'Dată invalidă'], 400); break; }
+            $weekStart = date('Y-m-d', $tsW);
+
+            $slots = cssiEditorialWeek($brand, $weekStart);
+            if (empty($slots)) { jsonResponse(['success' => false, 'error' => 'Niciun slot editorial pentru acest brand'], 400); break; }
+
+            $platLabels = ['fb'=>'Facebook','ig'=>'Instagram','linkedin'=>'LinkedIn','yt'=>'YouTube','tiktok'=>'TikTok','x'=>'Twitter/X'];
+            $platLimits = ['fb'=>63206,'ig'=>2200,'linkedin'=>3000,'yt'=>5000,'tiktok'=>2200,'x'=>280];
+            $dayNames = [1=>'Luni',2=>'Marți',3=>'Miercuri',4=>'Joi',5=>'Vineri',6=>'Sâmbătă',0=>'Duminică',7=>'Duminică'];
+
+            // Construiesc lista de sloturi pentru prompt
+            $slotLines = [];
+            foreach ($slots as $i => $s) {
+                $plats = array_map(function($p) use ($platLabels) { return isset($platLabels[$p]) ? $platLabels[$p] : $p; }, $s['platforme']);
+                $minLimit = 99999;
+                foreach ($s['platforme'] as $p) { if (isset($platLimits[$p]) && $platLimits[$p] < $minLimit) $minLimit = $platLimits[$p]; }
+                $slotLines[] = "Slot {$i} — ".($dayNames[$s['dow']] ?? '')." ".$s['ora']." · ".implode('+', $plats)." · format {$s['tip']} · max {$minLimit} caractere\n"
+                    ."   Brief: ".$s['unghi']."\n"
+                    ."   Hashtag-uri de inclus la final: ".$s['hashtag'];
+            }
+            $slotsText = implode("\n\n", $slotLines);
+
+            if ($brand === 'conca-verde') {
+                $brandVoice = "Conca Verde Camping (Râșnov) — voce casual, primitoare, turism local. Contact: 0752 288 400, www.conca-verde.ro.";
+            } else {
+                $brandVoice = "CSSI Brașov — firmă de securitate și instalații, autorizată IGPR + ISU + ANRE, 20 de ani experiență, 9.000+ proiecte. Ton profesional, autoritar, de încredere. Contact: telefon 0752 288 400, WhatsApp wa.me/40752288400, fix 0268 414 740.";
+            }
+            $locText = $location ? " Localitatea de referință pentru această săptămână: {$location} (menționeaz-o natural unde se potrivește, pentru SEO local)." : "";
+
+            $system = "Ești copywriter senior de social media pentru {$brandVoice}\n\n"
+                ."Scrii postări COMPLETE, gata de publicat — fără NICIUN placeholder, fără paranteze drepte [ ], fără „[adaugă...]\", fără text de completat ulterior. Omul doar va atașa o fotografie, atât.\n\n"
+                ."Reguli de calitate (best practices 2026):\n"
+                ."- LinkedIn: hook în primele 2 linii (înainte de „...vezi mai mult\"), profunzime > superficial, CTA cu întrebare la final pentru comentarii. NU pune linkuri externe în corp.\n"
+                ."- Instagram/Facebook: hook în prima linie, scanabil, emoji moderat, hashtag-urile la final.\n"
+                ."- Respectă limita de caractere a fiecărui slot.\n"
+                ."- Folosește hashtag-urile indicate la finalul fiecărei postări.\n"
+                ."- Limba română corectă, cu diacritice. Variază formulările între sloturi (să nu pară șablon).\n"
+                ."- Nu inventa cifre/clienți falși specifici; rămâi la mesaje generale credibile despre serviciu.{$locText}\n\n"
+                ."Răspunzi DOAR cu un array JSON valid, fără text în plus, fără ```. Format exact:\n"
+                ."[{\"slot\":0,\"continut\":\"textul complet al postării...\"}, ...] — câte un obiect per slot primit.";
+
+            $userPrompt = "Generează textul pentru următoarele ".count($slots)." sloturi din calendarul editorial al săptămânii. Întoarce un obiect per slot, cu indexul corect.\n\n".$slotsText;
+
+            $res = callClaude($system, $userPrompt, 4000);
+            if (!$res['ok']) { jsonResponse(['success' => false, 'error' => $res['error']], 400); break; }
+
+            // Extrag JSON-ul (poate veni învelit în text/```json)
+            $txt = trim($res['text']);
+            if (preg_match('/\[[\s\S]*\]/', $txt, $mJson)) $txt = $mJson[0];
+            $aiPosts = json_decode($txt, true);
+            if (!is_array($aiPosts)) { jsonResponse(['success' => false, 'error' => 'Răspuns AI neparsabil — reîncearcă.'], 502); break; }
+
+            // Indexez după slot
+            $byIdx = [];
+            foreach ($aiPosts as $k => $pp) {
+                if (is_array($pp) && isset($pp['slot'])) $byIdx[(int)$pp['slot']] = $pp;
+                elseif (is_array($pp) && isset($pp['continut'])) $byIdx[(int)$k] = $pp;
+            }
+
+            ensureSocialPostsTable($db);
+            $created = 0;
+            $ins = $db->prepare("INSERT INTO social_posts (brand, continut, platforme, tip_continut, status, data_programare, imagine_url, media_json, note, creat_de) VALUES (?,?,?,?,?,?,?,?,?,?)");
+            foreach ($slots as $i => $s) {
+                $continut = '';
+                if (isset($byIdx[$i]['continut'])) $continut = trim($byIdx[$i]['continut']);
+                if ($continut === '') continue;
+                $date = dateForDow($weekStart, $s['dow']);
+                $dt = $date . ' ' . $s['ora'] . ':00';
+                $note = '📷 LIPSEȘTE POZA' . ($campaign ? ' · [' . $campaign . ']' : '');
+                $ins->execute([$brand, $continut, json_encode($s['platforme']), $s['tip'], 'Draft', $dt, '', null, $note, 'AI']);
+                $created++;
+            }
+            if ($created === 0) { jsonResponse(['success' => false, 'error' => 'AI nu a returnat conținut utilizabil — reîncearcă.'], 502); break; }
+            jsonResponse(['success' => true, 'created' => $created, 'weekStart' => $weekStart]);
             break;
 
         case 'uploadSocialMedia':

@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Marketing — Portal CSSI 3.0</title>
+<title>Marketing — Portal CSSI</title>
 <meta name="robots" content="noindex, nofollow">
 <link rel="icon" type="image/x-icon" href="/images/favicon.ico">
 <meta name="theme-color" content="#dc2626">
@@ -19,82 +19,206 @@
 :root{--red:#dc2626;--red-d:#991b1b;--dark:#0f172a;--dark2:#1e293b;--gray:#64748b;--gray-l:#94a3b8;--gray-xl:#cbd5e1;--gray-bg:#f1f5f9;--gray-b:#e2e8f0;--blue:#3b82f6;--green:#22c55e;--orange:#f97316;--purple:#8b5cf6;--yellow:#eab308;--teal:#14b8a6;--pink:#ec4899;--radius:16px;--radius-sm:12px;--shadow:0 1px 3px rgba(0,0,0,0.06);--shadow-md:0 4px 12px rgba(0,0,0,0.08);--font:'Inter',system-ui,sans-serif;}
 body{font-family:var(--font);color:var(--dark);background:var(--gray-bg);-webkit-font-smoothing:antialiased;}
 a{text-decoration:none;color:inherit;}button{font-family:inherit;cursor:pointer;}
-.page-header{background:linear-gradient(135deg,#ec4899,#db2777);color:#fff;padding:20px 24px;border-radius:20px;margin-bottom:16px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;}
+
+.page-header{background:linear-gradient(135deg,#7c3aed,#6d28d9);color:#fff;padding:20px 24px;border-radius:20px;margin-bottom:16px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;}
 .page-back{color:rgba(255,255,255,0.7);font-size:13px;font-weight:500;}.page-back:hover{color:#fff;}
 .page-title{font-size:22px;font-weight:800;letter-spacing:-0.5px;}
 .page-subtitle{font-size:12px;color:rgba(255,255,255,0.5);margin-top:2px;}
 .page-actions{display:flex;gap:8px;align-items:center;}
 .page-btn{padding:10px 18px;border-radius:12px;font-size:13px;font-weight:700;border:none;transition:all 0.2s;}
-.page-btn.primary{background:#fff;color:#ec4899;}.page-btn.primary:hover{transform:translateY(-1px);}
+.page-btn.primary{background:#fff;color:#7c3aed;}.page-btn.primary:hover{transform:translateY(-1px);box-shadow:0 4px 15px rgba(0,0,0,0.2);}
 .page-btn.secondary{background:rgba(255,255,255,0.15);color:#fff;border:1px solid rgba(255,255,255,0.3);}.page-btn.secondary:hover{background:rgba(255,255,255,0.25);}
 .sync-indicator{width:8px;height:8px;border-radius:50%;display:inline-block;margin-right:6px;}
 .sync-ok{background:var(--green);box-shadow:0 0 6px rgba(34,197,94,0.5);}.sync-off{background:rgba(255,255,255,0.4);}.sync-loading{background:var(--orange);animation:pulse 1s infinite;}
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:0.4}}
 .container{max-width:1400px;margin:0 auto;padding:16px;}@media(min-width:768px){.container{padding:24px;}}
 
-.tabs{display:flex;gap:4px;background:#fff;border-radius:var(--radius);padding:4px;box-shadow:var(--shadow);margin-bottom:16px;}
-.tab{flex:1;padding:12px;border-radius:var(--radius-sm);font-weight:700;font-size:13px;border:none;background:transparent;color:var(--gray);transition:all 0.2s;text-align:center;cursor:pointer;}.tab.active{background:var(--dark);color:#fff;box-shadow:var(--shadow-md);}.tab:hover:not(.active){background:var(--gray-bg);}
+.kpi-row{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:16px;}
+.kpi-card{background:#fff;border-radius:var(--radius-sm);padding:14px 18px;box-shadow:var(--shadow);flex:1;min-width:120px;cursor:pointer;transition:all 0.2s;}.kpi-card:hover{box-shadow:var(--shadow-md);transform:translateY(-1px);}
+.kpi-card.active-filter{border:2px solid var(--purple);}
+.kpi-val{font-size:22px;font-weight:900;}.kpi-label{font-size:11px;color:var(--gray);margin-top:1px;}
 
-/* CAMPAIGNS */
-.campaigns{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:12px;margin-bottom:16px;}
-.camp-card{background:#fff;border-radius:var(--radius);padding:20px;box-shadow:var(--shadow);border-left:4px solid var(--pink);transition:all 0.2s;cursor:pointer;}
-.camp-card:hover{box-shadow:var(--shadow-md);transform:translateY(-1px);}
-.camp-card.activa{border-left-color:var(--green);}.camp-card.planificata{border-left-color:var(--blue);}.camp-card.finalizata{border-left-color:var(--gray);opacity:0.8;}
-.camp-top{display:flex;justify-content:space-between;align-items:start;margin-bottom:8px;}
-.camp-name{font-size:16px;font-weight:800;flex:1;}
-.camp-badge{padding:3px 10px;border-radius:6px;font-size:10px;font-weight:700;}
-.badge-activa{background:#f0fdf4;color:var(--green);}.badge-planificata{background:#eff6ff;color:var(--blue);}.badge-finalizata{background:var(--gray-bg);color:var(--gray);}.badge-pauza{background:#fff7ed;color:var(--orange);}
-.camp-desc{font-size:13px;color:var(--gray);margin-bottom:10px;line-height:1.5;}
-.camp-meta{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px;}
-.camp-tag{font-size:10px;font-weight:700;padding:3px 8px;border-radius:6px;background:var(--gray-bg);color:var(--gray);}
-.camp-progress{margin-bottom:8px;}
-.camp-bar{width:100%;height:8px;background:var(--gray-bg);border-radius:4px;overflow:hidden;}.camp-bar-fill{height:100%;background:var(--green);border-radius:4px;transition:width 0.5s;}
-.camp-pct{font-size:11px;color:var(--gray);margin-top:4px;text-align:right;}
-.camp-footer{display:flex;justify-content:space-between;font-size:11px;color:var(--gray);padding-top:8px;border-top:1px solid var(--gray-bg);}
+.filters{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:16px;align-items:center;}
+.filter-search{padding:10px 16px;border-radius:99px;font-size:13px;border:1px solid var(--gray-b);outline:none;font-family:inherit;min-width:160px;background:#fff;flex:1;max-width:240px;}.filter-search:focus{border-color:var(--purple);box-shadow:0 0 0 3px rgba(124,58,237,0.08);}
+.filter-select{padding:8px 14px;border-radius:99px;font-size:12px;font-weight:600;border:1px solid var(--gray-b);background:#fff;font-family:inherit;outline:none;cursor:pointer;}
+.view-toggle{display:flex;background:#fff;border-radius:10px;padding:3px;box-shadow:var(--shadow);border:1px solid var(--gray-b);margin-left:auto;}
+.view-btn{padding:7px 14px;border-radius:8px;font-size:12px;font-weight:600;border:none;background:none;color:var(--gray);cursor:pointer;transition:all 0.2s;}.view-btn.active{background:var(--dark);color:#fff;}
+.filter-count{font-size:12px;color:var(--gray);font-weight:500;}
 
-/* RESOURCES */
-.resources{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px;margin-bottom:16px;}
-.res-card{background:#fff;border-radius:var(--radius);padding:20px;box-shadow:var(--shadow);text-align:center;transition:all 0.2s;cursor:pointer;}
-.res-card:hover{box-shadow:var(--shadow-md);transform:translateY(-2px);}
-.res-icon{font-size:40px;margin-bottom:8px;}.res-title{font-size:14px;font-weight:800;margin-bottom:4px;}.res-desc{font-size:11px;color:var(--gray);margin-bottom:8px;}
-.res-link{display:inline-block;padding:6px 16px;border-radius:8px;background:var(--gray-bg);font-size:12px;font-weight:600;color:var(--dark);transition:all 0.2s;}.res-link:hover{background:var(--pink);color:#fff;}
+/* Platform colors */
+.plat-fb{color:#1877F2;}.plat-ig{color:#E4405F;}.plat-linkedin{color:#0A66C2;}.plat-yt{color:#FF0000;}.plat-tiktok{color:#000;}.plat-x{color:#000;}
+.bg-fb{background:#1877F215;}.bg-ig{background:#E4405F15;}.bg-linkedin{background:#0A66C215;}.bg-yt{background:#FF000015;}.bg-tiktok{background:#00000010;}.bg-x{background:#00000010;}
 
-/* HASHTAGS */
-.hashtag-section{background:#fff;border-radius:var(--radius);padding:20px;box-shadow:var(--shadow);margin-bottom:16px;}
-.hashtag-title{font-size:14px;font-weight:800;margin-bottom:12px;color:var(--dark);}
-.hashtags{display:flex;flex-wrap:wrap;gap:8px;}
-.hashtag{background:var(--gray-bg);padding:6px 14px;border-radius:99px;font-size:12px;font-weight:600;color:var(--dark);cursor:pointer;transition:all 0.2s;}.hashtag:hover{background:var(--pink);color:#fff;}
+/* Brand badges */
+.brand-cssi{background:#dc262615;color:var(--red);font-weight:700;padding:3px 10px;border-radius:6px;font-size:10px;}
+.brand-conca{background:#14b8a615;color:var(--teal);font-weight:700;padding:3px 10px;border-radius:6px;font-size:10px;}
 
-/* IDEAS */
-.ideas{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px;margin-bottom:16px;}
-.idea-card{background:#fff;border-radius:var(--radius);padding:16px;box-shadow:var(--shadow);transition:all 0.2s;border-left:3px solid var(--purple);}
-.idea-card:hover{box-shadow:var(--shadow-md);}
-.idea-title{font-size:14px;font-weight:800;margin-bottom:4px;}.idea-desc{font-size:12px;color:var(--gray);line-height:1.5;margin-bottom:8px;}
-.idea-tags{display:flex;flex-wrap:wrap;gap:4px;}
+/* POST CARDS */
+.posts{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:12px;margin-bottom:16px;}
+.pcard{background:#fff;border-radius:var(--radius);padding:18px;box-shadow:var(--shadow);border-left:4px solid var(--gray-b);transition:all 0.2s;cursor:pointer;}
+.pcard:hover{box-shadow:var(--shadow-md);transform:translateY(-1px);}
+.pcard-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;}
+.pcard-plats{display:flex;gap:6px;align-items:center;}
+.pcard-plat-icon{width:22px;height:22px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:12px;}
+.pcard-date{font-size:11px;color:var(--gray);font-weight:600;}
+.pcard-content{font-size:13px;line-height:1.6;color:var(--dark2);margin-bottom:10px;max-height:80px;overflow:hidden;}
+.pcard-tags{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px;}
+.pcard-badge{padding:3px 10px;border-radius:6px;font-size:10px;font-weight:700;}
+.badge-idee{background:#f5f3ff;color:var(--purple);}.badge-draft{background:var(--gray-bg);color:var(--gray);}.badge-programat{background:#fff7ed;color:var(--orange);}.badge-publicat{background:#f0fdf4;color:var(--green);}.badge-eroare{background:#fef2f2;color:var(--red);}
+.pcard-footer{display:flex;justify-content:space-between;align-items:center;padding-top:8px;border-top:1px solid var(--gray-bg);}
+.pcard-img{width:100%;height:120px;object-fit:cover;border-radius:10px;margin-bottom:10px;}
+
+/* CALENDAR VIEW */
+.cal-nav{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;background:#fff;border-radius:var(--radius);padding:12px 20px;box-shadow:var(--shadow);}
+.cal-nav-btn{padding:8px 16px;border-radius:8px;border:1px solid var(--gray-b);background:#fff;font-weight:700;font-size:13px;cursor:pointer;transition:all 0.2s;font-family:inherit;}.cal-nav-btn:hover{background:var(--gray-bg);}
+.cal-month{font-size:18px;font-weight:800;}
+.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:2px;margin-bottom:16px;}
+.cal-head{padding:8px;text-align:center;font-size:11px;font-weight:700;color:var(--gray);text-transform:uppercase;}
+.cal-day{background:#fff;min-height:100px;padding:6px;border-radius:8px;font-size:11px;position:relative;cursor:pointer;transition:all 0.15s;}
+.cal-day:hover{box-shadow:var(--shadow-md);}
+.cal-day.other{opacity:0.3;}.cal-day.today{border:2px solid var(--purple);}
+.cal-day-num{font-weight:800;font-size:12px;margin-bottom:4px;}
+.cal-post{padding:3px 5px;border-radius:4px;font-size:9px;font-weight:700;margin-bottom:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;cursor:pointer;display:flex;align-items:center;gap:3px;}
+.cal-post.fb{background:#1877F215;color:#1877F2;}.cal-post.ig{background:#E4405F15;color:#E4405F;}.cal-post.linkedin{background:#0A66C215;color:#0A66C2;}.cal-post.yt{background:#FF000015;color:#FF0000;}.cal-post.tiktok{background:#00000010;color:#000;}.cal-post.x{background:#00000010;color:#000;}
+
+/* KANBAN */
+.kanban{display:flex;gap:12px;overflow-x:auto;padding-bottom:12px;margin-bottom:16px;}
+.kanban-col{min-width:260px;flex:1;background:#fff;border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden;}
+.kanban-head{padding:14px 16px;color:#fff;font-weight:800;font-size:13px;display:flex;justify-content:space-between;align-items:center;}
+.kanban-head .count{background:rgba(255,255,255,0.3);padding:2px 8px;border-radius:6px;font-size:11px;}
+.kanban-body{padding:8px;min-height:100px;max-height:500px;overflow-y:auto;}
+.k-card{background:var(--gray-bg);border-radius:10px;padding:10px 12px;margin-bottom:8px;cursor:pointer;transition:all 0.2s;border-left:3px solid transparent;}
+.k-card:hover{transform:translateX(2px);box-shadow:0 2px 8px rgba(0,0,0,0.08);}
+.k-card-title{font-size:12px;font-weight:700;margin-bottom:4px;display:flex;gap:4px;align-items:center;}
+.k-card-sub{font-size:11px;color:var(--gray);}
 
 .toast-container{position:fixed;top:20px;right:20px;z-index:300;display:flex;flex-direction:column;gap:8px;}
 .toast{padding:14px 20px;border-radius:12px;color:#fff;font-size:13px;font-weight:600;box-shadow:0 8px 24px rgba(0,0,0,0.15);animation:slideIn 0.3s ease;max-width:380px;}
-.toast.success{background:var(--green);}.toast.info{background:var(--pink);}
+.toast.success{background:var(--green);}.toast.error{background:var(--red);}.toast.info{background:var(--purple);}
 @keyframes slideIn{from{transform:translateX(100%);opacity:0}to{transform:translateX(0);opacity:1}}
 
 .modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);backdrop-filter:blur(4px);z-index:200;align-items:center;justify-content:center;padding:16px;}.modal-overlay.active{display:flex;}
-.modal{background:#fff;border-radius:20px;width:100%;max-width:520px;max-height:90vh;overflow-y:auto;box-shadow:0 25px 60px rgba(0,0,0,0.3);}
+.modal{background:#fff;border-radius:20px;width:100%;max-width:580px;max-height:90vh;overflow-y:auto;box-shadow:0 25px 60px rgba(0,0,0,0.3);}
 .modal-head{padding:20px 24px;border-bottom:1px solid var(--gray-b);display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;background:#fff;border-radius:20px 20px 0 0;z-index:1;}
 .modal-title{font-size:18px;font-weight:800;}
 .modal-close{width:32px;height:32px;border-radius:8px;border:none;background:var(--gray-bg);color:var(--gray);font-size:18px;display:flex;align-items:center;justify-content:center;}.modal-close:hover{background:#fef2f2;color:var(--red);}
 .modal-body{padding:24px;}
 .form-group{margin-bottom:16px;}.form-label{display:block;font-size:13px;font-weight:600;color:var(--dark);margin-bottom:6px;}.form-label .req{color:var(--red);}
-.form-input,.form-select,.form-textarea{width:100%;padding:12px 16px;border:2px solid var(--gray-b);border-radius:var(--radius-sm);font-size:14px;font-family:inherit;outline:none;transition:all 0.2s;background:#fff;}.form-input:focus,.form-select:focus,.form-textarea:focus{border-color:var(--pink);box-shadow:0 0 0 3px rgba(236,72,153,0.08);}
-.form-textarea{min-height:60px;resize:vertical;}
+.form-input,.form-select,.form-textarea{width:100%;padding:12px 16px;border:2px solid var(--gray-b);border-radius:var(--radius-sm);font-size:14px;font-family:inherit;outline:none;transition:all 0.2s;background:#fff;}.form-input:focus,.form-select:focus,.form-textarea:focus{border-color:var(--purple);box-shadow:0 0 0 3px rgba(124,58,237,0.08);}
+.form-textarea{min-height:100px;resize:vertical;}
 .form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;}@media(max-width:480px){.form-row{grid-template-columns:1fr;}}
-.form-submit{width:100%;padding:14px;background:linear-gradient(135deg,#ec4899,#db2777);color:#fff;border:none;border-radius:var(--radius-sm);font-size:15px;font-weight:700;cursor:pointer;transition:all 0.3s;}.form-submit:hover{transform:translateY(-1px);}
+.form-submit{width:100%;padding:14px;background:linear-gradient(135deg,#7c3aed,#6d28d9);color:#fff;border:none;border-radius:var(--radius-sm);font-size:15px;font-weight:700;cursor:pointer;transition:all 0.3s;}.form-submit:hover{transform:translateY(-1px);}
+.char-count{font-size:11px;color:var(--gray);text-align:right;margin-top:4px;}
+
+/* Platform checkboxes */
+.plat-checks{display:flex;flex-wrap:wrap;gap:8px;}
+.plat-check{display:flex;align-items:center;gap:6px;padding:8px 14px;border-radius:10px;border:2px solid var(--gray-b);cursor:pointer;transition:all 0.2s;font-size:13px;font-weight:600;}
+.plat-check:hover{border-color:var(--purple);}
+.plat-check.checked{border-color:var(--purple);background:#f5f3ff;}
+.plat-check input{display:none;}
+
+/* Publish bar */
+.publish-bar{display:flex;gap:8px;margin-top:16px;}
+.btn-publish{flex:1;padding:14px;border-radius:var(--radius-sm);font-size:14px;font-weight:700;border:none;cursor:pointer;transition:all 0.2s;}
+.btn-save{background:var(--gray-bg);color:var(--dark);}.btn-save:hover{background:var(--gray-b);}
+.btn-schedule{background:linear-gradient(135deg,var(--orange),#ea580c);color:#fff;}.btn-schedule:hover{transform:translateY(-1px);}
+.btn-now{background:linear-gradient(135deg,var(--green),#16a34a);color:#fff;}.btn-now:hover{transform:translateY(-1px);}
 
 .bottom-nav{position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1px solid var(--gray-b);box-shadow:0 -4px 20px rgba(0,0,0,0.06);padding:6px 12px;z-index:100;display:flex;gap:4px;}@media(min-width:768px){.bottom-nav{display:none;}}
-.bn-item{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:8px 4px;border-radius:10px;font-size:10px;font-weight:600;color:var(--gray);transition:all 0.2s;gap:2px;}.bn-item.active{color:var(--pink);background:#fdf2f8;}.bn-item .bn-icon{font-size:20px;}
+.bn-item{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:8px 4px;border-radius:10px;font-size:10px;font-weight:600;color:var(--gray);transition:all 0.2s;gap:2px;}.bn-item.active{color:var(--purple);background:#f5f3ff;}.bn-item .bn-icon{font-size:20px;}
 .empty-msg{text-align:center;padding:40px;color:var(--gray-l);font-size:14px;}
+
+/* Media Upload Zone */
+.upload-zone{border:2px dashed var(--gray-b);border-radius:var(--radius);padding:24px;text-align:center;cursor:pointer;transition:all 0.2s;background:#fafbfc;position:relative;}
+.upload-zone:hover,.upload-zone.drag-over{border-color:var(--purple);background:#f5f3ff;}
+.upload-zone.drag-over{box-shadow:0 0 0 4px rgba(124,58,237,0.1);}
+.upload-zone-icon{font-size:32px;margin-bottom:8px;}
+.upload-zone-text{font-size:13px;color:var(--gray);font-weight:600;}
+.upload-zone-sub{font-size:11px;color:var(--gray-l);margin-top:4px;}
+.upload-zone input[type=file]{display:none;}
+.upload-preview{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px;}
+.upload-thumb{position:relative;width:90px;height:90px;border-radius:10px;overflow:hidden;border:2px solid var(--gray-b);background:var(--gray-bg);}
+.upload-thumb img,.upload-thumb video{width:100%;height:100%;object-fit:cover;}
+.upload-thumb-remove{position:absolute;top:2px;right:2px;width:22px;height:22px;border-radius:50%;background:rgba(0,0,0,0.6);color:#fff;border:none;font-size:12px;display:flex;align-items:center;justify-content:center;cursor:pointer;line-height:1;}
+.upload-thumb-remove:hover{background:var(--red);}
+.upload-thumb-name{position:absolute;bottom:0;left:0;right:0;background:rgba(0,0,0,0.6);color:#fff;font-size:8px;padding:2px 4px;text-overflow:ellipsis;overflow:hidden;white-space:nowrap;}
+.upload-thumb-video::after{content:'▶';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-size:20px;color:#fff;text-shadow:0 2px 6px rgba(0,0,0,0.5);pointer-events:none;}
+.upload-progress{height:3px;background:var(--gray-b);border-radius:2px;margin-top:8px;overflow:hidden;display:none;}
+.upload-progress.active{display:block;}
+.upload-progress-bar{height:100%;background:var(--purple);border-radius:2px;transition:width 0.3s;}
+
+/* AI Generation */
+.ai-bar{display:flex;gap:6px;margin-top:8px;}
+.ai-btn{padding:8px 14px;border-radius:10px;font-size:12px;font-weight:700;border:1px solid;cursor:pointer;transition:all 0.2s;display:flex;align-items:center;gap:4px;}
+.ai-btn-text{background:linear-gradient(135deg,#f5f3ff,#ede9fe);color:var(--purple);border-color:var(--purple);}.ai-btn-text:hover{background:var(--purple);color:#fff;}
+.ai-btn-img{background:linear-gradient(135deg,#fef3c7,#fde68a);color:#92400e;border-color:#f59e0b;}.ai-btn-img:hover{background:#f59e0b;color:#fff;}
+.ai-btn:disabled{opacity:0.5;cursor:wait;}
+.ai-prompt-box{background:linear-gradient(135deg,#f5f3ff,#ede9fe);border:2px solid var(--purple);border-radius:var(--radius-sm);padding:14px;margin-top:8px;display:none;}
+.ai-prompt-box.active{display:block;}
+.ai-prompt-box input{width:100%;padding:10px 14px;border:2px solid var(--gray-b);border-radius:10px;font-size:13px;font-family:inherit;outline:none;margin-bottom:8px;}.ai-prompt-box input:focus{border-color:var(--purple);}
+.ai-prompt-actions{display:flex;gap:6px;}
+.ai-prompt-go{padding:8px 18px;border-radius:10px;border:none;background:var(--purple);color:#fff;font-weight:700;font-size:12px;cursor:pointer;}.ai-prompt-go:hover{background:#6d28d9;}
+.ai-prompt-cancel{padding:8px 14px;border-radius:10px;border:1px solid var(--gray-b);background:#fff;color:var(--gray);font-weight:600;font-size:12px;cursor:pointer;}
+.ai-loading{display:inline-block;width:14px;height:14px;border:2px solid rgba(255,255,255,0.3);border-top-color:#fff;border-radius:50%;animation:spin 0.6s linear infinite;}
+@keyframes spin{to{transform:rotate(360deg)}}
 .footer{text-align:center;color:var(--gray-xl);font-size:11px;padding:24px 0 100px;}
-.loading-bar{position:fixed;top:0;left:0;right:0;height:3px;z-index:400;display:none;}.loading-bar.active{display:block;}.loading-bar::after{content:'';display:block;width:30%;height:100%;background:var(--pink);border-radius:2px;animation:loadSlide 1.2s infinite ease-in-out;}
+.loading-bar{position:fixed;top:0;left:0;right:0;height:3px;z-index:400;display:none;}.loading-bar.active{display:block;}.loading-bar::after{content:'';display:block;width:30%;height:100%;background:var(--purple);border-radius:2px;animation:loadSlide 1.2s infinite ease-in-out;}
 @keyframes loadSlide{0%{margin-left:-30%}100%{margin-left:100%}}
+
+/* Tabs pagină (Postări / Recenzii) */
+.tabs{display:flex;gap:6px;margin-bottom:16px;background:#fff;border-radius:14px;padding:5px;box-shadow:var(--shadow);max-width:380px;}
+.tab-btn{flex:1;padding:11px 14px;border-radius:10px;border:none;background:none;color:var(--gray);font-size:13px;font-weight:700;cursor:pointer;transition:all 0.2s;}
+.tab-btn.active{background:linear-gradient(135deg,#7c3aed,#6d28d9);color:#fff;box-shadow:0 2px 8px rgba(124,58,237,0.3);}
+
+/* Badge "lipsește poza" */
+.no-photo-badge{display:inline-flex;align-items:center;gap:4px;padding:3px 9px;border-radius:6px;font-size:10px;font-weight:800;background:#fef2f2;color:var(--red);border:1px dashed #fca5a5;}
+.filter-chip{padding:8px 14px;border-radius:99px;font-size:12px;font-weight:700;border:1px solid var(--gray-b);background:#fff;color:var(--gray);cursor:pointer;transition:all 0.2s;}
+.filter-chip.active{background:#fef2f2;color:var(--red);border-color:#fca5a5;}
+
+/* Generează săptămâna (mini-modal) */
+.gen-preset{padding:8px 14px;border-radius:99px;border:1px solid var(--gray-b);background:#fff;color:var(--dark);font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;}
+.gen-preset.active{border-color:var(--purple);background:#f5f3ff;color:var(--purple);}
+
+/* Recenzii (tab) */
+.stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:20px;}
+@media(max-width:640px){.stats-grid{grid-template-columns:repeat(2,1fr);}}
+.stat-card{background:#fff;border-radius:var(--radius);padding:16px;text-align:center;box-shadow:var(--shadow);}
+.stat-card .num{font-size:28px;font-weight:900;letter-spacing:-1px;}
+.stat-card .lbl{font-size:11px;font-weight:700;color:var(--gray);text-transform:uppercase;letter-spacing:0.5px;margin-top:2px;}
+.stat-card.green .num{color:var(--green);}.stat-card.blue .num{color:var(--blue);}.stat-card.orange .num{color:var(--orange);}.stat-card.purple .num{color:var(--purple);}
+.section{background:#fff;border-radius:var(--radius);padding:20px;box-shadow:var(--shadow);margin-bottom:16px;}
+.section-title{font-size:14px;font-weight:800;color:var(--dark);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:14px;display:flex;align-items:center;gap:8px;}
+.sms-list{display:flex;flex-direction:column;gap:10px;}
+.sms-row{background:var(--gray-bg);border-radius:var(--radius-sm);padding:14px 16px;display:grid;grid-template-columns:1fr auto;gap:10px;align-items:start;transition:all 0.15s;}
+.sms-row:hover{box-shadow:var(--shadow-md);}
+.sms-row .top{display:flex;flex-wrap:wrap;align-items:center;gap:8px;}
+.sms-row .client{font-weight:800;font-size:14px;}
+.sms-row .pill{display:inline-block;padding:2px 10px;border-radius:99px;font-size:11px;font-weight:700;}
+.pill.trimis{background:#dbeafe;color:#1d4ed8;}.pill.whatsapp{background:#dcfce7;color:#15803d;}.pill.simulat{background:#fef3c7;color:#92400e;}.pill.eroare{background:#fecaca;color:#991b1b;}.pill.livrat{background:#d1fae5;color:#065f46;}.pill.asteptare{background:#e2e8f0;color:#475569;}
+.sms-row .meta{font-size:12px;color:var(--gray);margin-top:4px;display:flex;flex-wrap:wrap;gap:12px;}
+.sms-row .meta span{display:inline-flex;align-items:center;gap:4px;}
+.sms-row .actions{display:flex;flex-direction:column;align-items:flex-end;gap:6px;}
+@media(max-width:640px){.sms-row{grid-template-columns:1fr;}.sms-row .actions{flex-direction:row;flex-wrap:wrap;}}
+.review-toggle{display:flex;align-items:center;gap:8px;padding:6px 12px;border-radius:10px;border:1.5px solid var(--gray-b);background:#fff;font-size:12px;font-weight:700;color:var(--gray);cursor:pointer;transition:all 0.15s;white-space:nowrap;}
+.review-toggle:hover{border-color:var(--green);color:var(--green);}
+.review-toggle.received{background:#d1fae5;border-color:#059669;color:#065f46;pointer-events:none;}
+.review-toggle .check{width:18px;height:18px;border-radius:50%;border:2px solid var(--gray-xl);display:flex;align-items:center;justify-content:center;font-size:11px;transition:all 0.15s;}
+.review-toggle.received .check{border-color:#059669;background:#059669;color:#fff;}
+.star-row{display:flex;align-items:center;gap:2px;margin-top:4px;}
+.star-row .star{font-size:16px;cursor:pointer;transition:transform 0.1s;}.star-row .star:hover{transform:scale(1.3);}
+.star-row .star.active{color:#f59e0b;}.star-row .star.inactive{color:#e2e8f0;}
+.note-input{margin-top:6px;width:100%;max-width:280px;padding:6px 10px;border:1px solid var(--gray-b);border-radius:8px;font-size:12px;font-family:inherit;resize:none;}
+.note-input:focus{outline:none;border-color:var(--blue);}
+.sms-preview{font-size:11px;color:var(--gray);margin-top:6px;padding:8px 10px;background:#fff;border-radius:8px;border:1px solid var(--gray-b);max-width:500px;line-height:1.5;display:none;white-space:pre-line;}
+.sms-row.expanded .sms-preview{display:block;}
+.btn-expand{padding:4px 10px;border-radius:8px;border:1px solid var(--gray-b);background:#fff;font-size:11px;color:var(--gray);cursor:pointer;font-family:inherit;}
+.btn-expand:hover{border-color:var(--blue);color:var(--blue);}
+.btn-delete{padding:4px 10px;border-radius:8px;border:1px solid #fecaca;background:#fff;font-size:11px;color:#dc2626;cursor:pointer;font-family:inherit;font-weight:600;}
+.btn-delete:hover{background:#fef2f2;border-color:#dc2626;}
+.btn-reset-all{padding:8px 14px;border-radius:10px;border:1px solid #fecaca;background:#fff;font-size:12px;color:#dc2626;cursor:pointer;font-family:inherit;font-weight:700;float:right;margin-top:-4px;}
+.btn-reset-all:hover{background:#fef2f2;}
+.empty-state{text-align:center;padding:40px 20px;color:var(--gray-l);}
+.empty-state .ei{font-size:40px;margin-bottom:12px;}.empty-state .et{font-size:14px;font-weight:600;}
 </style>
 <script src="/admin/access-guard.js" defer></script>
 </head>
@@ -106,493 +230,1045 @@ a{text-decoration:none;color:inherit;}button{font-family:inherit;cursor:pointer;
     <div class="page-header">
         <div>
             <a href="../admin.html" class="page-back">← Dashboard</a>
-            <div class="page-title">📊 Marketing Hub</div>
-            <div class="page-subtitle" id="syncStatus"><span class="sync-indicator sync-off"></span>Date locale (demo)</div>
+            <div class="page-title">📣 Marketing</div>
+            <div class="page-subtitle" id="syncStatus"><span class="sync-indicator sync-off"></span>Se conectează...</div>
         </div>
         <div class="page-actions">
-            <a href="planificator-saptamanal.html" class="page-btn secondary" style="background:linear-gradient(135deg,#ccfbf1,#99f6e4);color:#0f766e;border-color:#14b8a6" title="Generează 8 postări/săptămână dintr-un click">📅 Planificator Săptămânal</a>
-            <a href="calendar-social.html?filter=Draft" class="page-btn secondary" style="background:linear-gradient(135deg,#fef3c7,#fde68a);color:#92400e;border-color:#f59e0b" title="Postări care așteaptă aprobarea ta">✅ Aprobare postări</a>
-            <a href="calendar-social.html" class="page-btn secondary">📱 Social Manager</a>
-            <button class="page-btn primary" onclick="openAddModal()">+ Campanie Nouă</button>
+            <button class="page-btn secondary" style="background:linear-gradient(135deg,#ede9fe,#ddd6fe);color:#5b21b6;border-color:#8b5cf6" onclick="openGenWeek()" title="Generează automat o săptămână de postări cu AI">✨ Generează săptămâna</button>
+            <button class="page-btn secondary" onclick="loadPosts()">🔄 Refresh</button>
+            <button class="page-btn primary" onclick="openAddModal()">+ Postare Nouă</button>
         </div>
     </div>
 
     <div class="tabs">
-        <button class="tab active" onclick="setTab('campanii',this)">🎯 Campanii</button>
-        <button class="tab" onclick="setTab('seo',this)">🔍 SEO & Meta</button>
-        <button class="tab" onclick="setTab('idei',this)">💡 Idei Conținut</button>
-        <button class="tab" onclick="setTab('hashtag',this)">🏷️ Hashtag-uri</button>
-        <button class="tab" onclick="setTab('resurse',this)">📁 Resurse & Brand</button>
-        <button class="tab" onclick="setTab('kpi',this)">📊 KPI</button>
+        <button class="tab-btn active" id="tabBtnPostari" onclick="setTab('postari')">📋 Postări</button>
+        <button class="tab-btn" id="tabBtnRecenzii" onclick="setTab('recenzii')">⭐ Recenzii</button>
     </div>
 
-    <div id="tab-campanii"></div>
-    <div id="tab-seo" style="display:none"></div>
-    <div id="tab-idei" style="display:none"></div>
-    <div id="tab-hashtag" style="display:none"></div>
-    <div id="tab-resurse" style="display:none"></div>
-    <div id="tab-kpi" style="display:none"></div>
+    <!-- ════════ TAB POSTĂRI ════════ -->
+    <div id="tabPostari">
+        <div class="kpi-row" id="kpiRow"></div>
 
-    <div class="footer">Portal CSSI 3.0 · Marketing Hub v3.0</div>
+        <div class="filters">
+            <input type="text" class="filter-search" id="searchInput" placeholder="🔍 Caută..." oninput="render()">
+            <select class="filter-select" id="filterBrand" onchange="render()"><option value="">Toate brandurile</option><option value="cssi">🔴 CSSI</option><option value="conca-verde">🟢 Conca-Verde</option></select>
+            <select class="filter-select" id="filterStatus" onchange="render()"><option value="">Toate statusurile</option><option>Idee</option><option>Draft</option><option>Programat</option><option>Publicat</option><option>Eroare</option></select>
+            <select class="filter-select" id="filterPlatform" onchange="render()"><option value="">Toate platformele</option><option value="fb">📘 Facebook</option><option value="ig">📸 Instagram</option><option value="linkedin">💼 LinkedIn</option><option value="yt">▶️ YouTube</option><option value="tiktok">🎵 TikTok</option></select>
+            <button class="filter-chip" id="chipNoPhoto" onclick="toggleNoPhoto()" title="Doar postările fără fotografie">📷 Fără poză</button>
+            <div class="view-toggle">
+                <button class="view-btn" id="vList" onclick="setView('list')">📋 Lista</button>
+                <button class="view-btn active" id="vCal" onclick="setView('calendar')">📅 Calendar</button>
+                <button class="view-btn" id="vKanban" onclick="setView('kanban')">◫ Kanban</button>
+            </div>
+            <div class="filter-count" id="filterCount"></div>
+        </div>
+
+        <div id="listView" class="posts"></div>
+        <div id="calView" style="display:none"><div class="cal-nav"><button class="cal-nav-btn" onclick="navMonth(-1)">← Luna anterioară</button><div class="cal-month" id="calMonth"></div><button class="cal-nav-btn" onclick="navMonth(1)">Luna următoare →</button></div><div class="cal-grid" id="calGrid"></div></div>
+        <div id="kanbanView" style="display:none"></div>
+    </div>
+
+    <!-- ════════ TAB RECENZII ════════ -->
+    <div id="tabRecenzii" style="display:none">
+        <div class="stats-grid" id="statsGrid">
+            <div class="stat-card blue"><div class="num" id="stTotal">-</div><div class="lbl">Cereri trimise</div></div>
+            <div class="stat-card green"><div class="num" id="stClicked">-</div><div class="lbl">Link accesat</div></div>
+            <div class="stat-card orange"><div class="num" id="stRecenzii">-</div><div class="lbl">Recenzii primite</div></div>
+            <div class="stat-card purple"><div class="num" id="stRata">-</div><div class="lbl">Rată conversie</div></div>
+        </div>
+        <div class="section">
+            <div class="section-title">💬 Toate cererile de recenzie <button class="btn-reset-all" onclick="resetAll()" title="Șterge toate cererile (reset complet)">🗑️ Șterge tot</button></div>
+            <div class="sms-list" id="smsList"><div class="empty-state"><div class="ei">⏳</div><div class="et">Se încarcă...</div></div></div>
+        </div>
+    </div>
+
+    <div class="footer">Portal CSSI · Marketing v3.0 · Postări AI + Recenzii · Powered by Claude + Zernio</div>
 </div>
 
 <div class="bottom-nav">
     <a href="../admin.html" class="bn-item"><span class="bn-icon">🏠</span>Acasă</a>
     <a href="proiecte.html" class="bn-item"><span class="bn-icon">📋</span>Proiecte</a>
     <a href="crm-clienti.html" class="bn-item"><span class="bn-icon">💰</span>CRM</a>
-    <a href="executie.html" class="bn-item"><span class="bn-icon">🔧</span>Execuție</a>
+    <a href="marketing.html" class="bn-item active"><span class="bn-icon">📣</span>Marketing</a>
     <a href="financiar.html" class="bn-item"><span class="bn-icon">📄</span>Facturi</a>
 </div>
 
-<!-- ADD CAMPAIGN MODAL -->
+<!-- ADD/EDIT MODAL -->
 <div id="addModal" class="modal-overlay" onclick="if(event.target===this)closeAddModal()">
 <div class="modal">
-    <div class="modal-head"><div class="modal-title" id="modalTitle">🎯 Campanie Nouă</div><button class="modal-close" onclick="closeAddModal()">✕</button></div>
+    <div class="modal-head"><div class="modal-title" id="modalTitle">📝 Postare Nouă</div><button class="modal-close" onclick="closeAddModal()">✕</button></div>
     <div class="modal-body">
-        <form id="addForm" onsubmit="saveCampaign(event)">
-            <input type="hidden" name="editId" id="editId" value="">
-            <div class="form-group"><label class="form-label">Nume campanie <span class="req">*</span></label><input type="text" class="form-input" name="nume" id="fNume" required placeholder="ex: Lansare serviciu PRAM"></div>
-            <div class="form-group"><label class="form-label">Descriere</label><textarea class="form-textarea" name="desc" id="fDesc" placeholder="Obiective, mesaje cheie..."></textarea></div>
+        <form id="addForm" onsubmit="savePost(event)">
+            <input type="hidden" id="editId" value="">
+
             <div class="form-row">
-                <div class="form-group"><label class="form-label">Perioadă start</label><input type="date" class="form-input" name="start" id="fStart"></div>
-                <div class="form-group"><label class="form-label">Perioadă final</label><input type="date" class="form-input" name="end" id="fEnd"></div>
-            </div>
-            <div class="form-row">
-                <div class="form-group"><label class="form-label">Status</label>
-                    <select class="form-select" name="status" id="fStatus"><option>Planificată</option><option>Activă</option><option>Pauză</option><option>Finalizată</option></select>
+                <div class="form-group"><label class="form-label">Brand <span class="req">*</span></label>
+                    <select class="form-select" id="fBrand">
+                        <option value="cssi">🔴 CSSI</option>
+                        <option value="conca-verde">🟢 Conca-Verde</option>
+                    </select>
                 </div>
-                <div class="form-group"><label class="form-label">Buget (RON)</label><input type="number" class="form-input" name="buget" id="fBuget" min="0" placeholder="0"></div>
+                <div class="form-group"><label class="form-label">Tip conținut</label>
+                    <select class="form-select" id="fTip"><option>Foto</option><option>Video</option><option>Carusel</option><option>Story</option><option>Reel</option><option>Text</option></select>
+                </div>
             </div>
-            <div class="form-group"><label class="form-label">Platforme</label><input type="text" class="form-input" name="platforme" id="fPlat" placeholder="Facebook, Instagram, Google Ads..."></div>
-            <button type="submit" class="form-submit" id="submitBtn">🎯 Salvează Campanie</button>
+
+            <div class="form-group">
+                <label class="form-label">Platforme <span class="req">*</span></label>
+                <div class="plat-checks" id="platChecks">
+                    <label class="plat-check" onclick="toggleCheck(this)"><input type="checkbox" value="fb"><span class="plat-fb">📘</span> Facebook</label>
+                    <label class="plat-check" onclick="toggleCheck(this)"><input type="checkbox" value="ig"><span class="plat-ig">📸</span> Instagram</label>
+                    <label class="plat-check" onclick="toggleCheck(this)"><input type="checkbox" value="linkedin"><span class="plat-linkedin">💼</span> LinkedIn</label>
+                    <label class="plat-check" onclick="toggleCheck(this)"><input type="checkbox" value="yt"><span class="plat-yt">▶️</span> YouTube</label>
+                    <label class="plat-check" onclick="toggleCheck(this)"><input type="checkbox" value="tiktok"><span class="plat-tiktok">🎵</span> TikTok</label>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label" style="display:flex;justify-content:space-between;align-items:center">
+                    <span>Conținut <span class="req">*</span></span>
+                    <button type="button" onclick="openTemplatePicker()" style="padding:5px 12px;border-radius:8px;border:1px solid var(--purple);background:#fff;color:var(--purple);font-size:11px;font-weight:700;cursor:pointer">📚 Șabloane SEO 2026</button>
+                </label>
+                <textarea class="form-textarea" id="fContent" required placeholder="Textul postării, hashtag-uri... sau apasă „📚 Șabloane" pentru structuri optimizate" oninput="updateCharCount();updatePlatformLimits()"></textarea>
+                <div style="display:flex;justify-content:space-between;align-items:center;margin-top:4px">
+                    <div class="char-count" id="charCount">0 caractere</div>
+                    <div id="charCountPerPlat" style="font-size:11px;color:var(--gray)"></div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Media (imagini / video)</label>
+                <div class="upload-zone" id="uploadZone" onclick="document.getElementById('fileInput').click()" ondragover="event.preventDefault();this.classList.add('drag-over')" ondragleave="this.classList.remove('drag-over')" ondrop="event.preventDefault();this.classList.remove('drag-over');handleFiles(event.dataTransfer.files)">
+                    <input type="file" id="fileInput" multiple accept="image/*,video/*" onchange="handleFiles(this.files)">
+                    <div class="upload-zone-icon">📁</div>
+                    <div class="upload-zone-text">Click sau drag & drop fișiere aici</div>
+                    <div class="upload-zone-sub">JPG, PNG, GIF, WEBP, MP4, MOV · Max 50MB per fișier</div>
+                </div>
+                <div class="upload-progress" id="uploadProgress"><div class="upload-progress-bar" id="uploadProgressBar"></div></div>
+                <div class="ai-bar" style="margin-top:10px">
+                    <button type="button" class="ai-btn ai-btn-img" id="aiImgBtn" onclick="toggleAiImg()">🎨 Generează imagine AI</button>
+                </div>
+                <div class="ai-prompt-box" id="aiImgBox" style="border-color:#f59e0b;background:linear-gradient(135deg,#fffbeb,#fef3c7)">
+                    <input type="text" id="aiImgPrompt" placeholder="Descrie imaginea (ex: cameră supraveghere montată pe clădire, stil profesional)" onkeydown="if(event.key==='Enter'){event.preventDefault();generateAiImage()}">
+                    <div class="ai-prompt-actions">
+                        <button type="button" class="ai-prompt-go" style="background:#f59e0b" id="aiImgGo" onclick="generateAiImage()">🎨 Generează</button>
+                        <button type="button" class="ai-prompt-cancel" onclick="toggleAiImg()">Anulează</button>
+                    </div>
+                </div>
+                <div class="upload-preview" id="uploadPreview"></div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group"><label class="form-label">Data publicare</label><input type="date" class="form-input" id="fData"></div>
+                <div class="form-group"><label class="form-label">Ora</label><input type="time" class="form-input" id="fOra" value="10:00"></div>
+            </div>
+
+            <div class="form-group"><label class="form-label">Observații interne</label><input type="text" class="form-input" id="fNote" placeholder="Note echipă, linkuri..."></div>
+
+            <div class="publish-bar">
+                <button type="button" class="btn-publish btn-save" onclick="savePost(event,'Draft')">💾 Salvează Draft</button>
+                <button type="button" class="btn-publish btn-schedule" onclick="savePost(event,'Programat')">⏰ Programează</button>
+                <button type="button" class="btn-publish btn-now" onclick="savePost(event,'PublicaNow')">🚀 Publică Acum</button>
+            </div>
         </form>
     </div>
 </div>
 </div>
 
+<!-- DETAIL MODAL -->
+<div id="detailModal" class="modal-overlay" onclick="if(event.target===this)closeDetailModal()">
+<div class="modal">
+    <div class="modal-head"><div class="modal-title" id="detailTitle">📋 Detalii Postare</div><button class="modal-close" onclick="closeDetailModal()">✕</button></div>
+    <div class="modal-body" id="detailBody"></div>
+</div>
+</div>
+
+<!-- ȘABLOANE SEO MODAL — structuri optimizate pentru algoritmii 2026 -->
+<div id="templateModal" class="modal-overlay" onclick="if(event.target===this)closeTemplateModal()">
+<div class="modal" style="max-width:780px">
+    <div class="modal-head"><div class="modal-title">📚 Șabloane SEO 2026</div><button class="modal-close" onclick="closeTemplateModal()">✕</button></div>
+    <div class="modal-body" id="templateBody"></div>
+</div>
+</div>
+
+<!-- APROBARE MODAL (preview multi-platformă înainte de publicare) -->
+<div id="approveModal" class="modal-overlay" onclick="if(event.target===this)closeApproveModal()">
+<div class="modal" style="max-width:780px">
+    <div class="modal-head"><div class="modal-title">✅ Aprobare publicare</div><button class="modal-close" onclick="closeApproveModal()">✕</button></div>
+    <div class="modal-body" id="approveBody"></div>
+</div>
+</div>
+
+<!-- GENEREAZĂ SĂPTĂMÂNA CU AI -->
+<div id="genModal" class="modal-overlay" onclick="if(event.target===this)closeGenWeek()">
+<div class="modal" style="max-width:520px">
+    <div class="modal-head"><div class="modal-title">✨ Generează săptămâna cu AI</div><button class="modal-close" onclick="closeGenWeek()">✕</button></div>
+    <div class="modal-body">
+        <div style="background:linear-gradient(135deg,#f5f3ff,#ede9fe);border-radius:12px;padding:14px 18px;margin-bottom:18px;font-size:13px;color:#5b21b6;line-height:1.6">
+            AI scrie automat <strong>o săptămână de postări complete</strong> (calendar editorial pe servicii), gata de verificat. Apar ca <strong>Draft</strong>, programate pe orele optime. Tu doar verifici textul și adaugi pozele.
+        </div>
+        <div class="form-group"><label class="form-label">Brand</label>
+            <select class="form-select" id="gBrand"><option value="cssi">🔴 CSSI</option><option value="conca-verde">🟢 Conca-Verde</option></select>
+        </div>
+        <div class="form-group"><label class="form-label">Săptămâna</label>
+            <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:8px">
+                <button type="button" class="gen-preset active" id="gpThis" onclick="setGenWeek('this')">Săptămâna asta</button>
+                <button type="button" class="gen-preset" id="gpNext" onclick="setGenWeek('next')">Săptămâna viitoare</button>
+            </div>
+            <input type="date" class="form-input" id="gWeekStart">
+        </div>
+        <div class="form-row">
+            <div class="form-group"><label class="form-label">Localitate (opțional)</label><input type="text" class="form-input" id="gLocation" placeholder="ex: Codlea"></div>
+            <div class="form-group"><label class="form-label">Campanie (opțional)</label><input type="text" class="form-input" id="gCampaign" placeholder="ex: Promo CCTV"></div>
+        </div>
+        <button type="button" class="form-submit" id="gGenBtn" onclick="runGenWeek()">✨ Generează postările</button>
+        <div style="font-size:11px;color:var(--gray);text-align:center;margin-top:10px">Durează ~15-30 secunde · necesită cheia Claude în secrets.php</div>
+    </div>
+</div>
+</div>
+
 <script>
-var API_URL = 'https://script.google.com/macros/s/AKfycbzdM_e5DY5nmd57TmB24sXz8dML93gKIolkmlqKxE7_d-_o3jHMVYuQ06YiQ5zJgZiB/exec';
-var role = sessionStorage.getItem('cssi-role');
-if (!role) { window.location.href = '../admin.html'; }
+var API = 'api.php';
+var POSTS = [];
+var currentView = 'calendar';
+var kpiFilter = '';
+var calYear = 0, calMonthIdx = 0;
 
-// ═══════════════════════════════════════════════════════════════════
-// CAMPANII — strategice, derivate direct din Auditul SEO 19 mai 2026
-// Prioritizare: P0 critic → P1 urgent → P2 important
-// ═══════════════════════════════════════════════════════════════════
-var CAMPAIGNS = [
-    {id:1,row:1,nume:'P0 — Indexare Google + GBP',desc:'Verificare Search Console (cauze ne-indexare), resubmit sitemap, audit Schema.org, revendicare + optimizare 100% Google Business Profile, 20 foto-uri originale, zonă deservită Brașov + 7 localități.',start:'2026-05-28',end:'2026-06-28',status:'Activă',buget:0,platforme:'SEO, Google Business Profile',progres:15,postari:0,prio:'P0'},
-    {id:2,row:2,nume:'P0 — Recenzii GBP — viteză constantă',desc:'SMS post-lucrare cu link Google Review, răspunsuri 100% la recenzii în max 24h. Țintă: 5 recenzii noi în luna 1, 30+ cumulative la 6 luni, rating 4.7+. Algorithm 2026: review velocity > volum.',start:'2026-05-28',end:'2026-11-28',status:'Planificată',buget:0,platforme:'Google Business Profile',progres:0,postari:0,prio:'P0'},
-    {id:3,row:3,nume:'P1 — Google Ads B2B Concentrat',desc:'3 campanii Search Exact+Phrase: Control Acces+Pontaj (210 RON/lună), CCTV B2B Brașov+7 localități (180 RON), Automatizări Porți+Bariere (120 RON). Negative keywords: emag, ieftin, pret, second. CPA țintă 60 RON B2B.',start:'2026-06-15',end:'2026-08-15',status:'Planificată',buget:510,platforme:'Google Ads',progres:0,postari:0,prio:'P1'},
-    {id:4,row:4,nume:'P1 — 16 Landing Pages Localizate',desc:'CCTV × 8 localități + Alarme × 8 localități. 800-1.200 cuvinte unice/pagină (30% diferențiat), Service+AreaServed+FAQPage schema, hartă, FAQ 5-7 întrebări. Localități: Brașov, Ghimbav, Codlea, Râșnov, Bran, Predeal, Hărman, Sânpetru.',start:'2026-06-01',end:'2026-08-31',status:'Planificată',buget:0,platforme:'SEO Local',progres:0,postari:0,prio:'P1'},
-    {id:5,row:5,nume:'P1 — LinkedIn B2B Autoritate',desc:'2 posturi/săpt pagina CSSI + 1-2/săpt profil personal Mihai (thought leadership). Format: PDF carousel (6.6% engagement) + native video (5x). Sweet spot 1.200-1.500 char. CTA → comentarii 15+ cuvinte. Marți-joi dim.',start:'2026-06-01',end:'2026-11-30',status:'Planificată',buget:0,platforme:'LinkedIn',progres:0,postari:0,prio:'P1'},
-    {id:6,row:6,nume:'P1 — Pagină B2B Corporate + 2 Studii Caz',desc:'Pagină dedicată "Pentru Firme / B2B Corporate" cu studii caz CFR Călători (47 stații), Schaeffler, Spital Județean. ROI metrici, conformitate Legea 333/2003, SLA contract. Segmentul cel mai puțin disputat.',start:'2026-06-15',end:'2026-07-31',status:'Planificată',buget:0,platforme:'Site',progres:0,postari:0,prio:'P1'},
-    {id:7,row:7,nume:'P1 — Hero Homepage Redesign B2B',desc:'"Securitate completă pentru afacerea ta în Brașov" — autorizări IGPR+ISU+ANRE + 9.000 proiecte + 20 ani + 4 promisiuni (consultanță 1-12h, ofertă 24h, mentenanță inclusă, SLA garantat). 2 CTA: tradițional + B2B.',start:'2026-06-01',end:'2026-06-15',status:'Planificată',buget:0,platforme:'Site',progres:0,postari:0,prio:'P1'},
-    {id:8,row:8,nume:'P2 — Blog Conformitate Legală',desc:'4 articole/2 luni: "Legea 333/2003 explicată", "HG 301/2012", "GDPR și CCTV", "Conformitate ISU clădiri". 1.500-2.000 cuvinte/articol, FAQPage schema, CTA "Cere ghid PDF". Armă vs concurenți "negri".',start:'2026-07-01',end:'2026-10-31',status:'Planificată',buget:0,platforme:'SEO, Blog',progres:0,postari:0,prio:'P2'},
-    {id:9,row:9,nume:'P2 — Instagram Reels + TikTok',desc:'Time-lapse instalare (7-30 sec, hook în 3 sec, text overlay frame 1, trending audio +42% engagement). 1 Reel/săpt, 1 TikTok/săpt. Saves > Likes (semnal #2 algoritm 2026).',start:'2026-06-01',end:'2026-11-30',status:'Planificată',buget:0,platforme:'Instagram, TikTok',progres:0,postari:0,prio:'P2'},
-    {id:10,row:10,nume:'P2 — Listare Directoare + Backlinks',desc:'Pagini Aurii, Necesit, HomeRun, Daibau, Brașov Construct, Camera Comerț Brașov. NAP consistent (Name+Address+Phone identic peste tot). Outreach asociații profesionale.',start:'2026-06-15',end:'2026-09-30',status:'Planificată',buget:0,platforme:'SEO Off-page',progres:0,postari:0,prio:'P2'}
-];
+var PLAT = {fb:'📘 Facebook',ig:'📸 Instagram',linkedin:'💼 LinkedIn',yt:'▶️ YouTube',tiktok:'🎵 TikTok',x:'𝕏 Twitter'};
+var uploadedMedia = [];
+var PLAT_COLOR = {fb:'#1877F2',ig:'#E4405F',linkedin:'#0A66C2',yt:'#FF0000',tiktok:'#000',x:'#000'};
+var noPhotoFilter = false;
+var recenziiLoaded = false;
 
-// ═══════════════════════════════════════════════════════════════════
-// SEO META — Anexa A din audit + best practices 2026
-// Meta title max 60 char, description 150-160 char, format optimizat AI Overview
-// ═══════════════════════════════════════════════════════════════════
-var SEO_META = [
-    {pagina:'Homepage',url:'/',title:'CSSI Brașov — Sisteme Securitate, CCTV, Alarme | 20 Ani',desc:'Sisteme securitate, camere supraveghere, alarme antiefracție, control acces, automatizări porți în Brașov. Firmă autorizată IGPR + ISU. 9000+ proiecte. Ofertă în 24h.',h1:'Securitate completă pentru afacerea ta în Brașov',keywords:'sisteme securitate brasov, camere supraveghere brasov, alarma antiefractie brasov, firma autorizata IGPR'},
-    {pagina:'Camere supraveghere',url:'/camere-supraveghere',title:'Camere Supraveghere Brașov | CCTV Profesional CSSI',desc:'Sisteme camere supraveghere CCTV Brașov pentru firme, hale, magazine, case. IP / analog. Dahua, Hikvision. Firmă autorizată IGPR. Consultanță gratuită. Ofertă în 24h.',h1:'Sisteme Camere Supraveghere CCTV Brașov — Instalare, Service, Mentenanță',keywords:'camere supraveghere brasov, sistem cctv brasov, montaj camere brasov, hikvision dahua brasov, cctv firma hala magazin'},
-    {pagina:'Alarmă antiefracție',url:'/alarma-antiefractie',title:'Alarmă Antiefracție Brașov | Sisteme Profesionale CSSI',desc:'Sisteme alarmă antiefracție Brașov: Ajax, Paradox, DSC. Monitorizare 24/7. Firmă autorizată IGPR. Pentru firme, case, magazine. Cere ofertă în 24h.',h1:'Sisteme Alarmă Antiefracție Brașov — Ajax, Paradox, DSC + Monitorizare 24/7',keywords:'alarma antiefractie brasov, sistem alarma firma brasov, ajax brasov, paradox alarme'},
-    {pagina:'Control acces',url:'/control-acces',title:'Control Acces Brașov | RFID, Biometric, Pontaj | CSSI',desc:'Sisteme control acces Brașov pentru firme și clădiri: RFID, amprentă, recunoaștere facială. Integrare pontaj HR. 9000+ proiecte. Consultanță gratuită.',h1:'Sisteme Control Acces Brașov — RFID, Biometric, Integrare HR',keywords:'control acces brasov, cititor amprenta brasov, rfid brasov, control acces firma fabrica'},
-    {pagina:'Pontaj electronic',url:'/pontaj-electronic',title:'Pontaj Electronic Brașov | Sisteme Profesionale | CSSI',desc:'Sisteme pontaj electronic Brașov pentru firme: cu amprentă, card, recunoaștere facială. Integrare HR/ERP. Rapoarte automate. Ofertă personalizată în 24h.',h1:'Sisteme Pontaj Electronic Brașov — Amprentă, Card, Recunoaștere Facială',keywords:'pontaj electronic brasov, sistem pontaj firma, pontaj amprenta angajati'},
-    {pagina:'Automatizări porți',url:'/automatizari-porti',title:'Automatizări Porți Brașov | Motoare Nice, BFT, Came',desc:'Automatizări porți Brașov: batante, culisante, garaj. Nice, BFT, Came, Somfy. Instalare profesională, garanție SLA. Pentru case, firme, parcări. Ofertă rapidă.',h1:'Automatizări Porți Brașov — Nice, BFT, Came, Somfy',keywords:'automatizare poarta brasov, motor poarta culisanta brasov, motor poarta batanta brasov, nice somfy brasov'},
-    {pagina:'Uși garaj',url:'/usi-garaj',title:'Uși Garaj Brașov | Secționale, Rulou, Industriale | CSSI',desc:'Uși garaj Brașov: secționale, rulou, industriale. Hörmann, Wisniowski. Cu sau fără automatizare. Montaj profesional. Ofertă personalizată în 24h.',h1:'Uși Garaj Brașov — Secționale, Rulou, Industriale',keywords:'usi garaj brasov, usa garaj sectionala, usi industriale hala'},
-    {pagina:'Bariere auto',url:'/bariere-auto',title:'Bariere Auto Brașov | Parcări Firme, Hoteluri | CSSI',desc:'Bariere auto Brașov pentru parcări private, firme, hoteluri, instituții. Integrare LPR (recunoaștere plăcuțe). Soluții complete acces auto.',h1:'Bariere Auto Brașov — Parcări Firme, LPR Integrare',keywords:'bariera auto brasov, bariera parcare firma, lpr recunoastere placute'},
-    {pagina:'Aer condiționat',url:'/aer-conditionat',title:'Aer Condiționat Brașov | Instalare, Service | CSSI',desc:'Aer condiționat Brașov: instalare, service, mentenanță. Apartament, casă, spațiu comercial, hală. Branduri top. Calcul BTU gratuit. Ofertă în 24h.',h1:'Aer Condiționat Brașov — Instalare, Service, Mentenanță',keywords:'aer conditionat brasov, montaj clima brasov, aer conditionat industrial'},
-    {pagina:'Instalații electrice',url:'/instalatii-electrice',title:'Instalații Electrice Brașov | ANRE Autorizat | CSSI',desc:'Instalator electric Brașov: instalații case, firme, hale, smart home. Verificări PRAM, tablouri electrice. Autorizat ANRE. Echipa profesionistă. Ofertă rapidă.',h1:'Instalații Electrice Brașov — ANRE Autorizat, Verificări PRAM',keywords:'instalator electric brasov, ANRE autorizat brasov, verificare PRAM, tablou electric'},
-    {pagina:'Interfoane',url:'/interfoane-videointerfoane',title:'Interfoane Brașov | Bloc, Vilă, Firmă | CSSI',desc:'Interfoane și videointerfoane Brașov: bloc, vilă, firmă. IP sau analog. Montaj și mentenanță. Branduri profesionale. Consultanță gratuită.',h1:'Interfoane și Videointerfoane Brașov — IP, Analog',keywords:'interfoane brasov, videointerfoane bloc, interfon vila'},
-    {pagina:'Ventilație',url:'/ventilatie',title:'Sisteme Ventilație Brașov | Recuperare Căldură | CSSI',desc:'Sisteme ventilație Brașov: recuperare căldură, ventilații industriale, mecanică. Calcul debite. Pentru firme, hale, locuințe. Consultanță gratuită.',h1:'Sisteme Ventilație Brașov — Recuperare Căldură, Industrială',keywords:'ventilatie brasov, recuperare caldura, ventilatie hala'},
-    {pagina:'Instalații termice-sanitare',url:'/instalatii-termice-sanitare',title:'Instalații Termice și Sanitare Brașov | CSSI',desc:'Instalații termice și sanitare Brașov: centrale, pompe căldură, sanitare. Pentru case, firme, hale. Echipa autorizată. Ofertă personalizată în 24h.',h1:'Instalații Termice și Sanitare Brașov — Centrale, Pompe Căldură',keywords:'instalatii termice brasov, centrala termica, pompa caldura'},
-    {pagina:'Sonorizare',url:'/sonorizare',title:'Sisteme Sonorizare Brașov | Firme, Evenimente | CSSI',desc:'Sisteme sonorizare Brașov pentru firme, săli, evenimente, magazine. Profesional, cu instalare și mentenanță. Consultanță gratuită.',h1:'Sisteme Sonorizare Brașov — Firme, Săli, Evenimente',keywords:'sonorizare brasov, sistem audio firma, sonorizare eveniment'}
-];
+function hasPhoto(p){return !!((p.media&&p.media.length)||p.imagine);}
+function noPhotoBadge(p){return hasPhoto(p)?'':'<span class="no-photo-badge">📷 lipsește poza</span>';}
+function toggleNoPhoto(){noPhotoFilter=!noPhotoFilter;document.getElementById('chipNoPhoto').classList.toggle('active',noPhotoFilter);render();}
 
-// ═══════════════════════════════════════════════════════════════════
-// HASHTAG-uri STRATEGICE per serviciu (din cuvinte cheie audit + best practice 2026)
-// Regula: 5-8 hashtag-uri (NU stuffing — penalizat de algoritm 2026)
-// Mix: 2 brand + 3-4 local + 2-3 tip serviciu
-// ═══════════════════════════════════════════════════════════════════
-var HASHTAGS_BY_CATEGORY = {
-    brand: ['#CSSI', '#CSSIBrasov', '#BreakSistems', '#SecuritateBrasov'],
-    'camere-supraveghere': ['#CCTV', '#CamereSupraveghere', '#CamereBrasov', '#Hikvision', '#Dahua', '#SistemSupraveghere', '#CCTVBrasov'],
-    'alarma-antiefractie': ['#AlarmaAntiefractie', '#Ajax', '#Paradox', '#AlarmaBrasov', '#Monitorizare247', '#SecuritateAfacere'],
-    'control-acces': ['#ControlAcces', '#RFID', '#PontajElectronic', '#Biometric', '#ControlAccesBrasov', '#SmartBusiness'],
-    'automatizari-porti': ['#AutomatizariPorti', '#Nice', '#BFT', '#Came', '#Somfy', '#PoartaCulisanta', '#PoartaBatanta'],
-    'aer-conditionat': ['#AerConditionat', '#Clima', '#AerConditionatBrasov', '#Climatizare', '#MitsubishiElectric', '#Daikin'],
-    'instalatii-electrice': ['#InstalatiiElectrice', '#ElectricianBrasov', '#ANRE', '#PRAM', '#SmartHome', '#TabloElectric'],
-    'usi-garaj': ['#UsiGaraj', '#Hormann', '#Wisniowski', '#UsaSectionala', '#UsaGarajBrasov'],
-    'bariere-auto': ['#BariereAuto', '#LPR', '#Parcare', '#AccessAuto', '#ParcareFirma'],
-    'detectie-incendiu': ['#DetectieIncendiu', '#ISU', '#ProtectieIncendiu', '#Bosch', '#P118'],
-    'B2B': ['#B2B', '#Securitate', '#FacilityManagement', '#FirmaAutorizata', '#Compliance', '#Legea333'],
-    'local': ['#Brasov', '#Codlea', '#Rasnov', '#Ghimbav', '#Bran', '#Predeal', '#Harman', '#Sanpetru', '#TaraBarsei'],
-    'industry': ['#Securitate', '#FirmaAutorizataIGPR', '#ISU', '#ANRE', '#9000Proiecte', '#20AniExperienta']
-};
+function esc(s){var d=document.createElement('div');d.textContent=s||'';return d.innerHTML;}
+function todayStr(){var d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');}
 
-// ═══════════════════════════════════════════════════════════════════
-// RESURSE — link-uri concrete
-// ═══════════════════════════════════════════════════════════════════
-var RESOURCES = [
-    {icon:'📅',title:'Planificator Săptămânal',desc:'8 postări FB+IG+LinkedIn dintr-un click',link:'planificator-saptamanal.html'},
-    {icon:'📊',title:'Audit SEO Complet',desc:'19 mai 2026 — roadmap 30/90/180 zile',link:'/GHID-MARKETING-HUB.md'},
-    {icon:'📱',title:'Social Media Manager',desc:'Creare postări + calendar + aprobare',link:'calendar-social.html'},
-    {icon:'✅',title:'Aprobare Postări',desc:'Drafturi care așteaptă aprobarea ta',link:'calendar-social.html?filter=Draft'},
-    {icon:'🎨',title:'Brand Guidelines',desc:'Logo, culori #dc2626, fonturi Inter',link:'#'},
-    {icon:'📷',title:'Galerie Pozele Firmei',desc:'D:\\Poze firma\\_site-final\\',link:'#'},
-    {icon:'⭐',title:'Recenzii Google',desc:'Răspuns + cerere recenzii',link:'recenzii.html'},
-    {icon:'🔗',title:'Google Business Profile',desc:'Profil GBP — link extern',link:'https://business.google.com/'},
-    {icon:'📈',title:'Search Console',desc:'Indexare + cuvinte cheie',link:'https://search.google.com/search-console'},
-    {icon:'🎯',title:'Google Ads',desc:'Campanii Search + PMax',link:'https://ads.google.com/'},
-    {icon:'💼',title:'LinkedIn CSSI',desc:'Pagină business — cel mai sub-exploatat canal B2B',link:'https://linkedin.com/'}
-];
+function toast(msg,type){
+    var c=document.getElementById('toastContainer');var t=document.createElement('div');
+    t.className='toast '+(type||'info');t.textContent=msg;c.appendChild(t);
+    setTimeout(function(){t.remove()},3500);
+}
+function loading(on){document.getElementById('loadBar').classList.toggle('active',on);}
 
-// ═══════════════════════════════════════════════════════════════════
-// IDEI CONȚINUT — strategice, derivate din audit + best practices 2026
-// Marker: 🔴 high priority, 🟡 medium, 🟢 low
-// Format optimizat per algoritm 2026 (LinkedIn Depth Score, IG sends/saves, etc)
-// ═══════════════════════════════════════════════════════════════════
-var IDEAS = [
-    // ──── LINKEDIN B2B (cel mai sub-exploatat canal) ────
-    {title:'LinkedIn — 20 ani lecții: consultanță înainte de echipament',desc:'„După 20 de ani și 9.000 de proiecte, am învățat că cea mai mare diferență între o instalație care durează și una care eșuează nu sunt echipamentele — ci procesul de consultanță prealabilă. Iată ce verific de fiecare dată..." Format: text 1.500 char + 3-5 puncte concrete. Primele 2 linii = hook înainte de "see more".',tags:['LinkedIn','Mihai Personal','Thought Leadership','1500 char'],prio:'high'},
-    {title:'LinkedIn — Legea 333/2003 ca armă comercială',desc:'„Legea 333/2003 obligă proprietarii de afaceri să folosească firme autorizate IGPR. Cu toate acestea, peste 80% dintre instalațiile pe care le evaluăm pentru rebid au fost făcute de firme fără licență. Ce înseamnă pentru afacerea ta?" CTA: comentariu cu „vreau audit" → DM cu PDF ghid.',tags:['LinkedIn','Compliance','Lead Gen B2B'],prio:'high'},
-    {title:'LinkedIn PDF Carousel — Studiu Caz Schaeffler Brașov',desc:'10 slide-uri PDF: provocare → soluție → echipament → rezultat → quote client. Carusele PDF au 6.6% engagement (cel mai mare format LinkedIn 2026). 47 camere, control acces 1.200 angajați, zero impact pe producție.',tags:['LinkedIn','PDF Carousel','Studiu Caz','6.6% engagement'],prio:'high'},
-    {title:'LinkedIn — 3 greșeli sisteme CCTV hale industriale',desc:'„3 greșeli pe care le văd zilnic la sistemele CCTV pentru hale industriale. (Și cum să le eviți chiar dacă nu mă alegi pe mine.)" Format educațional → algorithm 2026 prioritizează „knowledge and advice". Termin cu întrebare → comentarii 15+ cuvinte = 15x weight.',tags:['LinkedIn','Educațional','Engagement High'],prio:'high'},
-    {title:'LinkedIn — ROI control acces B2B',desc:'„Costul real al unui sistem de control acces nu este investiția inițială — sunt rapoartele HR pe care le vei putea automatiza. Iată cum calculez ROI pentru clienții B2B." Cu tabel calcul concret (ore HR economisite/lună × cost orar = payback).',tags:['LinkedIn','ROI','B2B Decision Maker'],prio:'high'},
-    {title:'LinkedIn — De ce refuz uneori proiecte',desc:'„De ce refuz uneori proiecte. Sună contraintuitiv pentru o firmă de servicii, dar..." Hook puternic. Construiește încredere + diferențiator (calitate vs volum). Saves > Likes (semnal #2 algoritm 2026 — 5x weight).',tags:['LinkedIn','Storytelling','Saves','Trust'],prio:'medium'},
-    {title:'LinkedIn — Evoluția industriei în 20 ani',desc:'„Cum a evoluat industria securității în 20 de ani. De la cabluri groase și DVR-uri sufocante, la AI și cloud. Și ce vine în următorii 5 ani." Format: 5 puncte concrete + predictie. Establishes E-E-A-T (Experience + Expertise).',tags:['LinkedIn','Expertise','E-E-A-T'],prio:'medium'},
-
-    // ──── INSTAGRAM REELS / TIKTOK (algoritm 2026) ────
-    {title:'IG Reel — Time-lapse montaj cameră în 15 sec',desc:'Hook în primele 3 sec (50% drop-off altfel): „Hala asta avea zero camere. Acum are 12." Text overlay frame 1. Trending audio (+42% engagement 2026). Durată 15-30 sec (high completion rate). CTA în comentariu: „Vrei și tu? DM."',tags:['Instagram Reel','TikTok','Time-lapse','Hook 3s'],prio:'high'},
-    {title:'IG Reel — 5 semne că ai nevoie de camere',desc:'Format rapid 20-30 sec. Hook: „Dacă ai chiar și 1 din astea, e timpul." Numerotate vizual 1-5. Text overlay mare. Algoritm 2026: sends per reach = #1 signal — endpoint cu „trimite asta unui prieten care are firmă".',tags:['Instagram Reel','TikTok','List Format','Sends Signal'],prio:'high'},
-    {title:'IG Reel — Hală industrială înainte/după',desc:'Split-screen sau swipe before/after. Hook 3 sec: „Cum am securizat 8.500 mp în 3 zile, fără să oprim producția." Saves încurajate prin CTA: „Salvează pentru când vei avea nevoie."',tags:['Instagram Reel','Before/After','Saves'],prio:'high'},
-    {title:'IG Carousel — FAQ CCTV',desc:'Carusele au 0.55% engagement rate — cel mai mare format IG 2026. 10 slide-uri cu întrebări frecvente + răspuns scurt. Slide 1 = hook, slide 10 = CTA. Force dwell time → algorithm boost.',tags:['Instagram Carousel','FAQ','High Engagement'],prio:'medium'},
-    {title:'TikTok — „Nu pune camere ca asta" pattern',desc:'Format virale TikTok 2026: arăți greșeala comună (cameră prost montată, blind spot) → soluția corectă. 7-15 sec. Trending sound. Text overlay. CTA în descriere: „comentează Pro pentru cum se face."',tags:['TikTok','Pattern Interrupt','Educațional'],prio:'medium'},
-
-    // ──── FACEBOOK ────
-    {title:'FB — Studiu caz CFR Călători (47 stații)',desc:'Format lung Facebook (1.000+ cuvinte). Story-driven: provocare → echipa → soluție → rezultat. 5-7 poze proiect. CTA: „Ești o instituție publică / privată cu nevoi similare? Scrie-ne." Social proof real.',tags:['Facebook','Studiu Caz B2B','Social Proof'],prio:'high'},
-    {title:'FB — Comparativ „firmă licențiată vs nelicențiată"',desc:'Infografic tabel: ce înseamnă autorizația IGPR/ISU/ANRE vs riscurile cu firme „negre". Conform audit: 80% dintre instalațiile rebid sunt fără licență. Argument legal vs prețuri mici.',tags:['Facebook','Infografic','Diferențiator Legal'],prio:'high'},
-    {title:'FB — Cum alegi un sistem de alarmă (ghid lung)',desc:'Post tip ghid 800+ cuvinte: tipuri, branduri (Ajax/Paradox/DSC), monitorizare, costuri orientative, întrebări de pus. Educație → trust. Linkuri către pagina serviciu + articol blog.',tags:['Facebook','Ghid','Educațional'],prio:'medium'},
-
-    // ──── YOUTUBE ────
-    {title:'YT — Tutorial: cum funcționează controlul acces RFID',desc:'Video 3-5 min, demo live: cititor RFID, soft, raport HR. Optimizat SEO YouTube (title + description cu cuvinte cheie). Atrage căutări organice „cum funcționează control acces".',tags:['YouTube','Tutorial','SEO YouTube'],prio:'medium'},
-    {title:'YT — Walkthrough instalație Schaeffler',desc:'Video tour 8-10 min cu Mihai (autoritate personală — vezi audit). Showcase 9.000 proiecte. Optimizat pentru AI Overview (Google folosește video relevant ca sursă).',tags:['YouTube','Brand Building','E-E-A-T'],prio:'medium'},
-
-    // ──── GBP (Google Business Profile) ────
-    {title:'GBP Post — Lucrare săptămâna trecută',desc:'1 post/săpt obligatoriu (semnal de activitate Google). Foto reală + descriere scurtă serviciu + locație. Apare în Maps. GBP = 32% ranking factor local 2026.',tags:['GBP','Săptămânal','Local SEO'],prio:'high'},
-    {title:'GBP Post — Promoție 5% prima comandă',desc:'Tip „Offer" în GBP. Postări cu oferte → boost vizibilitate Maps. Valid 30 zile, reînnoiește.',tags:['GBP','Offer','Conversion'],prio:'medium'},
-
-    // ──── BLOG SEO ────
-    {title:'Blog — „Cât costă un sistem CCTV pentru firmă în 2026 [Brașov]"',desc:'Articol comercial 1.500-2.000 cuvinte. H1 cu cuvântul cheie + locație + an. Tabel prețuri orientative (kit 4 camere casă, 8 camere magazin, 16 camere hală). FAQPage schema. Intent „comparison shopping".',tags:['Blog','SEO Long-tail','Commercial Intent'],prio:'high'},
-    {title:'Blog — „Legea 333/2003 explicată: obligații firmă"',desc:'Articol B2B 2.000 cuvinte. Conformitate ca armă comercială. Audit citează: „80% concurenți ieftini nu au autorizații." Download PDF ghid → lead gen.',tags:['Blog','B2B','Legal Authority','Lead Gen'],prio:'high'},
-    {title:'Blog — „GDPR și camerele de supraveghere"',desc:'Articol informational 1.500 cuvinte. Intent B2B. Optimizat pentru AI Overview/Google AI Mode (răspuns clar, trustworthy, structured).',tags:['Blog','GDPR','AI Overview Ready'],prio:'medium'},
-    {title:'Blog — „Cum am securizat fabrica Schaeffler"',desc:'Studiu caz format SEO. 1.500 cuvinte: provocare → soluție tehnică → rezultat măsurabil → quote client (cu permisiune). Schema Article + organization markup.',tags:['Blog','Studiu Caz','E-E-A-T'],prio:'high'}
-];
-
-// Fallback hashtag (backward compat)
-var HASHTAGS_SEC = HASHTAGS_BY_CATEGORY.brand.concat(HASHTAGS_BY_CATEGORY.local.slice(0,4)).concat(HASHTAGS_BY_CATEGORY.industry);
-
-// ═══════════════════════════════════════════════════════════════════
-// KPI ȚINTĂ — direct din audit secțiunea 6
-// ═══════════════════════════════════════════════════════════════════
-var KPI_TARGETS = [
-    {metric:'Lead-uri / săptămână',sursa:'GA4 + manual telefon',tinta:'12-18',luna:'L6',color:'green'},
-    {metric:'Cost-per-lead Google Ads',sursa:'Google Ads',tinta:'< 60 RON',luna:'L6',color:'green'},
-    {metric:'Lead-uri organice SEO / săpt',sursa:'GA4 atribuire',tinta:'5-10',luna:'L6',color:'blue'},
-    {metric:'Recenzii GBP noi / săpt',sursa:'GBP',tinta:'1-2',luna:'Continuu',color:'orange'},
-    {metric:'Rating mediu GBP',sursa:'GBP',tinta:'4.7+',luna:'L6',color:'yellow'},
-    {metric:'Cuvinte cheie top 10 Google',sursa:'Search Console',tinta:'10+',luna:'L6',color:'purple'},
-    {metric:'CTR organic Search Console',sursa:'Search Console',tinta:'> 3.5%',luna:'L6',color:'blue'},
-    {metric:'Posturi LinkedIn / săpt',sursa:'Manual',tinta:'2',luna:'Săptămânal',color:'linkedin'},
-    {metric:'Posturi IG+FB / săpt',sursa:'Manual',tinta:'3',luna:'Săptămânal',color:'pink'},
-    {metric:'Bounce rate mobil',sursa:'GA4',tinta:'< 55%',luna:'L3',color:'red'},
-    {metric:'Landing pages localizate',sursa:'Audit săpt',tinta:'40+',luna:'L6',color:'green'},
-    {metric:'Articole blog cumulative',sursa:'Audit',tinta:'12+',luna:'L6',color:'purple'}
-];
-
-var currentTab = 'campanii';
-var isLive = false;
-
-function esc(s){if(!s)return '';var d=document.createElement('div');d.textContent=s;return d.innerHTML;}
-function fmt(n){return Number(n||0).toLocaleString('ro-RO');}
-function toast(msg,type){var c=document.getElementById('toastContainer');var t=document.createElement('div');t.className='toast '+(type||'info');t.textContent=msg;c.appendChild(t);setTimeout(function(){t.style.opacity='0';t.style.transform='translateX(100px)';t.style.transition='all 0.3s'},3000);setTimeout(function(){t.remove()},3500);}
-function updateSync(s){var el=document.getElementById('syncStatus');if(!isLive)el.innerHTML='<span class="sync-indicator sync-off"></span>Date locale (demo)';else el.innerHTML='<span class="sync-indicator sync-ok"></span>Conectat';}
-
-function refreshData(){toast('⚠️ API nesetat. Date demo.','info');updateSync();}
-
-function setTab(id,btn){
-    currentTab=id;
-    document.querySelectorAll('.tab').forEach(function(t){t.classList.remove('active')});
-    if(btn)btn.classList.add('active');
-    ['campanii','resurse','idei'].forEach(function(t){document.getElementById('tab-'+t).style.display=t===id?'':'none';});
-    render();
+// ═══ API CALLS ═══
+function apiGet(action,params){
+    var url=API+'?action='+action;if(params)url+='&'+params;
+    loading(true);
+    return fetch(url).then(function(r){return r.json()}).finally(function(){loading(false)});
+}
+function apiPost(action,body){
+    loading(true);
+    return fetch(API+'?action='+action,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)}).then(function(r){return r.json()}).finally(function(){loading(false)});
 }
 
+// ═══ LOAD DATA ═══
+// MEDIA UPLOAD
+function handleFiles(fileList){
+    if(!fileList||!fileList.length)return;
+    var formData=new FormData();
+    for(var i=0;i<fileList.length;i++) formData.append('files[]',fileList[i]);
+    var prog=document.getElementById('uploadProgress');
+    var bar=document.getElementById('uploadProgressBar');
+    prog.classList.add('active');bar.style.width='10%';
+    var xhr=new XMLHttpRequest();
+    xhr.open('POST','api.php?action=uploadSocialMedia');
+    xhr.upload.onprogress=function(e){if(e.lengthComputable) bar.style.width=Math.round(e.loaded/e.total*90)+'%';};
+    xhr.onload=function(){
+        bar.style.width='100%';
+        setTimeout(function(){prog.classList.remove('active');bar.style.width='0';},500);
+        try{
+            var res=JSON.parse(xhr.responseText);
+            if(res.success&&res.files){
+                res.files.forEach(function(f){uploadedMedia.push(f);});
+                renderUploadPreview();
+                toast('\u2705 '+res.files.length+' fisier(e) incarcat(e)','success');
+            } else {
+                toast('\u274c '+(res.error||'Eroare upload'),'error');
+            }
+        }catch(e){toast('\u274c Eroare upload','error');}
+    };
+    xhr.onerror=function(){prog.classList.remove('active');toast('\u274c Eroare conexiune','error');};
+    xhr.send(formData);
+    document.getElementById('fileInput').value='';
+}
+function renderUploadPreview(){
+    var html='';
+    uploadedMedia.forEach(function(f,i){
+        var isVideo=f.type==='video';
+        html+='<div class="upload-thumb'+(isVideo?' upload-thumb-video':'')+'">';
+        if(isVideo) html+='<video src="'+esc(f.url)+'" muted></video>';
+        else html+='<img src="'+esc(f.url)+'">';
+        html+='<button type="button" class="upload-thumb-remove" onclick="removeMedia('+i+')">\u00d7</button>';
+        html+='<div class="upload-thumb-name">'+esc(f.name)+'</div></div>';
+    });
+    document.getElementById('uploadPreview').innerHTML=html;
+}
+function removeMedia(idx){
+    uploadedMedia.splice(idx,1);
+    renderUploadPreview();
+}
+
+// AI IMAGE GENERATION
+function toggleAiImg(){
+    var box=document.getElementById('aiImgBox');
+    box.classList.toggle('active');
+    if(box.classList.contains('active')) document.getElementById('aiImgPrompt').focus();
+}
+function generateAiImage(){
+    var prompt=document.getElementById('aiImgPrompt').value.trim();
+    if(!prompt){toast('\u274c Descrie imaginea dorit\u0103','error');return;}
+    var btn=document.getElementById('aiImgGo');
+    btn.disabled=true;btn.innerHTML='<span class="ai-loading"></span> Se genereaz\u0103...';
+    toast('\ud83c\udfa8 Se genereaz\u0103 imaginea... (10-20s)','info');
+    apiPost('generateSocialImage',{prompt:prompt})
+    .then(function(res){
+        btn.disabled=false;btn.textContent='\ud83c\udfa8 Genereaz\u0103';
+        if(res.success&&res.file){
+            uploadedMedia.push(res.file);
+            renderUploadPreview();
+            toggleAiImg();
+            toast('\ud83c\udfa8 Imagine generat\u0103 cu AI!','success');
+        } else {
+            toast('\u274c '+(res.error||'Eroare generare imagine'),'error');
+        }
+    }).catch(function(){btn.disabled=false;btn.textContent='\ud83c\udfa8 Genereaz\u0103';toast('\u274c Eroare conexiune','error');});
+}
+
+function loadPosts(){
+    document.getElementById('syncStatus').innerHTML='<span class="sync-indicator sync-loading"></span>Se sincronizează...';
+    apiGet('getSocialPosts').then(function(res){
+        if(res.success){
+            POSTS=res.data.map(function(r){
+                var plats=Array.isArray(r.platforme)?r.platforme:[];
+                var dp=r.data_programare||'';
+                return {id:r.id,brand:r.brand||'cssi',content:r.continut||'',platforme:plats,data:dp?dp.substring(0,10):'',ora:dp?dp.substring(11,16):'',status:r.status||'Draft',tip:r.tip_continut||'Foto',imagine:r.imagine_url||'',media:r.media_json?JSON.parse(r.media_json):[],note:r.note||'',external_ids:r.external_ids||{},created_at:r.created_at};
+            });
+            document.getElementById('syncStatus').innerHTML='<span class="sync-indicator sync-ok"></span>Conectat · '+POSTS.length+' postări';
+            render();
+        } else {
+            document.getElementById('syncStatus').innerHTML='<span class="sync-indicator sync-off"></span>Eroare: '+res.error;
+            toast('❌ '+res.error,'error');
+        }
+    }).catch(function(e){
+        document.getElementById('syncStatus').innerHTML='<span class="sync-indicator sync-off"></span>Offline';
+        toast('❌ Eroare conexiune','error');
+    });
+}
+
+// ═══ FILTERS ═══
+function getFiltered(){
+    var q=document.getElementById('searchInput').value.toLowerCase();
+    var fb=document.getElementById('filterBrand').value;
+    var fs=document.getElementById('filterStatus').value;
+    var fp=document.getElementById('filterPlatform').value;
+    return POSTS.filter(function(p){
+        if(fb&&p.brand!==fb)return false;
+        if(fs&&p.status!==fs)return false;
+        if(fp&&p.platforme.indexOf(fp)===-1)return false;
+        if(kpiFilter&&p.status!==kpiFilter)return false;
+        if(noPhotoFilter&&hasPhoto(p))return false;
+        if(q&&!p.content.toLowerCase().includes(q))return false;
+        return true;
+    });
+}
+function toggleKpiFilter(f){kpiFilter=kpiFilter===f?'':f;render();}
+
+// ═══ RENDER ═══
 function render(){
-    if(currentTab==='campanii') renderCampaigns();
-    else if(currentTab==='seo') renderSeo();
-    else if(currentTab==='hashtag') renderHashtags();
-    else if(currentTab==='resurse') renderResources();
-    else if(currentTab==='kpi') renderKpi();
-    else renderIdeas();
+    renderKPI();
+    var f=getFiltered();
+    document.getElementById('filterCount').textContent=f.length+' postări';
+    if(currentView==='list'){renderList(f);show('listView');hide('calView');hide('kanbanView');}
+    else if(currentView==='calendar'){renderCal();hide('listView');show('calView');hide('kanbanView');}
+    else{renderKanban(f);hide('listView');hide('calView');show('kanbanView');}
+}
+function show(id){document.getElementById(id).style.display='';}function hide(id){document.getElementById(id).style.display='none';}
+
+function renderKPI(){
+    var counts={};['Idee','Draft','Programat','Publicat','Eroare'].forEach(function(s){counts[s]=POSTS.filter(function(p){return p.status===s}).length});
+    document.getElementById('kpiRow').innerHTML=
+        '<div class="kpi-card" onclick="toggleKpiFilter(\'\')"><div class="kpi-val">'+POSTS.length+'</div><div class="kpi-label">Total postări</div></div>'+
+        '<div class="kpi-card'+(kpiFilter==='Idee'?' active-filter':'')+'" onclick="toggleKpiFilter(\'Idee\')"><div class="kpi-val" style="color:var(--purple)">'+counts.Idee+'</div><div class="kpi-label">💡 Idei</div></div>'+
+        '<div class="kpi-card'+(kpiFilter==='Draft'?' active-filter':'')+'" onclick="toggleKpiFilter(\'Draft\')"><div class="kpi-val" style="color:var(--gray)">'+counts.Draft+'</div><div class="kpi-label">📝 Drafturi</div></div>'+
+        '<div class="kpi-card'+(kpiFilter==='Programat'?' active-filter':'')+'" onclick="toggleKpiFilter(\'Programat\')"><div class="kpi-val" style="color:var(--orange)">'+counts.Programat+'</div><div class="kpi-label">⏰ Programate</div></div>'+
+        '<div class="kpi-card'+(kpiFilter==='Publicat'?' active-filter':'')+'" onclick="toggleKpiFilter(\'Publicat\')"><div class="kpi-val" style="color:var(--green)">'+counts.Publicat+'</div><div class="kpi-label">✅ Publicate</div></div>'+
+        '<div class="kpi-card'+(kpiFilter==='Eroare'?' active-filter':'')+'" onclick="toggleKpiFilter(\'Eroare\')"><div class="kpi-val" style="color:var(--red)">'+counts.Eroare+'</div><div class="kpi-label">❌ Erori</div></div>';
 }
 
-function prioBadge(p){
-    if(!p) return '';
-    var colors={P0:'#dc2626',P1:'#f97316',P2:'#eab308',P3:'#22c55e'};
-    var labels={P0:'P0 CRITIC',P1:'P1 URGENT',P2:'P2 IMPORTANT',P3:'P3 DORIT'};
-    return '<span style="background:'+colors[p]+';color:#fff;padding:3px 10px;border-radius:6px;font-size:10px;font-weight:800;margin-right:6px">'+(labels[p]||p)+'</span>';
+function platIcons(plats){
+    return (plats||[]).map(function(p){return '<span title="'+(PLAT[p]||p)+'" style="font-size:14px">'+(PLAT[p]||p).split(' ')[0]+'</span>'}).join(' ');
+}
+function brandBadge(b){
+    return b==='conca-verde'?'<span class="brand-conca">Conca-Verde</span>':'<span class="brand-cssi">CSSI</span>';
+}
+function statusBadge(s){
+    var cls='badge-'+(s==='Publicat'?'publicat':s==='Programat'?'programat':s==='Draft'?'draft':s==='Eroare'?'eroare':'idee');
+    return '<span class="pcard-badge '+cls+'">'+s+'</span>';
 }
 
-function renderCampaigns(){
-    var html='<div style="background:linear-gradient(135deg,#fef3c7,#fde68a);border-radius:14px;padding:14px 18px;margin-bottom:16px;font-size:13px;color:#92400e;font-weight:600;display:flex;gap:10px;align-items:center">';
-    html+='<span style="font-size:22px">🎯</span><div><strong>Strategia derivă direct din Auditul SEO 19 mai 2026</strong><br><span style="font-weight:500;font-size:12px">P0 = critic primele 14 zile · P1 = urgent până la 60 zile · P2 = important 60-120 zile. Țintă globală: <strong>71-120 lead-uri/lună la 6 luni (vs. 5-15 azi)</strong></span></div>';
-    html+='</div>';
-
-    // Sortez după prioritate
-    var prioOrder={P0:0,P1:1,P2:2,P3:3};
-    var sorted=CAMPAIGNS.slice().sort(function(a,b){return (prioOrder[a.prio]||9)-(prioOrder[b.prio]||9)});
-
-    html+='<div class="campaigns">';
-    sorted.forEach(function(c){
-        var badgeCls=c.status==='Activă'?'badge-activa':c.status==='Planificată'?'badge-planificata':c.status==='Finalizată'?'badge-finalizata':'badge-pauza';
-        var cardCls=c.status==='Activă'?'activa':c.status==='Planificată'?'planificata':c.status==='Finalizată'?'finalizata':'';
-        var borderColor=c.prio==='P0'?'#dc2626':c.prio==='P1'?'#f97316':c.prio==='P2'?'#eab308':'#22c55e';
-        html+='<div class="camp-card '+cardCls+'" style="border-left-color:'+borderColor+';border-left-width:5px">';
-        html+='<div class="camp-top"><div class="camp-name">'+prioBadge(c.prio)+esc(c.nume)+'</div><span class="camp-badge '+badgeCls+'">'+c.status+'</span></div>';
-        html+='<div class="camp-desc">'+esc(c.desc)+'</div>';
-        html+='<div class="camp-meta">';
-        if(c.platforme) c.platforme.split(',').forEach(function(p){html+='<span class="camp-tag">'+p.trim()+'</span>';});
+function renderList(filtered){
+    if(!filtered.length){document.getElementById('listView').innerHTML='<div class="empty-msg">Nicio postare găsită. Apasă "+ Postare Nouă" pentru a adăuga.</div>';return;}
+    var sorted=filtered.slice().sort(function(a,b){return (b.data||'0').localeCompare(a.data||'0')});
+    var html='';
+    sorted.forEach(function(p){
+        var borderColor=p.platforme.length?PLAT_COLOR[p.platforme[0]]||'#cbd5e1':'#cbd5e1';
+        html+='<div class="pcard" style="border-left-color:'+borderColor+'" onclick="openDetailModal('+p.id+')">';
+        html+='<div class="pcard-top"><div class="pcard-plats">'+platIcons(p.platforme)+'</div><div class="pcard-date">'+(p.data||'Fără dată')+(p.ora?' · '+p.ora:'')+'</div></div>';
+        if(p.imagine) html+='<img class="pcard-img" src="'+esc(p.imagine)+'" onerror="this.style.display=\'none\'">';
+        html+='<div class="pcard-content">'+esc(p.content)+'</div>';
+        html+='<div class="pcard-tags">'+brandBadge(p.brand)+statusBadge(p.status)+noPhotoBadge(p);
+        if(p.tip) html+='<span class="pcard-badge" style="background:var(--gray-bg);color:var(--gray)">'+p.tip+'</span>';
         html+='</div>';
-        html+='<div class="camp-progress"><div class="camp-bar"><div class="camp-bar-fill" style="width:'+c.progres+'%;background:'+borderColor+'"></div></div><div class="camp-pct">'+c.progres+'% completat · '+c.postari+' postări</div></div>';
-        html+='<div class="camp-footer"><span>📅 '+c.start+' → '+c.end+'</span>';
-        if(c.buget) html+='<span>💰 '+fmt(c.buget)+' RON</span>';
-        else html+='<span style="color:var(--green);font-weight:700">💰 0 RON (doar timp)</span>';
-        html+='</div>';
-        html+='</div>';
+        html+='<div class="pcard-footer"><select onclick="event.stopPropagation()" onchange="changeStatus('+p.id+',this.value)" style="padding:6px 10px;border-radius:8px;border:1px solid var(--gray-b);font-size:11px;font-weight:600;font-family:inherit;cursor:pointer">';
+        ['Idee','Draft','Programat','Publicat'].forEach(function(s){html+='<option'+(p.status===s?' selected':'')+'>'+s+'</option>';});
+        html+='</select>';
+        html+='<div style="display:flex;gap:4px">';
+        if(p.status==='Draft'||p.status==='Idee') html+='<button onclick="event.stopPropagation();publishPost('+p.id+')" style="padding:5px 12px;border-radius:8px;border:none;background:#f0fdf4;color:var(--green);font-size:11px;font-weight:700;cursor:pointer" title="Publică via Zernio">🚀</button>';
+        html+='<button onclick="event.stopPropagation();openEditModal('+p.id+')" style="padding:5px 12px;border-radius:8px;border:none;background:var(--gray-bg);color:var(--gray);font-size:11px;font-weight:700;cursor:pointer">✏️</button>';
+        html+='</div></div></div>';
     });
-    html+='</div>';
-    document.getElementById('tab-campanii').innerHTML=html;
+    document.getElementById('listView').innerHTML=html;
 }
 
-// SEO META — listă cu meta titles + descriptions optimizate
-function renderSeo(){
-    var html='<div style="background:linear-gradient(135deg,#dbeafe,#bfdbfe);border-radius:14px;padding:14px 18px;margin-bottom:16px;font-size:13px;color:#1e40af;font-weight:600;display:flex;gap:10px;align-items:center">';
-    html+='<span style="font-size:22px">🔍</span><div><strong>Meta titles și descriptions optimizate pentru Google 2026</strong><br><span style="font-weight:500;font-size:12px">Format: max 60 char title, 150-160 char description. Optimizat pentru AI Overview + Google AI Mode. Cuvintele cheie din audit, structurate cu E-E-A-T.</span></div>';
-    html+='</div>';
-
-    html+='<div style="display:grid;gap:12px">';
-    SEO_META.forEach(function(s){
-        var titleLen=s.title.length;
-        var descLen=s.desc.length;
-        var titleColor=titleLen<=60?'var(--green)':'var(--red)';
-        var descColor=descLen>=140&&descLen<=160?'var(--green)':'var(--orange)';
-        html+='<div style="background:#fff;border-radius:14px;padding:18px;box-shadow:var(--shadow);border-left:4px solid var(--blue)">';
-        html+='<div style="display:flex;justify-content:space-between;align-items:start;gap:10px;margin-bottom:12px">';
-        html+='<div><div style="font-weight:800;font-size:15px;color:var(--dark)">'+esc(s.pagina)+'</div><div style="font-size:11px;color:var(--gray);margin-top:2px"><code style="background:var(--gray-bg);padding:2px 6px;border-radius:4px">'+esc(s.url)+'</code></div></div>';
-        html+='<button onclick="copyToClipboard(\''+s.title.replace(/\'/g,"\\'")+'\',\'Meta title\')" style="padding:6px 12px;border-radius:8px;border:1px solid var(--blue);background:#fff;color:var(--blue);font-size:11px;font-weight:700;cursor:pointer">📋 Copiază tot</button>';
-        html+='</div>';
-        // Title
-        html+='<div style="margin-bottom:10px">';
-        html+='<div style="display:flex;justify-content:space-between;font-size:11px;font-weight:700;color:var(--gray);margin-bottom:4px"><span>META TITLE</span><span style="color:'+titleColor+'">'+titleLen+'/60 char</span></div>';
-        html+='<div style="background:var(--gray-bg);padding:10px 14px;border-radius:8px;font-size:13px;font-family:monospace;color:var(--dark);cursor:pointer" onclick="copyToClipboard(this.textContent,\'Title\')">'+esc(s.title)+'</div>';
-        html+='</div>';
-        // H1
-        html+='<div style="margin-bottom:10px">';
-        html+='<div style="font-size:11px;font-weight:700;color:var(--gray);margin-bottom:4px">H1 RECOMANDAT</div>';
-        html+='<div style="background:#fef3c7;padding:10px 14px;border-radius:8px;font-size:13px;color:var(--dark);cursor:pointer" onclick="copyToClipboard(this.textContent,\'H1\')">'+esc(s.h1)+'</div>';
-        html+='</div>';
-        // Description
-        html+='<div style="margin-bottom:10px">';
-        html+='<div style="display:flex;justify-content:space-between;font-size:11px;font-weight:700;color:var(--gray);margin-bottom:4px"><span>META DESCRIPTION</span><span style="color:'+descColor+'">'+descLen+'/160 char</span></div>';
-        html+='<div style="background:var(--gray-bg);padding:10px 14px;border-radius:8px;font-size:13px;color:var(--dark);line-height:1.5;cursor:pointer" onclick="copyToClipboard(this.textContent,\'Description\')">'+esc(s.desc)+'</div>';
-        html+='</div>';
-        // Keywords
-        html+='<div>';
-        html+='<div style="font-size:11px;font-weight:700;color:var(--gray);margin-bottom:4px">CUVINTE CHEIE ȚINTĂ</div>';
-        html+='<div style="display:flex;flex-wrap:wrap;gap:6px">';
-        s.keywords.split(',').forEach(function(k){html+='<span style="background:#eff6ff;color:var(--blue);padding:4px 10px;border-radius:6px;font-size:11px;font-weight:600;cursor:pointer" onclick="copyToClipboard(\''+k.trim().replace(/\'/g,"\\'")+'\',\'Keyword\')">'+esc(k.trim())+'</span>';});
-        html+='</div></div>';
-        html+='</div>';
-    });
-    html+='</div>';
-    document.getElementById('tab-seo').innerHTML=html;
-}
-
-// HASHTAGS — categorisate pe servicii
-function renderHashtags(){
-    var html='<div style="background:linear-gradient(135deg,#fce7f3,#fbcfe8);border-radius:14px;padding:14px 18px;margin-bottom:16px;font-size:13px;color:#9d174d;font-weight:600;display:flex;gap:10px;align-items:center">';
-    html+='<span style="font-size:22px">🏷️</span><div><strong>Hashtag-uri strategice — 5-8 per post (NU stuffing)</strong><br><span style="font-weight:500;font-size:12px">Algoritm 2026: hashtag stuffing penalizat. Mix recomandat: 2 brand + 3-4 local + 2-3 categorie. Click → copiezi în clipboard.</span></div>';
-    html+='</div>';
-
-    var labels={brand:'🎯 Brand CSSI',local:'📍 Local Brașov + Localități','camere-supraveghere':'📹 Camere Supraveghere','alarma-antiefractie':'🚨 Alarmă Antiefracție','control-acces':'🔐 Control Acces','automatizari-porti':'🚧 Automatizări Porți','aer-conditionat':'❄️ Aer Condiționat','instalatii-electrice':'⚡ Instalații Electrice','usi-garaj':'🏚️ Uși Garaj','bariere-auto':'🚗 Bariere Auto','detectie-incendiu':'🔥 Detecție Incendiu',B2B:'💼 B2B Corporate',industry:'🏆 Industry & Autoritate'};
-
-    html+='<div style="display:grid;gap:12px;margin-bottom:16px">';
-    Object.keys(HASHTAGS_BY_CATEGORY).forEach(function(cat){
-        var tags=HASHTAGS_BY_CATEGORY[cat];
-        var allText=tags.join(' ');
-        html+='<div class="hashtag-section" style="margin:0">';
-        html+='<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">';
-        html+='<div class="hashtag-title">'+(labels[cat]||cat)+' <span style="color:var(--gray);font-weight:500;font-size:11px">('+tags.length+')</span></div>';
-        html+='<button onclick="copyToClipboard(\''+allText.replace(/\'/g,"\\'")+'\',\'Set complet\')" style="padding:5px 12px;border-radius:8px;border:1px solid var(--pink);background:#fff;color:var(--pink);font-size:11px;font-weight:700;cursor:pointer">📋 Copiază tot</button>';
-        html+='</div>';
-        html+='<div class="hashtags">';
-        tags.forEach(function(h){html+='<span class="hashtag" onclick="copyHashtag(this)">'+h+'</span>';});
-        html+='</div></div>';
-    });
-    html+='</div>';
-
-    // Set recomandat pentru fiecare serviciu (combinație optimă)
-    html+='<div style="background:#fff;border-radius:14px;padding:18px;box-shadow:var(--shadow);border-left:4px solid var(--purple)">';
-    html+='<div style="font-weight:800;font-size:14px;margin-bottom:12px;color:var(--purple)">⭐ Combinații recomandate per post serviciu</div>';
-    html+='<div style="display:grid;gap:10px;font-size:12px">';
-    var combos=[
-        {srv:'Camere supraveghere — post local',tags:HASHTAGS_BY_CATEGORY['camere-supraveghere'].slice(0,3).concat(HASHTAGS_BY_CATEGORY.local.slice(0,2)).concat(HASHTAGS_BY_CATEGORY.brand.slice(0,2))},
-        {srv:'Alarmă — post B2B',tags:HASHTAGS_BY_CATEGORY['alarma-antiefractie'].slice(0,3).concat(HASHTAGS_BY_CATEGORY.B2B.slice(0,2)).concat(HASHTAGS_BY_CATEGORY.brand.slice(0,2))},
-        {srv:'Control acces — LinkedIn B2B',tags:HASHTAGS_BY_CATEGORY['control-acces'].slice(0,3).concat(['#FacilityManagement','#B2B','#HRTech']).concat(HASHTAGS_BY_CATEGORY.brand.slice(0,1))},
-        {srv:'Automatizări porți — IG Reel',tags:HASHTAGS_BY_CATEGORY['automatizari-porti'].slice(0,3).concat(HASHTAGS_BY_CATEGORY.local.slice(0,2)).concat(['#Brasov','#CSSI'])},
-        {srv:'Aer condiționat — FB local',tags:HASHTAGS_BY_CATEGORY['aer-conditionat'].slice(0,3).concat(HASHTAGS_BY_CATEGORY.local.slice(0,2)).concat(HASHTAGS_BY_CATEGORY.brand.slice(0,2))}
-    ];
-    combos.forEach(function(c){
-        var txt=c.tags.join(' ');
-        html+='<div style="display:flex;justify-content:space-between;gap:10px;align-items:center;padding:10px 14px;background:var(--gray-bg);border-radius:10px">';
-        html+='<div style="flex:1"><div style="font-weight:700;color:var(--dark);margin-bottom:3px">'+esc(c.srv)+'</div><div style="color:var(--gray-l);font-family:monospace;font-size:11px">'+txt+'</div></div>';
-        html+='<button onclick="copyToClipboard(\''+txt.replace(/\'/g,"\\'")+'\',\'Combinație\')" style="padding:6px 12px;border-radius:8px;border:none;background:var(--purple);color:#fff;font-size:11px;font-weight:700;cursor:pointer">📋</button>';
-        html+='</div>';
-    });
-    html+='</div></div>';
-
-    document.getElementById('tab-hashtag').innerHTML=html;
-}
-
-// KPI — dashboard țintele din audit
-function renderKpi(){
-    var html='<div style="background:linear-gradient(135deg,#dcfce7,#bbf7d0);border-radius:14px;padding:14px 18px;margin-bottom:16px;font-size:13px;color:#166534;font-weight:600;display:flex;gap:10px;align-items:center">';
-    html+='<span style="font-size:22px">📊</span><div><strong>KPI țintă luna 6 — din Auditul SEO secțiunea 6</strong><br><span style="font-weight:500;font-size:12px">Verifică săptămânal luni dimineață (15 min). Surse: GA4, Search Console, Google Ads, GBP Insights.</span></div>';
-    html+='</div>';
-
-    var colorMap={green:'#22c55e',blue:'#3b82f6',orange:'#f97316',yellow:'#eab308',purple:'#8b5cf6',linkedin:'#0A66C2',pink:'#ec4899',red:'#dc2626'};
-    html+='<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px">';
-    KPI_TARGETS.forEach(function(k){
-        var c=colorMap[k.color]||'#64748b';
-        html+='<div style="background:#fff;border-radius:14px;padding:18px;box-shadow:var(--shadow);border-left:4px solid '+c+'">';
-        html+='<div style="font-size:11px;font-weight:700;color:var(--gray);text-transform:uppercase;margin-bottom:6px">'+esc(k.metric)+'</div>';
-        html+='<div style="font-size:24px;font-weight:900;color:'+c+';margin-bottom:6px">'+esc(k.tinta)+'</div>';
-        html+='<div style="font-size:11px;color:var(--gray);display:flex;justify-content:space-between"><span>📍 '+esc(k.sursa)+'</span><span style="font-weight:700">'+esc(k.luna)+'</span></div>';
-        html+='</div>';
-    });
-    html+='</div>';
-
-    // Pierdere oportunitate (estimare audit)
-    html+='<div style="margin-top:16px;background:linear-gradient(135deg,#fee2e2,#fecaca);border-radius:14px;padding:18px;border-left:4px solid var(--red)">';
-    html+='<div style="font-weight:800;font-size:14px;color:var(--red);margin-bottom:8px">⚠️ Pierdere oportunitate actuală (per audit)</div>';
-    html+='<div style="font-size:13px;color:#7f1d1d;line-height:1.6">73 lead-uri/lună ratate × 20% conversie × 4.500 RON valoare medie = <strong>~65.700 RON/lună venit potențial nerealizat</strong>, doar din vizibilitate organică ratată pe Brașov.</div>';
-    html+='<div style="font-size:12px;color:#991b1b;margin-top:8px;font-weight:600">Soluție: P0 din tab Campanii → indexare Google + GBP optimizat (luna 1)</div>';
-    html+='</div>';
-
-    document.getElementById('tab-kpi').innerHTML=html;
-}
-
-function renderResources(){
-    var html='<div class="resources">';
-    RESOURCES.forEach(function(r){
-        html+='<a href="'+r.link+'" class="res-card"><div class="res-icon">'+r.icon+'</div><div class="res-title">'+r.title+'</div><div class="res-desc">'+r.desc+'</div><span class="res-link">Deschide →</span></a>';
-    });
-    html+='</div>';
-    html+='<div class="hashtag-section"><div class="hashtag-title">🏷️ Hashtag-uri recomandate</div><div class="hashtags">';
-    HASHTAGS_SEC.forEach(function(h){html+='<span class="hashtag" onclick="copyHashtag(this)">'+h+'</span>';});
-    html+='</div></div>';
-    document.getElementById('tab-resurse').innerHTML=html;
-}
-
-function renderIdeas(){
-    var html='<div style="background:linear-gradient(135deg,#f5f3ff,#ede9fe);border-radius:14px;padding:14px 18px;margin-bottom:16px;font-size:13px;color:#5b21b6;font-weight:600;display:flex;gap:10px;align-items:center">';
-    html+='<span style="font-size:22px">💡</span><div><strong>Idei optimizate pentru algoritmul 2026</strong><br><span style="font-weight:500;font-size:12px">LinkedIn Depth Score · IG sends/saves > likes · Carusele PDF 6.6% engagement · Reels hook 3 sec (50% drop-off altfel) · Trending audio +42%. Click pe titlu → folosește ca template.</span></div>';
-    html+='</div>';
-
-    // Filtre rapide
-    html+='<div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px">';
-    var filters=[{key:'',label:'Toate'},{key:'LinkedIn',label:'💼 LinkedIn'},{key:'Reel',label:'📸 Reels'},{key:'TikTok',label:'🎵 TikTok'},{key:'Facebook',label:'📘 Facebook'},{key:'YouTube',label:'▶️ YouTube'},{key:'GBP',label:'📍 GBP'},{key:'Blog',label:'📝 Blog'}];
-    filters.forEach(function(f){
-        var active=(window.ideaFilter||'')===f.key;
-        html+='<button onclick="window.ideaFilter=\''+f.key+'\';renderIdeas()" style="padding:6px 14px;border-radius:99px;border:1px solid '+(active?'var(--purple)':'var(--gray-b)')+';background:'+(active?'var(--purple)':'#fff')+';color:'+(active?'#fff':'var(--gray)')+';font-size:12px;font-weight:700;cursor:pointer">'+f.label+'</button>';
-    });
-    html+='</div>';
-
-    var prio={high:'🔴 high',medium:'🟡 medium',low:'🟢 low'};
-    var prioOrder={high:0,medium:1,low:2};
-    var filtered=IDEAS.filter(function(i){
-        var f=window.ideaFilter||'';
-        if(!f) return true;
-        return i.tags.some(function(t){return t.indexOf(f)!==-1;});
-    });
-    var sorted=filtered.slice().sort(function(a,b){return (prioOrder[a.prio]||9)-(prioOrder[b.prio]||9)});
-
-    html+='<div class="ideas">';
-    sorted.forEach(function(idea,idx){
-        var prioColor=idea.prio==='high'?'#dc2626':idea.prio==='medium'?'#eab308':'#22c55e';
-        html+='<div class="idea-card" style="border-left-color:'+prioColor+';cursor:pointer" onclick="useIdeaAsTemplate('+idx+',\''+(idea.title.replace(/\'/g,"\\'"))+'\',\''+(idea.desc.replace(/\'/g,"\\'"))+'\')">';
-        html+='<div style="display:flex;justify-content:space-between;align-items:start;margin-bottom:4px"><div class="idea-title" style="flex:1">'+(prio[idea.prio]||'')+' '+esc(idea.title)+'</div></div>';
-        html+='<div class="idea-desc">'+esc(idea.desc)+'</div>';
-        html+='<div class="idea-tags">';
-        idea.tags.forEach(function(t){html+='<span class="camp-tag" style="background:#f5f3ff;color:var(--purple)">'+t+'</span>';});
-        html+='</div>';
-        html+='<div style="margin-top:10px;font-size:11px;color:var(--purple);font-weight:700">→ Folosește ca template pentru postare</div>';
-        html+='</div>';
-    });
-    html+='</div>';
-
-    if(!sorted.length) html+='<div class="empty-msg">Nicio idee pentru acest filtru. Click „Toate" sus.</div>';
-    document.getElementById('tab-idei').innerHTML=html;
-}
-
-function useIdeaAsTemplate(idx,title,desc){
-    // Trimit user-ul la calendar-social cu titlul și descrierea ideii pre-completate
-    var content=title+'\n\n'+desc;
-    sessionStorage.setItem('cssi-idea-template',JSON.stringify({title:title,content:content}));
-    window.location.href='calendar-social.html?template=idea';
-}
-
-function copyToClipboard(text,what){
-    if(navigator.clipboard){
-        navigator.clipboard.writeText(text).then(function(){
-            toast('📋 '+(what||'Text')+' copiat în clipboard','success');
+function renderCal(){
+    var now=new Date();if(!calYear){calYear=now.getFullYear();calMonthIdx=now.getMonth();}
+    var months=['Ianuarie','Februarie','Martie','Aprilie','Mai','Iunie','Iulie','August','Septembrie','Octombrie','Noiembrie','Decembrie'];
+    document.getElementById('calMonth').textContent=months[calMonthIdx]+' '+calYear;
+    var first=new Date(calYear,calMonthIdx,1);var lastDay=new Date(calYear,calMonthIdx+1,0).getDate();
+    var startDay=(first.getDay()+6)%7;
+    var html='';['Lun','Mar','Mie','Joi','Vin','Sâm','Dum'].forEach(function(d){html+='<div class="cal-head">'+d+'</div>';});
+    var prevLast=new Date(calYear,calMonthIdx,0).getDate();
+    for(var i=startDay-1;i>=0;i--) html+='<div class="cal-day other"><div class="cal-day-num">'+(prevLast-i)+'</div></div>';
+    var todayD=now.getDate(),todayM=now.getMonth(),todayY=now.getFullYear();
+    var fb=document.getElementById('filterBrand').value;
+    for(var d=1;d<=lastDay;d++){
+        var isToday=d===todayD&&calMonthIdx===todayM&&calYear===todayY;
+        var dateStr=calYear+'-'+String(calMonthIdx+1).padStart(2,'0')+'-'+String(d).padStart(2,'0');
+        var dayPosts=POSTS.filter(function(p){return p.data===dateStr&&(!fb||p.brand===fb)});
+        html+='<div class="cal-day'+(isToday?' today':'')+'" onclick="addForDate(\''+dateStr+'\')">';
+        html+='<div class="cal-day-num">'+d+'</div>';
+        dayPosts.forEach(function(p){
+            var cls=p.platforme.length?p.platforme[0]:'';
+            var icon=p.brand==='conca-verde'?'🟢':'🔴';
+            var noimg=hasPhoto(p)?'':'📷';
+            html+='<div class="cal-post '+cls+'" onclick="event.stopPropagation();openDetailModal('+p.id+')" title="'+esc(p.content.substring(0,80))+(hasPhoto(p)?'':' · lipsește poza')+'">'+icon+noimg+' '+esc(p.content.substring(0,25))+'</div>';
         });
-    } else {
-        var t=document.createElement('textarea');t.value=text;document.body.appendChild(t);t.select();
-        try{document.execCommand('copy');toast('📋 '+(what||'Text')+' copiat','success');}catch(e){}
-        document.body.removeChild(t);
+        html+='</div>';
     }
+    var totalCells=startDay+lastDay;var rem=totalCells%7?7-totalCells%7:0;
+    for(var i=1;i<=rem;i++) html+='<div class="cal-day other"><div class="cal-day-num">'+i+'</div></div>';
+    document.getElementById('calGrid').innerHTML=html;
+}
+function navMonth(d){calMonthIdx+=d;if(calMonthIdx<0){calMonthIdx=11;calYear--;}if(calMonthIdx>11){calMonthIdx=0;calYear++;}renderCal();}
+function addForDate(d){document.getElementById('fData').value=d;openAddModal();}
+
+function renderKanban(filtered){
+    var statuses=[{name:'Idee',color:'#8b5cf6'},{name:'Draft',color:'#64748b'},{name:'Programat',color:'#f97316'},{name:'Publicat',color:'#22c55e'},{name:'Eroare',color:'#dc2626'}];
+    var html='';
+    statuses.forEach(function(s){
+        var items=(filtered||POSTS).filter(function(p){return p.status===s.name});
+        html+='<div class="kanban-col"><div class="kanban-head" style="background:'+s.color+'">'+s.name+' <span class="count">'+items.length+'</span></div><div class="kanban-body">';
+        if(!items.length) html+='<div style="text-align:center;color:var(--gray-l);font-size:12px;padding:20px">Gol</div>';
+        items.forEach(function(p){
+            html+='<div class="k-card" onclick="openDetailModal('+p.id+')">';
+            html+='<div class="k-card-title">'+brandBadge(p.brand)+' '+platIcons(p.platforme)+'</div>';
+            html+='<div class="k-card-sub">'+esc(p.content.substring(0,60))+(p.content.length>60?'...':'')+'</div>';
+            if(!hasPhoto(p)) html+='<div style="margin-top:4px">'+noPhotoBadge(p)+'</div>';
+            if(p.data) html+='<div style="font-size:10px;color:var(--gray);margin-top:4px">📅 '+p.data+(p.ora?' · '+p.ora:'')+'</div>';
+            html+='</div>';
+        });
+        html+='</div></div>';
+    });
+    document.getElementById('kanbanView').innerHTML='<div class="kanban">'+html+'</div>';
 }
 
-function copyHashtag(el){
-    var t=el.textContent;
-    if(navigator.clipboard) navigator.clipboard.writeText(t);
-    toast('📋 Copiat: '+t,'info');
+// ═══ STATUS CHANGE ═══
+function changeStatus(id,val){
+    apiPost('updateSocialStatus',{id:id,status:val}).then(function(res){
+        if(res.success){var p=POSTS.find(function(x){return x.id===id});if(p)p.status=val;render();toast('✅ Status: '+val,'success');}
+        else toast('❌ '+res.error,'error');
+    });
+}
+
+// ═══ PUBLISH VIA ZERNIO ═══
+// Limite caractere per platformă (pentru avertismente)
+var PLAT_LIMITS={fb:63206,ig:2200,linkedin:3000,yt:5000,tiktok:2200,x:280};
+var PLAT_BG={fb:'#1877F2',ig:'linear-gradient(45deg,#F58529,#DD2A7B,#8134AF,#515BD4)',linkedin:'#0A66C2',yt:'#FF0000',tiktok:'#000',x:'#000'};
+
+function publishPost(id){
+    var p=POSTS.find(function(x){return x.id===id});if(!p)return;
+    if(!p.platforme.length){toast('❌ Selectează cel puțin o platformă','error');return;}
+    openApproveModal(p);
+}
+
+function openApproveModal(p){
+    var firstMedia=(p.media&&p.media.length)?p.media[0]:(p.imagine?{type:'image',url:p.imagine,name:''}:null);
+    var brandName=p.brand==='conca-verde'?'Conca-Verde':'CSSI';
+    var avatar=p.brand==='conca-verde'?'🌲':'🛡️';
+    var html='<div style="background:linear-gradient(135deg,#fef3c7,#fde68a);border-radius:12px;padding:14px 18px;margin-bottom:18px;font-size:13px;color:#92400e;font-weight:600;display:flex;gap:10px;align-items:center">';
+    html+='<span style="font-size:22px">⚠️</span><div><strong>Verifică conținutul pe fiecare platformă</strong><br><span style="font-weight:500;font-size:12px">După aprobare, postarea va fi publicată simultan pe toate platformele selectate via Zernio API.</span></div>';
+    html+='</div>';
+
+    // Meta info bar
+    html+='<div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px;align-items:center">';
+    html+='<span class="brand-'+(p.brand==='conca-verde'?'conca':'cssi')+'">'+brandName+'</span>';
+    html+='<span style="font-size:12px;color:var(--gray);font-weight:600">📅 '+(p.data||'imediat')+(p.ora?' · '+p.ora:'')+'</span>';
+    html+='<span style="font-size:12px;color:var(--gray);font-weight:600">📝 '+p.content.length+' caractere</span>';
+    html+='<span style="font-size:12px;color:var(--gray);font-weight:600">🎯 '+p.platforme.length+' platforme</span>';
+    if(p.media&&p.media.length) html+='<span style="font-size:12px;color:var(--gray);font-weight:600">📷 '+p.media.length+' media</span>';
+    html+='</div>';
+
+    // Preview-uri per platformă (mini-mockup)
+    html+='<div style="display:grid;gap:12px;margin-bottom:18px">';
+    p.platforme.forEach(function(plat){
+        var limit=PLAT_LIMITS[plat]||0;
+        var over=limit&&p.content.length>limit;
+        var platLabel=PLAT[plat]||plat;
+        var platName=platLabel.split(' ').slice(1).join(' ');
+        var platIcon=platLabel.split(' ')[0];
+        var bg=PLAT_BG[plat]||'#64748b';
+
+        html+='<div style="border:1px solid var(--gray-b);border-radius:12px;overflow:hidden;background:#fff">';
+        // Header platformă
+        html+='<div style="padding:10px 14px;background:'+bg+';color:#fff;font-weight:800;font-size:13px;display:flex;justify-content:space-between;align-items:center">';
+        html+='<span>'+platIcon+' '+platName+'</span>';
+        html+='<span style="font-size:11px;font-weight:600;opacity:0.9">'+p.content.length+'/'+(limit||'∞')+(over?' ⚠️ peste limită':'')+'</span>';
+        html+='</div>';
+        // Mock post
+        html+='<div style="padding:14px">';
+        html+='<div style="display:flex;gap:10px;align-items:center;margin-bottom:10px">';
+        html+='<div style="width:36px;height:36px;border-radius:50%;background:var(--gray-bg);display:flex;align-items:center;justify-content:center;font-size:18px">'+avatar+'</div>';
+        html+='<div><div style="font-weight:700;font-size:13px">'+brandName+(p.brand==='cssi'?' — Securitate & Instalații':' — Camping Conca Verde')+'</div><div style="font-size:11px;color:var(--gray)">'+(p.data?p.data+(p.ora?' · '+p.ora:''):'va fi publicat acum')+' · '+platName+'</div></div>';
+        html+='</div>';
+        // Conținut (truncat la limita platformei)
+        var displayContent=over?p.content.substring(0,limit)+'…':p.content;
+        html+='<div style="font-size:13px;line-height:1.6;color:var(--dark2);white-space:pre-wrap;margin-bottom:10px'+(over?';position:relative':'')+'">'+esc(displayContent)+'</div>';
+        if(over) html+='<div style="font-size:11px;color:var(--red);font-weight:700;margin-bottom:10px">⚠️ Textul depășește '+limit+' caractere — '+platName+' îl va trunchia automat. Recomand să-l scurtezi.</div>';
+        // Media preview
+        if(firstMedia){
+            if(firstMedia.type==='video') html+='<video src="'+esc(firstMedia.url)+'" muted style="width:100%;max-height:180px;object-fit:cover;border-radius:8px;background:#000"></video>';
+            else html+='<img src="'+esc(firstMedia.url)+'" style="width:100%;max-height:180px;object-fit:cover;border-radius:8px" onerror="this.style.display=\'none\'">';
+        }
+        // Avertismente specifice platformei
+        var warnings=[];
+        if(plat==='ig'&&!firstMedia) warnings.push('Instagram necesită cel puțin o imagine sau video');
+        if(plat==='tiktok'&&(!firstMedia||firstMedia.type!=='video')) warnings.push('TikTok necesită video (nu imagine)');
+        if(plat==='yt'&&(!firstMedia||firstMedia.type!=='video')) warnings.push('YouTube necesită video');
+        if(plat==='x'&&p.content.length>280) warnings.push('Twitter/X limită 280 caractere — restul se va pierde');
+        if(warnings.length){
+            html+='<div style="margin-top:10px;padding:8px 12px;background:#fef2f2;border-left:3px solid var(--red);border-radius:6px;font-size:11px;color:var(--red);font-weight:600">';
+            warnings.forEach(function(w){html+='⚠️ '+w+'<br>';});
+            html+='</div>';
+        }
+        html+='</div></div>';
+    });
+    html+='</div>';
+
+    // Buton APROB
+    var isScheduled=p.data&&new Date(p.data+'T'+(p.ora||'10:00')+':00')>new Date();
+    var btnLabel=isScheduled?'⏰ Aprob și programează pe toate':'🚀 Aprob și publică acum pe toate';
+    var btnSub=isScheduled?'Va fi publicat la '+p.data+(p.ora?' · '+p.ora:''):'Publicat imediat pe '+p.platforme.length+' platforme';
+
+    html+='<div style="background:linear-gradient(135deg,#f0fdf4,#dcfce7);border:2px solid var(--green);border-radius:14px;padding:18px;margin-bottom:12px">';
+    html+='<div style="text-align:center;margin-bottom:12px"><div style="font-size:14px;font-weight:800;color:#166534">Ești gata să publici?</div><div style="font-size:12px;color:#15803d;margin-top:4px">'+btnSub+'</div></div>';
+    html+='<button onclick="confirmApproval('+p.id+')" id="btnApprove" style="width:100%;padding:16px;border-radius:12px;border:none;background:linear-gradient(135deg,#16a34a,#15803d);color:#fff;font-weight:800;font-size:15px;cursor:pointer;box-shadow:0 4px 12px rgba(22,163,74,0.3);transition:all 0.2s" onmouseover="this.style.transform=\'translateY(-1px)\'" onmouseout="this.style.transform=\'translateY(0)\'">'+btnLabel+'</button>';
+    html+='</div>';
+    // Butoane secundare
+    html+='<div style="display:flex;gap:8px">';
+    html+='<button onclick="closeApproveModal();openEditModal('+p.id+')" style="flex:1;padding:12px;border-radius:10px;border:1px solid var(--gray-b);background:#fff;color:var(--dark);font-weight:700;cursor:pointer">✏️ Mai am de modificat</button>';
+    html+='<button onclick="closeApproveModal()" style="padding:12px 20px;border-radius:10px;border:1px solid var(--gray-b);background:#fff;color:var(--gray);font-weight:600;cursor:pointer">Anulez</button>';
+    html+='</div>';
+
+    document.getElementById('approveBody').innerHTML=html;
+    document.getElementById('approveModal').classList.add('active');
+    closeDetailModal();
+}
+
+function closeApproveModal(){document.getElementById('approveModal').classList.remove('active');}
+
+function confirmApproval(id){
+    var btn=document.getElementById('btnApprove');
+    if(btn){btn.disabled=true;btn.innerHTML='<span class="ai-loading"></span> Se publică pe toate platformele...';btn.style.opacity='0.7';}
+    apiPost('publishSocialPost',{id:id}).then(function(res){
+        var p=POSTS.find(function(x){return x.id===id});
+        if(res.success){
+            if(p)p.status=res.status;
+            closeApproveModal();
+            render();
+            toast('✅ '+res.status+' cu succes pe toate platformele!','success');
+        } else {
+            if(p)p.status='Eroare';
+            render();
+            if(btn){btn.disabled=false;btn.innerHTML='🚀 Reîncearcă';btn.style.opacity='1';}
+            toast('❌ '+res.error,'error');
+        }
+    }).catch(function(){
+        if(btn){btn.disabled=false;btn.innerHTML='🚀 Reîncearcă';btn.style.opacity='1';}
+        toast('❌ Eroare conexiune','error');
+    });
+}
+
+// ═══ DETAIL MODAL ═══
+function openDetailModal(id){
+    var p=POSTS.find(function(x){return x.id===id});if(!p)return;
+    document.getElementById('detailTitle').textContent='📋 Detalii Postare #'+p.id;
+    var html='<div style="display:grid;gap:14px">';
+    html+='<div style="display:flex;gap:8px;align-items:center;justify-content:center">'+brandBadge(p.brand)+statusBadge(p.status)+'</div>';
+    if(p.media&&p.media.length){
+        html+='<div style="display:flex;flex-wrap:wrap;gap:6px">';
+        p.media.forEach(function(m){
+            if(m.type==='video') html+='<video src="'+esc(m.url)+'" controls style="max-width:100%;max-height:200px;border-radius:12px"></video>';
+            else html+='<img src="'+esc(m.url)+'" style="max-height:200px;border-radius:12px;object-fit:cover" onerror="this.style.display=\'none\'">';
+        });
+        html+='</div>';
+    } else if(p.imagine) html+='<img src="'+esc(p.imagine)+'" style="width:100%;max-height:200px;object-fit:cover;border-radius:12px" onerror="this.style.display=\'none\'">';
+    html+='<div style="background:var(--gray-bg);padding:16px;border-radius:12px;font-size:14px;line-height:1.7;white-space:pre-wrap">'+esc(p.content)+'</div>';
+    html+='<div style="display:flex;flex-wrap:wrap;gap:6px;font-size:13px">'+platIcons(p.platforme)+'</div>';
+    html+='<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;font-size:13px">';
+    html+='<div style="padding:10px;background:#fff;border-radius:8px;border:1px solid var(--gray-b)"><strong>Data</strong><br>'+(p.data||'—')+(p.ora?' · '+p.ora:'')+'</div>';
+    html+='<div style="padding:10px;background:#fff;border-radius:8px;border:1px solid var(--gray-b)"><strong>Tip</strong><br>'+(p.tip||'—')+'</div>';
+    html+='<div style="padding:10px;background:#fff;border-radius:8px;border:1px solid var(--gray-b)"><strong>Caractere</strong><br>'+p.content.length+'</div>';
+    html+='<div style="padding:10px;background:#fff;border-radius:8px;border:1px solid var(--gray-b)"><strong>Creat</strong><br>'+(p.created_at||'—').substring(0,10)+'</div>';
+    html+='</div>';
+    if(p.note) html+='<div style="font-size:13px;color:var(--gray);font-style:italic;padding:10px 14px;background:var(--gray-bg);border-radius:8px">📝 '+esc(p.note)+'</div>';
+    html+='<div style="display:flex;gap:8px;flex-wrap:wrap">';
+    if(p.status!=='Publicat') html+='<button onclick="closeDetailModal();publishPost('+p.id+')" style="flex:1;padding:12px;border-radius:12px;border:none;background:linear-gradient(135deg,var(--green),#16a34a);color:#fff;font-weight:700;cursor:pointer">🚀 Publică</button>';
+    html+='<button onclick="closeDetailModal();openEditModal('+p.id+')" style="flex:1;padding:12px;border-radius:12px;border:none;background:var(--purple);color:#fff;font-weight:700;cursor:pointer">✏️ Editează</button>';
+    html+='<button onclick="deletePost('+p.id+')" style="padding:12px 16px;border-radius:12px;border:none;background:#fef2f2;color:var(--red);font-weight:700;cursor:pointer">🗑️</button></div></div>';
+    document.getElementById('detailBody').innerHTML=html;
+    document.getElementById('detailModal').classList.add('active');
+}
+function closeDetailModal(){document.getElementById('detailModal').classList.remove('active');}
+
+function deletePost(id){
+    if(!confirm('Ștergi această postare?'))return;
+    apiPost('deleteSocialPost',{id:id}).then(function(res){
+        if(res.success){POSTS=POSTS.filter(function(p){return p.id!==id});closeDetailModal();render();toast('🗑️ Postare ștearsă','info');}
+        else toast('❌ '+res.error,'error');
+    });
+}
+
+// ═══ ADD/EDIT MODAL ═══
+function toggleCheck(el){
+    setTimeout(function(){
+        var cb=el.querySelector('input');
+        el.classList.toggle('checked',cb.checked);
+    },10);
+}
+function getCheckedPlatforms(){
+    var checks=document.querySelectorAll('#platChecks input:checked');
+    return Array.prototype.map.call(checks,function(c){return c.value});
+}
+function setCheckedPlatforms(plats){
+    var checks=document.querySelectorAll('#platChecks input');
+    Array.prototype.forEach.call(checks,function(c){
+        c.checked=plats.indexOf(c.value)!==-1;
+        c.parentElement.classList.toggle('checked',c.checked);
+    });
 }
 
 function openAddModal(){
     document.getElementById('editId').value='';
-    document.getElementById('addForm').reset();
+    document.getElementById('modalTitle').textContent='📝 Postare Nouă';
+    document.getElementById('fBrand').value='cssi';
+    document.getElementById('fContent').value='';
+    uploadedMedia=[];
+    renderUploadPreview();
+    if(!document.getElementById('fData').value) document.getElementById('fData').value=todayStr();
+    document.getElementById('fOra').value='10:00';
+    document.getElementById('fTip').value='Foto';
+    document.getElementById('fNote').value='';
+    setCheckedPlatforms(['fb','ig']);
+    updateCharCount();
+    document.getElementById('addModal').classList.add('active');
+}
+function openEditModal(id){
+    var p=POSTS.find(function(x){return x.id===id});if(!p)return;
+    document.getElementById('editId').value=p.id;
+    document.getElementById('modalTitle').textContent='✏️ Editare Postare #'+p.id;
+    document.getElementById('fBrand').value=p.brand;
+    document.getElementById('fContent').value=p.content;
+    uploadedMedia=p.media&&p.media.length?p.media.slice():[];
+    renderUploadPreview();
+    document.getElementById('fData').value=p.data||'';
+    document.getElementById('fOra').value=p.ora||'10:00';
+    document.getElementById('fTip').value=p.tip||'Foto';
+    document.getElementById('fNote').value=p.note||'';
+    setCheckedPlatforms(p.platforme||[]);
+    updateCharCount();
     document.getElementById('addModal').classList.add('active');
 }
 function closeAddModal(){document.getElementById('addModal').classList.remove('active');}
+function updateCharCount(){document.getElementById('charCount').textContent=(document.getElementById('fContent').value||'').length+' caractere';}
 
-function saveCampaign(e){
-    e.preventDefault();var fd=new FormData(document.getElementById('addForm'));
-    var maxId=0;CAMPAIGNS.forEach(function(x){if(x.id>maxId)maxId=x.id});
-    CAMPAIGNS.push({id:maxId+1,row:maxId+1,nume:fd.get('nume'),desc:fd.get('desc')||'',start:fd.get('start')||'',end:fd.get('end')||'',status:fd.get('status')||'Planificată',buget:parseFloat(fd.get('buget'))||0,platforme:fd.get('platforme')||'',progres:0,postari:0});
-    render();closeAddModal();toast('🎯 Campanie adăugată','success');
+function savePost(e,action){
+    if(e&&e.preventDefault) e.preventDefault();
+    var content=document.getElementById('fContent').value.trim();
+    if(!content){toast('❌ Conținutul e obligatoriu','error');return;}
+    var plats=getCheckedPlatforms();
+    if(!plats.length){toast('❌ Selectează cel puțin o platformă','error');return;}
+    var editId=parseInt(document.getElementById('editId').value)||0;
+    var dataVal=document.getElementById('fData').value;
+    var oraVal=document.getElementById('fOra').value||'10:00';
+    var dataProgramare=dataVal?(dataVal+' '+oraVal+':00'):null;
+    var status=action==='Programat'?'Programat':action==='PublicaNow'?'Draft':'Draft';
+
+    var postData={
+        id:editId||undefined,
+        brand:document.getElementById('fBrand').value,
+        continut:content,
+        platforme:plats,
+        tip_continut:document.getElementById('fTip').value,
+        status:status,
+        data_programare:dataProgramare,
+        imagine_url:uploadedMedia.length?uploadedMedia[0].url:'',
+        media_json:uploadedMedia,
+        note:document.getElementById('fNote').value
+    };
+
+    apiPost('saveSocialPost',postData).then(function(res){
+        if(res.success){
+            toast('✅ Postare salvată','success');
+            closeAddModal();
+            // Reîncarc lista și apoi deschid aprobarea (preview multi-platformă)
+            loadPosts();
+            if(action==='PublicaNow'||action==='Programat'){
+                setTimeout(function(){
+                    // după loadPosts, găsesc postarea nouă și deschid Aprobare
+                    var newId=res.id;
+                    var tries=0;
+                    var iv=setInterval(function(){
+                        tries++;
+                        var p=POSTS.find(function(x){return x.id===newId});
+                        if(p){clearInterval(iv);publishPost(newId);}
+                        else if(tries>20){clearInterval(iv);}
+                    },100);
+                },300);
+            }
+        } else {
+            toast('❌ '+res.error,'error');
+        }
+    }).catch(function(){toast('❌ Eroare conexiune','error')});
 }
 
-render();
-</script>
-<script>
-if('serviceWorker' in navigator){navigator.serviceWorker.register('../sw.js').then(function(r){console.log('[PWA] SW registered, scope:',r.scope)}).catch(function(e){console.log('[PWA] SW failed:',e)});var __reloaded=false;navigator.serviceWorker.addEventListener('controllerchange',function(){if(__reloaded)return;__reloaded=true;window.location.reload();});}
+function setView(v){currentView=v;document.getElementById('vList').classList.toggle('active',v==='list');document.getElementById('vCal').classList.toggle('active',v==='calendar');document.getElementById('vKanban').classList.toggle('active',v==='kanban');render();}
+
+// ═══════════════════════════════════════════════════════════════════
+// TABURI (Postări / Recenzii)
+// ═══════════════════════════════════════════════════════════════════
+function setTab(t){
+    var post=t==='postari';
+    document.getElementById('tabPostari').style.display=post?'':'none';
+    document.getElementById('tabRecenzii').style.display=post?'none':'';
+    document.getElementById('tabBtnPostari').classList.toggle('active',post);
+    document.getElementById('tabBtnRecenzii').classList.toggle('active',!post);
+    if(!post&&!recenziiLoaded){recenziiLoaded=true;loadRecenzii();}
+}
+
+// ═══════════════════════════════════════════════════════════════════
+// GENERARE SĂPTĂMÂNĂ CU AI
+// ═══════════════════════════════════════════════════════════════════
+function mondayOf(d){var dt=new Date(d);var day=(dt.getDay()+6)%7;dt.setDate(dt.getDate()-day);return dt;}
+function isoDate(d){return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');}
+function openGenWeek(){
+    setGenWeek('this');
+    document.getElementById('gLocation').value='';
+    document.getElementById('gCampaign').value='';
+    document.getElementById('genModal').classList.add('active');
+}
+function closeGenWeek(){document.getElementById('genModal').classList.remove('active');}
+function setGenWeek(which){
+    var mon=mondayOf(new Date());
+    if(which==='next') mon.setDate(mon.getDate()+7);
+    document.getElementById('gWeekStart').value=isoDate(mon);
+    document.getElementById('gpThis').classList.toggle('active',which==='this');
+    document.getElementById('gpNext').classList.toggle('active',which==='next');
+}
+function runGenWeek(){
+    var weekStart=document.getElementById('gWeekStart').value;
+    if(!weekStart){toast('❌ Alege săptămâna','error');return;}
+    var btn=document.getElementById('gGenBtn');
+    btn.disabled=true;btn.innerHTML='<span class="ai-loading"></span> Se generează... (~15-30s)';
+    apiPost('generateWeekPosts',{
+        brand:document.getElementById('gBrand').value,
+        weekStart:weekStart,
+        location:document.getElementById('gLocation').value.trim(),
+        campaignName:document.getElementById('gCampaign').value.trim()
+    }).then(function(res){
+        btn.disabled=false;btn.innerHTML='✨ Generează postările';
+        if(res.success){
+            closeGenWeek();
+            toast('✅ '+res.created+' postări generate — verifică textul și adaugă poze','success');
+            // comut pe Listă filtrat pe Draft ca să le verifici
+            document.getElementById('filterStatus').value='Draft';
+            kpiFilter='';
+            loadPosts();
+            setTimeout(function(){setView('list');},400);
+        } else {
+            toast('❌ '+(res.error||'Eroare generare'),'error');
+        }
+    }).catch(function(){btn.disabled=false;btn.innerHTML='✨ Generează postările';toast('❌ Eroare conexiune','error');});
+}
+
+// ═══════════════════════════════════════════════════════════════════
+// RECENZII GOOGLE (tab) — portat din recenzii.html
+// ═══════════════════════════════════════════════════════════════════
+var RDATA=[];
+var MONTHS_REC=['Ian','Feb','Mar','Apr','Mai','Iun','Iul','Aug','Sep','Oct','Noi','Dec'];
+function fmtDateTime(s){if(!s)return '';var d=new Date(s.replace(' ','T'));if(isNaN(d.getTime()))return s;var pad=function(n){return n<10?'0'+n:n;};return d.getDate()+' '+MONTHS_REC[d.getMonth()]+' '+d.getFullYear()+', '+pad(d.getHours())+':'+pad(d.getMinutes());}
+function loadRecenzii(){
+    loading(true);
+    fetch(API+'?action=getRecenziiList&_t='+Date.now(),{credentials:'include'})
+    .then(function(r){return r.json()})
+    .then(function(res){
+        if(!res.success){toast(res.error||'Eroare','error');return;}
+        RDATA=res.data||[];
+        renderStats(res.stats||{});
+        renderRecenzii();
+    })
+    .catch(function(e){toast('Eroare: '+(e.message||e),'error');})
+    .finally(function(){loading(false);});
+}
+function renderStats(s){
+    document.getElementById('stTotal').textContent=s.total_sms!=null?s.total_sms:'-';
+    document.getElementById('stClicked').textContent=s.clicked!=null?s.clicked:'-';
+    document.getElementById('stRecenzii').textContent=s.recenzii_primite!=null?s.recenzii_primite:'-';
+    document.getElementById('stRata').textContent=(s.rata_conversie!=null?s.rata_conversie:'-')+'%';
+}
+function renderRecenzii(){
+    var el=document.getElementById('smsList');
+    if(!RDATA.length){el.innerHTML='<div class="empty-state"><div class="ei">📭</div><div class="et">Nicio cerere de recenzie trimisă încă</div><div style="color:#94a3b8;font-size:12px;margin-top:6px">Trimite prima cerere din pagina unui proiect aflat în Execuție, Recepție sau Facturat</div></div>';return;}
+    var html='';
+    RDATA.forEach(function(row){
+        var smsStatus=row.status||'whatsapp';
+        var deliveryPill=smsStatus==='whatsapp'?'<span class="pill whatsapp">💬 WhatsApp</span>':smsStatus==='simulat'?'<span class="pill simulat">🧪 Simulat</span>':smsStatus==='eroare'?'<span class="pill eroare">❌ Eroare</span>':'<span class="pill asteptare">📨 Trimis</span>';
+        var clickPill;
+        if(row.clicked_at){clickPill=row.click_count>1?'<span class="pill livrat">👆 Accesat de '+row.click_count+'x</span>':'<span class="pill livrat">👆 Link accesat ('+fmtDateTime(row.clicked_at)+')</span>';}
+        else clickPill='<span class="pill asteptare">⏳ Neaccesat</span>';
+        var reviewClass=row.recenzie_primita?' received':'';
+        var reviewLabel=row.recenzie_primita?'✅ Recenzie primită':'Marchează recenzie';
+        var stars='';
+        if(row.recenzie_primita&&row.recenzie_nota){stars=' · ';for(var i=1;i<=5;i++)stars+=(i<=row.recenzie_nota?'⭐':'☆');}
+        html+='<div class="sms-row" id="smsRow'+row.id+'"><div>';
+        html+='<div class="top"><span class="client">'+esc(row.client_nume)+'</span><span class="pill trimis">'+esc(row.proiect_cod)+'</span>'+deliveryPill+clickPill;
+        if(row.recenzie_primita)html+='<span class="pill livrat">⭐ Recenzie'+stars+'</span>';
+        html+='</div>';
+        html+='<div class="meta"><span>📞 '+esc(row.telefon)+'</span><span>🔧 '+esc(row.serviciu)+'</span><span>📅 '+fmtDateTime(row.trimis_la)+'</span><span>👤 '+esc(row.trimis_de)+'</span></div>';
+        html+='<div class="sms-preview" id="smsPreview'+row.id+'">💬 '+esc(row.mesaj)+'</div>';
+        if(row.recenzie_text)html+='<div style="font-size:12px;color:var(--dark2);margin-top:6px;padding:6px 10px;background:#fef3c7;border-radius:8px;border-left:3px solid #f59e0b;">💬 "'+esc(row.recenzie_text)+'"</div>';
+        html+='</div><div class="actions">';
+        html+='<button class="review-toggle'+reviewClass+'" onclick="toggleReview('+row.id+',this)"><span class="check">'+(row.recenzie_primita?'✓':'')+'</span> '+reviewLabel+'</button>';
+        if(!row.recenzie_primita){
+            html+='<div class="star-row" id="stars'+row.id+'">';
+            for(var s=1;s<=5;s++)html+='<span class="star inactive" data-v="'+s+'" onclick="setStars('+row.id+','+s+')">★</span>';
+            html+='</div><textarea class="note-input" id="note'+row.id+'" placeholder="Text recenzie (opțional)..." rows="2"></textarea>';
+        }
+        html+='<button class="btn-expand" onclick="togglePreview('+row.id+')">👁️ Vezi mesaj</button>';
+        html+='<button class="btn-delete" onclick="deleteRecenzie('+row.id+',\''+esc(row.client_nume).replace(/\x27/g,'\\\x27')+'\')" title="Șterge (permite retrimitere)">🗑️ Șterge</button>';
+        html+='</div></div>';
+    });
+    el.innerHTML=html;
+}
+function togglePreview(id){var row=document.getElementById('smsRow'+id);if(row)row.classList.toggle('expanded');}
+function setStars(smsId,nota){var c=document.getElementById('stars'+smsId);if(!c)return;c.querySelectorAll('.star').forEach(function(s){var v=parseInt(s.getAttribute('data-v'));s.className='star '+(v<=nota?'active':'inactive');});c.setAttribute('data-selected',nota);}
+function toggleReview(smsId,btn){
+    if(btn.classList.contains('received'))return;
+    var starsEl=document.getElementById('stars'+smsId);var noteEl=document.getElementById('note'+smsId);
+    var nota=starsEl?parseInt(starsEl.getAttribute('data-selected'))||0:0;
+    var text=noteEl?noteEl.value.trim():'';
+    if(!confirm('Confirmi că ai primit recenzie de la acest client?'))return;
+    btn.disabled=true;
+    var payload={id:smsId,recenzie_primita:true};
+    if(nota)payload.recenzie_nota=nota;if(text)payload.recenzie_text=text;
+    fetch(API+'?action=updateRecenzie',{method:'POST',credentials:'include',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)})
+    .then(function(r){return r.json()}).then(function(res){
+        if(res.success){toast('Recenzie marcată cu succes!','success');loadRecenzii();}
+        else{btn.disabled=false;toast(res.error||'Eroare','error');}
+    }).catch(function(e){btn.disabled=false;toast('Eroare: '+(e.message||e),'error');});
+}
+function deleteRecenzie(smsId,clientNume){
+    if(!confirm('Ștergi cererea pentru "'+clientNume+'"? Vei putea retrimite mesajul pentru același proiect.'))return;
+    fetch(API+'?action=deleteRecenzie',{method:'POST',credentials:'include',headers:{'Content-Type':'application/json'},body:JSON.stringify({id:smsId})})
+    .then(function(r){return r.json()}).then(function(res){
+        if(res.success){toast('Cerere ștearsă','success');loadRecenzii();}else toast(res.error||'Eroare','error');
+    }).catch(function(e){toast('Eroare: '+(e.message||e),'error');});
+}
+function resetAll(){
+    if(!RDATA.length){toast('Nimic de șters','info');return;}
+    if(!confirm('ATENȚIE: Ștergi TOATE cele '+RDATA.length+' cereri de recenzie? Acțiunea nu poate fi anulată.'))return;
+    if(!confirm('Confirmi din nou — chiar vrei să ștergi tot istoricul de cereri?'))return;
+    fetch(API+'?action=deleteRecenzie',{method:'POST',credentials:'include',headers:{'Content-Type':'application/json'},body:JSON.stringify({all:true})})
+    .then(function(r){return r.json()}).then(function(res){
+        if(res.success){toast('Toate cererile au fost șterse ('+(res.deleted||0)+')','success');loadRecenzii();}else toast(res.error||'Eroare','error');
+    }).catch(function(e){toast('Eroare: '+(e.message||e),'error');});
+}
+
+// ═══════════════════════════════════════════════════════════════════
+// ȘABLOANE SEO — structuri pre-optimizate pentru algoritmii 2026
+// LinkedIn Depth Score · IG 3-sec hook · TikTok pattern interrupt · etc.
+// ═══════════════════════════════════════════════════════════════════
+var SEO_TEMPLATES=[
+    {
+        cat:'LinkedIn B2B',icon:'💼',plat:['linkedin'],brand:'cssi',
+        title:'Lecție din 20 ani — autoritate Mihai',
+        content:'După 20 de ani și 9.000 de proiecte, am învățat un lucru:\n\nCea mai mare diferență între o instalație care durează și una care eșuează nu sunt echipamentele.\n\nEste procesul de consultanță prealabilă.\n\nIată ce verific de fiecare dată înainte de a propune o soluție:\n\n→ [punct 1 — ex: harta blind spots reali, nu „pe planuri"]\n→ [punct 2 — ex: integrare cu infrastructura existentă]\n→ [punct 3 — ex: planul de mentenanță pe 5 ani, nu doar instalare]\n\nCifrele celor care sar peste consultanță: 30-40% revin la noi în 2 ani pentru re-cablare completă.\n\nCifrele celor cu care facem consultanță corectă: zero recablări în 8 ani.\n\nCare e abordarea ta când evaluezi un sistem nou? Comentează mai jos.\n\n#B2B #Securitate #FacilityManagement #CSSI #Brasov',
+        tips:'Sweet spot 1.200-1.500 char · Primele 2 linii = hook înainte de „see more" (210 char) · CTA în final cu întrebare → comentarii 15+ cuvinte = 15x weight algoritm 2026 · Postează marți-joi 9-11 dim.'
+    },
+    {
+        cat:'LinkedIn B2B',icon:'💼',plat:['linkedin'],brand:'cssi',
+        title:'Legea 333/2003 — diferențiator legal',
+        content:'80%.\n\nAtât din instalațiile pe care le evaluăm pentru re-bid au fost făcute de firme fără autorizație IGPR.\n\nLegea 333/2003 te obligă să folosești o firmă licențiată pentru sisteme de securitate.\n\nCe înseamnă pentru afacerea ta dacă nu o respecți:\n\n• Amenzi 5.000-30.000 RON\n• Asigurarea NU plătește la incident — sistemul instalat ilegal e considerat inexistent\n• Răspundere directă pentru date personale (GDPR)\n• Riscuri penale dacă incidentul cauzează prejudiciu\n\nCSSI = firmă autorizată IGPR + ISU + ANRE. 9.000 proiecte. 20 ani.\n\nVrei un audit gratuit al sistemului actual? Comentează „audit" — îți trimit ghidul PDF cu tot ce trebuie verificat.\n\n#Compliance #Legea333 #SecuritateAfacere #IGPR #CSSI',
+        tips:'Hook cu cifră șocantă în prima linie · Listă bullets → easy scan · Lead gen prin comentariu „audit" → DM cu PDF (boost engagement) · NU pune link extern (-40% reach 2026) — pune în comentariu după primele engagement-uri.'
+    },
+    {
+        cat:'LinkedIn B2B',icon:'💼',plat:['linkedin'],brand:'cssi',
+        title:'PDF Carousel — Studiu caz Schaeffler',
+        content:'Cum am securizat 8.500 mp de hală fără să oprim producția nici 1 minut.\n\nProvocare: 1.200 angajați, 47 camere, control acces complex, 3 zile termen.\n\nÎn carusele de mai jos: planul, soluția, rezultatul.\n\n→ Swipe pentru detalii\n\n#StudiuCaz #B2B #Securitate #CSSI',
+        tips:'Format PDF carousel = 6.6% engagement (CEL MAI MARE LinkedIn 2026) · 10 slide-uri PDF: hook → context → provocare → soluție → echipament → calendar → rezultat → ROI → quote client → CTA · Saves = #1 metric algoritm. Încheie cu „Salvează pentru când vei avea nevoie."'
+    },
+    {
+        cat:'Instagram Reel',icon:'📸',plat:['ig','tiktok'],brand:'cssi',
+        title:'Time-lapse montaj cameră — 15 sec viral',
+        content:'Hala asta avea ZERO camere acum 3 ore.\n\nAcum are 12. 🎥\n\nTime-lapse complet în 15 sec ⬇️\n\n[Adaugă trending audio — +42% engagement]\n[Text overlay frame 1: „Hala 8.500 mp · 12 camere · 3 ore"]\n\n.\n.\n.\n#CSSI #CamereSupraveghere #Brasov #TimeLapse #Securitate #B2B #FirmaAutorizata',
+        tips:'Hook în primele 3 sec (50% drop-off altfel) · Text mare frame 1 (Reels watched fără sunet 50% timp) · Trending audio = +42% engagement 2026 · 15-30 sec sweet spot · CTA: „Salvează pentru când îți va trebui" → saves = #2 signal · Hashtag-uri în comentariu sau la final după 3 enter-uri.'
+    },
+    {
+        cat:'Instagram Reel',icon:'📸',plat:['ig','tiktok'],brand:'cssi',
+        title:'5 semne că ai nevoie de camere — list format',
+        content:'Dacă ai chiar și 1 din astea, e timpul. ⚠️\n\n1️⃣ Stoc care „dispare" inexplicabil\n2️⃣ Reclamații angajați nedrepte fără probă\n3️⃣ Furt de la mașini în parcare\n4️⃣ Acces neautorizat în zone sensibile\n5️⃣ Asigurarea cere camere pentru reînnoire\n\nNu aștepta să se întâmple. Trimite asta unui prieten care are firmă. 📤\n\n.\n.\n.\n#CSSI #CamereSupraveghere #Brasov #SecuritateFirma #B2B',
+        tips:'Format „list" viral 2026 · Numerotat vizual cu emojis · CTA „Trimite asta unui prieten" → sends per reach = #1 signal algoritm 2026 · 7-15 sec optim · Subtitrare auto-generată în reel.'
+    },
+    {
+        cat:'Facebook',icon:'📘',plat:['fb'],brand:'cssi',
+        title:'Studiu caz CFR Călători — social proof B2B',
+        content:'🚆 CFR Călători — 10 ani parteneriat.\n\n47 stații securizate. Zero incidente majore în ultimii 5 ani.\n\nProvocarea: rețea distribuită, 24/7 operațiuni, fără toleranță pentru downtime.\n\nSoluția noastră:\n• Sisteme CCTV integrate cu monitorizare centralizată\n• Control acces zonal pentru personal autorizat\n• Mentenanță predictivă — verificare lunară\n• SLA contractual răspuns 1-12h\n\nRezultat:\n→ Zero incidente majore în 5 ani\n→ Reducere 40% timp investigație incidente minore\n→ Renewal contract pentru încă 5 ani\n\nEști o instituție publică sau privată cu nevoi similare?\n\n📞 0752 288 400\n💬 WhatsApp: wa.me/40752288400\n\n#CSSI #B2B #StudiuCaz #SecuritateInstitutii',
+        tips:'Format lung Facebook (algoritm 2026 favorizează dwell time) · Story-driven: provocare → soluție → rezultat măsurabil · CTA dual (telefon + WhatsApp) · NU pune link extern în body — pune în comentariu primul.'
+    },
+    {
+        cat:'Facebook',icon:'📘',plat:['fb'],brand:'cssi',
+        title:'Comparativ „autorizat vs neautorizat" — diferențiator',
+        content:'⚠️ De ce contează ca firma ta de securitate să fie autorizată IGPR?\n\nFIRMĂ AUTORIZATĂ (CSSI ✅)\n✓ Asigurare profesională validă\n✓ Conformitate Legea 333/2003\n✓ GDPR compliance pentru CCTV\n✓ Răspundere clară la incident\n✓ Certificate IGPR + ISU + ANRE\n\nFIRMĂ NEAUTORIZATĂ ❌\n✗ Asigurare NU plătește la incident\n✗ Tu răspunzi penal/civil\n✗ Sistemul = inexistent legal\n✗ Risc amenzi 5.000-30.000 RON\n✗ Date personale neprotejate\n\n80% dintre concurenții cu prețuri mici NU au autorizația. Doar nu îți spun.\n\nCSSI — firmă autorizată din 2005. 20 ani. 9.000+ proiecte.\n\nCere audit gratuit: 0752 288 400\n\n#FirmaAutorizata #IGPR #Securitate #Brasov #CSSI',
+        tips:'Format comparativ → vizual scanabil · Diferențiator legal puternic (din audit) · CTA telefon · Hashtag-uri în finalul postării.'
+    },
+    {
+        cat:'GBP Post',icon:'📍',plat:['fb'],brand:'cssi',
+        title:'GBP Săptămânal — lucrare finalizată',
+        content:'✅ Săptămâna asta am finalizat instalarea sistemului CCTV pentru [tip locație — ex: depozit logistic 1.200 mp] în [localitate — ex: Codlea].\n\n📷 [număr] camere IP Hikvision 4K\n🔐 Control acces 24 angajați\n💻 Software monitorizare centralizat\n📅 Mentenanță inclusă 12 luni\n\nFirmă autorizată IGPR + ISU + ANRE.\n\nSună pentru ofertă: 0268 414 740',
+        tips:'1 post/săptămână OBLIGATORIU în GBP (semnal de activitate Google 2026) · GBP = 32% factor ranking local · Foto reală neapărat · Localitate menționată = SEO local.'
+    },
+    {
+        cat:'Blog SEO',icon:'📝',plat:['fb','linkedin'],brand:'cssi',
+        title:'Anunț blog — „Cât costă CCTV firmă 2026 Brașov"',
+        content:'💰 Cât costă un sistem CCTV pentru firma ta în 2026?\n\nAm publicat ghidul complet — cu prețuri orientative reale pe Brașov pentru 2026.\n\nÎn articol găsești:\n→ Tabel kit 4 camere casă (1.500-3.000 RON)\n→ 8 camere magazin/birou (3.500-8.000 RON)\n→ 16 camere hală industrială (12.000-25.000 RON)\n→ Factori care influențează prețul real\n→ Greșeli frecvente la achiziție\n→ Ce întreabă firma autorizată vs cea care vrea doar să vândă\n\nCitește ghidul complet: [link în comentariu]\n\n#CSSI #CCTV #Brasov #Ghid2026',
+        tips:'Anunț blog cu listă valoare clară · Link în comentariu (algoritm 2026 penalizează link în body) · Tabel prețuri → atrage căutări „cât costă X" · CTA „citește".'
+    },
+    {
+        cat:'YouTube',icon:'▶️',plat:['yt'],brand:'cssi',
+        title:'YT Title — Tutorial control acces RFID',
+        content:'TITLE OPTIMIZAT YT (max 60 char):\nCum Funcționează Controlul Acces RFID pentru Firme | CSSI\n\nDESCRIPTION (primele 100 char critice):\nGhid complet 2026 despre control acces RFID pentru fabrici și firme: cum alegi, cum instalezi, ROI real, integrare HR. Demo live + studiu caz Schaeffler.\n\n0:00 Intro\n0:45 Ce este controlul acces RFID\n2:00 Tipuri de cititoare\n4:30 Integrarea cu HR/ERP\n6:30 ROI — cazul Schaeffler\n8:00 Cum alegi pentru firma ta\n\nWebsite: cssi.ro\nWhatsApp: 0752 288 400\n\n#ControlAcces #RFID #B2B #CSSI #Brasov',
+        tips:'Title SEO YouTube cu cuvânt cheie principal + tip conținut + brand · Description first 100 char = ce arată în search · Timestamps obligatorii (boost retention) · Tag-uri în descriere + manual în YT Studio.'
+    },
+    {
+        cat:'Conca-Verde',icon:'🌲',plat:['fb','ig'],brand:'conca-verde',
+        title:'Camping — promovare sejur weekend',
+        content:'🌲 Weekend la munte fără bătăi de cap?\n\nConca Verde Camping — Râșnov\n\n🏕️ Locuri rulote/corturi cu electricitate\n🍳 Bucătărie comună + duș cald\n🌅 Hiking dimineața în Bucegi\n🐕 Animale binevenite\n📶 WiFi free în restaurant\n\nDe la 60 RON/noapte. Disponibil weekend-ul acesta!\n\nRezervare: 0752 288 400\nwww.conca-verde.ro\n\n#ConcaVerde #Camping #Brasov #Rasnov #Weekend #Bucegi #Hiking',
+        tips:'Conca Verde — voce mai casual decât CSSI · Emojis abundente OK · Hashtag-uri turism local · CTA rezervare clar.'
+    }
+];
+
+function openTemplatePicker(){
+    var html='<div style="background:linear-gradient(135deg,#f5f3ff,#ede9fe);border-radius:12px;padding:14px 18px;margin-bottom:18px;font-size:13px;color:#5b21b6;font-weight:600;display:flex;gap:10px;align-items:center">';
+    html+='<span style="font-size:22px">📚</span><div><strong>Șabloane optimizate pentru algoritmii 2026</strong><br><span style="font-weight:500;font-size:12px">Click pe orice șablon → pre-completează postarea. Modifică „[tex între paranteze]" cu detaliile lucrării tale.</span></div>';
+    html+='</div>';
+
+    // Grupare pe categorii
+    var cats={};
+    SEO_TEMPLATES.forEach(function(t){if(!cats[t.cat]) cats[t.cat]=[];cats[t.cat].push(t);});
+
+    Object.keys(cats).forEach(function(cat){
+        html+='<div style="font-weight:800;font-size:14px;color:var(--dark);margin:14px 0 8px;display:flex;align-items:center;gap:8px"><span style="font-size:20px">'+cats[cat][0].icon+'</span> '+cat+' <span style="background:var(--gray-bg);color:var(--gray);padding:2px 8px;border-radius:6px;font-size:11px">'+cats[cat].length+'</span></div>';
+        cats[cat].forEach(function(t){
+            var idx=SEO_TEMPLATES.indexOf(t);
+            html+='<div style="background:#fff;border:1px solid var(--gray-b);border-radius:12px;padding:14px;margin-bottom:8px;cursor:pointer;transition:all 0.2s" onmouseover="this.style.borderColor=\'var(--purple)\';this.style.transform=\'translateX(2px)\'" onmouseout="this.style.borderColor=\'var(--gray-b)\';this.style.transform=\'translateX(0)\'" onclick="useTemplate('+idx+')">';
+            html+='<div style="font-weight:700;font-size:14px;margin-bottom:6px;color:var(--dark)">'+esc(t.title)+'</div>';
+            html+='<div style="font-size:11px;color:var(--gray);line-height:1.6;max-height:40px;overflow:hidden;text-overflow:ellipsis;margin-bottom:8px">'+esc(t.content.substring(0,150))+'...</div>';
+            html+='<div style="display:flex;justify-content:space-between;align-items:center;font-size:11px"><div style="display:flex;gap:4px">';
+            t.plat.forEach(function(p){html+='<span style="background:'+(PLAT_COLOR[p]||'#64748b')+'20;color:'+(PLAT_COLOR[p]||'#64748b')+';padding:2px 8px;border-radius:6px;font-weight:700">'+(PLAT[p]||p).split(' ')[0]+'</span>';});
+            html+='</div>';
+            html+='<span style="color:var(--purple);font-weight:700">Folosește →</span>';
+            html+='</div>';
+            html+='<div style="margin-top:8px;padding:8px 10px;background:#fef3c7;border-radius:6px;font-size:10px;color:#92400e;line-height:1.5"><strong>💡 Algoritm 2026:</strong> '+esc(t.tips)+'</div>';
+            html+='</div>';
+        });
+    });
+
+    document.getElementById('templateBody').innerHTML=html;
+    document.getElementById('templateModal').classList.add('active');
+}
+
+function closeTemplateModal(){document.getElementById('templateModal').classList.remove('active');}
+
+function useTemplate(idx){
+    var t=SEO_TEMPLATES[idx];
+    document.getElementById('fContent').value=t.content;
+    document.getElementById('fBrand').value=t.brand;
+    setCheckedPlatforms(t.plat);
+    updateCharCount();
+    updatePlatformLimits();
+    closeTemplateModal();
+    toast('📚 Șablon „'+t.title+'" încărcat — modifică [text între paranteze]','success');
+}
+
+function updatePlatformLimits(){
+    var len=(document.getElementById('fContent').value||'').length;
+    var plats=getCheckedPlatforms();
+    if(!plats.length){document.getElementById('charCountPerPlat').innerHTML='';return;}
+    var limits={fb:63206,ig:2200,linkedin:3000,yt:5000,tiktok:2200,x:280};
+    var html='';
+    plats.forEach(function(p){
+        var lim=limits[p]||0;
+        var over=len>lim;
+        var color=over?'var(--red)':'var(--green)';
+        var label=(PLAT[p]||p).split(' ')[0];
+        html+='<span style="color:'+color+';margin-right:10px;font-weight:'+(over?'800':'600')+'">'+label+' '+len+'/'+(lim||'∞')+(over?' ⚠️':'')+'</span>';
+    });
+    document.getElementById('charCountPerPlat').innerHTML=html;
+}
+
+// ═══ INIT ═══
+// Aplic filtru din URL (ex: ?filter=Draft pentru pagina de Aprobare)
+(function(){
+    var urlParams=new URLSearchParams(window.location.search);
+    if(urlParams.get('tab')==='recenzii'){setTab('recenzii');}
+    var filterStatus=urlParams.get('filter');
+    if(filterStatus){
+        var sel=document.getElementById('filterStatus');
+        if(sel){sel.value=filterStatus;}
+        // dacă filtrul e Draft, comut pe vizualizarea Listă (cea mai utilă pentru aprobare)
+        if(filterStatus==='Draft'||filterStatus==='Idee'){currentView='list';}
+    }
+    // Pre-completare din șablonul ideii din Marketing Hub
+    if(urlParams.get('template')==='idea'){
+        try{
+            var raw=sessionStorage.getItem('cssi-idea-template');
+            if(raw){
+                var d=JSON.parse(raw);
+                setTimeout(function(){
+                    openAddModal();
+                    document.getElementById('fContent').value=d.content||'';
+                    updateCharCount();updatePlatformLimits();
+                    sessionStorage.removeItem('cssi-idea-template');
+                    toast('💡 Idee încărcată — completează detaliile','info');
+                },500);
+            }
+        }catch(e){}
+    }
+})();
+loadPosts();
 </script>
 <script src="/admin/notifications.js" defer></script>
 </body>

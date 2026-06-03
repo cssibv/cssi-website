@@ -1,8 +1,22 @@
-# 📊 Ghid Marketing Hub CSSI — postare multi-platformă cu aprobare
+# 📊 Ghid Marketing CSSI — postare multi-platformă cu aprobare
 
 **URL:** https://cssi.ro/admin/marketing
 
-Toată infrastructura există deja. Ai nevoie doar de **o cheie Zernio** în `secrets.php` ca să meargă publicarea.
+> ⚡ **ACTUALIZARE iunie 2026 — pagină unică.** Cele 4 pagini de marketing (Hub, Calendar Social,
+> Planificator, Recenzii) au fost unificate într-o **singură pagină** `admin/marketing.html`, cu **2 taburi**:
+> **📋 Postări** (creare/calendar/kanban + aprobare) și **⭐ Recenzii**. Vechile URL-uri redirecționează automat.
+>
+> ✨ **NOU — „Generează săptămâna cu AI".** Butonul din dreapta-sus scrie automat o săptămână de postări
+> COMPLETE (calendar editorial pe servicii, fără paranteze de completat), le pune ca **Draft** programate pe
+> orele optime, fiecare marcată **„📷 lipsește poza"**. Tu doar verifici textul, adaugi poza și aprobi.
+> Necesită o **cheie Claude** în `secrets.php`:
+> ```php
+> 'ANTHROPIC_KEY' => 'sk-ant-...',   // de la console.anthropic.com → API Keys
+> // opțional: 'CLAUDE_MODEL' => 'claude-sonnet-4-6',
+> ```
+> Fără cheie, butonul afișează un mesaj clar (nu strică nimic). Generarea imaginilor (Pollinations) rămâne gratis.
+
+Pentru **publicarea** pe rețele ai nevoie de **o cheie Zernio** în `secrets.php`.
 
 ---
 
