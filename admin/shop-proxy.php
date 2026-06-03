@@ -65,25 +65,33 @@ if (!$code) {
 // Căutarea WooCommerce: /?s=TERMEN&post_type=product (input name="s")
 $searchUrl = 'https://www.shop-security.ro/?s=' . urlencode($code) . '&post_type=product';
 
-// Helper: fetch HTML cu user-agent de browser
+// Helper: fetch HTML cu user-agent de browser. Întoarce [body, http, errno, error].
 function ssFetch($url) {
     $ch = curl_init();
     curl_setopt_array($ch, [
         CURLOPT_URL => $url,
         CURLOPT_RETURNTRANSFER => true,
         CURLOPT_FOLLOWLOCATION => true,
-        CURLOPT_TIMEOUT => 15,
+        CURLOPT_MAXREDIRS => 5,
+        CURLOPT_CONNECTTIMEOUT => 12,
+        CURLOPT_TIMEOUT => 30,
         CURLOPT_SSL_VERIFYPEER => false,
+        CURLOPT_SSL_VERIFYHOST => 0,
+        CURLOPT_ENCODING => '', // accept gzip/deflate/br
+        CURLOPT_IPRESOLVE => CURL_IPRESOLVE_V4, // unele shared-hosts au IPv6 rupt
         CURLOPT_USERAGENT => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
         CURLOPT_HTTPHEADER => [
             'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
             'Accept-Language: ro-RO,ro;q=0.9,en;q=0.8',
+            'Connection: close',
         ],
     ]);
-    $body = curl_exec($ch);
-    $http = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+    $body  = curl_exec($ch);
+    $http  = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+    $errno = curl_errno($ch);
+    $error = curl_error($ch);
     curl_close($ch);
-    return [$body, $http];
+    return [$body, $http, $errno, $error];
 }
 
 // Helper: preț românesc "1.234,56" sau "411,40" → float 1234.56 / 411.40
@@ -95,10 +103,20 @@ function ssParsePrice($raw) {
     return floatval($raw);
 }
 
-list($html, $httpCode) = ssFetch($searchUrl);
+list($html, $httpCode, $curlErrno, $curlError) = ssFetch($searchUrl);
 
 if (!$html || $httpCode !== 200) {
-    echo json_encode(['error' => 'Nu s-a putut accesa shop-security.ro (HTTP '.$httpCode.')', 'found' => false]);
+    echo json_encode([
+        'found' => false,
+        'error' => 'Nu s-a putut accesa shop-security.ro (HTTP '.$httpCode.')',
+        'debug' => [
+            'http' => $httpCode,
+            'curl_errno' => $curlErrno,
+            'curl_error' => $curlError,
+            'url' => $searchUrl,
+            'curl_ssl' => function_exists('curl_version') ? (curl_version()['ssl_version'] ?? '') : '',
+        ],
+    ]);
     exit;
 }
 
