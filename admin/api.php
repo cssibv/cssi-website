@@ -994,25 +994,26 @@ function cssiCopyGuidelines() {
         ."• EMOȚIE utilă (etic): atinge frica reală de pierdere (efracție, incendiu, lipsă de control) și soluția care aduce siguranță — fără alarmism exagerat.\n"
         ."• Maxim un semn de exclamare, doar dacă e chiar necesar. Diacritice corecte.\n"
         ."• CTA clar la final: ce să facă cititorul (sună, scrie pe WhatsApp, cere ofertă). Pe LinkedIn, un CTA sub formă de întrebare care invită la comentarii.\n"
+        ."• SEO: integrează NATURAL 2-4 fraze-cheie de căutare relevante pentru serviciu (ex. „camere de supraveghere Brașov\") + SEO local (Brașov și împrejurimi: Codlea, Săcele, Ghimbav, Râșnov, Zărnești, Făgăraș) — în text, nu doar în hashtag-uri. Fără keyword stuffing: frazele trebuie să sune firesc.\n"
         ."• Reguli de platformă: LinkedIn = profunzime, hook în primele 2 linii, FĂRĂ linkuri externe în corp; Instagram/Facebook = scanabil, emoji cu măsură, hashtag-urile la final.";
 }
 // Catalog servicii CSSI (nume natural + hashtag) — sursa unică pentru promptul AI.
 function cssiServiceCatalog() {
     return [
-        'camere-supraveghere' => ['nume' => 'sistemul de camere supraveghere', 'hashtag' => '#CCTV #CamereSupraveghere #CamereBrasov #Hikvision'],
-        'alarma-antiefractie' => ['nume' => 'sistemul de alarmă antiefracție', 'hashtag' => '#AlarmaAntiefractie #Ajax #Paradox #Monitorizare247'],
-        'control-acces' => ['nume' => 'sistemul de control acces', 'hashtag' => '#ControlAcces #RFID #PontajElectronic #B2B'],
-        'automatizari-porti' => ['nume' => 'automatizarea porții', 'hashtag' => '#AutomatizariPorti #Nice #BFT #Somfy'],
-        'pontaj-electronic' => ['nume' => 'sistemul de pontaj electronic', 'hashtag' => '#PontajElectronic #HR #B2B #ControlAcces'],
-        'aer-conditionat' => ['nume' => 'sistemul de aer condiționat', 'hashtag' => '#AerConditionat #Clima #Climatizare #Brasov'],
-        'instalatii-electrice' => ['nume' => 'instalația electrică', 'hashtag' => '#InstalatiiElectrice #ElectricianBrasov #ANRE #PRAM'],
-        'usi-garaj' => ['nume' => 'ușa de garaj', 'hashtag' => '#UsiGaraj #Hormann #UsaSectionala'],
-        'bariere-auto' => ['nume' => 'bariera auto', 'hashtag' => '#BariereAuto #LPR #Parcare'],
-        'detectie-incendiu' => ['nume' => 'sistemul de detecție incendiu', 'hashtag' => '#DetectieIncendiu #ISU #ProtectieIncendiu'],
-        'interfoane' => ['nume' => 'interfonul/videointerfonul', 'hashtag' => '#Interfoane #Videointerfoane #Bloc #Vila'],
-        'ventilatie' => ['nume' => 'sistemul de ventilație', 'hashtag' => '#Ventilatie #RecuperareCaldura'],
-        'instalatii-termice' => ['nume' => 'instalația termică', 'hashtag' => '#InstalatiiTermice #CentralaTermica'],
-        'sonorizare' => ['nume' => 'sistemul de sonorizare', 'hashtag' => '#Sonorizare #SistemAudio'],
+        'camere-supraveghere' => ['nume' => 'sistemul de camere supraveghere', 'hashtag' => '#CCTV #CamereSupraveghere #CamereBrasov #Hikvision', 'seo' => 'camere de supraveghere Brașov, sistem CCTV firmă, instalare camere supraveghere, supraveghere video Hikvision'],
+        'alarma-antiefractie' => ['nume' => 'sistemul de alarmă antiefracție', 'hashtag' => '#AlarmaAntiefractie #Ajax #Paradox #Monitorizare247', 'seo' => 'sistem de alarmă Brașov, alarmă antiefracție casă și firmă, alarmă cu monitorizare 24/7, instalare alarmă Ajax'],
+        'control-acces' => ['nume' => 'sistemul de control acces', 'hashtag' => '#ControlAcces #RFID #PontajElectronic #B2B', 'seo' => 'control acces firmă, sistem control acces Brașov, acces pe cartelă sau amprentă, control acces clădire'],
+        'automatizari-porti' => ['nume' => 'automatizarea porții', 'hashtag' => '#AutomatizariPorti #Nice #BFT #Somfy', 'seo' => 'automatizare poartă Brașov, motor poartă batantă și culisantă, automatizări porți Nice BFT'],
+        'pontaj-electronic' => ['nume' => 'sistemul de pontaj electronic', 'hashtag' => '#PontajElectronic #HR #B2B #ControlAcces', 'seo' => 'pontaj electronic firmă, sistem de pontaj Brașov, pontaj cu amprentă sau cartelă, evidență prezență angajați'],
+        'aer-conditionat' => ['nume' => 'sistemul de aer condiționat', 'hashtag' => '#AerConditionat #Clima #Climatizare #Brasov', 'seo' => 'aer condiționat Brașov, montaj aer condiționat, instalare climă, climatizare locuință și birou'],
+        'instalatii-electrice' => ['nume' => 'instalația electrică', 'hashtag' => '#InstalatiiElectrice #ElectricianBrasov #ANRE #PRAM', 'seo' => 'instalații electrice Brașov, electrician autorizat ANRE, tablou electric, verificare PRAM'],
+        'usi-garaj' => ['nume' => 'ușa de garaj', 'hashtag' => '#UsiGaraj #Hormann #UsaSectionala', 'seo' => 'uși de garaj Brașov, ușă secțională, montaj ușă garaj Hörmann'],
+        'bariere-auto' => ['nume' => 'bariera auto', 'hashtag' => '#BariereAuto #LPR #Parcare', 'seo' => 'bariere auto parcare, barieră acces auto Brașov, control acces auto cu LPR'],
+        'detectie-incendiu' => ['nume' => 'sistemul de detecție incendiu', 'hashtag' => '#DetectieIncendiu #ISU #ProtectieIncendiu', 'seo' => 'detecție incendiu Brașov, sistem de detecție și semnalizare incendiu, centrale incendiu, avizare ISU'],
+        'interfoane' => ['nume' => 'interfonul/videointerfonul', 'hashtag' => '#Interfoane #Videointerfoane #Bloc #Vila', 'seo' => 'videointerfon Brașov, interfon bloc și vilă, montaj videointerfon'],
+        'ventilatie' => ['nume' => 'sistemul de ventilație', 'hashtag' => '#Ventilatie #RecuperareCaldura', 'seo' => 'sistem de ventilație, ventilație cu recuperare de căldură, montaj ventilație Brașov'],
+        'instalatii-termice' => ['nume' => 'instalația termică', 'hashtag' => '#InstalatiiTermice #CentralaTermica', 'seo' => 'instalații termice Brașov, montaj centrală termică, instalator termic autorizat'],
+        'sonorizare' => ['nume' => 'sistemul de sonorizare', 'hashtag' => '#Sonorizare #SistemAudio', 'seo' => 'sistem de sonorizare, sonorizare ambientală firmă și restaurant, instalare sistem audio'],
     ];
 }
 
@@ -4813,6 +4814,11 @@ p { margin: 0; }
             } else {
                 $brandVoice = "CSSI Brașov — firmă de securitate și instalații, autorizată IGPR + ISU + ANRE, 20 de ani experiență, 9.000+ proiecte. Ton profesional, autoritar, de încredere. Contact: telefon 0752 288 400, WhatsApp wa.me/40752288400, fix 0268 414 740.";
             }
+            $seoRef = '';
+            if ($brand !== 'conca-verde') {
+                foreach (cssiServiceCatalog() as $svc) { $seoRef .= "- " . $svc['nume'] . ": " . $svc['seo'] . "\n"; }
+                $seoRef = "\n\nDOMENIILE CSSI și frazele-cheie SEO (alege-le pe cele potrivite subiectului și integrează-le natural în text):\n" . $seoRef;
+            }
             $systemS = "Ești copywriter senior de social media pentru {$brandVoice}\n\n"
                 ."Scrii O SINGURĂ postare COMPLETĂ, gata de publicat — fără NICIUN placeholder, fără paranteze drepte [ ], fără text de completat. Omul doar va atașa o fotografie.\n\n"
                 ."Reguli de calitate (best practices 2026):\n"
@@ -4820,7 +4826,7 @@ p { margin: 0; }
                 ."- Hook puternic în prima linie. LinkedIn: profunzime + CTA cu întrebare la final; Instagram/Facebook: scanabil, emoji moderat.\n"
                 ."- Limba română corectă, cu diacritice. Include 3-6 hashtag-uri relevante la final.\n"
                 ."- Nu inventa cifre/clienți falși specifici; rămâi la mesaje generale credibile.\n\n"
-                .cssiCopyGuidelines()."\n\n"
+                .cssiCopyGuidelines().$seoRef."\n\n"
                 ."Răspunzi DOAR cu textul postării (fără ghilimele de încadrare, fără explicații, fără ```).";
             $userPromptS = "Scrie postarea despre / folosind aceste cuvinte cheie sau subiect:\n".$topic;
 
@@ -4872,14 +4878,16 @@ p { margin: 0; }
             $dayNames = [1=>'Luni',2=>'Marți',3=>'Miercuri',4=>'Joi',5=>'Vineri',6=>'Sâmbătă',0=>'Duminică',7=>'Duminică'];
 
             // Construiesc lista de sloturi pentru prompt
+            $svcCat = cssiServiceCatalog();
             $slotLines = [];
             foreach ($slots as $i => $s) {
                 $plats = array_map(function($p) use ($platLabels) { return isset($platLabels[$p]) ? $platLabels[$p] : $p; }, $s['platforme']);
                 $minLimit = 99999;
                 foreach ($s['platforme'] as $p) { if (isset($platLimits[$p]) && $platLimits[$p] < $minLimit) $minLimit = $platLimits[$p]; }
+                $seoKw = ($s['serviciu'] !== '' && isset($svcCat[$s['serviciu']]['seo'])) ? "\n   Fraze-cheie SEO de integrat natural în text: ".$svcCat[$s['serviciu']]['seo'] : '';
                 $slotLines[] = "Slot {$i} — ".($dayNames[$s['dow']] ?? '')." ".$s['ora']." · ".implode('+', $plats)." · format {$s['tip']} · max {$minLimit} caractere\n"
                     ."   Brief: ".$s['unghi']."\n"
-                    ."   Hashtag-uri de inclus la final: ".$s['hashtag'];
+                    ."   Hashtag-uri de inclus la final: ".$s['hashtag'].$seoKw;
             }
             $slotsText = implode("\n\n", $slotLines);
 
