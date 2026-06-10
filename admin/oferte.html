@@ -498,6 +498,7 @@ function renderCard(o){
         else if(d <= 7) expHtml = '<span class="exp-warn">expiră în '+d+'z</span>';
     }
     var motivHtml = (st==='Refuzata' && o.motiv_respingere) ? '<div style="font-size:11px;color:var(--red);font-style:italic;margin-top:4px">Motiv: '+esc(o.motiv_respingere)+'</div>' : '';
+    var trimisHtml = o.trimisa_de ? '<div style="font-size:11px;color:var(--blue);margin-top:4px">📤 Trimisă de '+esc(o.trimisa_de)+'</div>' : '';
     var html = '<div class="oferta-card'+checked+arch+'" id="card-'+o.id+'">';
     html += '<div class="oc-top">';
     html += '<input type="checkbox" class="oc-check" '+ckBox+' onchange="toggleSelect('+o.id+',this.checked);event.stopPropagation()" onclick="event.stopPropagation()">';
@@ -505,6 +506,7 @@ function renderCard(o){
     html += '<div class="oc-client">'+esc(o.client_nume||'— fără client —')+'</div>';
     if(o.obiectiv) html += '<div class="oc-obiectiv">'+esc(o.obiectiv)+'</div>';
     html += motivHtml;
+    html += trimisHtml;
     html += '</div>';
     html += '</div>';
     html += '<div class="oc-meta" onclick="openOfertaView('+o.id+')" style="cursor:pointer"><span class="nr">#'+esc(o.oferta_id)+'</span><span class="data">'+fmtDate(o.data_oferta)+'</span>'+expHtml+'<span class="val">'+fmtMoney(o.total_cu_tva)+'</span></div>';
@@ -714,6 +716,7 @@ function renderOfertaView(o){
     if(o.client_contact) html += '<span><strong>Contact:</strong> '+esc(o.client_contact)+'</span>';
     html += '</div>';
     if(o.obiectiv) html += '<div class="vm-meta-line"><span><strong>Obiectiv:</strong> '+esc(o.obiectiv)+'</span></div>';
+    if(o.trimisa_de) html += '<div class="vm-meta-line"><span style="color:var(--blue)"><strong>📤 Trimisă de:</strong> '+esc(o.trimisa_de)+(o.trimisa_la?' · '+fmtDate(o.trimisa_la):'')+'</span></div>';
     if(o.motiv_respingere) html += '<div class="vm-meta-line"><span style="color:var(--red)"><strong>Motiv refuz:</strong> '+esc(o.motiv_respingere)+(o.decis_de?' · '+esc(o.decis_de):'')+'</span></div>';
     // Echipamente
     html += '<div class="vm-section">';

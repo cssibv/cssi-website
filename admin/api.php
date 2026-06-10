@@ -52,6 +52,13 @@ function ensureOferteColumns($db) {
         if (!in_array('notificat_pre_expirare_la', $cols)) {
             $db->exec("ALTER TABLE oferte ADD COLUMN notificat_pre_expirare_la DATETIME NULL DEFAULT NULL");
         }
+        // Cine a trimis oferta + când — pentru a ști cine s-a ocupat de lucrare
+        if (!in_array('trimisa_de', $cols)) {
+            $db->exec("ALTER TABLE oferte ADD COLUMN trimisa_de VARCHAR(100) NULL DEFAULT NULL");
+        }
+        if (!in_array('trimisa_la', $cols)) {
+            $db->exec("ALTER TABLE oferte ADD COLUMN trimisa_la DATETIME NULL DEFAULT NULL");
+        }
     } catch (Exception $e) {
         // Loghez ca să pot debug (apare în error_log)
         error_log('ensureOferteColumns FAILED: ' . $e->getMessage());
@@ -637,6 +644,54 @@ function advanceProiectStatus($db, $idOrCode, $newStatus, $user = 'Admin', $rese
         proiectareAutoSetup($db, $row['id']);
     }
     return ['ok' => true, 'old' => $oldStatus, 'id' => $row['id'], 'proiect_id' => $row['proiect_id'], 'client_nume' => $row['client_nume'], 'mesaj' => $mesaj];
+}
+
+// ─── Ofertă marcată „Trimisă" → cine a trimis-o preia automat lucrarea ─────────
+// Sursă unică folosită atât din updateOfertaStatus (1 ofertă) cât și din bulkOferte (în bloc).
+// 1) stampilează pe ofertă cine + când a trimis (doar prima dată, nu suprascrie);
+// 2) marchează proiectul legat ca preluat de actor, DOAR dacă nu e deja preluat de altcineva.
+function markOfertaTrimisa($db, $id, $actor) {
+    // 1) audit pe ofertă — păstrează primul expeditor
+    try {
+        $db->prepare("UPDATE oferte SET trimisa_de = ?, trimisa_la = NOW() WHERE id = ? AND (trimisa_de IS NULL OR trimisa_de = '')")
+           ->execute([$actor, $id]);
+    } catch (Exception $e) { error_log('markOfertaTrimisa stamp: ' . $e->getMessage()); }
+
+    // 2) găsește proiectul legat (direct sau fallback prin client)
+    $stmtO = $db->prepare("SELECT proiect_id, client_id FROM oferte WHERE id = ?");
+    $stmtO->execute([$id]);
+    $of = $stmtO->fetch();
+    if (!$of) return;
+    $pId = $of['proiect_id'] ?: null;
+    if (!$pId && $of['client_id']) {
+        $stmtF = $db->prepare("SELECT id FROM proiecte WHERE client_id = ? ORDER BY created_at DESC LIMIT 1");
+        $stmtF->execute([$of['client_id']]);
+        $pr = $stmtF->fetch();
+        if ($pr) {
+            $pId = $pr['id'];
+            $db->prepare("UPDATE oferte SET proiect_id = ? WHERE id = ?")->execute([$pId, $id]);
+        }
+    }
+    if (!$pId) return;
+
+    // 3) preia proiectul doar dacă nu are deja un responsabil
+    $stmtPr = $db->prepare("SELECT proiect_id, status, preluat_de FROM proiecte WHERE id = ?");
+    $stmtPr->execute([$pId]);
+    $prj = $stmtPr->fetch();
+    if ($prj && trim((string)$prj['preluat_de']) === '') {
+        $db->prepare("UPDATE proiecte SET preluat_de = ?, preluat_la = NOW() WHERE id = ?")->execute([$actor, $pId]);
+        try {
+            $db->prepare("INSERT INTO notificari (proiect_id, mesaj, tip, de_la, etapa_noua, preluat_de, preluat_la) VALUES (?,?,?,?,?,?,NOW())")
+               ->execute([
+                    $prj['proiect_id'],
+                    '✅ ' . $actor . ' a preluat lucrarea ' . $prj['proiect_id'] . ' (ofertă trimisă)',
+                    'assignment',
+                    $actor,
+                    $prj['status'],
+                    $actor
+               ]);
+        } catch (Exception $e) { error_log('markOfertaTrimisa notif: ' . $e->getMessage()); }
+    }
 }
 
 // ─── PROIECTARE: template + helpers partajate (sursă UNICĂ de adevăr) ──────────
@@ -1745,7 +1800,7 @@ try {
             $sortBy = (isset($_GET['sort']) ? $_GET['sort'] : 'data_desc'); // data_desc/asc, valoare_desc/asc, client_asc, status
             $light = !empty($_GET['light']);  // true = nu adaugă linii (mult mai rapid pentru listing)
 
-            $sql = "SELECT vc.*, o2.client_id AS client_db_id, o2.proiect_id AS proiect_db_id, o2.motiv_respingere, o2.data_decizie, o2.decis_de, o2.archived_at, o2.expires_at, o2.mentiuni FROM v_oferte_complete vc JOIN oferte o2 ON vc.id = o2.id WHERE 1=1";
+            $sql = "SELECT vc.*, o2.client_id AS client_db_id, o2.proiect_id AS proiect_db_id, o2.motiv_respingere, o2.data_decizie, o2.decis_de, o2.archived_at, o2.expires_at, o2.mentiuni, o2.trimisa_de, o2.trimisa_la FROM v_oferte_complete vc JOIN oferte o2 ON vc.id = o2.id WHERE 1=1";
             $params = [];
             if ($clientId) { $sql .= " AND o2.client_id = ?"; $params[] = $clientId; }
             if ($proiectId) { $sql .= " AND o2.proiect_id = ?"; $params[] = $proiectId; }
@@ -2091,6 +2146,12 @@ try {
                     }
                     $params = array_merge([$st], $ids);
                     $db->prepare("UPDATE oferte SET status = ? WHERE id IN ($placeholders)")->execute($params);
+                    // Marcare „Trimisă" în bloc → fiecare lucrare e preluată de cel care a trimis
+                    if ($st === 'Trimisa') {
+                        $sessB = currentUser();
+                        $actorB = $sessB ? (($sessB['display_name'] ?? '') ?: ($sessB['username'] ?? 'Admin')) : 'Admin';
+                        foreach ($ids as $oid) { markOfertaTrimisa($db, $oid, $actorB); }
+                    }
                     break;
                 default:
                     jsonResponse(['success' => false, 'error' => 'Operațiune necunoscută'], 400);
@@ -2172,11 +2233,15 @@ try {
             break;
 
         case 'updateOfertaStatus':
+            ensureOferteColumns($db);
             $id = (isset($data['id']) ? $data['id'] : 0);
             $status = (isset($data['status']) ? $data['status'] : '');
             $motiv = (isset($data['motiv_respingere']) ? $data['motiv_respingere'] : '');
             $user = (isset($data['user']) ? $data['user'] : 'Admin');
-            
+            // Actorul real — DIN SESIUNE (anti-spoof), fallback pe $user dacă nu există sesiune
+            $sessU = currentUser();
+            $actor = $sessU ? (($sessU['display_name'] ?? '') ?: ($sessU['username'] ?? $user)) : $user;
+
             // Update oferta status + motiv + data decizie
             $db->prepare("UPDATE oferte SET status = ?, motiv_respingere = ?, data_decizie = NOW(), decis_de = ? WHERE id = ?")->execute([$status, $motiv, $user, $id]);
             
@@ -2303,7 +2368,12 @@ try {
                     ]);
                 }
             }
-            
+
+            // Dacă oferta e marcată Trimisă → lucrarea e preluată automat de cel care a trimis-o
+            if ($status === 'Trimisa') {
+                markOfertaTrimisa($db, $id, $actor);
+            }
+
             jsonResponse(['success' => true]);
             break;
 
