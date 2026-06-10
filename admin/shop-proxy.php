@@ -103,6 +103,26 @@ function ssParsePrice($raw) {
     return floatval($raw);
 }
 
+// Helper: normalizează un cod pentru comparație — trim, lowercase, fără spații interioare.
+// (SKU-ul de pe site poate avea spații/altă capitalizare decât ce tastăm noi)
+function ssNormCode($s) {
+    $s = mb_strtolower(trim((string)$s), 'UTF-8');
+    return preg_replace('/\s+/u', '', $s);
+}
+
+// Helper: extrage codul produsului (SKU) din pagina de detaliu.
+// Sursa principală cerută: <span class="sku">COD</span> ("Cod produs:"); fallback pe JSON "sku":"...".
+function ssExtractSku($html) {
+    if (preg_match('/<span[^>]*class="[^"]*\bsku\b[^"]*"[^>]*>\s*(.*?)\s*<\/span>/si', $html, $m)) {
+        $v = trim(html_entity_decode(strip_tags($m[1]), ENT_QUOTES | ENT_HTML5, 'UTF-8'));
+        if ($v !== '' && strtolower($v) !== 'n/a') return $v;
+    }
+    if (preg_match('/"sku"\s*:\s*"([^"]+)"/', $html, $m) && trim($m[1]) !== '') {
+        return trim($m[1]);
+    }
+    return '';
+}
+
 list($html, $httpCode, $curlErrno, $curlError) = ssFetch($searchUrl);
 
 if (!$html || $httpCode !== 200) {
@@ -137,49 +157,45 @@ if (preg_match_all('/<h[1-6][^>]*class="[^"]*wd-entities-title[^"]*"[^>]*>\s*<a[
     }
 }
 
-// === Alege cel mai relevant produs față de termenul căutat ===
-// WooCommerce întoarce rezultatele în ordinea LUI de relevanță, care nu e mereu corectă
-// pentru căutări cu mai multe cuvinte (ex: "HDD 4 TB WD" → primul card poate fi alt produs).
-// Scorăm fiecare produs după câte cuvinte din căutare apar în denumire și-l aducem pe
-// cel mai potrivit pe poziția 0. Tie-break: păstrăm ordinea originală a magazinului.
-if (count($products) > 1) {
-    $qFull   = mb_strtolower(trim($code), 'UTF-8');
-    $qTokens = preg_split('/\s+/', $qFull, -1, PREG_SPLIT_NO_EMPTY);
-    if ($qTokens) {
-        $indexed = [];
-        foreach ($products as $i => $p) {
-            $name    = mb_strtolower($p['name'], 'UTF-8');
-            // slug-ul din URL conține de obicei codul/SKU produsului (ex: .../ds-7604nxi-k1-4p)
-            $slugRaw = mb_strtolower(rawurldecode(trim((string)parse_url($p['url'], PHP_URL_PATH), '/')), 'UTF-8');
-            $hayExact  = $name . ' ' . $slugRaw;                       // pentru match exact pe cod (păstrează cratimele)
-            $hayTokens = $name . ' ' . str_replace('-', ' ', $slugRaw); // pentru scoring pe cuvinte
-            $score = 0;
-            // bonus decisiv: tot termenul căutat (codul exact) apare ca atare în nume sau slug
-            if ($qFull !== '' && mb_strpos($hayExact, $qFull) !== false) $score += 100;
-            // altfel scor parțial: câte cuvinte din căutare apar (util pt. denumiri ca "HDD 4 TB WD")
-            foreach ($qTokens as $t) {
-                if ($t !== '' && mb_strpos($hayTokens, $t) !== false) $score++;
-            }
-            $indexed[] = ['p' => $p, 'i' => $i, 's' => $score];
-        }
-        usort($indexed, function ($a, $b) {
-            if ($a['s'] !== $b['s']) return $b['s'] - $a['s']; // scor mai mare primul
-            return $a['i'] - $b['i'];                          // egalitate → ordinea magazinului
-        });
-        $products = array_map(function ($x) { return $x['p']; }, $indexed);
-    }
-}
-
-// === Pagina de DETALIU produs (sursa cea mai sigură pentru cod/preț/imagine/descriere) ===
-// Dacă search-ul a redirecționat direct pe pagina produsului (rezultat unic), folosim $html.
+// === Selectează produsul al cărui COD PRODUS (SKU) == codul căutat ===
+// Sursa de adevăr e <span class="sku">COD</span> de pe pagina de detaliu, NU denumirea/slug-ul.
+// Parcurgem candidații (max N), luăm pagina fiecăruia și comparăm SKU-ul cu ce am tastat.
+// Ne oprim la prima potrivire exactă; dacă niciuna nu se potrivește → cădem pe primul rezultat.
+$qNorm      = ssNormCode($code);
 $detailHtml = '';
-$detailUrl = '';
+$detailUrl  = '';
+$firstHtml  = '';
+$firstUrl   = '';
+$matchedIdx = -1;
+
 if (!empty($products)) {
-    $detailUrl = $products[0]['url'];
-    list($detailHtml, $detailHttp) = ssFetch($detailUrl);
-    if (!$detailHtml || $detailHttp !== 200) $detailHtml = '';
+    $maxCheck = min(count($products), 6); // limităm request-urile ca să nu fie lent
+    for ($i = 0; $i < $maxCheck; $i++) {
+        list($dHtml, $dHttp) = ssFetch($products[$i]['url']);
+        if (!$dHtml || $dHttp !== 200) continue;
+        if ($firstHtml === '') { $firstHtml = $dHtml; $firstUrl = $products[$i]['url']; }
+        $sku = ssExtractSku($dHtml);
+        if ($sku !== '' && $qNorm !== '' && ssNormCode($sku) === $qNorm) {
+            $detailHtml = $dHtml;
+            $detailUrl  = $products[$i]['url'];
+            $matchedIdx = $i;
+            break;
+        }
+    }
+    // Nicio potrivire de SKU → folosim primul rezultat valid (comportament vechi)
+    if ($detailHtml === '') {
+        $detailHtml = $firstHtml;
+        $detailUrl  = $firstUrl ?: $products[0]['url'];
+        $matchedIdx = 0;
+    }
+    // Aducem produsul ales pe poziția 0 (pentru name + lista de alternative)
+    if ($matchedIdx > 0) {
+        $chosen = $products[$matchedIdx];
+        array_splice($products, $matchedIdx, 1);
+        array_unshift($products, $chosen);
+    }
 } elseif (strpos($html, 'product:price:amount') !== false) {
-    // search a aterizat direct pe pagina produsului
+    // search a aterizat direct pe pagina produsului (rezultat unic)
     $detailHtml = $html;
     if (preg_match('/<meta[^>]+property="og:url"[^>]+content="([^"]+)"/i', $html, $ou)) $detailUrl = trim($ou[1]);
     $products[] = ['name' => '', 'url' => $detailUrl];
@@ -211,12 +227,9 @@ if ($detailHtml !== '') {
         $price = ssParsePrice($pb[1]);
     }
 
-    // --- COD / SKU: din JSON-ul structurat ("sku":"...") — primul = produsul principal ---
-    if (preg_match('/"sku"\s*:\s*"([^"]+)"/', $detailHtml, $sm) && trim($sm[1]) !== '') {
-        $pcode = trim($sm[1]);
-    } elseif (preg_match('/<span[^>]*class="[^"]*\bsku\b[^"]*"[^>]*>\s*([^<]+?)\s*<\/span>/si', $detailHtml, $sv) && trim($sv[1]) !== '') {
-        $pcode = trim($sv[1]);
-    }
+    // --- COD / SKU: din <span class="sku"> ("Cod produs:"), fallback pe JSON "sku":"..." ---
+    $skuFound = ssExtractSku($detailHtml);
+    if ($skuFound !== '') $pcode = $skuFound;
 
     // --- IMAGINE: data-large_image (HD din galerie) → wp-post-image → og:image ---
     if (preg_match('/data-large_image="([^"]+)"/i', $detailHtml, $imA)) {
@@ -268,6 +281,7 @@ if (!empty($products) && $price > 0) {
         'price' => $price,
         'url' => $detailUrl,
         'code' => $pcode,
+        'code_match' => ($qNorm !== '' && ssNormCode($pcode) === $qNorm), // true = SKU-ul paginii == codul căutat
         'image' => $image,
         'description' => $description,
         'total_results' => count($products),
