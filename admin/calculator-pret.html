@@ -272,10 +272,10 @@ var dp=(data.data||'').split('-');var dataFmt=dp.length===3?(dp[2]+'.'+dp[1]+'.'
 var nr=data.nr||'';var valab=data.valab||'4 zile';
 var eqRows='';var idx=1;
 lines.forEach(function(l){if(!l.name)return;var pv=l.pAchiz*(1+(l.adaos||0)/100);var val=l.cant*pv;
-eqRows+='<tr class="'+(idx%2===0?'alt':'')+'"><td class="c">'+idx+'</td><td>'+esc(l.name)+'</td><td class="c">'+l.um+'</td><td class="c">'+l.cant+'</td><td class="r">'+fmt(pv)+'</td><td class="r">'+fmt(val)+'</td></tr>';idx++;});
+eqRows+='<tr class="'+(idx%2===0?'alt':'')+'"><td class="c">'+idx+'</td><td style="white-space:pre-wrap">'+esc(l.name)+'</td><td class="c">'+l.um+'</td><td class="c">'+l.cant+'</td><td class="r">'+fmt(pv)+'</td><td class="r">'+fmt(val)+'</td></tr>';idx++;});
 var labRows='';var labIdx=idx;
 labor.forEach(function(l){var c=parseFloat(l.cant)||0;var p=parseFloat(l.price)||0;if(!c||!l.name)return;
-labRows+='<tr class="'+(labIdx%2===0?'alt':'')+'"><td class="c">'+labIdx+'</td><td>'+esc(l.name)+'</td><td class="c">'+l.um+'</td><td class="c">'+c+'</td><td class="r">'+fmt(p)+'</td><td class="r">'+fmt(c*p)+'</td></tr>';labIdx++;});
+labRows+='<tr class="'+(labIdx%2===0?'alt':'')+'"><td class="c">'+labIdx+'</td><td style="white-space:pre-wrap">'+esc(l.name)+'</td><td class="c">'+l.um+'</td><td class="c">'+c+'</td><td class="r">'+fmt(p)+'</td><td class="r">'+fmt(c*p)+'</td></tr>';labIdx++;});
 var eT=data.subtotalEchip||0;var mT=data.subtotalManop||0;var net=data.totalNet||0;var tva=net*0.21;var total=net+tva;
 var h='<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Deviz '+esc(data.client)+' Nr. '+nr+' din '+dataFmt+'</title>';
 h+='<style>@page{size:A4;margin:8mm 10mm 10mm 10mm;@bottom-right{content:"Pagina " counter(page) " / " counter(pages);font-family:Arial,sans-serif;font-size:7pt;color:#94a3b8}}*{margin:0;padding:0;box-sizing:border-box}body{font-family:Arial,Helvetica,sans-serif;font-size:9pt;color:#0f172a;padding:0;margin:0;-webkit-print-color-adjust:exact;print-color-adjust:exact}';
@@ -367,7 +367,7 @@ if(false && data.includeAnexa && lines.length){
       // Cod + cantitate
       h+='<div style="display:flex;justify-content:space-between;align-items:center;gap:4mm;margin:3mm 0 2mm">'+codeBadge+'<span style="font-size:7.5pt;color:#1e40af;background:#dbeafe;padding:2px 8px;border-radius:4px;font-weight:700;white-space:nowrap">'+l.cant+' '+esc(l.um||'buc.')+'</span></div>';
       // Denumire
-      h+='<div style="font-size:9pt;font-weight:700;color:#0f172a;line-height:1.35;min-height:11mm">'+esc(l.name)+'</div>';
+      h+='<div style="font-size:9pt;font-weight:700;color:#0f172a;line-height:1.35;min-height:11mm;white-space:pre-wrap">'+esc(l.name)+'</div>';
       h+=specHtml;
       h+='</div>';
     });
@@ -531,7 +531,7 @@ function buildAnexaPageHtml(lines,info){
   h+='.tbl .img img{max-width:100%;max-height:240px;object-fit:contain;display:block}';
   h+='.tbl .img .ph{font-size:64px;color:#cbd5e1}';
   h+='.tbl .txt{width:60%;padding:12px 12px}';
-  h+='.tbl .name{font-size:14px;font-weight:700;color:#0f172a;line-height:1.35;margin-bottom:8px;outline:none}';
+  h+='.tbl .name{font-size:14px;font-weight:700;color:#0f172a;line-height:1.35;margin-bottom:8px;outline:none;white-space:pre-wrap}';
   h+='.tbl .spec{font-size:11px;color:#475569;line-height:1.55;white-space:pre-wrap;outline:none}';
   h+='.tbl .qty{text-align:center;width:75px;font-weight:700;color:#1e40af;white-space:nowrap}';
   h+='.tbl .qty .pill{display:inline-block;background:#dbeafe;padding:5px 11px;border-radius:6px;font-size:13px;outline:none;min-width:48px}';
