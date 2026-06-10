@@ -4827,16 +4827,28 @@ p { margin: 0; }
                 ."- Limba română corectă, cu diacritice. Include 3-6 hashtag-uri relevante la final.\n"
                 ."- Nu inventa cifre/clienți falși specifici; rămâi la mesaje generale credibile.\n\n"
                 .cssiCopyGuidelines().$seoRef."\n\n"
-                ."Răspunzi DOAR cu textul postării (fără ghilimele de încadrare, fără explicații, fără ```).";
+                ."Răspunzi DOAR cu un obiect JSON valid, fără text în plus, fără ```. Format exact:\n"
+                ."{\"continut\": \"textul complet al postării, gata de publicat\", \"image_prompt\": \"un prompt DETALIAT în ENGLEZĂ pentru un generator AI de imagini (nanobanana / Midjourney / etc.) care descrie o fotografie realistă și profesională potrivită postării — subiect, cadru, unghi, lumină, atmosferă, stil; fără text, watermark sau logo în imagine\"}";
             $userPromptS = "Scrie postarea despre / folosind aceste cuvinte cheie sau subiect:\n".$topic;
 
-            $resS = callClaude($systemS, $userPromptS, 1500);
+            $resS = callClaude($systemS, $userPromptS, 2000);
             if (!$resS['ok']) { jsonResponse(['success' => false, 'error' => $resS['error']], 400); break; }
             $txtS = trim($resS['text']);
-            $txtS = preg_replace('/^```[a-z]*\s*/i', '', $txtS);
-            $txtS = preg_replace('/\s*```$/', '', $txtS);
-            $txtS = trim($txtS, " \t\n\r\0\x0B\"");
-            jsonResponse(['success' => true, 'text' => $txtS, 'limit' => $minLimit]);
+            if (preg_match('/\{[\s\S]*\}/', $txtS, $mJ)) $txtS = $mJ[0];
+            $objS = json_decode($txtS, true);
+            $continutS = ''; $imgPromptS = '';
+            if (is_array($objS)) {
+                $continutS  = isset($objS['continut']) ? trim($objS['continut']) : '';
+                $imgPromptS = isset($objS['image_prompt']) ? trim($objS['image_prompt']) : '';
+            }
+            if ($continutS === '') {
+                // Fallback: AI a întors text simplu, nu JSON
+                $fb = trim($resS['text']);
+                $fb = preg_replace('/^```[a-z]*\s*/i', '', $fb);
+                $fb = preg_replace('/\s*```$/', '', $fb);
+                $continutS = trim($fb, " \t\n\r\0\x0B\"");
+            }
+            jsonResponse(['success' => true, 'text' => $continutS, 'image_prompt' => $imgPromptS, 'limit' => $minLimit]);
             break;
 
         case 'pingClaude':

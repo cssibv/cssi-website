@@ -327,12 +327,9 @@ a{text-decoration:none;color:inherit;}button{font-family:inherit;cursor:pointer;
             <div class="form-group">
                 <label class="form-label" style="display:flex;justify-content:space-between;align-items:center">
                     <span>Conținut <span class="req">*</span></span>
-                    <span style="display:flex;gap:6px">
-                        <button type="button" onclick="toggleAiText()" style="padding:5px 12px;border-radius:8px;border:1px solid var(--purple);background:var(--purple);color:#fff;font-size:11px;font-weight:700;cursor:pointer">✨ Scrie cu AI</button>
-                        <button type="button" onclick="openTemplatePicker()" style="padding:5px 12px;border-radius:8px;border:1px solid var(--purple);background:#fff;color:var(--purple);font-size:11px;font-weight:700;cursor:pointer">📚 Șabloane SEO 2026</button>
-                    </span>
+                    <button type="button" onclick="toggleAiText()" style="padding:5px 12px;border-radius:8px;border:1px solid var(--purple);background:var(--purple);color:#fff;font-size:11px;font-weight:700;cursor:pointer">✨ Scrie cu AI</button>
                 </label>
-                <textarea class="form-textarea" id="fContent" required placeholder="Textul postării, hashtag-uri... sau apasă „📚 Șabloane" pentru structuri optimizate" oninput="updateCharCount();updatePlatformLimits()"></textarea>
+                <textarea class="form-textarea" id="fContent" required placeholder="Textul postării, hashtag-uri... sau apasă „✨ Scrie cu AI" ca să-l genereze AI" oninput="updateCharCount();updatePlatformLimits()"></textarea>
                 <div style="display:flex;justify-content:space-between;align-items:center;margin-top:4px">
                     <div class="char-count" id="charCount">0 caractere</div>
                     <div id="charCountPerPlat" style="font-size:11px;color:var(--gray)"></div>
@@ -363,6 +360,7 @@ a{text-decoration:none;color:inherit;}button{font-family:inherit;cursor:pointer;
                     <input type="text" id="aiImgPrompt" placeholder="Descrie imaginea (ex: cameră supraveghere montată pe clădire, stil profesional)" onkeydown="if(event.key==='Enter'){event.preventDefault();generateAiImage()}">
                     <div class="ai-prompt-actions">
                         <button type="button" class="ai-prompt-go" style="background:#f59e0b" id="aiImgGo" onclick="generateAiImage()">🎨 Generează</button>
+                        <button type="button" class="ai-prompt-cancel" onclick="copyImgPrompt()">📋 Copiază prompt</button>
                         <button type="button" class="ai-prompt-cancel" onclick="toggleAiImg()">Anulează</button>
                     </div>
                 </div>
@@ -552,11 +550,25 @@ function generateAiText(){
             document.getElementById('fContent').value=res.text;
             updateCharCount();updatePlatformLimits();
             toggleAiText();
-            toast('✅ Text generat — verifică și ajustează','success');
+            if(res.image_prompt){
+                var ip=document.getElementById('aiImgPrompt');if(ip)ip.value=res.image_prompt;
+                var box=document.getElementById('aiImgBox');if(box)box.classList.add('active');
+                toast('✅ Text + prompt poză generate — copiază promptul (nanobanana) sau generează imaginea','success');
+            }else{
+                toast('✅ Text generat — verifică și ajustează','success');
+            }
         }else{
             toast('❌ '+(res.error||'Eroare generare'),'error');
         }
     }).catch(function(){btn.disabled=false;btn.innerHTML='✨ Generează text';toast('❌ Eroare conexiune','error');});
+}
+function copyImgPrompt(){
+    var ip=document.getElementById('aiImgPrompt');
+    var val=ip?ip.value.trim():'';
+    if(!val){toast('❌ Nu există prompt de copiat','error');return;}
+    if(navigator.clipboard&&navigator.clipboard.writeText){
+        navigator.clipboard.writeText(val).then(function(){toast('📋 Prompt poză copiat','success');},function(){ip.select();document.execCommand('copy');toast('📋 Prompt copiat','success');});
+    }else{ip.select();document.execCommand('copy');toast('📋 Prompt copiat','success');}
 }
 function generateAiImage(){
     var prompt=document.getElementById('aiImgPrompt').value.trim();
