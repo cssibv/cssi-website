@@ -68,8 +68,8 @@ if ($directUrl !== '' && !preg_match('#^https?://(www\.)?shop-security\.ro/#i', 
 }
 
 // Caută pe shop-security.ro (platformă WooCommerce/WoodMart din 2026)
-// Căutarea WooCommerce: /?s=TERMEN&post_type=product (input name="s")
-$searchUrl = 'https://www.shop-security.ro/?s=' . urlencode($code) . '&post_type=product';
+// Căutarea WooCommerce + FiboSearch (dgwt_wcas=1) — rezultate mai relevante, conștiente de SKU
+$searchUrl = 'https://www.shop-security.ro/?s=' . urlencode($code) . '&post_type=product&dgwt_wcas=1';
 
 // Helper: fetch HTML cu user-agent de browser. Întoarce [body, http, errno, error].
 function ssFetch($url, $connTimeout = 12, $timeout = 30) {
