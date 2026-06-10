@@ -137,6 +137,39 @@ if (preg_match_all('/<h[1-6][^>]*class="[^"]*wd-entities-title[^"]*"[^>]*>\s*<a[
     }
 }
 
+// === Alege cel mai relevant produs față de termenul căutat ===
+// WooCommerce întoarce rezultatele în ordinea LUI de relevanță, care nu e mereu corectă
+// pentru căutări cu mai multe cuvinte (ex: "HDD 4 TB WD" → primul card poate fi alt produs).
+// Scorăm fiecare produs după câte cuvinte din căutare apar în denumire și-l aducem pe
+// cel mai potrivit pe poziția 0. Tie-break: păstrăm ordinea originală a magazinului.
+if (count($products) > 1) {
+    $qFull   = mb_strtolower(trim($code), 'UTF-8');
+    $qTokens = preg_split('/\s+/', $qFull, -1, PREG_SPLIT_NO_EMPTY);
+    if ($qTokens) {
+        $indexed = [];
+        foreach ($products as $i => $p) {
+            $name    = mb_strtolower($p['name'], 'UTF-8');
+            // slug-ul din URL conține de obicei codul/SKU produsului (ex: .../ds-7604nxi-k1-4p)
+            $slugRaw = mb_strtolower(rawurldecode(trim((string)parse_url($p['url'], PHP_URL_PATH), '/')), 'UTF-8');
+            $hayExact  = $name . ' ' . $slugRaw;                       // pentru match exact pe cod (păstrează cratimele)
+            $hayTokens = $name . ' ' . str_replace('-', ' ', $slugRaw); // pentru scoring pe cuvinte
+            $score = 0;
+            // bonus decisiv: tot termenul căutat (codul exact) apare ca atare în nume sau slug
+            if ($qFull !== '' && mb_strpos($hayExact, $qFull) !== false) $score += 100;
+            // altfel scor parțial: câte cuvinte din căutare apar (util pt. denumiri ca "HDD 4 TB WD")
+            foreach ($qTokens as $t) {
+                if ($t !== '' && mb_strpos($hayTokens, $t) !== false) $score++;
+            }
+            $indexed[] = ['p' => $p, 'i' => $i, 's' => $score];
+        }
+        usort($indexed, function ($a, $b) {
+            if ($a['s'] !== $b['s']) return $b['s'] - $a['s']; // scor mai mare primul
+            return $a['i'] - $b['i'];                          // egalitate → ordinea magazinului
+        });
+        $products = array_map(function ($x) { return $x['p']; }, $indexed);
+    }
+}
+
 // === Pagina de DETALIU produs (sursa cea mai sigură pentru cod/preț/imagine/descriere) ===
 // Dacă search-ul a redirecționat direct pe pagina produsului (rezultat unic), folosim $html.
 $detailHtml = '';
