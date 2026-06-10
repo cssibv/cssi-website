@@ -55,9 +55,15 @@ header('Content-Type: application/json; charset=utf-8');
 header('Access-Control-Allow-Origin: *');
 header('Cache-Control: no-cache');
 
-$code = isset($_GET['q']) ? trim($_GET['q']) : '';
-if (!$code) {
-    echo json_encode(['error' => 'Cod produs lipsă', 'found' => false]);
+$code      = isset($_GET['q'])   ? trim($_GET['q'])   : '';
+$directUrl = isset($_GET['url']) ? trim($_GET['url']) : ''; // mod „link direct": user dă URL-ul produsului
+if ($code === '' && $directUrl === '') {
+    echo json_encode(['error' => 'Cod produs sau link lipsă', 'found' => false]);
+    exit;
+}
+// Link direct acceptat DOAR de pe shop-security.ro (anti-SSRF)
+if ($directUrl !== '' && !preg_match('#^https?://(www\.)?shop-security\.ro/#i', $directUrl)) {
+    echo json_encode(['found' => false, 'error' => 'Link invalid — acceptăm doar adrese de pe shop-security.ro']);
     exit;
 }
 
@@ -123,82 +129,97 @@ function ssExtractSku($html) {
     return '';
 }
 
-list($html, $httpCode, $curlErrno, $curlError) = ssFetch($searchUrl);
-
-if (!$html || $httpCode !== 200) {
-    echo json_encode([
-        'found' => false,
-        'error' => 'Nu s-a putut accesa shop-security.ro (HTTP '.$httpCode.')',
-        'debug' => [
-            'http' => $httpCode,
-            'curl_errno' => $curlErrno,
-            'curl_error' => $curlError,
-            'url' => $searchUrl,
-            'curl_ssl' => function_exists('curl_version') ? (curl_version()['ssl_version'] ?? '') : '',
-        ],
-    ]);
-    exit;
-}
-
-// === PRODUSE din pagina de rezultate (WooCommerce/WoodMart) ===
-// Card produs: <h3 class="wd-entities-title"><a href="URL">NUME</a></h3>
-$products = [];
-$seenUrls = [];
-if (preg_match_all('/<h[1-6][^>]*class="[^"]*wd-entities-title[^"]*"[^>]*>\s*<a[^>]*href="([^"]+)"[^>]*>(.*?)<\/a>/si', $html, $tm, PREG_SET_ORDER)) {
-    foreach ($tm as $m) {
-        $url = trim($m[1]);
-        $name = trim(html_entity_decode(strip_tags($m[2]), ENT_QUOTES | ENT_HTML5, 'UTF-8'));
-        if ($name === '' || isset($seenUrls[$url])) continue;
-        // doar URL-uri de produs (un singur segment de path), nu categorii/tag-uri
-        $path = trim((string)parse_url($url, PHP_URL_PATH), '/');
-        if ($path === '' || strpos($path, '/') !== false) continue; // sare peste /product-category/... etc
-        $seenUrls[$url] = true;
-        $products[] = ['name' => $name, 'url' => $url];
-    }
-}
-
-// === Selectează produsul al cărui COD PRODUS (SKU) == codul căutat ===
-// Sursa de adevăr e <span class="sku">COD</span> de pe pagina de detaliu, NU denumirea/slug-ul.
-// Parcurgem candidații (max N), luăm pagina fiecăruia și comparăm SKU-ul cu ce am tastat.
-// Ne oprim la prima potrivire exactă; dacă niciuna nu se potrivește → cădem pe primul rezultat.
 $qNorm      = ssNormCode($code);
+$products   = [];
 $detailHtml = '';
 $detailUrl  = '';
-$firstHtml  = '';
-$firstUrl   = '';
-$matchedIdx = -1;
+$exactMatch = false;
 
-if (!empty($products)) {
-    $maxCheck = min(count($products), 6); // limităm request-urile ca să nu fie lent
-    for ($i = 0; $i < $maxCheck; $i++) {
-        list($dHtml, $dHttp) = ssFetch($products[$i]['url']);
-        if (!$dHtml || $dHttp !== 200) continue;
-        if ($firstHtml === '') { $firstHtml = $dHtml; $firstUrl = $products[$i]['url']; }
-        $sku = ssExtractSku($dHtml);
-        if ($sku !== '' && $qNorm !== '' && ssNormCode($sku) === $qNorm) {
-            $detailHtml = $dHtml;
-            $detailUrl  = $products[$i]['url'];
-            $matchedIdx = $i;
-            break;
+if ($directUrl !== '') {
+    // ─── MOD LINK DIRECT: utilizatorul a dat URL-ul exact al produsului ───
+    list($dHtml, $dHttp) = ssFetch($directUrl);
+    if (!$dHtml || $dHttp !== 200) {
+        echo json_encode(['found' => false, 'error' => 'Nu s-a putut accesa link-ul (HTTP ' . $dHttp . ')']);
+        exit;
+    }
+    $detailHtml = $dHtml;
+    $detailUrl  = $directUrl;
+    $products[] = ['name' => '', 'url' => $directUrl];
+    $exactMatch = true; // user a ales explicit produsul → îl acceptăm ca atare
+
+} else {
+    // ─── MOD DUPĂ COD: caut și aleg DOAR produsul cu SKU identic ───
+    list($html, $httpCode, $curlErrno, $curlError) = ssFetch($searchUrl);
+    if (!$html || $httpCode !== 200) {
+        echo json_encode([
+            'found' => false,
+            'error' => 'Nu s-a putut accesa shop-security.ro (HTTP ' . $httpCode . ')',
+            'debug' => [
+                'http' => $httpCode,
+                'curl_errno' => $curlErrno,
+                'curl_error' => $curlError,
+                'url' => $searchUrl,
+                'curl_ssl' => function_exists('curl_version') ? (curl_version()['ssl_version'] ?? '') : '',
+            ],
+        ]);
+        exit;
+    }
+
+    // Produse din pagina de rezultate (card: <h3 class="wd-entities-title"><a href="URL">NUME</a>)
+    $seenUrls = [];
+    if (preg_match_all('/<h[1-6][^>]*class="[^"]*wd-entities-title[^"]*"[^>]*>\s*<a[^>]*href="([^"]+)"[^>]*>(.*?)<\/a>/si', $html, $tm, PREG_SET_ORDER)) {
+        foreach ($tm as $m) {
+            $url  = trim($m[1]);
+            $name = trim(html_entity_decode(strip_tags($m[2]), ENT_QUOTES | ENT_HTML5, 'UTF-8'));
+            if ($name === '' || isset($seenUrls[$url])) continue;
+            $path = trim((string)parse_url($url, PHP_URL_PATH), '/');
+            if ($path === '' || strpos($path, '/') !== false) continue; // sare peste /product-category/... etc
+            $seenUrls[$url] = true;
+            $products[] = ['name' => $name, 'url' => $url];
         }
     }
-    // Nicio potrivire de SKU → folosim primul rezultat valid (comportament vechi)
-    if ($detailHtml === '') {
-        $detailHtml = $firstHtml;
-        $detailUrl  = $firstUrl ?: $products[0]['url'];
-        $matchedIdx = 0;
+
+    // Aleg DOAR produsul al cărui <span class="sku"> == codul căutat. Mă opresc la prima potrivire.
+    if (!empty($products)) {
+        $maxCheck = min(count($products), 6); // limităm request-urile ca să nu fie lent
+        for ($i = 0; $i < $maxCheck; $i++) {
+            list($dHtml, $dHttp) = ssFetch($products[$i]['url']);
+            if (!$dHtml || $dHttp !== 200) continue;
+            $sku = ssExtractSku($dHtml);
+            if ($sku !== '' && $qNorm !== '' && ssNormCode($sku) === $qNorm) {
+                $detailHtml = $dHtml;
+                $detailUrl  = $products[$i]['url'];
+                if ($i > 0) { $c = $products[$i]; array_splice($products, $i, 1); array_unshift($products, $c); }
+                $exactMatch = true;
+                break;
+            }
+        }
+    } elseif (strpos($html, 'product:price:amount') !== false) {
+        // search a aterizat direct pe pagina unui produs — accept doar dacă SKU-ul se potrivește
+        $skuDirect = ssExtractSku($html);
+        if ($skuDirect !== '' && $qNorm !== '' && ssNormCode($skuDirect) === $qNorm) {
+            $detailHtml = $html;
+            if (preg_match('/<meta[^>]+property="og:url"[^>]+content="([^"]+)"/i', $html, $ou)) $detailUrl = trim($ou[1]);
+            $products[] = ['name' => '', 'url' => $detailUrl];
+            $exactMatch = true;
+        }
     }
-    // Aducem produsul ales pe poziția 0 (pentru name + lista de alternative)
-    if ($matchedIdx > 0) {
-        $chosen = $products[$matchedIdx];
-        array_splice($products, $matchedIdx, 1);
-        array_unshift($products, $chosen);
+
+    // Niciun produs cu codul EXACT → nu ghicim; cerem link-ul produsului
+    if (!$exactMatch) {
+        $cand = [];
+        foreach (array_slice($products, 0, 6) as $p) {
+            $cand[] = ['name' => $p['name'], 'url' => $p['url']];
+        }
+        echo json_encode([
+            'found'      => false,
+            'need_url'   => true,
+            'error'      => 'Niciun produs cu codul exact „' . $code . '". Introdu link-ul produsului de pe shop-security.ro.',
+            'search_url' => $searchUrl,
+            'candidates' => $cand,
+        ], JSON_UNESCAPED_UNICODE);
+        exit;
     }
-} elseif (strpos($html, 'product:price:amount') !== false) {
-    // search a aterizat direct pe pagina produsului (rezultat unic)
-    $detailHtml = $html;
-    if (preg_match('/<meta[^>]+property="og:url"[^>]+content="([^"]+)"/i', $html, $ou)) $detailUrl = trim($ou[1]);
-    $products[] = ['name' => '', 'url' => $detailUrl];
 }
 
 $name = !empty($products) ? $products[0]['name'] : '';
