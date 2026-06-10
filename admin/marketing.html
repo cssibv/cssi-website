@@ -327,12 +327,23 @@ a{text-decoration:none;color:inherit;}button{font-family:inherit;cursor:pointer;
             <div class="form-group">
                 <label class="form-label" style="display:flex;justify-content:space-between;align-items:center">
                     <span>Conținut <span class="req">*</span></span>
-                    <button type="button" onclick="openTemplatePicker()" style="padding:5px 12px;border-radius:8px;border:1px solid var(--purple);background:#fff;color:var(--purple);font-size:11px;font-weight:700;cursor:pointer">📚 Șabloane SEO 2026</button>
+                    <span style="display:flex;gap:6px">
+                        <button type="button" onclick="toggleAiText()" style="padding:5px 12px;border-radius:8px;border:1px solid var(--purple);background:var(--purple);color:#fff;font-size:11px;font-weight:700;cursor:pointer">✨ Scrie cu AI</button>
+                        <button type="button" onclick="openTemplatePicker()" style="padding:5px 12px;border-radius:8px;border:1px solid var(--purple);background:#fff;color:var(--purple);font-size:11px;font-weight:700;cursor:pointer">📚 Șabloane SEO 2026</button>
+                    </span>
                 </label>
                 <textarea class="form-textarea" id="fContent" required placeholder="Textul postării, hashtag-uri... sau apasă „📚 Șabloane" pentru structuri optimizate" oninput="updateCharCount();updatePlatformLimits()"></textarea>
                 <div style="display:flex;justify-content:space-between;align-items:center;margin-top:4px">
                     <div class="char-count" id="charCount">0 caractere</div>
                     <div id="charCountPerPlat" style="font-size:11px;color:var(--gray)"></div>
+                </div>
+                <div class="ai-prompt-box" id="aiTextBox">
+                    <input type="text" id="aiTextPrompt" placeholder="Despre ce să fie postarea? Subiect sau cuvinte cheie (ex: promoție camere supraveghere pentru pensiuni din Brașov)" onkeydown="if(event.key==='Enter'){event.preventDefault();generateAiText()}">
+                    <div style="font-size:11px;color:var(--gray);margin-bottom:8px">Folosește brandul, platformele și tipul de conținut selectate mai sus.</div>
+                    <div class="ai-prompt-actions">
+                        <button type="button" class="ai-prompt-go" id="aiTextGo" onclick="generateAiText()">✨ Generează text</button>
+                        <button type="button" class="ai-prompt-cancel" onclick="toggleAiText()">Anulează</button>
+                    </div>
                 </div>
             </div>
 
@@ -517,6 +528,35 @@ function toggleAiImg(){
     var box=document.getElementById('aiImgBox');
     box.classList.toggle('active');
     if(box.classList.contains('active')) document.getElementById('aiImgPrompt').focus();
+}
+function toggleAiText(){
+    var box=document.getElementById('aiTextBox');
+    box.classList.toggle('active');
+    if(box.classList.contains('active')) document.getElementById('aiTextPrompt').focus();
+}
+function generateAiText(){
+    var topic=document.getElementById('aiTextPrompt').value.trim();
+    if(!topic){toast('❌ Scrie despre ce să fie postarea (subiect / cuvinte cheie)','error');return;}
+    var plats=getCheckedPlatforms();
+    if(!plats.length){toast('❌ Selectează cel puțin o platformă mai întâi','error');return;}
+    var btn=document.getElementById('aiTextGo');
+    btn.disabled=true;btn.innerHTML='<span class="ai-loading"></span> Se generează... (~10-20s)';
+    apiPost('generateSinglePost',{
+        brand:document.getElementById('fBrand').value,
+        platforme:plats,
+        tip:document.getElementById('fTip').value,
+        topic:topic
+    }).then(function(res){
+        btn.disabled=false;btn.innerHTML='✨ Generează text';
+        if(res.success&&res.text){
+            document.getElementById('fContent').value=res.text;
+            updateCharCount();updatePlatformLimits();
+            toggleAiText();
+            toast('✅ Text generat — verifică și ajustează','success');
+        }else{
+            toast('❌ '+(res.error||'Eroare generare'),'error');
+        }
+    }).catch(function(){btn.disabled=false;btn.innerHTML='✨ Generează text';toast('❌ Eroare conexiune','error');});
 }
 function generateAiImage(){
     var prompt=document.getElementById('aiImgPrompt').value.trim();

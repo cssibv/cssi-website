@@ -4777,6 +4777,47 @@ p { margin: 0; }
             }
             break;
 
+        case 'generateSinglePost':
+            // Generează O singură postare pornind de la un subiect / cuvinte cheie date de user.
+            // Returnează doar textul (nu salvează) — userul îl verifică și apasă Salvează Draft.
+            requireAuth();
+            $brand = isset($data['brand']) ? $data['brand'] : 'cssi';
+            $platforme = (isset($data['platforme']) && is_array($data['platforme'])) ? $data['platforme'] : ['fb'];
+            $tip = isset($data['tip']) ? trim($data['tip']) : 'Foto';
+            $topic = isset($data['topic']) ? trim($data['topic']) : '';
+            if ($topic === '') { jsonResponse(['success' => false, 'error' => 'Scrie despre ce să fie postarea (subiect / cuvinte cheie)'], 400); break; }
+
+            $platLabels = ['fb'=>'Facebook','ig'=>'Instagram','linkedin'=>'LinkedIn','yt'=>'YouTube','tiktok'=>'TikTok','x'=>'Twitter/X'];
+            $platLimits = ['fb'=>63206,'ig'=>2200,'linkedin'=>3000,'yt'=>5000,'tiktok'=>2200,'x'=>280];
+            $plats = array_map(function($p) use ($platLabels) { return isset($platLabels[$p]) ? $platLabels[$p] : $p; }, $platforme);
+            $minLimit = 99999;
+            foreach ($platforme as $p) { if (isset($platLimits[$p]) && $platLimits[$p] < $minLimit) $minLimit = $platLimits[$p]; }
+            if ($minLimit === 99999) $minLimit = 2200;
+
+            if ($brand === 'conca-verde') {
+                $brandVoice = "Conca Verde Camping (Râșnov) — voce casual, primitoare, turism local. Contact: 0752 288 400, www.conca-verde.ro.";
+            } else {
+                $brandVoice = "CSSI Brașov — firmă de securitate și instalații, autorizată IGPR + ISU + ANRE, 20 de ani experiență, 9.000+ proiecte. Ton profesional, autoritar, de încredere. Contact: telefon 0752 288 400, WhatsApp wa.me/40752288400, fix 0268 414 740.";
+            }
+            $systemS = "Ești copywriter senior de social media pentru {$brandVoice}\n\n"
+                ."Scrii O SINGURĂ postare COMPLETĂ, gata de publicat — fără NICIUN placeholder, fără paranteze drepte [ ], fără text de completat. Omul doar va atașa o fotografie.\n\n"
+                ."Reguli de calitate (best practices 2026):\n"
+                ."- Platforme: ".implode('+', $plats)." · format {$tip} · maximum {$minLimit} caractere.\n"
+                ."- Hook puternic în prima linie. LinkedIn: profunzime + CTA cu întrebare la final; Instagram/Facebook: scanabil, emoji moderat.\n"
+                ."- Limba română corectă, cu diacritice. Include 3-6 hashtag-uri relevante la final.\n"
+                ."- Nu inventa cifre/clienți falși specifici; rămâi la mesaje generale credibile.\n\n"
+                ."Răspunzi DOAR cu textul postării (fără ghilimele de încadrare, fără explicații, fără ```).";
+            $userPromptS = "Scrie postarea despre / folosind aceste cuvinte cheie sau subiect:\n".$topic;
+
+            $resS = callClaude($systemS, $userPromptS, 1500);
+            if (!$resS['ok']) { jsonResponse(['success' => false, 'error' => $resS['error']], 400); break; }
+            $txtS = trim($resS['text']);
+            $txtS = preg_replace('/^```[a-z]*\s*/i', '', $txtS);
+            $txtS = preg_replace('/\s*```$/', '', $txtS);
+            $txtS = trim($txtS, " \t\n\r\0\x0B\"");
+            jsonResponse(['success' => true, 'text' => $txtS, 'limit' => $minLimit]);
+            break;
+
         case 'pingClaude':
             // Diagnostic: testează conexiunea la Claude (cheie + model). Acces din browser:
             //   /admin/api.php?action=pingClaude  (necesită sesiune admin)
