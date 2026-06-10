@@ -982,6 +982,20 @@ function callClaude($system, $userPrompt, $maxTokens = 3000) {
     return ['ok' => true, 'text' => $text];
 }
 
+// Ghid de copywriting pentru postări — distilat din skill-urile social/copywriting/
+// marketing-psychology. Aplicat la generarea AI (o postare + săptămânal).
+function cssiCopyGuidelines() {
+    return "GHID DE COPYWRITING (aplică-l strict):\n"
+        ."• HOOK: prima linie oprește scroll-ul — curiozitate, o întrebare retorică, o cifră concretă sau o afirmație îndrăzneață. Fără introduceri lungi de încălzire.\n"
+        ."• CLARITATE peste creativitate: propoziții scurte, limbaj simplu, voce activă. Fără umplutură de tip „soluții inovatoare\", „optimizăm\", „de top\", „lider de piață\".\n"
+        ."• BENEFICII, nu specificații: spune ce câștigă clientul (liniște, mai puține furturi, control de oriunde), nu doar ce face produsul.\n"
+        ."• SPECIFIC, nu vag: cifre și rezultate concrete (20 de ani, 9.000+ proiecte, montaj rapid) în loc de generalități.\n"
+        ."• AUTORITATE & dovezi reale ca social proof: autorizați IGPR + ISU + ANRE, experiență, număr de proiecte — fără a inventa cifre/clienți.\n"
+        ."• EMOȚIE utilă (etic): atinge frica reală de pierdere (efracție, incendiu, lipsă de control) și soluția care aduce siguranță — fără alarmism exagerat.\n"
+        ."• Maxim un semn de exclamare, doar dacă e chiar necesar. Diacritice corecte.\n"
+        ."• CTA clar la final: ce să facă cititorul (sună, scrie pe WhatsApp, cere ofertă). Pe LinkedIn, un CTA sub formă de întrebare care invită la comentarii.\n"
+        ."• Reguli de platformă: LinkedIn = profunzime, hook în primele 2 linii, FĂRĂ linkuri externe în corp; Instagram/Facebook = scanabil, emoji cu măsură, hashtag-urile la final.";
+}
 // Catalog servicii CSSI (nume natural + hashtag) — sursa unică pentru promptul AI.
 function cssiServiceCatalog() {
     return [
@@ -4806,6 +4820,7 @@ p { margin: 0; }
                 ."- Hook puternic în prima linie. LinkedIn: profunzime + CTA cu întrebare la final; Instagram/Facebook: scanabil, emoji moderat.\n"
                 ."- Limba română corectă, cu diacritice. Include 3-6 hashtag-uri relevante la final.\n"
                 ."- Nu inventa cifre/clienți falși specifici; rămâi la mesaje generale credibile.\n\n"
+                .cssiCopyGuidelines()."\n\n"
                 ."Răspunzi DOAR cu textul postării (fără ghilimele de încadrare, fără explicații, fără ```).";
             $userPromptS = "Scrie postarea despre / folosind aceste cuvinte cheie sau subiect:\n".$topic;
 
@@ -4884,6 +4899,7 @@ p { margin: 0; }
                 ."- Folosește hashtag-urile indicate la finalul fiecărei postări.\n"
                 ."- Limba română corectă, cu diacritice. Variază formulările între sloturi (să nu pară șablon).\n"
                 ."- Nu inventa cifre/clienți falși specifici; rămâi la mesaje generale credibile despre serviciu.{$locText}\n\n"
+                .cssiCopyGuidelines()."\n\n"
                 ."Răspunzi DOAR cu un array JSON valid, fără text în plus, fără ```. Format exact:\n"
                 ."[{\"slot\":0,\"continut\":\"textul complet al postării...\"}, ...] — câte un obiect per slot primit.";
 
