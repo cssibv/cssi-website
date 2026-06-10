@@ -72,15 +72,15 @@ if ($directUrl !== '' && !preg_match('#^https?://(www\.)?shop-security\.ro/#i', 
 $searchUrl = 'https://www.shop-security.ro/?s=' . urlencode($code) . '&post_type=product';
 
 // Helper: fetch HTML cu user-agent de browser. Întoarce [body, http, errno, error].
-function ssFetch($url) {
+function ssFetch($url, $connTimeout = 12, $timeout = 30) {
     $ch = curl_init();
     curl_setopt_array($ch, [
         CURLOPT_URL => $url,
         CURLOPT_RETURNTRANSFER => true,
         CURLOPT_FOLLOWLOCATION => true,
         CURLOPT_MAXREDIRS => 5,
-        CURLOPT_CONNECTTIMEOUT => 12,
-        CURLOPT_TIMEOUT => 30,
+        CURLOPT_CONNECTTIMEOUT => $connTimeout,
+        CURLOPT_TIMEOUT => $timeout,
         CURLOPT_SSL_VERIFYPEER => false,
         CURLOPT_SSL_VERIFYHOST => 0,
         CURLOPT_ENCODING => '', // accept gzip/deflate/br
@@ -179,17 +179,37 @@ if ($directUrl !== '') {
         }
     }
 
-    // Aleg DOAR produsul al cărui <span class="sku"> == codul căutat. Mă opresc la prima potrivire.
+    // Aleg DOAR produsul al cărui <span class="sku"> == codul căutat.
+    // SKU-ul NU apare pe cardurile din lista de rezultate → trebuie deschisă pagina fiecărui produs.
+    // Optimizare: deschid întâi produsele a căror DENUMIRE se potrivește cel mai bine cu termenul
+    // căutat (cel corect e de regulă printre ele), ca să nu deschid zeci de pagini irelevante.
     if (!empty($products)) {
-        $maxCheck = min(count($products), 6); // limităm request-urile ca să nu fie lent
-        for ($i = 0; $i < $maxCheck; $i++) {
-            list($dHtml, $dHttp) = ssFetch($products[$i]['url']);
+        $nameTokens = preg_split('/\s+/', mb_strtolower(trim($code), 'UTF-8'), -1, PREG_SPLIT_NO_EMPTY);
+        $ranked = [];
+        foreach ($products as $idx => $p) {
+            $nm = mb_strtolower($p['name'], 'UTF-8');
+            $score = 0;
+            foreach ($nameTokens as $t) { if ($t !== '' && mb_strpos($nm, $t) !== false) $score++; }
+            $ranked[] = ['p' => $p, 'i' => $idx, 's' => $score];
+        }
+        usort($ranked, function ($a, $b) {
+            if ($a['s'] !== $b['s']) return $b['s'] - $a['s']; // denumire mai relevantă întâi
+            return $a['i'] - $b['i'];                          // egalitate → ordinea magazinului
+        });
+
+        $maxCheck = min(count($ranked), 20); // câte pagini deschidem cel mult ca să găsim SKU-ul exact
+        for ($k = 0; $k < $maxCheck; $k++) {
+            $cand = $ranked[$k]['p'];
+            list($dHtml, $dHttp) = ssFetch($cand['url'], 8, 15); // timeout scurt — pot fi multe probe
             if (!$dHtml || $dHttp !== 200) continue;
             $sku = ssExtractSku($dHtml);
             if ($sku !== '' && $qNorm !== '' && ssNormCode($sku) === $qNorm) {
                 $detailHtml = $dHtml;
-                $detailUrl  = $products[$i]['url'];
-                if ($i > 0) { $c = $products[$i]; array_splice($products, $i, 1); array_unshift($products, $c); }
+                $detailUrl  = $cand['url'];
+                // aduc produsul ales pe poziția 0 (pentru name + lista de alternative)
+                $rest = [];
+                foreach ($products as $x) { if ($x['url'] !== $cand['url']) $rest[] = $x; }
+                $products = array_merge([$cand], $rest);
                 $exactMatch = true;
                 break;
             }
