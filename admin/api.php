@@ -74,6 +74,24 @@ function ensureOferteColumns($db) {
         }
     } catch (Exception $e) { /* silent — tabela poate lipsi in dev */ }
 }
+// ─── Helper: lărgește coloanele text din oferta_linii (idempotent) ─
+// Denumirea poate conține text descriptiv lung + formatare HTML (bold/culoare),
+// deci un VARCHAR scurt o trunchia (și strica HTML-ul → „dispărea"). O facem TEXT.
+function ensureOfertaLiniiColumns($db) {
+    static $checked = false;
+    if ($checked) return;
+    $checked = true;
+    try {
+        $cols = $db->query("SHOW COLUMNS FROM oferta_linii")->fetchAll(PDO::FETCH_ASSOC);
+        foreach ($cols as $c) {
+            if ($c['Field'] === 'denumire' && stripos($c['Type'], 'text') === false) {
+                $db->exec("ALTER TABLE oferta_linii MODIFY denumire TEXT NULL DEFAULT NULL");
+            }
+        }
+    } catch (Exception $e) {
+        error_log('ensureOfertaLiniiColumns FAILED: ' . $e->getMessage());
+    }
+}
 // Debug helper: returneaza listă coloane oferte (admin only — pentru troubleshoot)
 function debugOferteColumns($db) {
     try { return $db->query("SHOW COLUMNS FROM oferte")->fetchAll(PDO::FETCH_COLUMN); }
@@ -1874,6 +1892,9 @@ try {
             break;
 
         case 'saveOferta':
+            // Asigură că denumirea liniilor încape (TEXT, nu VARCHAR scurt) — rulează ÎNAINTE
+            // de tranzacție fiindcă ALTER face commit implicit. Idempotent (static-guarded).
+            ensureOfertaLiniiColumns($db);
             // Detectează update: prin oferta_db_id SAU prin nr existent
             $isUpdate = !empty($data['oferta_db_id']);
             if (!$isUpdate && !empty($data['nr'])) {
