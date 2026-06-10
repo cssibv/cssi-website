@@ -4777,6 +4777,25 @@ p { margin: 0; }
             }
             break;
 
+        case 'pingClaude':
+            // Diagnostic: testează conexiunea la Claude (cheie + model). Acces din browser:
+            //   /admin/api.php?action=pingClaude  (necesită sesiune admin)
+            requireAuth();
+            $t0 = microtime(true);
+            $r = callClaude('Răspunzi extrem de scurt.', 'Scrie un singur cuvânt: OK', 20);
+            $ms = (int)round((microtime(true) - $t0) * 1000);
+            jsonResponse([
+                'success'         => $r['ok'],
+                'cheie_setata'    => (defined('ANTHROPIC_KEY') && ANTHROPIC_KEY !== ''),
+                'cheie_prefix'    => (defined('ANTHROPIC_KEY') && ANTHROPIC_KEY !== '') ? substr(ANTHROPIC_KEY, 0, 7) . '…' : null,
+                'model'           => (defined('CLAUDE_MODEL') ? CLAUDE_MODEL : 'claude-sonnet-4-6'),
+                'durata_ms'       => $ms,
+                'raspuns'         => $r['ok'] ? trim($r['text']) : null,
+                'error'           => $r['ok'] ? null : $r['error'],
+                'max_execution_time' => (int)ini_get('max_execution_time'),
+            ]);
+            break;
+
         case 'generateWeekPosts':
             // Generează o săptămână de postări complete (text gata de publicat) cu Claude AI.
             // Calendar editorial pe servicii → fără date reale de client. Salvează ca Draft, cu slot poză gol.
