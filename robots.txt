@@ -5,5 +5,7 @@ Disallow: /cdn-cgi/
 Disallow: /contract.html
 Disallow: /detectie-incendiu-isu
 Disallow: /ga4-tracking-snippet.html
+Disallow: /review
+Disallow: /review.html
 
 Sitemap: https://cssi.ro/sitemap.xml
