@@ -259,7 +259,7 @@ a{text-decoration:none;color:inherit;}button{font-family:inherit;cursor:pointer;
 .vm-table tbody tr:hover{background:#fafbfc;}
 .vm-table .num{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap;}
 .vm-table .cod{font-family:'Courier New',monospace;font-size:11px;background:#fef9c3;padding:2px 6px;border-radius:4px;font-weight:700;color:var(--dark);}
-.vm-table .name{font-weight:600;color:var(--dark);}
+.vm-table .name{font-weight:600;color:var(--dark);white-space:pre-wrap;}
 @media(max-width:600px){
     .vm-table thead{display:none;}
     .vm-table tbody tr{display:block;border:1px solid var(--gray-b);border-radius:10px;padding:10px;margin-bottom:8px;}
@@ -334,6 +334,9 @@ var STATE = {
 
 // ═══ HELPERS ═══
 function esc(s){if(s==null)return '';var d=document.createElement('div');d.textContent=s;return d.innerHTML;}
+// Denumirea poate conține formatare (bold/italic/underline/culoare). Curăț la whitelist sigur.
+function sanitizeRich(html){var allowed={B:1,STRONG:1,I:1,EM:1,U:1,BR:1,SPAN:1};var tmp=document.createElement('div');tmp.innerHTML=(html==null?'':String(html));function walk(node){var out='';node.childNodes.forEach(function(ch){if(ch.nodeType===3){out+=esc(ch.nodeValue);return;}if(ch.nodeType!==1)return;var tag=ch.tagName;if(tag==='BR'){out+='<br>';return;}if(tag==='DIV'||tag==='P'){var inner=walk(ch);if(out&&!/<br>$/.test(out))out+='<br>';out+=inner;return;}if(allowed[tag]){if(tag==='SPAN'){var st='';var s=ch.style||{};if(s.color)st+='color:'+s.color+';';if(s.fontWeight==='bold'||parseInt(s.fontWeight,10)>=600)st+='font-weight:700;';if(s.fontStyle==='italic')st+='font-style:italic;';if(s.textDecoration&&/underline/.test(s.textDecoration))st+='text-decoration:underline;';out+= st?('<span style="'+esc(st)+'">'+walk(ch)+'</span>'):walk(ch);}else{var t=tag.toLowerCase();out+='<'+t+'>'+walk(ch)+'</'+t+'>';}}else{out+=walk(ch);}});return out;}return walk(tmp);}
+function richToHtml(s){s=(s==null?'':String(s));if(s.indexOf('<')===-1)return esc(s).replace(/\n/g,'<br>');return sanitizeRich(s);}
 function fmtMoney(n){var v=Number(n||0);return v.toLocaleString('ro-RO',{minimumFractionDigits:2,maximumFractionDigits:2})+' RON';}
 function fmtMoneyShort(n){var v=Number(n||0);if(v>=1e6)return (v/1e6).toFixed(1)+'M';if(v>=1e3)return (v/1e3).toFixed(1)+'k';return v.toFixed(0);}
 var MONTHS=['Ian','Feb','Mar','Apr','Mai','Iun','Iul','Aug','Sep','Oct','Noi','Dec'];
@@ -498,6 +501,7 @@ function renderCard(o){
         else if(d <= 7) expHtml = '<span class="exp-warn">expiră în '+d+'z</span>';
     }
     var motivHtml = (st==='Refuzata' && o.motiv_respingere) ? '<div style="font-size:11px;color:var(--red);font-style:italic;margin-top:4px">Motiv: '+esc(o.motiv_respingere)+'</div>' : '';
+    var trimisHtml = o.trimisa_de ? '<div style="font-size:11px;color:var(--blue);margin-top:4px">📤 Trimisă de '+esc(o.trimisa_de)+'</div>' : '';
     var html = '<div class="oferta-card'+checked+arch+'" id="card-'+o.id+'">';
     html += '<div class="oc-top">';
     html += '<input type="checkbox" class="oc-check" '+ckBox+' onchange="toggleSelect('+o.id+',this.checked);event.stopPropagation()" onclick="event.stopPropagation()">';
@@ -505,6 +509,7 @@ function renderCard(o){
     html += '<div class="oc-client">'+esc(o.client_nume||'— fără client —')+'</div>';
     if(o.obiectiv) html += '<div class="oc-obiectiv">'+esc(o.obiectiv)+'</div>';
     html += motivHtml;
+    html += trimisHtml;
     html += '</div>';
     html += '</div>';
     html += '<div class="oc-meta" onclick="openOfertaView('+o.id+')" style="cursor:pointer"><span class="nr">#'+esc(o.oferta_id)+'</span><span class="data">'+fmtDate(o.data_oferta)+'</span>'+expHtml+'<span class="val">'+fmtMoney(o.total_cu_tva)+'</span></div>';
@@ -714,6 +719,7 @@ function renderOfertaView(o){
     if(o.client_contact) html += '<span><strong>Contact:</strong> '+esc(o.client_contact)+'</span>';
     html += '</div>';
     if(o.obiectiv) html += '<div class="vm-meta-line"><span><strong>Obiectiv:</strong> '+esc(o.obiectiv)+'</span></div>';
+    if(o.trimisa_de) html += '<div class="vm-meta-line"><span style="color:var(--blue)"><strong>📤 Trimisă de:</strong> '+esc(o.trimisa_de)+(o.trimisa_la?' · '+fmtDate(o.trimisa_la):'')+'</span></div>';
     if(o.motiv_respingere) html += '<div class="vm-meta-line"><span style="color:var(--red)"><strong>Motiv refuz:</strong> '+esc(o.motiv_respingere)+(o.decis_de?' · '+esc(o.decis_de):'')+'</span></div>';
     // Echipamente
     html += '<div class="vm-section">';
@@ -727,7 +733,7 @@ function renderOfertaView(o){
             var val  = parseFloat(l.valoare || (cant*pret));
             html += '<tr>';
             html += '<td data-lbl="Cod">'+(l.cod?'<span class="cod">'+esc(l.cod)+'</span>':'<span style="color:var(--gray-l)">—</span>')+'</td>';
-            html += '<td data-lbl="Denumire" class="name">'+esc(l.denumire||'')+'</td>';
+            html += '<td data-lbl="Denumire" class="name">'+richToHtml(l.denumire||'')+'</td>';
             html += '<td data-lbl="UM" style="color:var(--gray)">'+esc(l.um||'buc')+'</td>';
             html += '<td data-lbl="Cantitate" class="num">'+cant+'</td>';
             html += '<td data-lbl="Preț unit." class="num">'+fmtMoney(pret)+'</td>';
@@ -748,7 +754,7 @@ function renderOfertaView(o){
             var pret = parseFloat(l.pret_vanzare||l.pret_achizitie||0);
             var val  = parseFloat(l.valoare || (cant*pret));
             html += '<tr>';
-            html += '<td data-lbl="Denumire" class="name">'+esc(l.denumire||'')+'</td>';
+            html += '<td data-lbl="Denumire" class="name">'+richToHtml(l.denumire||'')+'</td>';
             html += '<td data-lbl="UM" style="color:var(--gray)">'+esc(l.um||'ore')+'</td>';
             html += '<td data-lbl="Cantitate" class="num">'+cant+'</td>';
             html += '<td data-lbl="Preț unit." class="num">'+fmtMoney(pret)+'</td>';

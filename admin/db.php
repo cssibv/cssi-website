@@ -20,6 +20,10 @@ define('DB_CHARSET', 'utf8mb4');
 // API keys externe
 define('ZERNIO_KEY', getenv('CSSI_ZERNIO_KEY') ?: ($SECRETS['ZERNIO_KEY'] ?? ''));
 
+// Claude / Anthropic API — generare automată text postări marketing
+define('ANTHROPIC_KEY', getenv('CSSI_ANTHROPIC_KEY') ?: ($SECRETS['ANTHROPIC_KEY'] ?? ''));
+if (!defined('CLAUDE_MODEL') && !empty($SECRETS['CLAUDE_MODEL'])) define('CLAUDE_MODEL', $SECRETS['CLAUDE_MODEL']);
+
 // Recovery token — pentru endpoint-uri de recuperare admin (ex: deblocare cont)
 define('RECOVERY_TOKEN', getenv('CSSI_RECOVERY_TOKEN') ?: ($SECRETS['RECOVERY_TOKEN'] ?? ''));
 

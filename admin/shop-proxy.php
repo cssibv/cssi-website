@@ -1,13 +1,15 @@
 <?php
 /**
- * Shop-Security.ro Product Proxy v3 — desc extraction via tab-pane show-active
+ * Shop-Security.ro Product Proxy v4 — rescris pentru platforma WooCommerce/WoodMart
  * Caută un produs după cod pe shop-security.ro și returnează JSON
+ * Căutare: /?s=COD&post_type=product · cod din "sku":, preț din meta product:price:amount,
+ * nume din og:title, imagine din data-large_image, descriere din #tab-description.
  * mode=image — proxy imagine binara (rezolva hotlink/referer in print PDF)
- * Versiune: 2026-05-26 15:25 GMT+3 — fix regex descriere
+ * Versiune: 2026-06-03 — migrare la WooCommerce (vechiul /search?q= + markup custom nu mai există)
  */
 
 // ─── MODE: image (proxy binar) ───────────────────────────────────
-// Apelat ca: shop-proxy.php?mode=image&img=https://www.shop-security.ro/upload/img/products/...
+// Apelat ca: shop-proxy.php?mode=image&img=https://www.shop-security.ro/wp-content/uploads/...
 // Browser-ul face request same-origin → fără probleme de CORS/Referer/hotlink
 if (isset($_GET['mode']) && $_GET['mode'] === 'image') {
     $imgUrl = isset($_GET['img']) ? $_GET['img'] : '';
@@ -53,204 +55,251 @@ header('Content-Type: application/json; charset=utf-8');
 header('Access-Control-Allow-Origin: *');
 header('Cache-Control: no-cache');
 
-$code = isset($_GET['q']) ? trim($_GET['q']) : '';
-if (!$code) {
-    echo json_encode(['error' => 'Cod produs lipsă', 'found' => false]);
+$code      = isset($_GET['q'])   ? trim($_GET['q'])   : '';
+$directUrl = isset($_GET['url']) ? trim($_GET['url']) : ''; // mod „link direct": user dă URL-ul produsului
+if ($code === '' && $directUrl === '') {
+    echo json_encode(['error' => 'Cod produs sau link lipsă', 'found' => false]);
+    exit;
+}
+// Link direct acceptat DOAR de pe shop-security.ro (anti-SSRF)
+if ($directUrl !== '' && !preg_match('#^https?://(www\.)?shop-security\.ro/#i', $directUrl)) {
+    echo json_encode(['found' => false, 'error' => 'Link invalid — acceptăm doar adrese de pe shop-security.ro']);
     exit;
 }
 
-// Caută pe shop-security.ro
-$searchUrl = 'https://www.shop-security.ro/search?q=' . urlencode($code);
+// Caută pe shop-security.ro (platformă WooCommerce/WoodMart din 2026)
+// Căutarea WooCommerce + FiboSearch (dgwt_wcas=1) — rezultate mai relevante, conștiente de SKU
+$searchUrl = 'https://www.shop-security.ro/?s=' . urlencode($code) . '&post_type=product&dgwt_wcas=1';
 
-$ch = curl_init();
-curl_setopt_array($ch, [
-    CURLOPT_URL => $searchUrl,
-    CURLOPT_RETURNTRANSFER => true,
-    CURLOPT_FOLLOWLOCATION => true,
-    CURLOPT_TIMEOUT => 15,
-    CURLOPT_SSL_VERIFYPEER => false,
-    CURLOPT_USERAGENT => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
-    CURLOPT_HTTPHEADER => [
-        'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
-        'Accept-Language: ro-RO,ro;q=0.9,en;q=0.8',
-    ],
-]);
-$html = curl_exec($ch);
-$httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-curl_close($ch);
-
-if (!$html || $httpCode !== 200) {
-    echo json_encode(['error' => 'Nu s-a putut accesa shop-security.ro (HTTP '.$httpCode.')', 'found' => false]);
-    exit;
+// Helper: fetch HTML cu user-agent de browser. Întoarce [body, http, errno, error].
+function ssFetch($url, $connTimeout = 12, $timeout = 30) {
+    $ch = curl_init();
+    curl_setopt_array($ch, [
+        CURLOPT_URL => $url,
+        CURLOPT_RETURNTRANSFER => true,
+        CURLOPT_FOLLOWLOCATION => true,
+        CURLOPT_MAXREDIRS => 5,
+        CURLOPT_CONNECTTIMEOUT => $connTimeout,
+        CURLOPT_TIMEOUT => $timeout,
+        CURLOPT_SSL_VERIFYPEER => false,
+        CURLOPT_SSL_VERIFYHOST => 0,
+        CURLOPT_ENCODING => '', // accept gzip/deflate/br
+        CURLOPT_IPRESOLVE => CURL_IPRESOLVE_V4, // unele shared-hosts au IPv6 rupt
+        CURLOPT_USERAGENT => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+        CURLOPT_HTTPHEADER => [
+            'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+            'Accept-Language: ro-RO,ro;q=0.9,en;q=0.8',
+            'Connection: close',
+        ],
+    ]);
+    $body  = curl_exec($ch);
+    $http  = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+    $errno = curl_errno($ch);
+    $error = curl_error($ch);
+    curl_close($ch);
+    return [$body, $http, $errno, $error];
 }
 
-$products = [];
+// Helper: preț românesc "1.234,56" sau "411,40" → float 1234.56 / 411.40
+function ssParsePrice($raw) {
+    $raw = trim($raw);
+    // scot separatorul de mii (.) și transform virgula zecimală în punct
+    $raw = str_replace(['.', ' ', "\xc2\xa0"], '', $raw); // elimină . spațiu &nbsp;
+    $raw = str_replace(',', '.', $raw);
+    return floatval($raw);
+}
 
-// === METODA 1: Caută titlu produs în <h5 class="...product-item__title"><a ...>TITLU</a></h5> ===
-if (preg_match_all('/<h5[^>]*product-item__title[^>]*>\s*<a[^>]*href="([^"]+)"[^>]*>\s*(.+?)\s*<\/a>/si', $html, $titleMatches, PREG_SET_ORDER)) {
-    foreach ($titleMatches as $m) {
-        $name = trim(strip_tags($m[2]));
-        $url = trim($m[1]);
-        if (strlen($name) > 10) {
+// Helper: normalizează un cod pentru comparație — trim, lowercase, fără spații interioare.
+// (SKU-ul de pe site poate avea spații/altă capitalizare decât ce tastăm noi)
+function ssNormCode($s) {
+    $s = mb_strtolower(trim((string)$s), 'UTF-8');
+    return preg_replace('/\s+/u', '', $s);
+}
+
+// Helper: extrage codul produsului (SKU) din pagina de detaliu.
+// Sursa principală cerută: <span class="sku">COD</span> ("Cod produs:"); fallback pe JSON "sku":"...".
+function ssExtractSku($html) {
+    if (preg_match('/<span[^>]*class="[^"]*\bsku\b[^"]*"[^>]*>\s*(.*?)\s*<\/span>/si', $html, $m)) {
+        $v = trim(html_entity_decode(strip_tags($m[1]), ENT_QUOTES | ENT_HTML5, 'UTF-8'));
+        if ($v !== '' && strtolower($v) !== 'n/a') return $v;
+    }
+    if (preg_match('/"sku"\s*:\s*"([^"]+)"/', $html, $m) && trim($m[1]) !== '') {
+        return trim($m[1]);
+    }
+    return '';
+}
+
+$qNorm      = ssNormCode($code);
+$products   = [];
+$detailHtml = '';
+$detailUrl  = '';
+$exactMatch = false;
+
+if ($directUrl !== '') {
+    // ─── MOD LINK DIRECT: utilizatorul a dat URL-ul exact al produsului ───
+    list($dHtml, $dHttp) = ssFetch($directUrl);
+    if (!$dHtml || $dHttp !== 200) {
+        echo json_encode(['found' => false, 'error' => 'Nu s-a putut accesa link-ul (HTTP ' . $dHttp . ')']);
+        exit;
+    }
+    $detailHtml = $dHtml;
+    $detailUrl  = $directUrl;
+    $products[] = ['name' => '', 'url' => $directUrl];
+    $exactMatch = true; // user a ales explicit produsul → îl acceptăm ca atare
+
+} else {
+    // ─── MOD DUPĂ COD: caut și aleg DOAR produsul cu SKU identic ───
+    list($html, $httpCode, $curlErrno, $curlError) = ssFetch($searchUrl);
+    if (!$html || $httpCode !== 200) {
+        echo json_encode([
+            'found' => false,
+            'error' => 'Nu s-a putut accesa shop-security.ro (HTTP ' . $httpCode . ')',
+            'debug' => [
+                'http' => $httpCode,
+                'curl_errno' => $curlErrno,
+                'curl_error' => $curlError,
+                'url' => $searchUrl,
+                'curl_ssl' => function_exists('curl_version') ? (curl_version()['ssl_version'] ?? '') : '',
+            ],
+        ]);
+        exit;
+    }
+
+    // Produse din pagina de rezultate (card: <h3 class="wd-entities-title"><a href="URL">NUME</a>)
+    $seenUrls = [];
+    if (preg_match_all('/<h[1-6][^>]*class="[^"]*wd-entities-title[^"]*"[^>]*>\s*<a[^>]*href="([^"]+)"[^>]*>(.*?)<\/a>/si', $html, $tm, PREG_SET_ORDER)) {
+        foreach ($tm as $m) {
+            $url  = trim($m[1]);
+            $name = trim(html_entity_decode(strip_tags($m[2]), ENT_QUOTES | ENT_HTML5, 'UTF-8'));
+            if ($name === '' || isset($seenUrls[$url])) continue;
+            $path = trim((string)parse_url($url, PHP_URL_PATH), '/');
+            if ($path === '' || strpos($path, '/') !== false) continue; // sare peste /product-category/... etc
+            $seenUrls[$url] = true;
             $products[] = ['name' => $name, 'url' => $url];
         }
     }
-}
 
-// === METODA 2 FALLBACK: Caută link-uri cu class "text-blue font-weight-bold" spre .html ===
-if (empty($products)) {
-    if (preg_match_all('/<a[^>]*class="[^"]*text-blue[^"]*font-weight-bold[^"]*"[^>]*href="(https?:\/\/[^"]*\.html)"[^>]*>\s*(.+?)\s*<\/a>/si', $html, $titleMatches2, PREG_SET_ORDER)) {
-        foreach ($titleMatches2 as $m) {
-            $name = trim(strip_tags($m[2]));
-            $url = trim($m[1]);
-            if (strlen($name) > 10 && stripos($name, 'Adauga') === false && stripos($name, 'Citeste') === false) {
-                $products[] = ['name' => $name, 'url' => $url];
+    // Aleg DOAR produsul al cărui <span class="sku"> == codul căutat.
+    // SKU-ul NU apare pe cardurile din lista de rezultate → trebuie deschisă pagina fiecărui produs.
+    // Optimizare: deschid întâi produsele a căror DENUMIRE se potrivește cel mai bine cu termenul
+    // căutat (cel corect e de regulă printre ele), ca să nu deschid zeci de pagini irelevante.
+    if (!empty($products)) {
+        $nameTokens = preg_split('/\s+/', mb_strtolower(trim($code), 'UTF-8'), -1, PREG_SPLIT_NO_EMPTY);
+        $ranked = [];
+        foreach ($products as $idx => $p) {
+            $nm = mb_strtolower($p['name'], 'UTF-8');
+            $score = 0;
+            foreach ($nameTokens as $t) { if ($t !== '' && mb_strpos($nm, $t) !== false) $score++; }
+            $ranked[] = ['p' => $p, 'i' => $idx, 's' => $score];
+        }
+        usort($ranked, function ($a, $b) {
+            if ($a['s'] !== $b['s']) return $b['s'] - $a['s']; // denumire mai relevantă întâi
+            return $a['i'] - $b['i'];                          // egalitate → ordinea magazinului
+        });
+
+        $maxCheck = min(count($ranked), 20); // câte pagini deschidem cel mult ca să găsim SKU-ul exact
+        for ($k = 0; $k < $maxCheck; $k++) {
+            $cand = $ranked[$k]['p'];
+            list($dHtml, $dHttp) = ssFetch($cand['url'], 8, 15); // timeout scurt — pot fi multe probe
+            if (!$dHtml || $dHttp !== 200) continue;
+            $sku = ssExtractSku($dHtml);
+            if ($sku !== '' && $qNorm !== '' && ssNormCode($sku) === $qNorm) {
+                $detailHtml = $dHtml;
+                $detailUrl  = $cand['url'];
+                // aduc produsul ales pe poziția 0 (pentru name + lista de alternative)
+                $rest = [];
+                foreach ($products as $x) { if ($x['url'] !== $cand['url']) $rest[] = $x; }
+                $products = array_merge([$cand], $rest);
+                $exactMatch = true;
+                break;
             }
         }
-    }
-}
-
-// === METODA 3 FALLBACK: Orice link .html cu text lung care nu e navigare ===
-if (empty($products)) {
-    if (preg_match_all('/<a[^>]*href="(https:\/\/www\.shop-security\.ro\/(?!p\/|search)[^"]+\.html)"[^>]*>\s*(.+?)\s*<\/a>/si', $html, $titleMatches3, PREG_SET_ORDER)) {
-        foreach ($titleMatches3 as $m) {
-            $name = trim(strip_tags($m[2]));
-            $url = trim($m[1]);
-            if (strlen($name) > 20 && stripos($name, 'Adauga') === false && stripos($name, 'Citeste') === false && stripos($name, 'Montaj') === false) {
-                $products[] = ['name' => $name, 'url' => $url];
-            }
+    } elseif (strpos($html, 'product:price:amount') !== false) {
+        // search a aterizat direct pe pagina unui produs — accept doar dacă SKU-ul se potrivește
+        $skuDirect = ssExtractSku($html);
+        if ($skuDirect !== '' && $qNorm !== '' && ssNormCode($skuDirect) === $qNorm) {
+            $detailHtml = $html;
+            if (preg_match('/<meta[^>]+property="og:url"[^>]+content="([^"]+)"/i', $html, $ou)) $detailUrl = trim($ou[1]);
+            $products[] = ['name' => '', 'url' => $detailUrl];
+            $exactMatch = true;
         }
     }
-}
 
-// === EXTRAGE PREȚURI ===
-$prices = [];
-
-// Metoda 1: <div class="prodcut-price...">XXX,XX lei</div>
-if (preg_match_all('/<div[^>]*prodcut-price[^>]*>\s*([\d\s]+[,\.]\d{2})\s*lei/si', $html, $pm)) {
-    foreach ($pm[1] as $p) {
-        $clean = floatval(str_replace([' ', ','], ['', '.'], $p));
-        if ($clean > 0) $prices[] = $clean;
-    }
-}
-
-// Metoda 2: <ins ...>XXX,XX lei</ins>
-if (empty($prices)) {
-    if (preg_match_all('/<ins[^>]*>\s*([\d\s]+[,\.]\d{2})\s*lei\s*<\/ins>/si', $html, $pm2)) {
-        foreach ($pm2[1] as $p) {
-            $clean = floatval(str_replace([' ', ','], ['', '.'], $p));
-            if ($clean > 0) $prices[] = $clean;
+    // Niciun produs cu codul EXACT → nu ghicim; cerem link-ul produsului
+    if (!$exactMatch) {
+        $cand = [];
+        foreach (array_slice($products, 0, 6) as $p) {
+            $cand[] = ['name' => $p['name'], 'url' => $p['url']];
         }
+        echo json_encode([
+            'found'      => false,
+            'need_url'   => true,
+            'error'      => 'Niciun produs cu codul exact „' . $code . '". Introdu link-ul produsului de pe shop-security.ro.',
+            'search_url' => $searchUrl,
+            'candidates' => $cand,
+        ], JSON_UNESCAPED_UNICODE);
+        exit;
     }
 }
 
-// Metoda 3 fallback: Orice "XXX,XX lei" din pagină (nu 0,00)
-if (empty($prices)) {
-    if (preg_match_all('/(\d[\d\s]*\d?[,\.]\d{2})\s*lei/u', $html, $pm3)) {
-        foreach ($pm3[1] as $p) {
-            $clean = floatval(str_replace([' ', ','], ['', '.'], $p));
-            if ($clean > 1) $prices[] = $clean; // Exclude 0,00 lei
-        }
-    }
-}
-
-// === EXTRAGE CODURI ===
-$codes = [];
-if (preg_match_all('/Cod:\s*<[^>]*>\s*([^<]+)/u', $html, $cm)) {
-    $codes = array_map('trim', $cm[1]);
-}
-
-// === EXTRAGE IMAGINI ===
-// Strategia primară: dacă avem un produs cu URL, facem un al doilea request la
-// pagina de detaliu și scoatem imaginea HD din slick carousel (better quality).
-// Fallback: imagine din pagina de search (thumbnail, mai mic).
-$images = [];
-
-// PRIMARY — fetch detail page și extrage din slick carousel
-if (!empty($products) && !empty($products[0]['url'])) {
-    $detailUrl = $products[0]['url'];
-    $ch2 = curl_init();
-    curl_setopt_array($ch2, [
-        CURLOPT_URL => $detailUrl,
-        CURLOPT_RETURNTRANSFER => true,
-        CURLOPT_FOLLOWLOCATION => true,
-        CURLOPT_TIMEOUT => 10,
-        CURLOPT_SSL_VERIFYPEER => false,
-        CURLOPT_USERAGENT => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
-    ]);
-    $detailHtml = curl_exec($ch2);
-    $detailHttp = curl_getinfo($ch2, CURLINFO_HTTP_CODE);
-    curl_close($ch2);
-
-    if ($detailHtml && $detailHttp === 200) {
-        // Metoda A: exact div-ul slick-current din carusel (cea mai sigură)
-        if (preg_match('/<div[^>]*class="[^"]*slick-slide\s+slick-current[^"]*"[^>]*>\s*<img[^>]*class="img-fluid"[^>]*src="([^"]+)"/si', $detailHtml, $mA)) {
-            $images[] = $mA[1];
-        }
-        // Metoda B: orice <img class="img-fluid" src="..."> care e în /upload/img/products/
-        if (empty($images) && preg_match_all('/<img[^>]*class="[^"]*img-fluid[^"]*"[^>]*src="(https?:\/\/[^"]*shop-security\.ro\/upload\/img\/products\/[^"]+)"/si', $detailHtml, $mB, PREG_SET_ORDER)) {
-            foreach ($mB as $m) $images[] = $m[1];
-        }
-        // Metoda C: orice <img src=...> care e în /upload/img/products/
-        if (empty($images) && preg_match_all('/<img[^>]*src="(https?:\/\/[^"]*shop-security\.ro\/upload\/img\/products\/[^"]+\.(?:jpg|jpeg|png|webp))"/si', $detailHtml, $mC, PREG_SET_ORDER)) {
-            foreach ($mC as $m) $images[] = $m[1];
-        }
-    }
-}
-
-// FALLBACK — imagine din pagina de search dacă detaliu a eșuat
-if (empty($images)) {
-    if (preg_match_all('/<img[^>]*class="[^"]*product-item__image[^"]*"[^>]*src="([^"]+)"/si', $html, $im1, PREG_SET_ORDER)) {
-        foreach ($im1 as $m) $images[] = $m[1];
-    }
-    if (empty($images) && preg_match_all('/<img[^>]*src="(https?:\/\/[^"]*shop-security\.ro\/upload\/img\/products\/[^"]+\.(?:jpg|jpeg|png|webp))"/si', $html, $im2, PREG_SET_ORDER)) {
-        foreach ($im2 as $m) $images[] = $m[1];
-    }
-}
-
-// === EXTRAGE DESCRIERE LUNGĂ (din pagina de detaliu, după <!-- Tab Prodcut Section -->) ===
-// Structura tipica shop-security:
-//   <!-- Tab Prodcut Section -->
-//     <ul class="nav-tabs">...butoane...</ul>
-//     <div class="tab-content" id="pills-tabContent">
-//       <div class="tab-pane fade show active" id="pills-one-example1">  ← DESCRIERE aici
-//       <div class="tab-pane fade" id="pills-two-example1">              ← Specificatii
-//       <div class="tab-pane fade" id="product-tab-reviews">             ← Recenzii
-//     </div>
+$name = !empty($products) ? $products[0]['name'] : '';
+$price = 0;
+$pcode = $code;
+$image = '';
 $description = '';
-if (!empty($detailHtml)) {
-    // Metoda A (cea mai sigura): primul tab-pane cu „show active" (= Descriere)
-    //   captura cuprinde tot pana la urmatorul tab-pane (Specificatii)
-    if (preg_match('/<div[^>]*class="[^"]*tab-pane[^"]*\bshow\s+active\b[^"]*"[^>]*>(.*?)<div[^>]*class="[^"]*tab-pane\b/si', $detailHtml, $dA)) {
-        $description = $dA[1];
+
+if ($detailHtml !== '') {
+    // --- NUME din og:title (curat) ---
+    if (preg_match('/<meta[^>]+property="og:title"[^>]+content="([^"]+)"/i', $detailHtml, $ot)) {
+        $ogTitle = html_entity_decode(trim($ot[1]), ENT_QUOTES | ENT_HTML5, 'UTF-8');
+        $ogTitle = preg_replace('/\s*[-–—]\s*Shop Security\s*$/iu', '', $ogTitle);
+        if ($ogTitle !== '') $name = $ogTitle;
     }
-    // Metoda B: explicit pe id pills-one-example1
-    if (empty($description) && preg_match('/<div[^>]*id="pills-one-example1"[^>]*>(.*?)<div[^>]*id="pills-two-example1"/si', $detailHtml, $dB)) {
-        $description = $dB[1];
+
+    // --- PREȚ: meta product:price:amount (deja în format cu punct, = preț curent/redus) ---
+    if (preg_match('/<meta[^>]+property="product:price:amount"[^>]+content="([\d.,]+)"/i', $detailHtml, $pmeta)) {
+        $price = floatval(str_replace(',', '.', $pmeta[1]));
     }
-    // Metoda C fallback: id-uri uzuale (tab-description, product-description)
-    if (empty($description) && preg_match('/<div[^>]*(?:id|class)="[^"]*(?:tab-description|description-tab|product-description)[^"]*"[^>]*>(.*?)<\/div>\s*<\/div>/si', $detailHtml, $dC)) {
-        $description = $dC[1];
+    // Fallback preț: <ins> (preț redus) apoi orice woocommerce-Price-amount
+    if ($price <= 0 && preg_match('/<ins\b[^>]*>.*?woocommerce-Price-amount[^>]*>\s*<bdi>\s*([\d.\s\xc2\xa0]+,\d{2})/si', $detailHtml, $pi)) {
+        $price = ssParsePrice($pi[1]);
+    }
+    if ($price <= 0 && preg_match('/woocommerce-Price-amount[^>]*>\s*<bdi>\s*([\d.\s\xc2\xa0]+,\d{2})/si', $detailHtml, $pb)) {
+        $price = ssParsePrice($pb[1]);
+    }
+
+    // --- COD / SKU: din <span class="sku"> ("Cod produs:"), fallback pe JSON "sku":"..." ---
+    $skuFound = ssExtractSku($detailHtml);
+    if ($skuFound !== '') $pcode = $skuFound;
+
+    // --- IMAGINE: data-large_image (HD din galerie) → wp-post-image → og:image ---
+    if (preg_match('/data-large_image="([^"]+)"/i', $detailHtml, $imA)) {
+        $image = $imA[1];
+    } elseif (preg_match('/<img[^>]*class="[^"]*wp-post-image[^"]*"[^>]*src="([^"]+)"/i', $detailHtml, $imB)) {
+        $image = $imB[1];
+    } elseif (preg_match('/<meta[^>]+property="og:image"[^>]+content="([^"]+)"/i', $detailHtml, $imC)) {
+        $image = $imC[1];
+    }
+
+    // --- DESCRIERE: conținutul tab-ului #tab-description (până la tab-ul următor) ---
+    if (preg_match('/id="tab-description"[^>]*>(.*?)<div[^>]*id="tab-(?:additional_information|reviews)"/si', $detailHtml, $dT)) {
+        $description = $dT[1];
+    } elseif (preg_match('/<meta[^>]+property="og:description"[^>]+content="([^"]+)"/i', $detailHtml, $dOg)) {
+        $description = $dOg[1];
     }
     // Curățare HTML → text simplu
     if ($description) {
-        // Scot tag-uri script/style cu tot conținutul
         $description = preg_replace('/<(script|style|noscript)\b[^>]*>.*?<\/\1>/si', '', $description);
-        // Convertesc <br> și </p> în newline-uri ca să păstrez structura
         $description = preg_replace('/<br\s*\/?>/i', "\n", $description);
         $description = preg_replace('/<\/p>/i', "\n\n", $description);
         $description = preg_replace('/<\/li>/i', "\n", $description);
         $description = preg_replace('/<li[^>]*>/i', '• ', $description);
-        // Scot toate tag-urile
         $description = strip_tags($description);
-        // Decodez entități HTML
         $description = html_entity_decode($description, ENT_QUOTES | ENT_HTML5, 'UTF-8');
-        // Normalizez spațiile (păstrez newline-urile)
         $description = preg_replace('/[ \t]+/', ' ', $description);
         $description = preg_replace('/\n[ \t]+/', "\n", $description);
         $description = preg_replace('/\n{3,}/', "\n\n", $description);
         $description = trim($description);
-        // Limitez la 2000 caractere ca să nu intre conținut imens
         if (mb_strlen($description) > 2000) {
             $description = mb_substr($description, 0, 1997) . '...';
         }
@@ -258,36 +307,35 @@ if (!empty($detailHtml)) {
 }
 
 // === CONSTRUIEȘTE RĂSPUNS ===
-if (!empty($products) && !empty($prices)) {
-    // Elimină codul SKU din denumire dacă e prezent
-    $name = $products[0]['name'];
-    // Elimină "HIKVISION DS-XXXX" sau "- HIKVISION DS-XXXX" de la sfârsit
-    $name = preg_replace('/\s*-?\s*HIKVISION\s+DS-[\w\-\/]+$/i', '', $name);
-    // Elimină "- DS-XXXX" de la sfârsit
-    $name = preg_replace('/\s*-?\s*DS-[\w\-\/]+$/i', '', $name);
-    $name = trim($name, ' -');
+if (!empty($products) && $price > 0) {
+    $nameOriginal = $name;
+    // Curăț denumirea: elimin sufixul "- HIKVISION DS-XXXX" / "- DS-XXXX" / "- COD"
+    $clean = preg_replace('/\s*[-–—]\s*HIKVISION\s+[\w\-\/.]+$/i', '', $name);
+    $clean = preg_replace('/\s*[-–—]\s*' . preg_quote($pcode, '/') . '\s*$/i', '', $clean);
+    $clean = preg_replace('/\s*[-–—]\s*DS-[\w\-\/.]+$/i', '', $clean);
+    $clean = trim($clean, " -–—");
 
     $result = [
         'found' => true,
-        'name' => $name ?: $products[0]['name'],
-        'nameOriginal' => $products[0]['name'],
-        'price' => $prices[0],
-        'url' => $products[0]['url'],
-        'code' => !empty($codes) ? $codes[0] : $code,
-        'image' => !empty($images) ? $images[0] : '',
+        'name' => $clean ?: $name,
+        'nameOriginal' => $nameOriginal,
+        'price' => $price,
+        'url' => $detailUrl,
+        'code' => $pcode,
+        'code_match' => ($qNorm !== '' && ssNormCode($pcode) === $qNorm), // true = SKU-ul paginii == codul căutat
+        'image' => $image,
         'description' => $description,
         'total_results' => count($products),
     ];
 
-    // Adaugă alternative dacă există
+    // Alternative (celelalte rezultate din căutare)
     if (count($products) > 1) {
         $result['alternatives'] = [];
         for ($i = 1; $i < min(count($products), 5); $i++) {
-            $altName = $products[$i]['name'];
             $result['alternatives'][] = [
-                'name' => $altName,
+                'name' => $products[$i]['name'],
                 'url' => $products[$i]['url'],
-                'price' => isset($prices[$i]) ? $prices[$i] : null,
+                'price' => null,
             ];
         }
     }
@@ -300,7 +348,8 @@ if (!empty($products) && !empty($prices)) {
         'search_url' => $searchUrl,
         'debug' => [
             'products_found' => count($products),
-            'prices_found' => count($prices),
+            'price' => $price,
+            'detail_fetched' => $detailHtml !== '',
         ],
     ], JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
 }
