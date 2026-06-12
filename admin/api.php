@@ -1086,6 +1086,37 @@ function ensureSocialPostsTable($db) {
     }
 }
 
+// Schema PV intervenții — proces verbal editabil per intervenție (idempotent)
+function ensureInterventiePVSchema($db) {
+    static $done = false;
+    if ($done) return;
+    $done = true;
+    try {
+        $db->exec("CREATE TABLE IF NOT EXISTS interventii_pv (
+            id INT PRIMARY KEY AUTO_INCREMENT,
+            proiect_id INT NOT NULL,
+            pv_nr VARCHAR(40) NULL,
+            data_pv DATE NULL,
+            problema_constatata TEXT NULL,
+            cauza TEXT NULL,
+            solutie_aplicata TEXT NULL,
+            materiale TEXT NULL,
+            recomandari TEXT NULL,
+            stare_finala VARCHAR(40) NOT NULL DEFAULT 'Rezolvat',
+            durata_ore DECIMAL(5,1) NULL DEFAULT 0,
+            tehnicieni VARCHAR(255) NULL,
+            semnatar_client VARCHAR(150) NULL,
+            semnatura_client MEDIUMTEXT NULL,
+            created_by VARCHAR(100) NULL,
+            created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+            updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+            UNIQUE KEY uq_proiect (proiect_id)
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci");
+    } catch (Exception $e) {
+        error_log('ensureInterventiePVSchema FAILED: ' . $e->getMessage());
+    }
+}
+
 try {
     $db = getDB();
 
@@ -1736,6 +1767,215 @@ try {
                 jsonResponse(['success' => true, 'proiect_id' => $proiectIdCod, 'proiect_db_id' => $proiectIdDb, 'programare_id' => $prgId, 'client_id' => $clientId]);
             } catch (Exception $e) {
                 $db->rollBack();
+                jsonResponse(['success' => false, 'error' => $e->getMessage()], 500);
+            }
+            break;
+
+        // ══════════════════════════════════════
+        // INTERVENȚII — listă dedicată + proces verbal editabil
+        // ══════════════════════════════════════
+        case 'getInterventii':
+            ensureProiecteSchema($db);
+            ensureFinalizareSchema($db);
+            ensureInterventiePVSchema($db);
+            $db->exec("CREATE TABLE IF NOT EXISTS executie_programari (
+                id INT PRIMARY KEY AUTO_INCREMENT, proiect_id INT NOT NULL,
+                data_programata DATE NOT NULL, ora_start TIME DEFAULT '08:00:00',
+                durata_ore DECIMAL(4,1) DEFAULT 8, status VARCHAR(20) DEFAULT 'Programat',
+                obiectiv TEXT, note TEXT, created_by VARCHAR(60),
+                created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+                KEY idx_data (data_programata), KEY idx_proiect (proiect_id), KEY idx_status (status)
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4");
+            $db->exec("CREATE TABLE IF NOT EXISTS executie_atribuiri (
+                programare_id INT NOT NULL, user_id VARCHAR(60) NOT NULL,
+                PRIMARY KEY (programare_id, user_id), KEY idx_user (user_id)
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4");
+
+            // Tehnicienii văd doar intervențiile lor; admin/ceilalți le văd pe toate
+            $sessUserI = currentUser();
+            $userFilterI = (isAdmin() || !isTehnician()) ? '' : ($sessUserI['username'] ?? '');
+
+            // Proiecte cu status Interventie SAU care au deja un PV (finalizate, dar rămân vizibile)
+            $sqlPI = "SELECT p.id AS proiect_db_id, p.proiect_id, p.serviciu, p.obiectiv, p.adresa_obiectiv,
+                             p.status AS proiect_status, p.note, p.responsabil, p.data_finalizare,
+                             c.id AS client_db_id, c.client_id AS client_cod, c.nume AS client_nume,
+                             c.telefon AS client_telefon
+                      FROM proiecte p
+                      INNER JOIN clienti c ON p.client_id = c.id
+                      WHERE p.status = 'Interventie' OR p.id IN (SELECT proiect_id FROM interventii_pv)
+                      ORDER BY p.id DESC";
+            $interventii = $db->query($sqlPI)->fetchAll();
+
+            if ($interventii) {
+                $pids = array_column($interventii, 'proiect_db_id');
+                $place = implode(',', array_fill(0, count($pids), '?'));
+
+                // Programări pentru aceste proiecte
+                $stmtPg = $db->prepare("SELECT * FROM executie_programari WHERE proiect_id IN ($place) ORDER BY data_programata, ora_start");
+                $stmtPg->execute($pids);
+                $allPrg = $stmtPg->fetchAll();
+
+                // Atribuiri
+                $atribMap = [];
+                if ($allPrg) {
+                    $prgIds = array_column($allPrg, 'id');
+                    $pl2 = implode(',', array_fill(0, count($prgIds), '?'));
+                    $stmtA = $db->prepare("SELECT programare_id, user_id FROM executie_atribuiri WHERE programare_id IN ($pl2)");
+                    $stmtA->execute($prgIds);
+                    foreach ($stmtA->fetchAll() as $a) { $atribMap[$a['programare_id']][] = $a['user_id']; }
+                }
+                $prgByProj = [];
+                foreach ($allPrg as $pg) {
+                    $pg['atribuiri'] = $atribMap[$pg['id']] ?? [];
+                    $prgByProj[$pg['proiect_id']][] = $pg;
+                }
+
+                // PV-uri existente
+                $stmtPv = $db->prepare("SELECT proiect_id, pv_nr, data_pv, stare_finala, semnatar_client, updated_at FROM interventii_pv WHERE proiect_id IN ($place)");
+                $stmtPv->execute($pids);
+                $pvMap = [];
+                foreach ($stmtPv->fetchAll() as $pv) { $pvMap[$pv['proiect_id']] = $pv; }
+
+                foreach ($interventii as &$it) {
+                    $it['programari'] = $prgByProj[$it['proiect_db_id']] ?? [];
+                    $it['pv'] = $pvMap[$it['proiect_db_id']] ?? null;
+                }
+                unset($it);
+
+                // Filtru tehnician — păstrează doar intervențiile la care e atribuit
+                if ($userFilterI) {
+                    $interventii = array_values(array_filter($interventii, function($it) use ($userFilterI) {
+                        foreach ($it['programari'] as $pg) {
+                            if (in_array($userFilterI, $pg['atribuiri'], true)) return true;
+                        }
+                        return false;
+                    }));
+                }
+            }
+
+            jsonResponse(['success' => true, 'data' => $interventii]);
+            break;
+
+        case 'getInterventiePV':
+            ensureInterventiePVSchema($db);
+            $pid = isset($_GET['proiect_id']) ? intval($_GET['proiect_id']) : 0;
+            if (!$pid) { jsonResponse(['success' => false, 'error' => 'proiect_id obligatoriu'], 400); break; }
+            $stmt = $db->prepare("SELECT p.*, c.nume AS client_nume, c.telefon AS client_telefon, c.oras AS client_oras,
+                                         c.adresa AS client_adresa, c.cui_cnp AS client_cui, c.judet AS client_judet,
+                                         c.persoana_contact AS client_contact, c.email AS client_email
+                                  FROM proiecte p LEFT JOIN clienti c ON p.client_id = c.id
+                                  WHERE p.id = ? LIMIT 1");
+            $stmt->execute([$pid]);
+            $proj = $stmt->fetch();
+            if (!$proj) { jsonResponse(['success' => false, 'error' => 'Intervenție negăsită'], 404); break; }
+            $stmtPv = $db->prepare("SELECT * FROM interventii_pv WHERE proiect_id = ? LIMIT 1");
+            $stmtPv->execute([$pid]);
+            $pv = $stmtPv->fetch() ?: null;
+            // Tehnicieni din ultima programare (prefill dacă nu există PV)
+            $stmtT = $db->prepare("SELECT a.user_id FROM executie_atribuiri a
+                                   INNER JOIN executie_programari pg ON pg.id = a.programare_id
+                                   WHERE pg.proiect_id = ? ORDER BY pg.data_programata DESC");
+            $stmtT->execute([$pid]);
+            $tehLista = array_column($stmtT->fetchAll(), 'user_id');
+            jsonResponse(['success' => true, 'data' => [
+                'proiect'   => $proj,
+                'pv'        => $pv,
+                'tehnicieni'=> $tehLista,
+                'prestator' => prestatorData(),
+            ]]);
+            break;
+
+        case 'saveInterventiePV':
+            $u = currentUser();
+            ensureInterventiePVSchema($db);
+            ensureFinalizareSchema($db);
+            $pid = isset($data['proiect_id']) ? intval($data['proiect_id']) : 0;
+            if (!$pid) { jsonResponse(['success' => false, 'error' => 'proiect_id obligatoriu'], 400); break; }
+            $userName = $u['nume'] ?? ($u['username'] ?? 'Admin');
+
+            $stmtP = $db->prepare("SELECT id, proiect_id, status, client_id, adresa_obiectiv, istoric_status FROM proiecte WHERE id = ? LIMIT 1");
+            $stmtP->execute([$pid]);
+            $proj = $stmtP->fetch();
+            if (!$proj) { jsonResponse(['success' => false, 'error' => 'Intervenție negăsită'], 404); break; }
+
+            $finalizeaza = !empty($data['finalizeaza']);
+            $dataPv  = !empty($data['data_pv']) ? $data['data_pv'] : date('Y-m-d');
+            $stari   = ['Rezolvat','Parțial','Necesită revenire'];
+            $stare   = (isset($data['stare_finala']) && in_array($data['stare_finala'], $stari, true)) ? $data['stare_finala'] : 'Rezolvat';
+            $materiale = isset($data['materiale']) && is_array($data['materiale'])
+                       ? json_encode($data['materiale'], JSON_UNESCAPED_UNICODE) : '[]';
+            $tehnicieni = '';
+            if (isset($data['tehnicieni'])) {
+                $tehnicieni = is_array($data['tehnicieni']) ? implode(', ', $data['tehnicieni']) : trim((string)$data['tehnicieni']);
+            }
+
+            // Număr PV — derivat din codul unic al proiectului (un singur PV / intervenție)
+            $stmtEx = $db->prepare("SELECT id, pv_nr FROM interventii_pv WHERE proiect_id = ? LIMIT 1");
+            $stmtEx->execute([$pid]);
+            $exPv = $stmtEx->fetch();
+            $pvNr = ($exPv && !empty($exPv['pv_nr'])) ? $exPv['pv_nr']
+                  : (!empty($data['pv_nr']) ? trim($data['pv_nr']) : 'PV-' . ($proj['proiect_id'] ?: $pid));
+
+            try {
+                $db->beginTransaction();
+
+                $fields = [
+                    'pv_nr' => $pvNr,
+                    'data_pv' => $dataPv,
+                    'problema_constatata' => isset($data['problema_constatata']) ? trim($data['problema_constatata']) : '',
+                    'cauza' => isset($data['cauza']) ? trim($data['cauza']) : '',
+                    'solutie_aplicata' => isset($data['solutie_aplicata']) ? trim($data['solutie_aplicata']) : '',
+                    'materiale' => $materiale,
+                    'recomandari' => isset($data['recomandari']) ? trim($data['recomandari']) : '',
+                    'stare_finala' => $stare,
+                    'durata_ore' => isset($data['durata_ore']) ? floatval($data['durata_ore']) : 0,
+                    'tehnicieni' => $tehnicieni,
+                    'semnatar_client' => isset($data['semnatar_client']) ? trim($data['semnatar_client']) : '',
+                    'semnatura_client' => isset($data['semnatura_client']) ? $data['semnatura_client'] : '',
+                    'created_by' => $userName,
+                ];
+
+                if ($exPv) {
+                    $set = implode(', ', array_map(function($k){ return "$k = ?"; }, array_keys($fields)));
+                    $vals = array_values($fields); $vals[] = $pid;
+                    $db->prepare("UPDATE interventii_pv SET $set WHERE proiect_id = ?")->execute($vals);
+                } else {
+                    $cols = implode(', ', array_keys($fields)) . ', proiect_id';
+                    $ph   = implode(', ', array_fill(0, count($fields) + 1, '?'));
+                    $vals = array_values($fields); $vals[] = $pid;
+                    $db->prepare("INSERT INTO interventii_pv ($cols) VALUES ($ph)")->execute($vals);
+                }
+
+                $newStatus = $proj['status'];
+                if ($finalizeaza) {
+                    $newStatus = 'Finalizat';
+                    $istoric = json_decode($proj['istoric_status'] ?: '[]', true);
+                    if (!is_array($istoric)) $istoric = [];
+                    $istoric[] = ['status' => 'Finalizat', 'data' => date('Y-m-d H:i:s'), 'user' => $userName, 'event' => 'PV intervenție', 'nota' => 'Proces verbal ' . $pvNr];
+                    $db->prepare("UPDATE proiecte SET status = 'Finalizat', data_finalizare = ?, finalizat_by = ?, finalizat_at = NOW(), istoric_status = ? WHERE id = ?")
+                       ->execute([$dataPv, $userName, json_encode($istoric, JSON_UNESCAPED_UNICODE), $pid]);
+                    // Marchează programările deschise drept finalizate
+                    try { $db->prepare("UPDATE executie_programari SET status = 'Finalizat' WHERE proiect_id = ? AND status IN ('Programat','In curs')")->execute([$pid]); } catch (Exception $e) {}
+                    // Jurnal teren (best-effort)
+                    try {
+                        $now = date('Y-m-d H:i:s');
+                        $desc = "📄 Proces verbal $pvNr — stare: $stare." .
+                                (!empty($fields['problema_constatata']) ? ' Problemă: ' . $fields['problema_constatata'] . '.' : '') .
+                                (!empty($fields['solutie_aplicata']) ? ' Soluție: ' . $fields['solutie_aplicata'] . '.' : '');
+                        $db->prepare("INSERT INTO jurnal_teren (proiect_id, data_start, data_end, tehnicieni, locatie, descriere, created_by) VALUES (?,?,?,?,?,?,?)")
+                           ->execute([$pid, $now, $now, $tehnicieni, $proj['adresa_obiectiv'] ?: '', $desc, $userName]);
+                    } catch (Exception $e) {}
+                    // Notificare (best-effort)
+                    try {
+                        $db->prepare("INSERT INTO notificari (proiect_id, mesaj, tip, de_la, etapa_noua) VALUES (?,?,?,?,?)")
+                           ->execute([$pid, '🏁 Intervenție FINALIZATĂ — PV ' . $pvNr . ' (' . $stare . ')', 'finalizare', $userName, 'Finalizat']);
+                    } catch (Exception $e) {}
+                }
+
+                $db->commit();
+                jsonResponse(['success' => true, 'pv_nr' => $pvNr, 'status' => $newStatus, 'data_pv' => $dataPv]);
+            } catch (Exception $e) {
+                if ($db->inTransaction()) $db->rollBack();
                 jsonResponse(['success' => false, 'error' => $e->getMessage()], 500);
             }
             break;

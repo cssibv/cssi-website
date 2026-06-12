@@ -526,14 +526,16 @@ var STATUSES=[
 ];
 var SERVICE_TAGS={"Detecție Incendiu":{cls:"incendiu",s:"Incendiu"},"Alarmă Antiefracție":{cls:"alarm",s:"Alarmă"},"Supraveghere Video":{cls:"camera",s:"Camere"},"Videointerfonie":{cls:"camera",s:"Interfon"},"Instalații Electrice":{cls:"electric",s:"Electric"},"Instalații Sanitare":{cls:"install",s:"Sanitare"},"Automatizări Porți":{cls:"auto",s:"Porți"},"Proiect Complex":{cls:"incendiu",s:"Complex"}};
 
-// ═══════ ALL 14 MODULES ═══════
+// ═══════ ALL 15 MODULES ═══════
 var MODULES=[
     {id:"proiecte",h:"/admin/proiecte.html",i:"📋",t:"Proiecte",d:"Board Kanban + Listă",cat:"proiecte",v3:true,roles:["admin","org","sales","tech"]},
     {id:"crm",h:"/admin/crm-clienti.html",i:"💰",t:"CRM Clienți",d:"Lead-uri & Pipeline",cat:"sales",v3:true,roles:["admin","sales"]},
     {id:"planificare",h:"/admin/planificare.html",i:"📅",t:"Planificare",d:"Calendar · Agenda · Liste",cat:"org",v3:true,roles:["admin","org","tech"]},
     {id:"executie",h:"/admin/executie.html",i:"✅",t:"Execuție",d:"Rapoarte de lucrare",cat:"tech",v3:true,roles:["admin","org","tech"]},
+    {id:"interventii",h:"/admin/interventii.html",i:"⚡",t:"Intervenții",d:"Apel · Programare echipă · Proces verbal",cat:"maint",v3:true,roles:["admin","org","tech"]},
     {id:"proiectare",h:"/admin/proiectare.html",i:"📐",t:"Proiectare",d:"Avize ISU, scheme, dosare",cat:"tech",v3:true,roles:["admin","tech"]},
     {id:"mentenanta",h:"/admin/mentenanta.html",i:"🔄",t:"Mentenanță",d:"Contracte & verificări",cat:"maint",v3:true,roles:["admin","org","tech"]},
+    {id:"reclamatii",h:"/admin/reclamatii.html",i:"🛠️",t:"Reclamații & Intervenții",d:"Programare & urmărire",cat:"maint",v3:true,roles:["admin","org","tech"]},
     {id:"financiar",h:"/admin/financiar.html",i:"💳",t:"Financiar",d:"Facturi · Încasări · Restanțe",cat:"finance",v3:true,roles:["admin"]},
     {id:"materiale",h:"/admin/materiale.html",i:"📦",t:"Inventar & Stocuri",d:"Produse, stoc, mișcări",cat:"tech",v3:true,roles:["admin","org","tech"]},
     {id:"necesar",h:"/admin/necesar-materiale.html",i:"🛒",t:"Necesar Materiale",d:"Solicitări & Aprovizionare",cat:"tech",v3:true,roles:["admin","org","tech"]},
@@ -557,7 +559,7 @@ var STAT_DB_TO_UI={"Lead":"Lead","Oferta":"Ofertă","Contract":"Contract","Proie
 var FAVORITES=['proiecte','crm','calculator'];
 var CATEGORIES=[
     {title:'Vânzări & Clienți',icon:'💼',mods:['crm','calculator','contracte']},
-    {title:'Proiecte & Execuție',icon:'📋',mods:['proiecte','proiectare','executie','planificare','mentenanta']},
+    {title:'Proiecte & Execuție',icon:'📋',mods:['proiecte','proiectare','executie','planificare','interventii','mentenanta','reclamatii']},
     {title:'Stocuri & Materiale',icon:'📦',mods:['materiale','necesar']},
     {title:'Financiar',icon:'💳',mods:['financiar']},
     {title:'Marketing & Conținut',icon:'📣',mods:['marketing']},
