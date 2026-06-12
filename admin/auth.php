@@ -131,6 +131,18 @@ function defaultModulesForUser($u) {
 // Returnează lista de module accesibile pentru un user.
 // Logica: dacă există override în user_config.modules → folosește acela.
 // Altfel → defaults per rol.
+// Module publice — vizibile/accesibile pentru TOȚI utilizatorii, indiferent de rol
+// sau de override-ul din user_config (intervenții + reclamații).
+function publicModules() {
+    return ['interventii', 'reclamatii'];
+}
+function injectPublicModules($list) {
+    foreach (publicModules() as $pub) {
+        if (!in_array($pub, $list, true)) $list[] = $pub;
+    }
+    return $list;
+}
+
 function getAllowedModules($db, $u) {
     if (($u['role'] ?? '') === 'admin') return allModules(); // admin = mereu tot
     // Citim override din user_config
@@ -147,12 +159,15 @@ function getAllowedModules($db, $u) {
                 if (in_array('marketing', $custom) && !in_array('recenzii', $custom)) {
                     $custom[] = 'recenzii';
                 }
+                // Module publice — pentru toată lumea
+                $custom = injectPublicModules($custom);
                 return array_values($custom);
             }
         }
     } catch (Exception $e) { /* user_config tabelă lipsă — folosim defaults */ }
-    $def = defaultModulesForUser($u);
-    return array_values(array_diff($def, ['utilizatori']));
+    $def = array_diff(defaultModulesForUser($u), ['utilizatori']);
+    $def = injectPublicModules($def);
+    return array_values($def);
 }
 
 // Login attempt — întoarce array cu success + user/error
