@@ -112,18 +112,18 @@ function isTehnician() {
 // Lista TOATE modulele din portal (sursă unică de adevăr)
 function allModules() {
     return ['proiecte','crm','calculator','contracte','financiar','planificare','executie','proiectare',
-            'mentenanta','materiale','necesar','social','marketing','planificator','documente','utilizatori'];
+            'interventii','mentenanta','reclamatii','materiale','necesar','social','marketing','planificator','documente','utilizatori'];
 }
 
 // Defaults per rol — folosite când user_config.modules e gol
 function defaultModulesForUser($u) {
     if (($u['role'] ?? '') === 'admin') return allModules();
-    if (!empty($u['is_tehnician'])) return ['executie','planificare','necesar','mentenanta'];
+    if (!empty($u['is_tehnician'])) return ['executie','planificare','interventii','necesar','mentenanta','reclamatii'];
     switch ($u['role'] ?? '') {
         case 'sales': return ['calculator','contracte','crm','proiecte','financiar','marketing','social','recenzii','documente'];
-        case 'org':   return ['proiecte','contracte','planificare','financiar','mentenanta','documente','crm','recenzii'];
+        case 'org':   return ['proiecte','contracte','planificare','interventii','financiar','mentenanta','reclamatii','documente','crm','recenzii'];
         case 'mkt':   return ['marketing','social','recenzii','documente'];
-        case 'tech':  return ['proiecte','proiectare','executie','planificare','materiale','necesar','mentenanta','documente'];
+        case 'tech':  return ['proiecte','proiectare','executie','planificare','interventii','materiale','necesar','mentenanta','reclamatii','documente'];
         default:      return [];
     }
 }

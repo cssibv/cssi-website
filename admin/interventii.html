@@ -1,0 +1,862 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Intervenții — Portal CSSI 3.0</title>
+<meta name="robots" content="noindex, nofollow">
+<link rel="icon" type="image/x-icon" href="/images/favicon.ico">
+<meta name="theme-color" content="#9333ea">
+<link rel="manifest" href="../manifest.json">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Portal CSSI">
+<link rel="apple-touch-icon" sizes="180x180" href="../icons/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="96x96" href="../icons/favicon-96x96.png">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+:root{--red:#dc2626;--red-d:#991b1b;--dark:#0f172a;--dark2:#1e293b;--gray:#64748b;--gray-l:#94a3b8;--gray-xl:#cbd5e1;--gray-bg:#f1f5f9;--gray-b:#e2e8f0;--blue:#3b82f6;--green:#22c55e;--orange:#f97316;--purple:#8b5cf6;--purple-d:#7c3aed;--yellow:#eab308;--teal:#14b8a6;--pink:#ec4899;--radius:16px;--radius-sm:12px;--shadow:0 1px 3px rgba(0,0,0,0.06);--shadow-md:0 4px 12px rgba(0,0,0,0.08);--font:'Inter',system-ui,sans-serif;}
+body{font-family:var(--font);color:var(--dark);background:var(--gray-bg);-webkit-font-smoothing:antialiased;}
+a{text-decoration:none;color:inherit;}button{font-family:inherit;cursor:pointer;}
+:focus-visible{outline:2px solid var(--purple);outline-offset:2px;border-radius:6px;}
+
+.page-header{background:linear-gradient(135deg,#581c87,#9333ea);color:#fff;padding:20px 24px;border-radius:20px;margin-bottom:16px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;}
+.page-header.tech{background:linear-gradient(135deg,#9a3412,#ea580c);}
+.page-back{color:rgba(255,255,255,0.75);font-size:13px;font-weight:500;display:flex;align-items:center;gap:6px;}.page-back:hover{color:#fff;}
+.page-title{font-size:22px;font-weight:800;letter-spacing:-0.5px;}
+.page-subtitle{font-size:12px;color:rgba(255,255,255,0.6);margin-top:2px;display:flex;align-items:center;gap:6px;}
+.page-actions{display:flex;gap:8px;align-items:center;flex-wrap:wrap;}
+.page-btn{padding:10px 16px;border-radius:12px;font-size:13px;font-weight:700;border:none;transition:all 0.2s;display:inline-flex;align-items:center;gap:6px;}
+.page-btn.primary{background:#fff;color:#7c3aed;}.page-btn.primary:hover{transform:translateY(-1px);}
+.page-btn.secondary{background:rgba(255,255,255,0.12);color:#fff;border:1px solid rgba(255,255,255,0.25);}.page-btn.secondary:hover{background:rgba(255,255,255,0.22);}
+.page-btn.spinning .spin-icon{animation:spin 0.8s linear infinite;display:inline-block;}
+@keyframes spin{from{transform:rotate(0)}to{transform:rotate(360deg)}}
+.sync-indicator{width:8px;height:8px;border-radius:50%;display:inline-block;margin-right:4px;}
+.sync-ok{background:var(--green);box-shadow:0 0 6px rgba(34,197,94,0.5);}.sync-off{background:var(--gray-l);}.sync-loading{background:var(--orange);animation:pulse 1s infinite;}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.4}}
+.container{max-width:1400px;margin:0 auto;padding:16px;}@media(min-width:768px){.container{padding:24px;}}
+
+.summary{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:16px;}
+.s-item{background:#fff;border-radius:var(--radius-sm);padding:14px 18px;box-shadow:var(--shadow);flex:1;min-width:140px;display:flex;align-items:center;gap:12px;}
+.s-icon{width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;}
+.s-val{font-size:22px;font-weight:900;line-height:1;}.s-label{font-size:11px;color:var(--gray);margin-top:4px;}
+
+.toolbar{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px;align-items:center;}
+.filter-search{padding:10px 16px;border-radius:99px;font-size:13px;border:1px solid var(--gray-b);outline:none;font-family:inherit;min-width:200px;transition:all 0.2s;background:#fff;flex:1;max-width:320px;}
+.filter-search:focus{border-color:var(--purple);box-shadow:0 0 0 3px rgba(147,51,234,0.08);}
+.filter-select{padding:8px 14px;border-radius:99px;font-size:12px;font-weight:600;border:1px solid var(--gray-b);background:#fff;font-family:inherit;outline:none;cursor:pointer;}
+.tb-spacer{flex:1;}
+.add-btn{padding:10px 16px;border-radius:12px;background:linear-gradient(135deg,#9333ea,#7c3aed);color:#fff;border:none;font-size:13px;font-weight:700;cursor:pointer;transition:all 0.15s;}
+.add-btn:hover{transform:translateY(-1px);box-shadow:0 6px 16px -4px rgba(147,51,234,0.5);}
+
+/* Cards */
+.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(370px,1fr));gap:12px;margin-bottom:16px;}
+.icard{background:#fff;border-radius:var(--radius);padding:18px;box-shadow:var(--shadow);border-left:4px solid var(--purple);transition:all 0.2s;}
+.icard:hover{box-shadow:var(--shadow-md);transform:translateY(-1px);}
+.icard.finalizat{border-left-color:var(--green);opacity:0.92;}
+.icard-top{display:flex;justify-content:space-between;align-items:start;gap:8px;margin-bottom:6px;}
+.icard-client{font-size:16px;font-weight:800;line-height:1.2;}
+.icard-badge{padding:3px 10px;border-radius:6px;font-size:10px;font-weight:800;white-space:nowrap;text-transform:uppercase;letter-spacing:0.3px;}
+.icard-badge.interventie{background:#faf5ff;color:#7c3aed;}
+.icard-badge.finalizat{background:#dcfce7;color:#166534;}
+.icard-pid{display:inline-flex;align-items:center;gap:3px;font-size:11px;color:var(--purple);font-weight:700;margin-bottom:8px;padding:2px 8px;background:#faf5ff;border-radius:6px;}
+.icard-tags{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:8px;}
+.icard-tag{font-size:11px;font-weight:700;padding:3px 10px;border-radius:6px;background:var(--gray-bg);color:var(--gray);}
+.icard-tag.serv{background:#eff6ff;color:var(--blue);}
+.icard-title{font-size:13px;font-weight:700;color:var(--dark);margin-bottom:8px;line-height:1.4;}
+.icard-row{font-size:12px;color:var(--gray);margin-bottom:5px;display:flex;align-items:center;gap:6px;line-height:1.4;}
+.icard-row strong{color:var(--dark);font-weight:700;}
+.icard-team{display:flex;flex-wrap:wrap;gap:4px;margin:6px 0;}
+.team-chip{font-size:10px;padding:3px 9px;border-radius:99px;background:#fff7ed;border:1px solid #fed7aa;color:#9a3412;font-weight:700;display:inline-flex;align-items:center;gap:4px;}
+.team-chip .av{width:16px;height:16px;border-radius:50%;background:linear-gradient(135deg,#f97316,#9a3412);color:#fff;display:inline-flex;align-items:center;justify-content:center;font-size:8px;font-weight:800;}
+.icard-prg{font-size:11px;background:#f8fafc;border:1px solid var(--gray-b);border-radius:8px;padding:7px 10px;margin-bottom:6px;cursor:pointer;display:flex;justify-content:space-between;align-items:center;gap:6px;transition:all 0.15s;}
+.icard-prg:hover{border-color:var(--purple);background:#faf5ff;}
+.icard-prg .prg-when{font-weight:700;color:var(--dark);}
+.icard-prg .prg-st{font-size:9px;font-weight:800;padding:2px 7px;border-radius:99px;text-transform:uppercase;}
+.prg-st.programat{background:#dbeafe;color:#1d4ed8;}.prg-st.in-curs{background:#ffedd5;color:#9a3412;}.prg-st.finalizat{background:#dcfce7;color:#166534;}.prg-st.anulat{background:var(--gray-bg);color:var(--gray);}
+.pv-badge{display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:800;padding:5px 10px;border-radius:8px;background:#ecfdf5;color:#047857;margin-bottom:8px;}
+.icard-actions{display:flex;gap:6px;padding-top:12px;border-top:1px solid var(--gray-bg);flex-wrap:wrap;}
+.act-btn{padding:8px 12px;border-radius:10px;border:none;font-size:12px;font-weight:700;cursor:pointer;transition:all 0.15s;display:inline-flex;align-items:center;gap:5px;}
+.act-btn.pv{background:linear-gradient(135deg,#059669,#047857);color:#fff;flex:1;justify-content:center;}.act-btn.pv:hover{transform:translateY(-1px);}
+.act-btn.prg{background:#eff6ff;color:var(--blue);}.act-btn.prg:hover{background:var(--blue);color:#fff;}
+.act-btn.waze{background:linear-gradient(135deg,#33ccff,#0099cc);color:#fff;}.act-btn.waze:hover{transform:translateY(-1px);}
+
+/* Modal */
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);backdrop-filter:blur(4px);z-index:200;align-items:center;justify-content:center;padding:16px;}
+.modal-overlay.active{display:flex;}
+.modal{background:#fff;border-radius:20px;width:100%;max-width:600px;max-height:92vh;overflow-y:auto;box-shadow:0 25px 60px rgba(0,0,0,0.3);}
+.modal.wide{max-width:760px;}
+.modal-head{padding:18px 22px;border-bottom:1px solid var(--gray-b);display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;background:#fff;border-radius:20px 20px 0 0;z-index:2;}
+.modal-title{font-size:17px;font-weight:800;}
+.modal-close{width:32px;height:32px;border-radius:8px;border:none;background:var(--gray-bg);color:var(--gray);font-size:18px;display:flex;align-items:center;justify-content:center;}.modal-close:hover{background:#fef2f2;color:var(--red);}
+.modal-body{padding:22px;}
+.form-group{margin-bottom:14px;}
+.form-label{display:block;font-size:12px;font-weight:700;color:var(--dark);margin-bottom:6px;}.form-label .req{color:var(--red);}
+.form-input,.form-select,.form-textarea{width:100%;padding:11px 14px;border:2px solid var(--gray-b);border-radius:var(--radius-sm);font-size:14px;font-family:inherit;outline:none;transition:all 0.2s;background:#fff;}
+.form-input:focus,.form-select:focus,.form-textarea:focus{border-color:var(--purple);box-shadow:0 0 0 3px rgba(147,51,234,0.08);}
+.form-textarea{min-height:60px;resize:vertical;}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.form-row-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;}
+@media(max-width:520px){.form-row,.form-row-3{grid-template-columns:1fr;}}
+.tech-pick{display:grid;grid-template-columns:repeat(2,1fr);gap:6px;}
+@media(min-width:480px){.tech-pick{grid-template-columns:repeat(3,1fr);}}
+.tech-chip{display:flex;align-items:center;gap:8px;padding:8px 10px;border:2px solid var(--gray-b);border-radius:10px;background:#fff;cursor:pointer;transition:all 0.15s;font-size:12px;font-weight:700;color:var(--dark);user-select:none;}
+.tech-chip:hover{border-color:var(--orange);background:#fff7ed;}
+.tech-chip.checked{border-color:var(--orange);background:#fff7ed;color:#9a3412;}
+.tech-chip .av{width:22px;height:22px;border-radius:50%;background:linear-gradient(135deg,#f97316,#9a3412);color:#fff;display:inline-flex;align-items:center;justify-content:center;font-size:10px;font-weight:800;}
+.tech-chip input{display:none;}
+.seg-btn{flex:1;padding:8px;border-radius:8px;border:1.5px solid var(--gray-b);background:#fff;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;}
+.form-submit{width:100%;padding:13px;background:linear-gradient(135deg,var(--purple),var(--purple-d));color:#fff;border:none;border-radius:var(--radius-sm);font-size:14px;font-weight:700;cursor:pointer;transition:all 0.3s;}
+.form-submit:hover{transform:translateY(-1px);box-shadow:0 8px 20px -5px rgba(147,51,234,0.4);}
+.btn-del{background:transparent;border:1px solid var(--red);color:var(--red);padding:8px 14px;border-radius:10px;font-size:12px;font-weight:700;cursor:pointer;margin-top:8px;width:100%;}.btn-del:hover{background:var(--red);color:#fff;}
+
+/* Materiale rows (PV) */
+.mat-row{display:grid;grid-template-columns:1fr 70px 60px 32px;gap:6px;margin-bottom:6px;align-items:center;}
+.mat-row input{padding:8px 10px;border:1.5px solid var(--gray-b);border-radius:8px;font-size:13px;font-family:inherit;outline:none;}
+.mat-row input:focus{border-color:var(--purple);}
+.mat-del{width:32px;height:32px;border-radius:8px;border:none;background:#fef2f2;color:var(--red);font-size:16px;cursor:pointer;}
+.mat-add{margin-top:4px;padding:8px 14px;border-radius:10px;border:1.5px dashed var(--gray-b);background:#fff;color:var(--gray);font-size:12px;font-weight:700;cursor:pointer;}.mat-add:hover{border-color:var(--purple);color:var(--purple);}
+
+/* Signature */
+.sig-wrap{border:2px solid var(--gray-b);border-radius:12px;background:#fff;position:relative;}
+.sig-canvas{display:block;width:100%;height:130px;border-radius:10px;touch-action:none;cursor:crosshair;}
+.sig-clear{position:absolute;top:6px;right:6px;padding:4px 10px;border-radius:8px;border:none;background:var(--gray-bg);color:var(--gray);font-size:11px;font-weight:700;cursor:pointer;}.sig-clear:hover{background:#fef2f2;color:var(--red);}
+.sig-hint{position:absolute;bottom:8px;left:0;right:0;text-align:center;font-size:11px;color:var(--gray-l);pointer-events:none;}
+
+.pv-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:6px;}
+@media(max-width:520px){.pv-actions{grid-template-columns:1fr;}}
+.pv-actions .form-submit{margin:0;}
+.btn-finaliza{background:linear-gradient(135deg,var(--green),#16a34a);}
+.btn-print{background:linear-gradient(135deg,var(--dark),var(--dark2));}
+
+/* Toast */
+.toast-container{position:fixed;top:20px;right:20px;z-index:300;display:flex;flex-direction:column;gap:8px;}
+.toast{padding:12px 18px;border-radius:12px;color:#fff;font-size:13px;font-weight:600;box-shadow:0 8px 24px rgba(0,0,0,0.15);animation:slideIn 0.3s ease;max-width:380px;}
+.toast.success{background:var(--green);}.toast.error{background:var(--red);}.toast.info{background:var(--blue);}
+@keyframes slideIn{from{transform:translateX(100%);opacity:0}to{transform:translateX(0);opacity:1}}
+
+.bottom-nav{position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1px solid var(--gray-b);box-shadow:0 -4px 20px rgba(0,0,0,0.06);padding:6px 12px;z-index:100;display:flex;gap:4px;}
+@media(min-width:768px){.bottom-nav{display:none;}}
+.bn-item{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:8px 4px;border-radius:10px;font-size:10px;font-weight:600;color:var(--gray);transition:all 0.2s;gap:2px;}.bn-item.active{color:var(--purple);background:#faf5ff;}.bn-item .bn-icon{font-size:20px;}
+.empty-state{text-align:center;padding:50px 20px;background:#fff;border-radius:var(--radius);box-shadow:var(--shadow);}
+.empty-icon{font-size:46px;margin-bottom:10px;opacity:0.5;}
+.empty-msg{color:var(--gray-l);font-size:14px;font-weight:600;}
+.footer{text-align:center;color:var(--gray-xl);font-size:11px;padding:24px 0 100px;}
+.loading-bar{position:fixed;top:0;left:0;right:0;height:3px;z-index:400;display:none;}
+.loading-bar.active{display:block;}.loading-bar::after{content:'';display:block;width:30%;height:100%;background:var(--purple);border-radius:2px;animation:loadSlide 1.2s infinite ease-in-out;}
+@keyframes loadSlide{0%{margin-left:-30%}100%{margin-left:100%}}
+</style>
+<script src="/admin/access-guard.js" defer></script>
+</head>
+<body data-module="interventii">
+<div class="loading-bar" id="loadBar"></div>
+<div class="toast-container" id="toastContainer"></div>
+
+<div class="container">
+    <div class="page-header" id="pageHeader">
+        <div>
+            <a href="../admin.html" class="page-back">← Dashboard</a>
+            <div class="page-title" id="pageTitle">⚡ Intervenții</div>
+            <div class="page-subtitle" id="syncStatus"><span class="sync-indicator sync-off"></span>Se încarcă...</div>
+        </div>
+        <div class="page-actions">
+            <a href="planificare.html" class="page-btn secondary">📅 Calendar planificare</a>
+            <button class="page-btn secondary" id="refreshBtn" onclick="refreshData()"><span class="spin-icon">🔄</span> Reîncarcă</button>
+            <button class="page-btn primary" onclick="openInterventieModal()">⚡ Lucrare nouă</button>
+        </div>
+    </div>
+
+    <div class="summary" id="summary"></div>
+
+    <div class="toolbar">
+        <input type="text" class="filter-search" id="searchBox" placeholder="🔍 Caută client, adresă, problemă..." oninput="render()">
+        <select class="filter-select" id="filterStatus" onchange="render()">
+            <option value="active">⚡ Active (de rezolvat)</option>
+            <option value="finalizat">✅ Finalizate (cu PV)</option>
+            <option value="toate">Toate</option>
+        </select>
+        <select class="filter-select" id="filterTehnician" onchange="render()">
+            <option value="">Toți tehnicienii</option>
+        </select>
+        <div class="tb-spacer"></div>
+        <button class="add-btn" onclick="openInterventieModal()">⚡ Lucrare rapidă</button>
+    </div>
+
+    <div id="listView"></div>
+
+    <div class="footer">Portal CSSI 3.0 · Modul Intervenții v1.0 · Apel → programare echipă → proces verbal</div>
+</div>
+
+<div class="bottom-nav">
+    <a href="../admin.html" class="bn-item"><span class="bn-icon">🏠</span>Acasă</a>
+    <a href="planificare.html" class="bn-item"><span class="bn-icon">📅</span>Plan</a>
+    <a href="interventii.html" class="bn-item active"><span class="bn-icon">⚡</span>Intervenții</a>
+    <a href="executie.html" class="bn-item"><span class="bn-icon">🔧</span>Execuție</a>
+    <a href="mentenanta.html" class="bn-item"><span class="bn-icon">🔄</span>Mentenanță</a>
+</div>
+
+<!-- MODAL: Lucrare rapidă (intervenție) -->
+<div id="interventieModal" class="modal-overlay" onclick="if(event.target===this)closeInterventieModal()">
+<div class="modal">
+    <div class="modal-head">
+        <div class="modal-title">⚡ Lucrare rapidă (intervenție)</div>
+        <button class="modal-close" onclick="closeInterventieModal()">✕</button>
+    </div>
+    <div class="modal-body">
+        <div style="background:#faf5ff;border-left:3px solid #9333ea;padding:10px 14px;border-radius:8px;margin-bottom:14px;font-size:12px;color:#6b21a8;line-height:1.5">
+            Clientul sună → notezi intervenția. Se creează: client (dacă e nou) + intervenție + programare echipă. Apoi completezi procesul verbal la finalizare.
+        </div>
+        <form id="interventieForm" onsubmit="submitInterventie(event)">
+            <div class="form-group">
+                <label class="form-label">Client</label>
+                <div style="display:flex;gap:6px;margin-bottom:6px">
+                    <button type="button" class="seg-btn" id="segCliExist" onclick="setCliMode('exist')">📒 Client existent</button>
+                    <button type="button" class="seg-btn" id="segCliNou" onclick="setCliMode('nou')">➕ Client nou</button>
+                </div>
+                <div id="cliExistBlock">
+                    <select class="form-select" id="iClientId"><option value="">— Alege client —</option></select>
+                </div>
+                <div id="cliNouBlock" style="display:none">
+                    <input type="text" class="form-input" id="iClientNume" placeholder="Nume client / firmă" style="margin-bottom:6px">
+                    <input type="tel" class="form-input" id="iTelefon" placeholder="Telefon (opțional)">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="form-label">Problema reclamată / titlu lucrare <span class="req">*</span></label>
+                <input type="text" class="form-input" id="iTitlu" required placeholder="Ex: Cameră 2 nu mai transmite imagine, alarmă declanșată fals">
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label class="form-label">Tip serviciu</label>
+                    <select class="form-select" id="iServiciu">
+                        <option value="Supraveghere Video">📹 Supraveghere Video</option>
+                        <option value="Alarma">🔔 Alarmă</option>
+                        <option value="Detectie Incendiu">🔥 Incendiu</option>
+                        <option value="Electric">⚡ Electric</option>
+                        <option value="Control Acces">🔑 Control Acces</option>
+                        <option value="Automatizari">🚪 Automatizări</option>
+                        <option value="Complex">🛠️ Intervenție generală</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Adresă (locația lucrării)</label>
+                    <input type="text" class="form-input" id="iAdresa" placeholder="Str. ..., nr. ..., oraș">
+                </div>
+            </div>
+            <div class="form-row-3">
+                <div class="form-group">
+                    <label class="form-label">Data <span class="req">*</span></label>
+                    <input type="date" class="form-input" id="iData" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Ora start</label>
+                    <input type="time" class="form-input" id="iOra" value="09:00">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Durata (h)</label>
+                    <input type="number" class="form-input" id="iDurata" value="2" min="0.5" step="0.5">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="form-label">Echipa / tehnicieni</label>
+                <div class="tech-pick" id="iTehnicieni"></div>
+            </div>
+            <div class="form-group">
+                <label class="form-label">Note / detalii pentru echipă</label>
+                <textarea class="form-textarea" id="iNote" placeholder="Contact la fața locului, materiale necesare, particularități acces..."></textarea>
+            </div>
+            <button type="submit" class="form-submit" id="iSubmitBtn">⚡ Creează intervenția</button>
+        </form>
+    </div>
+</div>
+</div>
+
+<!-- MODAL: Programare echipă/zi -->
+<div id="prgModal" class="modal-overlay" onclick="if(event.target===this)closePrgModal()">
+<div class="modal">
+    <div class="modal-head">
+        <div class="modal-title" id="prgModalTitle">📅 Programare echipă</div>
+        <button class="modal-close" onclick="closePrgModal()">✕</button>
+    </div>
+    <div class="modal-body">
+        <div id="prgCtx" style="font-size:12px;color:var(--gray);margin-bottom:12px"></div>
+        <form id="prgForm" onsubmit="savePrg(event)">
+            <input type="hidden" id="fId"><input type="hidden" id="fProiectId">
+            <div class="form-row-3">
+                <div class="form-group">
+                    <label class="form-label">Data <span class="req">*</span></label>
+                    <input type="date" class="form-input" id="fData" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Ora start</label>
+                    <input type="time" class="form-input" id="fOra" value="09:00">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Durata (h)</label>
+                    <input type="number" class="form-input" id="fDurata" value="2" min="0.5" step="0.5">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="form-label">Status</label>
+                <select class="form-select" id="fStatus">
+                    <option value="Programat">📅 Programat</option>
+                    <option value="In curs">🔧 În curs</option>
+                    <option value="Finalizat">✅ Finalizat</option>
+                    <option value="Anulat">❌ Anulat</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label class="form-label">Echipa / tehnicieni</label>
+                <div class="tech-pick" id="fTehnicieni"></div>
+            </div>
+            <div class="form-group">
+                <label class="form-label">Note pentru echipă</label>
+                <textarea class="form-textarea" id="fNote" placeholder="Detalii, instrucțiuni, materiale..."></textarea>
+            </div>
+            <button type="submit" class="form-submit">💾 Salvează programarea</button>
+            <button type="button" class="btn-del" id="btnDel" onclick="deleteCurrentPrg()" style="display:none">🗑️ Șterge programarea</button>
+        </form>
+    </div>
+</div>
+</div>
+
+<!-- MODAL: Proces verbal -->
+<div id="pvModal" class="modal-overlay" onclick="if(event.target===this)closePvModal()">
+<div class="modal wide">
+    <div class="modal-head">
+        <div class="modal-title">📄 Proces verbal intervenție</div>
+        <button class="modal-close" onclick="closePvModal()">✕</button>
+    </div>
+    <div class="modal-body">
+        <div id="pvCtx" style="background:#f8fafc;border:1px solid var(--gray-b);border-radius:12px;padding:12px 14px;margin-bottom:16px;font-size:12px;line-height:1.6"></div>
+        <form id="pvForm" onsubmit="savePv(event,false)">
+            <input type="hidden" id="pvProiectId">
+            <div class="form-row">
+                <div class="form-group">
+                    <label class="form-label">Nr. proces verbal</label>
+                    <input type="text" class="form-input" id="pvNr" placeholder="Se generează automat" readonly style="background:var(--gray-bg)">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Data întocmirii <span class="req">*</span></label>
+                    <input type="date" class="form-input" id="pvData" required>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="form-label">Problema constatată <span class="req">*</span></label>
+                <textarea class="form-textarea" id="pvProblema" required placeholder="Ce a reclamat clientul / ce s-a constatat la fața locului"></textarea>
+            </div>
+            <div class="form-group">
+                <label class="form-label">Cauza defecțiunii</label>
+                <textarea class="form-textarea" id="pvCauza" placeholder="Cauza identificată a problemei"></textarea>
+            </div>
+            <div class="form-group">
+                <label class="form-label">Lucrări efectuate / soluția aplicată <span class="req">*</span></label>
+                <textarea class="form-textarea" id="pvSolutie" required placeholder="Ce s-a făcut concret pentru remediere"></textarea>
+            </div>
+            <div class="form-group">
+                <label class="form-label">Materiale / piese folosite</label>
+                <div id="pvMateriale"></div>
+                <button type="button" class="mat-add" onclick="addMatRow()">＋ Adaugă material</button>
+            </div>
+            <div class="form-row-3">
+                <div class="form-group">
+                    <label class="form-label">Stare finală</label>
+                    <select class="form-select" id="pvStare">
+                        <option value="Rezolvat">✅ Rezolvat</option>
+                        <option value="Parțial">🟡 Parțial</option>
+                        <option value="Necesită revenire">🔁 Necesită revenire</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Durata (h)</label>
+                    <input type="number" class="form-input" id="pvDurata" value="1" min="0" step="0.5">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Tehnicieni</label>
+                    <input type="text" class="form-input" id="pvTehnicieni" placeholder="Ex: Zoli, Sanyi">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="form-label">Recomandări / observații</label>
+                <textarea class="form-textarea" id="pvRecomandari" placeholder="Recomandări pentru client, lucrări viitoare necesare..."></textarea>
+            </div>
+            <div class="form-group">
+                <label class="form-label">Nume client semnatar (preluare lucrare)</label>
+                <input type="text" class="form-input" id="pvSemnatar" placeholder="Numele persoanei care confirmă lucrarea">
+            </div>
+            <div class="form-group">
+                <label class="form-label">Semnătură client</label>
+                <div class="sig-wrap">
+                    <canvas class="sig-canvas" id="sigCanvas"></canvas>
+                    <button type="button" class="sig-clear" onclick="clearSig()">Șterge</button>
+                    <div class="sig-hint" id="sigHint">✍️ Semnează cu degetul sau mouse-ul</div>
+                </div>
+            </div>
+            <div class="pv-actions">
+                <button type="submit" class="form-submit">💾 Salvează (ciornă)</button>
+                <button type="button" class="form-submit btn-finaliza" onclick="savePv(event,true)">🏁 Salvează & Finalizează</button>
+            </div>
+            <button type="button" class="form-submit btn-print" style="margin-top:8px" onclick="printPv()">🖨️ Listează / PDF proces verbal</button>
+        </form>
+    </div>
+</div>
+</div>
+
+<script>
+// ═══ AUTH ═══
+var role = sessionStorage.getItem('cssi-role');
+var userName = sessionStorage.getItem('cssi-user') || role || '';
+if (!role) { window.location.href = '../admin.html'; }
+
+// ═══ CONFIG ═══
+var API_DB = '/admin/api.php';
+var TECHNICIANS = [
+    {id:'zoli',name:'Zoli'},{id:'sanyi',name:'Sanyi'},{id:'bogdan',name:'Bogdan'},
+    {id:'cezar',name:'Cezar'},{id:'cristi',name:'Cristi'},{id:'denes',name:'Denes'}
+];
+var TECH_IDS = TECHNICIANS.map(function(t){return t.id;});
+var isTehnician = TECH_IDS.indexOf(role) >= 0;
+var DAYS_RO = ['Dum','Lun','Mar','Mie','Joi','Vin','Sâm'];
+var MONTHS_SHORT = ['Ian','Feb','Mar','Apr','Mai','Iun','Iul','Aug','Sep','Oct','Noi','Dec'];
+
+// ═══ STATE ═══
+var STATE = { items: [], loaded:false, isLive:false, prestator:null };
+var PV_CTX = null;        // intervenția curentă în modalul PV
+var _clientiLoaded = false;
+
+// ═══ HELPERS ═══
+function esc(s){if(s==null)return '';var d=document.createElement('div');d.textContent=s;return d.innerHTML;}
+function todayStr(){return new Date().toISOString().split('T')[0];}
+function showLoading(s){document.getElementById('loadBar').classList.toggle('active',s);}
+function toast(msg,type){var c=document.getElementById('toastContainer');var t=document.createElement('div');t.className='toast '+(type||'info');t.textContent=msg;c.appendChild(t);setTimeout(function(){t.style.opacity='0';t.style.transform='translateX(100px)';t.style.transition='all 0.3s'},2800);setTimeout(function(){t.remove()},3200);}
+function techName(id){var t=TECHNICIANS.find(function(x){return x.id===id;});return t?t.name:id;}
+function techInitial(id){return (techName(id)||'?').charAt(0).toUpperCase();}
+function statusKey(s){return (s||'').toLowerCase().replace(/[\s_]+/g,'-');}
+function fmtTime(s){return s?s.substring(0,5):'';}
+function fmtDate(ds){if(!ds)return '';var d=new Date(ds+'T00:00:00');if(isNaN(d))return ds;return DAYS_RO[d.getDay()]+' '+d.getDate()+' '+MONTHS_SHORT[d.getMonth()];}
+function wazeUrl(addr){return 'https://waze.com/ul?q='+encodeURIComponent((addr||'').trim())+'&navigate=yes';}
+
+// ═══ FETCH ═══
+function refreshData(){
+    var btn=document.getElementById('refreshBtn'); if(btn) btn.classList.add('spinning');
+    showLoading(true); updateSync('loading');
+    return fetch(API_DB+'?action=getInterventii&_t='+Date.now(),{credentials:'include'})
+        .then(function(r){return r.json();})
+        .then(function(res){
+            if(!res.success) throw new Error(res.error||'Eroare server');
+            STATE.items = res.data||[]; STATE.loaded=true; STATE.isLive=true;
+            updateSync(); render();
+        })
+        .catch(function(e){ STATE.isLive=false; updateSync(); render(); toast('❌ '+(e.message||e),'error'); })
+        .finally(function(){ if(btn) btn.classList.remove('spinning'); showLoading(false); });
+}
+function updateSync(state){
+    var el=document.getElementById('syncStatus');
+    if(state==='loading') el.innerHTML='<span class="sync-indicator sync-loading"></span>Se încarcă...';
+    else if(STATE.isLive){ var a=STATE.items.filter(function(i){return i.proiect_status==='Interventie';}).length; el.innerHTML='<span class="sync-indicator sync-ok"></span>MySQL · '+a+' active'; }
+    else el.innerHTML='<span class="sync-indicator sync-off"></span>Indisponibil';
+}
+
+// ═══ RENDER ═══
+function nextProgramare(it){
+    if(!it.programari||!it.programari.length) return null;
+    var sorted = it.programari.slice().sort(function(a,b){return (a.data_programata+a.ora_start).localeCompare(b.data_programata+b.ora_start);});
+    var today = todayStr();
+    var upcoming = sorted.filter(function(p){return p.data_programata>=today && p.status!=='Anulat';});
+    return upcoming.length ? upcoming[0] : sorted[sorted.length-1];
+}
+function filteredItems(){
+    var q = (document.getElementById('searchBox').value||'').toLowerCase().trim();
+    var fSt = document.getElementById('filterStatus').value;
+    var fTe = document.getElementById('filterTehnician').value;
+    return STATE.items.filter(function(it){
+        if(fSt==='active' && it.proiect_status!=='Interventie') return false;
+        if(fSt==='finalizat' && it.proiect_status!=='Finalizat') return false;
+        if(fTe){
+            var has=(it.programari||[]).some(function(p){return (p.atribuiri||[]).indexOf(fTe)>=0;});
+            if(!has) return false;
+        }
+        if(q){
+            var hay=((it.client_nume||'')+' '+(it.obiectiv||'')+' '+(it.adresa_obiectiv||'')+' '+(it.proiect_id||'')+' '+(it.note||'')).toLowerCase();
+            if(hay.indexOf(q)<0) return false;
+        }
+        return true;
+    });
+}
+function renderSummary(){
+    var act = STATE.items.filter(function(i){return i.proiect_status==='Interventie';});
+    var today = todayStr();
+    var azi = act.filter(function(i){return (i.programari||[]).some(function(p){return p.data_programata===today && p.status!=='Anulat';});}).length;
+    var faraPv = act.filter(function(i){return !i.pv;}).length;
+    var fin = STATE.items.filter(function(i){return i.proiect_status==='Finalizat';}).length;
+    document.getElementById('summary').innerHTML =
+        '<div class="s-item"><div class="s-icon" style="background:#faf5ff">⚡</div><div><div class="s-val" style="color:var(--purple)">'+act.length+'</div><div class="s-label">Active</div></div></div>'+
+        '<div class="s-item"><div class="s-icon" style="background:#fff7ed">📅</div><div><div class="s-val" style="color:var(--orange)">'+azi+'</div><div class="s-label">Programate azi</div></div></div>'+
+        '<div class="s-item"><div class="s-icon" style="background:#fef2f2">📄</div><div><div class="s-val" style="color:var(--red)">'+faraPv+'</div><div class="s-label">Fără proces verbal</div></div></div>'+
+        '<div class="s-item"><div class="s-icon" style="background:#f0fdf4">✅</div><div><div class="s-val" style="color:var(--green)">'+fin+'</div><div class="s-label">Finalizate (cu PV)</div></div></div>';
+}
+function render(){
+    renderSummary();
+    var items = filteredItems();
+    if(!items.length){
+        document.getElementById('listView').innerHTML='<div class="empty-state"><div class="empty-icon">📭</div><div class="empty-msg">Nicio intervenție pentru filtrele curente.</div></div>';
+        return;
+    }
+    // sortează: active întâi, apoi după data următoarei programări
+    items.sort(function(a,b){
+        var aActive=a.proiect_status==='Interventie'?0:1, bActive=b.proiect_status==='Interventie'?0:1;
+        if(aActive!==bActive) return aActive-bActive;
+        var pa=nextProgramare(a), pb=nextProgramare(b);
+        var da=pa?pa.data_programata:'', dbb=pb?pb.data_programata:'';
+        return da.localeCompare(dbb);
+    });
+    document.getElementById('listView').innerHTML='<div class="cards">'+items.map(cardHtml).join('')+'</div>';
+}
+function cardHtml(it){
+    var fin = it.proiect_status==='Finalizat';
+    var np = nextProgramare(it);
+    var team = np && np.atribuiri ? np.atribuiri : [];
+    var h='<div class="icard'+(fin?' finalizat':'')+'">';
+    h+='<div class="icard-top"><div class="icard-client">'+esc(it.client_nume||'Client')+'</div>';
+    h+='<span class="icard-badge '+(fin?'finalizat':'interventie')+'">'+(fin?'✅ Finalizat':'⚡ Activ')+'</span></div>';
+    h+='<div class="icard-pid">📌 '+esc(it.proiect_id||'')+'</div>';
+    h+='<div class="icard-tags">';
+    if(it.serviciu) h+='<span class="icard-tag serv">'+esc(it.serviciu)+'</span>';
+    if(it.client_telefon) h+='<span class="icard-tag">📞 '+esc(it.client_telefon)+'</span>';
+    h+='</div>';
+    if(it.obiectiv) h+='<div class="icard-title">🔧 '+esc(it.obiectiv)+'</div>';
+    if(it.adresa_obiectiv) h+='<div class="icard-row">📍 '+esc(it.adresa_obiectiv)+'</div>';
+    if(it.note) h+='<div class="icard-row" style="font-style:italic">📝 '+esc(it.note)+'</div>';
+    // Programări
+    (it.programari||[]).slice().sort(function(a,b){return (a.data_programata+a.ora_start).localeCompare(b.data_programata+b.ora_start);}).forEach(function(p){
+        h+='<div class="icard-prg" onclick="openEditPrg('+p.id+','+it.proiect_db_id+')">';
+        h+='<span class="prg-when">📅 '+fmtDate(p.data_programata)+' · '+fmtTime(p.ora_start)+'</span>';
+        h+='<span class="prg-st '+statusKey(p.status)+'">'+esc(p.status)+'</span></div>';
+    });
+    if(team.length){
+        h+='<div class="icard-team">'+team.map(function(uid){return '<span class="team-chip"><span class="av">'+techInitial(uid)+'</span>'+esc(techName(uid))+'</span>';}).join('')+'</div>';
+    }
+    if(it.pv){
+        h+='<div class="pv-badge">📄 '+esc(it.pv.pv_nr||'PV')+' · '+esc(it.pv.stare_finala||'')+(it.pv.data_pv?' · '+fmtDate(it.pv.data_pv):'')+'</div>';
+    }
+    h+='<div class="icard-actions">';
+    h+='<button class="act-btn pv" onclick="openPv('+it.proiect_db_id+')">📄 '+(it.pv?'Vezi/Editează PV':'Completează PV')+'</button>';
+    if(!fin) h+='<button class="act-btn prg" onclick="openNewPrg('+it.proiect_db_id+')" title="Adaugă programare echipă">📅</button>';
+    if(it.adresa_obiectiv) h+='<a class="act-btn waze" href="'+wazeUrl(it.adresa_obiectiv)+'" target="_blank" rel="noopener" title="Navighează cu Waze">🚗</a>';
+    h+='</div></div>';
+    return h;
+}
+
+// ═══ TECH PICKER ═══
+function renderTechPicker(containerId, selected){
+    document.getElementById(containerId).innerHTML = TECHNICIANS.map(function(t){
+        var checked=(selected||[]).indexOf(t.id)>=0;
+        return '<label class="tech-chip'+(checked?' checked':'')+'"><input type="checkbox" value="'+t.id+'"'+(checked?' checked':'')+' onchange="this.parentElement.classList.toggle(\'checked\',this.checked)"><span class="av">'+t.name.charAt(0)+'</span>'+t.name+'</label>';
+    }).join('');
+}
+function pickedTechs(containerId){return [].slice.call(document.querySelectorAll('#'+containerId+' input:checked')).map(function(i){return i.value;});}
+
+// ═══ CREATE INTERVENTIE ═══
+function setCliMode(mode){
+    var existB=document.getElementById('cliExistBlock'), nouB=document.getElementById('cliNouBlock');
+    var sE=document.getElementById('segCliExist'), sN=document.getElementById('segCliNou');
+    function on(b){b.style.borderColor='#9333ea';b.style.background='#faf5ff';b.style.color='#6b21a8';}
+    function off(b){b.style.borderColor='';b.style.background='';b.style.color='';}
+    if(mode==='nou'){existB.style.display='none';nouB.style.display='block';on(sN);off(sE);}
+    else{existB.style.display='block';nouB.style.display='none';on(sE);off(sN);}
+}
+function openInterventieModal(){
+    document.getElementById('interventieForm').reset();
+    document.getElementById('iData').value=todayStr();
+    document.getElementById('iOra').value='09:00';
+    document.getElementById('iDurata').value=2;
+    setCliMode('exist');
+    renderTechPicker('iTehnicieni', isTehnician?[role]:[]);
+    if(!_clientiLoaded){
+        document.getElementById('iClientId').innerHTML='<option value="">⏳ Se încarcă...</option>';
+        fetch(API_DB+'?action=getClienti&_t='+Date.now(),{credentials:'include'}).then(function(r){return r.json();}).then(function(res){
+            var opts='<option value="">— Alege client —</option>';
+            if(res.success&&res.data){
+                res.data.sort(function(a,b){return (a.nume||'').localeCompare(b.nume||'');});
+                res.data.forEach(function(c){opts+='<option value="'+c.id+'">'+esc(c.nume)+(c.telefon?' · '+esc(c.telefon):'')+'</option>';});
+            }
+            document.getElementById('iClientId').innerHTML=opts; _clientiLoaded=true;
+        }).catch(function(){document.getElementById('iClientId').innerHTML='<option value="">⚠️ Eroare</option>';});
+    }
+    document.getElementById('interventieModal').classList.add('active');
+    setTimeout(function(){document.getElementById('iTitlu').focus();},150);
+}
+function closeInterventieModal(){document.getElementById('interventieModal').classList.remove('active');}
+function submitInterventie(ev){
+    ev.preventDefault();
+    var clientId=parseInt(document.getElementById('iClientId').value)||0;
+    var clientNume=document.getElementById('iClientNume').value.trim();
+    var titlu=document.getElementById('iTitlu').value.trim();
+    if(!titlu){toast('⚠️ Problema/titlul e obligatoriu','error');return;}
+    if(!clientId&&!clientNume){toast('⚠️ Alege client existent sau introdu nume nou','error');return;}
+    var payload={action:'createInterventie',client_id:clientId||null,client_nume:clientNume,
+        telefon:document.getElementById('iTelefon').value.trim(),titlu:titlu,
+        serviciu:document.getElementById('iServiciu').value,adresa:document.getElementById('iAdresa').value.trim(),
+        data:document.getElementById('iData').value,ora_start:document.getElementById('iOra').value,
+        durata_ore:parseFloat(document.getElementById('iDurata').value)||2,
+        tehnicieni:pickedTechs('iTehnicieni'),note:document.getElementById('iNote').value.trim(),user:userName};
+    var btn=document.getElementById('iSubmitBtn'),orig=btn.textContent;
+    btn.disabled=true;btn.textContent='⏳ Se creează...';
+    fetch(API_DB+'?action=createInterventie',{method:'POST',credentials:'include',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)})
+        .then(function(r){return r.json();}).then(function(res){
+            btn.disabled=false;btn.textContent=orig;
+            if(!res.success) throw new Error(res.error||'Eroare');
+            closeInterventieModal(); toast('⚡ Intervenție creată: '+res.proiect_id,'success');
+            _clientiLoaded=false; refreshData();
+        }).catch(function(e){btn.disabled=false;btn.textContent=orig;toast('❌ '+(e.message||e),'error');});
+}
+
+// ═══ PROGRAMARE ═══
+function openNewPrg(proiectDbId){
+    var it=STATE.items.find(function(x){return x.proiect_db_id==proiectDbId;})||{};
+    document.getElementById('prgModalTitle').textContent='📅 Programare echipă';
+    document.getElementById('fId').value='';
+    document.getElementById('fProiectId').value=proiectDbId;
+    document.getElementById('prgCtx').innerHTML='Pentru: <strong>'+esc(it.client_nume||'')+'</strong> · '+esc(it.proiect_id||'');
+    document.getElementById('fData').value=todayStr();
+    document.getElementById('fOra').value='09:00';
+    document.getElementById('fDurata').value=2;
+    document.getElementById('fStatus').value='Programat';
+    document.getElementById('fNote').value='';
+    renderTechPicker('fTehnicieni',[]);
+    document.getElementById('btnDel').style.display='none';
+    document.getElementById('prgModal').classList.add('active');
+}
+function openEditPrg(prgId,proiectDbId){
+    var it=STATE.items.find(function(x){return x.proiect_db_id==proiectDbId;})||{};
+    var p=(it.programari||[]).find(function(x){return x.id==prgId;}); if(!p) return;
+    document.getElementById('prgModalTitle').textContent='✏️ Editează programarea';
+    document.getElementById('fId').value=p.id;
+    document.getElementById('fProiectId').value=proiectDbId;
+    document.getElementById('prgCtx').innerHTML='Pentru: <strong>'+esc(it.client_nume||'')+'</strong> · '+esc(it.proiect_id||'');
+    document.getElementById('fData').value=p.data_programata;
+    document.getElementById('fOra').value=(p.ora_start||'09:00:00').substring(0,5);
+    document.getElementById('fDurata').value=p.durata_ore;
+    document.getElementById('fStatus').value=p.status;
+    document.getElementById('fNote').value=p.note||'';
+    renderTechPicker('fTehnicieni',p.atribuiri||[]);
+    document.getElementById('btnDel').style.display=isTehnician?'none':'';
+    document.getElementById('prgModal').classList.add('active');
+}
+function closePrgModal(){document.getElementById('prgModal').classList.remove('active');}
+function savePrg(ev){
+    ev.preventDefault();
+    var id=document.getElementById('fId').value;
+    var payload={action:'saveProgramare',id:id?parseInt(id):0,
+        proiect_id:parseInt(document.getElementById('fProiectId').value),
+        data_programata:document.getElementById('fData').value,
+        ora_start:document.getElementById('fOra').value+':00',
+        durata_ore:parseFloat(document.getElementById('fDurata').value)||2,
+        status:document.getElementById('fStatus').value,
+        note:document.getElementById('fNote').value.trim(),
+        atribuiri:pickedTechs('fTehnicieni'),user:userName};
+    if(!payload.proiect_id||!payload.data_programata){toast('⚠️ Dată obligatorie','error');return;}
+    showLoading(true);
+    fetch(API_DB+'?action=saveProgramare',{method:'POST',credentials:'include',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)})
+        .then(function(r){return r.json();}).then(function(res){
+            if(!res.success) throw new Error(res.error||'Eroare');
+            closePrgModal(); toast('✅ Programare salvată','success'); refreshData();
+        }).catch(function(e){toast('❌ '+(e.message||e),'error');}).finally(function(){showLoading(false);});
+}
+function deleteCurrentPrg(){
+    var id=document.getElementById('fId').value; if(!id) return;
+    if(!confirm('Ștergi această programare?')) return;
+    fetch(API_DB+'?action=deleteProgramare',{method:'POST',credentials:'include',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'deleteProgramare',id:parseInt(id)})})
+        .then(function(r){return r.json();}).then(function(res){
+            if(!res.success) throw new Error(res.error||'Eroare');
+            closePrgModal(); toast('Programare ștearsă','info'); refreshData();
+        }).catch(function(e){toast('❌ '+(e.message||e),'error');});
+}
+
+// ═══ MATERIALE (PV) ═══
+function addMatRow(denumire,cant,um){
+    var wrap=document.getElementById('pvMateriale');
+    var div=document.createElement('div'); div.className='mat-row';
+    div.innerHTML='<input type="text" placeholder="Denumire material/piesă" value="'+esc(denumire||'')+'">'+
+        '<input type="text" placeholder="Cant." value="'+esc(cant||'')+'">'+
+        '<input type="text" placeholder="buc" value="'+esc(um||'buc')+'">'+
+        '<button type="button" class="mat-del" onclick="this.parentElement.remove()">✕</button>';
+    wrap.appendChild(div);
+}
+function readMateriale(){
+    return [].slice.call(document.querySelectorAll('#pvMateriale .mat-row')).map(function(r){
+        var ins=r.querySelectorAll('input');
+        return {denumire:ins[0].value.trim(),cant:ins[1].value.trim(),um:ins[2].value.trim()};
+    }).filter(function(m){return m.denumire;});
+}
+
+// ═══ SEMNĂTURĂ ═══
+var _sig={ctx:null,drawing:false,dirty:false};
+function initSig(){
+    var c=document.getElementById('sigCanvas');
+    var rect=c.getBoundingClientRect();
+    c.width=rect.width||500; c.height=130;
+    var ctx=c.getContext('2d'); ctx.lineWidth=2.2; ctx.lineCap='round'; ctx.strokeStyle='#0f172a';
+    _sig.ctx=ctx; _sig.dirty=false;
+    function pos(e){var r=c.getBoundingClientRect();var t=e.touches?e.touches[0]:e;return {x:t.clientX-r.left,y:t.clientY-r.top};}
+    function start(e){e.preventDefault();_sig.drawing=true;var p=pos(e);ctx.beginPath();ctx.moveTo(p.x,p.y);hideHint();}
+    function move(e){if(!_sig.drawing)return;e.preventDefault();var p=pos(e);ctx.lineTo(p.x,p.y);ctx.stroke();_sig.dirty=true;}
+    function end(){_sig.drawing=false;}
+    c.onmousedown=start;c.onmousemove=move;window.addEventListener('mouseup',end);
+    c.ontouchstart=start;c.ontouchmove=move;c.ontouchend=end;
+}
+function hideHint(){var h=document.getElementById('sigHint');if(h)h.style.display='none';}
+function clearSig(){if(_sig.ctx){_sig.ctx.clearRect(0,0,document.getElementById('sigCanvas').width,999);}_sig.dirty=false;var h=document.getElementById('sigHint');if(h)h.style.display='';}
+function loadSigImage(dataUrl){
+    if(!dataUrl) return;
+    var c=document.getElementById('sigCanvas');var img=new Image();
+    img.onload=function(){_sig.ctx.drawImage(img,0,0,c.width,c.height);_sig.dirty=true;hideHint();};
+    img.src=dataUrl;
+}
+function sigDataUrl(){return _sig.dirty?document.getElementById('sigCanvas').toDataURL('image/png'):'';}
+
+// ═══ PROCES VERBAL ═══
+function openPv(proiectDbId){
+    showLoading(true);
+    fetch(API_DB+'?action=getInterventiePV&proiect_id='+proiectDbId+'&_t='+Date.now(),{credentials:'include'})
+        .then(function(r){return r.json();}).then(function(res){
+            if(!res.success) throw new Error(res.error||'Eroare');
+            PV_CTX=res.data; STATE.prestator=res.data.prestator;
+            fillPvForm(res.data);
+            document.getElementById('pvModal').classList.add('active');
+            setTimeout(initSig,60);
+            setTimeout(function(){ if(res.data.pv&&res.data.pv.semnatura_client) loadSigImage(res.data.pv.semnatura_client); },120);
+        }).catch(function(e){toast('❌ '+(e.message||e),'error');}).finally(function(){showLoading(false);});
+}
+function fillPvForm(d){
+    var proj=d.proiect||{}, pv=d.pv||{};
+    document.getElementById('pvProiectId').value=proj.id;
+    document.getElementById('pvCtx').innerHTML=
+        '<strong>'+esc(proj.client_nume||'')+'</strong> · '+esc(proj.proiect_id||'')+'<br>'+
+        (proj.adresa_obiectiv?'📍 '+esc(proj.adresa_obiectiv)+'<br>':'')+
+        (proj.client_telefon?'📞 '+esc(proj.client_telefon):'')+
+        (proj.serviciu?' · '+esc(proj.serviciu):'');
+    document.getElementById('pvNr').value=pv.pv_nr||'(se generează la salvare)';
+    document.getElementById('pvData').value=pv.data_pv||todayStr();
+    document.getElementById('pvProblema').value=pv.problema_constatata||proj.obiectiv||'';
+    document.getElementById('pvCauza').value=pv.cauza||'';
+    document.getElementById('pvSolutie').value=pv.solutie_aplicata||'';
+    document.getElementById('pvRecomandari').value=pv.recomandari||'';
+    document.getElementById('pvStare').value=pv.stare_finala||'Rezolvat';
+    document.getElementById('pvDurata').value=pv.durata_ore||1;
+    document.getElementById('pvSemnatar').value=pv.semnatar_client||proj.client_contact||'';
+    var teh=pv.tehnicieni;
+    if(!teh && d.tehnicieni && d.tehnicieni.length) teh=d.tehnicieni.map(techName).join(', ');
+    document.getElementById('pvTehnicieni').value=teh||'';
+    // materiale
+    document.getElementById('pvMateriale').innerHTML='';
+    var mats=[]; try{mats=JSON.parse(pv.materiale||'[]');}catch(e){mats=[];}
+    if(mats.length) mats.forEach(function(m){addMatRow(m.denumire,m.cant,m.um);});
+    else addMatRow();
+    clearSig();
+}
+function closePvModal(){document.getElementById('pvModal').classList.remove('active');}
+function savePv(ev,finalizeaza){
+    if(ev&&ev.preventDefault) ev.preventDefault();
+    var problema=document.getElementById('pvProblema').value.trim();
+    var solutie=document.getElementById('pvSolutie').value.trim();
+    if(!problema||!solutie){toast('⚠️ Completează problema și soluția aplicată','error');return;}
+    if(finalizeaza && !confirm('Finalizezi intervenția? Statusul devine „Finalizat" și se închid programările deschise.')) return;
+    var payload={action:'saveInterventiePV',proiect_id:parseInt(document.getElementById('pvProiectId').value),
+        data_pv:document.getElementById('pvData').value,
+        problema_constatata:problema,cauza:document.getElementById('pvCauza').value.trim(),
+        solutie_aplicata:solutie,materiale:readMateriale(),
+        recomandari:document.getElementById('pvRecomandari').value.trim(),
+        stare_finala:document.getElementById('pvStare').value,
+        durata_ore:parseFloat(document.getElementById('pvDurata').value)||0,
+        tehnicieni:document.getElementById('pvTehnicieni').value.trim(),
+        semnatar_client:document.getElementById('pvSemnatar').value.trim(),
+        semnatura_client:sigDataUrl(),finalizeaza:!!finalizeaza,user:userName};
+    showLoading(true);
+    fetch(API_DB+'?action=saveInterventiePV',{method:'POST',credentials:'include',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)})
+        .then(function(r){return r.json();}).then(function(res){
+            if(!res.success) throw new Error(res.error||'Eroare');
+            document.getElementById('pvNr').value=res.pv_nr;
+            if(PV_CTX&&PV_CTX.pv){PV_CTX.pv.pv_nr=res.pv_nr;}else if(PV_CTX){PV_CTX.pv={pv_nr:res.pv_nr};}
+            toast(finalizeaza?'🏁 Intervenție finalizată · PV '+res.pv_nr:'💾 PV salvat: '+res.pv_nr,'success');
+            if(finalizeaza) closePvModal();
+            refreshData();
+        }).catch(function(e){toast('❌ '+(e.message||e),'error');}).finally(function(){showLoading(false);});
+}
+
+// ═══ PRINT / PDF PROCES VERBAL ═══
+function printPv(){
+    var p=STATE.prestator||{}, proj=(PV_CTX&&PV_CTX.proiect)||{};
+    var mats=readMateriale();
+    var matRows=mats.length?mats.map(function(m,i){return '<tr><td>'+(i+1)+'</td><td>'+esc(m.denumire)+'</td><td style="text-align:center">'+esc(m.cant||'')+'</td><td style="text-align:center">'+esc(m.um||'')+'</td></tr>';}).join('')
+        :'<tr><td colspan="4" style="text-align:center;color:#888">— fără materiale —</td></tr>';
+    var sig=sigDataUrl();
+    var nr=document.getElementById('pvNr').value||'';
+    var dataPv=document.getElementById('pvData').value||todayStr();
+    function row(label,val){return val?('<tr><td class="lbl">'+label+'</td><td>'+esc(val)+'</td></tr>'):'';}
+    var html='<!DOCTYPE html><html lang="ro"><head><meta charset="UTF-8"><title>Proces verbal '+esc(nr)+'</title><style>'+
+        '@page{size:A4;margin:16mm}*{box-sizing:border-box}body{font-family:Arial,Helvetica,sans-serif;color:#111;font-size:12px;line-height:1.5}'+
+        '.hd{display:flex;justify-content:space-between;border-bottom:2px solid #9333ea;padding-bottom:10px;margin-bottom:14px}'+
+        '.hd .co{font-size:15px;font-weight:800;color:#7c3aed}.hd .meta{font-size:10px;color:#444;text-align:right}'+
+        'h1{font-size:17px;text-align:center;margin:8px 0 2px}.sub{text-align:center;color:#555;font-size:11px;margin-bottom:14px}'+
+        'table{width:100%;border-collapse:collapse;margin-bottom:12px}td,th{border:1px solid #cbd5e1;padding:6px 8px;vertical-align:top}'+
+        '.info td.lbl{width:32%;background:#f5f3ff;font-weight:700;color:#444}'+
+        '.sec{font-weight:800;color:#7c3aed;margin:12px 0 5px;font-size:12px;text-transform:uppercase;letter-spacing:.4px}'+
+        '.box{border:1px solid #cbd5e1;border-radius:6px;padding:8px 10px;min-height:34px;white-space:pre-wrap}'+
+        '.mat th{background:#f5f3ff;font-size:10px;text-transform:uppercase}'+
+        '.sign{display:flex;gap:30px;margin-top:26px}.sign>div{flex:1;text-align:center}'+
+        '.sigimg{height:60px;margin:4px auto;display:block}.sigline{border-top:1px solid #333;margin-top:46px;padding-top:4px;font-size:11px;color:#555}'+
+        '.ft{margin-top:24px;font-size:9px;color:#999;text-align:center;border-top:1px solid #e2e8f0;padding-top:6px}</style></head><body>'+
+        '<div class="hd"><div><div class="co">'+esc(p.denumire||'BREAK SISTEMS SRL')+'</div>'+
+        '<div style="font-size:10px;color:#444">'+esc(p.sediu||'')+'<br>'+esc(p.reg_com||'')+' · CIF '+esc(p.cif||'')+'</div></div>'+
+        '<div class="meta">'+(p.email?esc(p.email)+'<br>':'')+(p.telefon?esc(p.telefon):'')+'</div></div>'+
+        '<h1>PROCES VERBAL DE INTERVENȚIE</h1><div class="sub">Nr. '+esc(nr)+' din '+esc(dataPv)+'</div>'+
+        '<table class="info">'+
+        row('Beneficiar',proj.client_nume)+
+        row('Adresă lucrare',proj.adresa_obiectiv||proj.client_adresa)+
+        row('Telefon',proj.client_telefon)+
+        row('Nr. intervenție',proj.proiect_id)+
+        row('Tip serviciu',proj.serviciu)+
+        row('Tehnicieni',document.getElementById('pvTehnicieni').value)+
+        row('Durata intervenție',(document.getElementById('pvDurata').value||'')+' ore')+
+        row('Stare finală',document.getElementById('pvStare').value)+
+        '</table>'+
+        '<div class="sec">Problema constatată</div><div class="box">'+esc(document.getElementById('pvProblema').value)+'</div>'+
+        (document.getElementById('pvCauza').value?'<div class="sec">Cauza</div><div class="box">'+esc(document.getElementById('pvCauza').value)+'</div>':'')+
+        '<div class="sec">Lucrări efectuate / soluția aplicată</div><div class="box">'+esc(document.getElementById('pvSolutie').value)+'</div>'+
+        '<div class="sec">Materiale / piese utilizate</div><table class="mat"><tr><th style="width:30px">#</th><th>Denumire</th><th style="width:60px">Cant.</th><th style="width:50px">U.M.</th></tr>'+matRows+'</table>'+
+        (document.getElementById('pvRecomandari').value?'<div class="sec">Recomandări</div><div class="box">'+esc(document.getElementById('pvRecomandari').value)+'</div>':'')+
+        '<div class="sign"><div><div style="font-weight:700">Prestator</div><div style="font-size:10px;color:#666">'+esc(p.reprezentant||'')+'</div><div class="sigline">Semnătură & ștampilă</div></div>'+
+        '<div><div style="font-weight:700">Beneficiar</div><div style="font-size:10px;color:#666">'+esc(document.getElementById('pvSemnatar').value||'')+'</div>'+
+        (sig?'<img class="sigimg" src="'+sig+'">':'')+'<div class="sigline">Semnătură de primire</div></div></div>'+
+        '<div class="ft">Document generat din Portal CSSI · '+esc(p.denumire||'')+'</div>'+
+        '<script>window.onload=function(){setTimeout(function(){window.print();},250);};<\/script></body></html>';
+    var w=window.open('','_blank');
+    if(!w){toast('⚠️ Permite ferestrele pop-up pentru a tipări','error');return;}
+    w.document.open(); w.document.write(html); w.document.close();
+}
+
+// ═══ INIT ═══
+function applyRoleUI(){
+    if(isTehnician){
+        document.getElementById('pageHeader').classList.add('tech');
+        document.getElementById('pageTitle').textContent='⚡ Intervențiile mele';
+        document.getElementById('filterTehnician').style.display='none';
+    } else {
+        var sel=document.getElementById('filterTehnician');
+        TECHNICIANS.forEach(function(t){var o=document.createElement('option');o.value=t.id;o.textContent=t.name;sel.appendChild(o);});
+    }
+}
+applyRoleUI();
+refreshData();
+window.addEventListener('resize',function(){ if(document.getElementById('pvModal').classList.contains('active')){ var url=sigDataUrl(); initSig(); if(url) loadSigImage(url); } });
+</script>
+<script>
+if('serviceWorker' in navigator){
+    navigator.serviceWorker.register('../sw.js').then(function(r){console.log('[PWA] SW registered:',r.scope)}).catch(function(e){console.log('[PWA] SW failed:',e)});
+}
+</script>
+<script src="/admin/notifications.js" defer></script>
+</body>
+</html>
