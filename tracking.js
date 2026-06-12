@@ -210,3 +210,5 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
 });
+// Lead magnet popup (task #94) — incarcat global prin tracking.js
+(function(){var s=document.createElement("script");s.src="/lead-magnet.js";s.defer=true;document.head.appendChild(s);})();
