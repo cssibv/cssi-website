@@ -1117,6 +1117,43 @@ function ensureInterventiePVSchema($db) {
     }
 }
 
+// Schema reclamații — registru reclamații/intervenții/garanție conectat la MySQL
+function ensureReclamatiiSchema($db) {
+    static $done = false;
+    if ($done) return;
+    $done = true;
+    try {
+        $db->exec("CREATE TABLE IF NOT EXISTS reclamatii (
+            id INT PRIMARY KEY AUTO_INCREMENT,
+            client VARCHAR(200) NOT NULL,
+            telefon VARCHAR(40) NULL,
+            adresa VARCHAR(300) NULL,
+            proiect_cod VARCHAR(40) NULL,
+            tip VARCHAR(40) NOT NULL DEFAULT 'Reclamație',
+            serviciu VARCHAR(60) NULL,
+            descriere TEXT NULL,
+            prioritate VARCHAR(20) NOT NULL DEFAULT 'Normală',
+            status VARCHAR(20) NOT NULL DEFAULT 'Nouă',
+            data_programare DATE NULL,
+            ora_programare TIME NULL,
+            echipa VARCHAR(80) NULL,
+            data_inreg DATE NULL,
+            data_rezolvare DATE NULL,
+            solutie TEXT NULL,
+            istoric TEXT NULL,
+            created_by VARCHAR(100) NULL,
+            created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+            updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+            KEY idx_status (status),
+            KEY idx_prio (prioritate),
+            KEY idx_dataprg (data_programare),
+            KEY idx_echipa (echipa)
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci");
+    } catch (Exception $e) {
+        error_log('ensureReclamatiiSchema FAILED: ' . $e->getMessage());
+    }
+}
+
 try {
     $db = getDB();
 
@@ -1978,6 +2015,123 @@ try {
                 if ($db->inTransaction()) $db->rollBack();
                 jsonResponse(['success' => false, 'error' => $e->getMessage()], 500);
             }
+            break;
+
+        // ══════════════════════════════════════
+        // RECLAMAȚII — registru reclamații/intervenții/garanție (MySQL)
+        // ══════════════════════════════════════
+        case 'getReclamatii':
+            ensureReclamatiiSchema($db);
+            $rows = $db->query("SELECT * FROM reclamatii ORDER BY
+                FIELD(status,'Nouă','Programată','În lucru','Rezolvată','Anulată'),
+                FIELD(prioritate,'Urgentă','Ridicată','Normală','Scăzută'),
+                (data_programare IS NULL), data_programare, id DESC")->fetchAll();
+            foreach ($rows as &$r) {
+                $r['istoric'] = json_decode($r['istoric'] ?: '[]', true) ?: [];
+                if (!empty($r['ora_programare'])) $r['ora_programare'] = substr($r['ora_programare'], 0, 5);
+            }
+            unset($r);
+            // Tehnicienii văd doar reclamațiile alocate lor
+            if (!isAdmin() && isTehnician()) {
+                $me = currentUser()['username'] ?? '';
+                $rows = array_values(array_filter($rows, function($r) use ($me) {
+                    return strcasecmp($r['echipa'] ?? '', $me) === 0;
+                }));
+            }
+            // Proiecte active pentru dropdown (cod + client)
+            $proi = $db->query("SELECT p.proiect_id AS cod, c.nume AS client
+                                FROM proiecte p INNER JOIN clienti c ON p.client_id = c.id
+                                WHERE p.status <> 'Anulat'
+                                ORDER BY p.id DESC LIMIT 500")->fetchAll();
+            jsonResponse(['success' => true, 'data' => ['items' => $rows, 'proiecte' => $proi]]);
+            break;
+
+        case 'saveReclamatie':
+            $u = currentUser();
+            ensureReclamatiiSchema($db);
+            $userName = $u['nume'] ?? ($u['username'] ?? 'Admin');
+            $id = isset($data['id']) ? intval($data['id']) : 0;
+            $client = trim($data['client'] ?? '');
+            if ($client === '') { jsonResponse(['success' => false, 'error' => 'Client obligatoriu'], 400); break; }
+
+            $statusValid = ['Nouă','Programată','În lucru','Rezolvată','Anulată'];
+            $prioValid   = ['Urgentă','Ridicată','Normală','Scăzută'];
+            $status = in_array(($data['status'] ?? ''), $statusValid, true) ? $data['status'] : 'Nouă';
+            $prio   = in_array(($data['prioritate'] ?? ''), $prioValid, true) ? $data['prioritate'] : 'Normală';
+            $dataPrg = !empty($data['data_programare']) ? $data['data_programare'] : null;
+            $oraPrg  = !empty($data['ora_programare']) ? $data['ora_programare'] : null;
+            // Auto: programat dar încă "Nouă" → Programată
+            if ($dataPrg && $status === 'Nouă') $status = 'Programată';
+
+            $f = [
+                'client'          => $client,
+                'telefon'         => trim($data['telefon'] ?? ''),
+                'adresa'          => trim($data['adresa'] ?? ''),
+                'proiect_cod'     => trim($data['proiect_cod'] ?? ''),
+                'tip'             => trim($data['tip'] ?? 'Reclamație'),
+                'serviciu'        => trim($data['serviciu'] ?? ''),
+                'descriere'       => trim($data['descriere'] ?? ''),
+                'prioritate'      => $prio,
+                'status'          => $status,
+                'data_programare' => $dataPrg,
+                'ora_programare'  => $oraPrg,
+                'echipa'          => trim($data['echipa'] ?? ''),
+                'solutie'         => trim($data['solutie'] ?? ''),
+            ];
+
+            if ($id) {
+                $st = $db->prepare("SELECT istoric, data_rezolvare FROM reclamatii WHERE id = ?");
+                $st->execute([$id]);
+                $cur = $st->fetch();
+                if (!$cur) { jsonResponse(['success' => false, 'error' => 'Reclamație inexistentă'], 404); break; }
+                $ist = json_decode($cur['istoric'] ?: '[]', true) ?: [];
+                $ist[] = ['d' => date('Y-m-d H:i'), 't' => 'Editat de ' . $userName];
+                $dataRez = $cur['data_rezolvare'];
+                if ($status === 'Rezolvată' && !$dataRez) $dataRez = date('Y-m-d');
+                $db->prepare("UPDATE reclamatii SET client=?, telefon=?, adresa=?, proiect_cod=?, tip=?, serviciu=?, descriere=?, prioritate=?, status=?, data_programare=?, ora_programare=?, echipa=?, solutie=?, data_rezolvare=?, istoric=? WHERE id=?")
+                   ->execute([$f['client'],$f['telefon'],$f['adresa'],$f['proiect_cod'],$f['tip'],$f['serviciu'],$f['descriere'],$f['prioritate'],$f['status'],$f['data_programare'],$f['ora_programare'],$f['echipa'],$f['solutie'],$dataRez,json_encode($ist, JSON_UNESCAPED_UNICODE),$id]);
+                jsonResponse(['success' => true, 'id' => $id]);
+            } else {
+                $ist = [['d' => date('Y-m-d H:i'), 't' => 'Înregistrată de ' . $userName]];
+                $dataRez = ($status === 'Rezolvată') ? date('Y-m-d') : null;
+                $db->prepare("INSERT INTO reclamatii (client, telefon, adresa, proiect_cod, tip, serviciu, descriere, prioritate, status, data_programare, ora_programare, echipa, data_inreg, data_rezolvare, solutie, istoric, created_by) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)")
+                   ->execute([$f['client'],$f['telefon'],$f['adresa'],$f['proiect_cod'],$f['tip'],$f['serviciu'],$f['descriere'],$f['prioritate'],$f['status'],$f['data_programare'],$f['ora_programare'],$f['echipa'],date('Y-m-d'),$dataRez,$f['solutie'],json_encode($ist, JSON_UNESCAPED_UNICODE),$userName]);
+                jsonResponse(['success' => true, 'id' => intval($db->lastInsertId())]);
+            }
+            break;
+
+        case 'updateReclamatieStatus':
+            $u = currentUser();
+            ensureReclamatiiSchema($db);
+            $userName = $u['nume'] ?? ($u['username'] ?? 'Admin');
+            $id = intval($data['id'] ?? 0);
+            $status = $data['status'] ?? '';
+            $valid = ['Nouă','Programată','În lucru','Rezolvată','Anulată'];
+            if (!$id || !in_array($status, $valid, true)) { jsonResponse(['success' => false, 'error' => 'Date invalide'], 400); break; }
+            $st = $db->prepare("SELECT istoric, status, data_rezolvare FROM reclamatii WHERE id = ?");
+            $st->execute([$id]);
+            $cur = $st->fetch();
+            if (!$cur) { jsonResponse(['success' => false, 'error' => 'Reclamație inexistentă'], 404); break; }
+            $ist = json_decode($cur['istoric'] ?: '[]', true) ?: [];
+            $ist[] = ['d' => date('Y-m-d H:i'), 't' => 'Status: ' . $cur['status'] . ' → ' . $status . ' (' . $userName . ')'];
+            $dataRez = $cur['data_rezolvare'];
+            if ($status === 'Rezolvată' && !$dataRez) $dataRez = date('Y-m-d');
+            if (isset($data['solutie'])) {
+                $db->prepare("UPDATE reclamatii SET status=?, data_rezolvare=?, solutie=?, istoric=? WHERE id=?")
+                   ->execute([$status, $dataRez, trim($data['solutie']), json_encode($ist, JSON_UNESCAPED_UNICODE), $id]);
+            } else {
+                $db->prepare("UPDATE reclamatii SET status=?, data_rezolvare=?, istoric=? WHERE id=?")
+                   ->execute([$status, $dataRez, json_encode($ist, JSON_UNESCAPED_UNICODE), $id]);
+            }
+            jsonResponse(['success' => true]);
+            break;
+
+        case 'deleteReclamatie':
+            ensureReclamatiiSchema($db);
+            $id = intval($data['id'] ?? 0);
+            if (!$id) { jsonResponse(['success' => false, 'error' => 'id obligatoriu'], 400); break; }
+            $db->prepare("DELETE FROM reclamatii WHERE id = ?")->execute([$id]);
+            jsonResponse(['success' => true]);
             break;
 
         case 'deleteProiect':
