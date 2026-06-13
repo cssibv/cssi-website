@@ -2080,7 +2080,7 @@ try {
             ];
 
             if ($id) {
-                $st = $db->prepare("SELECT istoric, data_rezolvare FROM reclamatii WHERE id = ?");
+                $st = $db->prepare("SELECT istoric, data_rezolvare, solutie FROM reclamatii WHERE id = ?");
                 $st->execute([$id]);
                 $cur = $st->fetch();
                 if (!$cur) { jsonResponse(['success' => false, 'error' => 'Reclamație inexistentă'], 404); break; }
@@ -2088,6 +2088,8 @@ try {
                 $ist[] = ['d' => date('Y-m-d H:i'), 't' => 'Editat de ' . $userName];
                 $dataRez = $cur['data_rezolvare'];
                 if ($status === 'Rezolvată' && !$dataRez) $dataRez = date('Y-m-d');
+                // Păstrează soluția existentă dacă formularul nu o trimite (nu o șterge la editare)
+                $f['solutie'] = isset($data['solutie']) ? trim($data['solutie']) : ($cur['solutie'] ?? '');
                 $db->prepare("UPDATE reclamatii SET client=?, telefon=?, adresa=?, proiect_cod=?, tip=?, serviciu=?, descriere=?, prioritate=?, status=?, data_programare=?, ora_programare=?, echipa=?, solutie=?, data_rezolvare=?, istoric=? WHERE id=?")
                    ->execute([$f['client'],$f['telefon'],$f['adresa'],$f['proiect_cod'],$f['tip'],$f['serviciu'],$f['descriere'],$f['prioritate'],$f['status'],$f['data_programare'],$f['ora_programare'],$f['echipa'],$f['solutie'],$dataRez,json_encode($ist, JSON_UNESCAPED_UNICODE),$id]);
                 jsonResponse(['success' => true, 'id' => $id]);
