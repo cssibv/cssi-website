@@ -147,7 +147,7 @@ tr:hover td{background:rgba(59,130,246,0.03);}
         <div>
             <a href="../admin.html" class="page-back">← Dashboard</a>
             <div class="page-title">🛠️ Reclamații & Intervenții</div>
-            <div class="page-subtitle" id="syncStatus"><span class="sync-indicator sync-off"></span>Salvat local pe acest dispozitiv</div>
+            <div class="page-subtitle" id="syncStatus"><span class="sync-indicator sync-off"></span>Se încarcă...</div>
         </div>
         <div class="page-actions">
             <button class="page-btn secondary" onclick="exportJSON()">⬇️ Export</button>
@@ -244,7 +244,6 @@ tr:hover td{background:rgba(59,130,246,0.03);}
             <div class="form-group"><label class="form-label">Echipă / Tehnician asignat</label>
                 <select class="form-select" name="echipa" id="fEchipa">
                     <option value="">— Nealocat —</option>
-                    <option>Echipa Mihai</option><option>Echipa Alex</option><option>Echipa Radu</option>
                 </select>
             </div>
             <button type="submit" class="form-submit" id="submitBtn">🛠️ Adaugă</button>
@@ -275,23 +274,23 @@ tr:hover td{background:rgba(59,130,246,0.03);}
 
 <script>
 // ═══════ CONFIG ═══════
-var STORE_KEY = 'cssi-reclamatii-v1';
+var API_DB = '/admin/api.php';
 
 // ═══════ AUTH ═══════
 var role = sessionStorage.getItem('cssi-role');
+var userName = sessionStorage.getItem('cssi-user') || role || '';
 if (!role) { window.location.href = '../admin.html'; }
+var TECH_IDS = ['zoli','sanyi','bogdan','cezar','cristi','denes'];
+var isTehnician = TECH_IDS.indexOf(role) >= 0;
 var canEdit = true;
 
 // ═══════ CONSTANTS ═══════
-var PROJECTS = [
-    {id:'CSSI-2026-001', client:'Hotel Cheile Râșnoavei'},
-    {id:'CSSI-2026-007', client:'Școala Nr. 5 Brașov'},
-    {id:'CSSI-2026-008', client:'Pensiune Bran'},
-    {id:'CSSI-2026-009', client:'Primăria Săcele'},
-    {id:'CSSI-2026-014', client:'ANAF Brașov'}
+var PROJECTS = [];   // încărcate din MySQL (getReclamatii)
+var TECHNICIANS = [
+    {id:'zoli',name:'Zoli'},{id:'sanyi',name:'Sanyi'},{id:'bogdan',name:'Bogdan'},
+    {id:'cezar',name:'Cezar'},{id:'cristi',name:'Cristi'},{id:'denes',name:'Denes'}
 ];
-var TEAMS = ['Echipa Mihai','Echipa Alex','Echipa Radu'];
-var TEAM_ICONS = {'Echipa Mihai':'👷','Echipa Alex':'👷‍♂️','Echipa Radu':'🔧'};
+function techName(id){var t=TECHNICIANS.find(function(x){return x.id===id});return t?t.name:(id||'');}
 var PRIO_RANK = {'Urgentă':0,'Ridicată':1,'Normală':2,'Scăzută':3};
 var PRIO_CLASS = {'Urgentă':'prio-urgenta','Ridicată':'prio-ridicata','Normală':'prio-normala','Scăzută':'prio-scazuta'};
 var PRIO_ICON = {'Urgentă':'🔴','Ridicată':'🟠','Normală':'🔵','Scăzută':'⚪'};
@@ -303,14 +302,6 @@ var ITEMS = [];
 var currentView = 'cards';
 var kpiFilter = '';
 
-// ═══════ DEMO DATA (seed la prima rulare) ═══════
-var DEMO_ITEMS = [
-    {id:1, client:'Primăria Săcele', telefon:'0268123456', adresa:'Piața Libertății 12, Săcele', pid:'CSSI-2026-009', tip:'Reclamație', serviciu:'Detecție Incendiu', descriere:'Centrala dă eroare la detectorul din arhivă, beep continuu.', prioritate:'Urgentă', status:'Programată', dataProgramare:'2026-06-06', oraProgramare:'09:00', echipa:'Echipa Mihai', dataInreg:'2026-06-04', dataRezolvare:'', solutie:'', istoric:[{d:'2026-06-04 10:12', t:'Înregistrată — reclamație telefonică'},{d:'2026-06-04 11:30', t:'Programată pe 2026-06-06 09:00 — Echipa Mihai'}]},
-    {id:2, client:'Hotel Cheile Râșnoavei', telefon:'0268678901', adresa:'DN1A km 4, Râșnov', pid:'CSSI-2026-001', tip:'Intervenție', serviciu:'Supraveghere Video', descriere:'2 camere de pe hol etaj 2 nu mai transmit imagine.', prioritate:'Ridicată', status:'În lucru', dataProgramare:'2026-06-05', oraProgramare:'14:00', echipa:'Echipa Alex', dataInreg:'2026-06-03', dataRezolvare:'', solutie:'', istoric:[{d:'2026-06-03 16:40', t:'Înregistrată'},{d:'2026-06-05 14:05', t:'Status: În lucru — echipa pe teren'}]},
-    {id:3, client:'Pensiune Bran', telefon:'0268567890', adresa:'Str. Principală 88, Bran', pid:'CSSI-2026-008', tip:'Service', serviciu:'Alarmă Antiefracție', descriere:'Verificare periodică + înlocuire baterie telecomandă.', prioritate:'Normală', status:'Nouă', dataProgramare:'', oraProgramare:'', echipa:'', dataInreg:'2026-06-05', dataRezolvare:'', solutie:'', istoric:[{d:'2026-06-05 09:20', t:'Înregistrată'}]},
-    {id:4, client:'ANAF Brașov', telefon:'0268234567', adresa:'B-dul Mihail Kogălniceanu 7, Brașov', pid:'CSSI-2026-014', tip:'Garanție', serviciu:'Control Acces', descriere:'Cititor card intrare principală defect — în garanție.', prioritate:'Ridicată', status:'Rezolvată', dataProgramare:'2026-06-02', oraProgramare:'10:30', echipa:'Echipa Radu', dataInreg:'2026-05-30', dataRezolvare:'2026-06-02', solutie:'Înlocuit cititor RFID, testat OK. Înlocuire pe garanție, fără cost.', istoric:[{d:'2026-05-30 13:00', t:'Înregistrată'},{d:'2026-06-01 09:00', t:'Programată pe 2026-06-02'},{d:'2026-06-02 12:15', t:'Rezolvată — cititor înlocuit'}]}
-];
-
 // ═══════ HELPERS ═══════
 function esc(s){if(s===0)return '0';if(!s)return '';var d=document.createElement('div');d.textContent=s;return d.innerHTML;}
 function getProjectName(pid){var p=PROJECTS.find(function(x){return x.id===pid});return p?p.client:'';}
@@ -320,18 +311,36 @@ function daysUntil(d){if(!d)return null;return Math.ceil((new Date(d+'T00:00:00'
 function showLoading(s){document.getElementById('loadBar').classList.toggle('active',s);}
 function toast(msg,type){var c=document.getElementById('toastContainer');var t=document.createElement('div');t.className='toast '+(type||'info');t.textContent=msg;c.appendChild(t);setTimeout(function(){t.style.opacity='0';t.style.transform='translateX(100px)';t.style.transition='all 0.3s'},3000);setTimeout(function(){t.remove()},3500);}
 
-// ═══════ PERSISTENCE (localStorage) ═══════
-function loadStore(){
-    try{
-        var raw=localStorage.getItem(STORE_KEY);
-        if(raw){var arr=JSON.parse(raw);if(Array.isArray(arr)){ITEMS=arr;return;}}
-    }catch(e){}
-    ITEMS=JSON.parse(JSON.stringify(DEMO_ITEMS));
-    saveStore();
+// ═══════ DATA (MySQL via API) ═══════
+function setSync(state){
+    var el=document.getElementById('syncStatus');
+    if(state==='loading') el.innerHTML='<span class="sync-indicator sync-loading"></span>Se încarcă...';
+    else if(state==='ok') el.innerHTML='<span class="sync-indicator sync-ok"></span>MySQL · '+ITEMS.length+' înregistrări';
+    else el.innerHTML='<span class="sync-indicator sync-off"></span>Indisponibil';
 }
-function saveStore(){
-    try{localStorage.setItem(STORE_KEY,JSON.stringify(ITEMS));}
-    catch(e){toast('⚠️ Nu am putut salva local','error');}
+function mapFromApi(r){
+    return {
+        id:r.id, client:r.client||'', telefon:r.telefon||'', adresa:r.adresa||'',
+        pid:r.proiect_cod||'', tip:r.tip||'Reclamație', serviciu:r.serviciu||'',
+        descriere:r.descriere||'', prioritate:r.prioritate||'Normală', status:r.status||'Nouă',
+        dataProgramare:r.data_programare||'', oraProgramare:(r.ora_programare||'').substring(0,5),
+        echipa:r.echipa||'', dataInreg:r.data_inreg||'', dataRezolvare:r.data_rezolvare||'',
+        solutie:r.solutie||'', istoric:Array.isArray(r.istoric)?r.istoric:[]
+    };
+}
+function loadData(){
+    setSync('loading'); showLoading(true);
+    return fetch(API_DB+'?action=getReclamatii&_t='+Date.now(),{credentials:'include'})
+        .then(function(r){return r.json();})
+        .then(function(res){
+            if(!res.success) throw new Error(res.error||'Eroare server');
+            ITEMS=((res.data&&res.data.items)||[]).map(mapFromApi);
+            PROJECTS=((res.data&&res.data.proiecte)||[]).map(function(p){return {id:p.cod,client:p.client};});
+            populateDropdowns();
+            setSync('ok'); render();
+        })
+        .catch(function(e){ setSync('off'); render(); toast('❌ '+(e.message||e),'error'); })
+        .finally(function(){ showLoading(false); });
 }
 function exportJSON(){
     var blob=new Blob([JSON.stringify(ITEMS,null,2)],{type:'application/json'});
@@ -359,7 +368,7 @@ function getFiltered(){
         if(kpiFilter==='urgente'&&!(c.prioritate==='Urgentă'&&c.status!=='Rezolvată'&&c.status!=='Anulată'))return false;
         if(kpiFilter==='azi'&&c.dataProgramare!==todayISO())return false;
         if(q){
-            var hay=[c.client,c.adresa,c.descriere,c.telefon,c.pid,getProjectName(c.pid),c.echipa,c.serviciu].join(' ').toLowerCase();
+            var hay=[c.client,c.adresa,c.descriere,c.telefon,c.pid,getProjectName(c.pid),techName(c.echipa),c.serviciu].join(' ').toLowerCase();
             if(hay.indexOf(q)<0)return false;
         }
         return true;
@@ -445,7 +454,7 @@ function renderCards(filtered){
         html+='<span class="mcard-tag tip">'+esc(c.tip)+'</span>';
         html+='<span class="mcard-tag serv">🔧 '+esc(c.serviciu)+'</span>';
         html+='<span class="mcard-tag '+(PRIO_CLASS[c.prioritate]||'prio-normala')+'">'+(PRIO_ICON[c.prioritate]||'')+' '+esc(c.prioritate)+'</span>';
-        if(c.echipa) html+='<span class="mcard-tag" style="background:var(--gray-bg);color:var(--gray)">'+(TEAM_ICONS[c.echipa]||'')+' '+esc(c.echipa)+'</span>';
+        if(c.echipa) html+='<span class="mcard-tag" style="background:var(--gray-bg);color:var(--gray)">'+'👷 '+esc(techName(c.echipa))+'</span>';
         html+='</div>';
         html+='<div class="mcard-dates">';
         html+='<div class="mcard-date"><span class="mcard-date-label">Înregistrat</span><span class="mcard-date-val">'+esc(c.dataInreg||'—')+'</span></div>';
@@ -475,7 +484,7 @@ function renderTable(filtered){
         html+='<td>'+esc(c.serviciu)+'</td>';
         html+='<td>'+(PRIO_ICON[c.prioritate]||'')+' '+esc(c.prioritate)+'</td>';
         html+='<td>'+progLabel(c)+'</td>';
-        html+='<td>'+(c.echipa?(TEAM_ICONS[c.echipa]||'')+' '+esc(c.echipa):'—')+'</td>';
+        html+='<td>'+(c.echipa?'👷 '+esc(techName(c.echipa)):'—')+'</td>';
         html+='<td style="color:'+stColor+';font-weight:700">'+STATUS_ICON[c.status]+' '+esc(c.status)+'</td>';
         html+='</tr>';
     });
@@ -485,14 +494,18 @@ function renderTable(filtered){
 
 function setView(v){currentView=v;document.getElementById('vCards').classList.toggle('active',v==='cards');document.getElementById('vTable').classList.toggle('active',v==='table');render();}
 
-// ═══════ ACTIONS ═══════
+// ═══════ ACTIONS (API) ═══════
+function apiPost(action,payload){
+    return fetch(API_DB+'?action='+action,{method:'POST',credentials:'include',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)})
+        .then(function(r){return r.json();})
+        .then(function(res){ if(!res.success) throw new Error(res.error||'Eroare'); return res; });
+}
 function changeStatus(id,val){
-    var c=ITEMS.find(function(x){return x.id===id});
-    if(!c)return;
-    var old=c.status; c.status=val;
-    if(val==='Rezolvată'&&!c.dataRezolvare)c.dataRezolvare=todayISO();
-    addHist(c,'Status: '+old+' → '+val);
-    saveStore();render();toast('✅ Status: '+val,'success');
+    showLoading(true);
+    apiPost('updateReclamatieStatus',{id:id,status:val})
+        .then(function(){ toast('✅ Status: '+val,'success'); return loadData(); })
+        .catch(function(e){ toast('❌ '+(e.message||e),'error'); })
+        .finally(function(){ showLoading(false); });
 }
 
 function confirmRezolvat(id){
@@ -500,20 +513,19 @@ function confirmRezolvat(id){
     if(!c)return;
     document.getElementById('confirmTitle').textContent='✅ Marchează rezolvat';
     document.getElementById('confirmText').innerHTML='Marchezi <strong>'+esc(c.client)+'</strong> ca rezolvat astăzi ('+todayISO()+')?';
-    document.getElementById('confirmOk').onclick=function(){markRezolvat(id);closeConfirm();};
+    var ok=document.getElementById('confirmOk');ok.style.background='var(--green)';
+    ok.onclick=function(){markRezolvat(id);closeConfirm();};
     document.getElementById('confirmModal').classList.add('active');
 }
 function closeConfirm(){document.getElementById('confirmModal').classList.remove('active');}
 
 function markRezolvat(id){
-    var c=ITEMS.find(function(x){return x.id===id});
-    if(!c)return;
-    c.status='Rezolvată';c.dataRezolvare=todayISO();
-    addHist(c,'Rezolvată');
-    saveStore();render();toast('✅ '+c.client+' — rezolvat!','success');
+    showLoading(true);
+    apiPost('updateReclamatieStatus',{id:id,status:'Rezolvată'})
+        .then(function(){ toast('✅ Marcat rezolvat!','success'); return loadData(); })
+        .catch(function(e){ toast('❌ '+(e.message||e),'error'); })
+        .finally(function(){ showLoading(false); });
 }
-
-function addHist(c,txt){if(!c.istoric)c.istoric=[];c.istoric.push({d:nowStamp(),t:txt});}
 
 function deleteItem(id){
     var c=ITEMS.find(function(x){return x.id===id});
@@ -521,7 +533,13 @@ function deleteItem(id){
     document.getElementById('confirmTitle').textContent='🗑️ Șterge înregistrarea';
     document.getElementById('confirmText').innerHTML='Sigur ștergi <strong>'+esc(c.client)+'</strong>? Acțiunea nu poate fi anulată.';
     var ok=document.getElementById('confirmOk');ok.style.background='var(--red)';
-    ok.onclick=function(){ITEMS=ITEMS.filter(function(x){return x.id!==id});saveStore();closeConfirm();closeDetailModal();render();toast('🗑️ Înregistrare ștearsă','info');ok.style.background='var(--green)';};
+    ok.onclick=function(){
+        showLoading(true);
+        apiPost('deleteReclamatie',{id:id})
+            .then(function(){ closeConfirm(); closeDetailModal(); toast('🗑️ Înregistrare ștearsă','info'); ok.style.background='var(--green)'; return loadData(); })
+            .catch(function(e){ toast('❌ '+(e.message||e),'error'); })
+            .finally(function(){ showLoading(false); });
+    };
     document.getElementById('confirmModal').classList.add('active');
 }
 
@@ -544,7 +562,7 @@ function openDetailModal(id){
     html+=infoRow('⚡ Prioritate','<span class="mcard-tag '+(PRIO_CLASS[c.prioritate]||'prio-normala')+'">'+(PRIO_ICON[c.prioritate]||'')+' '+esc(c.prioritate)+'</span>');
     html+=infoRow('📅 Înregistrat',esc(c.dataInreg||'—'));
     html+=infoRow('📅 Programat',progLabel(c));
-    if(c.echipa) html+=infoRow('👷 Echipa',(TEAM_ICONS[c.echipa]||'')+' '+esc(c.echipa));
+    if(c.echipa) html+=infoRow('👷 Echipa','👷 '+esc(techName(c.echipa)));
     if(c.dataRezolvare) html+=infoRow('✅ Rezolvat la',esc(c.dataRezolvare));
     if(c.descriere) html+='<div style="background:var(--gray-bg);padding:12px;border-radius:10px;font-size:13px;color:var(--gray);line-height:1.5">📝 '+esc(c.descriere)+'</div>';
     if(c.solutie) html+='<div style="background:#f0fdf4;padding:12px;border-radius:10px;font-size:13px;color:#15803d;line-height:1.5">✅ <strong>Soluție:</strong> '+esc(c.solutie)+'</div>';
@@ -607,57 +625,48 @@ function closeAddModal(){document.getElementById('addModal').classList.remove('a
 function saveItem(e){
     e.preventDefault();
     var f=document.getElementById('addForm');var fd=new FormData(f);
-    var editId=parseInt(fd.get('editId'));
+    var editId=parseInt(fd.get('editId'))||0;
     var btn=document.getElementById('submitBtn');btn.disabled=true;
 
-    var data={
+    var payload={
+        id:editId,
         client:(fd.get('client')||'').trim(),
         telefon:(fd.get('telefon')||'').trim(),
-        pid:fd.get('proiectId')||'',
+        proiect_cod:fd.get('proiectId')||'',
         adresa:(fd.get('adresa')||'').trim(),
         tip:fd.get('tip'), serviciu:fd.get('serviciu'),
         descriere:(fd.get('descriere')||'').trim(),
         prioritate:fd.get('prioritate'), status:fd.get('status'),
-        dataProgramare:fd.get('dataProgramare')||'',
-        oraProgramare:fd.get('oraProgramare')||'',
+        data_programare:fd.get('dataProgramare')||'',
+        ora_programare:fd.get('oraProgramare')||'',
         echipa:fd.get('echipa')||''
     };
-    // dacă are dată programată dar status încă "Nouă", urcă automat la Programată
-    if(data.dataProgramare&&data.status==='Nouă')data.status='Programată';
+    if(!payload.client){ toast('⚠️ Client obligatoriu','error'); btn.disabled=false; return; }
 
-    if(editId){
-        var c=ITEMS.find(function(x){return x.id===editId});
-        if(c){
-            Object.assign(c,data);
-            if(c.status==='Rezolvată'&&!c.dataRezolvare)c.dataRezolvare=todayISO();
-            addHist(c,'Editat');
-        }
-        toast('✅ Înregistrare actualizată','success');
-    } else {
-        var maxId=0;ITEMS.forEach(function(x){if(x.id>maxId)maxId=x.id});
-        var newC=Object.assign({id:maxId+1,dataInreg:todayISO(),dataRezolvare:'',solutie:'',istoric:[{d:nowStamp(),t:'Înregistrată'}]},data);
-        if(newC.status==='Rezolvată')newC.dataRezolvare=todayISO();
-        ITEMS.push(newC);
-        toast('✅ Adăugat'+(newC.dataProgramare?' și programat pe '+newC.dataProgramare:''),'success');
-    }
-    saveStore();render();closeAddModal();f.reset();btn.disabled=false;
+    showLoading(true);
+    apiPost('saveReclamatie',payload)
+        .then(function(){ toast(editId?'✅ Înregistrare actualizată':'✅ Adăugat','success'); closeAddModal(); f.reset(); return loadData(); })
+        .catch(function(e){ toast('❌ '+(e.message||e),'error'); })
+        .finally(function(){ btn.disabled=false; showLoading(false); });
 }
 
 // ═══════ DROPDOWNS ═══════
 function populateDropdowns(){
     var opts='<option value="">— Fără proiect —</option>';
-    PROJECTS.forEach(function(p){opts+='<option value="'+p.id+'">'+p.id+' — '+esc(p.client)+'</option>'});
+    PROJECTS.forEach(function(p){opts+='<option value="'+esc(p.id)+'">'+esc(p.id)+' — '+esc(p.client)+'</option>'});
     document.getElementById('fProiect').innerHTML=opts;
 
     var eopts='<option value="">Toate echipele</option>';
-    TEAMS.forEach(function(t){eopts+='<option>'+t+'</option>'});
+    TECHNICIANS.forEach(function(t){eopts+='<option value="'+t.id+'">'+t.name+'</option>'});
     document.getElementById('filterEchipa').innerHTML=eopts;
+
+    var aopts='<option value="">— Nealocat —</option>';
+    TECHNICIANS.forEach(function(t){aopts+='<option value="'+t.id+'">'+t.name+'</option>'});
+    document.getElementById('fEchipa').innerHTML=aopts;
 }
 
 // ═══════ INIT ═══════
-populateDropdowns();
-loadStore();
-render();
+loadData();
 </script>
 <script>
 if('serviceWorker' in navigator){navigator.serviceWorker.register('../sw.js').then(function(r){console.log('[PWA] SW registered, scope:',r.scope)}).catch(function(e){console.log('[PWA] SW failed:',e)});var __reloaded=false;navigator.serviceWorker.addEventListener('controllerchange',function(){if(__reloaded)return;__reloaded=true;window.location.reload();});}
