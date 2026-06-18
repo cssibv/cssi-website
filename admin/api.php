@@ -3939,6 +3939,77 @@ p { margin: 0; }
             }
             unset($p);
 
+            // Extensii doar pentru planificator (?planner=1) — nu afectează modulul Execuție.
+            $plannerMode = !empty($_GET['planner']);
+
+            // Backfill: proiecte referite de programări dar în afara scope-ului de mai sus
+            // (ex. intervenție finalizată al cărei status nu mai e Executie/Receptie/Interventie).
+            // Fără asta planificatorul afișa „?" în loc de client/proiect.
+            if ($plannerMode && !empty($programari)) {
+                $haveMap = array_flip(array_column($proiecte, 'proiect_db_id'));
+                $missing = [];
+                foreach ($programari as $pg) {
+                    if (!empty($pg['proiect_id']) && !isset($haveMap[$pg['proiect_id']])) {
+                        $missing[$pg['proiect_id']] = true;
+                    }
+                }
+                if ($missing) {
+                    $mids = array_keys($missing);
+                    $plM = implode(',', array_fill(0, count($mids), '?'));
+                    $stmtM = $db->prepare("SELECT p.id AS proiect_db_id, p.proiect_id, p.serviciu, p.obiectiv, p.adresa_obiectiv,
+                                                  p.status AS proiect_status, p.valoare_contract, p.responsabil,
+                                                  c.id AS client_db_id, c.client_id AS client_cod, c.nume AS client_nume,
+                                                  c.telefon AS client_telefon
+                                           FROM proiecte p INNER JOIN clienti c ON p.client_id = c.id
+                                           WHERE p.id IN ($plM)");
+                    $stmtM->execute($mids);
+                    foreach ($stmtM->fetchAll() as $row) { $proiecte[] = $row; }
+                }
+            }
+
+            // Reparații (reclamații) programate — suprapuse în planificator ca pseudo-programări
+            // de tip „reparatie" (read-only; editarea rămâne în modulul Reclamații).
+            // Folosesc aceleași ID-uri de tehnician (echipa) și aceleași zile/oră.
+            try {
+                if (!$plannerMode) throw new Exception('skip');
+                ensureReclamatiiSchema($db);
+                $sqlR = "SELECT id, client, telefon, adresa, proiect_cod, serviciu, descriere, prioritate,
+                                status, data_programare, ora_programare, echipa
+                         FROM reclamatii
+                         WHERE data_programare IS NOT NULL AND status <> 'Anulată'";
+                $paramsR = [];
+                if ($userFilter) { $sqlR .= " AND echipa = ?"; $paramsR[] = $userFilter; }
+                if ($fromFilter) { $sqlR .= " AND data_programare >= ?"; $paramsR[] = $fromFilter; }
+                if ($toFilter)   { $sqlR .= " AND data_programare <= ?"; $paramsR[] = $toFilter; }
+                $sqlR .= " ORDER BY data_programare, ora_programare";
+                $stmtR = $db->prepare($sqlR);
+                $stmtR->execute($paramsR);
+                $stMapR = ['Nouă'=>'Programat','Programată'=>'Programat','În lucru'=>'In curs','Rezolvată'=>'Finalizat','Anulată'=>'Anulat'];
+                foreach ($stmtR->fetchAll() as $r) {
+                    $ora = !empty($r['ora_programare']) ? $r['ora_programare'] : '08:00:00';
+                    $programari[] = [
+                        'id'              => 'rep-' . $r['id'],
+                        'tip'             => 'reparatie',
+                        'reclamatie_id'   => intval($r['id']),
+                        'proiect_id'      => null,
+                        'data_programata' => $r['data_programare'],
+                        'ora_start'       => $ora,
+                        'durata_ore'      => 2,
+                        'status'          => $stMapR[$r['status']] ?? 'Programat',
+                        'status_orig'     => $r['status'],
+                        'prioritate'      => $r['prioritate'],
+                        'obiectiv'        => $r['descriere'],
+                        'note'            => null,
+                        'atribuiri'       => !empty($r['echipa']) ? [$r['echipa']] : [],
+                        'client_nume'     => $r['client'],
+                        'client_telefon'  => $r['telefon'],
+                        'adresa_obiectiv' => $r['adresa'],
+                        'serviciu'        => $r['serviciu'],
+                        'proiect_cod'     => $r['proiect_cod'],
+                    ];
+                }
+            } catch (Exception $e) { /* reclamații indisponibile — nu blocăm planificatorul */ }
+
             jsonResponse(['success' => true, 'data' => [
                 'proiecte'   => $proiecte,
                 'programari' => $programari,

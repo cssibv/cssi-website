@@ -338,6 +338,11 @@ function loadData(){
             PROJECTS=((res.data&&res.data.proiecte)||[]).map(function(p){return {id:p.cod,client:p.client};});
             populateDropdowns();
             setSync('ok'); render();
+            // Deep-link din planificator: ?rec=<id> deschide direct fișa reparației
+            try{
+                var _rec=new URLSearchParams(location.search).get('rec');
+                if(_rec && ITEMS.some(function(x){return x.id===parseInt(_rec);})) openDetailModal(parseInt(_rec));
+            }catch(_e){}
         })
         .catch(function(e){ setSync('off'); render(); toast('❌ '+(e.message||e),'error'); })
         .finally(function(){ showLoading(false); });
