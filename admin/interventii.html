@@ -88,6 +88,8 @@ a{text-decoration:none;color:inherit;}button{font-family:inherit;cursor:pointer;
 .act-btn.prg{background:#eff6ff;color:var(--blue);}.act-btn.prg:hover{background:var(--blue);color:#fff;}
 .act-btn.waze{background:linear-gradient(135deg,#33ccff,#0099cc);color:#fff;}.act-btn.waze:hover{transform:translateY(-1px);}
 .act-btn.blank{background:var(--gray-bg);color:var(--dark);}.act-btn.blank:hover{background:#e2e8f0;}
+.act-btn.detail{background:#f5f3ff;color:var(--purple-d);}.act-btn.detail:hover{background:var(--purple);color:#fff;}
+.act-btn.del{background:#fef2f2;color:var(--red);}.act-btn.del:hover{background:var(--red);color:#fff;}
 
 /* Modal */
 .modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);backdrop-filter:blur(4px);z-index:200;align-items:center;justify-content:center;padding:16px;}
@@ -431,6 +433,17 @@ a{text-decoration:none;color:inherit;}button{font-family:inherit;cursor:pointer;
 </div>
 </div>
 
+<!-- MODAL: Detalii intervenție -->
+<div id="detailModal" class="modal-overlay" onclick="if(event.target===this)closeDetail()">
+<div class="modal">
+    <div class="modal-head">
+        <div class="modal-title" id="detailTitle">📋 Detalii intervenție</div>
+        <button class="modal-close" onclick="closeDetail()">✕</button>
+    </div>
+    <div class="modal-body" id="detailBody"></div>
+</div>
+</div>
+
 <script>
 // ═══ AUTH ═══
 var role = sessionStorage.getItem('cssi-role');
@@ -581,12 +594,59 @@ function cardHtml(it){
         h+='<div class="pv-badge">📄 '+esc(it.pv.pv_nr||'PV')+' · '+esc(it.pv.stare_finala||'')+(it.pv.data_pv?' · '+fmtDate(it.pv.data_pv):'')+'</div>';
     }
     h+='<div class="icard-actions">';
+    h+='<button class="act-btn detail" onclick="openDetail('+it.proiect_db_id+')" title="Deschide detalii">ℹ️ Detalii</button>';
     h+='<button class="act-btn pv" onclick="openPv('+it.proiect_db_id+')">📄 '+(it.pv?'Vezi/Editează PV':'Completează PV')+'</button>';
     h+='<button class="act-btn blank" onclick="printBlankPv('+it.proiect_db_id+')" title="PV gol — de completat/printat pentru teren">🖨️ PV gol</button>';
     if(!fin) h+='<button class="act-btn prg" onclick="openNewPrg('+it.proiect_db_id+')" title="Adaugă programare echipă">📅</button>';
     if(it.adresa_obiectiv) h+='<a class="act-btn waze" href="'+wazeUrl(it.adresa_obiectiv)+'" target="_blank" rel="noopener" title="Navighează cu Waze">🚗</a>';
+    if(!isTehnician) h+='<button class="act-btn del" onclick="deleteInterventie('+it.proiect_db_id+')" title="Șterge intervenția">🗑️</button>';
     h+='</div></div>';
     return h;
+}
+
+// ═══ DETALII + ȘTERGERE ═══
+function infoRow(l,v){return '<div style="display:flex;justify-content:space-between;gap:12px;padding:6px 0;border-bottom:1px solid var(--gray-bg)"><span style="font-size:13px;color:var(--gray);white-space:nowrap">'+l+'</span><span style="font-size:14px;font-weight:600;text-align:right">'+v+'</span></div>';}
+function openDetail(pid){
+    var it=STATE.items.find(function(x){return x.proiect_db_id==pid;}); if(!it) return;
+    var fin=it.proiect_status==='Finalizat';
+    var prio=it.prioritate||'Normală';
+    var h='<div style="display:grid;gap:2px">';
+    h+=infoRow('🏢 Client','<strong>'+esc(it.client_nume||'')+'</strong>');
+    h+=infoRow('📌 Cod',esc(it.proiect_id||''));
+    h+=infoRow('Status',fin?'✅ Finalizat':'⚡ Activ');
+    h+=infoRow('Prioritate',(PRIO_ICON[prio]||'')+' '+esc(prio));
+    if(it.serviciu) h+=infoRow('🔧 Serviciu',esc(it.serviciu));
+    if(it.client_telefon) h+=infoRow('📞 Telefon','<a href="tel:'+esc(it.client_telefon)+'" style="color:var(--blue);font-weight:700">'+esc(it.client_telefon)+'</a>');
+    if(it.adresa_obiectiv) h+=infoRow('📍 Adresă',esc(it.adresa_obiectiv));
+    h+='</div>';
+    if(it.obiectiv) h+='<div style="background:var(--gray-bg);padding:10px 12px;border-radius:8px;font-size:13px;white-space:pre-wrap;margin-top:10px">📝 '+esc(it.obiectiv)+'</div>';
+    if(it.note) h+='<div style="font-size:12px;color:var(--gray);font-style:italic;margin-top:6px">🗒️ '+esc(it.note)+'</div>';
+    var prgs=(it.programari||[]).slice().sort(function(a,b){return (a.data_programata+a.ora_start).localeCompare(b.data_programata+b.ora_start);});
+    h+='<div style="font-weight:700;font-size:12px;margin:12px 0 4px">📅 Programări</div>';
+    if(prgs.length){ prgs.forEach(function(p){
+        h+='<div class="icard-prg" onclick="closeDetail();openEditPrg('+p.id+','+it.proiect_db_id+')"><span class="prg-when">'+fmtDate(p.data_programata)+' · '+fmtTime(p.ora_start)+((p.atribuiri&&p.atribuiri.length)?' · '+p.atribuiri.map(techName).join(', '):'')+'</span><span class="prg-st '+statusKey(p.status)+'">'+esc(p.status)+'</span></div>';
+    }); } else { h+='<div style="font-size:12px;color:var(--orange)">🗓️ Neprogramată — nu apare încă în calendar</div>'; }
+    if(it.pv) h+='<div class="pv-badge" style="margin-top:8px">📄 '+esc(it.pv.pv_nr||'PV')+' · '+esc(it.pv.stare_finala||'')+'</div>';
+    h+='<div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:16px">';
+    h+='<button class="act-btn pv" style="flex:1;justify-content:center" onclick="closeDetail();openPv('+it.proiect_db_id+')">📄 '+(it.pv?'Vezi/Editează PV':'Completează PV')+'</button>';
+    h+='<button class="act-btn blank" onclick="printBlankPv('+it.proiect_db_id+')">🖨️ PV gol</button>';
+    if(!fin) h+='<button class="act-btn prg" onclick="closeDetail();openNewPrg('+it.proiect_db_id+')">📅 Programează</button>';
+    h+='</div>';
+    if(!isTehnician) h+='<button class="btn-del" onclick="deleteInterventie('+it.proiect_db_id+')">🗑️ Șterge intervenția</button>';
+    document.getElementById('detailTitle').textContent='📋 '+(it.client_nume||'Intervenție');
+    document.getElementById('detailBody').innerHTML=h;
+    document.getElementById('detailModal').classList.add('active');
+}
+function closeDetail(){document.getElementById('detailModal').classList.remove('active');}
+function deleteInterventie(pid){
+    var it=STATE.items.find(function(x){return x.proiect_db_id==pid;})||{};
+    if(!confirm('Ștergi definitiv intervenția'+(it.client_nume?' „'+it.client_nume+'"':'')+' ('+(it.proiect_id||'')+') și toate datele ei (programări, PV)?\n\nAcțiunea NU poate fi anulată.')) return;
+    showLoading(true);
+    fetch(API_DB+'?action=deleteInterventie',{method:'POST',credentials:'include',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'deleteInterventie',id:pid})})
+        .then(function(r){return r.json();}).then(function(res){
+            if(!res.success) throw new Error(res.error||'Eroare');
+            closeDetail(); toast('🗑️ Intervenție ștearsă','info'); refreshData();
+        }).catch(function(e){toast('❌ '+(e.message||e),'error');}).finally(function(){showLoading(false);});
 }
 
 // ═══ TECH PICKER ═══

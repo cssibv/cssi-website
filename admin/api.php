@@ -2309,6 +2309,38 @@ try {
             jsonResponse(['success' => true]);
             break;
 
+        case 'deleteInterventie':
+            // Șterge o intervenție și TOATE datele asociate (programări, atribuiri, PV, jurnal, notificări).
+            if (isTehnician() && !isAdmin()) { jsonResponse(['success' => false, 'error' => 'Nu ai dreptul să ștergi intervenții'], 403); break; }
+            $id = isset($data['id']) ? intval($data['id']) : 0;
+            if (!$id) { jsonResponse(['success' => false, 'error' => 'ID obligatoriu'], 400); break; }
+            try {
+                $db->beginTransaction();
+                // Atribuiri (prin programările proiectului)
+                $stmtPg = $db->prepare("SELECT id FROM executie_programari WHERE proiect_id = ?");
+                $stmtPg->execute([$id]);
+                $prgIds = array_column($stmtPg->fetchAll(), 'id');
+                if ($prgIds) {
+                    $pl = implode(',', array_fill(0, count($prgIds), '?'));
+                    $db->prepare("DELETE FROM executie_atribuiri WHERE programare_id IN ($pl)")->execute($prgIds);
+                }
+                $db->prepare("DELETE FROM executie_programari WHERE proiect_id = ?")->execute([$id]);
+                try { $db->prepare("DELETE FROM interventii_pv WHERE proiect_id = ?")->execute([$id]); } catch (Exception $e) {}
+                try { $db->prepare("DELETE FROM proiectare WHERE proiect_id = ?")->execute([$id]); } catch (Exception $e) {}
+                try { $db->prepare("DELETE FROM jurnal_teren WHERE proiect_id = ?")->execute([$id]); } catch (Exception $e) {}
+                $stmtCod = $db->prepare("SELECT proiect_id FROM proiecte WHERE id = ?");
+                $stmtCod->execute([$id]);
+                $codRow = $stmtCod->fetch();
+                if ($codRow) { try { $db->prepare("DELETE FROM notificari WHERE proiect_id = ?")->execute([$codRow['proiect_id']]); } catch (Exception $e) {} }
+                $db->prepare("DELETE FROM proiecte WHERE id = ?")->execute([$id]);
+                $db->commit();
+                jsonResponse(['success' => true]);
+            } catch (Exception $e) {
+                if ($db->inTransaction()) $db->rollBack();
+                jsonResponse(['success' => false, 'error' => $e->getMessage()], 500);
+            }
+            break;
+
         case 'updateProiect':
             $id = (isset($data['id']) ? $data['id'] : 0);
             // Poarta de calitate: nu permite setarea directă status=Executie când
