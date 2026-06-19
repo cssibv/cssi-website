@@ -1859,9 +1859,15 @@ try {
             $sessUserI = currentUser();
             $userFilterI = (isAdmin() || !isTehnician()) ? '' : ($sessUserI['username'] ?? '');
 
+            // Coloana prioritate poate lipsi (drepturi ALTER limitate) — altfel întreg SELECT-ul
+            // ar eșua și pagina ar rămâne goală. Selectăm o valoare implicită când lipsește.
+            $hasPrioI = false;
+            try { $hasPrioI = (bool)$db->query("SHOW COLUMNS FROM proiecte LIKE 'prioritate'")->fetch(); } catch (Exception $e) {}
+            $prioCol = $hasPrioI ? "p.prioritate" : "'Normală' AS prioritate";
+
             // Proiecte cu status Interventie SAU care au deja un PV (finalizate, dar rămân vizibile)
             $sqlPI = "SELECT p.id AS proiect_db_id, p.proiect_id, p.serviciu, p.obiectiv, p.adresa_obiectiv,
-                             p.status AS proiect_status, p.prioritate, p.note, p.responsabil, p.data_finalizare,
+                             p.status AS proiect_status, $prioCol, p.note, p.responsabil, p.data_finalizare,
                              c.id AS client_db_id, c.client_id AS client_cod, c.nume AS client_nume,
                              c.telefon AS client_telefon
                       FROM proiecte p
