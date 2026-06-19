@@ -626,6 +626,11 @@ function ensureProiecteSchema($db) {
             // Construim noul ENUM = vechiul + Interventie inainte de Anulat
             $db->exec("ALTER TABLE proiecte MODIFY status ENUM('Lead','Oferta','Contract','Proiectare','Executie','Receptie','Facturat','Mentenanta','Interventie','Anulat') NOT NULL DEFAULT 'Lead'");
         }
+        // Coloana prioritate (folosită de intervenții/reparații; reclamațiile au fost unificate aici)
+        $prio = $db->query("SHOW COLUMNS FROM proiecte LIKE 'prioritate'")->fetch();
+        if (!$prio) {
+            $db->exec("ALTER TABLE proiecte ADD COLUMN prioritate VARCHAR(20) NULL DEFAULT 'Normală' AFTER status");
+        }
     } catch (Exception $e) {
         error_log('ensureProiecteSchema FAILED: ' . $e->getMessage());
     }
@@ -1149,6 +1154,12 @@ function ensureReclamatiiSchema($db) {
             KEY idx_dataprg (data_programare),
             KEY idx_echipa (echipa)
         ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci");
+        // Coloană de urmărire migrare → intervenții (modulele au fost unificate).
+        // Reclamațiile cu migrat_proiect_id setat nu se mai dublează în planificator.
+        $mig = $db->query("SHOW COLUMNS FROM reclamatii LIKE 'migrat_proiect_id'")->fetch();
+        if (!$mig) {
+            $db->exec("ALTER TABLE reclamatii ADD COLUMN migrat_proiect_id INT NULL DEFAULT NULL");
+        }
     } catch (Exception $e) {
         error_log('ensureReclamatiiSchema FAILED: ' . $e->getMessage());
     }
@@ -1746,13 +1757,16 @@ try {
             $clientNume = isset($data['client_nume']) ? trim($data['client_nume']) : '';
             $titlu      = isset($data['titlu']) ? trim($data['titlu']) : '';
             $adresa     = isset($data['adresa']) ? trim($data['adresa']) : '';
-            $dataPrg    = isset($data['data']) ? $data['data'] : date('Y-m-d');
+            // Data e opțională: fără dată → intervenție „de programat" (triaj), fără programare în calendar.
+            $dataPrg    = !empty($data['data']) ? $data['data'] : '';
             $oraStart   = isset($data['ora_start']) ? $data['ora_start'] : '08:00';
             $durata     = isset($data['durata_ore']) ? floatval($data['durata_ore']) : 4;
             $tehnicieni = isset($data['tehnicieni']) && is_array($data['tehnicieni']) ? $data['tehnicieni'] : [];
             $note       = isset($data['note']) ? trim($data['note']) : '';
             $telefon    = isset($data['telefon']) ? trim($data['telefon']) : '';
             $serviciu   = isset($data['serviciu']) ? $data['serviciu'] : 'Supraveghere Video';
+            $prioValid  = ['Urgentă','Ridicată','Normală','Scăzută'];
+            $prioritate = (isset($data['prioritate']) && in_array($data['prioritate'], $prioValid, true)) ? $data['prioritate'] : 'Normală';
             $user       = isset($data['user']) ? $data['user'] : 'Admin';
 
             if (!$titlu)              jsonResponse(['success' => false, 'error' => 'Titlu obligatoriu'], 400);
@@ -1771,8 +1785,8 @@ try {
                 // 2. Creeaza proiect cu status Interventie
                 $proiectIdCod = nextId('proiect_seq', "CSSI-" . date('Y') . "-", 4);
                 $istoric = json_encode([['status' => 'Interventie', 'data' => date('Y-m-d H:i:s'), 'user' => $user, 'nota' => 'Lucrare rapida']]);
-                $db->prepare("INSERT INTO proiecte (proiect_id, client_id, serviciu, obiectiv, status, valoare_estimata, responsabil, adresa_obiectiv, note, istoric_status, preluat_de) VALUES (?,?,?,?,?,?,?,?,?,?,?)")
-                   ->execute([$proiectIdCod, $clientId, $serviciu, $titlu, 'Interventie', 0, $user, $adresa, $note, $istoric, $user]);
+                $db->prepare("INSERT INTO proiecte (proiect_id, client_id, serviciu, obiectiv, status, prioritate, valoare_estimata, responsabil, adresa_obiectiv, note, istoric_status, preluat_de) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)")
+                   ->execute([$proiectIdCod, $clientId, $serviciu, $titlu, 'Interventie', $prioritate, 0, $user, $adresa, $note, $istoric, $user]);
                 $proiectIdDb = $db->lastInsertId();
                 // Creare directoare uploads
                 $projDir = PROIECTE_DIR . $proiectIdCod . '/';
@@ -1792,13 +1806,18 @@ try {
                     programare_id INT NOT NULL, user_id VARCHAR(60) NOT NULL,
                     PRIMARY KEY (programare_id, user_id), KEY idx_user (user_id)
                 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4");
-                $stmtP = $db->prepare("INSERT INTO executie_programari (proiect_id, data_programata, ora_start, durata_ore, status, obiectiv, note, created_by) VALUES (?,?,?,?,?,?,?,?)");
-                $stmtP->execute([$proiectIdDb, $dataPrg, $oraStart . ':00', $durata, 'Programat', $titlu, $note, $user]);
-                $prgId = $db->lastInsertId();
-                // 4. Atribuiri tehnicieni
-                if ($tehnicieni) {
-                    $stmtA = $db->prepare("INSERT INTO executie_atribuiri (programare_id, user_id) VALUES (?,?)");
-                    foreach ($tehnicieni as $t) { if (trim($t) !== '') $stmtA->execute([$prgId, trim($t)]); }
+                // Programarea se creează DOAR dacă există o dată. Fără dată =
+                // intervenție „de programat" (apare în listă, nu în calendar).
+                $prgId = null;
+                if ($dataPrg) {
+                    $stmtP = $db->prepare("INSERT INTO executie_programari (proiect_id, data_programata, ora_start, durata_ore, status, obiectiv, note, created_by) VALUES (?,?,?,?,?,?,?,?)");
+                    $stmtP->execute([$proiectIdDb, $dataPrg, $oraStart . ':00', $durata, 'Programat', $titlu, $note, $user]);
+                    $prgId = $db->lastInsertId();
+                    // 4. Atribuiri tehnicieni
+                    if ($tehnicieni) {
+                        $stmtA = $db->prepare("INSERT INTO executie_atribuiri (programare_id, user_id) VALUES (?,?)");
+                        foreach ($tehnicieni as $t) { if (trim($t) !== '') $stmtA->execute([$prgId, trim($t)]); }
+                    }
                 }
                 $db->commit();
                 jsonResponse(['success' => true, 'proiect_id' => $proiectIdCod, 'proiect_db_id' => $proiectIdDb, 'programare_id' => $prgId, 'client_id' => $clientId]);
@@ -1834,7 +1853,7 @@ try {
 
             // Proiecte cu status Interventie SAU care au deja un PV (finalizate, dar rămân vizibile)
             $sqlPI = "SELECT p.id AS proiect_db_id, p.proiect_id, p.serviciu, p.obiectiv, p.adresa_obiectiv,
-                             p.status AS proiect_status, p.note, p.responsabil, p.data_finalizare,
+                             p.status AS proiect_status, p.prioritate, p.note, p.responsabil, p.data_finalizare,
                              c.id AS client_db_id, c.client_id AS client_cod, c.nume AS client_nume,
                              c.telefon AS client_telefon
                       FROM proiecte p
@@ -2134,6 +2153,124 @@ try {
             if (!$id) { jsonResponse(['success' => false, 'error' => 'id obligatoriu'], 400); break; }
             $db->prepare("DELETE FROM reclamatii WHERE id = ?")->execute([$id]);
             jsonResponse(['success' => true]);
+            break;
+
+        // ══════════════════════════════════════
+        // MIGRARE: Reclamații → Intervenții (unificare module).
+        // Idempotent: sare peste rândurile deja migrate (migrat_proiect_id setat).
+        // ?dry_run=1 sau {"dry_run":true} → doar raportează, nu modifică nimic.
+        // ══════════════════════════════════════
+        case 'migrateReclamatii':
+            if (!isAdmin()) { jsonResponse(['success' => false, 'error' => 'Doar administratorii pot migra reclamațiile'], 403); break; }
+            ensureReclamatiiSchema($db);
+            ensureProiecteSchema($db);
+            ensureFinalizareSchema($db);
+            ensureInterventiePVSchema($db);
+            $db->exec("CREATE TABLE IF NOT EXISTS executie_programari (
+                id INT PRIMARY KEY AUTO_INCREMENT, proiect_id INT NOT NULL,
+                data_programata DATE NOT NULL, ora_start TIME DEFAULT '08:00:00',
+                durata_ore DECIMAL(4,1) DEFAULT 8, status VARCHAR(20) DEFAULT 'Programat',
+                obiectiv TEXT, note TEXT, created_by VARCHAR(60),
+                created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+                KEY idx_data (data_programata), KEY idx_proiect (proiect_id), KEY idx_status (status)
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4");
+            $db->exec("CREATE TABLE IF NOT EXISTS executie_atribuiri (
+                programare_id INT NOT NULL, user_id VARCHAR(60) NOT NULL,
+                PRIMARY KEY (programare_id, user_id), KEY idx_user (user_id)
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4");
+
+            $dryRun = !empty($data['dry_run']) || !empty($_GET['dry_run']);
+            $u = currentUser();
+            $actor = $u['nume'] ?? ($u['username'] ?? 'Admin');
+
+            // Hartă serviciu (UI reclamații → ENUM proiecte)
+            $servMap = [
+                'Detecție Incendiu' => 'Detectie Incendiu', 'Alarmă Antiefracție' => 'Alarma',
+                'Supraveghere Video' => 'Supraveghere Video', 'Control Acces' => 'Control Acces',
+                'Videointerfonie' => 'Videointerfonie', 'Automatizări' => 'Automatizari',
+                'Altele' => 'Complex',
+            ];
+            $prgStatusMap = ['Nouă'=>'Programat','Programată'=>'Programat','În lucru'=>'In curs','Rezolvată'=>'Finalizat','Anulată'=>'Anulat'];
+            $validTech = ['zoli','sanyi','bogdan','cezar','cristi','denes'];
+
+            $pending = $db->query("SELECT * FROM reclamatii WHERE migrat_proiect_id IS NULL ORDER BY id")->fetchAll();
+            $report = ['total' => count($pending), 'migrate' => 0, 'cu_programare' => 0, 'cu_pv' => 0, 'erori' => [], 'dry_run' => $dryRun];
+
+            if ($dryRun) {
+                jsonResponse(['success' => true, 'data' => $report]);
+                break;
+            }
+
+            foreach ($pending as $r) {
+                try {
+                    $db->beginTransaction();
+
+                    // 1. Client: potrivire pe nume, altfel creează
+                    $clientNume = trim($r['client']);
+                    $stmtFc = $db->prepare("SELECT id FROM clienti WHERE LOWER(nume) = LOWER(?) LIMIT 1");
+                    $stmtFc->execute([$clientNume]);
+                    $cliRow = $stmtFc->fetch();
+                    if ($cliRow) {
+                        $cliId = intval($cliRow['id']);
+                    } else {
+                        $newCid = nextId('client_seq', "CLI-", 4);
+                        $db->prepare("INSERT INTO clienti (client_id, nume, telefon, oras, tip, note) VALUES (?,?,?,?,?,?)")
+                           ->execute([$newCid, $clientNume ?: 'Client', trim($r['telefon'] ?? ''), '', 'Persoana fizica', 'Client migrat din Reclamații #' . $r['id']]);
+                        $cliId = intval($db->lastInsertId());
+                    }
+
+                    // 2. Proiect (intervenție)
+                    $serviciu = $servMap[$r['serviciu'] ?? ''] ?? 'Complex';
+                    $obiectiv = trim($r['descriere'] ?? '') ?: (trim($r['tip'] ?? 'Intervenție'));
+                    $prio = in_array($r['prioritate'] ?? '', ['Urgentă','Ridicată','Normală','Scăzută'], true) ? $r['prioritate'] : 'Normală';
+                    $isRezolvat = ($r['status'] === 'Rezolvată');
+                    $isAnulat   = ($r['status'] === 'Anulată');
+                    $projStatus = $isRezolvat ? 'Finalizat' : ($isAnulat ? 'Anulat' : 'Interventie');
+                    $proiectIdCod = nextId('proiect_seq', "CSSI-" . date('Y') . "-", 4);
+                    $istoric = json_encode([
+                        ['status' => 'Interventie', 'data' => ($r['data_inreg'] ?: date('Y-m-d')) . ' 00:00:00', 'user' => $actor, 'nota' => 'Migrat din Reclamații #' . $r['id']],
+                    ], JSON_UNESCAPED_UNICODE);
+                    $noteProj = trim(($r['tip'] ? '['.$r['tip'].'] ' : '') . 'Migrat din Reclamații #' . $r['id']);
+                    $db->prepare("INSERT INTO proiecte (proiect_id, client_id, serviciu, obiectiv, status, prioritate, valoare_estimata, responsabil, adresa_obiectiv, note, istoric_status, preluat_de) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)")
+                       ->execute([$proiectIdCod, $cliId, $serviciu, $obiectiv, $projStatus, $prio, 0, $actor, trim($r['adresa'] ?? ''), $noteProj, $istoric, $actor]);
+                    $projDbId = intval($db->lastInsertId());
+                    $projDir = PROIECTE_DIR . $proiectIdCod . '/';
+                    foreach (['executie','receptie','facturi'] as $sub) { @mkdir($projDir . $sub, 0755, true); }
+
+                    // 3. Programare (dacă are dată și nu e anulată) → apare în planificator
+                    if (!empty($r['data_programare']) && !$isAnulat) {
+                        $ora = !empty($r['ora_programare']) ? (strlen($r['ora_programare']) === 5 ? $r['ora_programare'] . ':00' : $r['ora_programare']) : '08:00:00';
+                        $prgSt = $prgStatusMap[$r['status']] ?? 'Programat';
+                        $db->prepare("INSERT INTO executie_programari (proiect_id, data_programata, ora_start, durata_ore, status, obiectiv, note, created_by) VALUES (?,?,?,?,?,?,?,?)")
+                           ->execute([$projDbId, $r['data_programare'], $ora, 2, $prgSt, $obiectiv, null, $actor]);
+                        $prgId = intval($db->lastInsertId());
+                        $tech = trim($r['echipa'] ?? '');
+                        if ($tech !== '' && in_array($tech, $validTech, true)) {
+                            $db->prepare("INSERT INTO executie_atribuiri (programare_id, user_id) VALUES (?,?)")->execute([$prgId, $tech]);
+                        }
+                        $report['cu_programare']++;
+                    }
+
+                    // 4. PV pentru cele rezolvate → rămân vizibile ca finalizate cu proces verbal
+                    if ($isRezolvat) {
+                        $pvNr = 'PV-' . $proiectIdCod;
+                        $tehName = '';
+                        $db->prepare("INSERT INTO interventii_pv (proiect_id, pv_nr, data_pv, problema_constatata, cauza, solutie_aplicata, materiale, recomandari, stare_finala, durata_ore, tehnicieni, semnatar_client, semnatura_client, created_by) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)")
+                           ->execute([$projDbId, $pvNr, ($r['data_rezolvare'] ?: date('Y-m-d')), trim($r['descriere'] ?? ''), '', trim($r['solutie'] ?? ''), '[]', '', 'Rezolvat', 0, $tehName, '', '', $actor]);
+                        $report['cu_pv']++;
+                    }
+
+                    // 5. Marchează reclamația ca migrată
+                    $db->prepare("UPDATE reclamatii SET migrat_proiect_id = ? WHERE id = ?")->execute([$projDbId, $r['id']]);
+
+                    $db->commit();
+                    $report['migrate']++;
+                } catch (Exception $e) {
+                    if ($db->inTransaction()) $db->rollBack();
+                    $report['erori'][] = ['reclamatie_id' => $r['id'], 'client' => $r['client'], 'error' => $e->getMessage()];
+                }
+            }
+            jsonResponse(['success' => true, 'data' => $report]);
             break;
 
         case 'deleteProiect':
@@ -3976,7 +4113,8 @@ p { margin: 0; }
                 $sqlR = "SELECT id, client, telefon, adresa, proiect_cod, serviciu, descriere, prioritate,
                                 status, data_programare, ora_programare, echipa
                          FROM reclamatii
-                         WHERE data_programare IS NOT NULL AND status <> 'Anulată'";
+                         WHERE data_programare IS NOT NULL AND status <> 'Anulată'
+                           AND migrat_proiect_id IS NULL";
                 $paramsR = [];
                 if ($userFilter) { $sqlR .= " AND echipa = ?"; $paramsR[] = $userFilter; }
                 if ($fromFilter) { $sqlR .= " AND data_programare >= ?"; $paramsR[] = $fromFilter; }

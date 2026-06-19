@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Intervenții — Portal CSSI 3.0</title>
+<title>Intervenții & Reparații — Portal CSSI 3.0</title>
 <meta name="robots" content="noindex, nofollow">
 <link rel="icon" type="image/x-icon" href="/images/favicon.ico">
 <meta name="theme-color" content="#9333ea">
@@ -64,6 +64,12 @@ a{text-decoration:none;color:inherit;}button{font-family:inherit;cursor:pointer;
 .icard-tags{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:8px;}
 .icard-tag{font-size:11px;font-weight:700;padding:3px 10px;border-radius:6px;background:var(--gray-bg);color:var(--gray);}
 .icard-tag.serv{background:#eff6ff;color:var(--blue);}
+.icard-tag.prio-urgenta{background:#fef2f2;color:var(--red);}
+.icard-tag.prio-ridicata{background:#fff7ed;color:var(--orange);}
+.icard-tag.prio-normala{background:#eff6ff;color:var(--blue);}
+.icard-tag.prio-scazuta{background:var(--gray-bg);color:var(--gray);}
+.icard.urgent-flag{box-shadow:0 0 0 2px rgba(220,38,38,0.25),var(--shadow);}
+.icard-prg.deprogramat{border-style:dashed;color:var(--orange);justify-content:center;font-weight:800;}
 .icard-title{font-size:13px;font-weight:700;color:var(--dark);margin-bottom:8px;line-height:1.4;}
 .icard-row{font-size:12px;color:var(--gray);margin-bottom:5px;display:flex;align-items:center;gap:6px;line-height:1.4;}
 .icard-row strong{color:var(--dark);font-weight:700;}
@@ -157,7 +163,7 @@ a{text-decoration:none;color:inherit;}button{font-family:inherit;cursor:pointer;
     <div class="page-header" id="pageHeader">
         <div>
             <a href="../admin.html" class="page-back">← Dashboard</a>
-            <div class="page-title" id="pageTitle">⚡ Intervenții</div>
+            <div class="page-title" id="pageTitle">⚡ Intervenții & Reparații</div>
             <div class="page-subtitle" id="syncStatus"><span class="sync-indicator sync-off"></span>Se încarcă...</div>
         </div>
         <div class="page-actions">
@@ -173,8 +179,16 @@ a{text-decoration:none;color:inherit;}button{font-family:inherit;cursor:pointer;
         <input type="text" class="filter-search" id="searchBox" placeholder="🔍 Caută client, adresă, problemă..." oninput="render()">
         <select class="filter-select" id="filterStatus" onchange="render()">
             <option value="active">⚡ Active (de rezolvat)</option>
+            <option value="neprogramat">🗓️ De programat</option>
             <option value="finalizat">✅ Finalizate (cu PV)</option>
             <option value="toate">Toate</option>
+        </select>
+        <select class="filter-select" id="filterPrioritate" onchange="render()">
+            <option value="">Toate prioritățile</option>
+            <option value="Urgentă">🔴 Urgentă</option>
+            <option value="Ridicată">🟠 Ridicată</option>
+            <option value="Normală">🔵 Normală</option>
+            <option value="Scăzută">⚪ Scăzută</option>
         </select>
         <select class="filter-select" id="filterTehnician" onchange="render()">
             <option value="">Toți tehnicienii</option>
@@ -185,7 +199,7 @@ a{text-decoration:none;color:inherit;}button{font-family:inherit;cursor:pointer;
 
     <div id="listView"></div>
 
-    <div class="footer">Portal CSSI 3.0 · Modul Intervenții v1.0 · Apel → programare echipă → proces verbal</div>
+    <div class="footer">Portal CSSI 3.0 · Modul Intervenții & Reparații v2.0 · Apel/reclamație → programare echipă → proces verbal</div>
 </div>
 
 <div class="bottom-nav">
@@ -244,11 +258,23 @@ a{text-decoration:none;color:inherit;}button{font-family:inherit;cursor:pointer;
                     <input type="text" class="form-input" id="iAdresa" placeholder="Str. ..., nr. ..., oraș">
                 </div>
             </div>
-            <div class="form-row-3">
+            <div class="form-row">
                 <div class="form-group">
-                    <label class="form-label">Data <span class="req">*</span></label>
-                    <input type="date" class="form-input" id="iData" required>
+                    <label class="form-label">Prioritate</label>
+                    <select class="form-select" id="iPrioritate">
+                        <option value="Urgentă">🔴 Urgentă</option>
+                        <option value="Ridicată">🟠 Ridicată</option>
+                        <option value="Normală" selected>🔵 Normală</option>
+                        <option value="Scăzută">⚪ Scăzută</option>
+                    </select>
                 </div>
+                <div class="form-group">
+                    <label class="form-label">Data programată</label>
+                    <input type="date" class="form-input" id="iData">
+                    <div style="font-size:11px;color:var(--gray-l);margin-top:4px">Lasă gol → intervenție „de programat" (apare în listă, nu în calendar)</div>
+                </div>
+            </div>
+            <div class="form-row">
                 <div class="form-group">
                     <label class="form-label">Ora start</label>
                     <input type="time" class="form-input" id="iOra" value="09:00">
@@ -419,6 +445,8 @@ var TECH_IDS = TECHNICIANS.map(function(t){return t.id;});
 var isTehnician = TECH_IDS.indexOf(role) >= 0;
 var DAYS_RO = ['Dum','Lun','Mar','Mie','Joi','Vin','Sâm'];
 var MONTHS_SHORT = ['Ian','Feb','Mar','Apr','Mai','Iun','Iul','Aug','Sep','Oct','Noi','Dec'];
+var PRIO_CLASS = {'Urgentă':'prio-urgenta','Ridicată':'prio-ridicata','Normală':'prio-normala','Scăzută':'prio-scazuta'};
+var PRIO_ICON  = {'Urgentă':'🔴','Ridicată':'🟠','Normală':'🔵','Scăzută':'⚪'};
 
 // ═══ STATE ═══
 var STATE = { items: [], loaded:false, isLive:false, prestator:null };
@@ -469,10 +497,13 @@ function nextProgramare(it){
 function filteredItems(){
     var q = (document.getElementById('searchBox').value||'').toLowerCase().trim();
     var fSt = document.getElementById('filterStatus').value;
+    var fPr = document.getElementById('filterPrioritate').value;
     var fTe = document.getElementById('filterTehnician').value;
     return STATE.items.filter(function(it){
         if(fSt==='active' && it.proiect_status!=='Interventie') return false;
+        if(fSt==='neprogramat' && !(it.proiect_status==='Interventie' && !(it.programari&&it.programari.length))) return false;
         if(fSt==='finalizat' && it.proiect_status!=='Finalizat') return false;
+        if(fPr && (it.prioritate||'Normală')!==fPr) return false;
         if(fTe){
             var has=(it.programari||[]).some(function(p){return (p.atribuiri||[]).indexOf(fTe)>=0;});
             if(!has) return false;
@@ -517,11 +548,14 @@ function cardHtml(it){
     var fin = it.proiect_status==='Finalizat';
     var np = nextProgramare(it);
     var team = np && np.atribuiri ? np.atribuiri : [];
-    var h='<div class="icard'+(fin?' finalizat':'')+'">';
+    var prio = it.prioritate||'Normală';
+    var urgent = !fin && prio==='Urgentă';
+    var h='<div class="icard'+(fin?' finalizat':'')+(urgent?' urgent-flag':'')+'">';
     h+='<div class="icard-top"><div class="icard-client">'+esc(it.client_nume||'Client')+'</div>';
     h+='<span class="icard-badge '+(fin?'finalizat':'interventie')+'">'+(fin?'✅ Finalizat':'⚡ Activ')+'</span></div>';
     h+='<div class="icard-pid">📌 '+esc(it.proiect_id||'')+'</div>';
     h+='<div class="icard-tags">';
+    if(!fin) h+='<span class="icard-tag '+(PRIO_CLASS[prio]||'prio-normala')+'">'+(PRIO_ICON[prio]||'')+' '+esc(prio)+'</span>';
     if(it.serviciu) h+='<span class="icard-tag serv">'+esc(it.serviciu)+'</span>';
     if(it.client_telefon) h+='<span class="icard-tag">📞 '+esc(it.client_telefon)+'</span>';
     h+='</div>';
@@ -534,6 +568,10 @@ function cardHtml(it){
         h+='<span class="prg-when">📅 '+fmtDate(p.data_programata)+' · '+fmtTime(p.ora_start)+'</span>';
         h+='<span class="prg-st '+statusKey(p.status)+'">'+esc(p.status)+'</span></div>';
     });
+    // Intervenție activă fără programare → invită la programare (apare apoi în calendar)
+    if(!fin && !(it.programari&&it.programari.length)){
+        h+='<div class="icard-prg deprogramat" onclick="openNewPrg('+it.proiect_db_id+')">🗓️ De programat — adaugă în calendar</div>';
+    }
     if(team.length){
         h+='<div class="icard-team">'+team.map(function(uid){return '<span class="team-chip"><span class="av">'+techInitial(uid)+'</span>'+esc(techName(uid))+'</span>';}).join('')+'</div>';
     }
@@ -598,6 +636,7 @@ function submitInterventie(ev){
     var payload={action:'createInterventie',client_id:clientId||null,client_nume:clientNume,
         telefon:document.getElementById('iTelefon').value.trim(),titlu:titlu,
         serviciu:document.getElementById('iServiciu').value,adresa:document.getElementById('iAdresa').value.trim(),
+        prioritate:document.getElementById('iPrioritate').value,
         data:document.getElementById('iData').value,ora_start:document.getElementById('iOra').value,
         durata_ore:parseFloat(document.getElementById('iDurata').value)||2,
         tehnicieni:pickedTechs('iTehnicieni'),note:document.getElementById('iNote').value.trim(),user:userName};

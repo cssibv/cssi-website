@@ -155,6 +155,17 @@ tr:hover td{background:rgba(59,130,246,0.03);}
         </div>
     </div>
 
+    <div id="mergeBanner" style="background:linear-gradient(135deg,#faf5ff,#fff);border:1px solid #e9d5ff;border-left:4px solid #9333ea;border-radius:14px;padding:14px 18px;margin-bottom:16px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap">
+        <div style="font-size:13px;color:#6b21a8;line-height:1.5">
+            <strong>🔀 Modul unificat:</strong> Reclamațiile se mută în <a href="interventii.html" style="color:#7c3aed;font-weight:800;text-decoration:underline">Intervenții &amp; Reparații</a>.
+            Migrează înregistrările existente ca să apară corect în planificator (calendar) și cu proces verbal.
+        </div>
+        <div style="display:flex;gap:8px">
+            <a href="interventii.html" class="page-btn secondary" style="background:#f5f3ff;color:#7c3aed;border:1px solid #e9d5ff">⚡ Deschide Intervenții</a>
+            <button id="migrateBtn" class="page-btn primary" style="background:#9333ea" onclick="migrateToInterventii()">🔀 Migrează în Intervenții</button>
+        </div>
+    </div>
+
     <div class="summary" id="summary"></div>
 
     <div class="filters">
@@ -669,6 +680,34 @@ function populateDropdowns(){
     TECHNICIANS.forEach(function(t){aopts+='<option value="'+t.id+'">'+t.name+'</option>'});
     document.getElementById('fEchipa').innerHTML=aopts;
 }
+
+// ═══════ MIGRARE → INTERVENȚII ═══════
+function migrateToInterventii(){
+    if(role!=='admin'){ toast('⚠️ Doar administratorii pot migra','error'); return; }
+    var btn=document.getElementById('migrateBtn');
+    showLoading(true); btn.disabled=true;
+    // 1) Dry-run: numără ce se va migra
+    apiPost('migrateReclamatii',{dry_run:true})
+        .then(function(res){
+            var r=res.data||{};
+            if(!r.total){ toast('✅ Nimic de migrat — toate reclamațiile sunt deja în Intervenții','info'); btn.disabled=false; showLoading(false); return null; }
+            if(!confirm('Migrez '+r.total+' reclamații în modulul Intervenții & Reparații?\n\nFiecare devine o intervenție (client + proiect), iar cele cu dată apar în planificator. Cele rezolvate primesc proces verbal. Acțiunea nu se repetă pentru cele deja migrate.')){
+                btn.disabled=false; showLoading(false); return null;
+            }
+            // 2) Migrare reală
+            return apiPost('migrateReclamatii',{}).then(function(res2){
+                var d=res2.data||{};
+                var msg='✅ Migrate: '+d.migrate+'/'+d.total+' · în calendar: '+d.cu_programare+' · cu PV: '+d.cu_pv;
+                if(d.erori&&d.erori.length) msg+=' · erori: '+d.erori.length;
+                toast(msg, d.erori&&d.erori.length?'error':'success');
+                if(d.erori&&d.erori.length) console.warn('Erori migrare:',d.erori);
+                return loadData();
+            });
+        })
+        .catch(function(e){ toast('❌ '+(e.message||e),'error'); })
+        .finally(function(){ btn.disabled=false; showLoading(false); });
+}
+if(role!=='admin'){ var _mb=document.getElementById('migrateBtn'); if(_mb) _mb.style.display='none'; }
 
 // ═══════ INIT ═══════
 loadData();

@@ -292,6 +292,15 @@ tr:hover td{background:#f8fafc;}
                     <input type="text" class="form-input" id="iAdresa" placeholder="Str. ..., nr. ..., oraș">
                 </div>
             </div>
+            <div class="form-group">
+                <label class="form-label">Prioritate</label>
+                <select class="form-select" id="iPrioritate">
+                    <option value="Urgentă">🔴 Urgentă</option>
+                    <option value="Ridicată">🟠 Ridicată</option>
+                    <option value="Normală" selected>🔵 Normală</option>
+                    <option value="Scăzută">⚪ Scăzută</option>
+                </select>
+            </div>
             <div class="form-row-3">
                 <div class="form-group">
                     <label class="form-label">Data <span class="req">*</span></label>
@@ -747,6 +756,7 @@ function openInterventieModal(){
     document.getElementById('iData').value = new Date().toISOString().split('T')[0];
     document.getElementById('iOra').value = '09:00';
     document.getElementById('iDurata').value = 2;
+    document.getElementById('iPrioritate').value = 'Normală';
     setCliMode('exist');
     // Render tehnicieni picker (pre-selectează tehnicianul curent dacă e tehnician)
     var preselect = isTehnician ? [role] : [];
@@ -810,6 +820,7 @@ function submitInterventie(ev){
         titlu: titlu,
         serviciu: document.getElementById('iServiciu').value,
         adresa: document.getElementById('iAdresa').value.trim(),
+        prioritate: document.getElementById('iPrioritate').value,
         data: document.getElementById('iData').value,
         ora_start: document.getElementById('iOra').value,
         durata_ore: parseFloat(document.getElementById('iDurata').value) || 2,
