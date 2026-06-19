@@ -273,21 +273,30 @@ a{text-decoration:none;color:inherit;}button{font-family:inherit;cursor:pointer;
                     </select>
                 </div>
                 <div class="form-group">
-                    <label class="form-label">Data programată</label>
-                    <input type="date" class="form-input" id="iData">
-                    <div style="font-size:11px;color:var(--gray-l);margin-top:4px">Lasă gol → intervenție „de programat" (apare în listă, nu în calendar)</div>
+                    <label class="form-label">Programare</label>
+                    <div style="display:flex;gap:6px">
+                        <button type="button" class="seg-btn" id="segPrgNow" onclick="setPrgMode('now')">📅 Cu dată</button>
+                        <button type="button" class="seg-btn" id="segPrgLater" onclick="setPrgMode('later')">🕓 De programat</button>
+                    </div>
                 </div>
             </div>
-            <div class="form-row">
-                <div class="form-group">
-                    <label class="form-label">Ora start</label>
-                    <input type="time" class="form-input" id="iOra" value="09:00">
-                </div>
-                <div class="form-group">
-                    <label class="form-label">Durata (h)</label>
-                    <input type="number" class="form-input" id="iDurata" value="2" min="0.5" step="0.5">
+            <div id="schedBlock">
+                <div class="form-row-3">
+                    <div class="form-group">
+                        <label class="form-label">Data <span class="req">*</span></label>
+                        <input type="date" class="form-input" id="iData">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Ora start</label>
+                        <input type="time" class="form-input" id="iOra" value="09:00">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Durata (h)</label>
+                        <input type="number" class="form-input" id="iDurata" value="2" min="0.5" step="0.5">
+                    </div>
                 </div>
             </div>
+            <div id="laterHint" style="display:none;font-size:12px;color:#9a3412;background:#fff7ed;border-radius:8px;padding:8px 12px;margin-bottom:14px">🕓 Intervenție „de programat" — apare în listă fără dată; o programezi mai târziu (buton 📅) când te sincronizezi cu clientul.</div>
             <div class="form-group">
                 <label class="form-label">Echipa / tehnicieni</label>
                 <div class="tech-pick" id="iTehnicieni"></div>
@@ -667,12 +676,23 @@ function setCliMode(mode){
     if(mode==='nou'){existB.style.display='none';nouB.style.display='block';on(sN);off(sE);}
     else{existB.style.display='block';nouB.style.display='none';on(sE);off(sN);}
 }
+var _prgLater = false;
+function setPrgMode(mode){
+    _prgLater = (mode==='later');
+    var now=document.getElementById('segPrgNow'), later=document.getElementById('segPrgLater');
+    function on(b){b.style.borderColor='#9333ea';b.style.background='#faf5ff';b.style.color='#6b21a8';}
+    function off(b){b.style.borderColor='';b.style.background='';b.style.color='';}
+    document.getElementById('schedBlock').style.display = _prgLater ? 'none' : '';
+    document.getElementById('laterHint').style.display  = _prgLater ? '' : 'none';
+    if(_prgLater){on(later);off(now);} else {on(now);off(later);}
+}
 function openInterventieModal(){
     document.getElementById('interventieForm').reset();
     document.getElementById('iData').value=todayStr();
     document.getElementById('iOra').value='09:00';
     document.getElementById('iDurata').value=2;
     setCliMode('exist');
+    setPrgMode('now');
     renderTechPicker('iTehnicieni', isTehnician?[role]:[]);
     if(!_clientiLoaded){
         document.getElementById('iClientId').innerHTML='<option value="">⏳ Se încarcă...</option>';
@@ -696,11 +716,12 @@ function submitInterventie(ev){
     var titlu=document.getElementById('iTitlu').value.trim();
     if(!titlu){toast('⚠️ Problema/titlul e obligatoriu','error');return;}
     if(!clientId&&!clientNume){toast('⚠️ Alege client existent sau introdu nume nou','error');return;}
+    if(!_prgLater && !document.getElementById('iData').value){toast('⚠️ Alege o dată sau comută pe „De programat"','error');return;}
     var payload={action:'createInterventie',client_id:clientId||null,client_nume:clientNume,
         telefon:document.getElementById('iTelefon').value.trim(),titlu:titlu,
         serviciu:document.getElementById('iServiciu').value,adresa:document.getElementById('iAdresa').value.trim(),
         prioritate:document.getElementById('iPrioritate').value,
-        data:document.getElementById('iData').value,ora_start:document.getElementById('iOra').value,
+        data:_prgLater?'':document.getElementById('iData').value,ora_start:document.getElementById('iOra').value,
         durata_ore:parseFloat(document.getElementById('iDurata').value)||2,
         tehnicieni:pickedTechs('iTehnicieni'),note:document.getElementById('iNote').value.trim(),user:userName};
     var btn=document.getElementById('iSubmitBtn'),orig=btn.textContent;
