@@ -1785,8 +1785,16 @@ try {
                 // 2. Creeaza proiect cu status Interventie
                 $proiectIdCod = nextId('proiect_seq', "CSSI-" . date('Y') . "-", 4);
                 $istoric = json_encode([['status' => 'Interventie', 'data' => date('Y-m-d H:i:s'), 'user' => $user, 'nota' => 'Lucrare rapida']]);
-                $db->prepare("INSERT INTO proiecte (proiect_id, client_id, serviciu, obiectiv, status, prioritate, valoare_estimata, responsabil, adresa_obiectiv, note, istoric_status, preluat_de) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)")
-                   ->execute([$proiectIdCod, $clientId, $serviciu, $titlu, 'Interventie', $prioritate, 0, $user, $adresa, $note, $istoric, $user]);
+                // Coloana prioritate poate lipsi (drepturi ALTER limitate) — inserăm adaptiv.
+                $hasPrio = false;
+                try { $hasPrio = (bool)$db->query("SHOW COLUMNS FROM proiecte LIKE 'prioritate'")->fetch(); } catch (Exception $e) {}
+                if ($hasPrio) {
+                    $db->prepare("INSERT INTO proiecte (proiect_id, client_id, serviciu, obiectiv, status, prioritate, valoare_estimata, responsabil, adresa_obiectiv, note, istoric_status, preluat_de) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)")
+                       ->execute([$proiectIdCod, $clientId, $serviciu, $titlu, 'Interventie', $prioritate, 0, $user, $adresa, $note, $istoric, $user]);
+                } else {
+                    $db->prepare("INSERT INTO proiecte (proiect_id, client_id, serviciu, obiectiv, status, valoare_estimata, responsabil, adresa_obiectiv, note, istoric_status, preluat_de) VALUES (?,?,?,?,?,?,?,?,?,?,?)")
+                       ->execute([$proiectIdCod, $clientId, $serviciu, $titlu, 'Interventie', 0, $user, $adresa, $note, $istoric, $user]);
+                }
                 $proiectIdDb = $db->lastInsertId();
                 // Creare directoare uploads
                 $projDir = PROIECTE_DIR . $proiectIdCod . '/';
@@ -2193,8 +2201,12 @@ try {
             $prgStatusMap = ['Nouă'=>'Programat','Programată'=>'Programat','În lucru'=>'In curs','Rezolvată'=>'Finalizat','Anulată'=>'Anulat'];
             $validTech = ['zoli','sanyi','bogdan','cezar','cristi','denes'];
 
+            // Coloana prioritate poate lipsi (drepturi ALTER limitate) — inserăm adaptiv.
+            $hasPrio = false;
+            try { $hasPrio = (bool)$db->query("SHOW COLUMNS FROM proiecte LIKE 'prioritate'")->fetch(); } catch (Exception $e) {}
+
             $pending = $db->query("SELECT * FROM reclamatii WHERE migrat_proiect_id IS NULL ORDER BY id")->fetchAll();
-            $report = ['total' => count($pending), 'migrate' => 0, 'cu_programare' => 0, 'cu_pv' => 0, 'erori' => [], 'dry_run' => $dryRun];
+            $report = ['total' => count($pending), 'migrate' => 0, 'cu_programare' => 0, 'cu_pv' => 0, 'has_prioritate' => $hasPrio, 'erori' => [], 'dry_run' => $dryRun];
 
             if ($dryRun) {
                 jsonResponse(['success' => true, 'data' => $report]);
@@ -2231,8 +2243,13 @@ try {
                         ['status' => 'Interventie', 'data' => ($r['data_inreg'] ?: date('Y-m-d')) . ' 00:00:00', 'user' => $actor, 'nota' => 'Migrat din Reclamații #' . $r['id']],
                     ], JSON_UNESCAPED_UNICODE);
                     $noteProj = trim(($r['tip'] ? '['.$r['tip'].'] ' : '') . 'Migrat din Reclamații #' . $r['id']);
-                    $db->prepare("INSERT INTO proiecte (proiect_id, client_id, serviciu, obiectiv, status, prioritate, valoare_estimata, responsabil, adresa_obiectiv, note, istoric_status, preluat_de) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)")
-                       ->execute([$proiectIdCod, $cliId, $serviciu, $obiectiv, $projStatus, $prio, 0, $actor, trim($r['adresa'] ?? ''), $noteProj, $istoric, $actor]);
+                    if ($hasPrio) {
+                        $db->prepare("INSERT INTO proiecte (proiect_id, client_id, serviciu, obiectiv, status, prioritate, valoare_estimata, responsabil, adresa_obiectiv, note, istoric_status, preluat_de) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)")
+                           ->execute([$proiectIdCod, $cliId, $serviciu, $obiectiv, $projStatus, $prio, 0, $actor, trim($r['adresa'] ?? ''), $noteProj, $istoric, $actor]);
+                    } else {
+                        $db->prepare("INSERT INTO proiecte (proiect_id, client_id, serviciu, obiectiv, status, valoare_estimata, responsabil, adresa_obiectiv, note, istoric_status, preluat_de) VALUES (?,?,?,?,?,?,?,?,?,?,?)")
+                           ->execute([$proiectIdCod, $cliId, $serviciu, $obiectiv, $projStatus, 0, $actor, trim($r['adresa'] ?? ''), $noteProj, $istoric, $actor]);
+                    }
                     $projDbId = intval($db->lastInsertId());
                     $projDir = PROIECTE_DIR . $proiectIdCod . '/';
                     foreach (['executie','receptie','facturi'] as $sub) { @mkdir($projDir . $sub, 0755, true); }

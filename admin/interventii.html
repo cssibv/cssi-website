@@ -968,7 +968,11 @@ function importReclamatii(){
                     if(!res2.success) throw new Error(res2.error||'Eroare');
                     var d=res2.data||{};
                     var msg='✅ Importate: '+d.migrate+'/'+d.total+' · în calendar: '+d.cu_programare+' · cu PV: '+d.cu_pv;
-                    if(d.erori&&d.erori.length){ msg+=' · erori: '+d.erori.length; console.warn('Erori import:',d.erori); }
+                    if(d.erori&&d.erori.length){
+                        msg+=' · erori: '+d.erori.length; console.warn('Erori import:',d.erori);
+                        var det=d.erori.map(function(e){return '#'+e.reclamatie_id+' ('+(e.client||'')+'): '+e.error;}).join('\n');
+                        alert('Erori la import:\n\n'+det);
+                    }
                     toast(msg, (d.erori&&d.erori.length)?'error':'success');
                     refreshData();
                 });
