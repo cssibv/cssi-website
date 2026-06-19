@@ -2231,35 +2231,38 @@ try {
                         $cliId = intval($db->lastInsertId());
                     }
 
-                    // 2. Proiect (intervenție)
+                    // 2. Proiect (intervenție) — exact pe calea dovedită din createInterventie.
+                    //    Status mereu 'Interventie' (sigur în ENUM); detaliile originale
+                    //    (status reclamație, soluție) se păstrează în note ca să nu se piardă nimic.
                     $serviciu = $servMap[$r['serviciu'] ?? ''] ?? 'Complex';
                     $obiectiv = trim($r['descriere'] ?? '') ?: (trim($r['tip'] ?? 'Intervenție'));
                     $prio = in_array($r['prioritate'] ?? '', ['Urgentă','Ridicată','Normală','Scăzută'], true) ? $r['prioritate'] : 'Normală';
-                    $isRezolvat = ($r['status'] === 'Rezolvată');
-                    $isAnulat   = ($r['status'] === 'Anulată');
-                    $projStatus = $isRezolvat ? 'Finalizat' : ($isAnulat ? 'Anulat' : 'Interventie');
                     $proiectIdCod = nextId('proiect_seq', "CSSI-" . date('Y') . "-", 4);
                     $istoric = json_encode([
-                        ['status' => 'Interventie', 'data' => ($r['data_inreg'] ?: date('Y-m-d')) . ' 00:00:00', 'user' => $actor, 'nota' => 'Migrat din Reclamații #' . $r['id']],
+                        ['status' => 'Interventie', 'data' => date('Y-m-d H:i:s'), 'user' => $actor, 'nota' => 'Recreat din Reclamații #' . $r['id']],
                     ], JSON_UNESCAPED_UNICODE);
-                    $noteProj = trim(($r['tip'] ? '['.$r['tip'].'] ' : '') . 'Migrat din Reclamații #' . $r['id']);
+                    $noteParts = [];
+                    if (!empty($r['tip']))       $noteParts[] = $r['tip'];
+                    if (!empty($r['status']))    $noteParts[] = 'status inițial: ' . $r['status'];
+                    if (!empty($r['solutie']))   $noteParts[] = 'Soluție: ' . $r['solutie'];
+                    if (!empty($r['data_inreg']))$noteParts[] = 'înregistrat: ' . $r['data_inreg'];
+                    $noteProj = trim('[Reclamație #' . $r['id'] . '] ' . implode(' · ', $noteParts));
                     if ($hasPrio) {
                         $db->prepare("INSERT INTO proiecte (proiect_id, client_id, serviciu, obiectiv, status, prioritate, valoare_estimata, responsabil, adresa_obiectiv, note, istoric_status, preluat_de) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)")
-                           ->execute([$proiectIdCod, $cliId, $serviciu, $obiectiv, $projStatus, $prio, 0, $actor, trim($r['adresa'] ?? ''), $noteProj, $istoric, $actor]);
+                           ->execute([$proiectIdCod, $cliId, $serviciu, $obiectiv, 'Interventie', $prio, 0, $actor, trim($r['adresa'] ?? ''), $noteProj, $istoric, $actor]);
                     } else {
                         $db->prepare("INSERT INTO proiecte (proiect_id, client_id, serviciu, obiectiv, status, valoare_estimata, responsabil, adresa_obiectiv, note, istoric_status, preluat_de) VALUES (?,?,?,?,?,?,?,?,?,?,?)")
-                           ->execute([$proiectIdCod, $cliId, $serviciu, $obiectiv, $projStatus, 0, $actor, trim($r['adresa'] ?? ''), $noteProj, $istoric, $actor]);
+                           ->execute([$proiectIdCod, $cliId, $serviciu, $obiectiv, 'Interventie', 0, $actor, trim($r['adresa'] ?? ''), $noteProj, $istoric, $actor]);
                     }
                     $projDbId = intval($db->lastInsertId());
                     $projDir = PROIECTE_DIR . $proiectIdCod . '/';
                     foreach (['executie','receptie','facturi'] as $sub) { @mkdir($projDir . $sub, 0755, true); }
 
-                    // 3. Programare (dacă are dată și nu e anulată) → apare în planificator
-                    if (!empty($r['data_programare']) && !$isAnulat) {
+                    // 3. Programare (dacă are dată) → apare în planificator
+                    if (!empty($r['data_programare'])) {
                         $ora = !empty($r['ora_programare']) ? (strlen($r['ora_programare']) === 5 ? $r['ora_programare'] . ':00' : $r['ora_programare']) : '08:00:00';
-                        $prgSt = $prgStatusMap[$r['status']] ?? 'Programat';
                         $db->prepare("INSERT INTO executie_programari (proiect_id, data_programata, ora_start, durata_ore, status, obiectiv, note, created_by) VALUES (?,?,?,?,?,?,?,?)")
-                           ->execute([$projDbId, $r['data_programare'], $ora, 2, $prgSt, $obiectiv, null, $actor]);
+                           ->execute([$projDbId, $r['data_programare'], $ora, 2, 'Programat', $obiectiv, null, $actor]);
                         $prgId = intval($db->lastInsertId());
                         $tech = trim($r['echipa'] ?? '');
                         if ($tech !== '' && in_array($tech, $validTech, true)) {
@@ -2268,17 +2271,8 @@ try {
                         $report['cu_programare']++;
                     }
 
-                    // 4. PV pentru cele rezolvate → rămân vizibile ca finalizate cu proces verbal
-                    if ($isRezolvat) {
-                        $pvNr = 'PV-' . $proiectIdCod;
-                        $tehName = '';
-                        $db->prepare("INSERT INTO interventii_pv (proiect_id, pv_nr, data_pv, problema_constatata, cauza, solutie_aplicata, materiale, recomandari, stare_finala, durata_ore, tehnicieni, semnatar_client, semnatura_client, created_by) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)")
-                           ->execute([$projDbId, $pvNr, ($r['data_rezolvare'] ?: date('Y-m-d')), trim($r['descriere'] ?? ''), '', trim($r['solutie'] ?? ''), '[]', '', 'Rezolvat', 0, $tehName, '', '', $actor]);
-                        $report['cu_pv']++;
-                    }
-
-                    // 5. Marchează reclamația ca migrată
-                    $db->prepare("UPDATE reclamatii SET migrat_proiect_id = ? WHERE id = ?")->execute([$projDbId, $r['id']]);
+                    // 4. Șterge reclamația veche (recreată acum ca intervenție)
+                    $db->prepare("DELETE FROM reclamatii WHERE id = ?")->execute([$r['id']]);
 
                     $db->commit();
                     $report['migrate']++;

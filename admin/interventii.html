@@ -961,13 +961,13 @@ function importReclamatii(){
             if(!res.success) throw new Error(res.error||'Eroare');
             var r=res.data||{};
             if(!r.total){ toast('✅ Nimic de importat — totul e deja în Intervenții','info'); return null; }
-            if(!confirm('Import '+r.total+' reclamații ca intervenții?\n\nCele cu dată apar în planificator, cele rezolvate primesc proces verbal. Nu se repetă pentru cele deja importate.')) return null;
+            if(!confirm('Mut '+r.total+' reclamații ca intervenții?\n\nFiecare e recreată ca intervenție (cu datele ei), cele cu dată apar în planificator, iar reclamația veche se șterge.')) return null;
             return fetch(API_DB+'?action=migrateReclamatii',{method:'POST',credentials:'include',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'migrateReclamatii'})})
                 .then(function(r2){return r2.json();})
                 .then(function(res2){
                     if(!res2.success) throw new Error(res2.error||'Eroare');
                     var d=res2.data||{};
-                    var msg='✅ Importate: '+d.migrate+'/'+d.total+' · în calendar: '+d.cu_programare+' · cu PV: '+d.cu_pv;
+                    var msg='✅ Mutate: '+d.migrate+'/'+d.total+' · în calendar: '+d.cu_programare;
                     if(d.erori&&d.erori.length){
                         msg+=' · erori: '+d.erori.length; console.warn('Erori import:',d.erori);
                         var det=d.erori.map(function(e){return '#'+e.reclamatie_id+' ('+(e.client||'')+'): '+e.error;}).join('\n');
