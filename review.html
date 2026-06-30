@@ -134,5 +134,11 @@
         }, 2500);
     </script>
 
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    document.querySelectorAll("a[href^='tel:']").forEach(function(l){l.addEventListener("click",function(){if(typeof gtag==="function"){gtag("event","phone_call",{event_category:"Contact",event_label:this.href.replace("tel:",""),value:100,currency:"RON"});}});});
+    document.querySelectorAll("a[href*='wa.me']").forEach(function(l){l.addEventListener("click",function(){if(typeof gtag==="function"){gtag("event","whatsapp_click",{event_category:"Contact",event_label:"WhatsApp Direct",value:100,currency:"RON"});}});});
+});
+</script>
 </body>
 </html>

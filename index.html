@@ -912,8 +912,14 @@ Cum vă pot ajuta? Scrieți: servicii, prețuri sau contact.</div>
         if (tipText && tipText !== 'Tip serviciu (opțional)') msg += '📋 *Tip:* ' + tipText + '\n';
         if (detalii) msg += '📝 *Detalii:* ' + detalii + '\n';
         
+        if(typeof gtag==='function'){
+            gtag('event','cere_oferta_click',{event_category:'Lead',event_label:service||'Hero Form',value:200,currency:'RON'});
+            gtag('event','whatsapp_click',{event_category:'Lead',event_label:'Hero Form WhatsApp',value:200,currency:'RON'});
+            gtag('event','conversion',{send_to:'AW-17987940313/WVuaCJnH1YEcENnfqIFD',value:200,currency:'RON'});
+        }
+
         window.open('https://wa.me/40752288400?text=' + encodeURIComponent(msg), '_blank');
-        
+
         document.getElementById('heroForm').style.display = 'none';
         document.getElementById('formSteps').style.display = 'none';
         document.getElementById('formSuccess').style.display = 'block';
@@ -946,6 +952,8 @@ Cum vă pot ajuta? Scrieți: servicii, prețuri sau contact.</div>
         
         if(typeof gtag==='function'){
             gtag('event','generate_lead',{event_category:'Contact',event_label:service||'Homepage',value:150,currency:'RON'});
+            gtag('event','form_submit',{event_category:'Lead',event_label:'Contact Form',value:150,currency:'RON'});
+            gtag('event','whatsapp_click',{event_category:'Lead',event_label:'Contact Form WhatsApp',value:150,currency:'RON'});
             gtag('event','conversion',{send_to:'AW-17987940313/WVuaCJnH1YEcENnfqIFD',value:150,currency:'RON'});
         }
 
@@ -1155,5 +1163,22 @@ Cum vă pot ajuta? Scrieți: servicii, prețuri sau contact.</div>
 }
 </script>
 <script src="/tawk-chat.js" defer></script>
+<script>
+// GA4 tracking: phone_call pe toate linkurile tel:
+document.addEventListener('DOMContentLoaded', function() {
+    document.querySelectorAll('a[href^="tel:"]').forEach(function(link) {
+        link.addEventListener('click', function() {
+            if (typeof gtag === 'function') {
+                gtag('event', 'phone_call', {
+                    event_category: 'Contact',
+                    event_label: this.href.replace('tel:', ''),
+                    value: 100,
+                    currency: 'RON'
+                });
+            }
+        });
+    });
+});
+</script>
 </body>
 </html>
