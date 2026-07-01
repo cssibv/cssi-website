@@ -96,8 +96,9 @@ function ssFetch($url, $connTimeout = 12, $timeout = 30) {
     $http  = curl_getinfo($ch, CURLINFO_HTTP_CODE);
     $errno = curl_errno($ch);
     $error = curl_error($ch);
+    $eff   = curl_getinfo($ch, CURLINFO_EFFECTIVE_URL); // URL final după redirect(uri)
     curl_close($ch);
-    return [$body, $http, $errno, $error];
+    return [$body, $http, $errno, $error, $eff];
 }
 
 // Helper: preț românesc "1.234,56" sau "411,40" → float 1234.56 / 411.40
@@ -168,7 +169,7 @@ if ($directUrl !== '') {
 
 } else {
     // ─── MOD DUPĂ COD: caut și aleg DOAR produsul cu SKU identic ───
-    list($html, $httpCode, $curlErrno, $curlError) = ssFetch($searchUrl);
+    list($html, $httpCode, $curlErrno, $curlError, $effUrl) = ssFetch($searchUrl);
     if (!$html || $httpCode !== 200) {
         echo json_encode([
             'found' => false,
@@ -184,17 +185,38 @@ if ($directUrl !== '') {
         exit;
     }
 
+    // ─── CAZ: FiboSearch a găsit o potrivire UNICĂ și a redirectat direct pe pagina produsului.
+    // Atunci pagina NU e o listă de rezultate, ci detaliul produsului (are product:price:amount).
+    // Cardurile wd-entities-title de aici sunt produse ÎNRUDITE, nu produsul căutat — deci verificăm
+    // ÎNTÂI SKU-ul produsului principal (din <span class="sku">), altfel produsele cu match perfect
+    // (exact cele pentru care shop-ul redirectează) ar fi ratate. ───
+    $effPath = trim((string)parse_url((string)$effUrl, PHP_URL_PATH), '/');
+    $landedOnProduct = ($effPath !== '' && strpos($effPath, '/') === false
+                        && strpos($html, 'product:price:amount') !== false);
+    if ($landedOnProduct) {
+        $skuMain = ssExtractSku($html); // <span class="sku"> = produsul principal al paginii
+        if ($skuMain !== '' && $qNorm !== '' && ssNormCode($skuMain) === $qNorm) {
+            $detailHtml = $html;
+            $detailUrl  = $effUrl;
+            $products[] = ['name' => '', 'url' => $effUrl];
+            $exactMatch = true;
+        }
+    }
+
     // Produse din pagina de rezultate (card: <h3 class="wd-entities-title"><a href="URL">NUME</a>)
-    $seenUrls = [];
-    if (preg_match_all('/<h[1-6][^>]*class="[^"]*wd-entities-title[^"]*"[^>]*>\s*<a[^>]*href="([^"]+)"[^>]*>(.*?)<\/a>/si', $html, $tm, PREG_SET_ORDER)) {
-        foreach ($tm as $m) {
-            $url  = trim($m[1]);
-            $name = trim(html_entity_decode(strip_tags($m[2]), ENT_QUOTES | ENT_HTML5, 'UTF-8'));
-            if ($name === '' || isset($seenUrls[$url])) continue;
-            $path = trim((string)parse_url($url, PHP_URL_PATH), '/');
-            if ($path === '' || strpos($path, '/') !== false) continue; // sare peste /product-category/... etc
-            $seenUrls[$url] = true;
-            $products[] = ['name' => $name, 'url' => $url];
+    // (sărim dacă am prins deja produsul principal prin redirect)
+    if (!$exactMatch) {
+        $seenUrls = [];
+        if (preg_match_all('/<h[1-6][^>]*class="[^"]*wd-entities-title[^"]*"[^>]*>\s*<a[^>]*href="([^"]+)"[^>]*>(.*?)<\/a>/si', $html, $tm, PREG_SET_ORDER)) {
+            foreach ($tm as $m) {
+                $url  = trim($m[1]);
+                $name = trim(html_entity_decode(strip_tags($m[2]), ENT_QUOTES | ENT_HTML5, 'UTF-8'));
+                if ($name === '' || isset($seenUrls[$url])) continue;
+                $path = trim((string)parse_url($url, PHP_URL_PATH), '/');
+                if ($path === '' || strpos($path, '/') !== false) continue; // sare peste /product-category/... etc
+                $seenUrls[$url] = true;
+                $products[] = ['name' => $name, 'url' => $url];
+            }
         }
     }
 
@@ -202,7 +224,7 @@ if ($directUrl !== '') {
     // SKU-ul NU apare pe cardurile din lista de rezultate → trebuie deschisă pagina fiecărui produs.
     // Optimizare: deschid întâi produsele a căror DENUMIRE se potrivește cel mai bine cu termenul
     // căutat (cel corect e de regulă printre ele), ca să nu deschid zeci de pagini irelevante.
-    if (!empty($products)) {
+    if (!$exactMatch && !empty($products)) {
         $nameTokens = preg_split('/\s+/', mb_strtolower(trim($code), 'UTF-8'), -1, PREG_SPLIT_NO_EMPTY);
         $ranked = [];
         foreach ($products as $idx => $p) {
@@ -236,7 +258,7 @@ if ($directUrl !== '') {
                 break;
             }
         }
-    } elseif (strpos($html, 'product:price:amount') !== false) {
+    } elseif (!$exactMatch && strpos($html, 'product:price:amount') !== false) {
         // search a aterizat direct pe pagina unui produs — accept doar dacă SKU-ul se potrivește
         $skuDirect = ssExtractSku($html);
         if ($skuDirect !== '' && $qNorm !== '' && ssNormCode($skuDirect) === $qNorm) {
