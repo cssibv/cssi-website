@@ -83,6 +83,12 @@ a{text-decoration:none;color:inherit;}button{font-family:inherit;cursor:pointer;
 .cal-task .ct-client{display:block;font-weight:800;font-size:11px;color:inherit;}
 .cal-task .ct-pid{display:inline-block;font-size:9px;background:rgba(0,0,0,0.08);padding:1px 5px;border-radius:3px;margin-top:2px;}
 .cal-task .ct-team{font-size:9px;opacity:0.7;margin-top:1px;}
+.cal-task.reparatie{background:#cffafe;color:#155e75;border-left-color:#06b6d4;border-left-style:dashed;}
+.cal-task.reparatie.in-curs{background:#ffedd5;color:#9a3412;border-left-color:#f97316;}
+.cal-task.reparatie.finalizat{background:#dcfce7;color:#166534;border-left-color:#22c55e;}
+.cal-tech.neatribuit .av{background:var(--gray-l);}
+.rep-tag{display:inline-block;font-size:9px;font-weight:800;background:#06b6d4;color:#fff;padding:1px 6px;border-radius:3px;}
+.acard.reparatie{border-left:4px dashed #06b6d4;}
 .cal-cell-add{padding:4px 6px;border:1px dashed var(--gray-b);border-radius:6px;color:var(--gray-l);font-size:10px;font-weight:700;text-align:center;cursor:pointer;transition:all 0.15s;display:none;}
 .cal-cell:hover .cal-cell-add{display:block;}
 .cal-cell-add:hover{border-color:var(--orange);color:var(--orange);background:#fff7ed;}
@@ -286,6 +292,15 @@ tr:hover td{background:#f8fafc;}
                     <input type="text" class="form-input" id="iAdresa" placeholder="Str. ..., nr. ..., oraș">
                 </div>
             </div>
+            <div class="form-group">
+                <label class="form-label">Prioritate</label>
+                <select class="form-select" id="iPrioritate">
+                    <option value="Urgentă">🔴 Urgentă</option>
+                    <option value="Ridicată">🟠 Ridicată</option>
+                    <option value="Normală" selected>🔵 Normală</option>
+                    <option value="Scăzută">⚪ Scăzută</option>
+                </select>
+            </div>
             <div class="form-row-3">
                 <div class="form-group">
                     <label class="form-label">Data <span class="req">*</span></label>
@@ -407,13 +422,21 @@ function techInitial(id){return (techName(id)||'?').charAt(0).toUpperCase();}
 function statusKey(s){return (s||'').toLowerCase().replace(/[\s_]+/g,'-');}
 function fmtTime(s){return s?s.substring(0,5):'';}
 function projById(pid){return STATE.proiecte.find(function(p){return p.proiect_db_id == pid;});}
+// Info de afișare pentru o programare — tratează atât programările normale cât și reparațiile (reclamații)
+function projInfo(p){
+    if(p && p.tip==='reparatie') return {client_nume:p.client_nume, proiect_id:p.proiect_cod||'Reparație', serviciu:p.serviciu, adresa_obiectiv:p.adresa_obiectiv, _rep:true};
+    return projById(p.proiect_id) || {};
+}
+function isRep(p){return p && p.tip==='reparatie';}
+// O reparație se editează în modulul Reclamații, nu în planificator
+function openReparatie(recId){ window.location.href='reclamatii.html?rec='+recId; }
 function wazeUrl(addr){return 'https://waze.com/ul?q='+encodeURIComponent((addr||'').trim())+'&navigate=yes';}
 
 // ═══ FETCH ═══
 function refreshData(){
     var btn=document.getElementById('refreshBtn'); btn.classList.add('spinning');
     showLoading(true); updateSync('loading');
-    var url = API_DB+'?action=getExecutie&_t='+Date.now();
+    var url = API_DB+'?action=getExecutie&planner=1&_t='+Date.now();
     if(isTehnician) url += '&user='+encodeURIComponent(role);
     return fetch(url).then(function(r){return r.json()})
         .then(function(res){
@@ -515,7 +538,12 @@ function renderCalendar(){
     var today = todayStr();
     var fTeh = document.getElementById('filterTehnician').value;
     var rows = isTehnician ? [{id:role, name:techName(role)}]
-              : (fTeh ? [{id:fTeh, name:techName(fTeh)}] : TECHNICIANS);
+              : (fTeh ? [{id:fTeh, name:techName(fTeh)}] : TECHNICIANS.slice());
+    // Rând „Neatribuit" pentru programări/reparații fără tehnician asignat (altfel invizibile în grilă)
+    if(!isTehnician && !fTeh){
+        var hasNone = weekPrg.some(function(p){return !(p.atribuiri&&p.atribuiri.length);});
+        if(hasNone) rows = rows.concat([{id:'__none__', name:'Neatribuit', none:true}]);
+    }
 
     var html = '<div class="cal-wrap"><div class="cal-grid">';
     html += '<div class="cal-header-label">Tehnician</div>';
@@ -525,24 +553,36 @@ function renderCalendar(){
         html += '<div class="cal-header'+(ds===today?' today':'')+'">'+DAYS_RO[dd.getDay()]+'<div class="ch-day">'+dd.getDate()+'</div></div>';
     }
     rows.forEach(function(t){
-        html += '<div class="cal-tech"><span class="av">'+t.name.charAt(0)+'</span>'+esc(t.name)+'</div>';
+        html += '<div class="cal-tech'+(t.none?' neatribuit':'')+'"><span class="av">'+(t.none?'?':t.name.charAt(0))+'</span>'+esc(t.name)+'</div>';
         for(var d=0; d<7; d++){
             var dd = new Date(STATE.currentMonday); dd.setDate(dd.getDate()+d);
             var ds = dd.toISOString().split('T')[0];
             var isPast = ds < today;
-            var dayPrg = weekPrg.filter(function(p){return p.data_programata===ds && p.atribuiri && p.atribuiri.indexOf(t.id)>=0;});
+            var dayPrg = weekPrg.filter(function(p){
+                var a = p.atribuiri||[];
+                if(t.none) return p.data_programata===ds && a.length===0;
+                return p.data_programata===ds && a.indexOf(t.id)>=0;
+            });
             var cellCls = ds===today?' today':(isPast?' past':'');
             html += '<div class="cal-cell'+cellCls+'" onclick="onCellClick(\''+ds+'\')">';
             dayPrg.forEach(function(p){
-                var pj = projById(p.proiect_id) || {};
+                var pj = projInfo(p);
                 var sc = statusKey(p.status);
-                html += '<div class="cal-task '+sc+'" onclick="event.stopPropagation();openEditPrg('+p.id+')" title="'+esc((pj.client_nume||'?')+' · '+(pj.proiect_id||''))+'">';
-                html += '<span class="ct-time">'+fmtTime(p.ora_start)+' · '+p.durata_ore+'h</span>';
-                html += '<span class="ct-client">'+esc((pj.client_nume||'?').substring(0,28))+'</span>';
-                if(pj.proiect_id) html += '<span class="ct-pid">'+esc(pj.proiect_id)+'</span>';
-                html += '</div>';
+                if(isRep(p)){
+                    html += '<div class="cal-task reparatie '+sc+'" onclick="event.stopPropagation();openReparatie('+p.reclamatie_id+')" title="'+esc('Reparație · '+(pj.client_nume||'?'))+'">';
+                    html += '<span class="ct-time">🔧 '+fmtTime(p.ora_start)+'</span>';
+                    html += '<span class="ct-client">'+esc((pj.client_nume||'?').substring(0,28))+'</span>';
+                    html += '<span class="ct-pid">Reparație</span>';
+                    html += '</div>';
+                } else {
+                    html += '<div class="cal-task '+sc+'" onclick="event.stopPropagation();openEditPrg('+p.id+')" title="'+esc((pj.client_nume||'?')+' · '+(pj.proiect_id||''))+'">';
+                    html += '<span class="ct-time">'+fmtTime(p.ora_start)+' · '+p.durata_ore+'h</span>';
+                    html += '<span class="ct-client">'+esc((pj.client_nume||'?').substring(0,28))+'</span>';
+                    if(pj.proiect_id) html += '<span class="ct-pid">'+esc(pj.proiect_id)+'</span>';
+                    html += '</div>';
+                }
             });
-            if(!isTehnician && !isPast) html += '<div class="cal-cell-add">＋</div>';
+            if(!isTehnician && !isPast && !t.none) html += '<div class="cal-cell-add">＋</div>';
             html += '</div>';
         }
     });
@@ -569,12 +609,13 @@ function renderAgenda(){
         if(dayPrg.length){
             html += '<div class="agenda-cards">';
             dayPrg.forEach(function(p){
-                var pj = projById(p.proiect_id) || {};
+                var pj = projInfo(p);
                 var sc = statusKey(p.status);
-                html += '<div class="acard '+sc+'" onclick="openEditPrg('+p.id+')">';
+                var clickFn = isRep(p) ? 'openReparatie('+p.reclamatie_id+')' : 'openEditPrg('+p.id+')';
+                html += '<div class="acard '+sc+(isRep(p)?' reparatie':'')+'" onclick="'+clickFn+'">';
                 html += '<div class="acard-top">';
-                html += '<div class="acard-time">⏰ '+fmtTime(p.ora_start)+' <small>('+p.durata_ore+'h)</small></div>';
-                html += '<span class="acard-status '+sc+'">'+esc(p.status)+'</span>';
+                html += '<div class="acard-time">⏰ '+fmtTime(p.ora_start)+(isRep(p)?'':' <small>('+p.durata_ore+'h)</small>')+'</div>';
+                html += (isRep(p)?'<span class="rep-tag">🔧 Reparație</span>':'<span class="acard-status '+sc+'">'+esc(p.status)+'</span>');
                 html += '</div>';
                 html += '<div class="acard-title">'+esc(pj.client_nume||'?')+'</div>';
                 html += '<div class="acard-meta">📌 <strong>'+esc(pj.proiect_id||'?')+'</strong>'+(pj.serviciu?' · '+esc(pj.serviciu):'')+(pj.adresa_obiectiv?' · 📍 '+esc(pj.adresa_obiectiv):'')+'</div>';
@@ -604,17 +645,18 @@ function renderList(){
     weekPrg.sort(function(a,b){return (a.data_programata+a.ora_start).localeCompare(b.data_programata+b.ora_start);});
     var html = '<div class="list-wrap"><table><thead><tr><th>Data</th><th>Ora</th><th>Client</th><th>Proiect</th><th>Echipa</th><th>Durata</th><th>Status</th></tr></thead><tbody>';
     weekPrg.forEach(function(p){
-        var pj = projById(p.proiect_id) || {};
+        var pj = projInfo(p);
         var dd = new Date(p.data_programata+'T00:00:00');
         var sc = statusKey(p.status);
         var isCur = p.data_programata===today;
-        html += '<tr class="'+(isCur?'cur':'')+'" style="cursor:pointer" onclick="openEditPrg('+p.id+')">';
+        var clickFn = isRep(p) ? 'openReparatie('+p.reclamatie_id+')' : 'openEditPrg('+p.id+')';
+        html += '<tr class="'+(isCur?'cur':'')+'" style="cursor:pointer" onclick="'+clickFn+'">';
         html += '<td><strong>'+dd.getDate()+' '+MONTHS_SHORT[dd.getMonth()]+'</strong><br><small style="color:var(--gray)">'+DAYS_RO[dd.getDay()]+'</small></td>';
         html += '<td><strong>'+fmtTime(p.ora_start)+'</strong></td>';
-        html += '<td><strong>'+esc(pj.client_nume||'?')+'</strong></td>';
+        html += '<td><strong>'+esc(pj.client_nume||'?')+'</strong>'+(isRep(p)?' <span class="rep-tag">🔧</span>':'')+'</td>';
         html += '<td><span style="color:var(--blue);font-weight:700">'+esc(pj.proiect_id||'?')+'</span></td>';
-        html += '<td>'+(p.atribuiri||[]).map(techName).join(', ')+'</td>';
-        html += '<td>'+p.durata_ore+'h</td>';
+        html += '<td>'+((p.atribuiri||[]).length?(p.atribuiri||[]).map(techName).join(', '):'<span style="color:var(--gray-l)">Neatribuit</span>')+'</td>';
+        html += '<td>'+(isRep(p)?'—':p.durata_ore+'h')+'</td>';
         html += '<td><span class="acard-status '+sc+'">'+esc(p.status)+'</span></td>';
         html += '</tr>';
     });
@@ -714,6 +756,7 @@ function openInterventieModal(){
     document.getElementById('iData').value = new Date().toISOString().split('T')[0];
     document.getElementById('iOra').value = '09:00';
     document.getElementById('iDurata').value = 2;
+    document.getElementById('iPrioritate').value = 'Normală';
     setCliMode('exist');
     // Render tehnicieni picker (pre-selectează tehnicianul curent dacă e tehnician)
     var preselect = isTehnician ? [role] : [];
@@ -777,6 +820,7 @@ function submitInterventie(ev){
         titlu: titlu,
         serviciu: document.getElementById('iServiciu').value,
         adresa: document.getElementById('iAdresa').value.trim(),
+        prioritate: document.getElementById('iPrioritate').value,
         data: document.getElementById('iData').value,
         ora_start: document.getElementById('iOra').value,
         durata_ore: parseFloat(document.getElementById('iDurata').value) || 2,

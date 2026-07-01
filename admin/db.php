@@ -56,26 +56,30 @@ function getDB() {
     return $pdo;
 }
 
-// Generare ID unic secvential
+// Generare ID unic secvential.
+// Nesting-aware: dacă există deja o tranzacție activă (ex: apel din interiorul
+// createInterventie / migrateReclamatii), participă la ea în loc să pornească una nouă
+// — altfel PDO aruncă „There is already an active transaction".
 function nextId($cheie, $prefix = '', $pad = 4) {
     $db = getDB();
-    $db->beginTransaction();
+    $ownTx = !$db->inTransaction();
+    if ($ownTx) $db->beginTransaction();
     try {
         $stmt = $db->prepare("SELECT valoare FROM secvente WHERE cheie = ? FOR UPDATE");
         $stmt->execute([$cheie]);
         $row = $stmt->fetch();
         $next = ($row ? $row['valoare'] : 0) + 1;
-        
+
         $db->prepare("UPDATE secvente SET valoare = ? WHERE cheie = ?")
            ->execute([$next, $cheie]);
-        $db->commit();
-        
+        if ($ownTx) $db->commit();
+
         if ($prefix) {
             return $prefix . str_pad($next, $pad, '0', STR_PAD_LEFT);
         }
         return (string) $next;
     } catch (Exception $e) {
-        $db->rollBack();
+        if ($ownTx && $db->inTransaction()) $db->rollBack();
         throw $e;
     }
 }

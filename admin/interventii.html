@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Intervenții — Portal CSSI 3.0</title>
+<title>Intervenții & Reparații — Portal CSSI 3.0</title>
 <meta name="robots" content="noindex, nofollow">
 <link rel="icon" type="image/x-icon" href="/images/favicon.ico">
 <meta name="theme-color" content="#9333ea">
@@ -64,6 +64,12 @@ a{text-decoration:none;color:inherit;}button{font-family:inherit;cursor:pointer;
 .icard-tags{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:8px;}
 .icard-tag{font-size:11px;font-weight:700;padding:3px 10px;border-radius:6px;background:var(--gray-bg);color:var(--gray);}
 .icard-tag.serv{background:#eff6ff;color:var(--blue);}
+.icard-tag.prio-urgenta{background:#fef2f2;color:var(--red);}
+.icard-tag.prio-ridicata{background:#fff7ed;color:var(--orange);}
+.icard-tag.prio-normala{background:#eff6ff;color:var(--blue);}
+.icard-tag.prio-scazuta{background:var(--gray-bg);color:var(--gray);}
+.icard.urgent-flag{box-shadow:0 0 0 2px rgba(220,38,38,0.25),var(--shadow);}
+.icard-prg.deprogramat{border-style:dashed;color:var(--orange);justify-content:center;font-weight:800;}
 .icard-title{font-size:13px;font-weight:700;color:var(--dark);margin-bottom:8px;line-height:1.4;}
 .icard-row{font-size:12px;color:var(--gray);margin-bottom:5px;display:flex;align-items:center;gap:6px;line-height:1.4;}
 .icard-row strong{color:var(--dark);font-weight:700;}
@@ -81,6 +87,9 @@ a{text-decoration:none;color:inherit;}button{font-family:inherit;cursor:pointer;
 .act-btn.pv{background:linear-gradient(135deg,#059669,#047857);color:#fff;flex:1;justify-content:center;}.act-btn.pv:hover{transform:translateY(-1px);}
 .act-btn.prg{background:#eff6ff;color:var(--blue);}.act-btn.prg:hover{background:var(--blue);color:#fff;}
 .act-btn.waze{background:linear-gradient(135deg,#33ccff,#0099cc);color:#fff;}.act-btn.waze:hover{transform:translateY(-1px);}
+.act-btn.blank{background:var(--gray-bg);color:var(--dark);}.act-btn.blank:hover{background:#e2e8f0;}
+.act-btn.detail{background:#f5f3ff;color:var(--purple-d);}.act-btn.detail:hover{background:var(--purple);color:#fff;}
+.act-btn.del{background:#fef2f2;color:var(--red);}.act-btn.del:hover{background:var(--red);color:#fff;}
 
 /* Modal */
 .modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);backdrop-filter:blur(4px);z-index:200;align-items:center;justify-content:center;padding:16px;}
@@ -157,11 +166,12 @@ a{text-decoration:none;color:inherit;}button{font-family:inherit;cursor:pointer;
     <div class="page-header" id="pageHeader">
         <div>
             <a href="../admin.html" class="page-back">← Dashboard</a>
-            <div class="page-title" id="pageTitle">⚡ Intervenții</div>
+            <div class="page-title" id="pageTitle">⚡ Intervenții & Reparații</div>
             <div class="page-subtitle" id="syncStatus"><span class="sync-indicator sync-off"></span>Se încarcă...</div>
         </div>
         <div class="page-actions">
             <a href="planificare.html" class="page-btn secondary">📅 Calendar planificare</a>
+            <button class="page-btn secondary" id="importRecBtn" onclick="importReclamatii()" style="display:none" title="Importă reclamațiile vechi ca intervenții">🔀 Importă din Reclamații</button>
             <button class="page-btn secondary" id="refreshBtn" onclick="refreshData()"><span class="spin-icon">🔄</span> Reîncarcă</button>
             <button class="page-btn primary" onclick="openInterventieModal()">⚡ Lucrare nouă</button>
         </div>
@@ -173,8 +183,16 @@ a{text-decoration:none;color:inherit;}button{font-family:inherit;cursor:pointer;
         <input type="text" class="filter-search" id="searchBox" placeholder="🔍 Caută client, adresă, problemă..." oninput="render()">
         <select class="filter-select" id="filterStatus" onchange="render()">
             <option value="active">⚡ Active (de rezolvat)</option>
+            <option value="neprogramat">🗓️ De programat</option>
             <option value="finalizat">✅ Finalizate (cu PV)</option>
             <option value="toate">Toate</option>
+        </select>
+        <select class="filter-select" id="filterPrioritate" onchange="render()">
+            <option value="">Toate prioritățile</option>
+            <option value="Urgentă">🔴 Urgentă</option>
+            <option value="Ridicată">🟠 Ridicată</option>
+            <option value="Normală">🔵 Normală</option>
+            <option value="Scăzută">⚪ Scăzută</option>
         </select>
         <select class="filter-select" id="filterTehnician" onchange="render()">
             <option value="">Toți tehnicienii</option>
@@ -185,7 +203,7 @@ a{text-decoration:none;color:inherit;}button{font-family:inherit;cursor:pointer;
 
     <div id="listView"></div>
 
-    <div class="footer">Portal CSSI 3.0 · Modul Intervenții v1.0 · Apel → programare echipă → proces verbal</div>
+    <div class="footer">Portal CSSI 3.0 · Modul Intervenții & Reparații v2.0 · Apel/reclamație → programare echipă → proces verbal</div>
 </div>
 
 <div class="bottom-nav">
@@ -244,20 +262,41 @@ a{text-decoration:none;color:inherit;}button{font-family:inherit;cursor:pointer;
                     <input type="text" class="form-input" id="iAdresa" placeholder="Str. ..., nr. ..., oraș">
                 </div>
             </div>
-            <div class="form-row-3">
+            <div class="form-row">
                 <div class="form-group">
-                    <label class="form-label">Data <span class="req">*</span></label>
-                    <input type="date" class="form-input" id="iData" required>
+                    <label class="form-label">Prioritate</label>
+                    <select class="form-select" id="iPrioritate">
+                        <option value="Urgentă">🔴 Urgentă</option>
+                        <option value="Ridicată">🟠 Ridicată</option>
+                        <option value="Normală" selected>🔵 Normală</option>
+                        <option value="Scăzută">⚪ Scăzută</option>
+                    </select>
                 </div>
                 <div class="form-group">
-                    <label class="form-label">Ora start</label>
-                    <input type="time" class="form-input" id="iOra" value="09:00">
-                </div>
-                <div class="form-group">
-                    <label class="form-label">Durata (h)</label>
-                    <input type="number" class="form-input" id="iDurata" value="2" min="0.5" step="0.5">
+                    <label class="form-label">Programare</label>
+                    <div style="display:flex;gap:6px">
+                        <button type="button" class="seg-btn" id="segPrgNow" onclick="setPrgMode('now')">📅 Cu dată</button>
+                        <button type="button" class="seg-btn" id="segPrgLater" onclick="setPrgMode('later')">🕓 De programat</button>
+                    </div>
                 </div>
             </div>
+            <div id="schedBlock">
+                <div class="form-row-3">
+                    <div class="form-group">
+                        <label class="form-label">Data <span class="req">*</span></label>
+                        <input type="date" class="form-input" id="iData">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Ora start</label>
+                        <input type="time" class="form-input" id="iOra" value="09:00">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Durata (h)</label>
+                        <input type="number" class="form-input" id="iDurata" value="2" min="0.5" step="0.5">
+                    </div>
+                </div>
+            </div>
+            <div id="laterHint" style="display:none;font-size:12px;color:#9a3412;background:#fff7ed;border-radius:8px;padding:8px 12px;margin-bottom:14px">🕓 Intervenție „de programat" — apare în listă fără dată; o programezi mai târziu (buton 📅) când te sincronizezi cu clientul.</div>
             <div class="form-group">
                 <label class="form-label">Echipa / tehnicieni</label>
                 <div class="tech-pick" id="iTehnicieni"></div>
@@ -403,6 +442,17 @@ a{text-decoration:none;color:inherit;}button{font-family:inherit;cursor:pointer;
 </div>
 </div>
 
+<!-- MODAL: Detalii intervenție -->
+<div id="detailModal" class="modal-overlay" onclick="if(event.target===this)closeDetail()">
+<div class="modal">
+    <div class="modal-head">
+        <div class="modal-title" id="detailTitle">📋 Detalii intervenție</div>
+        <button class="modal-close" onclick="closeDetail()">✕</button>
+    </div>
+    <div class="modal-body" id="detailBody"></div>
+</div>
+</div>
+
 <script>
 // ═══ AUTH ═══
 var role = sessionStorage.getItem('cssi-role');
@@ -419,6 +469,8 @@ var TECH_IDS = TECHNICIANS.map(function(t){return t.id;});
 var isTehnician = TECH_IDS.indexOf(role) >= 0;
 var DAYS_RO = ['Dum','Lun','Mar','Mie','Joi','Vin','Sâm'];
 var MONTHS_SHORT = ['Ian','Feb','Mar','Apr','Mai','Iun','Iul','Aug','Sep','Oct','Noi','Dec'];
+var PRIO_CLASS = {'Urgentă':'prio-urgenta','Ridicată':'prio-ridicata','Normală':'prio-normala','Scăzută':'prio-scazuta'};
+var PRIO_ICON  = {'Urgentă':'🔴','Ridicată':'🟠','Normală':'🔵','Scăzută':'⚪'};
 
 // ═══ STATE ═══
 var STATE = { items: [], loaded:false, isLive:false, prestator:null };
@@ -469,10 +521,13 @@ function nextProgramare(it){
 function filteredItems(){
     var q = (document.getElementById('searchBox').value||'').toLowerCase().trim();
     var fSt = document.getElementById('filterStatus').value;
+    var fPr = document.getElementById('filterPrioritate').value;
     var fTe = document.getElementById('filterTehnician').value;
     return STATE.items.filter(function(it){
         if(fSt==='active' && it.proiect_status!=='Interventie') return false;
+        if(fSt==='neprogramat' && !(it.proiect_status==='Interventie' && !(it.programari&&it.programari.length))) return false;
         if(fSt==='finalizat' && it.proiect_status!=='Finalizat') return false;
+        if(fPr && (it.prioritate||'Normală')!==fPr) return false;
         if(fTe){
             var has=(it.programari||[]).some(function(p){return (p.atribuiri||[]).indexOf(fTe)>=0;});
             if(!has) return false;
@@ -517,11 +572,14 @@ function cardHtml(it){
     var fin = it.proiect_status==='Finalizat';
     var np = nextProgramare(it);
     var team = np && np.atribuiri ? np.atribuiri : [];
-    var h='<div class="icard'+(fin?' finalizat':'')+'">';
+    var prio = it.prioritate||'Normală';
+    var urgent = !fin && prio==='Urgentă';
+    var h='<div class="icard'+(fin?' finalizat':'')+(urgent?' urgent-flag':'')+'">';
     h+='<div class="icard-top"><div class="icard-client">'+esc(it.client_nume||'Client')+'</div>';
     h+='<span class="icard-badge '+(fin?'finalizat':'interventie')+'">'+(fin?'✅ Finalizat':'⚡ Activ')+'</span></div>';
     h+='<div class="icard-pid">📌 '+esc(it.proiect_id||'')+'</div>';
     h+='<div class="icard-tags">';
+    if(!fin) h+='<span class="icard-tag '+(PRIO_CLASS[prio]||'prio-normala')+'">'+(PRIO_ICON[prio]||'')+' '+esc(prio)+'</span>';
     if(it.serviciu) h+='<span class="icard-tag serv">'+esc(it.serviciu)+'</span>';
     if(it.client_telefon) h+='<span class="icard-tag">📞 '+esc(it.client_telefon)+'</span>';
     h+='</div>';
@@ -534,6 +592,10 @@ function cardHtml(it){
         h+='<span class="prg-when">📅 '+fmtDate(p.data_programata)+' · '+fmtTime(p.ora_start)+'</span>';
         h+='<span class="prg-st '+statusKey(p.status)+'">'+esc(p.status)+'</span></div>';
     });
+    // Intervenție activă fără programare → invită la programare (apare apoi în calendar)
+    if(!fin && !(it.programari&&it.programari.length)){
+        h+='<div class="icard-prg deprogramat" onclick="openNewPrg('+it.proiect_db_id+')">🗓️ De programat — adaugă în calendar</div>';
+    }
     if(team.length){
         h+='<div class="icard-team">'+team.map(function(uid){return '<span class="team-chip"><span class="av">'+techInitial(uid)+'</span>'+esc(techName(uid))+'</span>';}).join('')+'</div>';
     }
@@ -541,11 +603,59 @@ function cardHtml(it){
         h+='<div class="pv-badge">📄 '+esc(it.pv.pv_nr||'PV')+' · '+esc(it.pv.stare_finala||'')+(it.pv.data_pv?' · '+fmtDate(it.pv.data_pv):'')+'</div>';
     }
     h+='<div class="icard-actions">';
+    h+='<button class="act-btn detail" onclick="openDetail('+it.proiect_db_id+')" title="Deschide detalii">ℹ️ Detalii</button>';
     h+='<button class="act-btn pv" onclick="openPv('+it.proiect_db_id+')">📄 '+(it.pv?'Vezi/Editează PV':'Completează PV')+'</button>';
+    h+='<button class="act-btn blank" onclick="printBlankPv('+it.proiect_db_id+')" title="PV gol — de completat/printat pentru teren">🖨️ PV gol</button>';
     if(!fin) h+='<button class="act-btn prg" onclick="openNewPrg('+it.proiect_db_id+')" title="Adaugă programare echipă">📅</button>';
     if(it.adresa_obiectiv) h+='<a class="act-btn waze" href="'+wazeUrl(it.adresa_obiectiv)+'" target="_blank" rel="noopener" title="Navighează cu Waze">🚗</a>';
+    if(!isTehnician) h+='<button class="act-btn del" onclick="deleteInterventie('+it.proiect_db_id+')" title="Șterge intervenția">🗑️</button>';
     h+='</div></div>';
     return h;
+}
+
+// ═══ DETALII + ȘTERGERE ═══
+function infoRow(l,v){return '<div style="display:flex;justify-content:space-between;gap:12px;padding:6px 0;border-bottom:1px solid var(--gray-bg)"><span style="font-size:13px;color:var(--gray);white-space:nowrap">'+l+'</span><span style="font-size:14px;font-weight:600;text-align:right">'+v+'</span></div>';}
+function openDetail(pid){
+    var it=STATE.items.find(function(x){return x.proiect_db_id==pid;}); if(!it) return;
+    var fin=it.proiect_status==='Finalizat';
+    var prio=it.prioritate||'Normală';
+    var h='<div style="display:grid;gap:2px">';
+    h+=infoRow('🏢 Client','<strong>'+esc(it.client_nume||'')+'</strong>');
+    h+=infoRow('📌 Cod',esc(it.proiect_id||''));
+    h+=infoRow('Status',fin?'✅ Finalizat':'⚡ Activ');
+    h+=infoRow('Prioritate',(PRIO_ICON[prio]||'')+' '+esc(prio));
+    if(it.serviciu) h+=infoRow('🔧 Serviciu',esc(it.serviciu));
+    if(it.client_telefon) h+=infoRow('📞 Telefon','<a href="tel:'+esc(it.client_telefon)+'" style="color:var(--blue);font-weight:700">'+esc(it.client_telefon)+'</a>');
+    if(it.adresa_obiectiv) h+=infoRow('📍 Adresă',esc(it.adresa_obiectiv));
+    h+='</div>';
+    if(it.obiectiv) h+='<div style="background:var(--gray-bg);padding:10px 12px;border-radius:8px;font-size:13px;white-space:pre-wrap;margin-top:10px">📝 '+esc(it.obiectiv)+'</div>';
+    if(it.note) h+='<div style="font-size:12px;color:var(--gray);font-style:italic;margin-top:6px">🗒️ '+esc(it.note)+'</div>';
+    var prgs=(it.programari||[]).slice().sort(function(a,b){return (a.data_programata+a.ora_start).localeCompare(b.data_programata+b.ora_start);});
+    h+='<div style="font-weight:700;font-size:12px;margin:12px 0 4px">📅 Programări</div>';
+    if(prgs.length){ prgs.forEach(function(p){
+        h+='<div class="icard-prg" onclick="closeDetail();openEditPrg('+p.id+','+it.proiect_db_id+')"><span class="prg-when">'+fmtDate(p.data_programata)+' · '+fmtTime(p.ora_start)+((p.atribuiri&&p.atribuiri.length)?' · '+p.atribuiri.map(techName).join(', '):'')+'</span><span class="prg-st '+statusKey(p.status)+'">'+esc(p.status)+'</span></div>';
+    }); } else { h+='<div style="font-size:12px;color:var(--orange)">🗓️ Neprogramată — nu apare încă în calendar</div>'; }
+    if(it.pv) h+='<div class="pv-badge" style="margin-top:8px">📄 '+esc(it.pv.pv_nr||'PV')+' · '+esc(it.pv.stare_finala||'')+'</div>';
+    h+='<div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:16px">';
+    h+='<button class="act-btn pv" style="flex:1;justify-content:center" onclick="closeDetail();openPv('+it.proiect_db_id+')">📄 '+(it.pv?'Vezi/Editează PV':'Completează PV')+'</button>';
+    h+='<button class="act-btn blank" onclick="printBlankPv('+it.proiect_db_id+')">🖨️ PV gol</button>';
+    if(!fin) h+='<button class="act-btn prg" onclick="closeDetail();openNewPrg('+it.proiect_db_id+')">📅 Programează</button>';
+    h+='</div>';
+    if(!isTehnician) h+='<button class="btn-del" onclick="deleteInterventie('+it.proiect_db_id+')">🗑️ Șterge intervenția</button>';
+    document.getElementById('detailTitle').textContent='📋 '+(it.client_nume||'Intervenție');
+    document.getElementById('detailBody').innerHTML=h;
+    document.getElementById('detailModal').classList.add('active');
+}
+function closeDetail(){document.getElementById('detailModal').classList.remove('active');}
+function deleteInterventie(pid){
+    var it=STATE.items.find(function(x){return x.proiect_db_id==pid;})||{};
+    if(!confirm('Ștergi definitiv intervenția'+(it.client_nume?' „'+it.client_nume+'"':'')+' ('+(it.proiect_id||'')+') și toate datele ei (programări, PV)?\n\nAcțiunea NU poate fi anulată.')) return;
+    showLoading(true);
+    fetch(API_DB+'?action=deleteInterventie',{method:'POST',credentials:'include',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'deleteInterventie',id:pid})})
+        .then(function(r){return r.json();}).then(function(res){
+            if(!res.success) throw new Error(res.error||'Eroare');
+            closeDetail(); toast('🗑️ Intervenție ștearsă','info'); refreshData();
+        }).catch(function(e){toast('❌ '+(e.message||e),'error');}).finally(function(){showLoading(false);});
 }
 
 // ═══ TECH PICKER ═══
@@ -566,12 +676,23 @@ function setCliMode(mode){
     if(mode==='nou'){existB.style.display='none';nouB.style.display='block';on(sN);off(sE);}
     else{existB.style.display='block';nouB.style.display='none';on(sE);off(sN);}
 }
+var _prgLater = false;
+function setPrgMode(mode){
+    _prgLater = (mode==='later');
+    var now=document.getElementById('segPrgNow'), later=document.getElementById('segPrgLater');
+    function on(b){b.style.borderColor='#9333ea';b.style.background='#faf5ff';b.style.color='#6b21a8';}
+    function off(b){b.style.borderColor='';b.style.background='';b.style.color='';}
+    document.getElementById('schedBlock').style.display = _prgLater ? 'none' : '';
+    document.getElementById('laterHint').style.display  = _prgLater ? '' : 'none';
+    if(_prgLater){on(later);off(now);} else {on(now);off(later);}
+}
 function openInterventieModal(){
     document.getElementById('interventieForm').reset();
     document.getElementById('iData').value=todayStr();
     document.getElementById('iOra').value='09:00';
     document.getElementById('iDurata').value=2;
     setCliMode('exist');
+    setPrgMode('now');
     renderTechPicker('iTehnicieni', isTehnician?[role]:[]);
     if(!_clientiLoaded){
         document.getElementById('iClientId').innerHTML='<option value="">⏳ Se încarcă...</option>';
@@ -595,10 +716,12 @@ function submitInterventie(ev){
     var titlu=document.getElementById('iTitlu').value.trim();
     if(!titlu){toast('⚠️ Problema/titlul e obligatoriu','error');return;}
     if(!clientId&&!clientNume){toast('⚠️ Alege client existent sau introdu nume nou','error');return;}
+    if(!_prgLater && !document.getElementById('iData').value){toast('⚠️ Alege o dată sau comută pe „De programat"','error');return;}
     var payload={action:'createInterventie',client_id:clientId||null,client_nume:clientNume,
         telefon:document.getElementById('iTelefon').value.trim(),titlu:titlu,
         serviciu:document.getElementById('iServiciu').value,adresa:document.getElementById('iAdresa').value.trim(),
-        data:document.getElementById('iData').value,ora_start:document.getElementById('iOra').value,
+        prioritate:document.getElementById('iPrioritate').value,
+        data:_prgLater?'':document.getElementById('iData').value,ora_start:document.getElementById('iOra').value,
         durata_ore:parseFloat(document.getElementById('iDurata').value)||2,
         tehnicieni:pickedTechs('iTehnicieni'),note:document.getElementById('iNote').value.trim(),user:userName};
     var btn=document.getElementById('iSubmitBtn'),orig=btn.textContent;
@@ -837,6 +960,65 @@ function printPv(){
     w.document.open(); w.document.write(html); w.document.close();
 }
 
+// ═══ PV GOL (necompletat) — pentru printare/completare în teren ═══
+function printBlankPv(proiectDbId){
+    showLoading(true);
+    fetch(API_DB+'?action=getInterventiePV&proiect_id='+proiectDbId+'&_t='+Date.now(),{credentials:'include'})
+        .then(function(r){return r.json();})
+        .then(function(res){
+            if(!res.success) throw new Error(res.error||'Eroare');
+            renderBlankPv(res.data.proiect||{}, res.data.prestator||{});
+        })
+        .catch(function(e){toast('❌ '+(e.message||e),'error');})
+        .finally(function(){showLoading(false);});
+}
+function renderBlankPv(proj,p){
+    function row(label,val){return '<tr><td class="lbl">'+label+'</td><td>'+(val?esc(val):'&nbsp;')+'</td></tr>';}
+    var lines='<div class="lines"></div>';
+    var matRows='';
+    for(var i=1;i<=6;i++){ matRows+='<tr><td>'+i+'</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr>'; }
+    var html='<!DOCTYPE html><html lang="ro"><head><meta charset="UTF-8"><title>Proces verbal (necompletat)</title><style>'+
+        '@page{size:A4;margin:16mm}*{box-sizing:border-box}body{font-family:Arial,Helvetica,sans-serif;color:#111;font-size:12px;line-height:1.5}'+
+        '.hd{display:flex;justify-content:space-between;border-bottom:2px solid #9333ea;padding-bottom:10px;margin-bottom:14px}'+
+        '.hd .co{font-size:15px;font-weight:800;color:#7c3aed}.hd .meta{font-size:10px;color:#444;text-align:right}'+
+        'h1{font-size:17px;text-align:center;margin:8px 0 2px}.sub{text-align:center;color:#555;font-size:11px;margin-bottom:14px}'+
+        'table{width:100%;border-collapse:collapse;margin-bottom:12px}td,th{border:1px solid #cbd5e1;padding:6px 8px;vertical-align:top}'+
+        '.info td.lbl{width:32%;background:#f5f3ff;font-weight:700;color:#444}'+
+        '.sec{font-weight:800;color:#7c3aed;margin:12px 0 5px;font-size:12px;text-transform:uppercase;letter-spacing:.4px}'+
+        '.box{border:1px solid #cbd5e1;border-radius:6px;padding:8px 10px;min-height:30px}'+
+        '.lines{height:64px;background-image:repeating-linear-gradient(transparent,transparent 21px,#cbd5e1 22px)}'+
+        '.mat th{background:#f5f3ff;font-size:10px;text-transform:uppercase}'+
+        '.sign{display:flex;gap:30px;margin-top:26px}.sign>div{flex:1;text-align:center}'+
+        '.sigline{border-top:1px solid #333;margin-top:54px;padding-top:4px;font-size:11px;color:#555}'+
+        '.ft{margin-top:18px;font-size:9px;color:#999;text-align:center;border-top:1px solid #e2e8f0;padding-top:6px}</style></head><body>'+
+        '<div class="hd"><div><div class="co">'+esc(p.denumire||'BREAK SISTEMS SRL')+'</div>'+
+        '<div style="font-size:10px;color:#444">'+esc(p.sediu||'')+'<br>'+esc(p.reg_com||'')+(p.cif?' · CIF '+esc(p.cif):'')+'</div></div>'+
+        '<div class="meta">'+(p.email?esc(p.email)+'<br>':'')+(p.telefon?esc(p.telefon):'')+'</div></div>'+
+        '<h1>PROCES VERBAL DE INTERVENȚIE</h1><div class="sub">Nr. _____________ din ____ / ____ / __________</div>'+
+        '<table class="info">'+
+        row('Beneficiar',proj.client_nume)+
+        row('Adresă lucrare',proj.adresa_obiectiv||proj.client_adresa)+
+        row('Telefon',proj.client_telefon)+
+        row('Nr. intervenție',proj.proiect_id)+
+        row('Tip serviciu',proj.serviciu)+
+        row('Tehnicieni','')+
+        row('Durata intervenție','')+
+        row('Stare finală','☐ Rezolvat  ☐ Parțial  ☐ Necesită revenire')+
+        '</table>'+
+        '<div class="sec">Problema constatată</div><div class="box">'+lines+'</div>'+
+        '<div class="sec">Cauza defecțiunii</div><div class="box">'+lines+'</div>'+
+        '<div class="sec">Lucrări efectuate / soluția aplicată</div><div class="box">'+lines+'</div>'+
+        '<div class="sec">Materiale / piese utilizate</div><table class="mat"><tr><th style="width:30px">#</th><th>Denumire</th><th style="width:60px">Cant.</th><th style="width:50px">U.M.</th></tr>'+matRows+'</table>'+
+        '<div class="sec">Recomandări</div><div class="box">'+lines+'</div>'+
+        '<div class="sign"><div><div style="font-weight:700">Prestator</div><div style="font-size:10px;color:#666">'+esc(p.reprezentant||'')+'</div><div class="sigline">Semnătură & ștampilă</div></div>'+
+        '<div><div style="font-weight:700">Beneficiar</div><div style="font-size:10px;color:#666">&nbsp;</div><div class="sigline">Nume & semnătură de primire</div></div></div>'+
+        '<div class="ft">Document generat din Portal CSSI · '+esc(p.denumire||'')+' · formular necompletat</div>'+
+        '<script>window.onload=function(){setTimeout(function(){window.print();},250);};<\/script></body></html>';
+    var w=window.open('','_blank');
+    if(!w){toast('⚠️ Permite ferestrele pop-up pentru a tipări','error');return;}
+    w.document.open(); w.document.write(html); w.document.close();
+}
+
 // ═══ INIT ═══
 function applyRoleUI(){
     if(isTehnician){
@@ -847,6 +1029,37 @@ function applyRoleUI(){
         var sel=document.getElementById('filterTehnician');
         TECHNICIANS.forEach(function(t){var o=document.createElement('option');o.value=t.id;o.textContent=t.name;sel.appendChild(o);});
     }
+    if(role==='admin'){ var ib=document.getElementById('importRecBtn'); if(ib) ib.style.display=''; }
+}
+
+// ═══ IMPORT din modulul vechi Reclamații (one-shot, idempotent) ═══
+function importReclamatii(){
+    if(role!=='admin'){ toast('⚠️ Doar administratorii pot importa','error'); return; }
+    var btn=document.getElementById('importRecBtn'); btn.disabled=true; showLoading(true);
+    fetch(API_DB+'?action=migrateReclamatii',{method:'POST',credentials:'include',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'migrateReclamatii',dry_run:true})})
+        .then(function(r){return r.json();})
+        .then(function(res){
+            if(!res.success) throw new Error(res.error||'Eroare');
+            var r=res.data||{};
+            if(!r.total){ toast('✅ Nimic de importat — totul e deja în Intervenții','info'); return null; }
+            if(!confirm('Mut '+r.total+' reclamații ca intervenții?\n\nFiecare e recreată ca intervenție (cu datele ei), cele cu dată apar în planificator, iar reclamația veche se șterge.')) return null;
+            return fetch(API_DB+'?action=migrateReclamatii',{method:'POST',credentials:'include',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'migrateReclamatii'})})
+                .then(function(r2){return r2.json();})
+                .then(function(res2){
+                    if(!res2.success) throw new Error(res2.error||'Eroare');
+                    var d=res2.data||{};
+                    var msg='✅ Mutate: '+d.migrate+'/'+d.total+' · în calendar: '+d.cu_programare;
+                    if(d.erori&&d.erori.length){
+                        msg+=' · erori: '+d.erori.length; console.warn('Erori import:',d.erori);
+                        var det=d.erori.map(function(e){return '#'+e.reclamatie_id+' ('+(e.client||'')+'): '+e.error;}).join('\n');
+                        alert('Erori la import:\n\n'+det);
+                    }
+                    toast(msg, (d.erori&&d.erori.length)?'error':'success');
+                    refreshData();
+                });
+        })
+        .catch(function(e){ toast('❌ '+(e.message||e),'error'); })
+        .finally(function(){ btn.disabled=false; showLoading(false); });
 }
 applyRoleUI();
 refreshData();
