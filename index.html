@@ -912,10 +912,11 @@ Cum vă pot ajuta? Scrieți: servicii, prețuri sau contact.</div>
         if (tipText && tipText !== 'Tip serviciu (opțional)') msg += '📋 *Tip:* ' + tipText + '\n';
         if (detalii) msg += '📝 *Detalii:* ' + detalii + '\n';
         
-        if(typeof gtag==='function'){
-            gtag('event','cere_oferta_click',{event_category:'Lead',event_label:service||'Hero Form',value:200,currency:'RON'});
-            gtag('event','whatsapp_click',{event_category:'Lead',event_label:'Hero Form WhatsApp',value:200,currency:'RON'});
-            gtag('event','conversion',{send_to:'AW-17987940313/WVuaCJnH1YEcENnfqIFD',value:200,currency:'RON'});
+        /* 20.07.2026 — apel unic catre cssiTrackLead() din /tracking.js.
+           Eliminat 'whatsapp_click': o trimitere de formular NU este un click
+           pe butonul WhatsApp si polua metrica de contact direct. */
+        if (typeof window.cssiTrackLead === 'function') {
+            window.cssiTrackLead(service || 'Hero Form', 'heroForm');
         }
 
         window.open('https://wa.me/40752288400?text=' + encodeURIComponent(msg), '_blank');
@@ -950,11 +951,11 @@ Cum vă pot ajuta? Scrieți: servicii, prețuri sau contact.</div>
         if (service && service !== 'Selectează serviciul') msg += '🛠️ *Serviciu:* ' + service + '\n';
         if (message) msg += '📝 *Mesaj:* ' + message + '\n';
         
-        if(typeof gtag==='function'){
-            gtag('event','generate_lead',{event_category:'Contact',event_label:service||'Homepage',value:150,currency:'RON'});
-            gtag('event','form_submit',{event_category:'Lead',event_label:'Contact Form',value:150,currency:'RON'});
-            gtag('event','whatsapp_click',{event_category:'Lead',event_label:'Contact Form WhatsApp',value:150,currency:'RON'});
-            gtag('event','conversion',{send_to:'AW-17987940313/WVuaCJnH1YEcENnfqIFD',value:150,currency:'RON'});
+        /* 20.07.2026 — apel unic catre cssiTrackLead() din /tracking.js.
+           Eliminat 'whatsapp_click': o trimitere de formular NU este un click
+           pe butonul WhatsApp si polua metrica de contact direct. */
+        if (typeof window.cssiTrackLead === 'function') {
+            window.cssiTrackLead(service || 'Homepage', 'contactForm');
         }
 
         window.open('https://wa.me/40752288400?text=' + encodeURIComponent(msg), '_blank');

@@ -72,87 +72,9 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
-    /* --- 3. Track trimitere formular (window.open spre wa.me) --- */
-    /* --- Enhanced Conversions for Leads: trimite date utilizator cu conversia --- */
-    var originalOpen = window.open;
-    window.open = function(url) {
-        if (url && url.indexOf('wa.me') !== -1) {
-
-            if (typeof gtag === 'function') {
-
-                /* ═══ Enhanced Conversions for Leads ═══
-                   Captează datele din formularul de contact și le trimite
-                   hash-uite (automat de gtag) pentru conversii optimizate.
-                   Google Ads folosește aceste date pentru a potrivi conversiile
-                   cu utilizatorii autentificați Google. */
-                var contactForm = document.getElementById('contactForm');
-                if (contactForm) {
-                    var emailField = contactForm.querySelector('input[name="email"]');
-                    var phoneField = contactForm.querySelector('input[name="phone"]');
-                    var nameField = contactForm.querySelector('input[name="name"]');
-
-                    var userData = {};
-                    if (emailField && emailField.value) {
-                        userData.email = emailField.value.trim().toLowerCase();
-                    }
-                    if (phoneField && phoneField.value) {
-                        /* Normalizare telefon: +40 prefix, fără spații */
-                        var phone = phoneField.value.trim().replace(/[\s\-\.\(\)]/g, '');
-                        if (phone.indexOf('0') === 0) {
-                            phone = '+4' + phone;
-                        } else if (phone.indexOf('4') === 0 && phone.indexOf('+') !== 0) {
-                            phone = '+' + phone;
-                        }
-                        userData.phone_number = phone;
-                    }
-                    if (nameField && nameField.value) {
-                        var nameParts = nameField.value.trim().split(/\s+/);
-                        if (nameParts.length >= 2) {
-                            userData.address = {
-                                first_name: nameParts[0],
-                                last_name: nameParts.slice(1).join(' ')
-                            };
-                        } else if (nameParts.length === 1) {
-                            userData.address = { first_name: nameParts[0] };
-                        }
-                    }
-
-                    /* Setează user_data ÎNAINTE de evenimentul de conversie */
-                    if (Object.keys(userData).length > 0) {
-                        gtag('set', 'user_data', userData);
-                    }
-                }
-
-                /* Eveniment GA4 — generate_lead */
-                gtag('event', 'generate_lead', {
-                    event_category: 'conversion',
-                    event_label: 'form_whatsapp',
-                    currency: 'RON',
-                    value: 300
-                });
-
-                /* Eveniment form_submit pentru Google Ads Conversion */
-                gtag('event', 'form_submit', {
-                    event_category: 'conversion',
-                    event_label: 'form_whatsapp',
-                    currency: 'RON',
-                    value: 300
-                });
-
-                /* Google Ads Conversion — "Solicitati o oferta" */
-                gtag('event', 'conversion', {
-                    'send_to': 'AW-17987940313/WVuaCJnH1YEcENnfqIFD',
-                    'currency': 'RON',
-                    'value': 300
-                });
-            }
-
-            if (typeof fbq === 'function') {
-                fbq('track', 'Lead', { content_name: 'form_submit', currency: 'RON', value: 300.00 });
-            }
-        }
-        return originalOpen.apply(this, arguments);
-    };
+    /* --- 3. Track trimitere formular ---
+       Vezi cssiTrackLead() definita mai jos, in afara DOMContentLoaded.
+       Se apeleaza EXPLICIT din handler-ul fiecarui formular. */
 
     /* --- 4. Track click pe email --- */
     document.querySelectorAll('a[href^="mailto:"]').forEach(function(link) {
@@ -210,5 +132,112 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
 });
+
+
+/* ════════════════════════════════════════════════════════════════════
+   cssiTrackLead() — SURSA UNICA DE ADEVAR pentru conversia de tip lead
+   ════════════════════════════════════════════════════════════════════
+   ACTUALIZARE 20.07.2026 — fix dubla numarare:
+   Anterior, override-ul window.open din acest fisier se declansa peste
+   evenimentele gtag inline din contact.html / index.html, rezultand in
+   2x generate_lead si 2x conversion Ads pentru fiecare formular trimis.
+   Confirmat in GA4: generate_lead = 8 evenimente / 4 utilizatori.
+
+   Acum: override-ul a fost eliminat. Fiecare formular apeleaza EXPLICIT
+   cssiTrackLead() o singura data, inainte de window.open.
+
+   ATENTIE: 'form_submit' a fost redenumit 'lead_form_submit' pentru ca
+   form_submit este nume rezervat de GA4 Enhanced Measurement (form
+   interactions) si evenimentele custom cu acest nume pot fi ignorate.
+   => Conversia importata in Google Ads ("Solicitati o oferta") trebuie
+      remapata pe evenimentul GA4 'lead_form_submit'.
+
+   @param {string} service  eticheta serviciului (ex. "Camere Supraveghere")
+   @param {string} formId   id-ul formularului pentru Enhanced Conversions
+                            (implicit 'contactForm')
+   ════════════════════════════════════════════════════════════════════ */
+window.cssiTrackLead = function(service, formId) {
+
+    var LEAD_VALUE = 300;                    /* valoare unica pe tot site-ul */
+    var label = service || 'General';
+
+    if (typeof gtag === 'function') {
+
+        /* ═══ Enhanced Conversions for Leads ═══
+           Captureaza datele din formular si le trimite hash-uite (automat
+           de gtag) pentru potrivirea conversiilor cu utilizatori Google. */
+        var form = document.getElementById(formId || 'contactForm');
+        if (form) {
+            var emailField = form.querySelector('input[name="email"]');
+            var phoneField = form.querySelector('input[name="phone"]');
+            var nameField  = form.querySelector('input[name="name"]');
+
+            var userData = {};
+            if (emailField && emailField.value) {
+                userData.email = emailField.value.trim().toLowerCase();
+            }
+            if (phoneField && phoneField.value) {
+                /* Normalizare telefon: prefix +40, fara spatii */
+                var phone = phoneField.value.trim().replace(/[\s\-\.\(\)]/g, '');
+                if (phone.indexOf('0') === 0) {
+                    phone = '+4' + phone;
+                } else if (phone.indexOf('4') === 0 && phone.indexOf('+') !== 0) {
+                    phone = '+' + phone;
+                }
+                userData.phone_number = phone;
+            }
+            if (nameField && nameField.value) {
+                var nameParts = nameField.value.trim().split(/\s+/);
+                if (nameParts.length >= 2) {
+                    userData.address = {
+                        first_name: nameParts[0],
+                        last_name: nameParts.slice(1).join(' ')
+                    };
+                } else if (nameParts.length === 1) {
+                    userData.address = { first_name: nameParts[0] };
+                }
+            }
+
+            /* Seteaza user_data INAINTE de evenimentul de conversie */
+            if (Object.keys(userData).length > 0) {
+                gtag('set', 'user_data', userData);
+            }
+        }
+
+        /* GA4 — lead principal */
+        gtag('event', 'generate_lead', {
+            event_category: 'conversion',
+            event_label: label,
+            currency: 'RON',
+            value: LEAD_VALUE
+        });
+
+        /* GA4 — eveniment dedicat pentru importul in Google Ads */
+        gtag('event', 'lead_form_submit', {
+            event_category: 'conversion',
+            event_label: label,
+            currency: 'RON',
+            value: LEAD_VALUE
+        });
+
+        /* Google Ads Conversion — "Solicitati o oferta" */
+        gtag('event', 'conversion', {
+            'send_to': 'AW-17987940313/WVuaCJnH1YEcENnfqIFD',
+            'currency': 'RON',
+            'value': LEAD_VALUE
+        });
+    }
+
+    if (typeof fbq === 'function') {
+        fbq('track', 'Lead', {
+            content_name: 'lead_form',
+            currency: 'RON',
+            value: LEAD_VALUE
+        });
+    }
+
+    cssiLog('lead trimis o singura data —', label, LEAD_VALUE + ' RON');
+};
+
 // Lead magnet popup (task #94) — incarcat global prin tracking.js
 (function(){var s=document.createElement("script");s.src="/lead-magnet.js";s.defer=true;document.head.appendChild(s);})();
