@@ -146,11 +146,13 @@ document.addEventListener('DOMContentLoaded', function() {
    Acum: override-ul a fost eliminat. Fiecare formular apeleaza EXPLICIT
    cssiTrackLead() o singura data, inainte de window.open.
 
-   ATENTIE: 'form_submit' a fost redenumit 'lead_form_submit' pentru ca
-   form_submit este nume rezervat de GA4 Enhanced Measurement (form
-   interactions) si evenimentele custom cu acest nume pot fi ignorate.
-   => Conversia importata in Google Ads ("Solicitati o oferta") trebuie
-      remapata pe evenimentul GA4 'lead_form_submit'.
+   NUMELE EVENIMENTELOR RAMAN NESCHIMBATE.
+   Verificat in GA4 Admin > Evenimente-cheie (20.07.2026): 'form_submit'
+   este deja eveniment-cheie si primeste date din fluxul cssi.ro. Ipoteza
+   initiala ca ar intra in conflict cu Enhanced Measurement s-a dovedit
+   gresita. O redenumire ar fi insemnat pierderea temporara a evenimentului
+   -cheie si reimportarea conversiei in Ads, fara niciun castig.
+   => NU este necesara nicio modificare in GA4 sau Google Ads dupa deploy.
 
    @param {string} service  eticheta serviciului (ex. "Camere Supraveghere")
    @param {string} formId   id-ul formularului pentru Enhanced Conversions
@@ -213,7 +215,7 @@ window.cssiTrackLead = function(service, formId) {
         });
 
         /* GA4 — eveniment dedicat pentru importul in Google Ads */
-        gtag('event', 'lead_form_submit', {
+        gtag('event', 'form_submit', {
             event_category: 'conversion',
             event_label: label,
             currency: 'RON',
