@@ -324,9 +324,26 @@ function renderShopManual(code){
 // Cod negăsit exact → cerem link-ul produsului
 function renderShopNeedUrl(d,code){
   var cands='';
-  if(d.candidates&&d.candidates.length){cands='<div style="margin-bottom:10px"><div style="font-size:11px;color:var(--gray);margin-bottom:4px">Rezultate apropiate (click → folosește link-ul):</div>';d.candidates.forEach(function(c){var u=(c.url||'').replace(/'/g,"\\'");cands+='<div style="margin-bottom:3px">• <a href="javascript:void(0)" onclick="document.getElementById(\'codeUrlInput\').value=\''+u+'\'" style="font-size:11px;color:var(--blue)">'+(c.name?esc(c.name):esc(c.url))+'</a></div>';});cands+='</div>';}
-  document.getElementById('codeResult').innerHTML='<div class="card" style="margin:0;border:2px solid var(--orange);padding:16px"><div style="font-size:12px;color:var(--orange);font-weight:700;margin-bottom:8px">⚠️ Niciun produs cu codul exact „'+esc(code)+'"</div><p style="font-size:11px;color:var(--gray);margin-bottom:10px">Deschide shop-ul, copiază link-ul produsului corect și lipește-l mai jos:</p><div style="margin-bottom:10px"><a href="https://www.shop-security.ro/?s='+encodeURIComponent(code)+'&post_type=product" target="_blank"><button class="btn btn-outline" type="button">🔗 Caută pe shop-security.ro</button></a></div>'+cands+'<div class="form-group" style="margin-bottom:10px"><label class="form-label">Link produs (shop-security.ro)</label><input type="text" class="form-input" id="codeUrlInput" placeholder="https://www.shop-security.ro/produs..." onkeydown="if(event.key===\'Enter\'){event.preventDefault();searchByUrl();}"></div><div style="display:flex;gap:8px"><button class="btn btn-blue" onclick="searchByUrl()">🔗 Preia din link</button><button class="btn btn-outline" onclick="renderShopManual(\''+code.replace(/'/g,"\\'")+'\')">✏️ Manual</button></div></div>';
-  setTimeout(function(){var u=document.getElementById('codeUrlInput');if(u)u.focus();},100);
+  if(d.candidates&&d.candidates.length){
+    cands='<div style="margin-bottom:12px"><div style="font-size:11px;color:var(--gray);margin-bottom:6px">Variante găsite pe shop-security.ro — dă click pe cea corectă:</div>';
+    d.candidates.forEach(function(c){
+      var u=(c.url||'').replace(/'/g,"\\'");
+      var sku=c.sku?('<span style="font-family:monospace;font-weight:700;color:#0f172a">'+esc(c.sku)+'</span>'):'<span style="color:var(--gray)">(fără cod)</span>';
+      var price=(c.price!=null)?('<span style="color:var(--green);font-weight:700;white-space:nowrap">'+Number(c.price).toFixed(2)+' RON</span>'):'';
+      var nm=c.name?('<div style="font-size:10px;color:var(--gray);margin-top:2px">'+esc(c.name)+'</div>'):'';
+      cands+='<div onclick="pickShopCandidate(\''+u+'\')" style="cursor:pointer;border:1px solid #e2e8f0;border-radius:8px;padding:8px 10px;margin-bottom:6px;transition:.15s" onmouseover="this.style.borderColor=\'var(--blue)\';this.style.background=\'#f8fafc\'" onmouseout="this.style.borderColor=\'#e2e8f0\';this.style.background=\'\'"><div style="display:flex;justify-content:space-between;align-items:center;gap:8px">'+sku+price+'</div>'+nm+'</div>';
+    });
+    cands+='</div>';
+  }
+  document.getElementById('codeResult').innerHTML='<div class="card" style="margin:0;border:2px solid var(--orange);padding:16px"><div style="font-size:12px;color:var(--orange);font-weight:700;margin-bottom:8px">⚠️ Niciun produs cu codul exact „'+esc(code)+'"</div>'+cands+'<div style="font-size:11px;color:var(--gray);margin:10px 0 6px">Nu e niciuna corectă? Caută pe shop și lipește link-ul:</div><div style="margin-bottom:10px"><a href="https://www.shop-security.ro/?s='+encodeURIComponent(code)+'&post_type=product" target="_blank"><button class="btn btn-outline" type="button">🔗 Caută pe shop-security.ro</button></a></div><div class="form-group" style="margin-bottom:10px"><label class="form-label">Link produs (shop-security.ro)</label><input type="text" class="form-input" id="codeUrlInput" placeholder="https://www.shop-security.ro/produs..." onkeydown="if(event.key===\'Enter\'){event.preventDefault();searchByUrl();}"></div><div style="display:flex;gap:8px"><button class="btn btn-blue" onclick="searchByUrl()">🔗 Preia din link</button><button class="btn btn-outline" onclick="renderShopManual(\''+code.replace(/'/g,"\\'")+'\')">✏️ Manual</button></div></div>';
+}
+// Click pe o variantă din selector → preia produsul direct după link-ul ei
+function pickShopCandidate(url){
+  document.getElementById('codeResult').innerHTML='<div style="text-align:center;padding:30px;color:var(--gray)"><div style="font-size:24px;margin-bottom:8px">🔄</div>Se preia varianta aleasă...</div>';
+  fetch('/admin/shop-proxy.php?url='+encodeURIComponent(url)).then(function(r){return r.json()}).then(function(d){
+    if(d.found){renderShopFound(d);}
+    else{toast('⚠️ '+(d.error||'Nu am putut prelua produsul'),'error');var ci=document.getElementById('codeInput');renderShopManual(ci?ci.value.trim():'');}
+  }).catch(function(){toast('❌ Eroare conexiune','error');});
 }
 // Preia produsul direct din link-ul dat de utilizator
 function searchByUrl(){
