@@ -98,6 +98,48 @@ function debugOferteColumns($db) {
     catch (Exception $e) { return ['ERR' => $e->getMessage()]; }
 }
 
+// ─── Helper: ENUM proiecte.serviciu conține toate serviciile CSSI ───
+// Idempotent. Citește ENUM-ul curent și adaugă DOAR valorile lipsă, păstrând
+// tot ce există deja (inclusiv valori pe care acest cod nu le cunoaște).
+// Dacă `serviciu` e VARCHAR (nu ENUM), nu face nimic — orice text e acceptat.
+// Lista trebuie să corespundă cu CRM_SERVICII din admin/crm-clienti.html.
+function ensureServiciuEnum($db) {
+    static $checked = false;
+    if ($checked) return;
+    $checked = true;
+    $wanted = [
+        'Supraveghere Video', 'Alarma', 'Detectie Incendiu', 'Control Acces',
+        'Videointerfonie', 'Automatizari', 'Usi Garaj', 'Bariere Auto',
+        'Electric', 'Sanitare', 'Aer Conditionat', 'Ventilatie',
+        'Sonorizare', 'Pontaj Electronic', 'Securitate Industriala', 'Complex',
+    ];
+    try {
+        $row = $db->query("SHOW COLUMNS FROM proiecte LIKE 'serviciu'")->fetch(PDO::FETCH_ASSOC);
+        if (!$row) return;
+        if (!preg_match("/^enum\\((.*)\\)$/i", $row['Type'], $m)) return; // VARCHAR → nimic de făcut
+        $existing = $m[1];
+        $missing = [];
+        foreach ($wanted as $v) {
+            if (stripos($existing, "'" . $v . "'") === false) $missing[] = "'" . str_replace("'", "''", $v) . "'";
+        }
+        if (!$missing) return;
+        $newEnum = $existing . ',' . implode(',', $missing);
+        // Păstrează nullability și DEFAULT-ul existent — altfel ALTER-ul ar
+        // schimba pe tăcute constrângerile coloanei.
+        $nullSql = (isset($row['Null']) && strtoupper($row['Null']) === 'YES') ? 'NULL' : 'NOT NULL';
+        $defSql  = '';
+        if (isset($row['Default']) && $row['Default'] !== null && $row['Default'] !== '') {
+            $defSql = " DEFAULT '" . str_replace("'", "''", $row['Default']) . "'";
+        } elseif ($nullSql === 'NULL') {
+            $defSql = ' DEFAULT NULL';
+        }
+        $db->exec("ALTER TABLE proiecte MODIFY COLUMN serviciu ENUM($newEnum) $nullSql$defSql");
+    } catch (Exception $e) {
+        // Drepturi ALTER lipsă sau schemă diferită — inserarea continuă; dacă
+        // valoarea nu e acceptată, eroarea PDO ajunge oricum la client.
+    }
+}
+
 // ─── Helper: schemă finalizare proiecte + mentenanta (idempotent) ─
 function ensureFinalizareSchema($db) {
     static $checked = false;
@@ -948,10 +990,14 @@ function calcExpiresAt($dataOferta, $valab) {
 function callClaude($system, $userPrompt, $maxTokens = 3000) {
     $key = defined('ANTHROPIC_KEY') ? ANTHROPIC_KEY : (getenv('ANTHROPIC_KEY') ?: '');
     if (!$key) return ['ok' => false, 'error' => 'ANTHROPIC_KEY nesetat în secrets.php'];
-    $model = defined('CLAUDE_MODEL') ? CLAUDE_MODEL : 'claude-sonnet-4-6';
+    $model = defined('CLAUDE_MODEL') ? CLAUDE_MODEL : 'claude-sonnet-5';
     $payload = [
         'model' => $model,
         'max_tokens' => $maxTokens,
+        // Pe claude-sonnet-5 / opus-5 thinking-ul e pornit implicit dacă lipsește
+        // acest câmp, iar tokenii de thinking se scad din max_tokens → risc de
+        // răspuns trunchiat pe cURL non-streaming. Îl oprim explicit.
+        'thinking' => ['type' => 'disabled'],
         'system' => $system,
         'messages' => [['role' => 'user', 'content' => $userPrompt]]
     ];
@@ -1721,7 +1767,8 @@ try {
         case 'createProiect':
             $clientId = (isset($data['client_id']) ? $data['client_id'] : 0);
             if (!$clientId) { jsonResponse(['success' => false, 'error' => 'client_id obligatoriu'], 400); break; }
-            
+            ensureServiciuEnum($db);
+
             $year = date('Y');
             $proiectId = nextId('proiect_seq', "CSSI-$year-", 4);
             $istoric = json_encode([['status' => 'Lead', 'data' => date('Y-m-d H:i:s'), 'user' => (isset($data['responsabil']) ? $data['responsabil'] : 'Admin')]]);
@@ -1753,6 +1800,7 @@ try {
         // proiect cu status='Interventie' + programare + atribuiri tehnicieni
         case 'createInterventie':
             ensureProiecteSchema($db);
+            ensureServiciuEnum($db);
             $clientId   = isset($data['client_id']) ? intval($data['client_id']) : 0;
             $clientNume = isset($data['client_nume']) ? trim($data['client_nume']) : '';
             $titlu      = isset($data['titlu']) ? trim($data['titlu']) : '';
@@ -2354,6 +2402,7 @@ try {
                     if (!$gate['ready']) { jsonResponse(['success' => false, 'error' => 'Nu se poate preda la Execuție: ' . $gate['reason']], 409); break; }
                 }
             }
+            if (isset($data['serviciu'])) ensureServiciuEnum($db);
             $fields = [];
             $values = [];
             foreach (['serviciu','obiectiv','status','valoare_estimata','valoare_contract','responsabil','adresa_obiectiv','note'] as $f) {
@@ -5516,7 +5565,7 @@ p { margin: 0; }
                 'success'         => $r['ok'],
                 'cheie_setata'    => (defined('ANTHROPIC_KEY') && ANTHROPIC_KEY !== ''),
                 'cheie_prefix'    => (defined('ANTHROPIC_KEY') && ANTHROPIC_KEY !== '') ? substr(ANTHROPIC_KEY, 0, 7) . '…' : null,
-                'model'           => (defined('CLAUDE_MODEL') ? CLAUDE_MODEL : 'claude-sonnet-4-6'),
+                'model'           => (defined('CLAUDE_MODEL') ? CLAUDE_MODEL : 'claude-sonnet-5'),
                 'durata_ms'       => $ms,
                 'raspuns'         => $r['ok'] ? trim($r['text']) : null,
                 'error'           => $r['ok'] ? null : $r['error'],
