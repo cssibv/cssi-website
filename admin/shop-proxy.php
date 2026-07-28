@@ -120,6 +120,21 @@ function ssNormCode($s) {
     return preg_replace('/[^a-z0-9]+/', '', $s);
 }
 
+// Helper: taie o dimensiune de lentilă de la FINALUL codului: "2.8mm", "4mm", "2.8-12mm".
+// Magazinul lipește lentila de SKU ("DS-2CD2143G2-IS 2.8MM"), dar furnizorul dă codul de
+// bază fără ea ("DS-2CD2143G2-IS"). Tăiem DOAR sufixul mm — restul (-SL, /4G, -BLACK)
+// rămâne intact, ca să nu confundăm variante reale de produs.
+function ssStripLensSuffix($s) {
+    return preg_replace('#[\s\-/]*\d+(?:[.,]\d+)?(?:\s*-\s*\d+(?:[.,]\d+)?)?\s*mm\s*$#i', '', trim((string)$s));
+}
+
+// Helper: SKU-ul paginii se potrivește cu codul căutat? Exact, sau „cod de bază + lentilă".
+function ssCodeMatches($sku, $qNorm) {
+    if ($qNorm === '' || (string)$sku === '') return false;
+    if (ssNormCode($sku) === $qNorm) return true;               // potrivire exactă
+    return ssNormCode(ssStripLensSuffix($sku)) === $qNorm;       // cod căutat + sufix lentilă
+}
+
 // Helper: extrage prețul (curent/redus) dintr-o pagină de produs. 0 dacă nu găsește.
 function ssExtractPrice($html) {
     if (preg_match('/<meta[^>]+property="product:price:amount"[^>]+content="([\d.,]+)"/i', $html, $pmeta)) {
@@ -195,7 +210,7 @@ if ($directUrl !== '') {
                         && strpos($html, 'product:price:amount') !== false);
     if ($landedOnProduct) {
         $skuMain = ssExtractSku($html); // <span class="sku"> = produsul principal al paginii
-        if ($skuMain !== '' && $qNorm !== '' && ssNormCode($skuMain) === $qNorm) {
+        if ($skuMain !== '' && ssCodeMatches($skuMain, $qNorm)) {
             $detailHtml = $html;
             $detailUrl  = $effUrl;
             $products[] = ['name' => '', 'url' => $effUrl];
@@ -239,6 +254,7 @@ if ($directUrl !== '') {
         });
 
         $maxCheck = min(count($ranked), 20); // câte pagini deschidem cel mult ca să găsim SKU-ul exact
+        $lensHits = []; // produse „cod căutat + lentilă" (fără potrivire exactă): [cand, html]
         for ($k = 0; $k < $maxCheck; $k++) {
             $cand = $ranked[$k]['p'];
             list($dHtml, $dHttp) = ssFetch($cand['url'], 8, 15); // timeout scurt — pot fi multe probe
@@ -247,7 +263,8 @@ if ($directUrl !== '') {
             // Rețin ce am descărcat (SKU + preț) ca să pot arăta un selector de variante
             // dacă nu iese potrivire exactă — fără a mai descărca paginile a doua oară.
             $scanned[] = ['name' => $cand['name'], 'url' => $cand['url'], 'sku' => $sku, 'price' => ssExtractPrice($dHtml)];
-            if ($sku !== '' && $qNorm !== '' && ssNormCode($sku) === $qNorm) {
+            if ($sku === '' || $qNorm === '') continue;
+            if (ssNormCode($sku) === $qNorm) {
                 $detailHtml = $dHtml;
                 $detailUrl  = $cand['url'];
                 // aduc produsul ales pe poziția 0 (pentru name + lista de alternative)
@@ -257,11 +274,26 @@ if ($directUrl !== '') {
                 $exactMatch = true;
                 break;
             }
+            // Nu e exact, dar SKU-ul = codul căutat + o lentilă → candidat pe lentilă.
+            if (ssNormCode(ssStripLensSuffix($sku)) === $qNorm) {
+                $lensHits[] = ['cand' => $cand, 'html' => $dHtml];
+            }
+        }
+        // Fără potrivire exactă, dar EXACT o singură variantă = codul căutat + o lentilă → o acceptăm.
+        // (mai multe lentile ⇒ prețuri diferite ⇒ le lăsăm în selector ca userul să aleagă)
+        if (!$exactMatch && count($lensHits) === 1) {
+            $cand = $lensHits[0]['cand'];
+            $detailHtml = $lensHits[0]['html'];
+            $detailUrl  = $cand['url'];
+            $rest = [];
+            foreach ($products as $x) { if ($x['url'] !== $cand['url']) $rest[] = $x; }
+            $products = array_merge([$cand], $rest);
+            $exactMatch = true;
         }
     } elseif (!$exactMatch && strpos($html, 'product:price:amount') !== false) {
         // search a aterizat direct pe pagina unui produs — accept doar dacă SKU-ul se potrivește
         $skuDirect = ssExtractSku($html);
-        if ($skuDirect !== '' && $qNorm !== '' && ssNormCode($skuDirect) === $qNorm) {
+        if ($skuDirect !== '' && ssCodeMatches($skuDirect, $qNorm)) {
             $detailHtml = $html;
             if (preg_match('/<meta[^>]+property="og:url"[^>]+content="([^"]+)"/i', $html, $ou)) $detailUrl = trim($ou[1]);
             $products[] = ['name' => '', 'url' => $detailUrl];
@@ -366,7 +398,7 @@ if (!empty($products) && $price > 0) {
         'price' => $price,
         'url' => $detailUrl,
         'code' => $pcode,
-        'code_match' => ($qNorm !== '' && ssNormCode($pcode) === $qNorm), // true = SKU-ul paginii == codul căutat
+        'code_match' => ssCodeMatches($pcode, $qNorm), // true = SKU-ul paginii == codul căutat (exact sau + lentilă)
         'image' => $image,
         'description' => $description,
         'total_results' => count($products),
