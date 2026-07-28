@@ -74,23 +74,46 @@ function ensureOferteColumns($db) {
         }
     } catch (Exception $e) { /* silent — tabela poate lipsi in dev */ }
 }
-// ─── Helper: lărgește coloanele text din oferta_linii (idempotent) ─
-// Denumirea poate conține text descriptiv lung + formatare HTML (bold/culoare),
-// deci un VARCHAR scurt o trunchia (și strica HTML-ul → „dispărea"). O facem TEXT.
+// ─── Helper: schemă oferta_linii (idempotent) ─────────────────
+// 1) Denumirea poate conține text descriptiv lung + formatare HTML (bold/culoare),
+//    deci un VARCHAR scurt o trunchia (și strica HTML-ul → „dispărea"). O facem TEXT.
+// 2) link_extern = URL-ul de unde a fost luat un produs extern (nu e din catalog
+//    și nu vine de pe shop-security.ro). Îl vede cine face comanda, în Necesar
+//    Materiale, ca să găsească exact produsul ofertat.
 function ensureOfertaLiniiColumns($db) {
     static $checked = false;
     if ($checked) return;
     $checked = true;
     try {
         $cols = $db->query("SHOW COLUMNS FROM oferta_linii")->fetchAll(PDO::FETCH_ASSOC);
+        $names = [];
         foreach ($cols as $c) {
+            $names[] = $c['Field'];
             if ($c['Field'] === 'denumire' && stripos($c['Type'], 'text') === false) {
                 $db->exec("ALTER TABLE oferta_linii MODIFY denumire TEXT NULL DEFAULT NULL");
             }
         }
+        if (!in_array('link_extern', $names, true)) {
+            $db->exec("ALTER TABLE oferta_linii ADD COLUMN link_extern VARCHAR(500) NULL DEFAULT NULL");
+        }
     } catch (Exception $e) {
         error_log('ensureOfertaLiniiColumns FAILED: ' . $e->getMessage());
     }
+}
+// Există coloana link_extern? Dacă ALTER-ul de mai sus a eșuat (drepturi lipsă),
+// interogările trebuie să funcționeze mai departe fără ea — altfel s-ar rupe
+// salvarea ofertelor cu totul.
+function ofertaLiniiHasLink($db) {
+    static $has = null;
+    if ($has !== null) return $has;
+    ensureOfertaLiniiColumns($db);
+    try {
+        $cols = $db->query("SHOW COLUMNS FROM oferta_linii")->fetchAll(PDO::FETCH_COLUMN);
+        $has = in_array('link_extern', $cols, true);
+    } catch (Exception $e) {
+        $has = false;
+    }
+    return $has;
 }
 // Debug helper: returneaza listă coloane oferte (admin only — pentru troubleshoot)
 function debugOferteColumns($db) {
@@ -2653,29 +2676,40 @@ try {
                 }
                 
                 // Insert linii echipamente
-                $stmtLine = $db->prepare("INSERT INTO oferta_linii (oferta_id, tip, denumire, cod, um, cantitate, pret_achizitie, adaos_procent, pret_vanzare, valoare, ordine) VALUES (?,?,?,?,?,?,?,?,?,?,?)");
-                
+                $hasLink = ofertaLiniiHasLink($db);
+                $stmtLine = $db->prepare($hasLink
+                    ? "INSERT INTO oferta_linii (oferta_id, tip, denumire, cod, um, cantitate, pret_achizitie, adaos_procent, pret_vanzare, valoare, ordine, link_extern) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)"
+                    : "INSERT INTO oferta_linii (oferta_id, tip, denumire, cod, um, cantitate, pret_achizitie, adaos_procent, pret_vanzare, valoare, ordine) VALUES (?,?,?,?,?,?,?,?,?,?,?)");
+
                 $lines = (isset($data['lines']) ? $data['lines'] : []);
                 foreach ($lines as $i => $l) {
                     if (empty($l['name'])) continue;
                     $pv = ((isset($l['pAchiz']) ? $l['pAchiz'] : 0)) * (1 + ((isset($l['adaos']) ? $l['adaos'] : 40)) / 100);
                     $val = ((isset($l['cant']) ? $l['cant'] : 0)) * $pv;
-                    $stmtLine->execute([
+                    // Acceptă doar http(s) — câmpul e afișat ca link, deci un
+                    // javascript:/data: introdus manual n-are ce căuta în DB.
+                    $link = isset($l['link']) ? trim((string)$l['link']) : '';
+                    if ($link !== '' && !preg_match('#^https?://#i', $link)) $link = '';
+                    $row = [
                         $ofertaDbId, 'echipament', $l['name'], (isset($l['code']) ? $l['code'] : ''), (isset($l['um']) ? $l['um'] : 'buc.'),
                         (isset($l['cant']) ? $l['cant'] : 0), (isset($l['pAchiz']) ? $l['pAchiz'] : 0), (isset($l['adaos']) ? $l['adaos'] : 40), round($pv, 2), round($val, 2), $i
-                    ]);
+                    ];
+                    if ($hasLink) $row[] = ($link !== '' ? mb_substr($link, 0, 500) : null);
+                    $stmtLine->execute($row);
                 }
-                
+
                 // Insert linii manopera
                 $labor = (isset($data['labor']) ? $data['labor'] : []);
                 foreach ($labor as $i => $l) {
                     $c = floatval((isset($l['cant']) ? $l['cant'] : 0));
                     $p = floatval((isset($l['price']) ? $l['price'] : 0));
                     if (!$c || empty($l['name'])) continue;
-                    $stmtLine->execute([
+                    $row = [
                         $ofertaDbId, 'manopera', $l['name'], '', (isset($l['um']) ? $l['um'] : 'ore'),
                         $c, $p, 0, $p, round($c * $p, 2), 100 + $i
-                    ]);
+                    ];
+                    if ($hasLink) $row[] = null;
+                    $stmtLine->execute($row);
                 }
                 
                 $db->commit();
@@ -4034,11 +4068,12 @@ p { margin: 0; }
                 comandat_by VARCHAR(60) NOT NULL DEFAULT ''
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4");
 
+            $linkCol = ofertaLiniiHasLink($db) ? 'ol.link_extern' : "'' AS link_extern";
             $sql = "SELECT
                 c.id AS client_db_id, c.client_id AS client_cod, c.nume AS client_nume,
                 p.id AS proiect_db_id, p.proiect_id, p.obiectiv, p.adresa_obiectiv, p.status AS proiect_status,
                 o.id AS oferta_db_id, o.oferta_id, o.titlu AS oferta_titlu, o.data_oferta, o.total_cu_tva,
-                nc.comandat_at, nc.comandat_by,
+                nc.comandat_at, nc.comandat_by, $linkCol,
                 ol.id AS linie_id, ol.cod, ol.denumire, ol.um, ol.cantitate, ol.pret_vanzare, ol.valoare, ol.ordine
                 FROM proiecte p
                 INNER JOIN clienti c ON p.client_id = c.id
@@ -4078,10 +4113,11 @@ p { margin: 0; }
                     ];
                 }
                 $clienti[$cKey]['oferte'][$oKey]['linii'][] = [
-                    'cod'       => $r['cod'] ?: '',
-                    'denumire'  => $r['denumire'] ?: '',
-                    'um'        => $r['um'] ?: 'buc',
-                    'cantitate' => floatval($r['cantitate']),
+                    'cod'         => $r['cod'] ?: '',
+                    'denumire'    => $r['denumire'] ?: '',
+                    'um'          => $r['um'] ?: 'buc',
+                    'cantitate'   => floatval($r['cantitate']),
+                    'link_extern' => $r['link_extern'] ?: '',
                 ];
             }
 

@@ -338,6 +338,8 @@ function esc(s){if(s==null)return '';var d=document.createElement('div');d.textC
 function sanitizeRich(html){var allowed={B:1,STRONG:1,I:1,EM:1,U:1,BR:1,SPAN:1};var tmp=document.createElement('div');tmp.innerHTML=(html==null?'':String(html));function walk(node){var out='';node.childNodes.forEach(function(ch){if(ch.nodeType===3){out+=esc(ch.nodeValue);return;}if(ch.nodeType!==1)return;var tag=ch.tagName;if(tag==='BR'){out+='<br>';return;}if(tag==='DIV'||tag==='P'){var inner=walk(ch);if(out&&!/<br>$/.test(out))out+='<br>';out+=inner;return;}if(allowed[tag]){if(tag==='SPAN'){var st='';var s=ch.style||{};if(s.color)st+='color:'+s.color+';';if(s.fontWeight==='bold'||parseInt(s.fontWeight,10)>=600)st+='font-weight:700;';if(s.fontStyle==='italic')st+='font-style:italic;';if(s.textDecoration&&/underline/.test(s.textDecoration))st+='text-decoration:underline;';out+= st?('<span style="'+esc(st)+'">'+walk(ch)+'</span>'):walk(ch);}else{var t=tag.toLowerCase();out+='<'+t+'>'+walk(ch)+'</'+t+'>';}}else{out+=walk(ch);}});return out;}return walk(tmp);}
 function richToHtml(s){s=(s==null?'':String(s));if(s.indexOf('<')===-1)return esc(s).replace(/\n/g,'<br>');return sanitizeRich(s);}
 function fmtMoney(n){var v=Number(n||0);return v.toLocaleString('ro-RO',{minimumFractionDigits:2,maximumFractionDigits:2})+' RON';}
+// Domeniul afișat pe link-ul sursă al produselor externe (ex. „emag.ro")
+function lnkDomain(u){try{return String(new URL(u).hostname).replace(/^www\./,'');}catch(e){return 'link';}}
 function fmtMoneyShort(n){var v=Number(n||0);if(v>=1e6)return (v/1e6).toFixed(1)+'M';if(v>=1e3)return (v/1e3).toFixed(1)+'k';return v.toFixed(0);}
 var MONTHS=['Ian','Feb','Mar','Apr','Mai','Iun','Iul','Aug','Sep','Oct','Noi','Dec'];
 function fmtDate(s){if(!s)return '';var d=new Date(s.replace(' ','T'));if(isNaN(d.getTime()))return s;return d.getDate()+' '+MONTHS[d.getMonth()]+' '+d.getFullYear();}
@@ -732,8 +734,12 @@ function renderOfertaView(o){
             var pret = parseFloat(l.pret_vanzare||l.pret_achizitie||0);
             var val  = parseFloat(l.valoare || (cant*pret));
             html += '<tr>';
+            var lnk = (l.link_extern||'').trim();
+            var lnkOk = /^https?:\/\//i.test(lnk);
             html += '<td data-lbl="Cod">'+(l.cod?'<span class="cod">'+esc(l.cod)+'</span>':'<span style="color:var(--gray-l)">—</span>')+'</td>';
-            html += '<td data-lbl="Denumire" class="name">'+richToHtml(l.denumire||'')+'</td>';
+            html += '<td data-lbl="Denumire" class="name">'+richToHtml(l.denumire||'')
+                 + (lnkOk?'<br><a href="'+esc(lnk)+'" target="_blank" rel="noopener noreferrer" title="'+esc(lnk)+'" style="font-size:10px;font-weight:600;color:var(--blue);background:#eff6ff;padding:1px 6px;border-radius:5px;text-decoration:none;display:inline-block;margin-top:3px">🔗 sursă: '+esc(lnkDomain(lnk))+'</a>':'')
+                 + '</td>';
             html += '<td data-lbl="UM" style="color:var(--gray)">'+esc(l.um||'buc')+'</td>';
             html += '<td data-lbl="Cantitate" class="num">'+cant+'</td>';
             html += '<td data-lbl="Preț unit." class="num">'+fmtMoney(pret)+'</td>';
