@@ -18,4 +18,9 @@ return [
     // Token pentru recuperare conturi blocate (ex: admin lockout)
     // Generează cu: bin2hex(random_bytes(32))
     'RECOVERY_TOKEN' => 'PUNE_UN_TOKEN_LUNG_ALEATOR_DOAR_TU_AICI',
+    // Secret pentru scripturile cron apelate prin HTTP. Trimite-l în headerul
+    // X-Cron-Key, NU ca ?key= în URL (parametrii din URL ajung în access log).
+    //   curl -s -H "X-Cron-Key: SECRETUL" https://cssi.ro/admin/cron-backup-db.php
+    // Generează cu: bin2hex(random_bytes(32))
+    'CRON_SECRET'    => 'PUNE_UN_SECRET_LUNG_ALEATOR_AICI',
 ];

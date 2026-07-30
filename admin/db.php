@@ -27,6 +27,15 @@ if (!defined('CLAUDE_MODEL') && !empty($SECRETS['CLAUDE_MODEL'])) define('CLAUDE
 // Recovery token — pentru endpoint-uri de recuperare admin (ex: deblocare cont)
 define('RECOVERY_TOKEN', getenv('CSSI_RECOVERY_TOKEN') ?: ($SECRETS['RECOVERY_TOKEN'] ?? ''));
 
+// Cron secret — protejează scripturile cron apelate prin HTTP (vezi cron-guard.php).
+// Guard-ul îl acceptă doar din headerul X-Cron-Key; `?key=` mai merge, dar e
+// deprecat fiindcă parametrii din URL ajung în clar în access log-ul Apache.
+// `if (!defined(...))` pentru compatibilitate: în unele instalări e declarat
+// direct cu define() în secrets.php, înainte de return.
+if (!defined('CRON_SECRET')) {
+    define('CRON_SECRET', getenv('CSSI_CRON_SECRET') ?: ($SECRETS['CRON_SECRET'] ?? ''));
+}
+
 // SMSLink.ro — trimitere SMS automat (cereri recenzii, notificări)
 define('SMSLINK_KEY', getenv('CSSI_SMSLINK_KEY') ?: ($SECRETS['SMSLINK_KEY'] ?? ''));
 define('SMSLINK_SENDER', getenv('CSSI_SMSLINK_SENDER') ?: ($SECRETS['SMSLINK_SENDER'] ?? 'CSSI'));

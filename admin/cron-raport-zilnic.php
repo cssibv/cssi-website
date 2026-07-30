@@ -8,8 +8,9 @@
  *   Schedule:  0 8 * * *
  *   Command:   /usr/bin/php /home/USERNAME/public_html/admin/cron-raport-zilnic.php
  *
- * SAU prin curl HTTP (mai simplu de testat):
- *   curl -s "https://cssi.ro/admin/cron-raport-zilnic.php?key=YOUR_CRON_SECRET"
+ * SAU prin curl HTTP, cu secretul in HEADER (nu in URL — parametrii din URL
+ * ajung in clar in access log-ul Apache):
+ *   curl -s -H "X-Cron-Key: YOUR_CRON_SECRET" https://cssi.ro/admin/cron-raport-zilnic.php
  *
  * SETUP secrets.php (admin/secrets.php):
  *   define('CRON_SECRET', 'random_min_32_chars');
@@ -18,15 +19,10 @@
 
 require_once __DIR__ . '/db.php';
 require_once __DIR__ . '/raport-helpers.php';
+require_once __DIR__ . '/cron-guard.php';
 date_default_timezone_set('Europe/Bucharest');
 
-$isCli = php_sapi_name() === 'cli';
-$keyParam = $_GET['key'] ?? '';
-$keyOk = defined('CRON_SECRET') && CRON_SECRET && hash_equals(CRON_SECRET, (string)$keyParam);
-if (!$isCli && !$keyOk) {
-    http_response_code(403);
-    exit('Forbidden — set CRON_SECRET in secrets.php and pass ?key=...');
-}
+cronGuard('cron-raport-zilnic');
 
 // Destinatari (din secrets sau DB cssi_settings)
 $recipients = [];

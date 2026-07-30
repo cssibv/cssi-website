@@ -6,7 +6,14 @@
 // ============================================================
 
 require_once __DIR__ . '/db.php';
+require_once __DIR__ . '/cron-guard.php';
 date_default_timezone_set('Europe/Bucharest');
+
+// Scriptul nu avea nicio protecție: oricine putea cere URL-ul și declanșa
+// publicarea postărilor programate pe Facebook/Instagram/LinkedIn. Apeluri
+// simultane puteau publica aceeași postare de mai multe ori (două cereri apucă
+// să citească 'Programat' înainte ca vreuna să schimbe statusul).
+cronGuard('cron-social');
 
 $db = getDB();
 $now = date('Y-m-d H:i:s');
