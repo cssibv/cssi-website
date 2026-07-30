@@ -1245,6 +1245,9 @@ try {
     // Toate endpoint-urile necesită autentificare, EXCEPT lista publică
     if (!in_array($action, publicActions(), true) && $action !== '_resetLock') {
         requireAuth();
+        // Autorizare pe module — MODUL OBSERVARE: doar loghează, nu blochează.
+        // Vezi actionModules() / auditModuleAccess() în auth.php.
+        auditModuleAccess($db, $action);
     }
 
     switch ($action) {

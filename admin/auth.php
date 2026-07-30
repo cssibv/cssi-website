@@ -86,6 +86,213 @@ function requireAuth() {
     return $u;
 }
 
+// ═══════════════════════════════════════════════════════════════
+// AUTORIZARE PE MODULE — deocamdată în modul OBSERVARE
+// ═══════════════════════════════════════════════════════════════
+// Problema: access-guard.js protejează PAGINA, nu DATELE. Un user fără
+// modulul „calculator" e redirecționat de la /admin/oferte.html, dar poate
+// apela direct api.php?action=getOferte și primește tot, cu prețuri de
+// achiziție și adaos.
+//
+// Harta de mai jos a fost derivată din codul real: pentru fiecare pagină cu
+// data-module s-au extras acțiunile pe care le apelează. Acțiunile chemate
+// din module diferite au mai multe module acceptate (e destul UNUL).
+//
+// ⚠️ MODUL OBSERVARE: auditModuleAccess() DOAR loghează încălcările, nu
+// blochează nimic. Se rulează așa ~1 săptămână; dacă log-ul rămâne curat,
+// se schimbă error_log cu un răspuns 403 (vezi comentariul din funcție).
+//
+// Acțiunile care NU apar în hartă sunt scutite (comportament actual).
+function actionModules() {
+    return [
+        // ── CRM / clienți ────────────────────────────────────────
+        'getClienti'            => ['crm','calculator','interventii','planificare','proiecte'],
+        'getClient'             => ['crm','calculator','proiecte'],
+        'getClientFull'         => ['crm'],
+        'createClient'          => ['crm','proiecte'],
+        'updateClient'          => ['crm'],
+        'deleteClient'          => ['crm'],
+
+        // ── Proiecte + dosar ─────────────────────────────────────
+        'getProiecte'           => ['proiecte','crm','proiectare'],
+        'getProiect'            => ['proiecte','crm','proiectare','executie'],
+        'createProiect'         => ['proiecte','crm'],
+        'updateProiect'         => ['proiecte','crm'],
+        'deleteProiect'         => ['proiecte'],
+        'updateStatus'          => ['proiecte','crm','executie','proiectare'],
+        'setStatus'             => ['proiecte'],
+        'archive'               => ['proiecte'],
+        'unarchive'             => ['proiecte'],
+        'delete'                => ['proiecte'],
+        'preiaProiect'          => ['proiecte'],
+        'getProiecteNeprelate'  => ['proiecte'],
+        'getDateFinalizare'     => ['proiecte'],
+        'finalizeazaProiect'    => ['proiecte'],
+        'sendFinalizareEmail'   => ['proiecte'],
+        'getGarantiiExpiraCurand' => ['proiecte'],
+        'runMigrationFinalizare'  => ['proiecte'],
+        'getDosar'              => ['proiecte'],
+        'getDosareClienti'      => ['proiecte'],
+        'addDosarNota'          => ['proiecte'],
+        'dosarAvanseazaStage'   => ['proiecte'],
+        'dosarDezblocheaza'     => ['proiecte'],
+        'dosarMarcheazaBlocaj'  => ['proiecte'],
+        'dosarMarcheazaPierdut' => ['proiecte'],
+
+        // ── Ofertare ─────────────────────────────────────────────
+        'getOferte'             => ['calculator','crm','proiecte'],
+        'getOferta'             => ['calculator'],
+        'saveOferta'            => ['calculator'],
+        'deleteOferta'          => ['calculator'],
+        'archiveOferta'         => ['calculator'],
+        'unarchiveOferta'       => ['calculator'],
+        'bulkOferte'            => ['calculator'],
+        'exportOferteCSV'       => ['calculator'],
+        'nextOfertaId'          => ['calculator'],
+        'updateOfertaStatus'    => ['calculator','crm'],
+        'saveOfertaDraft'       => ['calculator'],
+        'getOfertaDraft'        => ['calculator'],
+        'listOferteDrafturi'    => ['calculator'],
+        'deleteOfertaDraft'     => ['calculator'],
+        '_debugOferteSchema'    => ['calculator'],
+
+        // ── Contracte ────────────────────────────────────────────
+        'getContracte'          => ['contracte'],
+        'getContract'           => ['contracte'],
+        'updateContract'        => ['contracte'],
+        'deleteContract'        => ['contracte'],
+        'completeContractDate'  => ['contracte'],
+        'getContractMateriale'  => ['contracte'],
+        'getContractAccessLog'  => ['contracte'],
+        'generateContractDoc'   => ['contracte'],
+        'createContractDraft'   => ['contracte'],
+        'regenerateContractToken' => ['contracte'],
+        '_debugContracteSchema' => ['contracte'],
+
+        // ── Intervenții / planificare / execuție ─────────────────
+        'getInterventii'        => ['interventii'],
+        'createInterventie'     => ['interventii','planificare'],
+        'deleteInterventie'     => ['interventii'],
+        'getInterventiePV'      => ['interventii'],
+        'saveInterventiePV'     => ['interventii'],
+        'migrateReclamatii'     => ['interventii'],
+        'getExecutie'           => ['executie','planificare'],
+        'getProiectExecutie'    => ['executie'],
+        'saveProgramare'        => ['executie','interventii','planificare'],
+        'deleteProgramare'      => ['executie','interventii','planificare'],
+        'uploadProiectFile'     => ['executie'],
+        'deleteProiectFile'     => ['executie'],
+        'getProiectMateriale'   => ['executie'],
+        'addProgresMaterial'    => ['executie'],
+        'deleteProgresMaterial' => ['executie'],
+        'addJurnalEntryExec'    => ['executie'],
+        'deleteJurnalEntryExec' => ['executie'],
+
+        // ── Proiectare ───────────────────────────────────────────
+        'getProiectare'         => ['proiectare'],
+        'updateProiectare'      => ['proiectare'],
+        'getProiectareList'     => ['proiectare'],
+        'getProiecteProiectare' => ['proiectare'],
+        'getProiectareChecklist'=> ['proiectare'],
+        'toggleChecklist'       => ['proiectare'],
+        'saveProiectareItem'    => ['proiectare'],
+        'bulkSaveProiectareItems' => ['proiectare'],
+        'uploadProiectareDoc'   => ['proiectare'],
+        'deleteProiectareDoc'   => ['proiectare'],
+        'getJurnalTeren'        => ['proiectare'],
+        'addJurnalTeren'        => ['proiectare'],
+        'addJurnalEntry'        => ['proiectare'],
+        'updateJurnalTeren'     => ['proiectare'],
+        'deleteJurnalTeren'     => ['proiectare'],
+
+        // ── Necesar materiale ────────────────────────────────────
+        'getNecesarMateriale'   => ['necesar'],
+        'markOfertaComandata'   => ['necesar'],
+        'unmarkOfertaComandata' => ['necesar'],
+
+        // ── Mentenanță ───────────────────────────────────────────
+        'getMentenanta'         => ['mentenanta'],
+        'addMentenanta'         => ['mentenanta'],
+        'updateMentenanta'      => ['mentenanta'],
+        'updateMentenantaStatus'=> ['mentenanta'],
+        'markMentenantaDone'    => ['mentenanta'],
+
+        // ── Reclamații (modul public — toți îl au) ───────────────
+        'getReclamatii'         => ['reclamatii'],
+        'saveReclamatie'        => ['reclamatii'],
+        'updateReclamatieStatus'=> ['reclamatii'],
+        'deleteReclamatie'      => ['reclamatii'],
+
+        // ── Marketing / social / recenzii ────────────────────────
+        'getSocialPosts'        => ['marketing','social'],
+        'saveSocialPost'        => ['marketing','social'],
+        'deleteSocialPost'      => ['marketing','social'],
+        'updateSocialStatus'    => ['marketing','social'],
+        'publishSocialPost'     => ['marketing','social'],
+        'generateSocialImage'   => ['marketing','social'],
+        'generateSinglePost'    => ['marketing','social'],
+        'generateWeekPosts'     => ['marketing','social'],
+        'uploadSocialMedia'     => ['marketing','social'],
+        'pingClaude'            => ['marketing','social'],
+        'getRecenziiList'       => ['marketing'],
+        'updateRecenzie'        => ['marketing'],
+        'deleteRecenzie'        => ['marketing'],
+        'sendReviewSMS'         => ['marketing'],
+        'getReviewSMSStatus'    => ['marketing','executie'],
+
+        // ── Administrare (deja protejate cu requireAdmin) ────────
+        'adminListUsers'        => ['utilizatori'],
+        'adminCreateUser'       => ['utilizatori'],
+        'adminUpdateUser'       => ['utilizatori'],
+        'adminSetPassword'      => ['utilizatori'],
+        'adminUnlockUser'       => ['utilizatori'],
+        'adminGetUserModules'   => ['utilizatori'],
+        'adminSetUserModules'   => ['utilizatori'],
+        'raportZilnicPreview'   => ['utilizatori'],
+        'raportZilnicSendNow'   => ['utilizatori'],
+        'getReportRecipients'   => ['utilizatori'],
+        'setReportRecipients'   => ['utilizatori'],
+        'getCronLog'            => ['utilizatori'],
+
+        // ── SCUTITE INTENȚIONAT (transversale, orice user autentificat) ──
+        // login, logout, me, ping, _resetLock, checkModuleAccess, getMyModules,
+        // getUserConfig, saveUserConfig, changeMyPassword, getNotificari,
+        // markNotificareRead, markAllRead, getDashboard, getDashboardStats,
+        // getActivitateRecenta, getContractByToken, submitContractDate,
+        // getProjects, getProiectMateriale (dashboard)
+    ];
+}
+
+// Verifică dacă user-ul are dreptul la acțiune — DEOCAMDATĂ DOAR LOGHEAZĂ.
+// Când log-ul e curat, înlocuiește error_log(...) cu:
+//   http_response_code(403);
+//   header('Content-Type: application/json; charset=utf-8');
+//   echo json_encode(['success'=>false,'error'=>'Acces interzis pentru acest modul.','code'=>'MODULE_REQUIRED']);
+//   exit;
+function auditModuleAccess($db, $action) {
+    $u = currentUser();
+    if (!$u) return;                              // gate-ul de auth se ocupă
+    if (($u['role'] ?? '') === 'admin') return;   // admin are tot
+    $map = actionModules();
+    if (!isset($map[$action])) return;            // acțiune scutită
+    try {
+        $allowed = getAllowedModules($db, $u);
+    } catch (Exception $e) {
+        return;                                   // nu blocăm din cauza unei erori de citire
+    }
+    foreach ($map[$action] as $needed) {
+        if (in_array($needed, $allowed, true)) return; // are cel puțin unul → OK
+    }
+    error_log(sprintf(
+        'AUTHZ-AUDIT: user=%s rol=%s actiune=%s necesita=[%s] are=[%s]',
+        $u['username'] ?? '?',
+        $u['role'] ?? '?',
+        $action,
+        implode('|', $map[$action]),
+        implode('|', $allowed)
+    ));
+}
+
 // Cere rol admin
 function requireAdmin() {
     $u = requireAuth();
