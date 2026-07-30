@@ -139,7 +139,8 @@ a{text-decoration:none;color:inherit;}button{font-family:inherit;cursor:pointer;
 .loading{text-align:center;padding:60px 20px;color:var(--gray-l);}
 </style>
 </head>
-<body>
+<script src="/admin/access-guard.js" defer></script>
+<body data-module="utilizatori">
 <div class="toast-container" id="toastContainer"></div>
 
 <div class="container">
@@ -304,8 +305,12 @@ a{text-decoration:none;color:inherit;}button{font-family:inherit;cursor:pointer;
 
 <script>
 // ═══ AUTH GUARD ═══
-var sessRole = sessionStorage.getItem('cssi-role');
-if (sessRole !== 'admin') { window.location.href = '../admin.html'; }
+// Verificarea de rol se face server-side, prin access-guard.js +
+// data-module="utilizatori" pe <body> (checkModuleAccess tratează explicit
+// modulul ăsta ca admin-only). Vechiul test citea sessionStorage, care e
+// controlat de browser — se putea trece cu setItem('cssi-role','admin') din
+// consolă, iar într-un tab nou, cu sessionStorage gol, arunca afară și
+// adminii reali.
 var API = '/admin/api.php';
 
 // ═══ STATE ═══

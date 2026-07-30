@@ -8,6 +8,36 @@
  * Versiune: 2026-06-03 — migrare la WooCommerce (vechiul /search?q= + markup custom nu mai există)
  */
 
+// ─── AUTENTIFICARE ───────────────────────────────────────────────
+// Endpoint-ul face cereri HTTP ieșite de pe server. Fără autentificare,
+// oricine de pe internet îl putea folosi ca proxy de imagini și ca
+// amplificator de trafic către shop-security.ro.
+// Toate apelurile vin din calculator-pret.html (same-origin, cu cookie de
+// sesiune), inclusiv imaginile din anexa PDF: fereastra de print e creată cu
+// window.open('','_blank') + document.write(), deci moștenește originea
+// paginii admin și trimite cookie-ul.
+require_once __DIR__ . '/auth.php';
+requireAuth();
+
+// ─── TLS: verificare pornită, cu revenire diagnosticată ──────────
+// Verificarea certificatului era dezactivată complet — cineva aflat pe traseul
+// de rețea putea servi conținut fals, iar denumirile și prețurile ajung direct
+// în ofertele trimise clienților.
+//
+// ⚠️ PAS DE DIAGNOSTIC, NU FIXUL FINAL: încercăm întâi CU verificare; dacă
+// eșuează dintr-o eroare de certificat (lipsă bundle CA pe shared hosting),
+// reîncercăm fără și scriem în log. Atât timp cât revenirea există, un atacator
+// poate forța calea nesigură rupând handshake-ul — deci nu e încă o protecție.
+// Dacă log-ul rămâne fără „TLS-FALLBACK" o săptămână, se șterge revenirea și
+// parametrul $insecure, iar atunci devine fix real.
+// Se definește AICI, înaintea blocului mode=image, care se încheie cu exit.
+define('SS_TLS_CERT_ERRORS', [
+    35,  // CURLE_SSL_CONNECT_ERROR
+    51,  // CURLE_PEER_FAILED_VERIFICATION
+    60,  // CURLE_SSL_CACERT — cazul tipic de bundle CA lipsă
+    77,  // CURLE_SSL_CACERT_BADFILE
+]);
+
 // ─── MODE: image (proxy binar) ───────────────────────────────────
 // Apelat ca: shop-proxy.php?mode=image&img=https://www.shop-security.ro/wp-content/uploads/...
 // Browser-ul face request same-origin → fără probleme de CORS/Referer/hotlink
@@ -19,21 +49,37 @@ if (isset($_GET['mode']) && $_GET['mode'] === 'image') {
         echo 'Invalid img URL (only shop-security.ro permitted)';
         exit;
     }
-    $chi = curl_init();
-    curl_setopt_array($chi, [
-        CURLOPT_URL => $imgUrl,
-        CURLOPT_RETURNTRANSFER => true,
-        CURLOPT_FOLLOWLOCATION => true,
-        CURLOPT_TIMEOUT => 15,
-        CURLOPT_SSL_VERIFYPEER => false,
-        CURLOPT_USERAGENT => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
-        CURLOPT_REFERER => 'https://www.shop-security.ro/',
-        CURLOPT_HTTPHEADER => ['Accept: image/avif,image/webp,image/png,image/jpeg,image/*,*/*;q=0.8'],
-    ]);
-    $imgData = curl_exec($chi);
-    $imgCt   = curl_getinfo($chi, CURLINFO_CONTENT_TYPE);
-    $imgHttp = curl_getinfo($chi, CURLINFO_HTTP_CODE);
-    curl_close($chi);
+    // Aceeași strategie ca la ssFetch: verificare pornită, cu revenire
+    // diagnosticată dacă bundle-ul CA lipsește. Vezi comentariul de la ssFetch.
+    $imgFetch = function ($insecure) use ($imgUrl) {
+        $chi = curl_init();
+        curl_setopt_array($chi, [
+            CURLOPT_URL => $imgUrl,
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_FOLLOWLOCATION => true,
+            CURLOPT_TIMEOUT => 15,
+            CURLOPT_SSL_VERIFYPEER => !$insecure,
+            CURLOPT_SSL_VERIFYHOST => $insecure ? 0 : 2,
+            CURLOPT_USERAGENT => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+            CURLOPT_REFERER => 'https://www.shop-security.ro/',
+            CURLOPT_HTTPHEADER => ['Accept: image/avif,image/webp,image/png,image/jpeg,image/*,*/*;q=0.8'],
+        ]);
+        $d  = curl_exec($chi);
+        $ct = curl_getinfo($chi, CURLINFO_CONTENT_TYPE);
+        $hc = curl_getinfo($chi, CURLINFO_HTTP_CODE);
+        $en = curl_errno($chi);
+        $er = curl_error($chi);
+        curl_close($chi);
+        return [$d, $ct, $hc, $en, $er];
+    };
+    list($imgData, $imgCt, $imgHttp, $imgErrno, $imgErr) = $imgFetch(false);
+    if (in_array($imgErrno, SS_TLS_CERT_ERRORS, true)) {
+        error_log(sprintf(
+            'TLS-FALLBACK: shop-proxy (imagine) a reincercat fara verificare de certificat. url=%s errno=%d eroare=%s',
+            $imgUrl, $imgErrno, $imgErr
+        ));
+        list($imgData, $imgCt, $imgHttp, $imgErrno, $imgErr) = $imgFetch(true);
+    }
     if (!$imgData || $imgHttp !== 200) {
         http_response_code(404);
         header('Content-Type: text/plain');
@@ -45,14 +91,13 @@ if (isset($_GET['mode']) && $_GET['mode'] === 'image') {
         $imgCt = ['jpg'=>'image/jpeg','jpeg'=>'image/jpeg','png'=>'image/png','webp'=>'image/webp','gif'=>'image/gif'][$ext] ?? 'image/jpeg';
     }
     header('Content-Type: ' . $imgCt);
-    header('Cache-Control: public, max-age=604800, immutable');
-    header('Access-Control-Allow-Origin: *');
+    // private: răspunsul depinde de sesiune, nu se cachează în proxy-uri comune
+    header('Cache-Control: private, max-age=604800, immutable');
     echo $imgData;
     exit;
 }
 
 header('Content-Type: application/json; charset=utf-8');
-header('Access-Control-Allow-Origin: *');
 header('Cache-Control: no-cache');
 
 $code      = isset($_GET['q'])   ? trim($_GET['q'])   : '';
@@ -72,7 +117,7 @@ if ($directUrl !== '' && !preg_match('#^https?://(www\.)?shop-security\.ro/#i', 
 $searchUrl = 'https://www.shop-security.ro/?s=' . urlencode($code) . '&post_type=product&dgwt_wcas=1';
 
 // Helper: fetch HTML cu user-agent de browser. Întoarce [body, http, errno, error].
-function ssFetch($url, $connTimeout = 12, $timeout = 30) {
+function ssFetch($url, $connTimeout = 12, $timeout = 30, $insecure = false) {
     $ch = curl_init();
     curl_setopt_array($ch, [
         CURLOPT_URL => $url,
@@ -81,8 +126,8 @@ function ssFetch($url, $connTimeout = 12, $timeout = 30) {
         CURLOPT_MAXREDIRS => 5,
         CURLOPT_CONNECTTIMEOUT => $connTimeout,
         CURLOPT_TIMEOUT => $timeout,
-        CURLOPT_SSL_VERIFYPEER => false,
-        CURLOPT_SSL_VERIFYHOST => 0,
+        CURLOPT_SSL_VERIFYPEER => !$insecure,
+        CURLOPT_SSL_VERIFYHOST => $insecure ? 0 : 2,
         CURLOPT_ENCODING => '', // accept gzip/deflate/br
         CURLOPT_IPRESOLVE => CURL_IPRESOLVE_V4, // unele shared-hosts au IPv6 rupt
         CURLOPT_USERAGENT => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
@@ -98,6 +143,16 @@ function ssFetch($url, $connTimeout = 12, $timeout = 30) {
     $error = curl_error($ch);
     $eff   = curl_getinfo($ch, CURLINFO_EFFECTIVE_URL); // URL final după redirect(uri)
     curl_close($ch);
+
+    // Eșec de certificat la prima încercare → reîncercăm o singură dată fără
+    // verificare, ca să nu rupem căutarea, și lăsăm urmă în log.
+    if (!$insecure && in_array($errno, SS_TLS_CERT_ERRORS, true)) {
+        error_log(sprintf(
+            'TLS-FALLBACK: shop-proxy a reincercat fara verificare de certificat. url=%s errno=%d eroare=%s',
+            $url, $errno, $error
+        ));
+        return ssFetch($url, $connTimeout, $timeout, true);
+    }
     return [$body, $http, $errno, $error, $eff];
 }
 
