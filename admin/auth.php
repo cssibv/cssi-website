@@ -209,6 +209,7 @@ function actionModules() {
         'getNecesarMateriale'   => ['necesar'],
         'markOfertaComandata'   => ['necesar'],
         'unmarkOfertaComandata' => ['necesar'],
+        'setFurnizorProdus'     => ['necesar'],
 
         // ── Mentenanță ───────────────────────────────────────────
         'getMentenanta'         => ['mentenanta'],

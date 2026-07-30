@@ -74,6 +74,41 @@ function ensureOferteColumns($db) {
         }
     } catch (Exception $e) { /* silent — tabela poate lipsi in dev */ }
 }
+// ─── Helper: tabela produse_furnizori (idempotent) ────────────
+// CSSI nu ține stoc: fiecare ofertă acceptată se comandă de la distribuitori
+// (Secpral / Tora / Telesystem). Codul produsului nu spune de la cine se
+// cumpără, așa că alocarea se face manual o dată și se reține pentru toate
+// comenzile următoare.
+function ensureProduseFurnizoriSchema($db) {
+    static $checked = false;
+    if ($checked) return;
+    $checked = true;
+    try {
+        $db->exec("CREATE TABLE IF NOT EXISTS produse_furnizori (
+            cod VARCHAR(100) NOT NULL PRIMARY KEY,
+            furnizor VARCHAR(60) NOT NULL,
+            updated_by VARCHAR(100) NULL DEFAULT NULL,
+            updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4");
+    } catch (Exception $e) {
+        error_log('ensureProduseFurnizoriSchema FAILED: ' . $e->getMessage());
+    }
+}
+
+// Harta cod → furnizor. Întoarce array gol dacă tabela nu poate fi creată,
+// caz în care lista de comandă rămâne funcțională, doar negrupată.
+function produseFurnizoriMap($db) {
+    ensureProduseFurnizoriSchema($db);
+    try {
+        $rows = $db->query("SELECT cod, furnizor FROM produse_furnizori")->fetchAll(PDO::FETCH_ASSOC);
+        $map = [];
+        foreach ($rows as $r) { $map[$r['cod']] = $r['furnizor']; }
+        return $map;
+    } catch (Exception $e) {
+        return [];
+    }
+}
+
 // ─── Helper: schemă oferta_linii (idempotent) ─────────────────
 // 1) Denumirea poate conține text descriptiv lung + formatare HTML (bold/culoare),
 //    deci un VARCHAR scurt o trunchia (și strica HTML-ul → „dispărea"). O facem TEXT.
@@ -4126,7 +4161,40 @@ p { margin: 0; }
 
             // Reindex (în loc de chei DB)
             $out = array_map(function($c){ $c['oferte'] = array_values($c['oferte']); return $c; }, array_values($clienti));
-            jsonResponse(['success' => true, 'data' => $out]);
+            jsonResponse([
+                'success'   => true,
+                'data'      => $out,
+                // Harta cod produs → distribuitor, ca lista de comandă să poată fi
+                // grupată pe furnizor. Nu ținem stoc: fiecare ofertă acceptată se
+                // comandă de la distribuitori (Secpral / Tora / Telesystem).
+                'furnizori' => produseFurnizoriMap($db),
+            ]);
+            break;
+
+        // ══════════════════════════════════════
+        // FURNIZORI PE PRODUS — învățați o dată, refolosiți la fiecare comandă
+        // Fără stoc propriu, singura grupare utilă la comandă e pe distribuitor.
+        // Codul produsului nu spune de la cine se cumpără, deci alocarea se face
+        // manual prima dată și se ține minte pentru toate ofertele următoare.
+        // ══════════════════════════════════════
+        case 'setFurnizorProdus':
+            $cod = isset($data['cod']) ? trim((string)$data['cod']) : '';
+            $furnizor = isset($data['furnizor']) ? trim((string)$data['furnizor']) : '';
+            if ($cod === '') { jsonResponse(['success' => false, 'error' => 'cod obligatoriu'], 400); break; }
+            if (mb_strlen($cod) > 100) { jsonResponse(['success' => false, 'error' => 'cod prea lung'], 400); break; }
+            if (mb_strlen($furnizor) > 60) { jsonResponse(['success' => false, 'error' => 'furnizor prea lung'], 400); break; }
+            ensureProduseFurnizoriSchema($db);
+            $u = currentUser();
+            $actor = $u['nume'] ?? ($u['username'] ?? 'Admin');
+            if ($furnizor === '') {
+                // Golire = dezalocare, ca să reapară în „De alocat"
+                $db->prepare("DELETE FROM produse_furnizori WHERE cod = ?")->execute([$cod]);
+                jsonResponse(['success' => true, 'cod' => $cod, 'furnizor' => '']);
+            }
+            $db->prepare("INSERT INTO produse_furnizori (cod, furnizor, updated_by) VALUES (?,?,?)
+                          ON DUPLICATE KEY UPDATE furnizor = VALUES(furnizor), updated_by = VALUES(updated_by)")
+               ->execute([$cod, $furnizor, $actor]);
+            jsonResponse(['success' => true, 'cod' => $cod, 'furnizor' => $furnizor]);
             break;
 
         // ══════════════════════════════════════

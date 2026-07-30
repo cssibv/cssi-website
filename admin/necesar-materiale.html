@@ -156,6 +156,17 @@ a{text-decoration:none;color:inherit;}button{font-family:inherit;cursor:pointer;
 .mat-um{color:var(--gray);font-size:11px;text-transform:lowercase;}
 .btn-copy{padding:4px 10px;border-radius:6px;border:1px solid var(--gray-b);background:#fff;color:var(--gray);font-size:11px;font-weight:600;cursor:pointer;transition:all 0.15s;font-family:inherit;}
 a.btn-copy{display:inline-block;text-decoration:none;white-space:nowrap;}
+/* ── Listă de comandă (agregat pe furnizor) ── */
+.cmd-bar{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;padding:12px 16px;margin-bottom:14px;background:#fff;border-radius:var(--radius);box-shadow:var(--shadow);}
+.cmd-bar-info{font-size:13px;color:var(--gray);}
+.cmd-group{background:#fff;border-radius:var(--radius);box-shadow:var(--shadow);margin-bottom:16px;overflow:hidden;border-left:4px solid var(--green,#16a34a);}
+.cmd-group.nealocat{border-left-color:var(--orange,#ea580c);}
+.cmd-group-head{display:flex;align-items:center;gap:12px;flex-wrap:wrap;padding:12px 16px;background:#f8fafc;border-bottom:1px solid var(--gray-bg,#f1f5f9);}
+.cmd-group-name{font-size:15px;font-weight:800;color:var(--dark,#0f172a);}
+.cmd-group-meta{font-size:11px;font-weight:600;color:var(--gray-l,#94a3b8);margin-right:auto;}
+.cmd-hint{padding:8px 16px;background:#fff7ed;color:#9a3412;font-size:11px;font-weight:600;}
+.cmd-furnizor{width:100%;padding:5px 8px;border-radius:6px;border:1px solid var(--gray-b,#e2e8f0);background:#fff;font-family:inherit;font-size:11px;font-weight:600;color:var(--dark,#0f172a);cursor:pointer;}
+.cmd-proiecte{display:inline-block;padding:2px 8px;border-radius:99px;background:var(--gray-bg,#f1f5f9);color:var(--gray,#64748b);font-size:10px;font-weight:700;cursor:help;white-space:nowrap;}
 .mat-link{display:inline-block;margin-top:3px;font-size:10px;font-weight:600;color:var(--blue,#2563eb);background:#eff6ff;padding:1px 6px;border-radius:5px;text-decoration:none;}
 .mat-link:hover{text-decoration:underline;}
 .btn-copy:hover{border-color:var(--blue);color:var(--blue);background:#eff6ff;}
@@ -239,6 +250,10 @@ mark{background:#fef08a;color:var(--dark);padding:0 2px;border-radius:3px;font-w
         </select>
         <button class="tb-btn" type="button" onclick="expandAll()" title="Expandează tot (E)" aria-label="Expandează tot">⤢ Expand all <span class="kbd">E</span></button>
         <button class="tb-btn" type="button" onclick="collapseAll()" title="Restrânge tot (C)" aria-label="Restrânge tot">⤡ Collapse all <span class="kbd">C</span></button>
+        <div class="density-toggle" role="group" aria-label="Mod vizualizare">
+            <button class="density-btn" type="button" data-view="proiecte" onclick="setView('proiecte')" title="Grupat pe client și ofertă">📋 Pe proiecte</button>
+            <button class="density-btn" type="button" data-view="comanda" onclick="setView('comanda')" title="Cantități adunate pe cod produs, pentru comandă">🛒 Listă comandă</button>
+        </div>
         <div class="density-toggle" role="group" aria-label="Densitate vizualizare">
             <button class="density-btn" type="button" data-density="comfortable" onclick="setDensity('comfortable')" title="Vizualizare confortabilă">⊞ Comfortable</button>
             <button class="density-btn" type="button" data-density="compact" onclick="setDensity('compact')" title="Vizualizare compactă">≡ Compact</button>
@@ -267,7 +282,7 @@ if (!role) { window.location.href = '../admin.html'; }
 
 // ═══ CONSTANTS ═══
 var API_DB = '/admin/api.php';
-var LS_KEYS = { expanded:'nm.expanded', density:'nm.density' };
+var LS_KEYS = { expanded:'nm.expanded', density:'nm.density', view:'nm.view', incluComandate:'nm.incluComandate' };
 
 // ═══ STATE ═══
 var STATE = {
@@ -277,6 +292,11 @@ var STATE = {
     lastRefresh: null,
     expanded: loadJSON(LS_KEYS.expanded, {}),
     density: localStorage.getItem(LS_KEYS.density) || 'comfortable',
+    view: localStorage.getItem(LS_KEYS.view) || 'proiecte',
+    furnizori: {},          // cod produs → distribuitor, venit de la server
+    // Implicit ascunde ofertele deja comandate — lista de comandă răspunde la
+    // „ce mai am de cumpărat", nu la „ce s-a cerut vreodată".
+    incluComandate: localStorage.getItem(LS_KEYS.incluComandate) === '1',
     searchDebounce: null,
 };
 
@@ -343,6 +363,7 @@ function refreshData(){
         .then(function(res){
             if(!res.success) throw new Error(res.error||'Eroare server');
             STATE.data = Array.isArray(res.data)?res.data:[];
+            STATE.furnizori = (res.furnizori && typeof res.furnizori==='object') ? res.furnizori : {};
             STATE.isLive = true;STATE.loaded=true;STATE.lastRefresh=Date.now();
             updateSync();render();
         })
@@ -383,6 +404,186 @@ function getFiltered(){
     return out;
 }
 
+// ═══ LISTĂ DE COMANDĂ — agregare pe cod produs, grupată pe distribuitor ═══
+// CSSI nu ține stoc: fiecare ofertă acceptată se comandă de la distribuitori.
+// Vizualizarea „pe proiecte" răspunde la „ce cere fiecare lucrare"; asta
+// răspunde la „ce trebuie cumpărat, de la cine" — aceeași cameră cerută în
+// trei proiecte devine o singură linie, cu cantitatea adunată.
+var DISTRIBUITORI = ['Secpral', 'Tora', 'Telesystem'];
+var FURNIZOR_NEALOCAT = '__nealocat__';
+
+// Furnizorul unei linii: alocare explicită după cod > domeniul link-ului
+// sursă (produsele externe își spun singure proveniența) > nealocat.
+function furnizorPentruLinie(l){
+    var cod = (l.cod||'').trim();
+    if(cod && STATE.furnizori[cod]) return STATE.furnizori[cod];
+    var link = (l.link_extern||'').trim();
+    if(/^https?:\/\//i.test(link)) return linkDomain(link);
+    return FURNIZOR_NEALOCAT;
+}
+
+// Adună liniile din ofertele filtrate. Cheia e codul produsului; fără cod,
+// denumirea normalizată (altfel produsele manuale s-ar contopi greșit).
+function agregaComanda(filtered){
+    var map = {};
+    filtered.forEach(function(c){
+        c.oferte.forEach(function(o){
+            if(o.comandat_at && !STATE.incluComandate) return;
+            o.linii.forEach(function(l){
+                var cod = (l.cod||'').trim();
+                var key = cod ? 'c:'+cod.toUpperCase() : 'd:'+(l.denumire||'').toLowerCase().trim();
+                if(!key || key==='d:') return;
+                if(!map[key]){
+                    map[key] = {
+                        key: key, cod: cod, denumire: l.denumire||'', um: l.um||'buc',
+                        cantitate: 0, link: '', furnizor: furnizorPentruLinie(l), surse: []
+                    };
+                }
+                var it = map[key];
+                it.cantitate += Number(l.cantitate)||0;
+                if(!it.link && /^https?:\/\//i.test((l.link_extern||'').trim())) it.link = l.link_extern.trim();
+                it.surse.push({
+                    client: c.client_nume||'', proiect: o.proiect_id||'',
+                    oferta: o.oferta_id||'', obiectiv: o.obiectiv||'',
+                    cant: Number(l.cantitate)||0, comandat: !!o.comandat_at
+                });
+            });
+        });
+    });
+
+    // Grupare pe furnizor; „De alocat" primul, fiind singurul care cere acțiune.
+    var grupuri = {};
+    Object.keys(map).forEach(function(k){
+        var it = map[k];
+        (grupuri[it.furnizor] = grupuri[it.furnizor] || []).push(it);
+    });
+    var nume = Object.keys(grupuri).sort(function(a,b){
+        if(a===FURNIZOR_NEALOCAT) return -1;
+        if(b===FURNIZOR_NEALOCAT) return 1;
+        return a.localeCompare(b,'ro');
+    });
+    return nume.map(function(n){
+        var items = grupuri[n].sort(function(a,b){
+            if(!a.cod && b.cod) return 1;
+            if(a.cod && !b.cod) return -1;
+            return (a.cod||a.denumire).localeCompare(b.cod||b.denumire,'ro');
+        });
+        return { furnizor:n, items:items };
+    });
+}
+
+function numeFurnizor(n){ return n===FURNIZOR_NEALOCAT ? '❓ De alocat' : n; }
+
+// Text simplu, pentru lipit în email/WhatsApp către distribuitor.
+function textComanda(grup){
+    var linii = grup.items.map(function(it){
+        var b = (it.cod ? it.cod + ' — ' : '') + plainText(it.denumire);
+        return b + ' — ' + fmtQty(it.cantitate) + ' ' + it.um;
+    });
+    return numeFurnizor(grup.furnizor) + '\n' + linii.join('\n');
+}
+function plainText(s){ var d=document.createElement('div'); d.innerHTML=s==null?'':String(s); return (d.textContent||'').replace(/\s+/g,' ').trim(); }
+
+function copiazaComanda(idx){
+    var grupuri = agregaComanda(getFiltered());
+    var g = grupuri[idx];
+    if(!g) return;
+    var txt = textComanda(g);
+    if(navigator.clipboard && navigator.clipboard.writeText){
+        navigator.clipboard.writeText(txt).then(function(){
+            toast('📋 Copiat: '+g.items.length+' poziții pentru '+numeFurnizor(g.furnizor),'success');
+        }).catch(function(){ toast('⚠️ Nu s-a putut copia','error'); });
+    } else {
+        // Fallback pentru contexte fără Clipboard API (http, browsere vechi)
+        var ta=document.createElement('textarea'); ta.value=txt; document.body.appendChild(ta);
+        ta.select(); try{ document.execCommand('copy'); toast('📋 Copiat','success'); }catch(e){ toast('⚠️ Nu s-a putut copia','error'); }
+        ta.remove();
+    }
+}
+
+function alocaFurnizor(cod, sel){
+    var furnizor = sel.value === FURNIZOR_NEALOCAT ? '' : sel.value;
+    fetch(API_DB+'?action=setFurnizorProdus', {
+        method:'POST', credentials:'include',
+        headers:{'Content-Type':'application/json'},
+        body: JSON.stringify({cod:cod, furnizor:furnizor})
+    }).then(function(r){ return r.json(); }).then(function(res){
+        if(!res || !res.success) throw new Error((res&&res.error)||'Eroare');
+        if(furnizor) STATE.furnizori[cod] = furnizor; else delete STATE.furnizori[cod];
+        toast(furnizor ? ('✅ '+cod+' → '+furnizor) : ('↩️ '+cod+' dezalocat'), 'success');
+        render();
+    }).catch(function(e){
+        toast('❌ Nu s-a salvat: '+(e.message||e),'error');
+        render();   // readuce select-ul la valoarea reală
+    });
+}
+
+function renderComanda(filtered){
+    var grupuri = agregaComanda(filtered);
+    var totalPoz = grupuri.reduce(function(s,g){return s+g.items.length},0);
+    if(!totalPoz){
+        return '<div class="empty-msg" style="padding:40px;text-align:center">'
+            + (STATE.incluComandate ? 'Nicio poziție de comandat.' : 'Tot ce era de comandat e deja marcat comandat.')
+            + '<div style="margin-top:12px"><button type="button" class="tb-btn" onclick="toggleComandate()">'
+            + (STATE.incluComandate?'Ascunde comandate':'Arată și ce e comandat')+'</button></div></div>';
+    }
+    var totalBuc = grupuri.reduce(function(s,g){return s+g.items.reduce(function(ss,i){return ss+i.cantitate},0)},0);
+
+    var html = '<div class="cmd-bar">'
+        + '<div class="cmd-bar-info"><strong>'+totalPoz+'</strong> poziții unice · <strong>'+fmtQty(totalBuc)+'</strong> bucăți · '
+        + grupuri.length+' '+(grupuri.length===1?'furnizor':'furnizori')+'</div>'
+        + '<button type="button" class="tb-btn" onclick="toggleComandate()" title="Comută afișarea ofertelor deja comandate">'
+        + (STATE.incluComandate?'✅ Include comandate':'🚫 Fără comandate')+'</button>'
+        + '</div>';
+
+    grupuri.forEach(function(g, gi){
+        var buc = g.items.reduce(function(s,i){return s+i.cantitate},0);
+        var nealocat = g.furnizor===FURNIZOR_NEALOCAT;
+        html += '<div class="cmd-group'+(nealocat?' nealocat':'')+'">';
+        html += '<div class="cmd-group-head"><div class="cmd-group-name">'+esc(numeFurnizor(g.furnizor))+'</div>'
+             +  '<div class="cmd-group-meta">'+g.items.length+' poziții · '+fmtQty(buc)+' buc.</div>'
+             +  '<button type="button" class="btn-copy" onclick="copiazaComanda('+gi+')" title="Copiază lista pentru acest furnizor">📋 Copiază lista</button></div>';
+        if(nealocat){
+            html += '<div class="cmd-hint">Alege distribuitorul pentru fiecare poziție — se ține minte pentru toate comenzile viitoare.</div>';
+        }
+        html += '<div class="mat-table-wrap"><table class="mat-table"><thead><tr>'
+             +  '<th style="width:20%">Cod</th><th>Denumire</th><th style="width:60px">UM</th>'
+             +  '<th style="width:90px;text-align:right">Cant.</th><th style="width:150px">Furnizor</th><th style="width:90px">Proiecte</th>'
+             +  '</tr></thead><tbody>';
+        g.items.forEach(function(it){
+            var f = getFilters();
+            html += '<tr>';
+            html += '<td>'+(it.cod?'<span class="mat-cod">'+highlight(it.cod,f.q)+'</span>':'<span class="mat-cod empty">— fără cod —</span>')+'</td>';
+            html += '<td><div class="mat-denumire" title="'+esc(plainText(it.denumire))+'">'+highlight(plainText(it.denumire),f.q)+'</div>';
+            if(it.link) html += '<a class="mat-link" href="'+esc(it.link)+'" target="_blank" rel="noopener noreferrer">🔗 '+esc(linkDomain(it.link))+'</a>';
+            html += '</td>';
+            html += '<td class="mat-um">'+esc(it.um)+'</td>';
+            html += '<td class="mat-cant"><strong>'+fmtQty(it.cantitate)+'</strong></td>';
+            html += '<td>';
+            if(it.cod){
+                var cur = STATE.furnizori[it.cod] || '';
+                var opts = '<option value="'+FURNIZOR_NEALOCAT+'"'+(cur?'':' selected')+'>— alege —</option>';
+                var lista = DISTRIBUITORI.slice();
+                if(cur && lista.indexOf(cur)<0) lista.push(cur);   // păstrează valori venite din link
+                lista.forEach(function(d){
+                    opts += '<option value="'+esc(d)+'"'+(cur===d?' selected':'')+'>'+esc(d)+'</option>';
+                });
+                html += '<select class="cmd-furnizor" onchange="alocaFurnizor(\''+esc(it.cod).replace(/'/g,"\\'")+'\', this)">'+opts+'</select>';
+            } else {
+                html += '<span class="mat-cod empty" title="Alocarea se ține minte după codul produsului">fără cod</span>';
+            }
+            html += '</td>';
+            var titluri = it.surse.map(function(s){
+                return (s.proiect||'?')+' · '+s.client+(s.obiectiv?' · '+s.obiectiv:'')+' — '+fmtQty(s.cant)+' '+it.um+(s.comandat?' (comandat)':'');
+            }).join('\n');
+            html += '<td><span class="cmd-proiecte" title="'+esc(titluri)+'">'+it.surse.length+' '+(it.surse.length===1?'proiect':'proiecte')+'</span></td>';
+            html += '</tr>';
+        });
+        html += '</tbody></table></div></div>';
+    });
+    return html;
+}
+
 // ═══ EXPAND/COLLAPSE STATE ═══
 function isOpen(key){ return !!STATE.expanded[key]; }
 function setOpen(key, v){ if(v) STATE.expanded[key]=true; else delete STATE.expanded[key]; saveJSON(LS_KEYS.expanded, STATE.expanded); }
@@ -402,7 +603,19 @@ function collapseAll(){ STATE.expanded={}; saveJSON(LS_KEYS.expanded, {}); rende
 function setDensity(d){
     STATE.density=d; localStorage.setItem(LS_KEYS.density, d);
     document.body.classList.toggle('compact', d==='compact');
-    document.querySelectorAll('.density-btn').forEach(function(b){b.classList.toggle('active', b.dataset.density===d);});
+    // Selector restrâns la [data-density]: butoanele de vizualizare folosesc
+    // aceeași clasă, dar nu trebuie atinse de aici.
+    document.querySelectorAll('.density-btn[data-density]').forEach(function(b){b.classList.toggle('active', b.dataset.density===d);});
+}
+function setView(v){
+    STATE.view = v; localStorage.setItem(LS_KEYS.view, v);
+    document.querySelectorAll('.density-btn[data-view]').forEach(function(b){b.classList.toggle('active', b.dataset.view===v);});
+    render();
+}
+function toggleComandate(){
+    STATE.incluComandate = !STATE.incluComandate;
+    localStorage.setItem(LS_KEYS.incluComandate, STATE.incluComandate ? '1' : '0');
+    render();
 }
 
 // ═══ RENDER ═══
@@ -469,6 +682,8 @@ function render(){
     if(!STATE.loaded){ renderSkeletons(); return; }
     if(!STATE.data.length){ renderEmpty(view, 'no-data'); return; }
     if(!filtered.length){ renderEmpty(view, 'no-match'); return; }
+
+    if(STATE.view === 'comanda'){ view.innerHTML = renderComanda(filtered); return; }
 
     var html = '';
     filtered.forEach(function(c){
@@ -649,6 +864,11 @@ document.addEventListener('keydown', function(ev){
 // ═══ INIT ═══
 document.getElementById('searchInput').addEventListener('input', onSearchInput);
 setDensity(STATE.density);
+// Marchează butonul de vizualizare activ fără să declanșeze un render înainte
+// de a exista date (setView() cheamă render()).
+document.querySelectorAll('.density-btn[data-view]').forEach(function(b){
+    b.classList.toggle('active', b.dataset.view === STATE.view);
+});
 refreshData();
 
 </script>
