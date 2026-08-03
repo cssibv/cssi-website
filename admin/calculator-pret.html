@@ -29,13 +29,14 @@
 <div id="tab-offer" class="tab-panel active"><div class="card"><div class="card-title">🏢 Date ofertă & beneficiar</div><div class="form-row-3"><div class="form-group"><label class="form-label">Nr. ofertă</label><input type="text" class="form-input" id="oNr" placeholder="Auto"></div><div class="form-group"><label class="form-label">Data</label><input type="date" class="form-input" id="oData"></div><div class="form-group"><label class="form-label">Valabilitate</label><select class="form-select" id="oValab"><option>4 zile</option><option>7 zile</option><option>15 zile</option><option>30 zile</option></select></div></div><div class="form-row"><div class="form-group"><label class="form-label">Beneficiar * <button type="button" style="float:right;padding:3px 10px;border-radius:8px;border:1px solid var(--blue);background:#eff6ff;color:var(--blue);font-size:11px;font-weight:700;cursor:pointer" onclick="openClientPicker()">🔍 Client existent</button></label><input type="text" class="form-input" id="oClient" placeholder="Denumire client / firmă"></div><div class="form-group"><label class="form-label">CUI / CNP</label><input type="text" class="form-input" id="oCui" placeholder="RO12345678"></div></div><div class="form-row"><div class="form-group"><label class="form-label">Adresa obiectiv</label><input type="text" class="form-input" id="oAdresa" placeholder="Str..., Nr..., Brașov"></div><div class="form-group"><label class="form-label">Persoană contact</label><input type="text" class="form-input" id="oContact" placeholder="Nume + telefon"></div></div><div class="form-group"><label class="form-label">Obiectiv / descriere lucrare</label><input type="text" class="form-input" id="oObiectiv" placeholder="Ex: Sistem supraveghere video depozit"></div><div class="form-group"><label class="form-label">📝 Mențiuni / Note pentru beneficiar</label><textarea class="form-input" id="oMentiuni" rows="3" placeholder="Ex: Casa este deja cablată. Dacă intervin modificări sau este necesar cablu suplimentar, acesta se va calcula separat. Etc." style="resize:vertical;min-height:70px;font-family:inherit;line-height:1.5"></textarea></div></div>
 <div class="card"><div class="card-title" style="justify-content:space-between;flex-wrap:wrap"><span>📦 Echipamente</span><div style="display:flex;gap:6px;flex-wrap:wrap"><button class="btn btn-sm btn-outline" onclick="addManualLine()">✏️ Manual</button><button class="btn btn-sm btn-green" onclick="openCodeModal()" style="background:var(--orange)">🔍 Cod produs</button><button class="btn btn-sm btn-outline" onclick="openPriceUpdate()" title="Verifică pe shop-security.ro prețurile curente ale pozițiilor din ofertă">🔄 Actualizare prețuri</button></div></div><div style="font-size:10px;color:var(--gray);margin-bottom:8px;display:flex;gap:12px"><span>🟡 Galben=preț achiz.</span><span>🔵 Albastru=adaos%</span><span>⬛ Negru=automat</span></div><div class="offer-line header"><div></div><div>#</div><div>Denumire</div><div>UM</div><div>Cant.</div><div>Preț achiz.</div><div>Adaos%</div><div>Valoare</div><div></div></div><div id="offerLines"></div><div id="offerEmpty" class="empty" style="padding:20px">Adaugă produse manual sau prin căutare după cod</div></div>
 <div class="card"><div class="card-title" style="justify-content:space-between"><span>🔧 Manoperă & Servicii</span><button class="btn btn-sm btn-outline" onclick="addLaborLine()">+ Linie</button></div><div class="offer-line header"><div></div><div>#</div><div>Denumire</div><div>UM</div><div>Cant.</div><div style="grid-column:span 2">Preț unitar</div><div>Valoare</div><div></div></div><div id="laborLines"></div></div>
-<div class="total-box" id="totalBox"><div class="total-row"><span>Subtotal echipamente</span><span class="tv" id="tEchip">0 LEI</span></div><div class="total-row"><span>Subtotal manoperă</span><span class="tv" id="tManop">0 LEI</span></div><div class="total-row"><span>Total fără TVA</span><span class="tv" id="tNet">0 LEI</span></div><div class="total-row"><span>TVA 21%</span><span class="tv" id="tTva">0 LEI</span></div><div class="total-row big"><span>TOTAL CU TVA</span><span id="tTotal">0 LEI</span></div><div id="editBanner" style="display:none;background:rgba(249,115,22,0.15);border:1px solid rgba(249,115,22,0.3);border-radius:12px;padding:10px 16px;margin-bottom:12px;text-align:center;font-size:12px;color:#f97316;font-weight:700"></div><div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:16px;justify-content:center" id="offerActionBtns"><button class="btn btn-green" id="btnSaveMain" onclick="saveOffer()">💾 Salvează oferta</button><button class="btn btn-blue" id="btnSaveNew" onclick="saveAsNew()" style="display:none">📄 Salvează ca ofertă nouă</button><button class="btn btn-red" onclick="exportPDF()">📄 Export PDF</button><button class="btn btn-blue" onclick="openAnexaCurrent()">📎 Anexă materiale</button><button class="btn btn-blue" onclick="exportOfferText()">📋 Copiază text</button></div></div></div>
+<div class="total-box" id="totalBox"><div class="total-row"><span>Subtotal echipamente</span><span class="tv" id="tEchip">0 LEI</span></div><div class="total-row"><span>Subtotal manoperă</span><span class="tv" id="tManop">0 LEI</span></div><div class="total-row"><span>Total fără TVA</span><span class="tv" id="tNet">0 LEI</span></div><div class="total-row"><span>TVA 21%</span><span class="tv" id="tTva">0 LEI</span></div><div class="total-row big"><span>TOTAL CU TVA</span><span id="tTotal">0 LEI</span></div><div id="editBanner" style="display:none;background:rgba(249,115,22,0.15);border:1px solid rgba(249,115,22,0.3);border-radius:12px;padding:10px 16px;margin-bottom:12px;text-align:center;font-size:12px;color:#f97316;font-weight:700"></div><div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:16px;justify-content:center" id="offerActionBtns"><button class="btn btn-green" id="btnSaveMain" onclick="saveOffer()">💾 Salvează oferta</button><button class="btn btn-blue" id="btnSaveNew" onclick="saveAsNew()" style="display:none">📄 Salvează ca ofertă nouă</button><button class="btn btn-red" onclick="exportPDF()">📄 Export PDF</button><button class="btn btn-blue" onclick="openAnexaCurrent()">📎 Anexă materiale</button><button class="btn btn-outline" onclick="openMaterialList()" title="Coduri și cantități pentru comandă — document intern">🧾 Listă materiale (intern)</button><button class="btn btn-blue" onclick="exportOfferText()">📋 Copiază text</button></div></div></div>
 <div id="tab-saved" class="tab-panel"><div class="search-bar"><input type="text" id="savedSearch" placeholder="Caută ofertă..." oninput="renderSaved()"></div><div id="savedList"></div></div>
 <div class="footer">Portal CSSI 3.0 · Generator Oferte v1.0 · Break Sistems SRL</div>
 </div>
 <div class="bottom-nav"><a href="/admin.html" class="bn-item"><span class="bn-icon">🏠</span>Acasă</a><a href="/admin/proiecte.html" class="bn-item"><span class="bn-icon">📋</span>Proiecte</a><a href="/admin/crm-clienti.html" class="bn-item"><span class="bn-icon">💰</span>CRM</a><a href="/admin/executie.html" class="bn-item"><span class="bn-icon">🔧</span>Execuție</a><a href="/admin/financiar.html" class="bn-item"><span class="bn-icon">📄</span>Facturi</a></div>
 <div id="pickerModal" class="modal-overlay" onclick="if(event.target===this)closePickerModal()"><div class="modal"><div class="modal-head"><div class="modal-title">📦 Selectează produse</div><button class="modal-close" onclick="closePickerModal()">✕</button></div><div class="modal-body"><div class="search-bar" style="margin-bottom:8px"><input type="text" id="pickerSearch" placeholder="Caută produs..." oninput="renderPicker()"></div><div id="pickerList" style="max-height:50vh;overflow-y:auto"></div></div></div></div>
 <div id="codeModal" class="modal-overlay" onclick="if(event.target===this)closeCodeModal()"><div class="modal"><div class="modal-head"><div class="modal-title">🔍 Import după cod produs</div><button class="modal-close" onclick="closeCodeModal()">✕</button></div><div class="modal-body"><div class="form-group"><label class="form-label">Cod produs / SKU</label><div style="display:flex;gap:8px"><input type="text" class="form-input" id="codeInput" placeholder="Ex: DS-2SE2C400MWG-E/14" style="flex:1" onkeydown="searchByCodeEnter(event)"><button class="btn btn-green" onclick="searchByCode()" id="codeSearchBtn">🔍 Caută</button></div><div class="form-hint">Caută pe shop-security.ro după codul produsului</div></div><div id="codeResult" style="margin-top:12px"></div></div></div></div>
+<div id="matModal" class="modal-overlay" onclick="if(event.target===this)closeMaterialList()"><div class="modal" style="max-width:780px"><div class="modal-head"><div class="modal-title">🧾 Listă materiale (intern)</div><button class="modal-close" onclick="closeMaterialList()">✕</button></div><div class="modal-body"><div id="matInfo" style="font-size:11px;color:var(--gray);margin-bottom:10px"></div><div id="matBody" style="max-height:48vh;overflow:auto;border:1px solid var(--gray-bg);border-radius:10px"></div><div id="matFoot" style="margin-top:12px"></div></div></div></div>
 <div id="priceUpdateModal" class="modal-overlay" onclick="if(event.target===this)closePriceUpdate()"><div class="modal" style="max-width:720px"><div class="modal-head"><div class="modal-title">🔄 Actualizare prețuri</div><button class="modal-close" onclick="closePriceUpdate()">✕</button></div><div class="modal-body"><div id="puStatus" style="font-size:11px;color:var(--gray);margin-bottom:10px"></div><div id="puBody" style="max-height:50vh;overflow-y:auto;border:1px solid var(--gray-bg);border-radius:10px"></div><div id="puFoot" style="margin-top:12px"></div></div></div></div>
 <div id="clientPickerModal" class="modal-overlay" onclick="if(event.target===this)closeClientPicker()"><div class="modal" style="max-width:600px"><div class="modal-head"><div class="modal-title">🔍 Selectează client existent</div><button class="modal-close" onclick="closeClientPicker()">✕</button></div><div class="modal-body"><div class="search-bar" style="margin-bottom:12px"><input type="text" id="clientPickerSearch" placeholder="Caută după nume, telefon, CUI..." oninput="renderClientPicker()"></div><div id="clientPickerList" style="max-height:50vh;overflow-y:auto"></div></div></div></div>
 <link rel="stylesheet" href="data:text/css,">
@@ -333,7 +334,7 @@ oNr.style.color='#94a3b8';oNr.readOnly=true;
 }}
 function exportOfferText(){var client=document.getElementById('oClient').value.trim()||'Client';var nr=document.getElementById('oNr').value.trim()||'CSSI-OF-XXXX';var t='═══════════════════════════════════════\n  OFERTĂ DE PREȚ — '+nr+'\n  Break Sistems SRL (CSSI)\n═══════════════════════════════════════\nBeneficiar: '+client+'\nData: '+(document.getElementById('oData').value||todayStr())+'\n\nECHIPAMENTE:\n';offerLines.forEach(function(l,i){if(!l.name)return;var pv=l.pAchiz*(1+l.adaos/100);t+=(i+1)+'. '+plainName(l.name)+'\n   '+l.cant+' '+l.um+' × '+fmt(pv)+' = '+fmt(l.cant*pv)+' RON\n';});t+='\nMANOPERĂ:\n';laborLines.forEach(function(l){var c=parseFloat(l.cant)||0;var p=parseFloat(l.price)||0;if(!c||!l.name)return;t+=plainName(l.name)+': '+c+' '+l.um+' × '+fmt(p)+' = '+fmt(c*p)+' RON\n';});var eT=0;offerLines.forEach(function(l){eT+=(l.cant||0)*(l.pAchiz*(1+(l.adaos||0)/100));});var mT=0;laborLines.forEach(function(l){mT+=(parseFloat(l.cant)||0)*(parseFloat(l.price)||0);});var net=eT+mT;t+='\n───────────────────────────────────────\nTotal fără TVA: '+fmt(net)+' RON\nTVA 21%: '+fmt(net*0.21)+' RON\nTOTAL CU TVA: '+fmtI(net*1.21)+' RON\n═══════════════════════════════════════\n';var ment=(document.getElementById('oMentiuni')?document.getElementById('oMentiuni').value.trim():'');if(ment)t+='\nMENȚIUNI:\n'+ment+'\n';if(navigator.clipboard)navigator.clipboard.writeText(t);toast('📋 Copiat','success');}
 function resetOffer(){window._editingOfertaDbId='';window._prefillClientDbId='';window._prefillProiectDbId='';updateEditUI();fetchNextOfertaNr();offerLines=[];laborLines=[{id:genId()+'l0',name:'Montaj și instalare echipamente',um:'ore',cant:'',price:220},{id:genId()+'l1',name:'Configurare și programare',um:'ore',cant:'',price:500},{id:genId()+'l2',name:'Cablare și protecție trasee',um:'ml.',cant:'',price:4},{id:genId()+'l3',name:'Punere în funcțiune (PIF)',um:'ans.',cant:'',price:450},{id:genId()+'l4',name:'Transport și deplasare',um:'km',cant:'',price:4}];['oNr','oClient','oCui','oAdresa','oContact','oObiectiv','oMentiuni'].forEach(function(id){var el=document.getElementById(id);if(el)el.value='';});document.getElementById('oData').value=todayStr();renderOfferLines();renderLaborLines();recalcOffer();toast('🔄 Resetat','info');}function newOffer(){resetOffer();setTab('offer');}
-function renderSaved(){var q=(document.getElementById('savedSearch').value||'').toLowerCase();var filtered=offers.filter(function(o){if(q&&!o.client.toLowerCase().includes(q)&&!o.nr.toLowerCase().includes(q)&&!(o.obiectiv||'').toLowerCase().includes(q))return false;return true;});if(!filtered.length){document.getElementById('savedList').innerHTML='<div class="empty">Nicio ofertă salvată.</div>';return;}var html='';filtered.forEach(function(o){html+='<div class="offer-card"><div class="offer-info"><div class="offer-nr">'+(o.titlu?esc(o.titlu):(esc(o.nr)+' · '+o.data))+'</div><div class="offer-client">'+esc(o.client)+'</div><div class="offer-meta">'+(o.obiectiv?esc(o.obiectiv)+' · ':'')+o.lines.length+' produse'+(o.labor.length?', '+o.labor.length+' servicii':'')+'</div><div style="display:flex;gap:4px;margin-top:6px"><button class="btn btn-sm btn-blue" onclick="loadOffer(\''+o.id+'\')">📝 Editează</button><button class="btn btn-sm btn-red" onclick="exportPDFSaved(\''+o.id+'\')">📄 PDF</button><button class="btn btn-sm btn-blue" onclick="openAnexaSaved(\''+o.id+'\')">📎 Anexă</button><button class="btn btn-sm btn-outline" onclick="copyOfferSaved(\''+o.id+'\')">📋</button><button class="btn btn-sm btn-outline" style="color:var(--red);border-color:var(--red)" onclick="deleteOffer(\''+o.id+'\')">🗑️</button></div></div><div class="offer-total"><div class="offer-total-val">'+fmtI(o.totalBrut)+'</div><div class="offer-total-sub">RON cu TVA</div></div></div>';});document.getElementById('savedList').innerHTML=html;}
+function renderSaved(){var q=(document.getElementById('savedSearch').value||'').toLowerCase();var filtered=offers.filter(function(o){if(q&&!o.client.toLowerCase().includes(q)&&!o.nr.toLowerCase().includes(q)&&!(o.obiectiv||'').toLowerCase().includes(q))return false;return true;});if(!filtered.length){document.getElementById('savedList').innerHTML='<div class="empty">Nicio ofertă salvată.</div>';return;}var html='';filtered.forEach(function(o){html+='<div class="offer-card"><div class="offer-info"><div class="offer-nr">'+(o.titlu?esc(o.titlu):(esc(o.nr)+' · '+o.data))+'</div><div class="offer-client">'+esc(o.client)+'</div><div class="offer-meta">'+(o.obiectiv?esc(o.obiectiv)+' · ':'')+o.lines.length+' produse'+(o.labor.length?', '+o.labor.length+' servicii':'')+'</div><div style="display:flex;gap:4px;margin-top:6px"><button class="btn btn-sm btn-blue" onclick="loadOffer(\''+o.id+'\')">📝 Editează</button><button class="btn btn-sm btn-red" onclick="exportPDFSaved(\''+o.id+'\')">📄 PDF</button><button class="btn btn-sm btn-blue" onclick="openAnexaSaved(\''+o.id+'\')">📎 Anexă</button><button class="btn btn-sm btn-outline" onclick="openMaterialListSaved(\''+o.id+'\')" title="Listă materiale (intern)">🧾</button><button class="btn btn-sm btn-outline" onclick="copyOfferSaved(\''+o.id+'\')">📋</button><button class="btn btn-sm btn-outline" style="color:var(--red);border-color:var(--red)" onclick="deleteOffer(\''+o.id+'\')">🗑️</button></div></div><div class="offer-total"><div class="offer-total-val">'+fmtI(o.totalBrut)+'</div><div class="offer-total-sub">RON cu TVA</div></div></div>';});document.getElementById('savedList').innerHTML=html;}
 function deleteOffer(oid){if(!confirm('Ștergi definitiv oferta?'))return;deleteOfertaFromDB(oid);}function loadOffer(oid){var o=offers.find(function(x){return String(x.id)===String(oid);});if(!o)return;window._editingOfertaDbId=o.id;window._prefillClientDbId=o.client_db_id||o.clientDbId||'';window._prefillProiectDbId=o.proiect_db_id||o.proiectDbId||'';document.getElementById('oNr').value=o.nr;document.getElementById('oData').value=o.data;if(o.valab)document.getElementById('oValab').value=o.valab;document.getElementById('oClient').value=o.client;document.getElementById('oCui').value=o.cui||'';document.getElementById('oAdresa').value=o.adresa||'';document.getElementById('oContact').value=o.contact||'';document.getElementById('oObiectiv').value=o.obiectiv||'';if(document.getElementById('oMentiuni'))document.getElementById('oMentiuni').value=o.mentiuni||'';offerLines=JSON.parse(JSON.stringify(o.lines));laborLines=o.labor.length?JSON.parse(JSON.stringify(o.labor)):laborLines;setTab('offer');renderOfferLines();renderLaborLines();recalcOffer();updateEditUI();fillClientFromDB(o.client_db_id||o.clientDbId);toast('✏️ Editezi oferta #'+o.nr,'info');}function copyOfferSaved(oid){var o=offers.find(function(x){return String(x.id)===String(oid);});if(!o)return;if(navigator.clipboard)navigator.clipboard.writeText('OFERTĂ '+o.nr+' — '+o.client+'\nTotal: '+fmtI(o.totalBrut)+' RON cu TVA');toast('📋 Copiat','success');}
 function openPickerModal(){document.getElementById('pickerModal').classList.add('active');renderPicker();}function closePickerModal(){document.getElementById('pickerModal').classList.remove('active');window._replaceLineId=null;}
 function openCodeModal(){document.getElementById('codeModal').classList.add('active');document.getElementById('codeInput').value='';document.getElementById('codeResult').innerHTML='';var isReplace=!!window._replaceLineId;document.querySelector('#codeModal .modal-title').textContent=isReplace?'🔍 Înlocuiește — caută cod produs':'🔍 Import după cod produs';setTimeout(function(){document.getElementById('codeInput').focus()},200);}function closeCodeModal(){document.getElementById('codeModal').classList.remove('active');window._replaceLineId=null;}
@@ -562,6 +563,145 @@ function applyPriceUpdate(){
   closePriceUpdate();
   renderOfferLines();recalcOffer();
   toast('✅ '+(n===1?'1 preț actualizat':n+' prețuri actualizate'),'success');
+}
+// ═══════ LISTĂ MATERIALE (INTERN) ═══════
+// Anexa de materiale e pentru client (poze, descrieri, prețuri cu adaos).
+// Asta e pentru noi: ce se cumpără, în ce cantitate, la ce preț de achiziție.
+// Agregarea se face pe cod produs — aceeași cameră pusă pe două poziții apare
+// o singură dată, cu cantitatea adunată — cu aceleași chei ca în Necesar
+// Materiale, ca lista de aici și comanda de acolo să arate la fel.
+var _matRows=[],_matInfo={};
+function _matQty(n){return String(Math.round((Number(n)||0)*1000)/1000);}
+function _matAgg(lines){
+  var map={},order=[];
+  (lines||[]).forEach(function(l){
+    var den=plainName(l.name),cod=(l.code||'').trim();
+    if(!den&&!cod)return; // linie goală, încă în lucru
+    var key=cod?('c:'+cod.toUpperCase()):('d:'+den.toLowerCase());
+    if(!map[key]){map[key]={cod:cod,den:den,um:l.um||'buc.',cant:0,val:0,preturi:[],link:''};order.push(key);}
+    var it=map[key],cant=Number(l.cant)||0,pret=Number(l.pAchiz)||0;
+    it.cant+=cant;
+    it.val+=cant*pret;
+    if(it.preturi.indexOf(pret)<0)it.preturi.push(pret);
+    if(!it.den&&den)it.den=den;
+    if(!it.link&&/^https?:\/\//i.test((l.link||'').trim()))it.link=l.link.trim();
+  });
+  var rows=order.map(function(k){return map[k];});
+  // Întâi ce are cod (se poate comanda direct), apoi restul — ca la Necesar Materiale
+  rows.sort(function(a,b){
+    if(!a.cod&&b.cod)return 1;
+    if(a.cod&&!b.cod)return -1;
+    return (a.cod||a.den).localeCompare(b.cod||b.den,'ro');
+  });
+  return rows;
+}
+function openMaterialList(){
+  var rows=_matAgg(offerLines);
+  if(!rows.length){toast('⚠️ Oferta nu are echipamente','error');return;}
+  _matShow(rows,{
+    nr:document.getElementById('oNr').value.trim()||'—',
+    data:document.getElementById('oData').value||todayStr(),
+    client:document.getElementById('oClient').value.trim()||'—',
+    obiectiv:document.getElementById('oObiectiv').value.trim()||''
+  });
+}
+function openMaterialListSaved(oid){
+  var o=offers.find(function(x){return String(x.id)===String(oid);});if(!o)return;
+  var rows=_matAgg(o.lines||[]); // liniile din DB sunt deja normalizate la loadOffersFromDB
+  if(!rows.length){toast('⚠️ Oferta nu are echipamente','error');return;}
+  _matShow(rows,{nr:o.nr||'—',data:o.data||'',client:o.client||'—',obiectiv:o.obiectiv||''});
+}
+function _matShow(rows,info){
+  _matRows=rows;_matInfo=info;
+  document.getElementById('matModal').classList.add('active');
+  _matRender();
+}
+function closeMaterialList(){document.getElementById('matModal').classList.remove('active');}
+function _matRender(){
+  var rows=_matRows,info=_matInfo;
+  document.getElementById('matInfo').innerHTML='<strong>'+esc(info.nr)+'</strong> · '+esc(info.client)
+    +(info.obiectiv?' · '+esc(info.obiectiv):'')+(info.data?' · '+esc(info.data):'')
+    +'<div style="margin-top:4px">Prețuri de achiziție, fără TVA și fără adaos. Manopera nu apare aici.</div>';
+  var html='<table style="width:100%;border-collapse:collapse;font-size:12px">'
+    +'<thead><tr style="background:var(--gray-bg)">'
+    +'<th style="text-align:left;padding:7px 8px;font-size:10px;color:var(--gray)">COD</th>'
+    +'<th style="text-align:left;padding:7px 8px;font-size:10px;color:var(--gray)">DENUMIRE</th>'
+    +'<th style="text-align:right;padding:7px 8px;font-size:10px;color:var(--gray)">CANT.</th>'
+    +'<th style="text-align:right;padding:7px 8px;font-size:10px;color:var(--gray)">P. ACHIZ.</th>'
+    +'<th style="text-align:right;padding:7px 8px;font-size:10px;color:var(--gray)">VALOARE</th></tr></thead><tbody>';
+  var totVal=0,totBuc=0,faraCod=0;
+  rows.forEach(function(r){
+    totVal+=r.val;totBuc+=r.cant;if(!r.cod)faraCod++;
+    var unit=r.cant>0?(r.val/r.cant):(r.preturi[0]||0);
+    var codCell=r.cod
+      ?'<span style="font-family:monospace;font-weight:700;color:#0f172a">'+esc(r.cod)+'</span>'
+      :'<span style="color:var(--orange);font-size:10px">fără cod</span>'
+        +(r.link?'<br><a href="'+esc(r.link)+'" target="_blank" rel="noopener noreferrer" style="font-size:9px;color:var(--blue)">'+esc(linkDomain(r.link))+' ↗</a>':'');
+    html+='<tr style="border-bottom:1px solid var(--gray-bg)">'
+      +'<td style="padding:7px 8px;vertical-align:top">'+codCell+'</td>'
+      +'<td style="padding:7px 8px">'+esc(r.den||'—')+'</td>'
+      +'<td style="padding:7px 8px;text-align:right;font-weight:700;white-space:nowrap">'+_matQty(r.cant)+' '+esc(r.um)+'</td>'
+      +'<td style="padding:7px 8px;text-align:right;white-space:nowrap">'+fmt(unit)
+      // Aceleași produs pus de două ori la prețuri diferite ⇒ afișăm media, dar o semnalăm
+      +(r.preturi.length>1?'<div style="font-size:9px;color:var(--orange)">prețuri diferite</div>':'')+'</td>'
+      +'<td style="padding:7px 8px;text-align:right;font-weight:700;white-space:nowrap">'+fmt(r.val)+'</td></tr>';
+  });
+  html+='</tbody></table>';
+  document.getElementById('matBody').innerHTML=html;
+  document.getElementById('matFoot').innerHTML='<div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;justify-content:space-between">'
+    +'<div style="font-size:11px;color:var(--gray)"><strong>'+rows.length+'</strong> poziții · <strong>'+_matQty(totBuc)+'</strong> bucăți · achiziție <strong style="color:#0f172a">'+fmt(totVal)+' RON</strong>'
+    +(faraCod?'<div style="color:var(--orange);margin-top:3px">⚠️ '+faraCod+' fără cod — de identificat înainte de comandă</div>':'')+'</div>'
+    +'<div style="display:flex;gap:8px">'
+    +'<button class="btn btn-outline" onclick="copyMaterialList()">📋 Copiază</button>'
+    +'<button class="btn btn-blue" onclick="printMaterialList()">🖨️ Printează</button>'
+    +'<button class="btn btn-outline" onclick="closeMaterialList()">Închide</button>'
+    +'</div></div>';
+}
+// Text simplu, în același format ca lista de comandă din Necesar Materiale
+function copyMaterialList(){
+  var t='Listă materiale — '+_matInfo.nr+' · '+_matInfo.client+(_matInfo.obiectiv?' · '+_matInfo.obiectiv:'')+'\n';
+  _matRows.forEach(function(r){
+    t+=(r.cod?r.cod+' — ':'')+(r.den||'—')+' — '+_matQty(r.cant)+' '+r.um+'\n';
+  });
+  if(navigator.clipboard&&navigator.clipboard.writeText){
+    navigator.clipboard.writeText(t).then(function(){toast('📋 Copiat: '+_matRows.length+' poziții','success');})
+      .catch(function(){toast('⚠️ Nu s-a putut copia','error');});
+  }else{
+    // Fallback pentru contexte fără Clipboard API (http, browsere vechi)
+    var ta=document.createElement('textarea');ta.value=t;document.body.appendChild(ta);ta.select();
+    try{document.execCommand('copy');toast('📋 Copiat','success');}catch(e){toast('⚠️ Nu s-a putut copia','error');}
+    ta.remove();
+  }
+}
+function printMaterialList(){
+  var info=_matInfo,totVal=0,totBuc=0;
+  var body='';
+  _matRows.forEach(function(r,i){
+    totVal+=r.val;totBuc+=r.cant;
+    var unit=r.cant>0?(r.val/r.cant):(r.preturi[0]||0);
+    body+='<tr><td>'+(i+1)+'</td><td class="cod">'+(r.cod?esc(r.cod):'—')+'</td><td>'+esc(r.den||'—')+'</td>'
+      +'<td class="r">'+_matQty(r.cant)+' '+esc(r.um)+'</td><td class="r">'+fmt(unit)+'</td><td class="r">'+fmt(r.val)+'</td>'
+      +'<td class="chk"></td></tr>';
+  });
+  var w=window.open('','_blank');
+  w.document.write('<!DOCTYPE html><html lang="ro"><head><meta charset="utf-8"><title>Listă materiale '+esc(info.nr)+'</title><style>'
+    +'body{font-family:Arial,Helvetica,sans-serif;color:#0f172a;margin:24px;font-size:12px}'
+    +'h1{font-size:16px;margin:0 0 2px}.sub{font-size:11px;color:#64748b;margin-bottom:14px}'
+    +'.intern{display:inline-block;background:#fef3c7;color:#854d0e;font-weight:700;font-size:10px;padding:2px 8px;border-radius:4px;margin-bottom:10px}'
+    +'table{width:100%;border-collapse:collapse}th{background:#f1f5f9;font-size:10px;color:#475569;text-align:left;padding:6px}'
+    +'td{padding:6px;border-bottom:1px solid #e2e8f0}.r{text-align:right;white-space:nowrap}.cod{font-family:monospace;font-weight:700}'
+    +'.chk{width:26px;border:1px solid #94a3b8;border-radius:3px}tfoot td{font-weight:700;border-top:2px solid #0f172a}'
+    +'@media print{body{margin:10mm}}</style></head><body>'
+    +'<div class="intern">DOCUMENT INTERN — nu se trimite clientului</div>'
+    +'<h1>Listă materiale — '+esc(info.nr)+'</h1>'
+    +'<div class="sub">'+esc(info.client)+(info.obiectiv?' · '+esc(info.obiectiv):'')+(info.data?' · '+esc(info.data):'')
+    +' · prețuri de achiziție, fără TVA și fără adaos</div>'
+    +'<table><thead><tr><th>#</th><th>Cod</th><th>Denumire</th><th class="r">Cant.</th><th class="r">P. achiz.</th><th class="r">Valoare</th><th>✓</th></tr></thead>'
+    +'<tbody>'+body+'</tbody>'
+    +'<tfoot><tr><td colspan="3">TOTAL ('+_matRows.length+' poziții)</td><td class="r">'+_matQty(totBuc)+'</td><td></td><td class="r">'+fmt(totVal)+' RON</td><td></td></tr></tfoot>'
+    +'</table></body></html>');
+  w.document.close();
+  setTimeout(function(){try{w.print();}catch(e){}},400);
 }
 function buildPDFHtml(data){
 var lines=data.lines||[];var labor=data.labor||[];
