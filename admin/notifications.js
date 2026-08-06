@@ -13,6 +13,7 @@
     var API_DB = '/admin/api.php';
     var POLL_MS = 30000;
     var pollTimer = null;
+    var resumeHooked = false;   // evită înregistrarea repetată a listenerilor de revenire
 
     var css = '' +
 '.cssi-notif-bell{position:fixed;top:14px;right:14px;z-index:9000;width:42px;height:42px;border-radius:50%;background:#fff;border:1px solid #e2e8f0;display:flex;align-items:center;justify-content:center;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,0.08);font-size:20px;transition:all 0.15s;}' +
@@ -171,9 +172,33 @@
         });
     }
 
+    // Oprește pollingul când sesiunea a expirat. Fără asta, un tab lăsat
+    // deschis continua să ceară notificări la fiecare 30s și primea 401 la
+    // nesfârșit (~35 de cereri inutile într-o jumătate de oră, în log).
+    // Reia automat când utilizatorul revine în tab — probabil s-a re-logat.
+    function stopPollingUntilBack(){
+        if (pollTimer){ clearInterval(pollTimer); pollTimer = null; }
+        var bell = document.getElementById('cssiNotifBell');
+        if (bell) bell.style.display = 'none';
+        if (resumeHooked) return;
+        resumeHooked = true;
+        var resume = function(){
+            if (document.visibilityState === 'hidden') return;
+            document.removeEventListener('visibilitychange', resume);
+            window.removeEventListener('focus', resume);
+            resumeHooked = false;
+            init();
+        };
+        document.addEventListener('visibilitychange', resume);
+        window.addEventListener('focus', resume);
+    }
+
     function loadNotifications(){
         return fetch(API_DB + '?action=getNotificari&limit=20&_t=' + Date.now(), {credentials: 'include'})
-            .then(function(r){ return r.json(); })
+            .then(function(r){
+                if (r.status === 401 || r.status === 403){ stopPollingUntilBack(); return null; }
+                return r.json();
+            })
             .then(function(res){
                 if (!res || !res.success) return;
                 var bell = document.getElementById('cssiNotifBell');
@@ -209,6 +234,8 @@
 
     function init(){
         injectMarkup();
+        var bell = document.getElementById('cssiNotifBell');
+        if (bell) bell.style.display = '';   // reafișează după o revenire din 401
         loadNotifications();
         if (pollTimer) clearInterval(pollTimer);
         pollTimer = setInterval(loadNotifications, POLL_MS);

@@ -9,8 +9,9 @@
  *   Schedule:  0 16 * * *
  *   Command:   /usr/bin/php /home/USERNAME/public_html/admin/cron-backup-db.php
  *
- * SAU prin HTTP cu CRON_SECRET (mai usor de testat manual):
- *   curl -s "https://cssi.ro/admin/cron-backup-db.php?key=YOUR_CRON_SECRET"
+ * SAU prin HTTP cu CRON_SECRET trimis in HEADER (nu in URL — parametrii din URL
+ * ajung in clar in access log-ul Apache):
+ *   curl -s -H "X-Cron-Key: YOUR_CRON_SECRET" https://cssi.ro/admin/cron-backup-db.php
  *
  * LOCATIE BACKUP:
  *   1. /home/USERNAME/backups/                    (preferat — outside public_html)
@@ -21,15 +22,10 @@
  */
 
 require_once __DIR__ . '/db.php';
+require_once __DIR__ . '/cron-guard.php';
 date_default_timezone_set('Europe/Bucharest');
 
-$isCli = php_sapi_name() === 'cli';
-$keyParam = isset($_GET['key']) ? $_GET['key'] : '';
-$keyOk = defined('CRON_SECRET') && CRON_SECRET && hash_equals(CRON_SECRET, (string)$keyParam);
-if (!$isCli && !$keyOk) {
-    http_response_code(403);
-    exit('Forbidden — set CRON_SECRET in secrets.php and pass ?key=...');
-}
+cronGuard('cron-backup-db');
 
 $startTime = microtime(true);
 $status = 'failed';

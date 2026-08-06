@@ -103,6 +103,15 @@ a{text-decoration:none;color:inherit;}button{font-family:inherit;cursor:pointer;
 .card-tag.install{background:#f0fdf4;color:#059669;}
 .card-tag.auto{background:#f5f3ff;color:var(--purple);}
 .card-tag.complex{background:#fdf2f8;color:var(--pink);}
+.card-tag.acces{background:#ecfeff;color:#0e7490;}
+.card-tag.interfon{background:#eef2ff;color:#4338ca;}
+.card-tag.garaj{background:#f8fafc;color:#475569;}
+.card-tag.bariere{background:#fffbeb;color:#b45309;}
+.card-tag.clima{background:#f0f9ff;color:#0369a1;}
+.card-tag.ventil{background:#ecfdf5;color:#047857;}
+.card-tag.sonor{background:#fdf4ff;color:#a21caf;}
+.card-tag.pontaj{background:#f7fee7;color:#4d7c0f;}
+.card-tag.industrial{background:#f1f5f9;color:#334155;}
 .card-sursa{display:inline-block;padding:3px 8px;border-radius:6px;font-size:10px;font-weight:600;background:var(--gray-bg);color:var(--gray);}
 .card-valoare{font-size:14px;font-weight:800;color:var(--dark);}
 .card-note{font-size:12px;color:var(--gray);margin-top:8px;font-style:italic;line-height:1.5;background:var(--gray-bg);padding:8px 12px;border-radius:8px;}
@@ -239,10 +248,6 @@ tr:hover td{background:rgba(59,130,246,0.03);}
         <input type="text" class="filter-search" id="searchInput" placeholder="🔍 Caută client, telefon, email..." oninput="render()">
         <select class="filter-select" id="filterServici" onchange="render()">
             <option value="">Toate serviciile</option>
-            <option>Detecție Incendiu</option><option>Alarmă Antiefracție</option>
-            <option>Supraveghere Video</option><option>Instalații Electrice</option>
-            <option>Instalații Sanitare</option><option>Automatizări Porți</option>
-            <option>Proiect Complex</option>
         </select>
         <select class="filter-select" id="filterSursa" onchange="render()">
             <option value="">Toate sursele</option>
@@ -283,12 +288,9 @@ tr:hover td{background:rgba(59,130,246,0.03);}
                 <div class="form-group"><label class="form-label">Email</label><input type="email" class="form-input" name="email" placeholder="email@client.ro"></div>
             </div>
             <div class="form-group"><label class="form-label">Serviciu dorit <span class="req">*</span></label>
-                <select class="form-select" name="serviciu" required>
+                <!-- Opțiunile sunt populate din CRM_SERVICII (populateServiceSelects) -->
+                <select class="form-select" name="serviciu" id="addServiciu" required>
                     <option value="">— Alege serviciul —</option>
-                    <option>Detecție Incendiu</option><option>Alarmă Antiefracție</option>
-                    <option>Supraveghere Video</option><option>Instalații Electrice</option>
-                    <option>Instalații Sanitare</option><option>Automatizări Porți</option>
-                    <option>Proiect Complex</option>
                 </select>
             </div>
             <div class="form-row">
@@ -408,15 +410,8 @@ tr:hover td{background:rgba(59,130,246,0.03);}
 
             <div class="form-section-title mt">📁 Date Proiect</div>
             <div class="form-group"><label class="form-label">Serviciu</label>
-                <select class="form-select" name="serviciu">
-                    <option>Detecție Incendiu</option>
-                    <option>Alarmă Antiefracție</option>
-                    <option>Supraveghere Video</option>
-                    <option>Instalații Electrice</option>
-                    <option>Instalații Sanitare</option>
-                    <option>Automatizări Porți</option>
-                    <option>Control Acces</option>
-                    <option>Proiect Complex</option>
+                <!-- Opțiunile sunt populate din CRM_SERVICII (populateServiceSelects) -->
+                <select class="form-select" name="serviciu" id="editServiciu">
                 </select>
             </div>
             <div class="form-group"><label class="form-label">Adresă obiectiv</label><input type="text" class="form-input" name="adresa_obiectiv" placeholder="Unde se va executa proiectul"></div>
@@ -458,22 +453,58 @@ var CRM_STATUSES = [
     {id:'facturat', name:'Facturat', cls:'s-contactat', icon:'💳', color:'var(--purple)'},
     {id:'anulat', name:'Anulat', cls:'s-pierdut', icon:'❌', color:'var(--gray)'}
 ];
-var SERV_DB_TO_UI={'Detectie Incendiu':'Detecție Incendiu','Alarma':'Alarmă Antiefracție','Supraveghere Video':'Supraveghere Video','Electric':'Instalații Electrice','Automatizari':'Automatizări Porți','Complex':'Proiect Complex','Control Acces':'Control Acces'};
-var SERV_UI_TO_DB={'Detecție Incendiu':'Detectie Incendiu','Alarmă Antiefracție':'Alarma','Supraveghere Video':'Supraveghere Video','Instalații Electrice':'Electric','Automatizări Porți':'Automatizari','Proiect Complex':'Complex'};
+// ═══════ SERVICII CSSI — sursă unică (UI ↔ DB ↔ tag) ═══════
+// Ordinea de aici e ordinea din toate select-urile paginii.
+// 'db' = valoarea din ENUM-ul proiecte.serviciu (fără diacritice).
+// Când adaugi un serviciu nou aici, backend-ul extinde automat ENUM-ul
+// la prima salvare (ensureServiciuEnum în api.php) — nu e nevoie de SQL manual.
+var CRM_SERVICII = [
+    {ui:'Supraveghere Video',           db:'Supraveghere Video',    cls:'camera',     tag:'📹 Camere'},
+    {ui:'Alarmă Antiefracție',          db:'Alarma',                cls:'alarm',      tag:'🚨 Alarmă'},
+    {ui:'Detecție Incendiu',            db:'Detectie Incendiu',     cls:'incendiu',   tag:'🔥 Incendiu'},
+    {ui:'Control Acces',                db:'Control Acces',         cls:'acces',      tag:'🔐 Control Acces'},
+    {ui:'Videointerfonie',              db:'Videointerfonie',       cls:'interfon',   tag:'📞 Videointerfonie'},
+    {ui:'Automatizări Porți',           db:'Automatizari',          cls:'auto',       tag:'🚪 Porți'},
+    {ui:'Uși Garaj',                    db:'Usi Garaj',             cls:'garaj',      tag:'🏚️ Uși Garaj'},
+    {ui:'Bariere Auto / Parcări',       db:'Bariere Auto',          cls:'bariere',    tag:'🚧 Bariere'},
+    {ui:'Instalații Electrice',         db:'Electric',              cls:'electric',   tag:'⚡ Electric'},
+    {ui:'Instalații Termice-Sanitare',  db:'Sanitare',              cls:'install',    tag:'🔧 Sanitare'},
+    {ui:'Aer Condiționat',              db:'Aer Conditionat',       cls:'clima',      tag:'❄️ Aer Cond.'},
+    {ui:'Ventilație',                   db:'Ventilatie',            cls:'ventil',     tag:'💨 Ventilație'},
+    {ui:'Sonorizare',                   db:'Sonorizare',            cls:'sonor',      tag:'🔊 Sonorizare'},
+    {ui:'Pontaj Electronic',            db:'Pontaj Electronic',     cls:'pontaj',     tag:'⏱️ Pontaj'},
+    {ui:'Securitate Industrială',       db:'Securitate Industriala',cls:'industrial', tag:'🏭 Industrial'},
+    {ui:'Proiect Complex',              db:'Complex',               cls:'complex',    tag:'🏗️ Complex'}
+];
+
+var SERV_DB_TO_UI={}, SERV_UI_TO_DB={};
+CRM_SERVICII.forEach(function(s){ SERV_DB_TO_UI[s.db]=s.ui; SERV_UI_TO_DB[s.ui]=s.db; });
+// Alias-uri pentru înregistrări vechi salvate înainte de unificarea listei.
+SERV_DB_TO_UI['Instalatii Sanitare']  = 'Instalații Termice-Sanitare';
+SERV_DB_TO_UI['Instalații Sanitare']  = 'Instalații Termice-Sanitare';
+SERV_UI_TO_DB['Instalații Sanitare']  = 'Sanitare';
+SERV_UI_TO_DB['Automatizări']         = 'Automatizari';
+
+// Populează toate select-urile de serviciu dintr-o singură listă.
+function populateServiceSelects() {
+    var opts = CRM_SERVICII.map(function(s){
+        return '<option value="' + s.ui + '">' + s.tag + ' — ' + s.ui + '</option>';
+    }).join('');
+    var add = document.getElementById('addServiciu');
+    if (add) add.innerHTML = '<option value="">— Alege serviciul —</option>' + opts;
+    var edit = document.getElementById('editServiciu');
+    if (edit) edit.innerHTML = opts;
+    var filter = document.getElementById('filterServici');
+    if (filter) filter.innerHTML = '<option value="">Toate serviciile</option>' + opts;
+}
 var STAT_DB_TO_UI={'Lead':'Lead','Oferta':'Ofertă','Contract':'Contract','Proiectare':'Proiectare','Executie':'Execuție','Receptie':'Recepție','Facturat':'Facturat','Mentenanta':'Mentenanță','Finalizat':'Finalizat','Anulat':'Anulat'};
 var STAT_UI_TO_DB={'Lead':'Lead','Ofertă':'Oferta','Contract':'Contract','Proiectare':'Proiectare','Execuție':'Executie','Recepție':'Receptie','Facturat':'Facturat','Mentenanță':'Mentenanta','Anulat':'Anulat'};
 var STATUS_MAP = {};
 CRM_STATUSES.forEach(function(s){ STATUS_MAP[s.name] = s; });
 
-var SERVICE_TAGS = {
-    'Detecție Incendiu': {cls:'incendiu',s:'🔥 Incendiu'},
-    'Alarmă Antiefracție': {cls:'alarm',s:'🚨 Alarmă'},
-    'Supraveghere Video': {cls:'camera',s:'📹 Camere'},
-    'Instalații Electrice': {cls:'electric',s:'⚡ Electric'},
-    'Instalații Sanitare': {cls:'install',s:'🔧 Sanitare'},
-    'Automatizări Porți': {cls:'auto',s:'🚪 Porți'},
-    'Proiect Complex': {cls:'complex',s:'🏗️ Complex'}
-};
+var SERVICE_TAGS = {};
+CRM_SERVICII.forEach(function(s){ SERVICE_TAGS[s.ui] = {cls:s.cls, s:s.tag}; });
+SERVICE_TAGS['Instalații Sanitare'] = {cls:'install', s:'🔧 Sanitare'};
 
 // ═══════ STATE ═══════
 var LEADS = [];
@@ -1243,7 +1274,15 @@ function openEditModal(leadId) {
     f.cui_cnp.value = l.cui || '';
     f.telefon.value = l.telefon || '';
     f.email.value = l.email || '';
+    // Dacă proiectul are un serviciu vechi, care nu mai e în listă, îl adăugăm
+    // temporar ca opțiune ca să nu-l pierdem la salvare.
     f.serviciu.value = l.serviciu || 'Supraveghere Video';
+    if (l.serviciu && f.serviciu.value !== l.serviciu) {
+        var legacyOpt = document.createElement('option');
+        legacyOpt.value = legacyOpt.textContent = l.serviciu;
+        f.serviciu.appendChild(legacyOpt);
+        f.serviciu.value = l.serviciu;
+    }
     f.adresa_obiectiv.value = l.locatie || '';
     f.valoare_estimata.value = l.valoare || '';
     f.obiectiv.value = l.note || '';
@@ -1441,6 +1480,7 @@ fetch(API_DB + '?action=me', {credentials:'include'})
         }
     })
     .catch(function(){ /* fără rol → butonul rămâne ascuns */ });
+populateServiceSelects();
 render();
 refreshData();
 </script>

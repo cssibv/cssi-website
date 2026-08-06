@@ -79,6 +79,11 @@ a{text-decoration:none;color:inherit;}button{font-family:inherit;cursor:pointer;
 .kcard-tag.alarm{background:#fef2f2;color:var(--red);}.kcard-tag.camera{background:#eff6ff;color:var(--blue);}
 .kcard-tag.incendiu{background:#fff7ed;color:var(--orange);}.kcard-tag.electric{background:#fefce8;color:#a16207;}
 .kcard-tag.install{background:#f0fdf4;color:#059669;}.kcard-tag.auto{background:#f5f3ff;color:var(--purple);}
+.kcard-tag.acces{background:#ecfeff;color:#0e7490;}.kcard-tag.interfon{background:#eef2ff;color:#4338ca;}
+.kcard-tag.garaj{background:#f8fafc;color:#475569;}.kcard-tag.bariere{background:#fffbeb;color:#b45309;}
+.kcard-tag.clima{background:#f0f9ff;color:#0369a1;}.kcard-tag.ventil{background:#ecfdf5;color:#047857;}
+.kcard-tag.sonor{background:#fdf4ff;color:#a21caf;}.kcard-tag.pontaj{background:#f7fee7;color:#4d7c0f;}
+.kcard-tag.industrial{background:#f1f5f9;color:#334155;}.kcard-tag.complex{background:#fdf2f8;color:var(--pink);}
 .kcard-val{font-size:11px;font-weight:700;color:var(--dark);margin-top:6px;}
 .kanban-empty{text-align:center;padding:16px;color:var(--gray-l);font-size:12px;font-style:italic;}
 
@@ -307,11 +312,8 @@ a{text-decoration:none;color:inherit;}button{font-family:inherit;cursor:pointer;
             </div>
             <div class="form-row-3">
                 <div class="form-group"><label class="form-label">Serviciu</label>
+                    <!-- Opțiunile sunt populate din CRM_SERVICII (populateServiceSelects) -->
                     <select class="form-select" name="serviciu" id="eServiciu">
-                        <option>Detecție Incendiu</option><option>Alarmă Antiefracție</option>
-                        <option>Supraveghere Video</option><option>Videointerfonie</option><option>Instalații Electrice</option>
-                        <option>Automatizări Porți</option><option>Control Acces</option>
-                        <option>Proiect Complex</option>
                     </select>
                 </div>
                 <div class="form-group"><label class="form-label">Valoare estimată</label><input type="number" class="form-input" name="valoare_estimata" id="eValoare" min="0"></div>
@@ -369,12 +371,9 @@ a{text-decoration:none;color:inherit;}button{font-family:inherit;cursor:pointer;
             </div>
             <div class="form-group"><label class="form-label">Persoană contact</label><input type="text" class="form-input" name="contact" placeholder="Nume + telefon contact"></div>
             <div class="form-group"><label class="form-label">Serviciu <span class="req">*</span></label>
-                <select class="form-select" name="serviciu" required>
+                <!-- Opțiunile sunt populate din CRM_SERVICII (populateServiceSelects) -->
+                <select class="form-select" name="serviciu" id="addServiciu" required>
                     <option value="">— Alege —</option>
-                    <option>Detecție Incendiu</option><option>Alarmă Antiefracție</option>
-                    <option>Supraveghere Video</option><option>Videointerfonie</option><option>Instalații Electrice</option>
-                    <option>Automatizări Porți</option><option>Control Acces</option>
-                    <option>Proiect Complex</option>
                 </select>
             </div>
             <div class="form-row">
@@ -410,8 +409,41 @@ a{text-decoration:none;color:inherit;}button{font-family:inherit;cursor:pointer;
 // ═══════ CONFIG ═══════
 var API_URL=null;
 var API_DB='/admin/api.php';
-var SERV_DB_TO_UI={'Detectie Incendiu':'Detecție Incendiu','Alarma':'Alarmă Antiefracție','Supraveghere Video':'Supraveghere Video','Videointerfonie':'Videointerfonie','Electric':'Instalații Electrice','Automatizari':'Automatizări Porți','Complex':'Proiect Complex','Control Acces':'Control Acces'};
-var SERV_UI_TO_DB={'Detecție Incendiu':'Detectie Incendiu','Alarmă Antiefracție':'Alarma','Supraveghere Video':'Supraveghere Video','Videointerfonie':'Videointerfonie','Instalații Electrice':'Electric','Instalații Sanitare':'Electric','Automatizări Porți':'Automatizari','Proiect Complex':'Complex','Control Acces':'Control Acces'};
+// Sursă unică servicii — trebuie ținută în sinc cu CRM_SERVICII din crm-clienti.html
+// și cu lista din ensureServiciuEnum() (api.php).
+var CRM_SERVICII = [
+    {ui:'Supraveghere Video',           db:'Supraveghere Video',    cls:'camera',     tag:'📹 Camere'},
+    {ui:'Alarmă Antiefracție',          db:'Alarma',                cls:'alarm',      tag:'🚨 Alarmă'},
+    {ui:'Detecție Incendiu',            db:'Detectie Incendiu',     cls:'incendiu',   tag:'🔥 Incendiu'},
+    {ui:'Control Acces',                db:'Control Acces',         cls:'acces',      tag:'🔐 Control Acces'},
+    {ui:'Videointerfonie',              db:'Videointerfonie',       cls:'interfon',   tag:'📞 Videointerfonie'},
+    {ui:'Automatizări Porți',           db:'Automatizari',          cls:'auto',       tag:'🚪 Porți'},
+    {ui:'Uși Garaj',                    db:'Usi Garaj',             cls:'garaj',      tag:'🏚️ Uși Garaj'},
+    {ui:'Bariere Auto / Parcări',       db:'Bariere Auto',          cls:'bariere',    tag:'🚧 Bariere'},
+    {ui:'Instalații Electrice',         db:'Electric',              cls:'electric',   tag:'⚡ Electric'},
+    {ui:'Instalații Termice-Sanitare',  db:'Sanitare',              cls:'install',    tag:'🔧 Sanitare'},
+    {ui:'Aer Condiționat',              db:'Aer Conditionat',       cls:'clima',      tag:'❄️ Aer Cond.'},
+    {ui:'Ventilație',                   db:'Ventilatie',            cls:'ventil',     tag:'💨 Ventilație'},
+    {ui:'Sonorizare',                   db:'Sonorizare',            cls:'sonor',      tag:'🔊 Sonorizare'},
+    {ui:'Pontaj Electronic',            db:'Pontaj Electronic',     cls:'pontaj',     tag:'⏱️ Pontaj'},
+    {ui:'Securitate Industrială',       db:'Securitate Industriala',cls:'industrial', tag:'🏭 Industrial'},
+    {ui:'Proiect Complex',              db:'Complex',               cls:'complex',    tag:'🏗️ Complex'}
+];
+var SERV_DB_TO_UI={}, SERV_UI_TO_DB={};
+CRM_SERVICII.forEach(function(s){ SERV_DB_TO_UI[s.db]=s.ui; SERV_UI_TO_DB[s.ui]=s.db; });
+SERV_DB_TO_UI['Instalatii Sanitare'] = 'Instalații Termice-Sanitare';
+SERV_UI_TO_DB['Instalații Sanitare'] = 'Sanitare';
+SERV_UI_TO_DB['Automatizări']        = 'Automatizari';
+
+function populateServiceSelects() {
+    var opts = CRM_SERVICII.map(function(s){
+        return '<option value="' + s.ui + '">' + s.tag + ' — ' + s.ui + '</option>';
+    }).join('');
+    var edit = document.getElementById('eServiciu');
+    if (edit) edit.innerHTML = opts;
+    var add = document.getElementById('addServiciu');
+    if (add) add.innerHTML = '<option value="">— Alege —</option>' + opts;
+}
 var STAT_DB_TO_UI={'Lead':'Lead','Oferta':'Ofertă','Contract':'Contract','Proiectare':'Proiectare','Executie':'Execuție','Receptie':'Recepție','Facturat':'Facturat','Mentenanta':'Mentenanță','Finalizat':'Finalizat','Anulat':'Anulat'};
 var STAT_UI_TO_DB={'Lead':'Lead','Ofertă':'Oferta','Contract':'Contract','Proiectare':'Proiectare','Execuție':'Executie','Recepție':'Receptie','Facturat':'Facturat','Mentenanță':'Mentenanta','Finalizat':'Finalizat','Anulat':'Anulat'};
 var RESP_ICONS={'Mihai':'💰','Roxana':'📋','Valentin':'📐','Cristina':'📞','Admin':'🔑'};
@@ -424,7 +456,9 @@ var userName=sessionStorage.getItem('cssi-user')||role;
 // ═══════ CONSTANTS ═══════
 var STATUSES=[{id:'lead',name:'Lead',cls:'lead'},{id:'oferta',name:'Ofertă',cls:'oferta'},{id:'contract',name:'Contract',cls:'contract'},{id:'proiectare',name:'Proiectare',cls:'proiectare'},{id:'executie',name:'Execuție',cls:'executie'},{id:'receptie',name:'Recepție',cls:'receptie'},{id:'facturat',name:'Facturat',cls:'facturat'},{id:'mentenanta',name:'Mentenanță',cls:'mentenanta'}];
 var STATUS_MAP={'Lead':'lead','Ofertă':'oferta','Contract':'contract','Proiectare':'proiectare','Execuție':'executie','Recepție':'receptie','Facturat':'facturat','Mentenanță':'mentenanta'};
-var SERVICE_TAGS={'Detecție Incendiu':{cls:'incendiu',s:'Incendiu'},'Alarmă Antiefracție':{cls:'alarm',s:'Alarmă'},'Supraveghere Video':{cls:'camera',s:'Camere'},'Videointerfonie':{cls:'camera',s:'Interfon'},'Instalații Electrice':{cls:'electric',s:'Electric'},'Instalații Sanitare':{cls:'install',s:'Sanitare'},'Automatizări Porți':{cls:'auto',s:'Porți'},'Control Acces':{cls:'install',s:'Acces'},'Proiect Complex':{cls:'incendiu',s:'Complex'}};
+var SERVICE_TAGS={};
+CRM_SERVICII.forEach(function(s){ SERVICE_TAGS[s.ui]={cls:s.cls, s:s.tag.replace(/^\S+\s/, '')}; });
+SERVICE_TAGS['Instalații Sanitare']={cls:'install',s:'Sanitare'};
 var STATUS_ICONS={'Lead':'📞','Ofertă':'📋','Contract':'✅','Proiectare':'📐','Execuție':'🔧','Recepție':'📸','Facturat':'💳','Mentenanță':'🔄'};
 
 // ═══════ STATE ═══════
@@ -435,6 +469,7 @@ var isLoading=false;
 var Q=String.fromCharCode(39); // single quote helper
 
 // ═══════ INIT ═══════
+populateServiceSelects();
 loadProjects();
 
 // ═══════ LOAD PROJECTS ═══════
@@ -721,7 +756,13 @@ function openEditModal(projectId){
     document.getElementById('eCui').value=p.cui;
     document.getElementById('eTelefon').value=p.telefon;
     document.getElementById('eContact').value=p.contact;
-    document.getElementById('eServiciu').value=p.serviciu;
+    var _eServ=document.getElementById('eServiciu');
+    _eServ.value=p.serviciu;
+    // Serviciu vechi, scos din listă → îl adăugăm temporar ca să nu se piardă la salvare
+    if(p.serviciu&&_eServ.value!==p.serviciu){
+        var _o=document.createElement('option');_o.value=_o.textContent=p.serviciu;
+        _eServ.appendChild(_o);_eServ.value=p.serviciu;
+    }
     document.getElementById('eValoare').value=p.valoare||'';
     document.getElementById('eValContract').value=p.valoareContract||'';
     document.getElementById('eResponsabil').value=p.responsabil;

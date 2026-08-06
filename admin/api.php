@@ -74,28 +74,128 @@ function ensureOferteColumns($db) {
         }
     } catch (Exception $e) { /* silent — tabela poate lipsi in dev */ }
 }
-// ─── Helper: lărgește coloanele text din oferta_linii (idempotent) ─
-// Denumirea poate conține text descriptiv lung + formatare HTML (bold/culoare),
-// deci un VARCHAR scurt o trunchia (și strica HTML-ul → „dispărea"). O facem TEXT.
+// ─── Helper: tabela produse_furnizori (idempotent) ────────────
+// CSSI nu ține stoc: fiecare ofertă acceptată se comandă de la distribuitori
+// (Secpral / Tora / Telesystem). Codul produsului nu spune de la cine se
+// cumpără, așa că alocarea se face manual o dată și se reține pentru toate
+// comenzile următoare.
+function ensureProduseFurnizoriSchema($db) {
+    static $checked = false;
+    if ($checked) return;
+    $checked = true;
+    try {
+        $db->exec("CREATE TABLE IF NOT EXISTS produse_furnizori (
+            cod VARCHAR(100) NOT NULL PRIMARY KEY,
+            furnizor VARCHAR(60) NOT NULL,
+            updated_by VARCHAR(100) NULL DEFAULT NULL,
+            updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4");
+    } catch (Exception $e) {
+        error_log('ensureProduseFurnizoriSchema FAILED: ' . $e->getMessage());
+    }
+}
+
+// Harta cod → furnizor. Întoarce array gol dacă tabela nu poate fi creată,
+// caz în care lista de comandă rămâne funcțională, doar negrupată.
+function produseFurnizoriMap($db) {
+    ensureProduseFurnizoriSchema($db);
+    try {
+        $rows = $db->query("SELECT cod, furnizor FROM produse_furnizori")->fetchAll(PDO::FETCH_ASSOC);
+        $map = [];
+        foreach ($rows as $r) { $map[$r['cod']] = $r['furnizor']; }
+        return $map;
+    } catch (Exception $e) {
+        return [];
+    }
+}
+
+// ─── Helper: schemă oferta_linii (idempotent) ─────────────────
+// 1) Denumirea poate conține text descriptiv lung + formatare HTML (bold/culoare),
+//    deci un VARCHAR scurt o trunchia (și strica HTML-ul → „dispărea"). O facem TEXT.
+// 2) link_extern = URL-ul de unde a fost luat un produs extern (nu e din catalog
+//    și nu vine de pe shop-security.ro). Îl vede cine face comanda, în Necesar
+//    Materiale, ca să găsească exact produsul ofertat.
 function ensureOfertaLiniiColumns($db) {
     static $checked = false;
     if ($checked) return;
     $checked = true;
     try {
         $cols = $db->query("SHOW COLUMNS FROM oferta_linii")->fetchAll(PDO::FETCH_ASSOC);
+        $names = [];
         foreach ($cols as $c) {
+            $names[] = $c['Field'];
             if ($c['Field'] === 'denumire' && stripos($c['Type'], 'text') === false) {
                 $db->exec("ALTER TABLE oferta_linii MODIFY denumire TEXT NULL DEFAULT NULL");
             }
+        }
+        if (!in_array('link_extern', $names, true)) {
+            $db->exec("ALTER TABLE oferta_linii ADD COLUMN link_extern VARCHAR(500) NULL DEFAULT NULL");
         }
     } catch (Exception $e) {
         error_log('ensureOfertaLiniiColumns FAILED: ' . $e->getMessage());
     }
 }
+// Există coloana link_extern? Dacă ALTER-ul de mai sus a eșuat (drepturi lipsă),
+// interogările trebuie să funcționeze mai departe fără ea — altfel s-ar rupe
+// salvarea ofertelor cu totul.
+function ofertaLiniiHasLink($db) {
+    static $has = null;
+    if ($has !== null) return $has;
+    ensureOfertaLiniiColumns($db);
+    try {
+        $cols = $db->query("SHOW COLUMNS FROM oferta_linii")->fetchAll(PDO::FETCH_COLUMN);
+        $has = in_array('link_extern', $cols, true);
+    } catch (Exception $e) {
+        $has = false;
+    }
+    return $has;
+}
 // Debug helper: returneaza listă coloane oferte (admin only — pentru troubleshoot)
 function debugOferteColumns($db) {
     try { return $db->query("SHOW COLUMNS FROM oferte")->fetchAll(PDO::FETCH_COLUMN); }
     catch (Exception $e) { return ['ERR' => $e->getMessage()]; }
+}
+
+// ─── Helper: ENUM proiecte.serviciu conține toate serviciile CSSI ───
+// Idempotent. Citește ENUM-ul curent și adaugă DOAR valorile lipsă, păstrând
+// tot ce există deja (inclusiv valori pe care acest cod nu le cunoaște).
+// Dacă `serviciu` e VARCHAR (nu ENUM), nu face nimic — orice text e acceptat.
+// Lista trebuie să corespundă cu CRM_SERVICII din admin/crm-clienti.html.
+function ensureServiciuEnum($db) {
+    static $checked = false;
+    if ($checked) return;
+    $checked = true;
+    $wanted = [
+        'Supraveghere Video', 'Alarma', 'Detectie Incendiu', 'Control Acces',
+        'Videointerfonie', 'Automatizari', 'Usi Garaj', 'Bariere Auto',
+        'Electric', 'Sanitare', 'Aer Conditionat', 'Ventilatie',
+        'Sonorizare', 'Pontaj Electronic', 'Securitate Industriala', 'Complex',
+    ];
+    try {
+        $row = $db->query("SHOW COLUMNS FROM proiecte LIKE 'serviciu'")->fetch(PDO::FETCH_ASSOC);
+        if (!$row) return;
+        if (!preg_match("/^enum\\((.*)\\)$/i", $row['Type'], $m)) return; // VARCHAR → nimic de făcut
+        $existing = $m[1];
+        $missing = [];
+        foreach ($wanted as $v) {
+            if (stripos($existing, "'" . $v . "'") === false) $missing[] = "'" . str_replace("'", "''", $v) . "'";
+        }
+        if (!$missing) return;
+        $newEnum = $existing . ',' . implode(',', $missing);
+        // Păstrează nullability și DEFAULT-ul existent — altfel ALTER-ul ar
+        // schimba pe tăcute constrângerile coloanei.
+        $nullSql = (isset($row['Null']) && strtoupper($row['Null']) === 'YES') ? 'NULL' : 'NOT NULL';
+        $defSql  = '';
+        if (isset($row['Default']) && $row['Default'] !== null && $row['Default'] !== '') {
+            $defSql = " DEFAULT '" . str_replace("'", "''", $row['Default']) . "'";
+        } elseif ($nullSql === 'NULL') {
+            $defSql = ' DEFAULT NULL';
+        }
+        $db->exec("ALTER TABLE proiecte MODIFY COLUMN serviciu ENUM($newEnum) $nullSql$defSql");
+    } catch (Exception $e) {
+        // Drepturi ALTER lipsă sau schemă diferită — inserarea continuă; dacă
+        // valoarea nu e acceptată, eroarea PDO ajunge oricum la client.
+    }
 }
 
 // ─── Helper: schemă finalizare proiecte + mentenanta (idempotent) ─
@@ -948,10 +1048,14 @@ function calcExpiresAt($dataOferta, $valab) {
 function callClaude($system, $userPrompt, $maxTokens = 3000) {
     $key = defined('ANTHROPIC_KEY') ? ANTHROPIC_KEY : (getenv('ANTHROPIC_KEY') ?: '');
     if (!$key) return ['ok' => false, 'error' => 'ANTHROPIC_KEY nesetat în secrets.php'];
-    $model = defined('CLAUDE_MODEL') ? CLAUDE_MODEL : 'claude-sonnet-4-6';
+    $model = defined('CLAUDE_MODEL') ? CLAUDE_MODEL : 'claude-sonnet-5';
     $payload = [
         'model' => $model,
         'max_tokens' => $maxTokens,
+        // Pe claude-sonnet-5 / opus-5 thinking-ul e pornit implicit dacă lipsește
+        // acest câmp, iar tokenii de thinking se scad din max_tokens → risc de
+        // răspuns trunchiat pe cURL non-streaming. Îl oprim explicit.
+        'thinking' => ['type' => 'disabled'],
         'system' => $system,
         'messages' => [['role' => 'user', 'content' => $userPrompt]]
     ];
@@ -1176,6 +1280,9 @@ try {
     // Toate endpoint-urile necesită autentificare, EXCEPT lista publică
     if (!in_array($action, publicActions(), true) && $action !== '_resetLock') {
         requireAuth();
+        // Autorizare pe module — MODUL OBSERVARE: doar loghează, nu blochează.
+        // Vezi actionModules() / auditModuleAccess() în auth.php.
+        auditModuleAccess($db, $action);
     }
 
     switch ($action) {
@@ -1721,7 +1828,8 @@ try {
         case 'createProiect':
             $clientId = (isset($data['client_id']) ? $data['client_id'] : 0);
             if (!$clientId) { jsonResponse(['success' => false, 'error' => 'client_id obligatoriu'], 400); break; }
-            
+            ensureServiciuEnum($db);
+
             $year = date('Y');
             $proiectId = nextId('proiect_seq', "CSSI-$year-", 4);
             $istoric = json_encode([['status' => 'Lead', 'data' => date('Y-m-d H:i:s'), 'user' => (isset($data['responsabil']) ? $data['responsabil'] : 'Admin')]]);
@@ -1753,6 +1861,7 @@ try {
         // proiect cu status='Interventie' + programare + atribuiri tehnicieni
         case 'createInterventie':
             ensureProiecteSchema($db);
+            ensureServiciuEnum($db);
             $clientId   = isset($data['client_id']) ? intval($data['client_id']) : 0;
             $clientNume = isset($data['client_nume']) ? trim($data['client_nume']) : '';
             $titlu      = isset($data['titlu']) ? trim($data['titlu']) : '';
@@ -2354,6 +2463,7 @@ try {
                     if (!$gate['ready']) { jsonResponse(['success' => false, 'error' => 'Nu se poate preda la Execuție: ' . $gate['reason']], 409); break; }
                 }
             }
+            if (isset($data['serviciu'])) ensureServiciuEnum($db);
             $fields = [];
             $values = [];
             foreach (['serviciu','obiectiv','status','valoare_estimata','valoare_contract','responsabil','adresa_obiectiv','note'] as $f) {
@@ -2604,29 +2714,40 @@ try {
                 }
                 
                 // Insert linii echipamente
-                $stmtLine = $db->prepare("INSERT INTO oferta_linii (oferta_id, tip, denumire, cod, um, cantitate, pret_achizitie, adaos_procent, pret_vanzare, valoare, ordine) VALUES (?,?,?,?,?,?,?,?,?,?,?)");
-                
+                $hasLink = ofertaLiniiHasLink($db);
+                $stmtLine = $db->prepare($hasLink
+                    ? "INSERT INTO oferta_linii (oferta_id, tip, denumire, cod, um, cantitate, pret_achizitie, adaos_procent, pret_vanzare, valoare, ordine, link_extern) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)"
+                    : "INSERT INTO oferta_linii (oferta_id, tip, denumire, cod, um, cantitate, pret_achizitie, adaos_procent, pret_vanzare, valoare, ordine) VALUES (?,?,?,?,?,?,?,?,?,?,?)");
+
                 $lines = (isset($data['lines']) ? $data['lines'] : []);
                 foreach ($lines as $i => $l) {
                     if (empty($l['name'])) continue;
                     $pv = ((isset($l['pAchiz']) ? $l['pAchiz'] : 0)) * (1 + ((isset($l['adaos']) ? $l['adaos'] : 40)) / 100);
                     $val = ((isset($l['cant']) ? $l['cant'] : 0)) * $pv;
-                    $stmtLine->execute([
+                    // Acceptă doar http(s) — câmpul e afișat ca link, deci un
+                    // javascript:/data: introdus manual n-are ce căuta în DB.
+                    $link = isset($l['link']) ? trim((string)$l['link']) : '';
+                    if ($link !== '' && !preg_match('#^https?://#i', $link)) $link = '';
+                    $row = [
                         $ofertaDbId, 'echipament', $l['name'], (isset($l['code']) ? $l['code'] : ''), (isset($l['um']) ? $l['um'] : 'buc.'),
                         (isset($l['cant']) ? $l['cant'] : 0), (isset($l['pAchiz']) ? $l['pAchiz'] : 0), (isset($l['adaos']) ? $l['adaos'] : 40), round($pv, 2), round($val, 2), $i
-                    ]);
+                    ];
+                    if ($hasLink) $row[] = ($link !== '' ? mb_substr($link, 0, 500) : null);
+                    $stmtLine->execute($row);
                 }
-                
+
                 // Insert linii manopera
                 $labor = (isset($data['labor']) ? $data['labor'] : []);
                 foreach ($labor as $i => $l) {
                     $c = floatval((isset($l['cant']) ? $l['cant'] : 0));
                     $p = floatval((isset($l['price']) ? $l['price'] : 0));
                     if (!$c || empty($l['name'])) continue;
-                    $stmtLine->execute([
+                    $row = [
                         $ofertaDbId, 'manopera', $l['name'], '', (isset($l['um']) ? $l['um'] : 'ore'),
                         $c, $p, 0, $p, round($c * $p, 2), 100 + $i
-                    ]);
+                    ];
+                    if ($hasLink) $row[] = null;
+                    $stmtLine->execute($row);
                 }
                 
                 $db->commit();
@@ -3985,11 +4106,12 @@ p { margin: 0; }
                 comandat_by VARCHAR(60) NOT NULL DEFAULT ''
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4");
 
+            $linkCol = ofertaLiniiHasLink($db) ? 'ol.link_extern' : "'' AS link_extern";
             $sql = "SELECT
                 c.id AS client_db_id, c.client_id AS client_cod, c.nume AS client_nume,
                 p.id AS proiect_db_id, p.proiect_id, p.obiectiv, p.adresa_obiectiv, p.status AS proiect_status,
                 o.id AS oferta_db_id, o.oferta_id, o.titlu AS oferta_titlu, o.data_oferta, o.total_cu_tva,
-                nc.comandat_at, nc.comandat_by,
+                nc.comandat_at, nc.comandat_by, $linkCol,
                 ol.id AS linie_id, ol.cod, ol.denumire, ol.um, ol.cantitate, ol.pret_vanzare, ol.valoare, ol.ordine
                 FROM proiecte p
                 INNER JOIN clienti c ON p.client_id = c.id
@@ -4029,16 +4151,50 @@ p { margin: 0; }
                     ];
                 }
                 $clienti[$cKey]['oferte'][$oKey]['linii'][] = [
-                    'cod'       => $r['cod'] ?: '',
-                    'denumire'  => $r['denumire'] ?: '',
-                    'um'        => $r['um'] ?: 'buc',
-                    'cantitate' => floatval($r['cantitate']),
+                    'cod'         => $r['cod'] ?: '',
+                    'denumire'    => $r['denumire'] ?: '',
+                    'um'          => $r['um'] ?: 'buc',
+                    'cantitate'   => floatval($r['cantitate']),
+                    'link_extern' => $r['link_extern'] ?: '',
                 ];
             }
 
             // Reindex (în loc de chei DB)
             $out = array_map(function($c){ $c['oferte'] = array_values($c['oferte']); return $c; }, array_values($clienti));
-            jsonResponse(['success' => true, 'data' => $out]);
+            jsonResponse([
+                'success'   => true,
+                'data'      => $out,
+                // Harta cod produs → distribuitor, ca lista de comandă să poată fi
+                // grupată pe furnizor. Nu ținem stoc: fiecare ofertă acceptată se
+                // comandă de la distribuitori (Secpral / Tora / Telesystem).
+                'furnizori' => produseFurnizoriMap($db),
+            ]);
+            break;
+
+        // ══════════════════════════════════════
+        // FURNIZORI PE PRODUS — învățați o dată, refolosiți la fiecare comandă
+        // Fără stoc propriu, singura grupare utilă la comandă e pe distribuitor.
+        // Codul produsului nu spune de la cine se cumpără, deci alocarea se face
+        // manual prima dată și se ține minte pentru toate ofertele următoare.
+        // ══════════════════════════════════════
+        case 'setFurnizorProdus':
+            $cod = isset($data['cod']) ? trim((string)$data['cod']) : '';
+            $furnizor = isset($data['furnizor']) ? trim((string)$data['furnizor']) : '';
+            if ($cod === '') { jsonResponse(['success' => false, 'error' => 'cod obligatoriu'], 400); break; }
+            if (mb_strlen($cod) > 100) { jsonResponse(['success' => false, 'error' => 'cod prea lung'], 400); break; }
+            if (mb_strlen($furnizor) > 60) { jsonResponse(['success' => false, 'error' => 'furnizor prea lung'], 400); break; }
+            ensureProduseFurnizoriSchema($db);
+            $u = currentUser();
+            $actor = $u['nume'] ?? ($u['username'] ?? 'Admin');
+            if ($furnizor === '') {
+                // Golire = dezalocare, ca să reapară în „De alocat"
+                $db->prepare("DELETE FROM produse_furnizori WHERE cod = ?")->execute([$cod]);
+                jsonResponse(['success' => true, 'cod' => $cod, 'furnizor' => '']);
+            }
+            $db->prepare("INSERT INTO produse_furnizori (cod, furnizor, updated_by) VALUES (?,?,?)
+                          ON DUPLICATE KEY UPDATE furnizor = VALUES(furnizor), updated_by = VALUES(updated_by)")
+               ->execute([$cod, $furnizor, $actor]);
+            jsonResponse(['success' => true, 'cod' => $cod, 'furnizor' => $furnizor]);
             break;
 
         // ══════════════════════════════════════
@@ -5516,7 +5672,7 @@ p { margin: 0; }
                 'success'         => $r['ok'],
                 'cheie_setata'    => (defined('ANTHROPIC_KEY') && ANTHROPIC_KEY !== ''),
                 'cheie_prefix'    => (defined('ANTHROPIC_KEY') && ANTHROPIC_KEY !== '') ? substr(ANTHROPIC_KEY, 0, 7) . '…' : null,
-                'model'           => (defined('CLAUDE_MODEL') ? CLAUDE_MODEL : 'claude-sonnet-4-6'),
+                'model'           => (defined('CLAUDE_MODEL') ? CLAUDE_MODEL : 'claude-sonnet-5'),
                 'durata_ms'       => $ms,
                 'raspuns'         => $r['ok'] ? trim($r['text']) : null,
                 'error'           => $r['ok'] ? null : $r['error'],
