@@ -32,3 +32,9 @@ Thumbs.db
 # ───────── Claude / dev tools ─────────
 .claude/
 *.bak-*
+
+# ───────── Materiale interne de marketing (nu se urcă pe site) ─────────
+daily-briefs/
+google-ads-plan/
+weekly-strategy/
+proiecte/
