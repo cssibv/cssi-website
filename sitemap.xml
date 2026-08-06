@@ -646,4 +646,11 @@
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
+  <!-- adaugat automat de agent 2026-08-06 -->
+  <url>
+    <loc>https://cssi.ro/blog/ce-faci-cand-se-declanseaza-alarma-firma-ghid-brasov</loc>
+    <lastmod>2026-08-06</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
 </urlset>
