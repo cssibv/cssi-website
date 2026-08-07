@@ -660,4 +660,11 @@
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
+  <!-- adaugat automat de agent 2026-08-07 -->
+  <url>
+    <loc>https://cssi.ro/blog/iluminat-siguranta-evacuare-firme-isu-brasov</loc>
+    <lastmod>2026-08-07</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
 </urlset>
