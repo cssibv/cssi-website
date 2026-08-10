@@ -667,4 +667,11 @@
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
+  <!-- adaugat automat de agent 2026-08-10 -->
+  <url>
+    <loc>https://cssi.ro/blog/control-acces-pontaj-relocare-extindere-birou-brasov</loc>
+    <lastmod>2026-08-10</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
 </urlset>
