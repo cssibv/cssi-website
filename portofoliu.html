@@ -157,7 +157,7 @@
 
 <div class="topbar">
   <span>&#11088; Peste 20 ani de experien&#x21B;&#x103;</span>
-  <span>&#11088; 4.9/5 &bull; 127 recenzii</span>
+  <span>&#11088; 5.0/5 &bull; 2 recenzii</span>
   <span>&#11088; 8.700+ proiecte</span>
   <a href="tel:0752288400" class="top-cta">&#128222; Sun&#x103; acum</a>
 </div>
@@ -221,7 +221,7 @@
 <div class="hero">
   <div class="breadcrumb"><a href="/">Acas&#x103;</a><span>&rsaquo;</span><span>Portofoliu</span></div>
   <h1>Portofoliu <span>Clien&#x21B;i</span></h1>
-  <p>Peste 8.700 de proiecte finalizate &icirc;n 20+ ani, &icirc;n toat&#x103; Rom&acirc;nia.</p>
+  <p>Peste 8.700 de proiecte finalizate &icirc;n 20+ ani, &icirc;n toat&#x103; Rom&acirc;nia &mdash; de la <a href="camere-supraveghere-brasov">camere de supraveghere &icirc;n Bra&#x219;ov</a> la sisteme integrate de securitate.</p>
 </div>
 
 <!-- STATS -->
@@ -513,25 +513,6 @@
     }
   ]
 }
-</script>
-<script>
-// GA4 tracking: phone_call & whatsapp_click
-document.addEventListener('DOMContentLoaded', function() {
-    document.querySelectorAll('a[href^="tel:"]').forEach(function(link) {
-        link.addEventListener('click', function() {
-            if (typeof gtag === 'function') {
-                gtag('event', 'phone_call', {event_category:'Contact', event_label:this.href.replace('tel:',''), value:100, currency:'RON'});
-            }
-        });
-    });
-    document.querySelectorAll('a[href*="wa.me"]').forEach(function(link) {
-        link.addEventListener('click', function() {
-            if (typeof gtag === 'function') {
-                gtag('event', 'whatsapp_click', {event_category:'Contact', event_label:'WhatsApp Direct', value:100, currency:'RON'});
-            }
-        });
-    });
-});
 </script>
 <script src="/tawk-chat.js" defer></script>
 </body>

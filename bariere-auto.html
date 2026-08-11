@@ -74,7 +74,7 @@
         <div style="max-width:1280px;margin:0 auto;padding:0 24px;display:flex;justify-content:space-between;align-items:center;">
             <span>⭐ <span style="color:#4ade80;font-weight:600;">Peste 20 ani de experiență</span></span>
             <div style="display:flex;align-items:center;gap:16px;">
-                <span class="animate-badge-pulse" style="display:inline-flex;align-items:center;gap:6px;padding:2px 8px;background:rgba(34,197,94,0.2);border-radius:999px;"><span style="color:#facc15;">⭐</span><span style="font-weight:600;">4.9/5</span><span style="color:#94a3b8;">•</span><span>127 recenzii</span></span>
+                <span class="animate-badge-pulse" style="display:inline-flex;align-items:center;gap:6px;padding:2px 8px;background:rgba(34,197,94,0.2);border-radius:999px;"><span style="color:#facc15;">⭐</span><span style="font-weight:600;">5.0/5</span><span style="color:#94a3b8;">•</span><span>2 recenzii</span></span>
                 <span>⭐ <span style="font-weight:600;">8.700+ proiecte</span></span>
             </div>
         </div>
@@ -119,7 +119,7 @@
                 <a href="contact" style="background:linear-gradient(to right,#dc2626,#b91c1c);color:#fff;padding:8px 20px;border-radius:8px;font-size:14px;font-weight:600;box-shadow:0 4px 6px -1px rgba(0,0,0,0.1);">Cere Ofertă</a>
             </div>
             <div class="lg:hidden" style="display:flex;align-items:center;gap:8px;">
-                <span class="animate-badge-pulse" style="display:inline-flex;align-items:center;gap:4px;padding:2px 6px;border-radius:999px;font-size:10px;background:rgba(0,0,0,0.08);color:#334155;"><span style="color:#facc15;font-size:9px;">⭐</span><span style="font-weight:600;">4.9</span></span>
+                <span class="animate-badge-pulse" style="display:inline-flex;align-items:center;gap:4px;padding:2px 6px;border-radius:999px;font-size:10px;background:rgba(0,0,0,0.08);color:#334155;"><span style="color:#facc15;font-size:9px;">⭐</span><span style="font-weight:600;">5.0</span></span>
                 <button onclick="toggleMobileMenu()" id="menuBtn" class="animate-subtle-pulse" style="padding:4px;border-radius:6px;border:none;cursor:pointer;background:linear-gradient(to right,#ef4444,#dc2626);color:#fff;">
                     <svg id="menuIcon" style="width:20px;height:20px;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
                     <svg id="closeIcon" style="width:20px;height:20px;display:none;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
@@ -722,7 +722,7 @@ function toggleAccordion(id){var allIds=['proiectare','instalare','integrari','s
 </script>
 
 <script type="application/ld+json">
-{"@context": "https://schema.org", "@type": "Service", "name": "Bariere Auto - CSSI", "description": "Bariere auto profesionale pentru parcări, rezidențial și industrial. Bariere cu braț de 3-8m, sisteme de taxare, LPR. Instalare și mentenanță.", "provider": {"@type": "LocalBusiness", "name": "CSSI - Confort, Securitate, Siguranță, Imobil", "telephone": "+40268414740", "email": "office@cssi.ro", "url": "https://cssi.ro", "address": {"@type": "PostalAddress", "streetAddress": "Str. Busuiocului Nr. 6", "addressLocality": "Brașov", "addressRegion": "Brașov", "postalCode": "500234", "addressCountry": "RO"}, "aggregateRating": {"@type": "AggregateRating", "ratingValue": "4.9", "reviewCount": "127", "bestRating": "5"}}, "areaServed": {"@type": "City", "name": "Brașov"}, "serviceType": ["Bariere auto parcări", "Sisteme taxare parcare", "Bariere industriale", "Mentenanță bariere"]}
+{"@context": "https://schema.org", "@type": "Service", "name": "Bariere Auto - CSSI", "description": "Bariere auto profesionale pentru parcări, rezidențial și industrial. Bariere cu braț de 3-8m, sisteme de taxare, LPR. Instalare și mentenanță.", "provider": {"@type": "LocalBusiness", "name": "CSSI - Confort, Securitate, Siguranță, Imobil", "telephone": "+40268414740", "email": "office@cssi.ro", "url": "https://cssi.ro", "address": {"@type": "PostalAddress", "streetAddress": "Str. Busuiocului Nr. 6", "addressLocality": "Brașov", "addressRegion": "Brașov", "postalCode": "500234", "addressCountry": "RO"}, "aggregateRating": {"@type": "AggregateRating", "ratingValue": "5.0", "reviewCount": "2", "bestRating": "5"}}, "areaServed": {"@type": "City", "name": "Brașov"}, "serviceType": ["Bariere auto parcări", "Sisteme taxare parcare", "Bariere industriale", "Mentenanță bariere"]}
 </script>
 <script>
 document.querySelectorAll('.faq-item').forEach(function(item){
@@ -737,25 +737,6 @@ document.querySelectorAll('.faq-item').forEach(function(item){
             var a=item.querySelector('.faq-a');
             a.style.maxHeight=a.scrollHeight+'px';
         }
-    });
-});
-</script>
-<script>
-// GA4 tracking: phone_call & whatsapp_click
-document.addEventListener('DOMContentLoaded', function() {
-    document.querySelectorAll('a[href^="tel:"]').forEach(function(link) {
-        link.addEventListener('click', function() {
-            if (typeof gtag === 'function') {
-                gtag('event', 'phone_call', {event_category:'Contact', event_label:this.href.replace('tel:',''), value:100, currency:'RON'});
-            }
-        });
-    });
-    document.querySelectorAll('a[href*="wa.me"]').forEach(function(link) {
-        link.addEventListener('click', function() {
-            if (typeof gtag === 'function') {
-                gtag('event', 'whatsapp_click', {event_category:'Contact', event_label:'WhatsApp Direct', value:100, currency:'RON'});
-            }
-        });
     });
 });
 </script>
