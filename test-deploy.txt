@@ -1,0 +1,1 @@
+Test propagare deploy CSSI - 2026-08-12 - daca vezi acest fisier pe cssi.ro/test-deploy.txt, lantul GitHub -> cron pull functioneaza.
