@@ -1,0 +1,53 @@
+name: Publicare zilnică blog CSSI
+
+on:
+  schedule:
+    # 04:30 UTC = 07:30 România (iarna 06:30). Cron-ul GitHub poate întârzia câteva minute.
+    - cron: '30 4 * * *'
+  workflow_dispatch: {}   # permite rulare manuală din tab-ul Actions
+
+permissions:
+  contents: write
+
+concurrency:
+  group: publicare-zilnica
+  cancel-in-progress: false
+
+jobs:
+  publica:
+    runs-on: ubuntu-latest
+    env:
+      TZ: Europe/Bucharest   # ca datetime.date.today() să fie ziua României
+    steps:
+      - name: Checkout site (public)
+        uses: actions/checkout@v4
+
+      - name: Checkout conținut (repo privat cssi-content)
+        uses: actions/checkout@v4
+        with:
+          repository: cssibv/cssi-content
+          token: ${{ secrets.CONTENT_TOKEN }}
+          path: .publicare
+
+      - name: Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Dependențe
+        run: pip install openpyxl
+
+      - name: Staging articole de azi
+        run: python .publicare/stage_publicare_azi.py
+
+      - name: Commit + push (doar dacă există modificări)
+        run: |
+          git config user.name  "cssi-publicare-bot"
+          git config user.email "actions@github.com"
+          git add blog/ sitemap.xml
+          if git diff --cached --quiet; then
+            echo "Nimic de publicat azi — niciun commit."
+          else
+            git commit -m "Publicare automată blog $(date +%Y-%m-%d)"
+            git push
+          fi

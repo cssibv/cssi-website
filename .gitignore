@@ -38,3 +38,6 @@ daily-briefs/
 google-ads-plan/
 weekly-strategy/
 proiecte/
+
+# coada de continut vine din repo-ul privat cssi-content (checkout in CI)
+.publicare/
