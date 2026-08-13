@@ -688,4 +688,11 @@
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
+  <!-- adaugat automat de agent 2026-08-13 -->
+  <url>
+    <loc>https://cssi.ro/blog/videointerfon-bloc-asociatie-proprietari-brasov</loc>
+    <lastmod>2026-08-13</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
 </urlset>
