@@ -2,8 +2,9 @@ name: Publicare zilnică blog CSSI
 
 on:
   schedule:
-    # 04:30 UTC = 07:30 România (iarna 06:30). Cron-ul GitHub poate întârzia câteva minute.
-    - cron: '30 4 * * *'
+    # 03:43 UTC = 06:43 România (iarna 05:43). Minut/oră atipice, alese ca să evite
+    # sloturile aglomerate ale cron-ului GitHub (:00/:30) și ora de vârf → mai puțină întârziere.
+    - cron: '43 3 * * *'
   workflow_dispatch: {}   # permite rulare manuală din tab-ul Actions
 
 permissions:
