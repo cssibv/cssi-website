@@ -695,4 +695,11 @@
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
+  <!-- adaugat automat de agent 2026-08-14 -->
+  <url>
+    <loc>https://cssi.ro/blog/sonorizare-public-address-firme-magazine-brasov</loc>
+    <lastmod>2026-08-14</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
 </urlset>
