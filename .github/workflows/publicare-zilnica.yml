@@ -5,6 +5,9 @@ on:
     # 03:43 UTC = 06:43 România (iarna 05:43). Minut/oră atipice, alese ca să evite
     # sloturile aglomerate ale cron-ului GitHub (:00/:30) și ora de vârf → mai puțină întârziere.
     - cron: '43 3 * * *'
+    # Retry ~5h mai târziu (08:43 UTC = 11:43 RO) dacă primul run a picat sau a fost sărit
+    # de GitHub. E idempotent (dedupe pe canonical) → dacă deja s-a publicat, nu face nimic.
+    - cron: '43 8 * * *'
   workflow_dispatch: {}   # permite rulare manuală din tab-ul Actions
 
 permissions:
@@ -42,13 +45,40 @@ jobs:
         run: python .publicare/stage_publicare_azi.py
 
       - name: Commit + push (doar dacă există modificări)
+        id: commit
         run: |
           git config user.name  "cssi-publicare-bot"
           git config user.email "actions@github.com"
           git add blog/ sitemap.xml
           if git diff --cached --quiet; then
             echo "Nimic de publicat azi — niciun commit."
+            echo "published=false" >> "$GITHUB_OUTPUT"
           else
+            articole=$(git diff --cached --name-only -- blog/ \
+              | grep -E '^blog/.+\.html$' | grep -v '^blog/index\.html$' \
+              | sed 's#^blog/##; s#\.html$##' | paste -sd ', ' -)
             git commit -m "Publicare automată blog $(date +%Y-%m-%d)"
             git push
+            echo "published=true" >> "$GITHUB_OUTPUT"
+            echo "articole=$articole" >> "$GITHUB_OUTPUT"
           fi
+
+      - name: Alertă Telegram — publicat
+        if: success() && steps.commit.outputs.published == 'true'
+        env:
+          TG_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TG_CHAT: ${{ secrets.TELEGRAM_CHAT_ID }}
+        run: |
+          text="✅ cssi.ro — publicat $(date +%Y-%m-%d): ${{ steps.commit.outputs.articole }}"
+          curl -s -X POST "https://api.telegram.org/bot${TG_TOKEN}/sendMessage" \
+            -d chat_id="${TG_CHAT}" --data-urlencode text="$text" -o /dev/null
+
+      - name: Alertă Telegram — eroare
+        if: failure()
+        env:
+          TG_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TG_CHAT: ${{ secrets.TELEGRAM_CHAT_ID }}
+        run: |
+          text="❌ cssi.ro — publicarea a EȘUAT ($(date +%Y-%m-%d)). Log: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+          curl -s -X POST "https://api.telegram.org/bot${TG_TOKEN}/sendMessage" \
+            -d chat_id="${TG_CHAT}" --data-urlencode text="$text" -o /dev/null
