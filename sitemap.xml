@@ -723,4 +723,11 @@
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
+  <!-- adaugat automat de agent 2026-08-18 -->
+  <url>
+    <loc>https://cssi.ro/blog/instalatie-electrica-statie-incarcare-ev-comerciala-firma-brasov</loc>
+    <lastmod>2026-08-18</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
 </urlset>
