@@ -413,6 +413,98 @@ function ensureOferteDrafturiSchema($db) {
     }
 }
 
+// ─── Helper: schemă situații de plată (idempotent) ────────────
+// O situație de plată e documentul final, de după execuție: pornește din ofertă,
+// dar reflectă ce s-a montat efectiv în teren (cantități reale de cablu, copex
+// suplimentar, materiale adăugate pe parcurs). Se dă clientului împreună cu
+// factura. Ține tabele proprii, NU coloane pe `oferte`, ca statisticile de
+// ofertare (pipeline, rată conversie, CRM) să rămână curate.
+function ensureSituatiiSchema($db) {
+    static $checked = false;
+    if ($checked) return;
+    $checked = true;
+    try {
+        $db->exec("CREATE TABLE IF NOT EXISTS situatii_plata (
+            id INT AUTO_INCREMENT PRIMARY KEY,
+            situatie_id VARCHAR(50) NOT NULL,
+            sursa_oferta_id INT NULL DEFAULT NULL,
+            sursa_oferta_nr VARCHAR(50) NULL DEFAULT NULL,
+            titlu VARCHAR(255) NULL,
+            data_situatie DATE NULL,
+            obiectiv TEXT NULL,
+            mentiuni TEXT NULL,
+            client_id INT NULL DEFAULT NULL,
+            proiect_id INT NULL DEFAULT NULL,
+            client_nume VARCHAR(255) NULL,
+            client_cui VARCHAR(50) NULL,
+            client_adresa VARCHAR(255) NULL,
+            client_contact VARCHAR(255) NULL,
+            subtotal_echip DECIMAL(15,2) DEFAULT 0,
+            subtotal_manop DECIMAL(15,2) DEFAULT 0,
+            total_fara_tva DECIMAL(15,2) DEFAULT 0,
+            tva DECIMAL(15,2) DEFAULT 0,
+            total_cu_tva DECIMAL(15,2) DEFAULT 0,
+            created_by VARCHAR(100) NULL,
+            created_by_name VARCHAR(255) NULL,
+            updated_by VARCHAR(100) NULL,
+            created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+            updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+            UNIQUE KEY uniq_situatie_id (situatie_id),
+            INDEX idx_sursa (sursa_oferta_id),
+            INDEX idx_data (data_situatie)
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4");
+        // Aceeași formă ca `oferta_linii` — editorul din calculator e refolosit ca atare
+        $db->exec("CREATE TABLE IF NOT EXISTS situatie_linii (
+            id INT AUTO_INCREMENT PRIMARY KEY,
+            situatie_id INT NOT NULL,
+            tip ENUM('echipament','manopera') NOT NULL DEFAULT 'echipament',
+            denumire TEXT NULL,
+            cod VARCHAR(100) NULL,
+            um VARCHAR(20) NULL,
+            cantitate DECIMAL(15,3) DEFAULT 0,
+            pret_achizitie DECIMAL(15,2) DEFAULT 0,
+            adaos_procent DECIMAL(6,2) DEFAULT 0,
+            pret_vanzare DECIMAL(15,2) DEFAULT 0,
+            valoare DECIMAL(15,2) DEFAULT 0,
+            ordine INT DEFAULT 0,
+            link_extern VARCHAR(500) NULL DEFAULT NULL,
+            INDEX idx_situatie (situatie_id)
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4");
+    } catch (Exception $e) {
+        error_log('ensureSituatiiSchema FAILED: ' . $e->getMessage());
+    }
+}
+
+// Numerotare derivată din oferta sursă: 1247 → „1247-SP", apoi „1247-SP2", „1247-SP3"…
+// Pot exista mai multe situații pe aceeași lucrare (etape, lucrări suplimentare).
+// Fără ofertă sursă (situație creată de la zero) folosește prefixul „SP" + secvență.
+function nextSituatieNr($db, $ofertaNr) {
+    ensureSituatiiSchema($db);
+    $ofertaNr = trim((string)$ofertaNr);
+    if ($ofertaNr === '') {
+        // Fără ofertă sursă: serie proprie SP-0001. Derivat din max-ul existent, nu
+        // din tabela `secvente` — acolo n-avem rând semănat pentru cheia asta, iar
+        // nextId() nu creează rânduri lipsă (ar întoarce mereu 1).
+        $rows = $db->query("SELECT situatie_id FROM situatii_plata WHERE situatie_id LIKE 'SP-%'")->fetchAll(PDO::FETCH_COLUMN);
+        $maxFree = 0;
+        foreach ($rows as $existing) {
+            if (preg_match('/^SP-(\d+)$/', $existing, $m)) $maxFree = max($maxFree, intval($m[1]));
+        }
+        return 'SP-' . str_pad($maxFree + 1, 4, '0', STR_PAD_LEFT);
+    }
+    // Caut cel mai mare sufix existent pentru oferta asta, ca să nu reciclez numere
+    // după ștergeri (un „1247-SP" șters n-ar trebui să reapară la altă situație).
+    $stmt = $db->prepare("SELECT situatie_id FROM situatii_plata WHERE situatie_id = ? OR situatie_id LIKE ?");
+    $stmt->execute([$ofertaNr . '-SP', $ofertaNr . '-SP%']);
+    $maxSuffix = 0;
+    foreach ($stmt->fetchAll(PDO::FETCH_COLUMN) as $existing) {
+        if ($existing === $ofertaNr . '-SP') { $maxSuffix = max($maxSuffix, 1); continue; }
+        if (preg_match('/-SP(\d+)$/', $existing, $m)) $maxSuffix = max($maxSuffix, intval($m[1]));
+    }
+    if ($maxSuffix === 0) return $ofertaNr . '-SP';
+    return $ofertaNr . '-SP' . ($maxSuffix + 1);
+}
+
 // Schema contracte: creeaza daca nu exista + ALTER pentru coloanele lipsa
 // (idempotent — protejeaza pt cazul cand exista deja o tabela 'contracte' veche)
 function ensureContracteSchema($db) {
@@ -2843,6 +2935,196 @@ try {
         case 'deleteOferta':
             $id = (isset($data['id']) ? $data['id'] : 0);
             $db->prepare("DELETE FROM oferte WHERE id = ? OR oferta_id = ?")->execute([$id, $id]);
+            jsonResponse(['success' => true]);
+            break;
+
+        // ══════════════════════════════════════
+        // SITUAȚII DE PLATĂ
+        // Documentul de după execuție: pornește dintr-o ofertă, dar conține ce s-a
+        // montat efectiv (cantități reale, materiale adăugate în teren). Se editează
+        // în același calculator ca oferta și se dă clientului odată cu factura.
+        // ══════════════════════════════════════
+        case 'getSituatii':
+            ensureSituatiiSchema($db);
+            $search    = isset($_GET['search']) ? $_GET['search'] : '';
+            $sursaId   = isset($_GET['sursa_oferta_id']) ? intval($_GET['sursa_oferta_id']) : 0;
+            $light     = !empty($_GET['light']);
+            $sql = "SELECT * FROM situatii_plata WHERE 1=1";
+            $params = [];
+            if ($sursaId) { $sql .= " AND sursa_oferta_id = ?"; $params[] = $sursaId; }
+            if ($search) {
+                $sql .= " AND (client_nume LIKE ? OR situatie_id LIKE ? OR obiectiv LIKE ?)";
+                $s = "%$search%"; $params = array_merge($params, [$s, $s, $s]);
+            }
+            $sql .= " ORDER BY data_situatie DESC, id DESC";
+            $stmt = $db->prepare($sql);
+            $stmt->execute($params);
+            $situatii = $stmt->fetchAll();
+            if (!$light) {
+                $stmtL = $db->prepare("SELECT * FROM situatie_linii WHERE situatie_id = ? ORDER BY tip, ordine");
+                foreach ($situatii as &$s) {
+                    $stmtL->execute([$s['id']]);
+                    $linii = $stmtL->fetchAll();
+                    $s['lines'] = array_values(array_filter($linii, function($l) { return $l['tip'] === 'echipament'; }));
+                    $s['labor'] = array_values(array_filter($linii, function($l) { return $l['tip'] === 'manopera'; }));
+                }
+                unset($s);
+            }
+            jsonResponse(['success' => true, 'data' => $situatii]);
+            break;
+
+        case 'getSituatie':
+            ensureSituatiiSchema($db);
+            $id = isset($_GET['id']) ? $_GET['id'] : (isset($data['id']) ? $data['id'] : 0);
+            // Numerele de situație sunt text („1247-SP"). Dacă l-aș compara direct cu
+            // coloana INT `id`, MySQL l-ar converti la 1247 și ar întoarce altă situație.
+            $idNum = is_numeric($id) ? intval($id) : 0;
+            $stmt = $db->prepare("SELECT * FROM situatii_plata WHERE id = ? OR situatie_id = ? LIMIT 1");
+            $stmt->execute([$idNum, (string)$id]);
+            $s = $stmt->fetch();
+            if ($s) {
+                $stmtL = $db->prepare("SELECT * FROM situatie_linii WHERE situatie_id = ? ORDER BY tip, ordine");
+                $stmtL->execute([$s['id']]);
+                $linii = $stmtL->fetchAll();
+                $s['lines'] = array_values(array_filter($linii, function($l) { return $l['tip'] === 'echipament'; }));
+                $s['labor'] = array_values(array_filter($linii, function($l) { return $l['tip'] === 'manopera'; }));
+            }
+            jsonResponse(['success' => true, 'data' => $s]);
+            break;
+
+        case 'saveSituatie':
+            ensureSituatiiSchema($db);
+            $u = currentUser();
+            $username    = $u['username'] ?? 'anonim';
+            $displayName = $u['display_name'] ?? $username;
+
+            $isUpdateS = !empty($data['situatie_db_id']);
+            // Oferta sursă: acceptă id DB sau numărul ofertei; rezolvă amândouă,
+            // ca numerotarea „1247-SP" să funcționeze indiferent ce trimite frontend-ul.
+            $sursaDbId = !empty($data['sursa_oferta_db_id']) ? intval($data['sursa_oferta_db_id']) : null;
+            $sursaNr   = isset($data['sursa_oferta_nr']) ? trim((string)$data['sursa_oferta_nr']) : '';
+            if ($sursaDbId || $sursaNr !== '') {
+                $chkO = $db->prepare("SELECT id, oferta_id FROM oferte WHERE id = ? OR oferta_id = ? LIMIT 1");
+                $chkO->execute([$sursaDbId ?: 0, $sursaNr]);
+                $rowO = $chkO->fetch();
+                if ($rowO) { $sursaDbId = intval($rowO['id']); $sursaNr = $rowO['oferta_id']; }
+                else { $sursaDbId = null; }   // oferta a fost ștearsă între timp — păstrez doar nr-ul ca text
+            }
+
+            $dataS = isset($data['data']) ? $data['data'] : date('Y-m-d');
+            $dp = explode('-', $dataS);
+            $dataFmtS = isset($dp[2]) ? ($dp[2] . '.' . $dp[1] . '.' . $dp[0]) : $dataS;
+            $clientS   = isset($data['client']) ? $data['client'] : '';
+            $obiectivS = isset($data['obiectiv']) ? $data['obiectiv'] : '';
+
+            $db->beginTransaction();
+            try {
+                // FK-uri validate ca la oferte — un id inexistent devine NULL, nu eroare
+                $clientIdS = null;
+                if (!empty($data['client_db_id'])) {
+                    $chkC = $db->prepare("SELECT id FROM clienti WHERE id = ? LIMIT 1");
+                    $chkC->execute([$data['client_db_id']]);
+                    if ($chkC->fetch()) $clientIdS = $data['client_db_id'];
+                }
+                $proiectIdS = null;
+                if (!empty($data['proiect_db_id'])) {
+                    $chkP = $db->prepare("SELECT id FROM proiecte WHERE id = ? LIMIT 1");
+                    $chkP->execute([$data['proiect_db_id']]);
+                    if ($chkP->fetch()) $proiectIdS = $data['proiect_db_id'];
+                }
+
+                if ($isUpdateS) {
+                    $situatieDbId = intval($data['situatie_db_id']);
+                    $chkS = $db->prepare("SELECT situatie_id FROM situatii_plata WHERE id = ? LIMIT 1");
+                    $chkS->execute([$situatieDbId]);
+                    $rowS = $chkS->fetch();
+                    if (!$rowS) throw new Exception('Situația nu mai există');
+                    $situatieNr = $rowS['situatie_id'];
+                    $titluS = 'Situație de plată ' . $clientS . ($obiectivS ? ' ' . $obiectivS : '') . ' Nr. ' . $situatieNr . ' din ' . $dataFmtS;
+                    $db->prepare("UPDATE situatii_plata SET titlu=?, data_situatie=?, obiectiv=?, mentiuni=?, sursa_oferta_id=?, sursa_oferta_nr=?, client_id=?, proiect_id=?, subtotal_echip=?, subtotal_manop=?, total_fara_tva=?, tva=?, total_cu_tva=?, client_nume=?, client_cui=?, client_adresa=?, client_contact=?, updated_by=? WHERE id=?")
+                       ->execute([
+                           $titluS, $dataS, $obiectivS,
+                           (isset($data['mentiuni']) ? $data['mentiuni'] : ''),
+                           $sursaDbId, ($sursaNr !== '' ? $sursaNr : null),
+                           $clientIdS, $proiectIdS,
+                           (isset($data['subtotalEchip']) ? $data['subtotalEchip'] : 0),
+                           (isset($data['subtotalManop']) ? $data['subtotalManop'] : 0),
+                           (isset($data['totalNet']) ? $data['totalNet'] : 0),
+                           (isset($data['tva']) ? $data['tva'] : 0),
+                           (isset($data['totalBrut']) ? $data['totalBrut'] : 0),
+                           $clientS,
+                           (isset($data['cui']) ? $data['cui'] : ''),
+                           (isset($data['adresa']) ? $data['adresa'] : ''),
+                           (isset($data['contact']) ? $data['contact'] : ''),
+                           $username, $situatieDbId
+                       ]);
+                    $db->prepare("DELETE FROM situatie_linii WHERE situatie_id = ?")->execute([$situatieDbId]);
+                } else {
+                    $situatieNr = nextSituatieNr($db, $sursaNr);
+                    $titluS = 'Situație de plată ' . $clientS . ($obiectivS ? ' ' . $obiectivS : '') . ' Nr. ' . $situatieNr . ' din ' . $dataFmtS;
+                    $db->prepare("INSERT INTO situatii_plata (situatie_id, sursa_oferta_id, sursa_oferta_nr, titlu, data_situatie, obiectiv, mentiuni, client_id, proiect_id, client_nume, client_cui, client_adresa, client_contact, subtotal_echip, subtotal_manop, total_fara_tva, tva, total_cu_tva, created_by, created_by_name, updated_by) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)")
+                       ->execute([
+                           $situatieNr, $sursaDbId, ($sursaNr !== '' ? $sursaNr : null),
+                           $titluS, $dataS, $obiectivS,
+                           (isset($data['mentiuni']) ? $data['mentiuni'] : ''),
+                           $clientIdS, $proiectIdS,
+                           $clientS,
+                           (isset($data['cui']) ? $data['cui'] : ''),
+                           (isset($data['adresa']) ? $data['adresa'] : ''),
+                           (isset($data['contact']) ? $data['contact'] : ''),
+                           (isset($data['subtotalEchip']) ? $data['subtotalEchip'] : 0),
+                           (isset($data['subtotalManop']) ? $data['subtotalManop'] : 0),
+                           (isset($data['totalNet']) ? $data['totalNet'] : 0),
+                           (isset($data['tva']) ? $data['tva'] : 0),
+                           (isset($data['totalBrut']) ? $data['totalBrut'] : 0),
+                           $username, $displayName, $username
+                       ]);
+                    $situatieDbId = $db->lastInsertId();
+                }
+
+                $stmtLineS = $db->prepare("INSERT INTO situatie_linii (situatie_id, tip, denumire, cod, um, cantitate, pret_achizitie, adaos_procent, pret_vanzare, valoare, ordine, link_extern) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)");
+                foreach ((isset($data['lines']) ? $data['lines'] : []) as $i => $l) {
+                    if (empty($l['name'])) continue;
+                    $pv  = ((isset($l['pAchiz']) ? $l['pAchiz'] : 0)) * (1 + ((isset($l['adaos']) ? $l['adaos'] : 40)) / 100);
+                    $val = ((isset($l['cant']) ? $l['cant'] : 0)) * $pv;
+                    $link = isset($l['link']) ? trim((string)$l['link']) : '';
+                    if ($link !== '' && !preg_match('#^https?://#i', $link)) $link = '';
+                    $stmtLineS->execute([
+                        $situatieDbId, 'echipament', $l['name'], (isset($l['code']) ? $l['code'] : ''), (isset($l['um']) ? $l['um'] : 'buc.'),
+                        (isset($l['cant']) ? $l['cant'] : 0), (isset($l['pAchiz']) ? $l['pAchiz'] : 0), (isset($l['adaos']) ? $l['adaos'] : 40),
+                        round($pv, 2), round($val, 2), $i, ($link !== '' ? mb_substr($link, 0, 500) : null)
+                    ]);
+                }
+                foreach ((isset($data['labor']) ? $data['labor'] : []) as $i => $l) {
+                    $c = floatval((isset($l['cant']) ? $l['cant'] : 0));
+                    $p = floatval((isset($l['price']) ? $l['price'] : 0));
+                    if (!$c || empty($l['name'])) continue;
+                    $stmtLineS->execute([
+                        $situatieDbId, 'manopera', $l['name'], '', (isset($l['um']) ? $l['um'] : 'ore'),
+                        $c, $p, 0, $p, round($c * $p, 2), 100 + $i, null
+                    ]);
+                }
+
+                $db->commit();
+                jsonResponse(['success' => true, 'id' => intval($situatieDbId), 'situatie_id' => $situatieNr]);
+            } catch (Exception $e) {
+                if ($db->inTransaction()) $db->rollBack();
+                jsonResponse(['success' => false, 'error' => $e->getMessage()], 500);
+            }
+            break;
+
+        case 'deleteSituatie':
+            ensureSituatiiSchema($db);
+            $id = isset($data['id']) ? $data['id'] : 0;
+            if (!$id) jsonResponse(['success' => false, 'error' => 'id obligatoriu'], 400);
+            $idNum = is_numeric($id) ? intval($id) : 0;   // vezi nota de la getSituatie
+            $stmtD = $db->prepare("SELECT id FROM situatii_plata WHERE id = ? OR situatie_id = ? LIMIT 1");
+            $stmtD->execute([$idNum, (string)$id]);
+            $rowD = $stmtD->fetch();
+            if ($rowD) {
+                $db->prepare("DELETE FROM situatie_linii WHERE situatie_id = ?")->execute([$rowD['id']]);
+                $db->prepare("DELETE FROM situatii_plata WHERE id = ?")->execute([$rowD['id']]);
+            }
             jsonResponse(['success' => true]);
             break;
 

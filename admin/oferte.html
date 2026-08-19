@@ -522,6 +522,7 @@ function renderCard(o){
     var dosarUrl = o.proiect_db_id ? ('dosar.html?proiect='+o.proiect_db_id) : (o.client_db_id ? ('dosar.html?client='+o.client_db_id) : '');
     if (dosarUrl) html += '<a class="oc-btn" href="'+dosarUrl+'" onclick="event.stopPropagation()" title="Vezi dosar complet">📁</a>';
     html += '<a class="oc-btn" href="calculator-pret.html?edit='+esc(o.oferta_id)+'" onclick="event.stopPropagation()" title="Editează în calculator">✏️</a>';
+    html += '<a class="oc-btn" href="calculator-pret.html?situatie_din='+esc(o.oferta_id)+'" onclick="event.stopPropagation()" title="Situație de plată — pornește din ofertă și o ajustezi cu ce s-a montat efectiv">📑</a>';
     if(o.archived_at){
         html += '<button class="oc-btn warn" onclick="event.stopPropagation();doUnarchive('+o.id+')" title="Dezarhivează">📤</button>';
     } else {
@@ -782,6 +783,7 @@ function renderOfertaView(o){
     html += '<div class="vm-actions">';
     html += '<a class="vm-act-btn primary" href="calculator-pret.html?edit='+esc(o.oferta_id)+'">✏️ Editează în calculator</a>';
     html += '<a class="vm-act-btn secondary" href="calculator-pret.html?view_offer='+esc(o.oferta_id)+'" target="_blank">📄 Export PDF</a>';
+    html += '<a class="vm-act-btn secondary" href="calculator-pret.html?situatie_din='+esc(o.oferta_id)+'" title="Documentul final, cu ce s-a montat efectiv — se dă clientului odată cu factura">📑 Situație de plată</a>';
     html += '<button class="vm-act-btn warn" onclick="closeViewModal();openStatusModal('+o.id+',\''+esc((o.client_nume||'').replace(/\047/g,'')).replace(/'/g,"\\'")+'\')">🎯 Schimbă status</button>';
     html += '</div>';
     document.getElementById('vmBody').innerHTML = html;

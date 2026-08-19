@@ -156,6 +156,12 @@ function actionModules() {
         'deleteOfertaDraft'     => ['calculator'],
         '_debugOferteSchema'    => ['calculator'],
 
+        // ── Situații de plată (documentul final, după execuție) ──
+        'getSituatii'           => ['calculator','crm','proiecte'],
+        'getSituatie'           => ['calculator'],
+        'saveSituatie'          => ['calculator'],
+        'deleteSituatie'        => ['calculator'],
+
         // ── Contracte ────────────────────────────────────────────
         'getContracte'          => ['contracte'],
         'getContract'           => ['contracte'],
