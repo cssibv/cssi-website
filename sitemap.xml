@@ -737,4 +737,11 @@
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
+  <!-- adaugat automat de agent 2026-08-20 -->
+  <url>
+    <loc>https://cssi.ro/blog/securitate-magazin-sezon-sarbatori-black-friday-craciun-brasov</loc>
+    <lastmod>2026-08-20</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
 </urlset>
