@@ -485,7 +485,7 @@ function nextSituatieNr($db, $ofertaNr) {
         // Fără ofertă sursă: serie proprie SP-0001. Derivat din max-ul existent, nu
         // din tabela `secvente` — acolo n-avem rând semănat pentru cheia asta, iar
         // nextId() nu creează rânduri lipsă (ar întoarce mereu 1).
-        $rows = $db->query("SELECT situatie_id FROM situatii_plata WHERE situatie_id LIKE 'SP-%'")->fetchAll(PDO::FETCH_COLUMN);
+        $rows = $db->query("SELECT situatie_id FROM situatii_plata WHERE situatie_id LIKE 'SP-%' FOR UPDATE")->fetchAll(PDO::FETCH_COLUMN);
         $maxFree = 0;
         foreach ($rows as $existing) {
             if (preg_match('/^SP-(\d+)$/', $existing, $m)) $maxFree = max($maxFree, intval($m[1]));
@@ -494,7 +494,14 @@ function nextSituatieNr($db, $ofertaNr) {
     }
     // Caut cel mai mare sufix existent pentru oferta asta, ca să nu reciclez numere
     // după ștergeri (un „1247-SP" șters n-ar trebui să reapară la altă situație).
-    $stmt = $db->prepare("SELECT situatie_id FROM situatii_plata WHERE situatie_id = ? OR situatie_id LIKE ?");
+    //
+    // FOR UPDATE nu e decorativ: apelul se face în interiorul tranzacției din
+    // saveSituatie, iar o citire obișnuită ar veni din snapshot-ul REPEATABLE READ.
+    // Doi oameni care salvează simultan pe aceeași ofertă ar calcula amândoi „-SP2",
+    // iar al doilea ar lua eroare de cheie unică — și ar recalcula la infinit același
+    // număr, fiindcă snapshot-ul nu se împrospătează. Citirea blocantă vede ultima
+    // versiune comisă, deci al doilea așteaptă și primește corect „-SP3".
+    $stmt = $db->prepare("SELECT situatie_id FROM situatii_plata WHERE situatie_id = ? OR situatie_id LIKE ? FOR UPDATE");
     $stmt->execute([$ofertaNr . '-SP', $ofertaNr . '-SP%']);
     $maxSuffix = 0;
     foreach ($stmt->fetchAll(PDO::FETCH_COLUMN) as $existing) {
@@ -3060,25 +3067,40 @@ try {
                        ]);
                     $db->prepare("DELETE FROM situatie_linii WHERE situatie_id = ?")->execute([$situatieDbId]);
                 } else {
-                    $situatieNr = nextSituatieNr($db, $sursaNr);
-                    $titluS = 'Situație de plată ' . $clientS . ($obiectivS ? ' ' . $obiectivS : '') . ' Nr. ' . $situatieNr . ' din ' . $dataFmtS;
-                    $db->prepare("INSERT INTO situatii_plata (situatie_id, sursa_oferta_id, sursa_oferta_nr, titlu, data_situatie, obiectiv, mentiuni, client_id, proiect_id, client_nume, client_cui, client_adresa, client_contact, subtotal_echip, subtotal_manop, total_fara_tva, tva, total_cu_tva, created_by, created_by_name, updated_by) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)")
-                       ->execute([
-                           $situatieNr, $sursaDbId, ($sursaNr !== '' ? $sursaNr : null),
-                           $titluS, $dataS, $obiectivS,
-                           (isset($data['mentiuni']) ? $data['mentiuni'] : ''),
-                           $clientIdS, $proiectIdS,
-                           $clientS,
-                           (isset($data['cui']) ? $data['cui'] : ''),
-                           (isset($data['adresa']) ? $data['adresa'] : ''),
-                           (isset($data['contact']) ? $data['contact'] : ''),
-                           (isset($data['subtotalEchip']) ? $data['subtotalEchip'] : 0),
-                           (isset($data['subtotalManop']) ? $data['subtotalManop'] : 0),
-                           (isset($data['totalNet']) ? $data['totalNet'] : 0),
-                           (isset($data['tva']) ? $data['tva'] : 0),
-                           (isset($data['totalBrut']) ? $data['totalBrut'] : 0),
-                           $username, $displayName, $username
-                       ]);
+                    // Citirea din nextSituatieNr e blocantă, deci coliziunea nu ar trebui
+                    // să apară. Retry-ul rămâne ca plasă de siguranță: dacă totuși scapă
+                    // una (versiune de MySQL fără suport, lock expirat), utilizatorul
+                    // primește următorul număr liber, nu o eroare 500.
+                    $stmtIns = $db->prepare("INSERT INTO situatii_plata (situatie_id, sursa_oferta_id, sursa_oferta_nr, titlu, data_situatie, obiectiv, mentiuni, client_id, proiect_id, client_nume, client_cui, client_adresa, client_contact, subtotal_echip, subtotal_manop, total_fara_tva, tva, total_cu_tva, created_by, created_by_name, updated_by) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
+                    $situatieNr = null;
+                    for ($attempt = 1; $attempt <= 5; $attempt++) {
+                        $candidat = nextSituatieNr($db, $sursaNr);
+                        $titluS = 'Situație de plată ' . $clientS . ($obiectivS ? ' ' . $obiectivS : '') . ' Nr. ' . $candidat . ' din ' . $dataFmtS;
+                        try {
+                            $stmtIns->execute([
+                                $candidat, $sursaDbId, ($sursaNr !== '' ? $sursaNr : null),
+                                $titluS, $dataS, $obiectivS,
+                                (isset($data['mentiuni']) ? $data['mentiuni'] : ''),
+                                $clientIdS, $proiectIdS,
+                                $clientS,
+                                (isset($data['cui']) ? $data['cui'] : ''),
+                                (isset($data['adresa']) ? $data['adresa'] : ''),
+                                (isset($data['contact']) ? $data['contact'] : ''),
+                                (isset($data['subtotalEchip']) ? $data['subtotalEchip'] : 0),
+                                (isset($data['subtotalManop']) ? $data['subtotalManop'] : 0),
+                                (isset($data['totalNet']) ? $data['totalNet'] : 0),
+                                (isset($data['tva']) ? $data['tva'] : 0),
+                                (isset($data['totalBrut']) ? $data['totalBrut'] : 0),
+                                $username, $displayName, $username
+                            ]);
+                            $situatieNr = $candidat;
+                            break;
+                        } catch (PDOException $ePdo) {
+                            // 23000 = violare de constrângere unică pe situatie_id.
+                            // Orice altceva (coloană lipsă, FK, conexiune) e o eroare reală.
+                            if ($ePdo->getCode() !== '23000' || $attempt === 5) throw $ePdo;
+                        }
+                    }
                     $situatieDbId = $db->lastInsertId();
                 }
 

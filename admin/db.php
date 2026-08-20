@@ -14,7 +14,21 @@ define('DB_HOST', 'localhost');
 define('DB_NAME', 'r101042brea_cssi');  // cPanel prefix + db name
 define('DB_USER', 'r101042brea_cssi');  // cPanel prefix + user
 // Prioritate: variabilă de mediu > fișier secrets > fallback (DOAR pentru compat tranziție)
-define('DB_PASS', getenv('CSSI_DB_PASS') ?: ($SECRETS['DB_PASS'] ?? 'cssi-install-2026'));
+//
+// Fallback-ul de mai jos e o parolă scrisă în clar, într-un repo găzduit pe GitHub.
+// Nu o scot direct: dacă undeva conexiunea chiar se ține pe ea, aplicația ar cădea
+// instant. În schimb, se autodenunță în error_log de fiecare dată când e folosită.
+// Dacă după câteva zile de rulare linia nu apare în log → fallback-ul e cod mort și
+// se poate șterge. Dacă apare → parola trebuie rotită în cPanel, pusă în secrets.php,
+// și abia apoi ștearsă de aici.
+$__dbPassFallback = 'cssi-install-2026';
+$__dbPass = getenv('CSSI_DB_PASS') ?: ($SECRETS['DB_PASS'] ?? $__dbPassFallback);
+if ($__dbPass === $__dbPassFallback) {
+    error_log('SECURITATE db.php: conexiunea folosește parola-fallback din cod (publică în git). '
+            . 'Pune parola reală în secrets.php sau în CSSI_DB_PASS, apoi rotește-o și scoate fallback-ul.');
+}
+define('DB_PASS', $__dbPass);
+unset($__dbPass, $__dbPassFallback);
 define('DB_CHARSET', 'utf8mb4');
 
 // API keys externe
