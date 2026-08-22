@@ -751,4 +751,11 @@
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
+  <!-- adaugat automat de agent 2026-08-22 -->
+  <url>
+    <loc>https://cssi.ro/blog/camere-termice-detectie-timpurie-firma-brasov</loc>
+    <lastmod>2026-08-22</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
 </urlset>
