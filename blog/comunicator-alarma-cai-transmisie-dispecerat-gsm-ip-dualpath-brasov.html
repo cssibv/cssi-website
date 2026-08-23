@@ -1,0 +1,714 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Comunicatoare și căi de transmisie a alarmei | CSSI</title>
+<meta name="description" content="Cum ajunge semnalul de alarmă la dispecerat: linie IP, GSM/GPRS, dual-path redundant, anti-sabotaj și supervizare. Ghid tehnic clar de la CSSI Brașov">
+<link rel="canonical" href="https://cssi.ro/blog/comunicator-alarma-cai-transmisie-dispecerat-gsm-ip-dualpath-brasov">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Comunicatoare și căi de transmisie a alarmei la dispecerat: GSM, IP, dual-path | CSSI Brașov">
+<meta property="og:description" content="Linie IP, GSM/GPRS și dual-path redundant. Cum verifici că alarma chiar ajunge la dispecerat și de ce supervizarea și anti-sabotajul contează.">
+<meta property="og:url" content="https://cssi.ro/blog/comunicator-alarma-cai-transmisie-dispecerat-gsm-ip-dualpath-brasov">
+<meta property="og:image" content="https://cssi.ro/images/blog/comunicator-alarma-transmisie-cover.webp">
+<meta property="og:locale" content="ro_RO">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Comunicatoare și căi de transmisie a alarmei la dispecerat">
+<meta name="twitter:description" content="GSM, IP și dual-path redundant. Cum se asigură că semnalul de alarmă ajunge sigur la dispecerat. CSSI Brașov: 0752 288 400.">
+<meta name="twitter:image" content="https://cssi.ro/images/blog/comunicator-alarma-transmisie-cover.webp">
+
+<!-- ===== SCHEMA JSON-LD: Article + BreadcrumbList + FAQPage ===== -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Article",
+      "@id": "https://cssi.ro/blog/comunicator-alarma-cai-transmisie-dispecerat-gsm-ip-dualpath-brasov#article",
+      "headline": "Comunicatoare și căi de transmisie a alarmei la dispecerat: GSM, IP, dual-path",
+      "description": "Cum ajunge semnalul de alarmă la dispecerat: linie IP, GSM/GPRS, dual-path redundant, anti-sabotaj și supervizare. Ghid tehnic de la CSSI Brașov.",
+      "image": "https://cssi.ro/images/blog/comunicator-alarma-transmisie-cover.webp",
+      "author": {
+        "@type": "Organization",
+        "name": "CSSI Brașov",
+        "url": "https://cssi.ro"
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": "CSSI Brașov",
+        "logo": {
+          "@type": "ImageObject",
+          "url": "https://cssi.ro/images/logo-cssi.webp"
+        }
+      },
+      "datePublished": "2030-04-21",
+      "dateModified": "2030-04-21",
+      "mainEntityOfPage": "https://cssi.ro/blog/comunicator-alarma-cai-transmisie-dispecerat-gsm-ip-dualpath-brasov",
+      "inLanguage": "ro"
+    },
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Acasă",
+          "item": "https://cssi.ro/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "Blog",
+          "item": "https://cssi.ro/blog"
+        },
+        {
+          "@type": "ListItem",
+          "position": 3,
+          "name": "Comunicatoare și căi de transmisie a alarmei la dispecerat"
+        }
+      ]
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "Ce este un comunicator de alarmă?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Comunicatorul este modulul care preia semnalul de la centrala de alarmă și îl trimite mai departe la dispeceratul de monitorizare și pe telefonul tău. El decide cum pleacă informația: prin linia de internet (IP), prin rețeaua mobilă (GSM/GPRS) sau prin ambele în același timp. Fără un comunicator funcțional, alarma sună local, dar nimeni din exterior nu află că s-a întâmplat ceva."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Care e diferența dintre transmisie pe IP și pe GSM?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Transmisia pe IP folosește conexiunea de internet a clădirii, e rapidă și ieftină în exploatare, dar cade dacă pică internetul sau curentul la router. Transmisia pe GSM/GPRS folosește rețeaua de telefonie mobilă cu o cartelă SIM dedicată și funcționează chiar dacă internetul e tăiat. Cele mai sigure sisteme le folosesc pe ambele, ca să nu depindă de o singură cale."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Ce înseamnă dual-path la o alarmă?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Dual-path înseamnă două căi de transmisie în paralel — de obicei IP plus GSM. Dacă una cade sau e sabotată, semnalul pleacă pe cealaltă, automat, fără nicio intervenție. Este soluția recomandată pentru obiective în care o întrerupere a semnalizării înseamnă un risc real: firme, depozite, spații cu valori sau case izolate."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Ce este supervizarea și de ce contează?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Supervizarea înseamnă că sistemul trimite periodic un semnal de „sunt în viață\" către dispecerat. Dacă acest semnal nu mai ajunge la intervalul stabilit, dispeceratul știe că legătura s-a întrerupt și poate reacționa. Fără supervizare, un cablu tăiat sau o cartelă SIM blocată ar trece neobservate până la următoarea alarmă reală — adică exact când ai nevoie de sistem."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Un hoț poate sabota transmisia alarmei?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Poate încerca — tăind cablul de internet sau bruind semnalul GSM. Tocmai de aceea se folosesc dual-path și supervizare: dacă o cale e tăiată, semnalul pleacă pe a doua, iar dispariția semnalului supervizat alarmează dispeceratul chiar și atunci când nu s-a declanșat încă alarma propriu-zisă. Anti-sabotajul (tamper) pe cutii și module completează protecția."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Am nevoie de internet ca să funcționeze alarma cu monitorizare?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Nu neapărat. Dacă sistemul are comunicator GSM/GPRS cu cartelă SIM, alarma poate transmite la dispecerat și fără internet fix. Internetul (IP) este util pentru viteză și costuri mici, dar într-o soluție dual-path GSM-ul acoperă exact situația în care nu ai internet sau el pică. Alegem calea în funcție de locație și de acoperirea din zona ta din Brașov."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Cum verific că alarma chiar ajunge la dispecerat?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Prin teste de transmisie periodice și prin supervizare. La punerea în funcțiune se face un test real: se declanșează sistemul și se confirmă că semnalul a ajuns la dispecerat pe fiecare cale. Apoi, semnalul de supervizare confirmă zilnic legătura. La CSSI includem aceste verificări în punerea în funcțiune și în mentenanță, ca să nu rămâi cu un sistem care pare că merge, dar nu comunică."
+          }
+        }
+      ]
+    }
+  ]
+}
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;600;700;800&family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,400;0,8..60,600;1,8..60,400&display=swap" rel="stylesheet" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.js"></script>
+  <script src="/cookie-consent.js" defer></script>
+  <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}</script>
+  <script src="/tracking.js" defer></script>
+  <style>
+    @keyframes subtle-pulse-n { 0%,100%{transform:scale(1)}50%{transform:scale(.92)} }
+    @keyframes badge-pulse-n { 0%,100%{box-shadow:0 0 0 0 rgba(34,197,94,.4)}50%{box-shadow:0 0 0 8px rgba(34,197,94,0)} }
+    .animate-subtle-pulse{animation:subtle-pulse-n 2.5s ease-in-out infinite}
+    .animate-badge-pulse{animation:badge-pulse-n 2s ease-in-out infinite}
+    .dropdown-menu{display:none!important}
+    .dropdown:hover .dropdown-menu{display:block!important}
+    #mobileMenu{display:none}
+    #mobileMenu.open{display:block}
+    #servicesSubmenu{display:none}
+    #servicesSubmenu.open{display:block}
+    .dropdown-scroll::-webkit-scrollbar{width:4px}
+    .dropdown-scroll::-webkit-scrollbar-track{background:#f1f1f1}
+    .dropdown-scroll::-webkit-scrollbar-thumb{background:#cbd5e1;border-radius:4px}
+    @media(min-width:640px){.sm\:block{display:block}.sm\:hidden{display:none}.sm\:px-6{padding-left:24px;padding-right:24px}}
+    @media(min-width:1024px){.lg\:flex{display:flex}.lg\:hidden{display:none}}
+    #mainHeader, #mainHeader a, #mainHeader button, #mainHeader span, #mainHeader div { font-family: 'Sora', sans-serif !important; }
+  </style>
+  <style>
+    :root{--brand-dark:#0b1a2e;--brand-navy:#102a4c;--brand-blue:#1a4b8c;--brand-accent:#e63022;--brand-gold:#f5a623;--brand-light:#f0f4f9;--text-main:#1c2b3a;--text-muted:#5a6e82;--text-light:#8fa0b3;--border:#dce6f0;--white:#ffffff;--ff-head:'Sora',sans-serif;--ff-body:'Source Serif 4',Georgia,serif;--radius:10px;--shadow-sm:0 2px 8px rgba(11,26,46,.08);--shadow-md:0 6px 24px rgba(11,26,46,.13);--shadow-lg:0 16px 48px rgba(11,26,46,.18);--max-w:1400px}
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    html{scroll-behavior:smooth}
+    body{font-family:var(--ff-body);font-size:18px;line-height:1.75;color:var(--text-main);background:var(--white);-webkit-font-smoothing:antialiased}
+    img{max-width:100%;height:auto;display:block}
+    a{color:var(--brand-blue);text-decoration:none}
+    a:hover{text-decoration:underline}
+    .breadcrumb{background:var(--brand-dark);border-bottom:none;padding:12px 0;padding-top:104px;font-family:var(--ff-head);font-size:13px;color:rgba(255,255,255,.55)}
+    .breadcrumb .inner{max-width:1280px;margin:0 auto;padding:0 0 12px 24px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+    .breadcrumb a{color:rgba(255,255,255,.7)}
+    .breadcrumb .sep{color:rgba(255,255,255,.3)}
+    .hero{background:var(--brand-dark);background-image:radial-gradient(ellipse 70% 60% at 80% 50%,rgba(26,75,140,.45) 0%,transparent 70%),radial-gradient(ellipse 40% 50% at 10% 80%,rgba(230,48,34,.15) 0%,transparent 60%);color:var(--white);padding:48px 24px 64px;position:relative;overflow:hidden}
+    .hero::before{content:'';position:absolute;inset:0;background-image:url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23ffffff' fill-opacity='0.025'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/svg%3E")}
+        .hero .inner{max-width:var(--max-w);margin:0 auto;position:relative;z-index:1;display:flex;align-items:center;gap:40px}
+    .hero-content{flex:1;min-width:0}
+    .hero-img-wrap{flex:0 0 280px;display:flex;align-items:center;justify-content:center}
+    .hero-img-wrap img{width:280px;height:auto;border-radius:14px;box-shadow:0 8px 32px rgba(0,0,0,.35);border:1px solid rgba(255,255,255,.1);opacity:.92;transition:opacity .3s}
+    .hero-img-wrap img:hover{opacity:1}
+    @media(max-width:900px){.hero .inner{flex-direction:column;gap:24px}.hero-img-wrap{flex:0 0 auto;order:-1}.hero-img-wrap img{width:220px}}
+    @media(max-width:700px){.hero-img-wrap{display:none}}
+    .hero-badge{display:inline-flex;align-items:center;gap:6px;background:rgba(230,48,34,.2);border:1px solid rgba(230,48,34,.4);color:#ff8a80;font-family:var(--ff-head);font-size:12px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;padding:5px 12px;border-radius:100px;margin-bottom:20px}
+    .hero h1{font-family:var(--ff-head);font-size:clamp(26px,4vw,40px);font-weight:800;line-height:1.2;margin-bottom:20px;letter-spacing:-.02em}
+    .hero h1 em{font-style:normal;color:var(--brand-gold)}
+    .hero .lead{font-size:clamp(16px,2vw,19px);line-height:1.65;color:rgba(255,255,255,.82);max-width:620px;margin-bottom:32px}
+    .hero-meta{display:flex;align-items:center;gap:20px;flex-wrap:wrap;font-family:var(--ff-head);font-size:13px;color:rgba(255,255,255,.55)}
+    .hero-meta span{display:flex;align-items:center;gap:5px}
+    .hero-meta .dot{color:rgba(255,255,255,.25)}
+    .topic-pills{display:flex;gap:10px;flex-wrap:wrap;margin-top:28px}
+    .pill{display:flex;align-items:center;gap:8px;padding:8px 16px;border-radius:100px;font-family:var(--ff-head);font-size:13px;font-weight:600;border:1px solid}
+    .pill-red{background:rgba(230,48,34,.15);border-color:rgba(230,48,34,.35);color:#ff8a80}
+    .pill-amber{background:rgba(245,166,35,.12);border-color:rgba(245,166,35,.3);color:#ffd180}
+    .pill-blue{background:rgba(26,75,140,.25);border-color:rgba(26,75,140,.5);color:#82b4ff}
+    .pill-green{background:rgba(39,174,96,.15);border-color:rgba(39,174,96,.35);color:#81c995}
+    .article-wrap{max-width:1440px;margin:0 auto;padding:0 20px;display:grid;grid-template-columns:1fr 280px;gap:32px;align-items:start}
+    .article-body{padding:32px 0}
+    .article-body h2{font-family:var(--ff-head);font-size:clamp(20px,2.5vw,26px);font-weight:700;color:var(--brand-dark);margin:36px 0 14px;padding-top:6px;border-top:3px solid var(--brand-accent);line-height:1.3}
+    .article-body h3{font-family:var(--ff-head);font-size:clamp(17px,2vw,20px);font-weight:600;color:var(--brand-navy);margin:32px 0 12px}
+    .article-body p{margin-bottom:16px;color:var(--text-main)}
+    .article-body ul,.article-body ol{padding-left:24px;margin-bottom:20px}
+    .article-body li{margin-bottom:8px}
+    .article-body strong{color:var(--brand-dark)}
+    .intro-p{font-size:19px;line-height:1.7}
+    .box{border-radius:var(--radius);padding:22px 26px;margin:28px 0;border-left:4px solid}
+    .box-red{background:#fef2f2;border-color:var(--brand-accent)}
+    .box-blue{background:#eff6ff;border-color:var(--brand-blue)}
+    .box-amber{background:#fffbeb;border-color:var(--brand-gold)}
+    .box-green{background:#f0fdf4;border-color:#27ae60}
+    .box h4{font-family:var(--ff-head);font-size:15px;font-weight:700;margin-bottom:8px}
+    .box p{font-size:15px;margin-bottom:8px}
+    .check-list{list-style:none;padding:0}
+    .check-list li{display:flex;gap:10px;padding:6px 0;font-size:16px}
+    .chk{color:#27ae60;font-weight:700;flex-shrink:0}
+    .price-table{width:100%;border-collapse:collapse;margin:24px 0;font-size:15px}
+    .price-table th{background:var(--brand-navy);color:var(--white);font-family:var(--ff-head);font-size:13px;font-weight:600;text-transform:uppercase;letter-spacing:.04em;padding:12px 16px;text-align:left}
+    .price-table td{padding:12px 16px;border-bottom:1px solid var(--border)}
+    .price-table tr:nth-child(even) td{background:var(--brand-light)}
+    .price-table .highlight td{background:#fffbeb;font-weight:600}
+    .cta-banner{background:linear-gradient(135deg,var(--brand-dark),var(--brand-navy));border-radius:var(--radius);padding:28px 32px;color:var(--white);display:flex;align-items:center;justify-content:space-between;gap:20px;flex-wrap:wrap}
+    .cta-banner h3{font-family:var(--ff-head);font-size:18px;font-weight:700;margin-bottom:4px}
+    .cta-banner p{font-size:14px;color:rgba(255,255,255,.7);margin:0}
+    .cta-buttons{display:flex;gap:10px;flex-wrap:wrap}
+    .btn{display:inline-flex;align-items:center;gap:7px;padding:10px 18px;border-radius:8px;font-family:var(--ff-head);font-size:13px;font-weight:600;cursor:pointer;border:none;text-decoration:none!important}
+    .btn-primary{background:var(--brand-accent);color:var(--white)!important;box-shadow:0 4px 14px rgba(230,48,34,.3)}
+    .btn-secondary{background:rgba(255,255,255,.12);color:var(--white)!important;border:1px solid rgba(255,255,255,.25)}
+    .faq-section{margin:48px 0 32px}
+    .faq-item{border:1px solid var(--border);border-radius:var(--radius);margin-bottom:10px;overflow:hidden}
+    .faq-q{display:flex;align-items:center;justify-content:space-between;padding:16px 20px;cursor:pointer;background:var(--white);font-family:var(--ff-head);font-size:15px;font-weight:600;color:var(--brand-dark);border:none;width:100%;text-align:left;gap:12px}
+    .faq-q:hover{background:var(--brand-light)}
+    .faq-a{display:none;padding:0 20px 16px;font-size:15px;color:var(--text-muted);line-height:1.7}
+    .faq-item.open .faq-a{display:block}
+    .faq-item.open .faq-q{background:var(--brand-light);color:var(--brand-blue)}
+    .faq-chevron{transition:transform .2s;flex-shrink:0}
+    .faq-item.open .faq-chevron{transform:rotate(180deg)}
+    .sidebar{position:sticky;top:104px}
+    .sidebar-card{border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;margin-bottom:20px;background:var(--white);box-shadow:var(--shadow-sm)}
+    .sidebar-card-head{background:var(--brand-navy);color:var(--white);font-family:var(--ff-head);font-size:12px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;padding:12px 18px}
+    .sidebar-card-body{padding:16px 18px}
+    .toc-list{list-style:none;padding:0;counter-reset:toc}
+    .toc-list li{counter-increment:toc}
+    .toc-list a{display:flex;align-items:baseline;gap:8px;padding:7px 0;font-family:var(--ff-head);font-size:13px;color:var(--text-muted);border-bottom:1px solid var(--border);text-decoration:none}
+    .toc-list a::before{content:counter(toc,decimal-leading-zero);font-size:11px;font-weight:700;color:var(--text-light)}
+    .toc-list li:last-child a{border-bottom:none}
+    .toc-list a:hover{color:var(--brand-blue)}
+    .contact-info{list-style:none;padding:0}
+    .contact-info li{display:flex;gap:12px;padding:10px 0;border-bottom:1px solid var(--border);align-items:flex-start}
+    .contact-info li:last-child{border-bottom:none}
+    .ci-icon{font-size:20px;flex-shrink:0;margin-top:2px}
+    .contact-info strong{font-family:var(--ff-head);font-size:14px;display:block;color:var(--brand-dark)}
+    .contact-info span{font-size:12px;color:var(--text-light)}
+    .article-footer{background:var(--brand-light);border-top:1px solid var(--border);padding:40px 24px;text-align:center}
+    .article-footer p{font-size:14px;color:var(--text-muted);max-width:500px;margin:0 auto 16px}
+    .tags{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-top:12px}
+    .tag{background:var(--white);border:1px solid var(--border);padding:4px 12px;border-radius:100px;font-family:var(--ff-head);font-size:11px;color:var(--text-muted)}
+    @media(max-width:768px){.article-wrap{grid-template-columns:1fr;gap:32px}.sidebar{position:static;order:2}.cta-banner{flex-direction:column;text-align:center}}
+  </style>
+<style>.cta-banner h3{color:#ffffff !important}.cta-banner p{color:rgba(255,255,255,.85) !important}.box-info{background:#eef5ff;border-color:var(--brand-blue)}.box-warn{background:#fff8ec;border-color:var(--brand-gold)}.box-tip{background:#f0faf2;border-color:#27ae60}.box-danger{background:#fef2f2;border-color:#e63022}.box-info .box-title{color:var(--brand-blue)}.box-warn .box-title{color:#b7760a}.box-tip .box-title{color:#1e8c3f}.box-danger .box-title{color:#c0392b}.compare-table{width:100%;border-collapse:collapse;font-size:15px;margin:24px 0;border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow-sm)}.compare-table th{background:var(--brand-navy);color:var(--white);font-family:var(--ff-head);font-weight:600;padding:13px 16px;text-align:left}.compare-table td{padding:12px 16px;border-bottom:1px solid var(--border);vertical-align:top}.compare-table tr:nth-child(even) td{background:var(--brand-light)}.compare-table tr:last-child td{border-bottom:none}.compare-table .yes{color:#27ae60;font-weight:600}.compare-table .no{color:#c0392b}</style></head>
+<body>
+<header id="mainHeader" style="position:fixed;top:0;left:0;right:0;z-index:50;transition:all 0.3s;">
+    <div class="hidden sm:block" style="background:#0f172a;color:#fff;font-size:12px;padding:6px 0;">
+        <div style="max-width:1280px;margin:0 auto;padding:0 24px;display:flex;justify-content:space-between;align-items:center;">
+            <span>⭐ <span style="color:#4ade80;font-weight:600;">Peste 20 ani de experiență</span></span>
+            <div style="display:flex;align-items:center;gap:16px;">
+                <span class="animate-badge-pulse" style="display:inline-flex;align-items:center;gap:6px;padding:2px 8px;background:rgba(34,197,94,0.2);border-radius:999px;">
+                    <span style="color:#facc15;">⭐</span>
+                    <span style="font-weight:600;">4.9/5</span>
+                    <span style="color:#94a3b8;">•</span>
+                    <span>127 recenzii</span>
+                </span>
+                <span>⭐ <span style="font-weight:600;">8.700+ proiecte</span></span>
+            </div>
+        </div>
+    </div>
+    <div class="sm:hidden" style="background:#0f172a;color:#fff;font-size:12px;padding:6px 0;">
+        <div style="max-width:1280px;margin:0 auto;padding:0 12px;display:flex;justify-content:space-between;align-items:center;">
+            <span>⭐ <span style="color:#4ade80;font-weight:600;">Peste 20 ani de experiență</span></span>
+            <a href="tel:0752288400" style="display:flex;align-items:center;gap:4px;font-weight:600;color:#4ade80;">📞 Sună acum</a>
+        </div>
+    </div>
+    <div id="navBg" style="transition:all 0.3s;">
+        <div style="max-width:1280px;margin:0 auto;padding:0 12px;display:flex;justify-content:space-between;align-items:center;height:64px;" class="sm:px-6">
+            <a href="../">
+                <img src="https://eu.chat-img.sintra.ai/32c1b29c-0c86-4833-a031-e7c45e21a11e/983d52bb-2eb6-42f1-bed4-f94d769bb634/Logo_CSSI.png" alt="CSSI Logo" id="logoImg" style="height:56px;width:auto;transition:all 0.3s;filter:brightness(0) invert(1) drop-shadow(0 0 1px rgba(255,255,255,0.8));">
+            </a>
+            <nav class="hidden lg:flex" style="align-items:center;gap:4px;">
+                <a href="../" id="navLink1" style="padding:6px 12px;font-size:14px;font-weight:500;color:#fff;transition:all 0.2s;border-radius:8px;" onmouseover="this.style.color='#f87171'" onmouseout="this.style.color=navTextColor">🏠 Acasă</a>
+                <div class="dropdown" style="position:relative;">
+                    <button id="navLink2" style="padding:6px 12px;font-size:14px;font-weight:500;color:#fff;transition:all 0.2s;border-radius:8px;background:none;border:none;cursor:pointer;display:flex;align-items:center;font-family:inherit;">
+                        🛠️ Servicii
+                        <svg style="margin-left:4px;width:16px;height:16px;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+                    </button>
+                    <div class="dropdown-menu dropdown-scroll" style="position:absolute;top:100%;left:0;width:280px;background:#fff;box-shadow:0 10px 15px -3px rgba(0,0,0,0.1);border-radius:12px;padding:8px;border:1px solid #f1f5f9;max-height:80vh;overflow-y:auto;z-index:100;">
+                        <a href="../detectie-incendiu-isu" style="display:block;padding:10px 16px;font-size:13px;color:#334155;border-radius:8px;" onmouseover="this.style.background='#fef2f2';this.style.color='#dc2626'" onmouseout="this.style.background='';this.style.color='#334155'">🔥 Detecție Incendiu ISU</a>
+                        <a href="../camere-supraveghere" style="display:block;padding:10px 16px;font-size:13px;color:#334155;border-radius:8px;" onmouseover="this.style.background='#fef2f2';this.style.color='#dc2626'" onmouseout="this.style.background='';this.style.color='#334155'">📹 Camere Supraveghere</a>
+                        <a href="../alarma-antiefractie" style="display:block;padding:10px 16px;font-size:13px;color:#334155;border-radius:8px;" onmouseover="this.style.background='#fef2f2';this.style.color='#dc2626'" onmouseout="this.style.background='';this.style.color='#334155'">🚨 Alarmă Antiefracție</a>
+                        <a href="../control-acces" style="display:block;padding:10px 16px;font-size:13px;color:#334155;border-radius:8px;" onmouseover="this.style.background='#fef2f2';this.style.color='#dc2626'" onmouseout="this.style.background='';this.style.color='#334155'">🚪 Control Acces</a>
+                        <a href="../pontaj-electronic" style="display:block;padding:10px 16px;font-size:13px;color:#334155;border-radius:8px;" onmouseover="this.style.background='#fef2f2';this.style.color='#dc2626'" onmouseout="this.style.background='';this.style.color='#334155'">⏱️ Pontaj Electronic</a>
+                        <a href="../bariere-auto" style="display:block;padding:10px 16px;font-size:13px;color:#334155;border-radius:8px;" onmouseover="this.style.background='#fef2f2';this.style.color='#dc2626'" onmouseout="this.style.background='';this.style.color='#334155'">🚧 Bariere Auto</a>
+                        <a href="../interfoane-videointerfoane" style="display:block;padding:10px 16px;font-size:13px;color:#334155;border-radius:8px;" onmouseover="this.style.background='#fef2f2';this.style.color='#dc2626'" onmouseout="this.style.background='';this.style.color='#334155'">🔔 Interfoane &amp; Videointerfoane</a>
+                        <a href="../sonorizare" style="display:block;padding:10px 16px;font-size:13px;color:#334155;border-radius:8px;" onmouseover="this.style.background='#fef2f2';this.style.color='#dc2626'" onmouseout="this.style.background='';this.style.color='#334155'">🔊 Sonorizare</a>
+                        <a href="../automatizari-porti" style="display:block;padding:10px 16px;font-size:13px;color:#334155;border-radius:8px;" onmouseover="this.style.background='#fef2f2';this.style.color='#dc2626'" onmouseout="this.style.background='';this.style.color='#334155'">🚗 Automatizări Porți</a>
+                        <a href="../usi-garaj" style="display:block;padding:10px 16px;font-size:13px;color:#334155;border-radius:8px;" onmouseover="this.style.background='#fef2f2';this.style.color='#dc2626'" onmouseout="this.style.background='';this.style.color='#334155'">🏠 Uși Garaj</a>
+                        <a href="../aer-conditionat" style="display:block;padding:10px 16px;font-size:13px;color:#334155;border-radius:8px;" onmouseover="this.style.background='#fef2f2';this.style.color='#dc2626'" onmouseout="this.style.background='';this.style.color='#334155'">❄️ Aer Condiționat</a>
+                        <a href="../ventilatie" style="display:block;padding:10px 16px;font-size:13px;color:#334155;border-radius:8px;" onmouseover="this.style.background='#fef2f2';this.style.color='#dc2626'" onmouseout="this.style.background='';this.style.color='#334155'">💨 Ventilație</a>
+                        <a href="../instalatii-electrice" style="display:block;padding:10px 16px;font-size:13px;color:#334155;border-radius:8px;" onmouseover="this.style.background='#fef2f2';this.style.color='#dc2626'" onmouseout="this.style.background='';this.style.color='#334155'">⚡ Instalații Electrice</a>
+                        <a href="../instalatii-termice-sanitare" style="display:block;padding:10px 16px;font-size:13px;color:#334155;border-radius:8px;" onmouseover="this.style.background='#fef2f2';this.style.color='#dc2626'" onmouseout="this.style.background='';this.style.color='#334155'">🔧 Instalații Termice &amp; Sanitare</a>
+                    </div>
+                </div>
+                <a href="../despre-noi" id="navLink3" style="padding:6px 12px;font-size:14px;font-weight:500;color:#fff;transition:all 0.2s;border-radius:8px;" onmouseover="this.style.color='#f87171'" onmouseout="this.style.color=navTextColor">ℹ️ Despre Noi</a>
+                <a href="../portofoliu" id="navLink4" style="padding:6px 12px;font-size:14px;font-weight:500;color:#fff;transition:all 0.2s;border-radius:8px;" onmouseover="this.style.color='#f87171'" onmouseout="this.style.color=navTextColor">📁 Portofoliu</a>
+                <a href="index.html" style="padding:6px 12px;font-size:14px;font-weight:600;color:#16a34a;border-radius:8px;">📝 Blog</a>
+                <a href="../contact" id="navLink5" style="padding:6px 12px;font-size:14px;font-weight:500;color:#fff;transition:all 0.2s;border-radius:8px;" onmouseover="this.style.color='#f87171'" onmouseout="this.style.color=navTextColor">📍 Contact</a>
+            </nav>
+            <div class="hidden lg:flex" style="align-items:center;gap:12px;">
+                <a href="tel:0752288400" id="phoneLink" style="display:flex;align-items:center;font-size:14px;font-weight:500;color:#fff;transition:all 0.2s;">
+                    <svg style="width:16px;height:16px;margin-right:6px;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/></svg>
+                    0752 288 400
+                </a>
+                <a href="../contact" style="background:linear-gradient(to right,#dc2626,#b91c1c);color:#fff;padding:8px 20px;border-radius:8px;font-size:14px;font-weight:600;box-shadow:0 4px 6px -1px rgba(0,0,0,0.1);transition:all 0.2s;" onmouseover="this.style.background='linear-gradient(to right,#b91c1c,#991b1b)'" onmouseout="this.style.background='linear-gradient(to right,#dc2626,#b91c1c)'">Cere Ofertă</a>
+            </div>
+            <div class="lg:hidden" style="display:flex;align-items:center;gap:8px;">
+                <span class="animate-badge-pulse" style="display:inline-flex;align-items:center;gap:4px;padding:2px 6px;border-radius:999px;font-size:10px;background:rgba(255,255,255,0.2);color:#fff;">
+                    <span style="color:#facc15;font-size:9px;">⭐</span>
+                    <span style="font-weight:600;">4.9</span>
+                </span>
+                <button onclick="toggleMobileMenu()" id="menuBtn" class="animate-subtle-pulse" style="padding:4px;border-radius:6px;border:none;cursor:pointer;background:linear-gradient(to right,#ef4444,#dc2626);color:#fff;">
+                    <svg id="menuIcon" style="width:20px;height:20px;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
+                    <svg id="closeIcon" style="width:20px;height:20px;display:none;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+                </button>
+            </div>
+        </div>
+        <div id="mobileMenu" style="background:#fff;border-radius:16px;box-shadow:0 20px 25px -5px rgba(0,0,0,0.1);margin:8px 12px;padding:8px;max-height:80vh;overflow-y:auto;">
+            <nav style="display:flex;flex-direction:column;gap:4px;">
+                <a href="../" style="padding:10px 16px;font-size:16px;font-weight:500;color:#334155;border-radius:8px;">🏠 Acasă</a>
+                <button onclick="toggleServicesSubmenu()" style="padding:10px 16px;font-size:16px;font-weight:500;color:#334155;border-radius:8px;background:none;border:none;cursor:pointer;display:flex;justify-content:space-between;align-items:center;width:100%;font-family:inherit;text-align:left;">
+                    🛠️ Servicii
+                    <svg id="servicesArrow" style="width:16px;height:16px;transition:transform 0.2s;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+                </button>
+                <div id="servicesSubmenu" style="padding-left:16px;overflow-y:auto;">
+                    <a href="../detectie-incendiu-isu" onclick="closeMobile()" style="display:block;padding:8px 16px;font-size:14px;color:#475569;border-radius:8px;">🔥 Detecție Incendiu ISU</a>
+                    <a href="../camere-supraveghere" onclick="closeMobile()" style="display:block;padding:8px 16px;font-size:14px;color:#475569;border-radius:8px;">📹 Camere Supraveghere</a>
+                    <a href="../alarma-antiefractie" onclick="closeMobile()" style="display:block;padding:8px 16px;font-size:14px;color:#475569;border-radius:8px;">🚨 Alarmă Antiefracție</a>
+                    <a href="../control-acces" onclick="closeMobile()" style="display:block;padding:8px 16px;font-size:14px;color:#475569;border-radius:8px;">🚪 Control Acces</a>
+                    <a href="../pontaj-electronic" onclick="closeMobile()" style="display:block;padding:8px 16px;font-size:14px;color:#475569;border-radius:8px;">⏱️ Pontaj Electronic</a>
+                    <a href="../bariere-auto" onclick="closeMobile()" style="display:block;padding:8px 16px;font-size:14px;color:#475569;border-radius:8px;">🚧 Bariere Auto</a>
+                    <a href="../interfoane-videointerfoane" onclick="closeMobile()" style="display:block;padding:8px 16px;font-size:14px;color:#475569;border-radius:8px;">🔔 Interfoane &amp; Videointerfoane</a>
+                    <a href="../sonorizare" onclick="closeMobile()" style="display:block;padding:8px 16px;font-size:14px;color:#475569;border-radius:8px;">🔊 Sonorizare</a>
+                    <a href="../automatizari-porti" onclick="closeMobile()" style="display:block;padding:8px 16px;font-size:14px;color:#475569;border-radius:8px;">🚗 Automatizări Porți</a>
+                    <a href="../usi-garaj" onclick="closeMobile()" style="display:block;padding:8px 16px;font-size:14px;color:#475569;border-radius:8px;">🏠 Uși Garaj</a>
+                    <a href="../aer-conditionat" onclick="closeMobile()" style="display:block;padding:8px 16px;font-size:14px;color:#475569;border-radius:8px;">❄️ Aer Condiționat</a>
+                    <a href="../ventilatie" onclick="closeMobile()" style="display:block;padding:8px 16px;font-size:14px;color:#475569;border-radius:8px;">💨 Ventilație</a>
+                    <a href="../instalatii-electrice" onclick="closeMobile()" style="display:block;padding:8px 16px;font-size:14px;color:#475569;border-radius:8px;">⚡ Instalații Electrice</a>
+                    <a href="../instalatii-termice-sanitare" onclick="closeMobile()" style="display:block;padding:8px 16px;font-size:14px;color:#475569;border-radius:8px;">🔧 Instalații Termice &amp; Sanitare</a>
+                </div>
+                <a href="../despre-noi" onclick="closeMobile()" style="padding:10px 16px;font-size:16px;font-weight:500;color:#334155;border-radius:8px;">ℹ️ Despre Noi</a>
+                <a href="../portofoliu" onclick="closeMobile()" style="padding:10px 16px;font-size:16px;font-weight:500;color:#334155;border-radius:8px;">📁 Portofoliu</a>
+                <a href="index.html" onclick="closeMobile()" style="padding:10px 16px;font-size:16px;font-weight:600;color:#16a34a;border-radius:8px;">📝 Blog</a>
+                <a href="../contact" onclick="closeMobile()" style="padding:10px 16px;font-size:16px;font-weight:500;color:#334155;border-radius:8px;">📍 Contact</a>
+                <div style="padding:12px 8px;">
+                    <a href="../contact" onclick="closeMobile()" style="display:block;text-align:center;background:linear-gradient(to right,#dc2626,#b91c1c);color:#fff;padding:10px 16px;border-radius:12px;font-weight:600;">Cere Ofertă</a>
+                </div>
+            </nav>
+        </div>
+    </div>
+</header>
+
+
+  
+  
+  <nav class="breadcrumb" aria-label="Breadcrumb">
+    <div class="inner">
+      <a href="/">Acasă</a><span class="sep">›</span>
+      <a href="/blog/">Blog</a><span class="sep">›</span>
+      <span style="color:rgba(255,255,255,.9)">Comunicatoare și căi de transmisie a alarmei | CSSI</span>
+    </div>
+  </nav>
+
+  <header class="hero">
+    <div class="inner">
+      <div class="hero-content">
+      <div class="hero-badge">🚨 Ghid CSSI · 2026</div>
+      <h1>Comunicatoare și căi de transmisie a alarmei la dispecerat: GSM, IP, dual-path</h1>
+      <p class="lead">O alarmă bună nu se măsoară doar în senzori și sirenă. Contează la fel de mult <strong>cum ajunge semnalul afară</strong> — la dispeceratul de monitorizare și pe telefonul tău. Aici intervine <strong>comunicatorul</strong> și <strong>calea de transmisie</strong>: pe internet (IP), pe rețeaua mobilă (GSM/GPRS) sau pe ambele, redundant (dual-path). O sirenă care urlă degeaba, într-o hală izolată, nu oprește pe nimeni dacă nimeni nu află. Acest ghid tehnic explică, pe înțeles, cum circulă alarma de la centrală la dispecerat și de ce redundanța, supervizarea și anti-sabotajul fac diferența dintre un sistem care doar pare că merge și unul pe care te poți baza.</p>
+      <div class="hero-meta">
+        <span>✍ CSSI Brașov</span><span class="dot">·</span>
+        <span>📅 23 Aug 2026</span><span class="dot">·</span>
+        <span>⏱ 6 min lectură</span>
+      </div>
+      <div class="topic-pills">
+        <span class="pill pill-blue">🛡 Securitate firme</span>
+        <span class="pill pill-green">📍 Brașov & împrejurimi</span>
+        <span class="pill pill-amber">✅ Ghid practic</span>
+      </div>
+    </div>
+      <div class="hero-img-wrap"><div style="width:280px;height:280px;background:linear-gradient(135deg,#0b1a2e,#1a4b8c);border-radius:14px;display:flex;align-items:center;justify-content:center;box-shadow:0 8px 32px rgba(0,0,0,.35);border:1px solid rgba(255,255,255,.1);"><span style="font-size:80px;">🚨</span></div></div>
+    </div>
+  </header>
+
+  <div class="article-wrap">
+    <main class="article-body" id="articol">
+<h2 id="raspunsul-scurt">Răspunsul scurt</h2>
+<p>Semnalul de alarmă pleacă de la centrală prin <strong>comunicator</strong> către dispecerat pe una sau mai multe căi: <strong>IP</strong> (internetul clădirii — rapid și ieftin), <strong>GSM/GPRS</strong> (rețeaua mobilă, cu cartelă SIM — funcționează și fără internet) sau <strong>dual-path</strong> (ambele în paralel, pentru redundanță). Pentru orice obiectiv unde o întrerupere a semnalizării înseamnă risc real, recomandarea este dual-path cu <strong>supervizare</strong> (sistemul confirmă periodic că legătura e vie) și <strong>anti-sabotaj</strong> pe module. Astfel, dacă o cale e tăiată sau bruiată, semnalul pleacă pe cealaltă, iar dispariția legăturii alarmează dispeceratul chiar înainte de o efracție.</p>
+
+
+<h2 id="ce-face-de-fapt-comunicatorul">Ce face, de fapt, comunicatorul</h2>
+<p>Centrala de alarmă adună informația de la senzori (contacte de ușă, detectoare de mișcare, butoane de panică) și decide când e o alarmă. Dar centrala singură doar comandă sirena locală. <strong>Comunicatorul</strong> este modulul care ia acel eveniment și îl trimite mai departe — la <strong>dispeceratul de monitorizare</strong>, care poate dispecera un echipaj de intervenție, și către <strong>aplicația de pe telefonul tău</strong>. Practic, el este puntea dintre „a sunat alarma în clădire" și „cineva din afară știe și reacționează". Rolul dispeceratului și al intervenției l-am detaliat în articolul despre <a href="https://cssi.ro/blog/ce-faci-cand-se-declanseaza-alarma-firma-ghid-brasov">alarma cu monitorizare la dispecerat</a>, iar aici ne concentrăm pe partea tehnică: pe ce drum pleacă semnalul.</p>
+
+      <div class="cta-banner" style="margin:32px 0">
+        <div>
+          <h3>Vrei o evaluare pentru firma ta?</h3>
+          <p>Evaluarea la fața locului e gratuită în Brașov și împrejurimi — vii cu nevoia, pleci cu o soluție și un preț defalcat.</p>
+        </div>
+        <div class="cta-buttons">
+          <a href="tel:0752288400" class="btn btn-primary">📞 0752 288 400</a>
+          <a target="_blank" rel="noopener" href="https://wa.me/40752288400" class="btn btn-secondary">💬 WhatsApp</a>
+        </div>
+      </div>
+<h2 id="calea-ip-rapida-ieftina-dar-dependenta">Calea IP: rapidă, ieftină, dar dependentă</h2>
+<p>Transmisia pe <strong>IP</strong> folosește conexiunea de internet a clădirii. Are avantaje clare: e <strong>rapidă</strong>, transmite mult și e <strong>ieftină în exploatare</strong>, pentru că folosește internetul deja plătit. Dezavantajul e la fel de clar: <strong>depinde de internet și de curent la router</strong>. Dacă pică furnizorul de net, dacă e o pană de curent care oprește routerul sau dacă cineva taie pur și simplu cablul de la stradă, calea IP dispare. De aceea IP-ul singur e potrivit doar acolo unde riscul e mic sau unde există un plan de rezervă. Pentru ca partea electrică să nu fie veriga slabă, o sursă neîntreruptibilă (UPS) pe router și pe centrală ține sistemul viu în timpul unei pene scurte — subiect legat de o instalație electrică sigură, despre care am scris în articolul despre <a href="https://cssi.ro/instalatii-electrice">curenți tari și curenți slabi cu o singură echipă</a>.</p>
+
+<h2 id="calea-gsm-gprs-independenta-de-internetu">Calea GSM/GPRS: independentă de internetul fix</h2>
+<p>Transmisia pe <strong>GSM/GPRS</strong> folosește rețeaua de telefonie mobilă printr-o cartelă SIM dedicată din comunicator. Marele avantaj: <strong>funcționează chiar dacă internetul fix e tăiat sau nu există deloc</strong>. E soluția firească pentru case izolate, șantiere, ferme sau spații fără abonament de net. Are și limite: depinde de acoperirea mobilă din zonă și de o cartelă activă cu credit/abonament valid. Într-o zonă din Brașov cu semnal slab, alegem operatorul cu cea mai bună acoperire la adresa respectivă și, unde e cazul, antene externe. GSM-ul e și piesa de rezervă ideală atunci când calea principală e IP-ul.</p>
+
+<h2 id="dual-path-doua-cai-zero-puncte-unice-de-">Dual-path: două căi, zero puncte unice de cădere</h2>
+<p>Aici stă esența unei transmisii sigure. <strong>Dual-path</strong> înseamnă că sistemul transmite pe <strong>două căi în paralel</strong> — de regulă IP plus GSM. Dacă una cade — pentru că a picat internetul, a fost tăiat cablul sau s-a bruiat semnalul — cealaltă preia automat, <strong>fără nicio intervenție din partea ta</strong>. Nu mai există un singur punct de cădere. Pentru un depozit, o firmă cu valori, un magazin sau o casă în care o întrerupere a semnalizării înseamnă risc real, dual-path nu e un lux, ci standardul rezonabil. Modul în care alarma se corelează cu restul sistemului de securitate — camere, control acces — l-am tratat în ghidul despre <a href="https://cssi.ro/blog/sistem-integrat-securitate-brasov">integrarea alarmei cu camerele și controlul de acces</a>.</p>
+
+
+<h2 id="supervizarea-sunt-in-viata-trimis-period">Supervizarea: „sunt în viață" trimis periodic</h2>
+<p>O alarmă poate arăta perfect pe hârtie și, totuși, să nu comunice — o cartelă SIM blocată, un cablu deconectat, un router resetat. Fără o verificare continuă, ai afla abia la o efracție reală. <strong>Supervizarea</strong> rezolvă exact asta: comunicatorul trimite periodic un semnal de tip „sunt în viață" (heartbeat) către dispecerat. Dacă semnalul nu mai ajunge la intervalul stabilit, dispeceratul știe că <strong>legătura s-a întrerupt</strong> și poate reacționa — te sună, verifică, trimite pe cineva. Practic, supervizarea transformă o defecțiune tăcută într-un eveniment vizibil. Cu cât intervalul de supervizare e mai scurt, cu atât mai repede se observă o problemă.</p>
+
+<h2 id="anti-sabotajul-protectia-modulelor-in-si">Anti-sabotajul: protecția modulelor în sine</h2>
+<p>Un atacator informat nu forțează neapărat ușa — poate încerca să <strong>dezactiveze sistemul</strong>: deschide cutia centralei, taie o antenă, scoate un modul. De aceea centrala, comunicatorul și cutiile de conexiuni au contacte <strong>anti-sabotaj (tamper)</strong>: orice deschidere neautorizată declanșează o alarmă, indiferent dacă sistemul e armat sau nu. Combinat cu dual-path și supervizare, anti-sabotajul închide cercul: nu poți nici tăia o cale fără să pleace semnalul pe cealaltă, nici deschide un modul fără să declanșezi alarma, nici întrerupe legătura fără ca dispeceratul să observe lipsa supervizării.</p>
+
+<h2 id="cum-alegem-calea-potrivita-pentru-tine">Cum alegem calea potrivită pentru tine</h2>
+<p>Nu există o singură rețetă. Pentru o locuință cu risc mediu și internet stabil, o transmisie IP cu backup GSM și supervizare e adesea echilibrul corect. Pentru o firmă, un depozit sau un spațiu cu valori, dual-path complet cu supervizare scurtă și anti-sabotaj e minimul rezonabil. Pentru o casă izolată fără internet, GSM-ul devine calea principală. Ținem cont de <strong>acoperirea mobilă din zona ta din Brașov</strong>, de stabilitatea internetului, de cât de critic e obiectivul și de bugetul de exploatare. Alegerea între sistemele de alarmă în sine — cu fir sau wireless, cu ce senzori — o discutăm în ghidul despre <a href="https://cssi.ro/blog/alarme-brasov-ajax-vs-paradox-vs-hikvision-2026">sistemele de alarmă antiefracție</a>. Iar dacă vrei o vedere de ansamblu asupra a tot ce înseamnă securizarea unui spațiu, pornește de la <a href="https://cssi.ro/servicii">pagina noastră de sisteme de securitate</a>.</p>
+
+<h2 id="tabel-comparativ-comunicator-gsm-simplu-">Tabel comparativ: comunicator GSM simplu vs dual-path IP + GSM</h2>
+<p>Ca să vezi dintr-o privire unde se despart drumurile, iată comparația directă între un comunicator GSM „clasic" (o singură cale, prin rețeaua mobilă) și o soluție dual-path redundantă, care transmite în paralel pe internet și pe GSM:</p>
+<table class="compare-table">
+<thead><tr><th>Criteriu</th><th>GSM simplu</th><th>Dual-path IP + GSM</th></tr></thead>
+<tbody>
+<tr><td>Funcționează fără internet fix</td><td class="yes">Da</td><td class="yes">Da — GSM preia automat</td></tr>
+<tr><td>Rezistă la tăierea cablului de internet</td><td class="yes">Da</td><td class="yes">Da</td></tr>
+<tr><td>Rezistă la bruiaj GSM (jamming)</td><td class="no">Nu — rămâi fără nicio cale</td><td class="yes">Da — semnalul pleacă pe IP</td></tr>
+<tr><td>A doua cale de rezervă, comutare automată</td><td class="no">Nu</td><td class="yes">Da</td></tr>
+<tr><td>Viteză de raportare la dispecerat</td><td>Bună (câteva secunde)</td><td>Foarte bună — IP transmite aproape instant</td></tr>
+<tr><td>Supervizare la interval scurt</td><td>Limitată (consum de date pe SIM)</td><td class="yes">Da, uzual la 90 de secunde – 3 minute</td></tr>
+<tr><td>Cost echipament</td><td>Mai mic</td><td>Mai mare (modul dublu)</td></tr>
+<tr><td>Cost lunar de exploatare</td><td>Doar cartela SIM</td><td>SIM + internetul pe care îl plătești oricum</td></tr>
+<tr><td>Video-verificare și trafic mare de date</td><td class="no">Limitat</td><td class="yes">Da, pe calea IP</td></tr>
+<tr><td>Adecvat pentru risc ridicat (grad 3 SR EN 50131)</td><td class="no">De regulă insuficient</td><td class="yes">Da, cu supervizare configurată corect</td></tr>
+</tbody>
+</table>
+
+<h2 id="cand-ajunge-gsm-simplu-si-cand-alegi-dua">Când ajunge GSM simplu și când alegi dual-path IP + GSM</h2>
+<p>Întrebarea pe care ne-o pun cel mai des clienții din Brașov sună simplu: „chiar am nevoie de două căi, sau e doar un cost în plus?". Răspunsul cinstit: depinde de ce pierzi dacă alarma tace. Pentru o magazie de grădină, o rulotă sau un spațiu cu risc mic, un comunicator GSM cu supervizare rezonabilă face treaba. Pentru un sediu de firmă, un depozit cu marfă, un magazin cu încasări sau o casă în care stau oameni, o singură cale de transmisie înseamnă un singur punct de cădere — exact ce caută un atacator pregătit.</p>
+
+<div class="box box-info"><div class="box-title">Alegi GSM simplu dacă…</div><p>…obiectivul are risc mic sau mediu-mic, nu există internet fix la locație (cabană, șantier, casă de vacanță), bugetul e limitat, iar o întârziere de reacție nu produce pagube majore. Condiții minime: cartelă SIM cu abonament (nu prepay uitat), operator ales după acoperirea reală la adresă și supervizare activă, ca dispeceratul să observe dacă legătura moare.</p></div>
+
+<div class="box box-tip"><div class="box-title">Alegi dual-path IP + GSM dacă…</div><p>…ești firmă sau ai valori de protejat: birouri, depozit, magazin, hală de producție, farmacie, casă de amanet sau locuință cu bunuri de valoare. La fel dacă asigurătorul sau analiza de risc cere grad de securitate 2–3, dacă vrei video-verificare la alarmă sau dacă pur și simplu nu vrei ca un cablu tăiat ori un bruiaj de 50 de lei de pe internet să-ți „orbească" sistemul. Diferența de cost față de GSM simplu e mică raportată la valoarea protejată.</p></div>
+
+<div class="box box-tip"><div class="box-title">💡 Verdictul CSSI</div><p>Din peste 8.700 de proiecte în județul Brașov, regula noastră practică e simplă: <strong>la persoane fizice cu risc mic, GSM cu supervizare; la orice firmă și la orice obiectiv cu valori, dual-path IP + GSM</strong>. Diferența de preț dintre cele două soluții se amortizează din prima tentativă de sabotaj ratată. Iar acolo unde centrala modernă (de exemplu Ajax, cu Ethernet + două sloturi SIM) include dual-path din fabrică, ar fi păcat să nu-l activezi.</p></div>
+
+<h2 id="cadrul-normativ-sr-en-50131-en-50136-si-">Cadrul normativ: SR EN 50131, EN 50136 și gradele de securitate</h2>
+<p>Transmisia alarmei nu e lăsată la voia întâmplării. Familia de standarde <strong>SR EN 50131</strong> (sisteme de alarmă împotriva efracției și jafului) împarte sistemele în <strong>patru grade de securitate</strong>, după tipul de atacator la care trebuie să reziste: gradul 1 — risc scăzut, atacator ocazional; gradul 2 — risc scăzut spre mediu, atacator cu scule uzuale (nivelul tipic pentru locuințe și firme mici); gradul 3 — risc mediu spre ridicat, atacator cu cunoștințe și echipamente (depozite, magazine cu valori, obiective comerciale serioase); gradul 4 — risc ridicat (bănci, obiective speciale). Cu cât gradul e mai mare, cu atât cerințele pentru calea de transmisie sunt mai stricte: la gradul 3, o singură cale nesupravegheată pur și simplu nu mai e acceptabilă — se cer căi duale sau supervizare la intervale scurte.</p>
+<p>Standardul-pereche <strong>EN 50136</strong> reglementează chiar sistemele de transmisie a alarmelor: definește categoriile de performanță (SP — single path, DP — dual path), timpii maximi de raportare și intervalele de supervizare. În practică, o configurație DP cu supervizare la ordinul minutelor este ceea ce recomandăm pentru firme. Peste toate acestea stă <strong>Legea 333/2003</strong>, care cere ca sistemele de alarmare să fie proiectate și instalate de firme licențiate — CSSI deține <strong>licență IGPR</strong> pentru sisteme de securitate și lucrează cu <strong>electrician autorizat ANRE</strong> pentru partea de alimentare. Am explicat pe larg obligațiile legale în <a href="https://cssi.ro/blog/legislatie-securitate-romania-ghid-2026">ghidul de legislație a securității în România</a>.</p>
+
+<h2 id="costuri-orientative-pentru-comunicatoare">Costuri orientative pentru comunicatoare și transmisie</h2>
+<p>Cifrele de mai jos sunt orientative, la nivelul pieței din 2026, și variază în funcție de marca centralei și de complexitatea configurării — dar îți dau ordinea de mărime corectă:</p>
+<ul>
+<li><strong>Modul comunicator GSM/GPRS (4G LTE)</strong> pentru o centrală existentă: aproximativ 250–600 lei echipamentul;</li>
+<li><strong>Comunicator dual-path IP + GSM</strong> (sau centrală cu dual-path integrat): aproximativ 600–1.500 lei;</li>
+<li><strong>Montaj, configurare și test real de transmisie</strong>: de regulă 150–400 lei, în funcție de sistem;</li>
+<li><strong>Cartelă SIM M2M cu abonament</strong>: 10–30 lei/lună;</li>
+<li><strong>Abonament de monitorizare la dispecerat</strong>, cu sau fără echipaj de intervenție: uzual 100–250 lei/lună pentru un obiectiv obișnuit.</li>
+</ul>
+<p>Cu alte cuvinte, saltul de la o singură cale la dual-path costă de obicei câteva sute de lei o singură dată — puțin față de ce protejează. Dacă vrei imaginea completă a bugetului pentru un sistem întreg (senzori, centrală, sirenă, monitorizare), am detaliat-o în articolul despre <a href="https://cssi.ro/blog/cost-sistem-securitate-complet-2026">costul unui sistem de securitate complet</a>.</p>
+
+<h2 id="greseli-frecvente-care-lasa-alarma-muta">Greșeli frecvente care lasă alarma „mută"</h2>
+<p>În verificările pe care le facem la sisteme montate de alții, aceleași probleme revin obsesiv:</p>
+<div class="box box-warn"><div class="box-title">⚠ Cele mai des întâlnite 6 greșeli</div><p><strong>1. Cartela SIM prepay expirată</strong> — nimeni n-a reîncărcat-o de un an, comunicatorul e mort și nimeni nu știe. <strong>2. Supervizarea dezactivată sau la interval de 24 de ore</strong> — o legătură căzută luni dimineața se observă abia marți. <strong>3. Routerul fără UPS</strong> — la prima pană de curent, calea IP dispare odată cu Wi-Fi-ul. <strong>4. Comunicator 2G/3G rămas în funcțiune</strong> — pe măsură ce operatorii închid rețelele vechi, aceste module rămân fără semnal; migrarea la 4G LTE e obligatorie. <strong>5. Antena GSM în cutia metalică a centralei</strong> — semnal slab exact acolo unde contează. <strong>6. Niciun test real de transmisie după instalare</strong> — sistemul „arată bine", dar nimeni n-a confirmat că evenimentele chiar ajung la dispecerat.</p></div>
+<div class="box box-danger"><div class="box-title">🚨 Scenariul care doare</div><p>Un depozit cu alarmă „funcțională", comunicator GSM simplu și cartelă prepay expirată de 8 luni: la efracție, sirena a sunat 3 minute într-o zonă industrială pustie, dispeceratul n-a primit nimic, iar paguba a depășit de zeci de ori costul unui abonament SIM și al unui dual-path. Nu e un caz inventat — e exact tipul de situație pe care supervizarea ar fi semnalat-o din prima zi.</p></div>
+
+<h2 id="pasii-de-implementare-cu-cssi">Pașii de implementare cu CSSI</h2>
+<p>Ca să nu rămână teorie, iată cum arată concret un proiect de transmisie sigură la CSSI Brașov:</p>
+<p><strong>Pasul 1 — evaluarea la fața locului:</strong> verificăm acoperirea GSM reală la adresă (pe operatori), stabilitatea internetului, gradul de risc al obiectivului și starea sistemului existent, dacă ai deja unul. <strong>Pasul 2 — proiectarea căilor:</strong> alegem configurația (IP, GSM sau dual-path), operatorul SIM, intervalul de supervizare și modul de alimentare de rezervă (acumulator centrală + UPS pe router). <strong>Pasul 3 — instalarea și configurarea:</strong> montăm comunicatorul, conectăm centrala la dispecerat, activăm anti-sabotajul și notificările în aplicație. <strong>Pasul 4 — testul real de transmisie:</strong> declanșăm sistemul controlat și confirmăm recepția pe fiecare cale în parte, apoi simulăm căderea unei căi și verificăm comutarea automată. <strong>Pasul 5 — instruirea și predarea:</strong> îți arătăm ce înseamnă fiecare notificare și ce faci când primești una — iar dacă vrei să știi dinainte cum se procedează, citește ghidul <a href="https://cssi.ro/blog/ce-faci-cand-se-declanseaza-alarma-firma-ghid-brasov">ce faci când se declanșează alarma la firmă</a>. Dacă abia acum îți alegi sistemul de alarmă — Ajax, Paradox sau DSC — pornește de la pagina noastră de <a href="https://cssi.ro/alarma-antiefractie">alarme antiefracție</a>.</p>
+
+<h2 id="checklist-transmisia-ta-e-cu-adevarat-si">Checklist: transmisia ta e cu adevărat sigură?</h2>
+<p>Bifează sincer. Orice element lipsă e o breșă reală, nu un detaliu:</p>
+<ul class="check-list">
+<li><span class="chk">✓</span> Știi exact pe ce cale (sau căi) transmite alarma ta acum — IP, GSM sau ambele</li>
+<li><span class="chk">✓</span> Comunicatorul GSM e pe 4G LTE, nu pe rețele 2G/3G în curs de închidere</li>
+<li><span class="chk">✓</span> Cartela SIM are abonament activ, nu prepay care poate expira neobservat</li>
+<li><span class="chk">✓</span> Supervizarea e activă, cu interval scurt, iar dispeceratul reacționează la pierderea legăturii</li>
+<li><span class="chk">✓</span> Routerul și centrala au alimentare de rezervă (UPS, acumulator) pentru pene de curent</li>
+<li><span class="chk">✓</span> Contactele anti-sabotaj (tamper) sunt active pe centrală, comunicator și cutii</li>
+<li><span class="chk">✓</span> S-a făcut un test real de transmisie la punerea în funcțiune, pe fiecare cale</li>
+<li><span class="chk">✓</span> Testul de transmisie se repetă periodic, în cadrul mentenanței</li>
+<li><span class="chk">✓</span> Știi cine te sună și în cât timp atunci când pleacă un semnal de alarmă</li>
+</ul>
+
+<h2 id="mentenanta-transmisia-se-verifica-nu-se-">Mentenanța: transmisia se verifică, nu se presupune</h2>
+<p>Un comunicator e un echipament viu: cartele SIM care expiră, operatori care își modernizează rețelele, routere schimbate de furnizorul de internet, firmware care trebuie actualizat. De aceea, în contractele de mentenanță CSSI, verificarea transmisiei e un punct fix: testăm periodic recepția la dispecerat pe fiecare cale, verificăm nivelul de semnal GSM, starea acumulatorilor și jurnalul de evenimente al supervizării. O revizie de o oră previne exact defecțiunea tăcută care se descoperă, altfel, în noaptea nepotrivită — am explicat de ce merită în articolul despre <a href="https://cssi.ro/blog/mentenanta-sisteme-securitate-de-ce-conteaza">mentenanța sistemelor de securitate</a>.</p>
+      <h2 id="faq">Întrebări frecvente</h2>
+      <div class="faq-wrap">
+        <div class="faq-item">
+          <button class="faq-q" onclick="toggleFaq(this)">Ce este un comunicator de alarmă? <svg class="faq-chevron" width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg></button>
+          <div class="faq-a"><p>Comunicatorul este modulul care preia semnalul de la centrala de alarmă și îl trimite mai departe la dispeceratul de monitorizare și pe telefonul tău. El decide cum pleacă informația: prin linia de internet (IP), prin rețeaua mobilă (GSM/GPRS) sau prin ambele în același timp. Fără un comunicator funcțional, alarma sună local, dar nimeni din exterior nu află că s-a întâmplat ceva.</p></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q" onclick="toggleFaq(this)">Care e diferența dintre transmisie pe IP și pe GSM? <svg class="faq-chevron" width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg></button>
+          <div class="faq-a"><p>Transmisia pe IP folosește conexiunea de internet a clădirii, e rapidă și ieftină în exploatare, dar cade dacă pică internetul sau curentul la router. Transmisia pe GSM/GPRS folosește rețeaua de telefonie mobilă cu o cartelă SIM dedicată și funcționează chiar dacă internetul e tăiat. Cele mai sigure sisteme le folosesc pe ambele, ca să nu depindă de o singură cale.</p></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q" onclick="toggleFaq(this)">Ce înseamnă dual-path la o alarmă? <svg class="faq-chevron" width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg></button>
+          <div class="faq-a"><p>Dual-path înseamnă două căi de transmisie în paralel — de obicei IP plus GSM. Dacă una cade sau e sabotată, semnalul pleacă pe cealaltă, automat, fără nicio intervenție. Este soluția recomandată pentru obiective în care o întrerupere a semnalizării înseamnă un risc real: firme, depozite, spații cu valori sau case izolate.</p></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q" onclick="toggleFaq(this)">Ce este supervizarea și de ce contează? <svg class="faq-chevron" width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg></button>
+          <div class="faq-a"><p>Supervizarea înseamnă că sistemul trimite periodic un semnal de „sunt în viață" către dispecerat. Dacă acest semnal nu mai ajunge la intervalul stabilit, dispeceratul știe că legătura s-a întrerupt și poate reacționa. Fără supervizare, un cablu tăiat sau o cartelă SIM blocată ar trece neobservate până la următoarea alarmă reală — adică exact când ai nevoie de sistem.</p></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q" onclick="toggleFaq(this)">Un hoț poate sabota transmisia alarmei? <svg class="faq-chevron" width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg></button>
+          <div class="faq-a"><p>Poate încerca — tăind cablul de internet sau bruind semnalul GSM. Tocmai de aceea se folosesc dual-path și supervizare: dacă o cale e tăiată, semnalul pleacă pe a doua, iar dispariția semnalului supervizat alarmează dispeceratul chiar și atunci când nu s-a declanșat încă alarma propriu-zisă. Anti-sabotajul (tamper) pe cutii și module completează protecția.</p></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q" onclick="toggleFaq(this)">Am nevoie de internet ca să funcționeze alarma cu monitorizare? <svg class="faq-chevron" width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg></button>
+          <div class="faq-a"><p>Nu neapărat. Dacă sistemul are comunicator GSM/GPRS cu cartelă SIM, alarma poate transmite la dispecerat și fără internet fix. Internetul (IP) este util pentru viteză și costuri mici, dar într-o soluție dual-path GSM-ul acoperă exact situația în care nu ai internet sau el pică. Alegem calea în funcție de locație și de acoperirea din zona ta din Brașov.</p></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q" onclick="toggleFaq(this)">Cum verific că alarma chiar ajunge la dispecerat? <svg class="faq-chevron" width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg></button>
+          <div class="faq-a"><p>Prin teste de transmisie periodice și prin supervizare. La punerea în funcțiune se face un test real: se declanșează sistemul și se confirmă că semnalul a ajuns la dispecerat pe fiecare cale. Apoi, semnalul de supervizare confirmă zilnic legătura. La CSSI includem aceste verificări în punerea în funcțiune și în mentenanță, ca să nu rămâi cu un sistem care pare că merge, dar nu comunică.</p></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q" onclick="toggleFaq(this)">Cât costă un comunicator dual-path IP + GSM? <svg class="faq-chevron" width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg></button>
+          <div class="faq-a"><p>Orientativ, echipamentul costă 600–1.500 lei (sau e deja inclus în centralele moderne cu Ethernet și SIM dublu), la care se adaugă montajul și configurarea (150–400 lei) și cartela SIM cu abonament (10–30 lei/lună). Raportat la valoarea protejată — marfă, echipamente, încasări — diferența față de un comunicator GSM simplu este de câteva sute de lei, plătită o singură dată.</p></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q" onclick="toggleFaq(this)">Ce grad de securitate SR EN 50131 îmi trebuie? <svg class="faq-chevron" width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg></button>
+          <div class="faq-a"><p>Pentru locuințe și firme mici cu risc obișnuit, gradul 2 este nivelul tipic; pentru depozite, magazine cu valori și obiective comerciale cu risc ridicat, gradul 3 — care aduce și cerințe mai stricte pentru transmisie: dual-path sau supervizare la interval scurt. Gradul exact îl stabilește evaluarea de risc a obiectivului, iar noi dimensionăm comunicatorul și calea de transmisie în consecință.</p></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q" onclick="toggleFaq(this)">Mai funcționează comunicatoarele pe 2G sau 3G? <svg class="faq-chevron" width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg></button>
+          <div class="faq-a"><p>Din ce în ce mai prost. Operatorii închid treptat rețelele 2G și 3G pentru a elibera frecvențe pentru 4G și 5G, așa că un comunicator vechi poate rămâne fără semnal fără niciun avertisment. Dacă sistemul tău are un modul GSM mai vechi de câțiva ani, verificarea și migrarea la un comunicator 4G LTE ar trebui să fie prioritare — este una dintre cele mai frecvente probleme pe care le găsim la sistemele preluate în mentenanță.</p></div>
+        </div>
+      </div>
+
+      <div class="cta-banner">
+        <div>
+          <h3>Pașii următori — cere oferta ta</h3>
+          <p>Fără obligații: vii cu nevoia, pleci cu o soluție și un preț defalcat. CSSI — 20 de ani, 8.700+ proiecte în județul Brașov.</p>
+        </div>
+        <div class="cta-buttons">
+          <a href="tel:0752288400" class="btn btn-primary">📞 0752 288 400</a>
+          <a target="_blank" rel="noopener" href="https://wa.me/40752288400" class="btn btn-secondary">💬 WhatsApp</a>
+        </div>
+      </div>
+
+    </main>
+
+    <aside class="sidebar">
+      <div class="sidebar-card">
+        <div class="sidebar-card-head">📑 Cuprins</div>
+        <div class="sidebar-card-body" style="padding:10px 18px">
+          <ol class="toc-list">
+            <li><a href="#raspunsul-scurt">Răspunsul scurt</a></li>
+            <li><a href="#ce-face-de-fapt-comunicatorul">Ce face, de fapt, comunicatorul</a></li>
+            <li><a href="#calea-ip-rapida-ieftina-dar-dependenta">Calea IP: rapidă, ieftină, dar dependentă</a></li>
+            <li><a href="#calea-gsm-gprs-independenta-de-internetu">Calea GSM/GPRS: independentă de internetul fix</a></li>
+            <li><a href="#dual-path-doua-cai-zero-puncte-unice-de-">Dual-path: două căi, zero puncte unice de cădere</a></li>
+            <li><a href="#supervizarea-sunt-in-viata-trimis-period">Supervizarea: „sunt în viață" trimis periodic</a></li>
+            <li><a href="#anti-sabotajul-protectia-modulelor-in-si">Anti-sabotajul: protecția modulelor în sine</a></li>
+            <li><a href="#cum-alegem-calea-potrivita-pentru-tine">Cum alegem calea potrivită pentru tine</a></li>
+            <li><a href="#tabel-comparativ-comunicator-gsm-simplu-">Tabel comparativ: comunicator GSM simplu vs dual-path IP + GSM</a></li>
+            <li><a href="#cand-ajunge-gsm-simplu-si-cand-alegi-dua">Când ajunge GSM simplu și când alegi dual-path IP + GSM</a></li>
+            <li><a href="#cadrul-normativ-sr-en-50131-en-50136-si-">Cadrul normativ: SR EN 50131, EN 50136 și gradele de securitate</a></li>
+            <li><a href="#costuri-orientative-pentru-comunicatoare">Costuri orientative pentru comunicatoare și transmisie</a></li>
+            <li><a href="#greseli-frecvente-care-lasa-alarma-muta">Greșeli frecvente care lasă alarma „mută"</a></li>
+            <li><a href="#pasii-de-implementare-cu-cssi">Pașii de implementare cu CSSI</a></li>
+            <li><a href="#checklist-transmisia-ta-e-cu-adevarat-si">Checklist: transmisia ta e cu adevărat sigură?</a></li>
+            <li><a href="#mentenanta-transmisia-se-verifica-nu-se-">Mentenanța: transmisia se verifică, nu se presupune</a></li>
+            <li><a href="#faq">Întrebări frecvente</a></li>
+          </ol>
+        </div>
+      </div>
+      <div class="sidebar-card">
+        <div class="sidebar-card-head">📞 Contact CSSI Brașov</div>
+        <div class="sidebar-card-body">
+          <ul class="contact-info">
+            <li><div class="ci-icon">📞</div><div><strong>0752 288 400</strong><span>Lun–Vin 08:00–18:00</span></div></li>
+            <li><div class="ci-icon">📧</div><div><strong>office@cssi.ro</strong><span>Răspuns în max 24h</span></div></li>
+            <li><div class="ci-icon">📍</div><div><strong>Brașov</strong><span>și județele înconjurătoare</span></div></li>
+          </ul>
+          <a target="_blank" rel="noopener" href="https://wa.me/40752288400" class="btn btn-primary" style="margin-top:12px">💬 Scrie pe WhatsApp</a>
+        </div>
+      </div>
+    </aside>
+  </div>
+
+<footer class="article-footer">
+    <p>Articol scris de echipa <strong>CSSI Brașov</strong> — firmă autorizată IGPR și ISU, cu peste 20 de ani de experiență în sisteme de securitate și instalații.</p>
+    <div class="tags">
+      <span class="tag">camere supraveghere brasov</span>
+      <span class="tag">instalare camere</span>
+      <span class="tag">preturi camere 2026</span>
+      <span class="tag">Hikvision</span>
+      <span class="tag">Dahua</span>
+      <span class="tag">Uniview</span>
+      <span class="tag">CCTV</span>
+      <span class="tag">Brașov</span>
+    </div>
+    <p style="font-size:12px;color:#aaa;margin-top:8px">© 2026 CSSI — Confort, Securitate, Siguranță, Imobil | <a href="/">cssi.ro</a></p>
+  </footer>
+<script>
+    function toggleFaq(btn) {
+      const item = btn.closest('.faq-item');
+      const isOpen = item.classList.contains('open');
+      document.querySelectorAll('.faq-item.open').forEach(el => el.classList.remove('open'));
+      if (!isOpen) item.classList.add('open');
+    }
+    const headings = document.querySelectorAll('h2[id]');
+    const tocLinks = document.querySelectorAll('.toc-list a');
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          tocLinks.forEach(a => a.style.color = '');
+          const active = document.querySelector(`.toc-list a[href="#${entry.target.id}"]`);
+          if (active) active.style.color = 'var(--brand-blue)';
+        }
+      });
+    }, { rootMargin: '-20% 0px -70% 0px' });
+    headings.forEach(h => observer.observe(h));
+  </script>
+  <script>
+    let navTextColor = '#fff';
+    window.addEventListener('scroll', function() {
+        const navBg = document.getElementById('navBg');
+        const logo = document.getElementById('logoImg');
+        const scrolled = window.scrollY > 50;
+        if (scrolled) {
+            navBg.style.background = '#ffffff';
+            navBg.style.backdropFilter = 'blur(12px)';
+            navBg.style.boxShadow = '0 1px 2px rgba(0,0,0,0.05)';
+            if (logo) logo.style.filter = '';
+            navTextColor = '#334155';
+        } else {
+            navBg.style.background = 'transparent';
+            navBg.style.backdropFilter = '';
+            navBg.style.boxShadow = '';
+            if (logo) logo.style.filter = 'brightness(0) invert(1) drop-shadow(0 0 1px rgba(255,255,255,0.8))';
+            navTextColor = '#fff';
+        }
+        ['navLink1','navLink2','navLink3','navLink4','navLink5','phoneLink'].forEach(id=>{
+            const el=document.getElementById(id);
+            if(el) el.style.color=navTextColor;
+        });
+    });
+    function toggleMobileMenu(){
+        const menu=document.getElementById('mobileMenu');
+        const menuIcon=document.getElementById('menuIcon');
+        const closeIcon=document.getElementById('closeIcon');
+        const btn=document.getElementById('menuBtn');
+        if(menu.classList.contains('open')){
+            menu.classList.remove('open');
+            menuIcon.style.display='';
+            closeIcon.style.display='none';
+            btn.style.background='linear-gradient(to right,#ef4444,#dc2626)';
+            btn.classList.add('animate-subtle-pulse');
+        } else {
+            menu.classList.add('open');
+            menuIcon.style.display='none';
+            closeIcon.style.display='';
+            btn.style.background='#6b7280';
+            btn.classList.remove('animate-subtle-pulse');
+        }
+    }
+    function closeMobile(){
+        document.getElementById('mobileMenu').classList.remove('open');
+        document.getElementById('menuIcon').style.display='';
+        document.getElementById('closeIcon').style.display='none';
+    }
+    function toggleServicesSubmenu(){
+        const sub=document.getElementById('servicesSubmenu');
+        const arrow=document.getElementById('servicesArrow');
+        if(sub.classList.contains('open')){
+            sub.classList.remove('open');
+            arrow.style.transform='';
+        } else {
+            sub.classList.add('open');
+            arrow.style.transform='rotate(180deg)';
+        }
+    }
+  </script>
+<script>
+// GA4 tracking: phone_call & whatsapp_click
+document.addEventListener('DOMContentLoaded', function() {
+    document.querySelectorAll('a[href^="tel:"]').forEach(function(link) {
+        link.addEventListener('click', function() {
+            if (typeof gtag === 'function') {
+                gtag('event', 'phone_call', {event_category:'Contact', event_label:this.href.replace('tel:',''), value:100, currency:'RON'});
+            }
+        });
+    });
+    document.querySelectorAll('a[href*="wa.me"]').forEach(function(link) {
+        link.addEventListener('click', function() {
+            if (typeof gtag === 'function') {
+                gtag('event', 'whatsapp_click', {event_category:'Contact', event_label:'WhatsApp Direct', value:100, currency:'RON'});
+            }
+        });
+    });
+});
+</script>
+<script src="/tawk-chat.js" defer></script>
+</body>
+</html>

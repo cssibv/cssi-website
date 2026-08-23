@@ -758,4 +758,11 @@
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
+  <!-- adaugat automat de agent 2026-08-23 -->
+  <url>
+    <loc>https://cssi.ro/blog/comunicator-alarma-cai-transmisie-dispecerat-gsm-ip-dualpath-brasov</loc>
+    <lastmod>2026-08-23</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
 </urlset>
