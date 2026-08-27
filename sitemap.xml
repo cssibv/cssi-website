@@ -786,4 +786,11 @@
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
+  <!-- adaugat automat de agent 2026-08-27 -->
+  <url>
+    <loc>https://cssi.ro/blog/inlocuire-interfon-bloc-asociatie-ghid-brasov</loc>
+    <lastmod>2026-08-27</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
 </urlset>
