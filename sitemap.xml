@@ -793,4 +793,11 @@
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
+  <!-- adaugat automat de agent 2026-08-28 -->
+  <url>
+    <loc>https://cssi.ro/blog/sonorizare-restaurant-magazin-cum-alegi-brasov</loc>
+    <lastmod>2026-08-28</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
 </urlset>
