@@ -800,4 +800,11 @@
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
+  <!-- adaugat automat de agent 2026-08-29 -->
+  <url>
+    <loc>https://cssi.ro/blog/smart-home-brasov-securitate-automatizari-electric</loc>
+    <lastmod>2026-08-29</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
 </urlset>
