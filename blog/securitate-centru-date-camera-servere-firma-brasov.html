@@ -1,0 +1,762 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Securitatea camerei de servere: cum protejezi inima | CSSI</title>
+<meta name="description" content="Camera de servere e inima IT a firmei: acces strict și jurnalizat, monitorizarea mediului, detecție de incendiu adaptată și alimentare critică. Ghid.">
+<link rel="canonical" href="https://cssi.ro/blog/securitate-centru-date-camera-servere-firma-brasov">
+<!-- Open Graph + Twitter Card -->
+<meta property="og:type" content="article">
+<meta property="og:title" content="Securitatea camerei de servere: cum protejezi inima IT a firmei | CSSI Brașov">
+<meta property="og:description" content="Acces controlat și jurnalizat, temperatură și umiditate monitorizate, detecție timpurie de incendiu, alimentare critică. Cum gândești corect protecția camerei de servere.">
+<meta property="og:url" content="https://cssi.ro/blog/securitate-centru-date-camera-servere-firma-brasov">
+<meta property="og:image" content="https://cssi.ro/images/blog/securitate-camera-servere-cover.webp">
+<meta property="og:locale" content="ro_RO">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Securitatea camerei de servere pentru firme">
+<meta name="twitter:description" content="Acces jurnalizat, mediu monitorizat, detecție de incendiu, alimentare critică — cum protejezi inima IT a firmei. CSSI Brașov: 0752 288 400.">
+<meta name="twitter:image" content="https://cssi.ro/images/blog/securitate-camera-servere-cover.webp">
+
+<!-- ===== SCHEMA JSON-LD: Article + BreadcrumbList + FAQPage ===== -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Article",
+      "@id": "https://cssi.ro/blog/securitate-centru-date-camera-servere-firma-brasov#article",
+      "headline": "Securitatea camerei de servere: cum protejezi inima IT a firmei",
+      "description": "Ghid practic pentru protecția camerei de servere și a unui mic centru de date: control acces strict și jurnalizat, monitorizarea mediului, detecție de incendiu adaptată, alimentare critică și integrarea cu restul securității firmei.",
+      "image": "https://cssi.ro/images/blog/securitate-camera-servere-cover.webp",
+      "author": {
+        "@type": "Organization",
+        "name": "CSSI Brașov",
+        "url": "https://cssi.ro"
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": "CSSI Brașov",
+        "logo": {
+          "@type": "ImageObject",
+          "url": "https://cssi.ro/images/logo-cssi.webp"
+        }
+      },
+      "datePublished": "2028-03-02",
+      "dateModified": "2028-03-02",
+      "mainEntityOfPage": "https://cssi.ro/blog/securitate-centru-date-camera-servere-firma-brasov",
+      "inLanguage": "ro"
+    },
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Acasă",
+          "item": "https://cssi.ro/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "Blog",
+          "item": "https://cssi.ro/blog"
+        },
+        {
+          "@type": "ListItem",
+          "position": 3,
+          "name": "Securitatea camerei de servere pentru firme"
+        }
+      ]
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "Cât costă securizarea unei camere de servere în 2026?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Depinde de mărimea încăperii, de câte persoane trebuie să aibă acces și de ce straturi acoperi. Ca reper orientativ, controlul de acces pe ușă pornește de la circa 800–1.500 RON, un kit de senzori de mediu cu alertare de la 800 RON, iar UPS-ul pentru rack de la 1.500 RON, la care se adaugă camerele și detecția de incendiu. Nu e o investiție uriașă în raport cu paguba pe care o previne. Prețul exact vine după o evaluare la fața locului, cu ofertă defalcată."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Am o firmă mică, chiar am nevoie de toate astea?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Nu neapărat de toate deodată, dar de logica pe straturi, da. Chiar și o firmă mică pierde enorm dacă îi cade nodul IT: contabilitate, email, aplicații, uneori și înregistrările camerelor. Se pornește de la ce e mai ieftin și mai eficient (control acces jurnalizat și senzori de mediu cu alertare) și se adaugă restul pe măsură. La evaluare stabilim un plan pe priorități, potrivit dimensiunii firmei tale."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Pot fi anunțat pe telefon dacă apare o problemă în camera de servere?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Da, și e chiar esența unei protecții moderne. Senzorii de mediu, alarma și controlul de acces pot trimite alerte în timp real pe telefon: temperatură ridicată, ușă forțată, pană de curent. Diferența dintre a afla imediat și a afla luni dimineață se măsoară în zile de activitate și, uneori, în date pierdute. Configurăm și testăm aceste alerte la punerea în funcțiune."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "De ce camera de servere e o categorie aparte de risc?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Pentru că acolo se adună tot ce ține firma în funcțiune digital: date, contabilitate, email, aplicații, adesea și înregistrările camerelor. Un singur incident — acces neautorizat, supraîncălzire, infiltrație de apă, început de incendiu sau pană prelungită — poate opri întreaga firmă. De aceea cere protecție pe mai multe straturi: acces, mediu, incendiu și alimentare."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Cum controlezi corect accesul într-o cameră de servere?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Cu acces strict și jurnalizat: doar câteva persoane autorizate, identificate prin card, cod sau biometrie, iar sistemul reține automat cine a intrat, când și cât a stat. Spre deosebire de o cheie clasică, controlul electronic îți dă limitare și trasabilitate reală — util la incidente, la audit și ca descurajare."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Ce înseamnă monitorizarea mediului și de ce contează?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Senzori care urmăresc permanent temperatura, umiditatea, infiltrațiile de apă și starea alimentării, și te alertează imediat ce ceva iese din parametri. Serverele produc multă căldură; dacă răcirea cedează noaptea sau în weekend, echipamentele se opresc singure. Cu alertare în timp real afli de problemă cât încă o poți rezolva."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "De ce nu e potrivită stingerea clasică cu apă într-o cameră de servere?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Pentru că apa distruge electronica la fel de sigur ca focul. Aici contează detecția foarte timpurie — să prinzi un început de problemă înainte să devină incendiu. Soluțiile de stingere pentru spații IT sunt gândite să nu distrugă echipamentele. Recomandarea concretă se face cu un specialist autorizat în securitate la incendiu."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Ce rol au camerele într-o cameră de servere?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Pe ușa de acces, camera arată cine intră și iese — probă și descurajare. În interior, pe rack-uri, documentează ce se întâmplă fizic cu echipamentele. Combinată cu jurnalul de acces, imaginea video îți dă tabloul complet: cine a fost prezent și ce a făcut."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "De ce contează alimentarea critică și backupul?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Pentru că o pană înseamnă servere oprite și risc de corupere a datelor la oprirea bruscă. Un UPS ține echipamentele suficient cât să se închidă corect sau să pornească o sursă de rezervă, iar alarmele la pană te anunță imediat. Tot sistemul de securitate trebuie să aibă și el alimentare de rezervă."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Cum se integrează protecția camerei de servere cu restul securității firmei?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Ideal, totul comunică într-un singur sistem: o alarmă de mediu, o ușă forțată sau o pană declanșează imediat o alertă pe telefon, iar camera potrivită se deschide automat pentru verificare. Integrarea înseamnă reacție rapidă și un singur loc din care vezi tot ce se întâmplă cu nodul central."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Cum se leagă securitatea fizică de protecția datelor (GDPR)?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Strâns. Datele de pe servere trebuie protejate nu doar logic (parole, firewall), ci și fizic — cine poate ajunge la echipamente. Un acces controlat și jurnalizat face parte din măsurile rezonabile de securitate așteptate de legislația privind protecția datelor. Securitatea fizică și cea a datelor merg împreună."
+          }
+        }
+      ]
+    }
+  ]
+}
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;600;700;800&family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,400;0,8..60,600;1,8..60,400&display=swap" rel="stylesheet" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.js"></script>
+  <script src="/cookie-consent.js" defer></script>
+  <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}</script>
+  <script src="/tracking.js" defer></script>
+  <style>
+    @keyframes subtle-pulse-n { 0%,100%{transform:scale(1)}50%{transform:scale(.92)} }
+    @keyframes badge-pulse-n { 0%,100%{box-shadow:0 0 0 0 rgba(34,197,94,.4)}50%{box-shadow:0 0 0 8px rgba(34,197,94,0)} }
+    .animate-subtle-pulse{animation:subtle-pulse-n 2.5s ease-in-out infinite}
+    .animate-badge-pulse{animation:badge-pulse-n 2s ease-in-out infinite}
+    .dropdown-menu{display:none!important}
+    .dropdown:hover .dropdown-menu{display:block!important}
+    #mobileMenu{display:none}
+    #mobileMenu.open{display:block}
+    #servicesSubmenu{display:none}
+    #servicesSubmenu.open{display:block}
+    .dropdown-scroll::-webkit-scrollbar{width:4px}
+    .dropdown-scroll::-webkit-scrollbar-track{background:#f1f1f1}
+    .dropdown-scroll::-webkit-scrollbar-thumb{background:#cbd5e1;border-radius:4px}
+    @media(min-width:640px){.sm\:block{display:block}.sm\:hidden{display:none}.sm\:px-6{padding-left:24px;padding-right:24px}}
+    @media(min-width:1024px){.lg\:flex{display:flex}.lg\:hidden{display:none}}
+    #mainHeader, #mainHeader a, #mainHeader button, #mainHeader span, #mainHeader div { font-family: 'Sora', sans-serif !important; }
+  </style>
+  <style>
+    :root{--brand-dark:#0b1a2e;--brand-navy:#102a4c;--brand-blue:#1a4b8c;--brand-accent:#e63022;--brand-gold:#f5a623;--brand-light:#f0f4f9;--text-main:#1c2b3a;--text-muted:#5a6e82;--text-light:#8fa0b3;--border:#dce6f0;--white:#ffffff;--ff-head:'Sora',sans-serif;--ff-body:'Source Serif 4',Georgia,serif;--radius:10px;--shadow-sm:0 2px 8px rgba(11,26,46,.08);--shadow-md:0 6px 24px rgba(11,26,46,.13);--shadow-lg:0 16px 48px rgba(11,26,46,.18);--max-w:1400px}
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    html{scroll-behavior:smooth}
+    body{font-family:var(--ff-body);font-size:18px;line-height:1.75;color:var(--text-main);background:var(--white);-webkit-font-smoothing:antialiased}
+    img{max-width:100%;height:auto;display:block}
+    a{color:var(--brand-blue);text-decoration:none}
+    a:hover{text-decoration:underline}
+    .breadcrumb{background:var(--brand-dark);border-bottom:none;padding:12px 0;padding-top:104px;font-family:var(--ff-head);font-size:13px;color:rgba(255,255,255,.55)}
+    .breadcrumb .inner{max-width:1280px;margin:0 auto;padding:0 0 12px 24px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+    .breadcrumb a{color:rgba(255,255,255,.7)}
+    .breadcrumb .sep{color:rgba(255,255,255,.3)}
+    .hero{background:var(--brand-dark);background-image:radial-gradient(ellipse 70% 60% at 80% 50%,rgba(26,75,140,.45) 0%,transparent 70%),radial-gradient(ellipse 40% 50% at 10% 80%,rgba(230,48,34,.15) 0%,transparent 60%);color:var(--white);padding:48px 24px 64px;position:relative;overflow:hidden}
+    .hero::before{content:'';position:absolute;inset:0;background-image:url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23ffffff' fill-opacity='0.025'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/svg%3E")}
+        .hero .inner{max-width:var(--max-w);margin:0 auto;position:relative;z-index:1;display:flex;align-items:center;gap:40px}
+    .hero-content{flex:1;min-width:0}
+    .hero-img-wrap{flex:0 0 280px;display:flex;align-items:center;justify-content:center}
+    .hero-img-wrap img{width:280px;height:auto;border-radius:14px;box-shadow:0 8px 32px rgba(0,0,0,.35);border:1px solid rgba(255,255,255,.1);opacity:.92;transition:opacity .3s}
+    .hero-img-wrap img:hover{opacity:1}
+    @media(max-width:900px){.hero .inner{flex-direction:column;gap:24px}.hero-img-wrap{flex:0 0 auto;order:-1}.hero-img-wrap img{width:220px}}
+    @media(max-width:700px){.hero-img-wrap{display:none}}
+    .hero-badge{display:inline-flex;align-items:center;gap:6px;background:rgba(230,48,34,.2);border:1px solid rgba(230,48,34,.4);color:#ff8a80;font-family:var(--ff-head);font-size:12px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;padding:5px 12px;border-radius:100px;margin-bottom:20px}
+    .hero h1{font-family:var(--ff-head);font-size:clamp(26px,4vw,40px);font-weight:800;line-height:1.2;margin-bottom:20px;letter-spacing:-.02em}
+    .hero h1 em{font-style:normal;color:var(--brand-gold)}
+    .hero .lead{font-size:clamp(16px,2vw,19px);line-height:1.65;color:rgba(255,255,255,.82);max-width:620px;margin-bottom:32px}
+    .hero-meta{display:flex;align-items:center;gap:20px;flex-wrap:wrap;font-family:var(--ff-head);font-size:13px;color:rgba(255,255,255,.55)}
+    .hero-meta span{display:flex;align-items:center;gap:5px}
+    .hero-meta .dot{color:rgba(255,255,255,.25)}
+    .topic-pills{display:flex;gap:10px;flex-wrap:wrap;margin-top:28px}
+    .pill{display:flex;align-items:center;gap:8px;padding:8px 16px;border-radius:100px;font-family:var(--ff-head);font-size:13px;font-weight:600;border:1px solid}
+    .pill-red{background:rgba(230,48,34,.15);border-color:rgba(230,48,34,.35);color:#ff8a80}
+    .pill-amber{background:rgba(245,166,35,.12);border-color:rgba(245,166,35,.3);color:#ffd180}
+    .pill-blue{background:rgba(26,75,140,.25);border-color:rgba(26,75,140,.5);color:#82b4ff}
+    .pill-green{background:rgba(39,174,96,.15);border-color:rgba(39,174,96,.35);color:#81c995}
+    .article-wrap{max-width:1440px;margin:0 auto;padding:0 20px;display:grid;grid-template-columns:1fr 280px;gap:32px;align-items:start}
+    .article-body{padding:32px 0}
+    .article-body h2{font-family:var(--ff-head);font-size:clamp(20px,2.5vw,26px);font-weight:700;color:var(--brand-dark);margin:36px 0 14px;padding-top:6px;border-top:3px solid var(--brand-accent);line-height:1.3}
+    .article-body h3{font-family:var(--ff-head);font-size:clamp(17px,2vw,20px);font-weight:600;color:var(--brand-navy);margin:32px 0 12px}
+    .article-body p{margin-bottom:16px;color:var(--text-main)}
+    .article-body ul,.article-body ol{padding-left:24px;margin-bottom:20px}
+    .article-body li{margin-bottom:8px}
+    .article-body strong{color:var(--brand-dark)}
+    .intro-p{font-size:19px;line-height:1.7}
+    .box{border-radius:var(--radius);padding:22px 26px;margin:28px 0;border-left:4px solid}
+    .box-red{background:#fef2f2;border-color:var(--brand-accent)}
+    .box-blue{background:#eff6ff;border-color:var(--brand-blue)}
+    .box-amber{background:#fffbeb;border-color:var(--brand-gold)}
+    .box-green{background:#f0fdf4;border-color:#27ae60}
+    .box h4{font-family:var(--ff-head);font-size:15px;font-weight:700;margin-bottom:8px}
+    .box p{font-size:15px;margin-bottom:8px}
+    .check-list{list-style:none;padding:0}
+    .check-list li{display:flex;gap:10px;padding:6px 0;font-size:16px}
+    .chk{color:#27ae60;font-weight:700;flex-shrink:0}
+    .price-table{width:100%;border-collapse:collapse;margin:24px 0;font-size:15px}
+    .price-table th{background:var(--brand-navy);color:var(--white);font-family:var(--ff-head);font-size:13px;font-weight:600;text-transform:uppercase;letter-spacing:.04em;padding:12px 16px;text-align:left}
+    .price-table td{padding:12px 16px;border-bottom:1px solid var(--border)}
+    .price-table tr:nth-child(even) td{background:var(--brand-light)}
+    .price-table .highlight td{background:#fffbeb;font-weight:600}
+    .cta-banner{background:linear-gradient(135deg,var(--brand-dark),var(--brand-navy));border-radius:var(--radius);padding:28px 32px;color:var(--white);display:flex;align-items:center;justify-content:space-between;gap:20px;flex-wrap:wrap}
+    .cta-banner h3{font-family:var(--ff-head);font-size:18px;font-weight:700;margin-bottom:4px}
+    .cta-banner p{font-size:14px;color:rgba(255,255,255,.7);margin:0}
+    .cta-buttons{display:flex;gap:10px;flex-wrap:wrap}
+    .btn{display:inline-flex;align-items:center;gap:7px;padding:10px 18px;border-radius:8px;font-family:var(--ff-head);font-size:13px;font-weight:600;cursor:pointer;border:none;text-decoration:none!important}
+    .btn-primary{background:var(--brand-accent);color:var(--white)!important;box-shadow:0 4px 14px rgba(230,48,34,.3)}
+    .btn-secondary{background:rgba(255,255,255,.12);color:var(--white)!important;border:1px solid rgba(255,255,255,.25)}
+    .faq-section{margin:48px 0 32px}
+    .faq-item{border:1px solid var(--border);border-radius:var(--radius);margin-bottom:10px;overflow:hidden}
+    .faq-q{display:flex;align-items:center;justify-content:space-between;padding:16px 20px;cursor:pointer;background:var(--white);font-family:var(--ff-head);font-size:15px;font-weight:600;color:var(--brand-dark);border:none;width:100%;text-align:left;gap:12px}
+    .faq-q:hover{background:var(--brand-light)}
+    .faq-a{display:none;padding:0 20px 16px;font-size:15px;color:var(--text-muted);line-height:1.7}
+    .faq-item.open .faq-a{display:block}
+    .faq-item.open .faq-q{background:var(--brand-light);color:var(--brand-blue)}
+    .faq-chevron{transition:transform .2s;flex-shrink:0}
+    .faq-item.open .faq-chevron{transform:rotate(180deg)}
+    .sidebar{position:sticky;top:104px}
+    .sidebar-card{border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;margin-bottom:20px;background:var(--white);box-shadow:var(--shadow-sm)}
+    .sidebar-card-head{background:var(--brand-navy);color:var(--white);font-family:var(--ff-head);font-size:12px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;padding:12px 18px}
+    .sidebar-card-body{padding:16px 18px}
+    .toc-list{list-style:none;padding:0;counter-reset:toc}
+    .toc-list li{counter-increment:toc}
+    .toc-list a{display:flex;align-items:baseline;gap:8px;padding:7px 0;font-family:var(--ff-head);font-size:13px;color:var(--text-muted);border-bottom:1px solid var(--border);text-decoration:none}
+    .toc-list a::before{content:counter(toc,decimal-leading-zero);font-size:11px;font-weight:700;color:var(--text-light)}
+    .toc-list li:last-child a{border-bottom:none}
+    .toc-list a:hover{color:var(--brand-blue)}
+    .contact-info{list-style:none;padding:0}
+    .contact-info li{display:flex;gap:12px;padding:10px 0;border-bottom:1px solid var(--border);align-items:flex-start}
+    .contact-info li:last-child{border-bottom:none}
+    .ci-icon{font-size:20px;flex-shrink:0;margin-top:2px}
+    .contact-info strong{font-family:var(--ff-head);font-size:14px;display:block;color:var(--brand-dark)}
+    .contact-info span{font-size:12px;color:var(--text-light)}
+    .article-footer{background:var(--brand-light);border-top:1px solid var(--border);padding:40px 24px;text-align:center}
+    .article-footer p{font-size:14px;color:var(--text-muted);max-width:500px;margin:0 auto 16px}
+    .tags{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-top:12px}
+    .tag{background:var(--white);border:1px solid var(--border);padding:4px 12px;border-radius:100px;font-family:var(--ff-head);font-size:11px;color:var(--text-muted)}
+    @media(max-width:768px){.article-wrap{grid-template-columns:1fr;gap:32px}.sidebar{position:static;order:2}.cta-banner{flex-direction:column;text-align:center}}
+  </style>
+<style>.cta-banner h3{color:#ffffff !important}.cta-banner p{color:rgba(255,255,255,.85) !important}.box-info{background:#eef5ff;border-color:var(--brand-blue)}.box-warn{background:#fff8ec;border-color:var(--brand-gold)}.box-tip{background:#f0faf2;border-color:#27ae60}.box-danger{background:#fef2f2;border-color:#e63022}.box-info .box-title{color:var(--brand-blue)}.box-warn .box-title{color:#b7760a}.box-tip .box-title{color:#1e8c3f}.box-danger .box-title{color:#c0392b}.compare-table{width:100%;border-collapse:collapse;font-size:15px;margin:24px 0;border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow-sm)}.compare-table th{background:var(--brand-navy);color:var(--white);font-family:var(--ff-head);font-weight:600;padding:13px 16px;text-align:left}.compare-table td{padding:12px 16px;border-bottom:1px solid var(--border);vertical-align:top}.compare-table tr:nth-child(even) td{background:var(--brand-light)}.compare-table tr:last-child td{border-bottom:none}.compare-table .yes{color:#27ae60;font-weight:600}.compare-table .no{color:#c0392b}</style></head>
+<body>
+<header id="mainHeader" style="position:fixed;top:0;left:0;right:0;z-index:50;transition:all 0.3s;">
+    <div class="hidden sm:block" style="background:#0f172a;color:#fff;font-size:12px;padding:6px 0;">
+        <div style="max-width:1280px;margin:0 auto;padding:0 24px;display:flex;justify-content:space-between;align-items:center;">
+            <span>⭐ <span style="color:#4ade80;font-weight:600;">Peste 20 ani de experiență</span></span>
+            <div style="display:flex;align-items:center;gap:16px;">
+                <span class="animate-badge-pulse" style="display:inline-flex;align-items:center;gap:6px;padding:2px 8px;background:rgba(34,197,94,0.2);border-radius:999px;">
+                    <span style="color:#facc15;">⭐</span>
+                    <span style="font-weight:600;">4.9/5</span>
+                    <span style="color:#94a3b8;">•</span>
+                    <span>127 recenzii</span>
+                </span>
+                <span>⭐ <span style="font-weight:600;">8.700+ proiecte</span></span>
+            </div>
+        </div>
+    </div>
+    <div class="sm:hidden" style="background:#0f172a;color:#fff;font-size:12px;padding:6px 0;">
+        <div style="max-width:1280px;margin:0 auto;padding:0 12px;display:flex;justify-content:space-between;align-items:center;">
+            <span>⭐ <span style="color:#4ade80;font-weight:600;">Peste 20 ani de experiență</span></span>
+            <a href="tel:0752288400" style="display:flex;align-items:center;gap:4px;font-weight:600;color:#4ade80;">📞 Sună acum</a>
+        </div>
+    </div>
+    <div id="navBg" style="transition:all 0.3s;">
+        <div style="max-width:1280px;margin:0 auto;padding:0 12px;display:flex;justify-content:space-between;align-items:center;height:64px;" class="sm:px-6">
+            <a href="../">
+                <img src="https://eu.chat-img.sintra.ai/32c1b29c-0c86-4833-a031-e7c45e21a11e/983d52bb-2eb6-42f1-bed4-f94d769bb634/Logo_CSSI.png" alt="CSSI Logo" id="logoImg" style="height:56px;width:auto;transition:all 0.3s;filter:brightness(0) invert(1) drop-shadow(0 0 1px rgba(255,255,255,0.8));">
+            </a>
+            <nav class="hidden lg:flex" style="align-items:center;gap:4px;">
+                <a href="../" id="navLink1" style="padding:6px 12px;font-size:14px;font-weight:500;color:#fff;transition:all 0.2s;border-radius:8px;" onmouseover="this.style.color='#f87171'" onmouseout="this.style.color=navTextColor">🏠 Acasă</a>
+                <div class="dropdown" style="position:relative;">
+                    <button id="navLink2" style="padding:6px 12px;font-size:14px;font-weight:500;color:#fff;transition:all 0.2s;border-radius:8px;background:none;border:none;cursor:pointer;display:flex;align-items:center;font-family:inherit;">
+                        🛠️ Servicii
+                        <svg style="margin-left:4px;width:16px;height:16px;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+                    </button>
+                    <div class="dropdown-menu dropdown-scroll" style="position:absolute;top:100%;left:0;width:280px;background:#fff;box-shadow:0 10px 15px -3px rgba(0,0,0,0.1);border-radius:12px;padding:8px;border:1px solid #f1f5f9;max-height:80vh;overflow-y:auto;z-index:100;">
+                        <a href="../detectie-incendiu-isu" style="display:block;padding:10px 16px;font-size:13px;color:#334155;border-radius:8px;" onmouseover="this.style.background='#fef2f2';this.style.color='#dc2626'" onmouseout="this.style.background='';this.style.color='#334155'">🔥 Detecție Incendiu ISU</a>
+                        <a href="../camere-supraveghere" style="display:block;padding:10px 16px;font-size:13px;color:#334155;border-radius:8px;" onmouseover="this.style.background='#fef2f2';this.style.color='#dc2626'" onmouseout="this.style.background='';this.style.color='#334155'">📹 Camere Supraveghere</a>
+                        <a href="../alarma-antiefractie" style="display:block;padding:10px 16px;font-size:13px;color:#334155;border-radius:8px;" onmouseover="this.style.background='#fef2f2';this.style.color='#dc2626'" onmouseout="this.style.background='';this.style.color='#334155'">🚨 Alarmă Antiefracție</a>
+                        <a href="../control-acces" style="display:block;padding:10px 16px;font-size:13px;color:#334155;border-radius:8px;" onmouseover="this.style.background='#fef2f2';this.style.color='#dc2626'" onmouseout="this.style.background='';this.style.color='#334155'">🚪 Control Acces</a>
+                        <a href="../pontaj-electronic" style="display:block;padding:10px 16px;font-size:13px;color:#334155;border-radius:8px;" onmouseover="this.style.background='#fef2f2';this.style.color='#dc2626'" onmouseout="this.style.background='';this.style.color='#334155'">⏱️ Pontaj Electronic</a>
+                        <a href="../bariere-auto" style="display:block;padding:10px 16px;font-size:13px;color:#334155;border-radius:8px;" onmouseover="this.style.background='#fef2f2';this.style.color='#dc2626'" onmouseout="this.style.background='';this.style.color='#334155'">🚧 Bariere Auto</a>
+                        <a href="../interfoane-videointerfoane" style="display:block;padding:10px 16px;font-size:13px;color:#334155;border-radius:8px;" onmouseover="this.style.background='#fef2f2';this.style.color='#dc2626'" onmouseout="this.style.background='';this.style.color='#334155'">🔔 Interfoane &amp; Videointerfoane</a>
+                        <a href="../sonorizare" style="display:block;padding:10px 16px;font-size:13px;color:#334155;border-radius:8px;" onmouseover="this.style.background='#fef2f2';this.style.color='#dc2626'" onmouseout="this.style.background='';this.style.color='#334155'">🔊 Sonorizare</a>
+                        <a href="../automatizari-porti" style="display:block;padding:10px 16px;font-size:13px;color:#334155;border-radius:8px;" onmouseover="this.style.background='#fef2f2';this.style.color='#dc2626'" onmouseout="this.style.background='';this.style.color='#334155'">🚗 Automatizări Porți</a>
+                        <a href="../usi-garaj" style="display:block;padding:10px 16px;font-size:13px;color:#334155;border-radius:8px;" onmouseover="this.style.background='#fef2f2';this.style.color='#dc2626'" onmouseout="this.style.background='';this.style.color='#334155'">🏠 Uși Garaj</a>
+                        <a href="../aer-conditionat" style="display:block;padding:10px 16px;font-size:13px;color:#334155;border-radius:8px;" onmouseover="this.style.background='#fef2f2';this.style.color='#dc2626'" onmouseout="this.style.background='';this.style.color='#334155'">❄️ Aer Condiționat</a>
+                        <a href="../ventilatie" style="display:block;padding:10px 16px;font-size:13px;color:#334155;border-radius:8px;" onmouseover="this.style.background='#fef2f2';this.style.color='#dc2626'" onmouseout="this.style.background='';this.style.color='#334155'">💨 Ventilație</a>
+                        <a href="../instalatii-electrice" style="display:block;padding:10px 16px;font-size:13px;color:#334155;border-radius:8px;" onmouseover="this.style.background='#fef2f2';this.style.color='#dc2626'" onmouseout="this.style.background='';this.style.color='#334155'">⚡ Instalații Electrice</a>
+                        <a href="../instalatii-termice-sanitare" style="display:block;padding:10px 16px;font-size:13px;color:#334155;border-radius:8px;" onmouseover="this.style.background='#fef2f2';this.style.color='#dc2626'" onmouseout="this.style.background='';this.style.color='#334155'">🔧 Instalații Termice &amp; Sanitare</a>
+                    </div>
+                </div>
+                <a href="../despre-noi" id="navLink3" style="padding:6px 12px;font-size:14px;font-weight:500;color:#fff;transition:all 0.2s;border-radius:8px;" onmouseover="this.style.color='#f87171'" onmouseout="this.style.color=navTextColor">ℹ️ Despre Noi</a>
+                <a href="../portofoliu" id="navLink4" style="padding:6px 12px;font-size:14px;font-weight:500;color:#fff;transition:all 0.2s;border-radius:8px;" onmouseover="this.style.color='#f87171'" onmouseout="this.style.color=navTextColor">📁 Portofoliu</a>
+                <a href="index.html" style="padding:6px 12px;font-size:14px;font-weight:600;color:#16a34a;border-radius:8px;">📝 Blog</a>
+                <a href="../contact" id="navLink5" style="padding:6px 12px;font-size:14px;font-weight:500;color:#fff;transition:all 0.2s;border-radius:8px;" onmouseover="this.style.color='#f87171'" onmouseout="this.style.color=navTextColor">📍 Contact</a>
+            </nav>
+            <div class="hidden lg:flex" style="align-items:center;gap:12px;">
+                <a href="tel:0752288400" id="phoneLink" style="display:flex;align-items:center;font-size:14px;font-weight:500;color:#fff;transition:all 0.2s;">
+                    <svg style="width:16px;height:16px;margin-right:6px;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/></svg>
+                    0752 288 400
+                </a>
+                <a href="../contact" style="background:linear-gradient(to right,#dc2626,#b91c1c);color:#fff;padding:8px 20px;border-radius:8px;font-size:14px;font-weight:600;box-shadow:0 4px 6px -1px rgba(0,0,0,0.1);transition:all 0.2s;" onmouseover="this.style.background='linear-gradient(to right,#b91c1c,#991b1b)'" onmouseout="this.style.background='linear-gradient(to right,#dc2626,#b91c1c)'">Cere Ofertă</a>
+            </div>
+            <div class="lg:hidden" style="display:flex;align-items:center;gap:8px;">
+                <span class="animate-badge-pulse" style="display:inline-flex;align-items:center;gap:4px;padding:2px 6px;border-radius:999px;font-size:10px;background:rgba(255,255,255,0.2);color:#fff;">
+                    <span style="color:#facc15;font-size:9px;">⭐</span>
+                    <span style="font-weight:600;">4.9</span>
+                </span>
+                <button onclick="toggleMobileMenu()" id="menuBtn" class="animate-subtle-pulse" style="padding:4px;border-radius:6px;border:none;cursor:pointer;background:linear-gradient(to right,#ef4444,#dc2626);color:#fff;">
+                    <svg id="menuIcon" style="width:20px;height:20px;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
+                    <svg id="closeIcon" style="width:20px;height:20px;display:none;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+                </button>
+            </div>
+        </div>
+        <div id="mobileMenu" style="background:#fff;border-radius:16px;box-shadow:0 20px 25px -5px rgba(0,0,0,0.1);margin:8px 12px;padding:8px;max-height:80vh;overflow-y:auto;">
+            <nav style="display:flex;flex-direction:column;gap:4px;">
+                <a href="../" style="padding:10px 16px;font-size:16px;font-weight:500;color:#334155;border-radius:8px;">🏠 Acasă</a>
+                <button onclick="toggleServicesSubmenu()" style="padding:10px 16px;font-size:16px;font-weight:500;color:#334155;border-radius:8px;background:none;border:none;cursor:pointer;display:flex;justify-content:space-between;align-items:center;width:100%;font-family:inherit;text-align:left;">
+                    🛠️ Servicii
+                    <svg id="servicesArrow" style="width:16px;height:16px;transition:transform 0.2s;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+                </button>
+                <div id="servicesSubmenu" style="padding-left:16px;overflow-y:auto;">
+                    <a href="../detectie-incendiu-isu" onclick="closeMobile()" style="display:block;padding:8px 16px;font-size:14px;color:#475569;border-radius:8px;">🔥 Detecție Incendiu ISU</a>
+                    <a href="../camere-supraveghere" onclick="closeMobile()" style="display:block;padding:8px 16px;font-size:14px;color:#475569;border-radius:8px;">📹 Camere Supraveghere</a>
+                    <a href="../alarma-antiefractie" onclick="closeMobile()" style="display:block;padding:8px 16px;font-size:14px;color:#475569;border-radius:8px;">🚨 Alarmă Antiefracție</a>
+                    <a href="../control-acces" onclick="closeMobile()" style="display:block;padding:8px 16px;font-size:14px;color:#475569;border-radius:8px;">🚪 Control Acces</a>
+                    <a href="../pontaj-electronic" onclick="closeMobile()" style="display:block;padding:8px 16px;font-size:14px;color:#475569;border-radius:8px;">⏱️ Pontaj Electronic</a>
+                    <a href="../bariere-auto" onclick="closeMobile()" style="display:block;padding:8px 16px;font-size:14px;color:#475569;border-radius:8px;">🚧 Bariere Auto</a>
+                    <a href="../interfoane-videointerfoane" onclick="closeMobile()" style="display:block;padding:8px 16px;font-size:14px;color:#475569;border-radius:8px;">🔔 Interfoane &amp; Videointerfoane</a>
+                    <a href="../sonorizare" onclick="closeMobile()" style="display:block;padding:8px 16px;font-size:14px;color:#475569;border-radius:8px;">🔊 Sonorizare</a>
+                    <a href="../automatizari-porti" onclick="closeMobile()" style="display:block;padding:8px 16px;font-size:14px;color:#475569;border-radius:8px;">🚗 Automatizări Porți</a>
+                    <a href="../usi-garaj" onclick="closeMobile()" style="display:block;padding:8px 16px;font-size:14px;color:#475569;border-radius:8px;">🏠 Uși Garaj</a>
+                    <a href="../aer-conditionat" onclick="closeMobile()" style="display:block;padding:8px 16px;font-size:14px;color:#475569;border-radius:8px;">❄️ Aer Condiționat</a>
+                    <a href="../ventilatie" onclick="closeMobile()" style="display:block;padding:8px 16px;font-size:14px;color:#475569;border-radius:8px;">💨 Ventilație</a>
+                    <a href="../instalatii-electrice" onclick="closeMobile()" style="display:block;padding:8px 16px;font-size:14px;color:#475569;border-radius:8px;">⚡ Instalații Electrice</a>
+                    <a href="../instalatii-termice-sanitare" onclick="closeMobile()" style="display:block;padding:8px 16px;font-size:14px;color:#475569;border-radius:8px;">🔧 Instalații Termice &amp; Sanitare</a>
+                </div>
+                <a href="../despre-noi" onclick="closeMobile()" style="padding:10px 16px;font-size:16px;font-weight:500;color:#334155;border-radius:8px;">ℹ️ Despre Noi</a>
+                <a href="../portofoliu" onclick="closeMobile()" style="padding:10px 16px;font-size:16px;font-weight:500;color:#334155;border-radius:8px;">📁 Portofoliu</a>
+                <a href="index.html" onclick="closeMobile()" style="padding:10px 16px;font-size:16px;font-weight:600;color:#16a34a;border-radius:8px;">📝 Blog</a>
+                <a href="../contact" onclick="closeMobile()" style="padding:10px 16px;font-size:16px;font-weight:500;color:#334155;border-radius:8px;">📍 Contact</a>
+                <div style="padding:12px 8px;">
+                    <a href="../contact" onclick="closeMobile()" style="display:block;text-align:center;background:linear-gradient(to right,#dc2626,#b91c1c);color:#fff;padding:10px 16px;border-radius:12px;font-weight:600;">Cere Ofertă</a>
+                </div>
+            </nav>
+        </div>
+    </div>
+</header>
+
+
+  
+  
+  <nav class="breadcrumb" aria-label="Breadcrumb">
+    <div class="inner">
+      <a href="/">Acasă</a><span class="sep">›</span>
+      <a href="/blog/">Blog</a><span class="sep">›</span>
+      <span style="color:rgba(255,255,255,.9)">Securitatea camerei de servere: cum protejezi inima | CSSI</span>
+    </div>
+  </nav>
+
+  <header class="hero">
+    <div class="inner">
+      <div class="hero-content">
+      <div class="hero-badge">📹 Ghid CSSI · 2026</div>
+      <h1>Securitatea camerei de servere: cum protejezi inima IT a firmei</h1>
+      <p class="lead">Există o încăpere, de obicei mică și fără ferestre, de care nu-și amintește nimeni — până în ziua în care ceva nu mai merge. E camera de servere: locul unde se adună datele clienților, contabilitatea, emailul, aplicațiile interne și, de multe ori, chiar înregistrările camerelor de supraveghere. Un singur incident aici nu oprește un birou, ci <strong>toată firma</strong>. Și totuși, cele mai multe astfel de încăperi sunt „protejate” doar de o ușă cu cheie și de speranța că nu se va întâmpla nimic. Iată cum gândești corect securitatea camerei de servere — pe straturi: <strong>acces, mediu, incendiu și alimentare</strong>.</p>
+      <div class="hero-meta">
+        <span>✍ CSSI Brașov</span><span class="dot">·</span>
+        <span>📅 4 Sep 2026</span><span class="dot">·</span>
+        <span>⏱ 12 min lectură</span>
+      </div>
+      <div class="topic-pills">
+        <span class="pill pill-blue">🛡 Securitate firme</span>
+        <span class="pill pill-green">📍 Brașov & împrejurimi</span>
+        <span class="pill pill-amber">✅ Ghid practic</span>
+      </div>
+    </div>
+      <div class="hero-img-wrap"><div style="width:280px;height:280px;background:linear-gradient(135deg,#0d3b2f,#1e7852);border-radius:14px;display:flex;align-items:center;justify-content:center;box-shadow:0 8px 32px rgba(0,0,0,.35);border:1px solid rgba(255,255,255,.1);"><span style="font-size:80px;">📹</span></div></div>
+    </div>
+  </header>
+
+  <div class="article-wrap">
+    <main class="article-body" id="articol">
+<h2 id="de-ce-camera-de-servere-e-alta-categorie">De ce camera de servere e altă categorie de risc</h2>
+<p>Hai să fim direcți: camera de servere nu e „încă o cameră” pe care o securizezi ca pe un birou. E <strong>nodul central al firmei</strong> și are patru tipuri de risc care lucrează simultan, fiecare capabil să oprească activitatea.</p>
+<p>Primul e <strong>accesul</strong>: dacă oricine poate intra, oricine poate copia date, deconecta un echipament din greșeală sau, mai rău, intenționat. Al doilea e <strong>mediul</strong>: serverele produc multă căldură, iar dacă răcirea cedează, ele se supraîncălzesc și se opresc singure ca să se protejeze — de regulă noaptea sau în weekend, când nu e nimeni să observe. Al treilea e <strong>incendiul</strong>: o încăpere plină de electronică sub tensiune are un risc real de început de incendiu, iar stingerea clasică cu apă ar distruge echipamentele la fel de sigur ca focul. Al patrulea e <strong>indisponibilitatea</strong>: o pană de curent prelungită nu doar oprește serverele, ci poate corupe datele la oprirea bruscă.</p>
+<p>Vestea bună e că niciunul dintre aceste riscuri nu cere o investiție uriașă — cere o <strong>gândire pe straturi</strong>. Protejezi accesul, monitorizezi mediul, detectezi din timp incendiul, asiguri alimentarea. Hai să le luăm pe rând.</p>
+
+<h2 id="control-acces-strict-si-jurnalizat-cine-">Control acces strict și jurnalizat: cine, când, cât</h2>
+<p>Prima regulă a unei camere de servere bine protejate: <strong>foarte puține persoane au voie să intre, și sistemul știe mereu cine a fost acolo.</strong> O cheie clasică nu-ți oferă niciuna dintre aceste garanții — se copiază ușor, se împrumută și nu lasă nicio urmă. În schimb, un control electronic al accesului cu card, cod sau amprentă/recunoaștere facială îți dă două lucruri esențiale: <strong>limitarea</strong> (doar cei autorizați deschid ușa) și <strong>trasabilitatea</strong> (sistemul reține automat cine a intrat, la ce oră și cât a stat).</p>
+<p>De ce contează jurnalul atât de mult? Pentru că, atunci când ceva nu mai merge sau lipsește, prima întrebare e „cine a fost ultima dată acolo?”. Cu un jurnal de acces, ai răspunsul în câteva secunde, nu printr-o anchetă internă jenantă. În plus, simpla existență a jurnalului <strong>descurajează</strong> accesul nejustificat — oamenii se comportă altfel când știu că rămâne o urmă. Dacă vrei să înțelegi cum alegi între card, cod, amprentă și recunoaștere facială pentru un astfel de spațiu, am detaliat criteriile în ghidul despre cum alegi controlul accesului: amprentă, card, cod sau facial.</p>
+
+      <div class="cta-banner" style="margin:32px 0">
+        <div>
+          <h3>Vrei o evaluare pentru firma ta?</h3>
+          <p>Evaluarea la fața locului e gratuită în Brașov și împrejurimi — vii cu nevoia, pleci cu o soluție și un preț defalcat.</p>
+        </div>
+        <div class="cta-buttons">
+          <a href="tel:0752288400" class="btn btn-primary">📞 0752 288 400</a>
+          <a target="_blank" rel="noopener" href="https://wa.me/40752288400" class="btn btn-secondary">💬 WhatsApp</a>
+        </div>
+      </div>
+<h2 id="monitorizarea-mediului-temperatura-umidi">Monitorizarea mediului: temperatură, umiditate, apă, alimentare</h2>
+<p>Aici e partea pe care cei mai mulți o descoperă prea târziu. Serverele sunt sensibile la <strong>temperatură și umiditate</strong>, iar răcirea care le ține în parametri poate ceda fără ca nimeni să bage de seamă. Scenariul clasic: vineri seara aerul condiționat din camera de servere se oprește, temperatura urcă în weekend, iar luni dimineață găsești jumătate din echipamente oprite și, în cel mai rău caz, date pierdute.</p>
+<p>Soluția e simplă și ieftină în raport cu paguba pe care o previne: <strong>senzori de mediu</strong> care urmăresc permanent temperatura, umiditatea, eventualele infiltrații de apă (de la o instalație de la etajul superior, de exemplu) și starea alimentării — iar la primul parametru ieșit din normă trimit imediat o <strong>alertă pe telefon</strong>. Diferența dintre „aflu sâmbătă seara și salvez tot” și „aflu luni dimineață când e prea târziu” se măsoară în zile de activitate oprită și, uneori, în date irecuperabile. Monitorizarea mediului transformă camera de servere dintr-o cutie neagră într-un sistem care îți spune singur când are nevoie de ajutor.</p>
+
+
+<h2 id="detectia-timpurie-de-incendiu-si-de-ce-s">Detecția timpurie de incendiu — și de ce stingerea clasică nu e potrivită aici</h2>
+<p>O cameră plină de echipamente sub tensiune are un risc real de <strong>început de incendiu</strong> — un contact defect, o sursă supraîncărcată, un cablu îmbătrânit. Și aici apare paradoxul: într-un spațiu IT, <strong>apa e la fel de distrugătoare ca focul</strong>. Un sistem de stingere cu apă, declanșat peste rack-uri, ar transforma un mic incident într-un dezastru total.</p>
+<p>De aceea, în camera de servere mizezi în primul rând pe <strong>detecția foarte timpurie</strong>: senzori capabili să prindă un început de problemă (fum, supraîncălzire) înainte ca aceasta să devină incendiu, ca să poți interveni controlat. Pentru stingere, soluțiile gândite pentru spații IT sunt concepute să <strong>nu distrugă echipamentele</strong>, spre deosebire de apă. Important: alegerea concretă a sistemului de detecție și stingere pentru un spațiu tehnic se face împreună cu un specialist autorizat în securitate la incendiu și ținând cont de cerințele oficiale; informații despre detecția și stingerea incendiilor în spații tehnice găsești la <a href="https://www.igsu.ro" rel="noopener" target="_blank">Inspectoratul General pentru Situații de Urgență (IGSU)</a>.</p>
+
+<h2 id="cctv-pe-rack-uri-si-pe-usa-de-acces">CCTV pe rack-uri și pe ușa de acces</h2>
+<p>Camerele joacă două roluri complementare în camera de servere. Pe <strong>ușa de acces</strong>, camera arată clar cine intră și iese — dublând jurnalul electronic cu o dovadă vizuală și descurajând orice tentativă de a „trece repede” fără a se identifica. În <strong>interior</strong>, o cameră orientată spre rack-uri documentează ce se întâmplă fizic cu echipamentele: cine a umblat la ele, ce a deconectat, când.</p>
+<p>De ce contează la o cameră de servere mai mult decât în alte spații? Pentru că aici incidentele sunt rareori spectaculoase — sunt discrete: un cablu scos „din greșeală”, un echipament mutat, o intervenție nedocumentată. Imaginea video, combinată cu jurnalul de acces, îți oferă <strong>tabloul complet</strong>: cine a fost prezent și ce a făcut. Pentru spațiile fără supraveghere permanentă, camerele cu detecție inteligentă pot semnala automat prezența cuiva în afara orelor normale — un subiect pe care l-am tratat pe larg în articolul despre camerele cu detecție inteligentă (AI).</p>
+
+<h2 id="alimentarea-critica-ups-backup-si-alarme">Alimentarea critică: UPS, backup și alarme la pană</h2>
+<p>Serverele nu suportă întreruperile de curent ca un calculator de birou. O <strong>oprire bruscă</strong> nu doar întrerupe activitatea, ci poate corupe datele și baze de date întregi. De aceea, alimentarea critică nu e un lux, ci o componentă de bază a oricărei camere de servere serioase.</p>
+<p>Un <strong>UPS</strong> (sursă neîntreruptibilă) preia instantaneu sarcina la o pană și ține echipamentele în funcțiune suficient cât să se închidă corect sau să pornească o sursă de rezervă. <strong>Alarmele la pană</strong> te anunță imediat ce curentul a căzut, ca să poți reacționa. Și un detaliu pe care multe firme îl ratează: <strong>tot sistemul de securitate</strong> — camere, control acces, alarmă — trebuie să aibă și el alimentare de rezervă, altfel rămâi descoperit exact în momentul vulnerabil. Despre cum menții întregul sistem în funcțiune la pene de curent, cu backup și UPS dimensionate corect, am scris în articolul despre menținerea sistemului de securitate la pene de curent.</p>
+
+
+<h2 id="integrarea-cu-restul-securitatii-si-aler">Integrarea cu restul securității și alertarea în timp real</h2>
+<p>Toate straturile de mai sus dau cel mai mult atunci când <strong>comunică între ele</strong>, într-un singur sistem. Imaginează-ți scenariul ideal: o alarmă de temperatură ridicată din camera de servere declanșează automat o alertă pe telefonul persoanei responsabile, iar camera orientată spre rack-uri se deschide instantaneu pentru verificare vizuală. Sau: o ușă forțată în afara programului trimite o notificare și pornește înregistrarea prioritară. Sau: o pană de curent prelungită alertează managerul IT, nu „cineva care întâmplă să fie pe hol”.</p>
+<p>Aceasta e diferența dintre o colecție de echipamente separate și un <strong>sistem coerent</strong>. Când controlul accesului, camerele, senzorii de mediu și alarma vorbesc aceeași limbă și ajung într-un singur loc, reacția nu mai depinde de noroc. Pentru firmele care vor să vadă tot ce se întâmplă dintr-un singur loc, integrarea pe o platformă unică e pasul firesc — un subiect pe care îl tratăm separat. Iar pentru a putea fi anunțat oriunde te-ai afla, monitorizarea de pe telefon, în siguranță, e esențială; am explicat cum se face corect în articolul despre monitorizarea camerelor și a alarmei din aplicația de telefon.</p>
+
+<h2 id="gdpr-si-securitatea-datelor-legatura-fiz">GDPR și securitatea datelor: legătura fizic–logic</h2>
+<p>Un aspect pe care firmele îl ignoră frecvent: <strong>protecția datelor nu se oprește la parole și firewall</strong>. Datele cu caracter personal pe care le ții pe servere — date despre clienți, angajați, parteneri — trebuie protejate și <strong>fizic</strong>. Cine poate ajunge la echipamentele pe care stau aceste date? Cine intră în camera de servere și lasă o urmă?</p>
+<p>Un acces controlat și jurnalizat, plus o evidență clară a intrărilor, fac parte din <strong>măsurile rezonabile de securitate</strong> pe care le așteaptă legislația privind protecția datelor. Practic, securitatea fizică a camerei de servere e o componentă a conformității tale GDPR, nu un capitol separat. Cele două merg împreună: degeaba ai cea mai bună securitate logică dacă oricine poate intra fizic la servere. Despre obligațiile concrete legate de datele filmate și stocate am scris pe larg în articolul despre GDPR și camerele de supraveghere în firmă, iar reperele oficiale le găsești la <a href="https://www.dataprotection.ro" rel="noopener" target="_blank">Autoritatea Națională de Supraveghere a Prelucrării Datelor (ANSPDCP)</a>.</p>
+
+<h2 id="cine-ar-trebui-sa-aiba-acces-si-cine-nu">Cine ar trebui să aibă acces, și cine nu</h2>
+<p>O regulă simplă separă camerele de servere protejate de cele expuse: <strong>accesul se acordă pe nevoie, nu pe funcție sau vechime</strong>. Nu contează că cineva e „om de bază” în firmă, ci dacă are un motiv real să intre acolo. În practică, lista celor cu drept de acces ar trebui să fie scurtă: responsabilul IT (intern sau firma care se ocupă de mentenanță), poate un administrator și, punctual, tehnicienii care fac o intervenție anunțată. Restul, inclusiv management, nu au ce căuta fizic lângă rack-uri.</p>
+<p>De ce contează atât de mult? Pentru că fiecare persoană cu acces e un risc suplimentar: de eroare (un cablu atins din greșeală), de scurgere de date sau, în cel mai rău caz, de acțiune rău-intenționată. Cu cât lista e mai scurtă și mai bine controlată, cu atât mai puține lucruri pot merge prost. Iar când cineva pleacă din firmă sau își schimbă rolul, <strong>accesul trebuie retras imediat</strong> — un pas banal pe care controlul electronic îl face dintr-un clic, dar pe care o cheie fizică îl transformă într-o operațiune de schimbat yala. De aici și avantajul jurnalizării: nu doar limitezi, ci și verifici periodic cine chiar a folosit accesul, ca să tai din listă persoanele care oricum nu mai intră.</p>
+
+<h2 id="camera-de-servere-sau-doar-un-dulap-de-r">Cameră de servere sau doar un dulap de rețea?</h2>
+<p>Nu orice firmă are o încăpere dedicată. Multe au doar un <strong>dulap de rețea (rack)</strong> într-un birou, pe hol sau într-o debara. Principiile rămân aceleași, doar scara diferă. Un rack într-un spațiu comun e, dacă stai să te gândești, chiar mai expus: trece lume pe lângă el, se poate atinge, se poate folosi priza lui pentru alte scopuri, se pot pune cutii peste el care blochează ventilația. Minimul rezonabil pentru un astfel de dulap: să fie <strong>încuiat</strong> (ideal cu acces controlat, nu doar o cheiță care stă în broască), să aibă <strong>ventilație liberă</strong>, un <strong>senzor de temperatură cu alertă</strong> și o <strong>alimentare pe UPS</strong>. Sunt măsuri ieftine care previn exact incidentele tipice: supraîncălzirea într-un spațiu neventilat și oprirea bruscă la o pană.</p>
+<p>Când firma crește, se justifică trecerea la o încăpere dedicată, cu răcire proprie și toate cele patru straturi de protecție. La evaluare îți spunem sincer în ce categorie ești și ce e suficient pentru dimensiunea ta, fără să-ți vindem un centru de date când ai nevoie de un dulap bine făcut.</p>
+
+<h2 id="semne-ca-nodul-it-al-firmei-tale-e-prost">Semne că nodul IT al firmei tale e prost protejat</h2>
+<p>Câteva semnale clare că merită o evaluare: camera de servere e încuiată cu o <strong>cheie pe care o știu mulți</strong> sau care stă la recepție; <strong>nu există niciun senzor</strong> care să te anunțe dacă se încălzește sau intră apă; aerul condiționat din încăpere e unul obișnuit, <strong>fără nicio alarmă</strong> dacă se oprește; serverele <strong>nu sunt pe UPS</strong>, așa că orice pană le închide brusc; ușa e <strong>lăsată deschisă</strong> „că oricum e cald înăuntru”; sau nimeni nu poate răspunde la întrebarea „cine a intrat ultima dată în camera de servere?”. Fiecare dintre acestea, luat separat, e un motiv de îngrijorare; mai multe împreună înseamnă că inima IT a firmei stă, practic, pe noroc. Vestea bună, repetată pentru că e importantă: remedierea nu e scumpă, e doar o chestiune de a o face înainte, nu după incident. Cele mai multe firme amână exact până în ziua în care un incident le arată, cu factura în față, cât ar fi costat prevenția, iar atunci discuția nu mai e despre buget, ci despre date pierdute și zile de activitate oprită care nu se mai recuperează.</p>
+
+<h2 id="cele-patru-straturi-de-risc-pe-scurt">Cele patru straturi de risc, pe scurt</h2>
+<p>Dacă reții un singur cadru din tot articolul, fie acesta: camera de servere se protejează pe patru straturi, fiecare cu măsura lui. Iată-le laolaltă:</p>
+<table class="compare-table">
+<thead><tr><th>Strat</th><th>Riscul</th><th>Măsura</th></tr></thead>
+<tbody>
+<tr><td>Acces</td><td>Oricine intră poate copia date sau deconecta echipamente</td><td class="yes">Control acces electronic jurnalizat + CCTV pe ușă</td></tr>
+<tr><td>Mediu</td><td>Răcirea cedează noaptea/weekend, serverele se opresc</td><td class="yes">Senzori de temperatură, umiditate, apă + alertă pe telefon</td></tr>
+<tr><td>Incendiu</td><td>Electronică sub tensiune; apa distruge ca focul</td><td class="yes">Detecție timpurie + stingere gândită pentru IT</td></tr>
+<tr><td>Alimentare</td><td>Pana bruscă corupe date și oprește activitatea</td><td class="yes">UPS + alarme la pană + backup pe securitate</td></tr>
+</tbody>
+</table>
+
+<div class="box box-danger"><div class="box-title">🚨 Greșeala care distruge tot: stingere cu apă peste rack-uri</div><p>Un sprinkler clasic declanșat peste servere transformă un mic incident într-o pierdere totală: apa distruge electronica la fel de sigur ca focul. Într-un spațiu IT mizezi pe detecție foarte timpurie și pe soluții de stingere concepute să nu distrugă echipamentele. Alegerea concretă se face cu un specialist autorizat în securitate la incendiu, nu „la ochi”.</p></div>
+
+<h2 id="cheie-clasica-vs-control-acces-electroni">Cheie clasică vs control acces electronic</h2>
+<p>Cea mai ieftină și mai frecventă „securitate” a unei camere de servere e o ușă cu cheie. Iată de ce nu e suficientă:</p>
+<table class="compare-table">
+<thead><tr><th>Criteriu</th><th>Cheie clasică</th><th>Control acces electronic</th></tr></thead>
+<tbody>
+<tr><td>Cine poate intra</td><td class="no">Oricine are o copie</td><td class="yes">Doar persoane autorizate</td></tr>
+<tr><td>Urmă cine/când a intrat</td><td class="no">Niciuna</td><td class="yes">Jurnal automat, la secundă</td></tr>
+<tr><td>Retragerea accesului</td><td class="no">Schimbi yala fizic</td><td class="yes">Dezactivezi cardul din software</td></tr>
+<tr><td>Descurajare</td><td class="no">Redusă</td><td class="yes">Ridicată (rămâne urmă)</td></tr>
+<tr><td>Integrare cu alarmă/CCTV</td><td class="no">Nu</td><td class="yes">Da</td></tr>
+</tbody>
+</table>
+
+<h2 id="costuri-orientative-2026">Costuri orientative 2026</h2>
+<p>Protejarea unei camere de servere nu cere o investiție uriașă, ci una gândită. Repere orientative pentru 2026, la o încăpere tehnică de firmă:</p>
+<table class="compare-table">
+<thead><tr><th>Componentă</th><th>Interval orientativ</th><th>Observații</th></tr></thead>
+<tbody>
+<tr><td>Control acces pe ușă (cititor + controler)</td><td>de la 800–1.500 RON</td><td>Crește cu biometria și integrarea</td></tr>
+<tr><td>Kit senzori de mediu (temperatură, umiditate, apă) cu alertare</td><td>800–2.500 RON</td><td>În funcție de numărul de senzori și platformă</td></tr>
+<tr><td>1–2 camere (ușă + rack)</td><td>orientativ pe cameră</td><td>Se leagă la sistemul existent</td></tr>
+<tr><td>UPS pentru rack</td><td>de la 1.500 RON</td><td>Crește mult cu autonomia și puterea</td></tr>
+<tr><td>Detecție incendiu pentru spațiu tehnic</td><td>pe proiect</td><td>Cu specialist autorizat</td></tr>
+</tbody>
+</table>
+<p>Ce mută prețul: dimensiunea încăperii și a rack-urilor, câte persoane trebuie să aibă acces, autonomia dorită la UPS, dacă integrezi cu un sistem existent și cerințele de detecție/stingere. Cifrele sunt orientative, <strong>prețul exact vine după o evaluare la fața locului</strong>, cu ofertă defalcată.</p>
+
+<div class="box box-warn"><div class="box-title">⚠ Greșeli frecvente la camera de servere</div><p><strong>1. Doar o ușă cu cheie</strong> — fără limitare reală și fără urmă a intrărilor. <strong>2. Fără monitorizare de mediu</strong> — afli de supraîncălzire luni dimineață, când e prea târziu. <strong>3. Sprinkler clasic</strong> peste echipamente, în loc de soluție pentru IT. <strong>4. Fără UPS</strong> — pana bruscă corupe baze de date. <strong>5. Securitatea proprie fără backup</strong> — camerele și accesul pică fix la pană. <strong>6. Nicio integrare</strong> — echipamente separate care nu alertează pe nimeni în timp real.</p></div>
+
+<h2 id="cum-arata-implementarea-cu-cssi">Cum arată implementarea cu CSSI</h2>
+<p><strong>1. Evaluare de risc la fața locului</strong> pe cele patru straturi (acces, mediu, incendiu, alimentare). <strong>2. Propunere pe priorități</strong> — ce e urgent, ce poate aștepta, cu ofertă defalcată. <strong>3. Montaj</strong>: control acces jurnalizat, senzori de mediu cu alertare, CCTV pe ușă și rack, UPS și alarme la pană. <strong>4. Integrare</strong> într-un singur sistem, cu alertare în timp real pe telefon. <strong>5. Punere în funcțiune și testare</strong> a scenariilor (ușă forțată, temperatură ridicată, pană). <strong>6. Garanție și mentenanță</strong>, cu aceeași echipă pentru curenți tari, curenți slabi și securitate.</p>
+
+<div class="box box-tip"><div class="box-title">✅ Checklist: camera ta de servere e protejată?</div><p>Accesul e <strong>electronic și jurnalizat</strong>, nu doar pe cheie? Ai <strong>senzori de mediu cu alertă pe telefon</strong>? Detecția de incendiu e <strong>gândită pentru spațiu IT</strong> (nu apă peste rack-uri)? Ai <strong>UPS și alarme la pană</strong>? Are și <strong>sistemul de securitate backup</strong> propriu? Comunică totul <strong>într-un singur sistem</strong>, cu alertare în timp real? Dacă ai ezitat la vreun punct, exact acolo e riscul.</p></div>
+
+<h2 id="mentenanta-camerei-de-servere">Mentenanța camerei de servere</h2>
+<p>Protecția se menține: verifici periodic <strong>bateriile UPS</strong> (se uzează și trebuie schimbate la timp), <strong>calibrarea senzorilor</strong> de mediu, <strong>funcționarea alertelor</strong> (un test real, nu presupunerea că merg), starea <strong>camerelor și a controlului de acces</strong> și lista persoanelor cu drept de intrare (se retrag accesele celor care au plecat din firmă). O revizie planificată prinde din timp un UPS obosit sau un senzor decalibrat, adică exact componentele care „tac” până în ziua incidentului.</p>
+
+<h2 id="citeste-si">Citește și</h2>
+<ul>
+  <li><a href="https://cssi.ro/blog/sistem-integrat-securitate-brasov">Sistem integrat de securitate</a> — cum lucrează împreună accesul, camerele și alarma.</li>
+  <li><a href="https://cssi.ro/blog/securizare-retea-cctv-ip-parole-vlan-protectie-brasov">Securizarea rețelei CCTV IP</a> — protecția logică a echipamentelor.</li>
+  <li><a href="https://cssi.ro/blog/camere-supraveghere-brasov-ghid-complet-2026">Ghidul complet de camere de supraveghere</a>.</li>
+</ul>
+      <h2 id="faq">Întrebări frecvente</h2>
+      <div class="faq-wrap">
+        <div class="faq-item">
+          <button class="faq-q" onclick="toggleFaq(this)">Cât costă securizarea unei camere de servere în 2026? <svg class="faq-chevron" width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg></button>
+          <div class="faq-a"><p>Depinde de mărimea încăperii, de câte persoane trebuie să aibă acces și de ce straturi acoperi. Ca reper orientativ, controlul de acces pe ușă pornește de la circa 800–1.500 RON, un kit de senzori de mediu cu alertare de la 800 RON, iar UPS-ul pentru rack de la 1.500 RON, la care se adaugă camerele și detecția de incendiu. Nu e o investiție uriașă în raport cu paguba pe care o previne. Prețul exact vine după o evaluare la fața locului, cu ofertă defalcată.</p></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q" onclick="toggleFaq(this)">Am o firmă mică, chiar am nevoie de toate astea? <svg class="faq-chevron" width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg></button>
+          <div class="faq-a"><p>Nu neapărat de toate deodată, dar de logica pe straturi, da. Chiar și o firmă mică pierde enorm dacă îi cade nodul IT: contabilitate, email, aplicații, uneori și înregistrările camerelor. Se pornește de la ce e mai ieftin și mai eficient (control acces jurnalizat și senzori de mediu cu alertare) și se adaugă restul pe măsură. La evaluare stabilim un plan pe priorități, potrivit dimensiunii firmei tale.</p></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q" onclick="toggleFaq(this)">Pot fi anunțat pe telefon dacă apare o problemă în camera de servere? <svg class="faq-chevron" width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg></button>
+          <div class="faq-a"><p>Da, și e chiar esența unei protecții moderne. Senzorii de mediu, alarma și controlul de acces pot trimite alerte în timp real pe telefon: temperatură ridicată, ușă forțată, pană de curent. Diferența dintre a afla imediat și a afla luni dimineață se măsoară în zile de activitate și, uneori, în date pierdute. Configurăm și testăm aceste alerte la punerea în funcțiune.</p></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q" onclick="toggleFaq(this)">De ce camera de servere e o categorie aparte de risc? <svg class="faq-chevron" width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg></button>
+          <div class="faq-a"><p>Pentru că acolo se adună tot ce ține firma în funcțiune digital: date, contabilitate, email, aplicații, adesea și înregistrările camerelor. Un singur incident — acces neautorizat, supraîncălzire, infiltrație de apă, început de incendiu sau pană prelungită — poate opri întreaga firmă. De aceea cere protecție pe mai multe straturi: acces, mediu, incendiu și alimentare.</p></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q" onclick="toggleFaq(this)">Cum controlezi corect accesul într-o cameră de servere? <svg class="faq-chevron" width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg></button>
+          <div class="faq-a"><p>Cu acces strict și jurnalizat: doar câteva persoane autorizate, identificate prin card, cod sau biometrie, iar sistemul reține automat cine a intrat, când și cât a stat. Spre deosebire de o cheie clasică, controlul electronic îți dă limitare și trasabilitate reală — util la incidente, la audit și ca descurajare.</p></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q" onclick="toggleFaq(this)">Ce înseamnă monitorizarea mediului și de ce contează? <svg class="faq-chevron" width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg></button>
+          <div class="faq-a"><p>Senzori care urmăresc permanent temperatura, umiditatea, infiltrațiile de apă și starea alimentării, și te alertează imediat ce ceva iese din parametri. Serverele produc multă căldură; dacă răcirea cedează noaptea sau în weekend, echipamentele se opresc singure. Cu alertare în timp real afli de problemă cât încă o poți rezolva.</p></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q" onclick="toggleFaq(this)">De ce nu e potrivită stingerea clasică cu apă într-o cameră de servere? <svg class="faq-chevron" width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg></button>
+          <div class="faq-a"><p>Pentru că apa distruge electronica la fel de sigur ca focul. Aici contează detecția foarte timpurie — să prinzi un început de problemă înainte să devină incendiu. Soluțiile de stingere pentru spații IT sunt gândite să nu distrugă echipamentele. Recomandarea concretă se face cu un specialist autorizat în securitate la incendiu.</p></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q" onclick="toggleFaq(this)">Ce rol au camerele într-o cameră de servere? <svg class="faq-chevron" width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg></button>
+          <div class="faq-a"><p>Pe ușa de acces, camera arată cine intră și iese — probă și descurajare. În interior, pe rack-uri, documentează ce se întâmplă fizic cu echipamentele. Combinată cu jurnalul de acces, imaginea video îți dă tabloul complet: cine a fost prezent și ce a făcut.</p></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q" onclick="toggleFaq(this)">De ce contează alimentarea critică și backupul? <svg class="faq-chevron" width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg></button>
+          <div class="faq-a"><p>Pentru că o pană înseamnă servere oprite și risc de corupere a datelor la oprirea bruscă. Un UPS ține echipamentele suficient cât să se închidă corect sau să pornească o sursă de rezervă, iar alarmele la pană te anunță imediat. Tot sistemul de securitate trebuie să aibă și el alimentare de rezervă.</p></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q" onclick="toggleFaq(this)">Cum se integrează protecția camerei de servere cu restul securității firmei? <svg class="faq-chevron" width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg></button>
+          <div class="faq-a"><p>Ideal, totul comunică într-un singur sistem: o alarmă de mediu, o ușă forțată sau o pană declanșează imediat o alertă pe telefon, iar camera potrivită se deschide automat pentru verificare. Integrarea înseamnă reacție rapidă și un singur loc din care vezi tot ce se întâmplă cu nodul central.</p></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q" onclick="toggleFaq(this)">Cum se leagă securitatea fizică de protecția datelor (GDPR)? <svg class="faq-chevron" width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg></button>
+          <div class="faq-a"><p>Strâns. Datele de pe servere trebuie protejate nu doar logic (parole, firewall), ci și fizic — cine poate ajunge la echipamente. Un acces controlat și jurnalizat face parte din măsurile rezonabile de securitate așteptate de legislația privind protecția datelor. Securitatea fizică și cea a datelor merg împreună.</p></div>
+        </div>
+      </div>
+
+      <div class="cta-banner">
+        <div>
+          <h3>Pașii următori — cere oferta ta</h3>
+          <p>Fără obligații: vii cu nevoia, pleci cu o soluție și un preț defalcat. CSSI — 20 de ani, 8.700+ proiecte în județul Brașov.</p>
+        </div>
+        <div class="cta-buttons">
+          <a href="tel:0752288400" class="btn btn-primary">📞 0752 288 400</a>
+          <a target="_blank" rel="noopener" href="https://wa.me/40752288400" class="btn btn-secondary">💬 WhatsApp</a>
+        </div>
+      </div>
+
+    </main>
+
+    <aside class="sidebar">
+      <div class="sidebar-card">
+        <div class="sidebar-card-head">📑 Cuprins</div>
+        <div class="sidebar-card-body" style="padding:10px 18px">
+          <ol class="toc-list">
+            <li><a href="#de-ce-camera-de-servere-e-alta-categorie">De ce camera de servere e altă categorie de risc</a></li>
+            <li><a href="#control-acces-strict-si-jurnalizat-cine-">Control acces strict și jurnalizat: cine, când, cât</a></li>
+            <li><a href="#monitorizarea-mediului-temperatura-umidi">Monitorizarea mediului: temperatură, umiditate, apă, alimentare</a></li>
+            <li><a href="#detectia-timpurie-de-incendiu-si-de-ce-s">Detecția timpurie de incendiu — și de ce stingerea clasică nu e potrivită aici</a></li>
+            <li><a href="#cctv-pe-rack-uri-si-pe-usa-de-acces">CCTV pe rack-uri și pe ușa de acces</a></li>
+            <li><a href="#alimentarea-critica-ups-backup-si-alarme">Alimentarea critică: UPS, backup și alarme la pană</a></li>
+            <li><a href="#integrarea-cu-restul-securitatii-si-aler">Integrarea cu restul securității și alertarea în timp real</a></li>
+            <li><a href="#gdpr-si-securitatea-datelor-legatura-fiz">GDPR și securitatea datelor: legătura fizic–logic</a></li>
+            <li><a href="#cine-ar-trebui-sa-aiba-acces-si-cine-nu">Cine ar trebui să aibă acces, și cine nu</a></li>
+            <li><a href="#camera-de-servere-sau-doar-un-dulap-de-r">Cameră de servere sau doar un dulap de rețea?</a></li>
+            <li><a href="#semne-ca-nodul-it-al-firmei-tale-e-prost">Semne că nodul IT al firmei tale e prost protejat</a></li>
+            <li><a href="#cele-patru-straturi-de-risc-pe-scurt">Cele patru straturi de risc, pe scurt</a></li>
+            <li><a href="#cheie-clasica-vs-control-acces-electroni">Cheie clasică vs control acces electronic</a></li>
+            <li><a href="#costuri-orientative-2026">Costuri orientative 2026</a></li>
+            <li><a href="#cum-arata-implementarea-cu-cssi">Cum arată implementarea cu CSSI</a></li>
+            <li><a href="#mentenanta-camerei-de-servere">Mentenanța camerei de servere</a></li>
+            <li><a href="#citeste-si">Citește și</a></li>
+            <li><a href="#faq">Întrebări frecvente</a></li>
+          </ol>
+        </div>
+      </div>
+      <div class="sidebar-card">
+        <div class="sidebar-card-head">📞 Contact CSSI Brașov</div>
+        <div class="sidebar-card-body">
+          <ul class="contact-info">
+            <li><div class="ci-icon">📞</div><div><strong>0752 288 400</strong><span>Lun–Vin 08:00–18:00</span></div></li>
+            <li><div class="ci-icon">📧</div><div><strong>office@cssi.ro</strong><span>Răspuns în max 24h</span></div></li>
+            <li><div class="ci-icon">📍</div><div><strong>Brașov</strong><span>și județele înconjurătoare</span></div></li>
+          </ul>
+          <a target="_blank" rel="noopener" href="https://wa.me/40752288400" class="btn btn-primary" style="margin-top:12px">💬 Scrie pe WhatsApp</a>
+        </div>
+      </div>
+    </aside>
+  </div>
+
+<footer class="article-footer">
+    <p>Articol scris de echipa <strong>CSSI Brașov</strong> — firmă autorizată IGPR și ISU, cu peste 20 de ani de experiență în sisteme de securitate și instalații.</p>
+    <div class="tags">
+      <span class="tag">camere supraveghere brasov</span>
+      <span class="tag">instalare camere</span>
+      <span class="tag">preturi camere 2026</span>
+      <span class="tag">Hikvision</span>
+      <span class="tag">Dahua</span>
+      <span class="tag">Uniview</span>
+      <span class="tag">CCTV</span>
+      <span class="tag">Brașov</span>
+    </div>
+    <p style="font-size:12px;color:#aaa;margin-top:8px">© 2026 CSSI — Confort, Securitate, Siguranță, Imobil | <a href="/">cssi.ro</a></p>
+  </footer>
+<script>
+    function toggleFaq(btn) {
+      const item = btn.closest('.faq-item');
+      const isOpen = item.classList.contains('open');
+      document.querySelectorAll('.faq-item.open').forEach(el => el.classList.remove('open'));
+      if (!isOpen) item.classList.add('open');
+    }
+    const headings = document.querySelectorAll('h2[id]');
+    const tocLinks = document.querySelectorAll('.toc-list a');
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          tocLinks.forEach(a => a.style.color = '');
+          const active = document.querySelector(`.toc-list a[href="#${entry.target.id}"]`);
+          if (active) active.style.color = 'var(--brand-blue)';
+        }
+      });
+    }, { rootMargin: '-20% 0px -70% 0px' });
+    headings.forEach(h => observer.observe(h));
+  </script>
+  <script>
+    let navTextColor = '#fff';
+    window.addEventListener('scroll', function() {
+        const navBg = document.getElementById('navBg');
+        const logo = document.getElementById('logoImg');
+        const scrolled = window.scrollY > 50;
+        if (scrolled) {
+            navBg.style.background = '#ffffff';
+            navBg.style.backdropFilter = 'blur(12px)';
+            navBg.style.boxShadow = '0 1px 2px rgba(0,0,0,0.05)';
+            if (logo) logo.style.filter = '';
+            navTextColor = '#334155';
+        } else {
+            navBg.style.background = 'transparent';
+            navBg.style.backdropFilter = '';
+            navBg.style.boxShadow = '';
+            if (logo) logo.style.filter = 'brightness(0) invert(1) drop-shadow(0 0 1px rgba(255,255,255,0.8))';
+            navTextColor = '#fff';
+        }
+        ['navLink1','navLink2','navLink3','navLink4','navLink5','phoneLink'].forEach(id=>{
+            const el=document.getElementById(id);
+            if(el) el.style.color=navTextColor;
+        });
+    });
+    function toggleMobileMenu(){
+        const menu=document.getElementById('mobileMenu');
+        const menuIcon=document.getElementById('menuIcon');
+        const closeIcon=document.getElementById('closeIcon');
+        const btn=document.getElementById('menuBtn');
+        if(menu.classList.contains('open')){
+            menu.classList.remove('open');
+            menuIcon.style.display='';
+            closeIcon.style.display='none';
+            btn.style.background='linear-gradient(to right,#ef4444,#dc2626)';
+            btn.classList.add('animate-subtle-pulse');
+        } else {
+            menu.classList.add('open');
+            menuIcon.style.display='none';
+            closeIcon.style.display='';
+            btn.style.background='#6b7280';
+            btn.classList.remove('animate-subtle-pulse');
+        }
+    }
+    function closeMobile(){
+        document.getElementById('mobileMenu').classList.remove('open');
+        document.getElementById('menuIcon').style.display='';
+        document.getElementById('closeIcon').style.display='none';
+    }
+    function toggleServicesSubmenu(){
+        const sub=document.getElementById('servicesSubmenu');
+        const arrow=document.getElementById('servicesArrow');
+        if(sub.classList.contains('open')){
+            sub.classList.remove('open');
+            arrow.style.transform='';
+        } else {
+            sub.classList.add('open');
+            arrow.style.transform='rotate(180deg)';
+        }
+    }
+  </script>
+<script>
+// GA4 tracking: phone_call & whatsapp_click
+document.addEventListener('DOMContentLoaded', function() {
+    document.querySelectorAll('a[href^="tel:"]').forEach(function(link) {
+        link.addEventListener('click', function() {
+            if (typeof gtag === 'function') {
+                gtag('event', 'phone_call', {event_category:'Contact', event_label:this.href.replace('tel:',''), value:100, currency:'RON'});
+            }
+        });
+    });
+    document.querySelectorAll('a[href*="wa.me"]').forEach(function(link) {
+        link.addEventListener('click', function() {
+            if (typeof gtag === 'function') {
+                gtag('event', 'whatsapp_click', {event_category:'Contact', event_label:'WhatsApp Direct', value:100, currency:'RON'});
+            }
+        });
+    });
+});
+</script>
+<script src="/tawk-chat.js" defer></script>
+</body>
+</html>

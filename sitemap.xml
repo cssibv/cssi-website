@@ -842,4 +842,11 @@
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
+  <!-- adaugat automat de agent 2026-09-04 -->
+  <url>
+    <loc>https://cssi.ro/blog/securitate-centru-date-camera-servere-firma-brasov</loc>
+    <lastmod>2026-09-04</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
 </urlset>
