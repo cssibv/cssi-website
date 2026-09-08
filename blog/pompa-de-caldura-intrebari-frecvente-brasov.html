@@ -170,6 +170,11 @@
 /* mobfix-v1 */
 .hidden{display:none}
 @media(max-width:900px){.article-wrap{grid-template-columns:minmax(0,1fr)}.sidebar{position:static;top:auto}.article-body table{display:block;overflow-x:auto;max-width:100%}}
+
+/* buton inapoi-sus */
+#toTop{position:fixed;right:18px;bottom:18px;z-index:45;width:46px;height:46px;border:none;border-radius:50%;background:var(--brand-navy);color:#fff;cursor:pointer;box-shadow:0 6px 18px rgba(11,26,46,.28);opacity:0;visibility:hidden;transform:translateY(8px);transition:opacity .2s,transform .2s,visibility .2s;display:flex;align-items:center;justify-content:center}
+#toTop.show{opacity:1;visibility:visible;transform:none}
+#toTop:hover{background:var(--brand-blue)}
 </style></head>
 <body>
 <header id="mainHeader" style="position:fixed;top:0;left:0;right:0;z-index:50;transition:all 0.3s;">
@@ -652,5 +657,6 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 </script>
 <script src="/tawk-chat.js" defer></script>
+<button id="toTop" aria-label="Înapoi sus" onclick="window.scrollTo({top:0,behavior:&#39;smooth&#39;})"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 15l-6-6-6 6"/></svg></button><script>(function(){var b=document.getElementById("toTop");window.addEventListener("scroll",function(){if(window.scrollY>400)b.classList.add("show");else b.classList.remove("show");});})();</script>
 </body>
 </html>
