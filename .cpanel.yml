@@ -7,6 +7,7 @@ deployment:
     - echo "=== BEFORE cp — deploy state ==="
     - ls -la $DEPLOYPATH/admin/api.php 2>&1 || echo "api.php NU e în $DEPLOYPATH/admin/"
     - /bin/cp -R * $DEPLOYPATH
+    - /bin/cp .htaccess $DEPLOYPATH/
     - echo "=== AFTER cp — deploy state ==="
     - ls -la $DEPLOYPATH/admin/api.php 2>&1 || echo "!!! api.php LIPSEȘTE DUPĂ CP !!!"
     - cd $DEPLOYPATH && php generate-localized.php
