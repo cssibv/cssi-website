@@ -894,4 +894,11 @@
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
+  <!-- adaugat automat de agent 2026-09-14 -->
+  <url>
+    <loc>https://cssi.ro/blog/ceata-securitate-fog-cannon-generator-antiefractie-brasov</loc>
+    <lastmod>2026-09-14</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
 </urlset>
