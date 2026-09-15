@@ -1,0 +1,765 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Control acces cu recunoaștere facială: cum | CSSI</title>
+<meta name="description" content="Recunoaștere facială la control acces și pontaj: cum funcționează, ce avantaje are față de card sau amprentă, ce înseamnă GDPR pentru datele — CSSI Brașov">
+<link rel="canonical" href="https://cssi.ro/blog/control-acces-recunoastere-faciala-gdpr-brasov">
+<!-- Open Graph + Twitter Card -->
+<meta property="og:type" content="article">
+<meta property="og:title" content="Control acces cu recunoaștere facială: cum funcționează, GDPR, când merită | CSSI Brașov">
+<meta property="og:description" content="Cum funcționează accesul și pontajul cu recunoaștere facială, ce spune GDPR despre datele biometrice și când merită cu adevărat vs. card sau amprentă. Ghid pentru firmele din Brașov.">
+<meta property="og:url" content="https://cssi.ro/blog/control-acces-recunoastere-faciala-gdpr-brasov">
+<meta property="og:image" content="https://cssi.ro/images/blog/control-acces-recunoastere-faciala-cover.webp">
+<meta property="og:locale" content="ro_RO">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Control acces cu recunoaștere facială: cum funcționează și GDPR">
+<meta name="twitter:description" content="Acces și pontaj cu fața: avantaje, capcana GDPR a datelor biometrice și când merită cu adevărat. Ghid pentru firmele din Brașov. CSSI: 0752 288 400.">
+<meta name="twitter:image" content="https://cssi.ro/images/blog/control-acces-recunoastere-faciala-cover.webp">
+
+<!-- ===== SCHEMA JSON-LD: Article + BreadcrumbList + FAQPage ===== -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Article",
+      "@id": "https://cssi.ro/blog/control-acces-recunoastere-faciala-gdpr-brasov#article",
+      "headline": "Control acces cu recunoaștere facială: cum funcționează, GDPR și când merită",
+      "description": "Ghid pentru firmele din Brașov: cum funcționează controlul accesului și pontajul cu recunoaștere facială, ce avantaje are față de card, cod sau amprentă, ce înseamnă GDPR pentru datele biometrice și când merită cu adevărat să investești în această tehnologie.",
+      "image": "https://cssi.ro/images/blog/control-acces-recunoastere-faciala-cover.webp",
+      "author": {
+        "@type": "Organization",
+        "name": "CSSI Brașov",
+        "url": "https://cssi.ro"
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": "CSSI Brașov",
+        "logo": {
+          "@type": "ImageObject",
+          "url": "https://cssi.ro/images/logo-cssi.webp"
+        }
+      },
+      "datePublished": "2027-03-18",
+      "dateModified": "2027-03-18",
+      "mainEntityOfPage": "https://cssi.ro/blog/control-acces-recunoastere-faciala-gdpr-brasov",
+      "inLanguage": "ro"
+    },
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Acasă",
+          "item": "https://cssi.ro/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "Blog",
+          "item": "https://cssi.ro/blog"
+        },
+        {
+          "@type": "ListItem",
+          "position": 3,
+          "name": "Control acces cu recunoaștere facială: cum funcționează, GDPR, când merită"
+        }
+      ]
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "Recunoașterea facială la pontaj sau acces este legală în România?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Da, este legală, dar fața e considerată dată biometrică — categorie specială protejată strict de GDPR. Ai nevoie de temei legal solid, de regulă de o alternativă pentru cine nu vrea scanarea și, după caz, de o evaluare de impact. Nu e interzisă, dar nici de bifat la întâmplare. Articol informativ, nu consultanță juridică — verifică pentru cazul tău cu un specialist GDPR."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Care e diferența față de o cameră cu recunoaștere facială (AI)?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Camera AI observă o scenă în scop de securitate; controlul accesului cu recunoaștere facială compară activ fața cu o bază de angajați înrolați ca să decidă accesul sau pontajul. Primul ține de CCTV, al doilea de acces, cu șabloane biometrice stocate intenționat — de aceea regimul GDPR e mai strict la al doilea."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Se stochează poza mea pe un server?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "La sistemele profesionale se păstrează de regulă un șablon matematic (numere), nu o fotografie din care s-ar putea reconstrui imaginea. Șablonul stă criptat și servește doar la comparare. Firma trebuie să știe exact ce se stochează, unde, cât timp și cine are acces — și să comunice asta angajaților. Detaliile depind de echipament și se stabilesc la implementare."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Pot obliga angajații să folosească recunoașterea facială?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "În general nu: datele biometrice sunt categorie specială, iar consimțământul angajatului e considerat fragil din cauza relației de subordonare. Recomandarea practică e să oferi mereu o alternativă (card sau cod) pentru cine nu dorește scanarea. Temeiul și alternativa potrivite firmei tale se stabilesc printr-o analiză GDPR specifică."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Când merită cu adevărat recunoașterea facială?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Acolo unde aduce beneficiu real: flux mare la intrare, cerințe de igienă (fără atingere) sau pontaj unde vrei să elimini pontajul de complezență, pentru că fața nu se împrumută ca un card. La o firmă mică, fără aceste presiuni, cardul sau codul rezolvă același lucru mai simplu și fără complicații."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Funcționează cu mască, ochelari sau pe întuneric?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Sistemele moderne se descurcă bine cu ochelari și variații de aspect, iar multe au iluminare în infraroșu, deci merg și pe întuneric. Masca poate reduce acuratețea, în funcție de echipament — de aceea un sistem bun păstrează și o metodă alternativă (card/cod) pentru situațiile în care recunoașterea nu reușește."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Ce alternative am dacă nu vreau date biometrice?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Card de proximitate, cod PIN, breloc/etichetă sau acces prin aplicație pe telefon — toate oferă control bun și pontaj, fără regimul strict al datelor biometrice. Pentru multe firme din Brașov, cardul sau codul, eventual cu camere la intrare, e cea mai echilibrată soluție. La evaluare îți arătăm ce ți se potrivește, fără să te împingem spre cea mai scumpă variantă."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Cât costă un sistem de control acces cu recunoaștere facială?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Pentru un punct de acces, un cititor facial cu software și montaj pornește orientativ de la 2.500–5.000 RON, la care se adaugă, dacă e cazul, integrarea cu pontajul și alternativa card/cod pentru angajații care nu vor să fie scanați. La mai multe puncte de acces sau la funcții anti-spoofing avansate, bugetul crește. Cifrele sunt orientative — prețul exact vine după o evaluare la fața locului."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Cât durează implementarea unui sistem de acces facial?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "La un singur punct de acces, montajul și configurarea de bază durează de regulă câteva ore, într-o singură vizită. Timpul crește dacă sunt mai multe puncte, dacă se integrează cu pontajul existent sau dacă firma alege să facă întâi o evaluare GDPR mai amplă (DPIA) înainte de instalare — pas recomandat înainte de a porni lucrarea, nu după."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "E nevoie de evaluare de impact (DPIA) pentru orice sistem cu recunoaștere facială?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Nu automat pentru orice instalație, dar GDPR cere o evaluare de impact atunci când prelucrarea prezintă risc ridicat pentru drepturile persoanelor, iar utilizarea pe scară largă a datelor biometrice se încadrează frecvent aici. Pentru o firmă cu mulți angajați sau mai multe puncte de acces, recomandarea prudentă e să faci întâi această evaluare. Pentru cazul tău exact, verifică cu un specialist GDPR."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Ce mentenanță cere un sistem de acces facial?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Verificări periodice ale acurateței recunoașterii (mai ales la schimbări de iluminat sezonier), curățarea camerei/cititorului, actualizări de securitate ale software-ului, ștergerea din bază a angajaților care au plecat din firmă și testarea periodică a alternativei card/cod. O mentenanță regulată reduce erorile de recunoaștere și menține sistemul conform cu principiul minimizării datelor."
+          }
+        }
+      ]
+    }
+  ]
+}
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;600;700;800&family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,400;0,8..60,600;1,8..60,400&display=swap" rel="stylesheet" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.js"></script>
+  <script src="/cookie-consent.js" defer></script>
+  <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}</script>
+  <script src="/tracking.js" defer></script>
+  <style>
+    @keyframes subtle-pulse-n { 0%,100%{transform:scale(1)}50%{transform:scale(.92)} }
+    @keyframes badge-pulse-n { 0%,100%{box-shadow:0 0 0 0 rgba(34,197,94,.4)}50%{box-shadow:0 0 0 8px rgba(34,197,94,0)} }
+    .animate-subtle-pulse{animation:subtle-pulse-n 2.5s ease-in-out infinite}
+    .animate-badge-pulse{animation:badge-pulse-n 2s ease-in-out infinite}
+    .dropdown-menu{display:none!important}
+    .dropdown:hover .dropdown-menu{display:block!important}
+    #mobileMenu{display:none}
+    #mobileMenu.open{display:block}
+    #servicesSubmenu{display:none}
+    #servicesSubmenu.open{display:block}
+    .dropdown-scroll::-webkit-scrollbar{width:4px}
+    .dropdown-scroll::-webkit-scrollbar-track{background:#f1f1f1}
+    .dropdown-scroll::-webkit-scrollbar-thumb{background:#cbd5e1;border-radius:4px}
+    @media(min-width:640px){.sm\:block{display:block!important}.sm\:hidden{display:none!important}.sm\:px-6{padding-left:24px;padding-right:24px}}
+    @media(min-width:1024px){.lg\:flex{display:flex!important}.lg\:hidden{display:none!important}}@media(min-width:768px){.md\:flex{display:flex!important}.md\:hidden{display:none!important}}
+    #mainHeader, #mainHeader a, #mainHeader button, #mainHeader span, #mainHeader div { font-family: 'Sora', sans-serif !important; }
+  </style>
+  <style>
+    :root{--brand-dark:#0b1a2e;--brand-navy:#102a4c;--brand-blue:#1a4b8c;--brand-accent:#e63022;--brand-gold:#f5a623;--brand-light:#f0f4f9;--text-main:#1c2b3a;--text-muted:#5a6e82;--text-light:#8fa0b3;--border:#dce6f0;--white:#ffffff;--ff-head:'Sora',sans-serif;--ff-body:'Source Serif 4',Georgia,serif;--radius:10px;--shadow-sm:0 2px 8px rgba(11,26,46,.08);--shadow-md:0 6px 24px rgba(11,26,46,.13);--shadow-lg:0 16px 48px rgba(11,26,46,.18);--max-w:1400px}
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    html{scroll-behavior:smooth}
+    body{font-family:var(--ff-body);font-size:18px;line-height:1.75;color:var(--text-main);background:var(--white);-webkit-font-smoothing:antialiased}
+    img{max-width:100%;height:auto;display:block}
+    a{color:var(--brand-blue);text-decoration:none}
+    a:hover{text-decoration:underline}
+    .breadcrumb{background:var(--brand-dark);border-bottom:none;padding:12px 0;padding-top:104px;font-family:var(--ff-head);font-size:13px;color:rgba(255,255,255,.55)}
+    .breadcrumb .inner{max-width:1280px;margin:0 auto;padding:0 0 12px 24px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+    .breadcrumb a{color:rgba(255,255,255,.7)}
+    .breadcrumb .sep{color:rgba(255,255,255,.3)}
+    .hero{background:var(--brand-dark);background-image:radial-gradient(ellipse 70% 60% at 80% 50%,rgba(26,75,140,.45) 0%,transparent 70%),radial-gradient(ellipse 40% 50% at 10% 80%,rgba(230,48,34,.15) 0%,transparent 60%);color:var(--white);padding:48px 24px 64px;position:relative;overflow:hidden}
+    .hero::before{content:'';position:absolute;inset:0;background-image:url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23ffffff' fill-opacity='0.025'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/svg%3E")}
+        .hero .inner{max-width:var(--max-w);margin:0 auto;position:relative;z-index:1;display:flex;align-items:center;gap:40px}
+    .hero-content{flex:1;min-width:0}
+    .hero-img-wrap{flex:0 0 280px;display:flex;align-items:center;justify-content:center}
+    .hero-img-wrap img{width:280px;height:auto;border-radius:14px;box-shadow:0 8px 32px rgba(0,0,0,.35);border:1px solid rgba(255,255,255,.1);opacity:.92;transition:opacity .3s}
+    .hero-img-wrap img:hover{opacity:1}
+    @media(max-width:900px){.hero .inner{flex-direction:column;gap:24px}.hero-img-wrap{flex:0 0 auto;order:-1}.hero-img-wrap img{width:220px}}
+    @media(max-width:700px){.hero-img-wrap{display:none}}
+    .hero-badge{display:inline-flex;align-items:center;gap:6px;background:rgba(230,48,34,.2);border:1px solid rgba(230,48,34,.4);color:#ff8a80;font-family:var(--ff-head);font-size:12px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;padding:5px 12px;border-radius:100px;margin-bottom:20px}
+    .hero h1{font-family:var(--ff-head);font-size:clamp(26px,4vw,40px);font-weight:800;line-height:1.2;margin-bottom:20px;letter-spacing:-.02em}
+    .hero h1 em{font-style:normal;color:var(--brand-gold)}
+    .hero .lead{font-size:clamp(16px,2vw,19px);line-height:1.65;color:rgba(255,255,255,.82);max-width:620px;margin-bottom:32px}
+    .hero-meta{display:flex;align-items:center;gap:20px;flex-wrap:wrap;font-family:var(--ff-head);font-size:13px;color:rgba(255,255,255,.55)}
+    .hero-meta span{display:flex;align-items:center;gap:5px}
+    .hero-meta .dot{color:rgba(255,255,255,.25)}
+    .topic-pills{display:flex;gap:10px;flex-wrap:wrap;margin-top:28px}
+    .pill{display:flex;align-items:center;gap:8px;padding:8px 16px;border-radius:100px;font-family:var(--ff-head);font-size:13px;font-weight:600;border:1px solid}
+    .pill-red{background:rgba(230,48,34,.15);border-color:rgba(230,48,34,.35);color:#ff8a80}
+    .pill-amber{background:rgba(245,166,35,.12);border-color:rgba(245,166,35,.3);color:#ffd180}
+    .pill-blue{background:rgba(26,75,140,.25);border-color:rgba(26,75,140,.5);color:#82b4ff}
+    .pill-green{background:rgba(39,174,96,.15);border-color:rgba(39,174,96,.35);color:#81c995}
+    .article-wrap{max-width:1440px;margin:0 auto;padding:0 20px;display:grid;grid-template-columns:1fr 280px;gap:32px;align-items:start}
+    .article-body{padding:32px 0}
+    .article-body h2{font-family:var(--ff-head);font-size:clamp(20px,2.5vw,26px);font-weight:700;color:var(--brand-dark);margin:36px 0 14px;padding-top:6px;border-top:3px solid var(--brand-accent);line-height:1.3}
+    .article-body h3{font-family:var(--ff-head);font-size:clamp(17px,2vw,20px);font-weight:600;color:var(--brand-navy);margin:32px 0 12px}
+    .article-body p{margin-bottom:16px;color:var(--text-main)}
+    .article-body ul,.article-body ol{padding-left:24px;margin-bottom:20px}
+    .article-body li{margin-bottom:8px}
+    .article-body strong{color:var(--brand-dark)}
+    .intro-p{font-size:19px;line-height:1.7}
+    .box{border-radius:var(--radius);padding:22px 26px;margin:28px 0;border-left:4px solid}
+    .box-red{background:#fef2f2;border-color:var(--brand-accent)}
+    .box-blue{background:#eff6ff;border-color:var(--brand-blue)}
+    .box-amber{background:#fffbeb;border-color:var(--brand-gold)}
+    .box-green{background:#f0fdf4;border-color:#27ae60}
+    .box h4{font-family:var(--ff-head);font-size:15px;font-weight:700;margin-bottom:8px}
+    .box p{font-size:15px;margin-bottom:8px}
+    .check-list{list-style:none;padding:0}
+    .check-list li{display:flex;gap:10px;padding:6px 0;font-size:16px}
+    .chk{color:#27ae60;font-weight:700;flex-shrink:0}
+    .price-table{width:100%;border-collapse:collapse;margin:24px 0;font-size:15px}
+    .price-table th{background:var(--brand-navy);color:var(--white);font-family:var(--ff-head);font-size:13px;font-weight:600;text-transform:uppercase;letter-spacing:.04em;padding:12px 16px;text-align:left}
+    .price-table td{padding:12px 16px;border-bottom:1px solid var(--border)}
+    .price-table tr:nth-child(even) td{background:var(--brand-light)}
+    .price-table .highlight td{background:#fffbeb;font-weight:600}
+    .cta-banner{background:linear-gradient(135deg,var(--brand-dark),var(--brand-navy));border-radius:var(--radius);padding:28px 32px;color:var(--white);display:flex;align-items:center;justify-content:space-between;gap:20px;flex-wrap:wrap}
+    .cta-banner h3{font-family:var(--ff-head);font-size:18px;font-weight:700;margin-bottom:4px}
+    .cta-banner p{font-size:14px;color:rgba(255,255,255,.7);margin:0}
+    .cta-buttons{display:flex;gap:10px;flex-wrap:wrap}
+    .btn{display:inline-flex;align-items:center;gap:7px;padding:10px 18px;border-radius:8px;font-family:var(--ff-head);font-size:13px;font-weight:600;cursor:pointer;border:none;text-decoration:none!important}
+    .btn-primary{background:var(--brand-accent);color:var(--white)!important;box-shadow:0 4px 14px rgba(230,48,34,.3)}
+    .btn-secondary{background:rgba(255,255,255,.12);color:var(--white)!important;border:1px solid rgba(255,255,255,.25)}
+    .faq-section{margin:48px 0 32px}
+    .faq-item{border:1px solid var(--border);border-radius:var(--radius);margin-bottom:10px;overflow:hidden}
+    .faq-q{display:flex;align-items:center;justify-content:space-between;padding:16px 20px;cursor:pointer;background:var(--white);font-family:var(--ff-head);font-size:15px;font-weight:600;color:var(--brand-dark);border:none;width:100%;text-align:left;gap:12px}
+    .faq-q:hover{background:var(--brand-light)}
+    .faq-a{display:none;padding:0 20px 16px;font-size:15px;color:var(--text-muted);line-height:1.7}
+    .faq-item.open .faq-a{display:block}
+    .faq-item.open .faq-q{background:var(--brand-light);color:var(--brand-blue)}
+    .faq-chevron{transition:transform .2s;flex-shrink:0}
+    .faq-item.open .faq-chevron{transform:rotate(180deg)}
+    .sidebar{position:sticky;top:104px}
+    .sidebar-card{border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;margin-bottom:20px;background:var(--white);box-shadow:var(--shadow-sm)}
+    .sidebar-card-head{background:var(--brand-navy);color:var(--white);font-family:var(--ff-head);font-size:12px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;padding:12px 18px}
+    .sidebar-card-body{padding:16px 18px}
+    .toc-list{list-style:none;padding:0;counter-reset:toc}
+    .toc-list li{counter-increment:toc}
+    .toc-list a{display:flex;align-items:baseline;gap:8px;padding:7px 0;font-family:var(--ff-head);font-size:13px;color:var(--text-muted);border-bottom:1px solid var(--border);text-decoration:none}
+    .toc-list a::before{content:counter(toc,decimal-leading-zero);font-size:11px;font-weight:700;color:var(--text-light)}
+    .toc-list li:last-child a{border-bottom:none}
+    .toc-list a:hover{color:var(--brand-blue)}
+    .contact-info{list-style:none;padding:0}
+    .contact-info li{display:flex;gap:12px;padding:10px 0;border-bottom:1px solid var(--border);align-items:flex-start}
+    .contact-info li:last-child{border-bottom:none}
+    .ci-icon{font-size:20px;flex-shrink:0;margin-top:2px}
+    .contact-info strong{font-family:var(--ff-head);font-size:14px;display:block;color:var(--brand-dark)}
+    .contact-info span{font-size:12px;color:var(--text-light)}
+    .article-footer{background:var(--brand-light);border-top:1px solid var(--border);padding:40px 24px;text-align:center}
+    .article-footer p{font-size:14px;color:var(--text-muted);max-width:500px;margin:0 auto 16px}
+    .tags{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-top:12px}
+    .tag{background:var(--white);border:1px solid var(--border);padding:4px 12px;border-radius:100px;font-family:var(--ff-head);font-size:11px;color:var(--text-muted)}
+    @media(max-width:768px){.article-wrap{grid-template-columns:1fr;gap:32px}.sidebar{position:static;order:2}.cta-banner{flex-direction:column;text-align:center}}
+  
+.discuta-in-grup{background:var(--brand-light);border:1px solid var(--border);border-left:4px solid var(--brand-blue);border-radius:var(--radius);padding:20px 24px;margin:32px 0}
+.discuta-in-grup h3{font-family:var(--ff-head);font-weight:600;font-size:17px;color:var(--brand-navy);margin:0 0 8px}
+.discuta-in-grup p{font-size:15px;color:var(--text-muted);line-height:1.6;margin:0 0 12px}
+.discuta-in-grup a{display:inline-block;font-family:var(--ff-head);font-weight:600;font-size:14px;color:var(--brand-blue);text-decoration:none}
+.discuta-in-grup a:hover{text-decoration:underline}
+
+/* mobfix-v1 */
+.hidden{display:none}
+@media(max-width:900px){.article-wrap{grid-template-columns:minmax(0,1fr)}.sidebar{position:static;top:auto}.article-body table{display:block;overflow-x:auto;max-width:100%}}
+
+/* mobfix-v2 */
+.lg\:hidden .animate-badge-pulse{background:rgba(15,23,42,.9)!important;color:#fff!important;border:1px solid rgba(255,255,255,.25)}
+
+/* buton inapoi-sus */
+#toTop{position:fixed;right:18px;bottom:18px;z-index:45;width:46px;height:46px;border:none;border-radius:50%;background:var(--brand-navy);color:#fff;cursor:pointer;box-shadow:0 6px 18px rgba(11,26,46,.28);opacity:0;visibility:hidden;transform:translateY(8px);transition:opacity .2s,transform .2s,visibility .2s;display:flex;align-items:center;justify-content:center}
+#toTop.show{opacity:1;visibility:visible;transform:none}
+#toTop:hover{background:var(--brand-blue)}
+</style>
+<style>.cta-banner h3{color:#ffffff !important}.cta-banner p{color:rgba(255,255,255,.85) !important}.box-info{background:#eef5ff;border-color:var(--brand-blue)}.box-warn{background:#fff8ec;border-color:var(--brand-gold)}.box-tip{background:#f0faf2;border-color:#27ae60}.box-danger{background:#fef2f2;border-color:#e63022}.box-info .box-title{color:var(--brand-blue)}.box-warn .box-title{color:#b7760a}.box-tip .box-title{color:#1e8c3f}.box-danger .box-title{color:#c0392b}.compare-table{width:100%;border-collapse:collapse;font-size:15px;margin:24px 0;border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow-sm)}.compare-table th{background:var(--brand-navy);color:var(--white);font-family:var(--ff-head);font-weight:600;padding:13px 16px;text-align:left}.compare-table td{padding:12px 16px;border-bottom:1px solid var(--border);vertical-align:top}.compare-table tr:nth-child(even) td{background:var(--brand-light)}.compare-table tr:last-child td{border-bottom:none}.compare-table .yes{color:#27ae60;font-weight:600}.compare-table .no{color:#c0392b}</style></head>
+<body>
+<header id="mainHeader" style="position:fixed;top:0;left:0;right:0;z-index:50;transition:all 0.3s;">
+    <div class="hidden sm:block" style="background:#0f172a;color:#fff;font-size:12px;padding:6px 0;">
+        <div style="max-width:1280px;margin:0 auto;padding:0 24px;display:flex;justify-content:space-between;align-items:center;">
+            <span>⭐ <span style="color:#4ade80;font-weight:600;">Peste 20 ani de experiență</span></span>
+            <div style="display:flex;align-items:center;gap:16px;">
+                <span>⭐ <span style="font-weight:600;">8.700+ proiecte</span></span>
+            </div>
+        </div>
+    </div>
+    <div class="sm:hidden" style="background:#0f172a;color:#fff;font-size:12px;padding:6px 0;">
+        <div style="max-width:1280px;margin:0 auto;padding:0 12px;display:flex;justify-content:space-between;align-items:center;">
+            <span>⭐ <span style="color:#4ade80;font-weight:600;">Peste 20 ani de experiență</span></span>
+            <a href="tel:0752288400" style="display:flex;align-items:center;gap:4px;font-weight:600;color:#4ade80;">📞 Sună acum</a>
+        </div>
+    </div>
+    <div id="navBg" style="transition:all 0.3s;">
+        <div style="max-width:1280px;margin:0 auto;padding:0 12px;display:flex;justify-content:space-between;align-items:center;height:64px;" class="sm:px-6">
+            <a href="../">
+                <img src="https://eu.chat-img.sintra.ai/32c1b29c-0c86-4833-a031-e7c45e21a11e/983d52bb-2eb6-42f1-bed4-f94d769bb634/Logo_CSSI.png" alt="CSSI Logo" id="logoImg" style="height:56px;width:auto;transition:all 0.3s;filter:brightness(0) invert(1) drop-shadow(0 0 1px rgba(255,255,255,0.8));">
+            </a>
+            <nav class="hidden md:flex" style="align-items:center;gap:4px;">
+                <a href="../" id="navLink1" style="padding:6px 12px;font-size:14px;font-weight:500;color:#fff;transition:all 0.2s;border-radius:8px;" onmouseover="this.style.color='#f87171'" onmouseout="this.style.color=navTextColor">🏠 Acasă</a>
+                <div class="dropdown" style="position:relative;">
+                    <button id="navLink2" style="padding:6px 12px;font-size:14px;font-weight:500;color:#fff;transition:all 0.2s;border-radius:8px;background:none;border:none;cursor:pointer;display:flex;align-items:center;font-family:inherit;">
+                        🛠️ Servicii
+                        <svg style="margin-left:4px;width:16px;height:16px;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+                    </button>
+                    <div class="dropdown-menu dropdown-scroll" style="position:absolute;top:100%;left:0;width:280px;background:#fff;box-shadow:0 10px 15px -3px rgba(0,0,0,0.1);border-radius:12px;padding:8px;border:1px solid #f1f5f9;max-height:80vh;overflow-y:auto;z-index:100;">
+                        <a href="../detectie-incendiu-isu" style="display:block;padding:10px 16px;font-size:13px;color:#334155;border-radius:8px;" onmouseover="this.style.background='#fef2f2';this.style.color='#dc2626'" onmouseout="this.style.background='';this.style.color='#334155'">🔥 Detecție Incendiu ISU</a>
+                        <a href="../camere-supraveghere" style="display:block;padding:10px 16px;font-size:13px;color:#334155;border-radius:8px;" onmouseover="this.style.background='#fef2f2';this.style.color='#dc2626'" onmouseout="this.style.background='';this.style.color='#334155'">📹 Camere Supraveghere</a>
+                        <a href="../alarma-antiefractie" style="display:block;padding:10px 16px;font-size:13px;color:#334155;border-radius:8px;" onmouseover="this.style.background='#fef2f2';this.style.color='#dc2626'" onmouseout="this.style.background='';this.style.color='#334155'">🚨 Alarmă Antiefracție</a>
+                        <a href="../control-acces" style="display:block;padding:10px 16px;font-size:13px;color:#334155;border-radius:8px;" onmouseover="this.style.background='#fef2f2';this.style.color='#dc2626'" onmouseout="this.style.background='';this.style.color='#334155'">🚪 Control Acces</a>
+                        <a href="../pontaj-electronic" style="display:block;padding:10px 16px;font-size:13px;color:#334155;border-radius:8px;" onmouseover="this.style.background='#fef2f2';this.style.color='#dc2626'" onmouseout="this.style.background='';this.style.color='#334155'">⏱️ Pontaj Electronic</a>
+                        <a href="../bariere-auto" style="display:block;padding:10px 16px;font-size:13px;color:#334155;border-radius:8px;" onmouseover="this.style.background='#fef2f2';this.style.color='#dc2626'" onmouseout="this.style.background='';this.style.color='#334155'">🚧 Bariere Auto</a>
+                        <a href="../interfoane-videointerfoane" style="display:block;padding:10px 16px;font-size:13px;color:#334155;border-radius:8px;" onmouseover="this.style.background='#fef2f2';this.style.color='#dc2626'" onmouseout="this.style.background='';this.style.color='#334155'">🔔 Interfoane &amp; Videointerfoane</a>
+                        <a href="../sonorizare" style="display:block;padding:10px 16px;font-size:13px;color:#334155;border-radius:8px;" onmouseover="this.style.background='#fef2f2';this.style.color='#dc2626'" onmouseout="this.style.background='';this.style.color='#334155'">🔊 Sonorizare</a>
+                        <a href="../automatizari-porti" style="display:block;padding:10px 16px;font-size:13px;color:#334155;border-radius:8px;" onmouseover="this.style.background='#fef2f2';this.style.color='#dc2626'" onmouseout="this.style.background='';this.style.color='#334155'">🚗 Automatizări Porți</a>
+                        <a href="../usi-garaj" style="display:block;padding:10px 16px;font-size:13px;color:#334155;border-radius:8px;" onmouseover="this.style.background='#fef2f2';this.style.color='#dc2626'" onmouseout="this.style.background='';this.style.color='#334155'">🏠 Uși Garaj</a>
+                        <a href="../aer-conditionat" style="display:block;padding:10px 16px;font-size:13px;color:#334155;border-radius:8px;" onmouseover="this.style.background='#fef2f2';this.style.color='#dc2626'" onmouseout="this.style.background='';this.style.color='#334155'">❄️ Aer Condiționat</a>
+                        <a href="../ventilatie" style="display:block;padding:10px 16px;font-size:13px;color:#334155;border-radius:8px;" onmouseover="this.style.background='#fef2f2';this.style.color='#dc2626'" onmouseout="this.style.background='';this.style.color='#334155'">💨 Ventilație</a>
+                        <a href="../instalatii-electrice" style="display:block;padding:10px 16px;font-size:13px;color:#334155;border-radius:8px;" onmouseover="this.style.background='#fef2f2';this.style.color='#dc2626'" onmouseout="this.style.background='';this.style.color='#334155'">⚡ Instalații Electrice</a>
+                        <a href="../instalatii-termice-sanitare" style="display:block;padding:10px 16px;font-size:13px;color:#334155;border-radius:8px;" onmouseover="this.style.background='#fef2f2';this.style.color='#dc2626'" onmouseout="this.style.background='';this.style.color='#334155'">🔧 Instalații Termice &amp; Sanitare</a>
+                    </div>
+                </div>
+                <a href="../despre-noi" id="navLink3" style="padding:6px 12px;font-size:14px;font-weight:500;color:#fff;transition:all 0.2s;border-radius:8px;" onmouseover="this.style.color='#f87171'" onmouseout="this.style.color=navTextColor">ℹ️ Despre Noi</a>
+                <a href="../portofoliu" id="navLink4" style="padding:6px 12px;font-size:14px;font-weight:500;color:#fff;transition:all 0.2s;border-radius:8px;" onmouseover="this.style.color='#f87171'" onmouseout="this.style.color=navTextColor">📁 Portofoliu</a>
+                <a href="/blog/" style="padding:6px 12px;font-size:14px;font-weight:500;color:#fff;transition:all 0.2s;border-radius:8px;" id="navLinkBlog" onmouseover="this.style.color='#f87171'" onmouseout="this.style.color=navTextColor">📝 Blog</a>
+                <a href="../contact" id="navLink5" style="padding:6px 12px;font-size:14px;font-weight:500;color:#fff;transition:all 0.2s;border-radius:8px;" onmouseover="this.style.color='#f87171'" onmouseout="this.style.color=navTextColor">📍 Contact</a>
+            </nav>
+            <div class="hidden lg:flex" style="align-items:center;gap:12px;">
+                <a href="tel:0752288400" id="phoneLink" style="display:flex;align-items:center;font-size:14px;font-weight:500;color:#fff;transition:all 0.2s;">
+                    <svg style="width:16px;height:16px;margin-right:6px;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/></svg>
+                    0752 288 400
+                </a>
+                <a href="../contact" style="background:linear-gradient(to right,#dc2626,#b91c1c);color:#fff;padding:8px 20px;border-radius:8px;font-size:14px;font-weight:600;box-shadow:0 4px 6px -1px rgba(0,0,0,0.1);transition:all 0.2s;" onmouseover="this.style.background='linear-gradient(to right,#b91c1c,#991b1b)'" onmouseout="this.style.background='linear-gradient(to right,#dc2626,#b91c1c)'">Cere Ofertă</a>
+            </div>
+            <div class="md:hidden" style="display:flex;align-items:center;gap:8px;">
+                <button onclick="toggleMobileMenu()" id="menuBtn" class="animate-subtle-pulse" style="padding:4px;border-radius:6px;border:none;cursor:pointer;background:linear-gradient(to right,#ef4444,#dc2626);color:#fff;">
+                    <svg id="menuIcon" style="width:20px;height:20px;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
+                    <svg id="closeIcon" style="width:20px;height:20px;display:none;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+                </button>
+            </div>
+        </div>
+        <div id="mobileMenu" style="background:#fff;border-radius:16px;box-shadow:0 20px 25px -5px rgba(0,0,0,0.1);margin:8px 12px;padding:8px;max-height:80vh;overflow-y:auto;">
+            <nav style="display:flex;flex-direction:column;gap:4px;">
+                <a href="../" style="padding:10px 16px;font-size:16px;font-weight:500;color:#334155;border-radius:8px;">🏠 Acasă</a>
+                <button onclick="toggleServicesSubmenu()" style="padding:10px 16px;font-size:16px;font-weight:500;color:#334155;border-radius:8px;background:none;border:none;cursor:pointer;display:flex;justify-content:space-between;align-items:center;width:100%;font-family:inherit;text-align:left;">
+                    🛠️ Servicii
+                    <svg id="servicesArrow" style="width:16px;height:16px;transition:transform 0.2s;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+                </button>
+                <div id="servicesSubmenu" style="padding-left:16px;overflow-y:auto;">
+                    <a href="../detectie-incendiu-isu" onclick="closeMobile()" style="display:block;padding:8px 16px;font-size:14px;color:#475569;border-radius:8px;">🔥 Detecție Incendiu ISU</a>
+                    <a href="../camere-supraveghere" onclick="closeMobile()" style="display:block;padding:8px 16px;font-size:14px;color:#475569;border-radius:8px;">📹 Camere Supraveghere</a>
+                    <a href="../alarma-antiefractie" onclick="closeMobile()" style="display:block;padding:8px 16px;font-size:14px;color:#475569;border-radius:8px;">🚨 Alarmă Antiefracție</a>
+                    <a href="../control-acces" onclick="closeMobile()" style="display:block;padding:8px 16px;font-size:14px;color:#475569;border-radius:8px;">🚪 Control Acces</a>
+                    <a href="../pontaj-electronic" onclick="closeMobile()" style="display:block;padding:8px 16px;font-size:14px;color:#475569;border-radius:8px;">⏱️ Pontaj Electronic</a>
+                    <a href="../bariere-auto" onclick="closeMobile()" style="display:block;padding:8px 16px;font-size:14px;color:#475569;border-radius:8px;">🚧 Bariere Auto</a>
+                    <a href="../interfoane-videointerfoane" onclick="closeMobile()" style="display:block;padding:8px 16px;font-size:14px;color:#475569;border-radius:8px;">🔔 Interfoane &amp; Videointerfoane</a>
+                    <a href="../sonorizare" onclick="closeMobile()" style="display:block;padding:8px 16px;font-size:14px;color:#475569;border-radius:8px;">🔊 Sonorizare</a>
+                    <a href="../automatizari-porti" onclick="closeMobile()" style="display:block;padding:8px 16px;font-size:14px;color:#475569;border-radius:8px;">🚗 Automatizări Porți</a>
+                    <a href="../usi-garaj" onclick="closeMobile()" style="display:block;padding:8px 16px;font-size:14px;color:#475569;border-radius:8px;">🏠 Uși Garaj</a>
+                    <a href="../aer-conditionat" onclick="closeMobile()" style="display:block;padding:8px 16px;font-size:14px;color:#475569;border-radius:8px;">❄️ Aer Condiționat</a>
+                    <a href="../ventilatie" onclick="closeMobile()" style="display:block;padding:8px 16px;font-size:14px;color:#475569;border-radius:8px;">💨 Ventilație</a>
+                    <a href="../instalatii-electrice" onclick="closeMobile()" style="display:block;padding:8px 16px;font-size:14px;color:#475569;border-radius:8px;">⚡ Instalații Electrice</a>
+                    <a href="../instalatii-termice-sanitare" onclick="closeMobile()" style="display:block;padding:8px 16px;font-size:14px;color:#475569;border-radius:8px;">🔧 Instalații Termice &amp; Sanitare</a>
+                </div>
+                <a href="../despre-noi" onclick="closeMobile()" style="padding:10px 16px;font-size:16px;font-weight:500;color:#334155;border-radius:8px;">ℹ️ Despre Noi</a>
+                <a href="../portofoliu" onclick="closeMobile()" style="padding:10px 16px;font-size:16px;font-weight:500;color:#334155;border-radius:8px;">📁 Portofoliu</a>
+                <a href="/blog/" onclick="closeMobile()" style="padding:10px 16px;font-size:16px;font-weight:500;color:#334155;border-radius:8px;">📝 Blog</a>
+                <a href="../contact" onclick="closeMobile()" style="padding:10px 16px;font-size:16px;font-weight:500;color:#334155;border-radius:8px;">📍 Contact</a>
+                <div style="padding:12px 8px;">
+                    <a href="../contact" onclick="closeMobile()" style="display:block;text-align:center;background:linear-gradient(to right,#dc2626,#b91c1c);color:#fff;padding:10px 16px;border-radius:12px;font-weight:600;">Cere Ofertă</a>
+                </div>
+            </nav>
+        </div>
+    </div>
+</header>
+
+
+  
+  
+  <nav class="breadcrumb" aria-label="Breadcrumb">
+    <div class="inner">
+      <a href="/">Acasă</a><span class="sep">›</span>
+      <a href="/blog/">Blog</a><span class="sep">›</span>
+      <span style="color:rgba(255,255,255,.9)">Control acces cu recunoaștere facială: cum | CSSI</span>
+    </div>
+  </nav>
+
+  <header class="hero">
+    <div class="inner">
+      <div class="hero-content">
+      <div class="hero-badge">🔒 Ghid CSSI · 2026</div>
+      <h1>Control acces cu recunoaștere facială: cum funcționează, GDPR și când merită cu adevărat</h1>
+      <p class="lead">Recunoașterea facială pentru acces și pontaj sună spectaculos: intri pe ușă fără card, fără cod, doar privind spre un cititor. Tehnologia a devenit accesibilă și tot mai multe firme din Brașov o iau în calcul. Înainte să te entuziasmezi însă, e bine să știi două lucruri: fața ta este o <strong>dată biometrică</strong>, protejată strict de GDPR, iar tehnologia merită cu adevărat doar în anumite situații. Iată ghidul onest, pe înțelesul unui administrator de firmă.</p>
+      <div class="hero-meta">
+        <span>✍ CSSI Brașov</span><span class="dot">·</span>
+        <span>📅 15 Sep 2026</span><span class="dot">·</span>
+        <span>⏱ 10 min lectură</span>
+      </div>
+      <div class="topic-pills">
+        <span class="pill pill-blue">🛡 Securitate firme</span>
+        <span class="pill pill-green">📍 Brașov & împrejurimi</span>
+        <span class="pill pill-amber">✅ Ghid practic</span>
+      </div>
+    </div>
+      <div class="hero-img-wrap"><div style="width:280px;height:280px;background:linear-gradient(135deg,#0b1a2e,#1a4b8c);border-radius:14px;display:flex;align-items:center;justify-content:center;box-shadow:0 8px 32px rgba(0,0,0,.35);border:1px solid rgba(255,255,255,.1);"><span style="font-size:80px;">🔒</span></div></div>
+    </div>
+  </header>
+
+  <div class="article-wrap">
+    <main class="article-body" id="articol">
+<h2 id="raspunsul-scurt">Răspunsul scurt</h2>
+<p>Recunoașterea facială la control acces și pontaj este <strong>legală și utilă</strong>, dar lucrează cu date biometrice, deci trebuie implementată cu grijă: temei legal corect, <strong>alternativă</strong> pentru cine nu vrea să fie scanat și, după caz, evaluare de impact GDPR. Merită cu adevărat la <strong>flux mare</strong> de oameni, când vrei <strong>mâini libere / igienă</strong> sau când vrei să elimini „pontajul de complezență" (un coleg pontează pentru altul). Pentru o firmă mică, cu puțini angajați, un <strong>card sau un cod</strong> rezolvă același lucru mai simplu și fără complicații. Începe de la nevoia reală, nu de la tehnologia la modă.</p>
+
+
+<h2 id="ce-inseamna-recunoastere-faciala-la-acce">Ce înseamnă recunoaștere facială la acces și pontaj</h2>
+<p>Spre deosebire de un card de proximitate sau de un cod PIN, unde „cheia" e un obiect sau o informație pe care o ai, recunoașterea facială folosește <strong>trăsăturile feței tale</strong> ca metodă de identificare. La intrare (sau la terminalul de pontaj) un cititor compară fața persoanei din fața lui cu o bază de date de angajați <strong>înrolați</strong> în prealabil și decide dacă deschide ușa sau înregistrează prezența. E o formă de identificare biometrică, în aceeași familie cu amprenta, dar fără contact fizic.</p>
+<p>Important de înțeles din start: acest subiect e diferit de <a href="https://cssi.ro/blog/camere-supraveghere-firma-ghid-complet">camerele de supraveghere pentru firmă</a>, care observă o scenă în scop de securitate. Aici vorbim despre <strong>acces și pontaj</strong>, unde sistemul stochează intenționat informație biometrică despre angajați ca să-i recunoască. De aceea regimul de protecție a datelor e mai strict — nu mai discutăm despre o cameră care „vede" o zonă, ci despre o bază de date construită special ca să identifice fiecare persoană în parte.</p>
+<p>Diferența contează și practic, în relația cu angajații: o cameră de supraveghere clasică poate funcționa cu informare generală („zona e monitorizată video"), pe când un sistem de acces facial presupune ca fiecare persoană să fie <strong>înrolată individual</strong>, cu acordul și informarea ei explicită. E un nivel de implicare a angajatului mult mai mare decât la o cameră, și de aceea și obligațiile GDPR sunt mai mari.</p>
+
+      <div class="cta-banner" style="margin:32px 0">
+        <div>
+          <h3>Vrei o evaluare pentru firma ta?</h3>
+          <p>Evaluarea la fața locului e gratuită în Brașov și împrejurimi — vii cu nevoia, pleci cu o soluție și un preț defalcat.</p>
+        </div>
+        <div class="cta-buttons">
+          <a href="/control-acces-brasov" class="btn btn-secondary">📍 Control acces în Brașov</a>
+          <a href="/contact" class="btn btn-secondary">📩 Cere ofertă</a>
+          <a href="tel:0752288400" class="btn btn-primary">📞 0752 288 400</a>
+          <a target="_blank" rel="noopener" href="https://wa.me/40752288400" class="btn btn-secondary">💬 WhatsApp</a>
+        </div>
+      </div>
+<h2 id="cum-functioneaza-pas-cu-pas">Cum funcționează, pas cu pas</h2>
+<p>Procesul are trei etape simple. <strong>Înrolarea</strong>: la prima utilizare, sistemul „învață" fața fiecărui angajat și generează un <strong>șablon matematic</strong> — un set de numere derivate din trăsături, din care nu se poate reconstrui o fotografie. <strong>Compararea</strong>: la fiecare acces, cititorul generează un șablon din imaginea de moment și îl compară cu cele stocate. <strong>Decizia</strong>: dacă potrivirea depășește un prag de încredere, accesul e permis sau pontajul e înregistrat. Totul durează o fracțiune de secundă. La sistemele bune, ceea ce se păstrează e șablonul criptat, nu poza ta — un detaliu care contează enorm pentru GDPR.</p>
+<p>Un aspect tehnic util de știut: pragul de încredere la care sistemul acceptă o potrivire nu e fix — se reglează. Un prag prea permisiv crește riscul ca sistemul să confunde două persoane asemănătoare (rar, dar posibil); un prag prea strict duce la refuzuri false, mai ales la schimbări de aspect (barbă, ochelari noi, machiaj, lumină slabă). La instalare, un tehnician bun calibrează acest prag pentru condițiile reale de la fața locului, nu lasă setarea din fabrică.</p>
+
+<h2 id="avantajele-fata-de-card-cod-sau-amprenta">Avantajele față de card, cod sau amprentă</h2>
+<p>Recunoașterea facială are câteva atuuri reale. Primul: <strong>mâini libere</strong> — nu cauți cardul, nu tastezi codul, doar privești spre cititor, util când vii cu brațele ocupate. Al doilea: <strong>igienă</strong> — nu atingi nimic, un avantaj apreciat după anii din urmă, spre deosebire de cititorul de amprentă. Al treilea, poate cel mai important pentru pontaj: fața <strong>nu se „împrumută"</strong> ca un card. Practica prin care un coleg pontează pentru altul (numită și „buddy punching") devine imposibilă, ceea ce face datele de prezență mai corecte. Despre cum se leagă accesul de evidența prezenței scriem și în articolul despre <a href="https://cssi.ro/blog/pontaj-electronic-ghid-complet">pontajul electronic</a>.</p>
+<p>Există și un al patrulea avantaj, mai puțin discutat: <strong>viteza la flux mare</strong>. La o firmă cu zeci de angajați care intră în același interval de dimineață, un cititor de card poate crea coadă la ușă — fiecare persoană caută cardul, îl apropie, așteaptă deschiderea. Recunoașterea facială, bine calibrată, reduce acest timp aproape la zero, pentru că persoana e recunoscută din mers, fără gest suplimentar. Diferența se simte cel mai mult exact la orele de vârf, nu la o firmă cu trafic redus.</p>
+
+
+<h2 id="card-cod-amprenta-sau-fata-comparatie-di">Card, cod, amprentă sau față: comparație directă</h2>
+<p>Toate cele patru metode fac același lucru — decid cine intră — dar diferă mult la viteză, cost și, mai ales, la regimul legal al datelor pe care le folosesc. Iată o comparație pe scurt, utilă înainte să te decizi:</p>
+
+<table class="compare-table">
+<thead><tr><th>Metodă</th><th>Cum funcționează</th><th>Viteza la trecere</th><th>Regim date personale</th></tr></thead>
+<tbody>
+<tr><td><strong>Card de proximitate</strong></td><td>Apropii cardul de cititor</td><td>Rapidă, dar cu un gest suplimentar</td><td>Date obișnuite, ușor de gestionat</td></tr>
+<tr><td><strong>Cod PIN</strong></td><td>Tastezi un cod la tastatură</td><td>Medie, mai lentă la coadă</td><td>Date obișnuite, dar codul poate fi „furat" din priviri</td></tr>
+<tr><td><strong>Amprentă</strong></td><td>Apeși degetul pe senzor</td><td>Medie, necesită contact fizic</td><td>Dată biometrică — categorie specială GDPR</td></tr>
+<tr><td><strong>Recunoaștere facială</strong></td><td>Cititorul recunoaște fața, fără atingere</td><td>Foarte rapidă, fără gest suplimentar</td><td>Dată biometrică — categorie specială GDPR, de regulă cu temei legal explicit și alternativă obligatorie</td></tr>
+</tbody>
+</table>
+
+<p>Observația practică: singurele metode care evită complet regimul special al datelor biometrice sunt <strong>cardul</strong> și <strong>codul</strong>. Amprenta și recunoașterea facială aduc un plus de comoditate și de acuratețe la pontaj, dar cu obligații suplimentare de conformare. Alegerea corectă nu e „cea mai avansată tehnologie", ci cea care rezolvă problema reală a firmei tale cu cel mai mic nivel de complicație.</p>
+
+<h2 id="atentie-gdpr-si-datele-biometrice">Atenție: GDPR și datele biometrice</h2>
+<p>Aici e partea pe care mulți furnizori o trec sub tăcere. Fața este, în logica GDPR, o <strong>dată biometrică</strong> — Regulamentul (UE) 2016/679, la articolul 9, o încadrează explicit printre <strong>categoriile speciale de date</strong> (alături de date privind sănătatea, originea etnică sau convingerile religioase), acolo unde e folosită pentru a identifica în mod unic o persoană. Categoriile speciale au, implicit, o interdicție de principiu la prelucrare, ridicată doar dacă există una dintre condițiile prevăzute expres de regulament. Nu o poți folosi doar pentru că e comodă sau pentru că „așa fac și alții". În practică, asta se traduce în câteva obligații concrete, pe care le tratăm pe rând.</p>
+
+<p><strong>Temei legal solid, nu doar un formular semnat.</strong> Trebuie să existe o justificare reală și documentată pentru a prelucra date biometrice ale angajaților. Consimțământul este, teoretic, unul dintre temeiurile posibile din Art. 9, dar autoritățile europene de protecție a datelor tratează cu multă rezervă consimțământul obținut de la un angajat, tocmai din cauza dezechilibrului de putere din relația de muncă — angajatul poate simți că refuzul îi afectează poziția, chiar dacă nu i se spune direct asta. De aceea, un temei legal solid presupune, de regulă, mai mult decât o semnătură: o justificare de fond (de ce anume nu ajunge cardul sau codul pentru situația ta) și garanții suplimentare.</p>
+
+<p><strong>Alternativă reală, nu doar declarativă.</strong> Recomandarea prudentă, aplicată consecvent de specialiștii în protecția datelor, e să oferi mereu o metodă neutră (card sau cod) pentru angajații care nu vor să fie scanați facial — fără ca refuzul să atragă vreun dezavantaj practic (acces mai greoi, întârzieri la pontaj etc.). O alternativă „pe hârtie", care în realitate îngreunează viața celui care o alege, nu rezolvă problema din perspectiva GDPR.</p>
+
+<p><strong>Evaluare de impact asupra protecției datelor (DPIA).</strong> Articolul 35 din GDPR cere o astfel de evaluare înainte de operațiuni de prelucrare care prezintă probabil un risc ridicat pentru drepturile persoanelor — iar prelucrarea pe scară largă a datelor din categorii speciale, cum sunt cele biometrice, se încadrează frecvent aici. Practic, pentru o firmă cu un număr semnificativ de angajați sau cu mai multe puncte de acces facial, DPIA nu e un „nice to have", ci un pas de făcut înainte de instalare, nu după. Evaluarea documentează riscurile pentru angajați și măsurile prin care se reduc, iar dacă riscul rezidual rămâne ridicat, regulamentul cere consultarea autorității de supraveghere înainte de a începe prelucrarea.</p>
+
+<p><strong>Minimizarea datelor.</strong> Principiul minimizării (Art. 5 din GDPR) înseamnă că se colectează și se păstrează doar ce e strict necesar: șablonul matematic criptat, nu fotografia brută; acces la baza de date limitat la persoanele care chiar au nevoie de el, nu la tot departamentul IT; o perioadă de retenție stabilită clar (de regulă, datele se șterg la încetarea contractului de muncă, nu se păstrează „pentru orice eventualitate"); și fără refolosirea datelor în alt scop decât cel declarat (de exemplu, nu se combină baza de acces cu profiluri de marketing sau evaluare de performanță, fără un temei separat).</p>
+
+<p><strong>Drepturile angajaților.</strong> Fiecare persoană înrolată are dreptul să fie informată clar, înainte de înrolare, despre ce date se colectează, unde se stochează, cât timp și cine are acces (obligație de transparență, Art. 13-14 GDPR); dreptul de a cere acces la datele proprii; dreptul de ștergere, mai ales la plecarea din firmă; și dreptul de a depune o plângere la autoritatea de supraveghere dacă are nemulțumiri legate de modul în care sunt tratate datele.</p>
+
+<div class="box box-danger"><div class="box-title">🚨 Riscul unic al datelor biometrice: nu le poți „reseta"</div><p>Dacă o bază de date cu parole sau coduri PIN e compromisă, schimbi parola sau codul și problema se rezolvă. Dacă o bază de date cu șabloane faciale ale angajaților e compromisă, nu poți „schimba fața" nimănui — expunerea e permanentă. De aceea securizarea tehnică (criptare, acces restricționat, audit, actualizări) contează la fel de mult ca alegerea propriu-zisă a tehnologiei, iar un furnizor serios discută despre asta din prima întâlnire, nu doar despre viteza de recunoaștere.</p></div>
+
+<p>Acest articol este informativ și nu ține loc de consultanță juridică. Pentru cazul tău concret, e bine să verifici cu un specialist în protecția datelor și să consulți recomandările autorității de supraveghere, <a href="https://www.dataprotection.ro" rel="noopener" target="_blank">ANSPDCP (dataprotection.ro)</a>. Logica de prudență e aceeași pe care o aplicăm și la <a href="https://cssi.ro/blog/camere-supraveghere-gdpr-ghid-complet">GDPR-ul camerelor de supraveghere pentru firme</a>.</p>
+
+<h2 id="cand-merita-cu-adevarat-si-cand-e-exager">Când merită cu adevărat — și când e exagerare</h2>
+<p>Recunoașterea facială <strong>merită</strong> când rezolvă o problemă reală: la o intrare cu <strong>flux mare</strong> unde cardurile creează cozi; acolo unde <strong>igiena</strong> contează (laborator, producție alimentară, clinică); sau la <strong>pontaj</strong>, unde vrei date de prezență corecte și elimini pontajul de complezență. În aceste cazuri, beneficiul justifică efortul de conformare GDPR.</p>
+<p>E <strong>exagerare</strong> când o firmă mică, cu zece angajați și o singură ușă, vrea recunoaștere facială „ca să fie modern". Acolo, un card sau un cod oferă același control, mai ieftin și fără bătaie de cap cu datele biometrice. Regula noastră: alege metoda în funcție de nevoie, nu invers. Dacă te muți sau extinzi biroul și vrei să regândești accesul și pontajul unitar, vezi și articolul despre <a href="https://cssi.ro/blog/control-acces-pontaj-relocare-extindere-birou-brasov">control acces și pontaj la relocarea biroului</a>.</p>
+<p>În practică, la firmele din Brașov cu care lucrăm, cererile care chiar justifică investiția vin mai ales din trei zone: <strong>producție și depozite</strong> cu schimburi multiple, unde angajații intră cu mâinile ocupate sau cu mănuși și un card devine incomod; <strong>spații cu cerințe de igienă</strong> (laboratoare, cabinete medicale, unități din industria alimentară), unde eliminarea contactului fizic cu un cititor comun e un argument real, nu doar de imagine; și <strong>firme cu istoric de „pontaj de complezență"</strong>, unde managementul are nevoie de date de prezență pe care să se poată baza. În afara acestor situații, avantajul practic al recunoașterii faciale față de un card e mult mai mic decât pare la prima vedere.</p>
+
+<h2 id="ce-alternative-ai">Ce alternative ai</h2>
+<p>Dacă vrei să eviți complet datele biometrice, ai opțiuni foarte bune: <strong>cardul de proximitate</strong> (rapid, ieftin, ușor de dezactivat când pleacă un angajat), <strong>codul PIN</strong>, <strong>brelocul/eticheta</strong> și <strong>accesul prin aplicație pe telefon</strong>. Toate se integrează cu pontajul și cu restul sistemelor de securitate. Multe firme aleg o combinație echilibrată — card la intrare plus camere — fără să intre deloc în zona biometrică. Un avantaj practic al cardului, adesea trecut cu vederea: dezactivarea instantă la plecarea unui angajat. Retragi cardul din sistem în câteva secunde, fără nicio implicație GDPR suplimentară, în timp ce la un sistem facial trebuie să te asiguri și că șablonul biometric al persoanei chiar a fost șters din bază, nu doar dezactivat. Pentru imaginea de ansamblu a unui sistem de acces bine făcut, pornește de la ghidul nostru despre <a href="https://cssi.ro/blog/control-acces-firma-ghid-alegere-2026">controlul accesului pentru firmă</a>.</p>
+
+<h2 id="costuri-orientative-2026">Costuri orientative 2026</h2>
+<p>Prețul unui sistem de control acces cu recunoaștere facială depinde de numărul de puncte de acces, de funcțiile de securitate ale cititorului și de câtă integrare vrei cu pontajul existent. Ca reper orientativ pentru 2026, pentru un singur punct de acces la o firmă din Brașov:</p>
+
+<table class="compare-table">
+<thead><tr><th>Componentă</th><th>Interval orientativ</th><th>Observații</th></tr></thead>
+<tbody>
+<tr><td>Cititor/terminal cu recunoaștere facială (1 punct)</td><td>1.500–4.500 RON</td><td>Variază cu viteza, funcțiile anti-spoofing și integrarea cu pontajul</td></tr>
+<tr><td>Software de management + licențe</td><td>500–2.000 RON</td><td>Unele sisteme au abonament pentru actualizări și acces cloud</td></tr>
+<tr><td>Montaj și configurare</td><td>400–1.000 RON / punct</td><td>Depinde de numărul de uși și de traseul de cablare</td></tr>
+<tr><td>Electromagnet/yală electrică + accesorii ușă</td><td>300–800 RON</td><td>Dacă ușa nu are deja echipamentul montat</td></tr>
+<tr><td>Card sau cod ca alternativă obligatorie</td><td>10–50 RON / card</td><td>Necesar pentru angajații care refuză scanarea</td></tr>
+<tr><td>Sprijin în evaluarea GDPR / DPIA (dacă e cazul)</td><td>variabil</td><td>De regulă realizată de un specialist extern în protecția datelor</td></tr>
+</tbody>
+</table>
+
+<p>Ce mută prețul în sus sau în jos: <strong>numărul de puncte de acces</strong> (fiecare ușă are propriul cititor și propria configurare), <strong>funcțiile anti-spoofing</strong> (protecție împotriva unei fotografii sau a unei măști, mai scumpe dar mai sigure), <strong>integrarea cu pontajul și cu restul sistemelor</strong> de securitate, <strong>numărul de angajați de înrolat</strong> (proces care ia timp la firme mari) și <strong>dacă e nevoie de infrastructură nouă</strong> (cablare, alimentare, eventual instalație electrică suplimentară). O ofertă serioasă trece componentele separat, ca să vezi clar unde se duce bugetul — inclusiv dacă recomandăm o soluție mai simplă, pe card, în locul celei faciale.</p>
+
+<div class="box box-warn"><div class="box-title">⚠ Greșeli frecvente la controlul accesului facial</div><p><strong>1. Fără alternativă reală</strong> — se instalează sistemul fără card sau cod pentru angajații care refuză scanarea, deși alternativa e obligatorie în practică. <strong>2. Fără informare scrisă</strong> — angajații nu știu exact ce se colectează, unde se stochează și cât timp. <strong>3. „Acord" tratat superficial</strong> — se presupune că o semnătură pe un formular rezolvă temeiul legal, fără o analiză reală a situației firmei. <strong>4. DPIA ignorată</strong> — la firme cu mulți angajați sau mai multe puncte de acces, evaluarea de impact se sare, deși ar fi trebuit făcută înainte de instalare. <strong>5. Echipament ieftin, fără protecție anti-spoofing</strong> — poate fi păcălit cu o fotografie, ceea ce anulează avantajul de securitate. <strong>6. Date păstrate la nesfârșit</strong> — șabloanele angajaților plecați din firmă rămân în bază, în loc să fie șterse.</p></div>
+
+<h2 id="cum-arata-implementarea-cu-cssi">Cum arată implementarea cu CSSI</h2>
+<p>Nu montăm un cititor facial „la pachet" fără să discutăm întâi despre nevoia reală și despre GDPR. Pașii unei lucrări corecte, așa cum o facem în Brașov și împrejurimi: <strong>1. Evaluare la fața locului</strong> — analizăm fluxul de oameni, numărul de puncte de acces și dacă recunoașterea facială chiar rezolvă o problemă mai bine decât un card sau un cod. <strong>2. Discuție despre temei legal și alternativă</strong> — te ajutăm să înțelegi ce presupune conformarea GDPR pentru cazul tău și recomandăm, dacă e nevoie, verificarea cu un specialist în protecția datelor. <strong>3. Ofertă defalcată</strong> — cititor, software, montaj, alternativă card/cod, fiecare cu prețul lui, fără costuri ascunse. <strong>4. Montaj și configurare</strong> — instalăm echipamentul, calibrăm pragul de recunoaștere pentru condițiile de la fața locului și integrăm cu pontajul, dacă e cazul. <strong>5. Înrolarea angajaților</strong> — cu informare prealabilă clară despre ce se întâmplă cu datele lor. <strong>6. Test și predare</strong> — verificăm funcționarea, inclusiv a alternativei card/cod, și lăsăm documentația în scris. <strong>7. Garanție și mentenanță</strong> — rămânem disponibili pentru reglaje, actualizări și eventuale extinderi.</p>
+<p>Ce ne diferențiază: nu împingem clientul spre cea mai scumpă soluție doar pentru că „e mai avansată tehnologic". Dacă la evaluare vedem că un card sau un cod rezolvă la fel de bine problema ta, cu mai puțină bătaie de cap legală, îți spunem asta direct — chiar dacă înseamnă o factură mai mică. Aceeași echipă care montează accesul poate integra și camerele, alarma sau <a href="https://cssi.ro/automatizari-porti">automatizarea porții</a>, ca să ai un singur interlocutor pentru tot sistemul de securitate.</p>
+
+<div class="box box-tip"><div class="box-title">✅ Checklist înainte de a alege recunoașterea facială</div><p>Ai un motiv real (flux mare, igienă, pontaj corect) sau vrei doar „ceva modern"? Ai stabilit un temei legal solid și oferi o alternativă (card/cod) pentru cine refuză scanarea? Știi exact ce se stochează — șablon criptat, nu fotografie — și pentru cât timp? Ai informat angajații în scris, înainte de înrolare? Ai verificat dacă situația ta (număr de angajați, puncte de acces) cere o evaluare de impact (DPIA)? Știi cine are acces la baza de date și cum e securizată? Dacă ai bifat toate, ești pregătit. Dacă nu, exact pentru asta e evaluarea gratuită.</p></div>
+
+<h2 id="mentenanta-sistemului-de-acces-facial">Mentenanța sistemului de acces facial</h2>
+<p>Un sistem montat corect cere puțină, dar constantă atenție. Merită verificate periodic: <strong>acuratețea recunoașterii</strong> (se poate schimba sezonier, odată cu lumina naturală de la intrare), <strong>curățarea camerei/cititorului</strong> (praf sau amprente pe lentilă scad performanța), <strong>actualizările de securitate</strong> ale software-ului (esențiale, pentru că vulnerabilitățile software sunt principalul risc de scurgere de date), <strong>ștergerea din bază a angajaților plecați</strong> (parte din obligația de minimizare, nu doar o bună practică), și <strong>testarea periodică a alternativei</strong> card/cod, ca să funcționeze mereu când e nevoie. Un audit anual al accesului la baza de date — cine mai are drepturi, dacă mai sunt justificate — completează tabloul. Semnele că ceva cere atenție: refuzuri false tot mai dese, timp de recunoaștere care crește vizibil sau reclamații ale angajaților legate de confidențialitate.</p>
+
+<h2 id="citeste-si">Citește și</h2>
+<ul>
+  <li><a href="https://cssi.ro/blog/control-acces-firma-ghid-alegere-2026">Control acces pentru firmă: ghid de alegere</a> — de la card la biometrie, cum alegi tehnologia potrivită.</li>
+  <li><a href="https://cssi.ro/blog/pontaj-electronic-ghid-complet">Pontaj electronic: ghid complet</a> — cum se leagă accesul de evidența prezenței.</li>
+  <li><a href="https://cssi.ro/blog/camere-supraveghere-gdpr-ghid-complet">GDPR pentru camerele de supraveghere</a> — aceeași logică de prudență, aplicată la CCTV.</li>
+  <li><a href="https://cssi.ro/blog/turnichete-control-acces-pietonal-firme-fabrici-brasov">Turnichete pentru control acces pietonal</a> — o alternativă fizică, complementară controlului electronic.</li>
+</ul>
+      <h2 id="faq">Întrebări frecvente</h2>
+      <div class="faq-wrap">
+        <div class="faq-item">
+          <button class="faq-q" onclick="toggleFaq(this)">Recunoașterea facială la pontaj sau acces este legală în România? <svg class="faq-chevron" width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg></button>
+          <div class="faq-a"><p>Da, este legală, dar fața e considerată dată biometrică — categorie specială protejată strict de GDPR. Ai nevoie de temei legal solid, de regulă de o alternativă pentru cine nu vrea scanarea și, după caz, de o evaluare de impact. Nu e interzisă, dar nici de bifat la întâmplare. Articol informativ, nu consultanță juridică — verifică pentru cazul tău cu un specialist GDPR.</p></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q" onclick="toggleFaq(this)">Care e diferența față de o cameră cu recunoaștere facială (AI)? <svg class="faq-chevron" width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg></button>
+          <div class="faq-a"><p>Camera AI observă o scenă în scop de securitate; controlul accesului cu recunoaștere facială compară activ fața cu o bază de angajați înrolați ca să decidă accesul sau pontajul. Primul ține de CCTV, al doilea de acces, cu șabloane biometrice stocate intenționat — de aceea regimul GDPR e mai strict la al doilea.</p></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q" onclick="toggleFaq(this)">Se stochează poza mea pe un server? <svg class="faq-chevron" width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg></button>
+          <div class="faq-a"><p>La sistemele profesionale se păstrează de regulă un șablon matematic (numere), nu o fotografie din care s-ar putea reconstrui imaginea. Șablonul stă criptat și servește doar la comparare. Firma trebuie să știe exact ce se stochează, unde, cât timp și cine are acces — și să comunice asta angajaților. Detaliile depind de echipament și se stabilesc la implementare.</p></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q" onclick="toggleFaq(this)">Pot obliga angajații să folosească recunoașterea facială? <svg class="faq-chevron" width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg></button>
+          <div class="faq-a"><p>În general nu: datele biometrice sunt categorie specială, iar consimțământul angajatului e considerat fragil din cauza relației de subordonare. Recomandarea practică e să oferi mereu o alternativă (card sau cod) pentru cine nu dorește scanarea. Temeiul și alternativa potrivite firmei tale se stabilesc printr-o analiză GDPR specifică.</p></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q" onclick="toggleFaq(this)">Când merită cu adevărat recunoașterea facială? <svg class="faq-chevron" width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg></button>
+          <div class="faq-a"><p>Acolo unde aduce beneficiu real: flux mare la intrare, cerințe de igienă (fără atingere) sau pontaj unde vrei să elimini pontajul de complezență, pentru că fața nu se împrumută ca un card. La o firmă mică, fără aceste presiuni, cardul sau codul rezolvă același lucru mai simplu și fără complicații.</p></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q" onclick="toggleFaq(this)">Funcționează cu mască, ochelari sau pe întuneric? <svg class="faq-chevron" width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg></button>
+          <div class="faq-a"><p>Sistemele moderne se descurcă bine cu ochelari și variații de aspect, iar multe au iluminare în infraroșu, deci merg și pe întuneric. Masca poate reduce acuratețea, în funcție de echipament — de aceea un sistem bun păstrează și o metodă alternativă (card/cod) pentru situațiile în care recunoașterea nu reușește.</p></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q" onclick="toggleFaq(this)">Ce alternative am dacă nu vreau date biometrice? <svg class="faq-chevron" width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg></button>
+          <div class="faq-a"><p>Card de proximitate, cod PIN, breloc/etichetă sau acces prin aplicație pe telefon — toate oferă control bun și pontaj, fără regimul strict al datelor biometrice. Pentru multe firme din Brașov, cardul sau codul, eventual cu camere la intrare, e cea mai echilibrată soluție. La evaluare îți arătăm ce ți se potrivește, fără să te împingem spre cea mai scumpă variantă.</p></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q" onclick="toggleFaq(this)">Cât costă un sistem de control acces cu recunoaștere facială? <svg class="faq-chevron" width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg></button>
+          <div class="faq-a"><p>Pentru un punct de acces, un cititor facial cu software și montaj pornește orientativ de la 2.500–5.000 RON, la care se adaugă, dacă e cazul, integrarea cu pontajul și alternativa card/cod pentru angajații care nu vor să fie scanați. La mai multe puncte de acces sau la funcții anti-spoofing avansate, bugetul crește. Cifrele sunt orientative — prețul exact vine după o evaluare la fața locului.</p></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q" onclick="toggleFaq(this)">Cât durează implementarea unui sistem de acces facial? <svg class="faq-chevron" width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg></button>
+          <div class="faq-a"><p>La un singur punct de acces, montajul și configurarea de bază durează de regulă câteva ore, într-o singură vizită. Timpul crește dacă sunt mai multe puncte, dacă se integrează cu pontajul existent sau dacă firma alege să facă întâi o evaluare GDPR mai amplă (DPIA) înainte de instalare — pas recomandat înainte de a porni lucrarea, nu după.</p></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q" onclick="toggleFaq(this)">E nevoie de evaluare de impact (DPIA) pentru orice sistem cu recunoaștere facială? <svg class="faq-chevron" width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg></button>
+          <div class="faq-a"><p>Nu automat pentru orice instalație, dar GDPR cere o evaluare de impact atunci când prelucrarea prezintă risc ridicat pentru drepturile persoanelor, iar utilizarea pe scară largă a datelor biometrice se încadrează frecvent aici. Pentru o firmă cu mulți angajați sau mai multe puncte de acces, recomandarea prudentă e să faci întâi această evaluare. Pentru cazul tău exact, verifică cu un specialist GDPR.</p></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q" onclick="toggleFaq(this)">Ce mentenanță cere un sistem de acces facial? <svg class="faq-chevron" width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg></button>
+          <div class="faq-a"><p>Verificări periodice ale acurateței recunoașterii (mai ales la schimbări de iluminat sezonier), curățarea camerei/cititorului, actualizări de securitate ale software-ului, ștergerea din bază a angajaților care au plecat din firmă și testarea periodică a alternativei card/cod. O mentenanță regulată reduce erorile de recunoaștere și menține sistemul conform cu principiul minimizării datelor.</p></div>
+        </div>
+      </div>
+
+      <aside class="discuta-in-grup">
+        <h3>Ai o întrebare despre asta?</h3>
+        <p>Discutăm subiectul în grupul nostru de pe Facebook, împreună cu electricieni, instalatori și proprietari din Brașov și împrejurimi. Pune întrebarea acolo și primești răspuns de la oameni care lucrează efectiv în domeniu. Suntem deja <!-- MEMBRI-GRUP -->351<!-- /MEMBRI-GRUP --> în grup.</p>
+        <a href="https://www.facebook.com/groups/1970585079825010" rel="noopener" target="_blank">Intră în grupul Instalații Brașov →</a>
+      </aside>
+      <div class="cta-banner">
+        <div>
+          <h3>Pașii următori — cere oferta ta</h3>
+          <p>Fără obligații: vii cu nevoia, pleci cu o soluție și un preț defalcat. CSSI — 20 de ani, 8.700+ proiecte în județul Brașov.</p>
+        </div>
+        <div class="cta-buttons">
+          <a href="/control-acces-brasov" class="btn btn-secondary">📍 Control acces în Brașov</a>
+          <a href="/contact" class="btn btn-secondary">📩 Cere ofertă</a>
+          <a href="tel:0752288400" class="btn btn-primary">📞 0752 288 400</a>
+          <a target="_blank" rel="noopener" href="https://wa.me/40752288400" class="btn btn-secondary">💬 WhatsApp</a>
+        </div>
+      </div>
+
+    </main>
+
+    <aside class="sidebar">
+      <div class="sidebar-card">
+        <div class="sidebar-card-head">📑 Cuprins</div>
+        <div class="sidebar-card-body" style="padding:10px 18px">
+          <ol class="toc-list">
+            <li><a href="#raspunsul-scurt">Răspunsul scurt</a></li>
+            <li><a href="#ce-inseamna-recunoastere-faciala-la-acce">Ce înseamnă recunoaștere facială la acces și pontaj</a></li>
+            <li><a href="#cum-functioneaza-pas-cu-pas">Cum funcționează, pas cu pas</a></li>
+            <li><a href="#avantajele-fata-de-card-cod-sau-amprenta">Avantajele față de card, cod sau amprentă</a></li>
+            <li><a href="#card-cod-amprenta-sau-fata-comparatie-di">Card, cod, amprentă sau față: comparație directă</a></li>
+            <li><a href="#atentie-gdpr-si-datele-biometrice">Atenție: GDPR și datele biometrice</a></li>
+            <li><a href="#cand-merita-cu-adevarat-si-cand-e-exager">Când merită cu adevărat — și când e exagerare</a></li>
+            <li><a href="#ce-alternative-ai">Ce alternative ai</a></li>
+            <li><a href="#costuri-orientative-2026">Costuri orientative 2026</a></li>
+            <li><a href="#cum-arata-implementarea-cu-cssi">Cum arată implementarea cu CSSI</a></li>
+            <li><a href="#mentenanta-sistemului-de-acces-facial">Mentenanța sistemului de acces facial</a></li>
+            <li><a href="#citeste-si">Citește și</a></li>
+            <li><a href="#faq">Întrebări frecvente</a></li>
+          </ol>
+        </div>
+      </div>
+      <div class="sidebar-card">
+        <div class="sidebar-card-head">📞 Contact CSSI Brașov</div>
+        <div class="sidebar-card-body">
+          <ul class="contact-info">
+            <li><div class="ci-icon">📞</div><div><strong>0752 288 400</strong><span>Lun–Vin 08:00–18:00</span></div></li>
+            <li><div class="ci-icon">📧</div><div><strong>office@cssi.ro</strong><span>Răspuns în max 24h</span></div></li>
+            <li><div class="ci-icon">📍</div><div><strong>Brașov</strong><span>și județele înconjurătoare</span></div></li>
+          </ul>
+          <a target="_blank" rel="noopener" href="https://wa.me/40752288400" class="btn btn-primary" style="margin-top:12px">💬 Scrie pe WhatsApp</a>
+        </div>
+      </div>
+    </aside>
+  </div>
+
+<footer class="article-footer">
+    <p>Articol scris de echipa <strong>CSSI Brașov</strong> — firmă autorizată IGPR și ISU, cu peste 20 de ani de experiență în sisteme de securitate și instalații.</p>
+    <div class="tags">
+      <span class="tag">camere supraveghere brasov</span>
+      <span class="tag">instalare camere</span>
+      <span class="tag">preturi camere 2026</span>
+      <span class="tag">Hikvision</span>
+      <span class="tag">Dahua</span>
+      <span class="tag">Uniview</span>
+      <span class="tag">CCTV</span>
+      <span class="tag">Brașov</span>
+    </div>
+    <p style="font-size:12px;color:#aaa;margin-top:8px">© 2026 CSSI — Confort, Securitate, Siguranță, Imobil | <a href="/">cssi.ro</a></p>
+  </footer>
+<script>
+    function toggleFaq(btn) {
+      const item = btn.closest('.faq-item');
+      const isOpen = item.classList.contains('open');
+      document.querySelectorAll('.faq-item.open').forEach(el => el.classList.remove('open'));
+      if (!isOpen) item.classList.add('open');
+    }
+    const headings = document.querySelectorAll('h2[id]');
+    const tocLinks = document.querySelectorAll('.toc-list a');
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          tocLinks.forEach(a => a.style.color = '');
+          const active = document.querySelector(`.toc-list a[href="#${entry.target.id}"]`);
+          if (active) active.style.color = 'var(--brand-blue)';
+        }
+      });
+    }, { rootMargin: '-20% 0px -70% 0px' });
+    headings.forEach(h => observer.observe(h));
+  </script>
+  <script>
+    let navTextColor = '#fff';
+    window.addEventListener('scroll', function() {
+        const navBg = document.getElementById('navBg');
+        const logo = document.getElementById('logoImg');
+        const scrolled = window.scrollY > 50;
+        if (scrolled) {
+            navBg.style.background = '#ffffff';
+            navBg.style.backdropFilter = 'blur(12px)';
+            navBg.style.boxShadow = '0 1px 2px rgba(0,0,0,0.05)';
+            if (logo) logo.style.filter = '';
+            navTextColor = '#334155';
+        } else {
+            navBg.style.background = 'transparent';
+            navBg.style.backdropFilter = '';
+            navBg.style.boxShadow = '';
+            if (logo) logo.style.filter = 'brightness(0) invert(1) drop-shadow(0 0 1px rgba(255,255,255,0.8))';
+            navTextColor = '#fff';
+        }
+        ['navLink1','navLink2','navLink3','navLink4','navLinkBlog','navLink5','phoneLink'].forEach(id=>{
+            const el=document.getElementById(id);
+            if(el) el.style.color=navTextColor;
+        });
+    });
+    function toggleMobileMenu(){
+        const menu=document.getElementById('mobileMenu');
+        const menuIcon=document.getElementById('menuIcon');
+        const closeIcon=document.getElementById('closeIcon');
+        const btn=document.getElementById('menuBtn');
+        if(menu.classList.contains('open')){
+            menu.classList.remove('open');
+            menuIcon.style.display='';
+            closeIcon.style.display='none';
+            btn.style.background='linear-gradient(to right,#ef4444,#dc2626)';
+            btn.classList.add('animate-subtle-pulse');
+        } else {
+            menu.classList.add('open');
+            menuIcon.style.display='none';
+            closeIcon.style.display='';
+            btn.style.background='#6b7280';
+            btn.classList.remove('animate-subtle-pulse');
+        }
+    }
+    function closeMobile(){
+        document.getElementById('mobileMenu').classList.remove('open');
+        document.getElementById('menuIcon').style.display='';
+        document.getElementById('closeIcon').style.display='none';
+    }
+    function toggleServicesSubmenu(){
+        const sub=document.getElementById('servicesSubmenu');
+        const arrow=document.getElementById('servicesArrow');
+        if(sub.classList.contains('open')){
+            sub.classList.remove('open');
+            arrow.style.transform='';
+        } else {
+            sub.classList.add('open');
+            arrow.style.transform='rotate(180deg)';
+        }
+    }
+  </script>
+<script>
+// GA4 tracking: phone_call & whatsapp_click
+document.addEventListener('DOMContentLoaded', function() {
+    document.querySelectorAll('a[href^="tel:"]').forEach(function(link) {
+        link.addEventListener('click', function() {
+            if (typeof gtag === 'function') {
+                gtag('event', 'phone_call', {event_category:'Contact', event_label:this.href.replace('tel:',''), value:100, currency:'RON'});
+            }
+        });
+    });
+    document.querySelectorAll('a[href*="wa.me"]').forEach(function(link) {
+        link.addEventListener('click', function() {
+            if (typeof gtag === 'function') {
+                gtag('event', 'whatsapp_click', {event_category:'Contact', event_label:'WhatsApp Direct', value:100, currency:'RON'});
+            }
+        });
+    });
+});
+</script>
+<script src="/tawk-chat.js" defer></script>
+<button id="toTop" aria-label="Înapoi sus" onclick="window.scrollTo({top:0,behavior:&#39;smooth&#39;})"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 15l-6-6-6 6"/></svg></button><script>(function(){var b=document.getElementById("toTop");window.addEventListener("scroll",function(){if(window.scrollY>400)b.classList.add("show");else b.classList.remove("show");});})();</script>
+</body>
+</html>
