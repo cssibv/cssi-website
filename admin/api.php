@@ -46,6 +46,11 @@ function ensureOferteColumns($db) {
         if (!in_array('mentiuni', $cols)) {
             $db->exec("ALTER TABLE oferte ADD COLUMN mentiuni TEXT NULL DEFAULT NULL");
         }
+        // Conditiile comerciale editate in calculator, ca JSON array de randuri.
+        // NULL sau gol = oferta foloseste textul standard din generator.
+        if (!in_array('conditii', $cols)) {
+            $db->exec("ALTER TABLE oferte ADD COLUMN conditii TEXT NULL DEFAULT NULL");
+        }
         if (!in_array('notificat_expirare_la', $cols)) {
             $db->exec("ALTER TABLE oferte ADD COLUMN notificat_expirare_la DATETIME NULL DEFAULT NULL");
         }
@@ -433,6 +438,7 @@ function ensureSituatiiSchema($db) {
             data_situatie DATE NULL,
             obiectiv TEXT NULL,
             mentiuni TEXT NULL,
+            conditii TEXT NULL,
             client_id INT NULL DEFAULT NULL,
             proiect_id INT NULL DEFAULT NULL,
             client_nume VARCHAR(255) NULL,
@@ -470,6 +476,12 @@ function ensureSituatiiSchema($db) {
             link_extern VARCHAR(500) NULL DEFAULT NULL,
             INDEX idx_situatie (situatie_id)
         ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4");
+        // Conditiile editabile din calculator (JSON array de randuri). Adaugata
+        // ulterior, deci are nevoie de ALTER pentru tabelele deja create.
+        $colsS = $db->query("SHOW COLUMNS FROM situatii_plata")->fetchAll(PDO::FETCH_COLUMN);
+        if (!in_array('conditii', $colsS)) {
+            $db->exec("ALTER TABLE situatii_plata ADD COLUMN conditii TEXT NULL DEFAULT NULL");
+        }
     } catch (Exception $e) {
         error_log('ensureSituatiiSchema FAILED: ' . $e->getMessage());
     }
@@ -2624,7 +2636,7 @@ try {
             $sortBy = (isset($_GET['sort']) ? $_GET['sort'] : 'data_desc'); // data_desc/asc, valoare_desc/asc, client_asc, status
             $light = !empty($_GET['light']);  // true = nu adaugă linii (mult mai rapid pentru listing)
 
-            $sql = "SELECT vc.*, o2.client_id AS client_db_id, o2.proiect_id AS proiect_db_id, o2.motiv_respingere, o2.data_decizie, o2.decis_de, o2.archived_at, o2.expires_at, o2.mentiuni, o2.trimisa_de, o2.trimisa_la FROM v_oferte_complete vc JOIN oferte o2 ON vc.id = o2.id WHERE 1=1";
+            $sql = "SELECT vc.*, o2.client_id AS client_db_id, o2.proiect_id AS proiect_db_id, o2.motiv_respingere, o2.data_decizie, o2.decis_de, o2.archived_at, o2.expires_at, o2.mentiuni, o2.conditii, o2.trimisa_de, o2.trimisa_la FROM v_oferte_complete vc JOIN oferte o2 ON vc.id = o2.id WHERE 1=1";
             $params = [];
             if ($clientId) { $sql .= " AND o2.client_id = ?"; $params[] = $clientId; }
             if ($proiectId) { $sql .= " AND o2.proiect_id = ?"; $params[] = $proiectId; }
@@ -2680,13 +2692,14 @@ try {
                 // numerice direct din tabela oferte ca să le poată folosi frontend-ul
                 // la save (păstrare legătură ofertă→client/proiect la edit)
                 ensureOferteColumns($db);
-                $stmtFK = $db->prepare("SELECT client_id, proiect_id, mentiuni FROM oferte WHERE id = ?");
+                $stmtFK = $db->prepare("SELECT client_id, proiect_id, mentiuni, conditii FROM oferte WHERE id = ?");
                 $stmtFK->execute([$o['id']]);
                 $fk = $stmtFK->fetch();
                 if ($fk) {
                     $o['client_id']  = $fk['client_id']  !== null ? intval($fk['client_id'])  : null;
                     $o['proiect_id'] = $fk['proiect_id'] !== null ? intval($fk['proiect_id']) : null;
                     if (!isset($o['mentiuni']) || $o['mentiuni'] === null) $o['mentiuni'] = $fk['mentiuni'] ?? '';
+                    $o['conditii'] = $fk['conditii'] ?? '';
                 }
                 $stmtL = $db->prepare("SELECT * FROM oferta_linii WHERE oferta_id = ? ORDER BY tip, ordine");
                 $stmtL->execute([$o['id']]);
@@ -2739,13 +2752,14 @@ try {
                     $dataOf = (isset($data['data']) ? $data['data'] : date('Y-m-d'));
                     $valabUpd = (isset($data['valab']) ? $data['valab'] : '4 zile');
                     $expUpd = calcExpiresAt($dataOf, $valabUpd);
-                    $db->prepare("UPDATE oferte SET titlu=?, data_oferta=?, valabilitate=?, obiectiv=?, mentiuni=?, client_id=?, proiect_id=?, subtotal_echip=?, subtotal_manop=?, total_fara_tva=?, tva=?, total_cu_tva=?, client_nume=?, client_cui=?, client_adresa=?, client_contact=?, status=?, expires_at=? WHERE id=?")
+                    $db->prepare("UPDATE oferte SET titlu=?, data_oferta=?, valabilitate=?, obiectiv=?, mentiuni=?, conditii=?, client_id=?, proiect_id=?, subtotal_echip=?, subtotal_manop=?, total_fara_tva=?, tva=?, total_cu_tva=?, client_nume=?, client_cui=?, client_adresa=?, client_contact=?, status=?, expires_at=? WHERE id=?")
                        ->execute([
                            (isset($data['titlu']) ? $data['titlu'] : ''),
                            $dataOf,
                            $valabUpd,
                            (isset($data['obiectiv']) ? $data['obiectiv'] : ''),
                            (isset($data['mentiuni']) ? $data['mentiuni'] : ''),
+                           (isset($data['conditii']) ? $data['conditii'] : ''),
                            $clientIdVal,
                            $proiectIdVal,
                            (isset($data['subtotalEchip']) ? $data['subtotalEchip'] : 0),
@@ -2775,7 +2789,7 @@ try {
                     $titlu = 'Deviz ' . $client . ($obiectiv ? ' ' . $obiectiv : '') . ' ser.BV Nr. ' . $ofertaId . ' din ' . $dataFmt;
                     ensureOferteColumns($db);
                     $expIns = calcExpiresAt($dataOf, (isset($data['valab']) ? $data['valab'] : '4 zile'));
-                    $stmt = $db->prepare("INSERT INTO oferte (oferta_id, titlu, data_oferta, valabilitate, obiectiv, mentiuni, client_id, proiect_id, subtotal_echip, subtotal_manop, total_fara_tva, tva, total_cu_tva, client_nume, client_cui, client_adresa, client_contact, status, expires_at) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
+                    $stmt = $db->prepare("INSERT INTO oferte (oferta_id, titlu, data_oferta, valabilitate, obiectiv, mentiuni, conditii, client_id, proiect_id, subtotal_echip, subtotal_manop, total_fara_tva, tva, total_cu_tva, client_nume, client_cui, client_adresa, client_contact, status, expires_at) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
                     // Validare FK pt INSERT
                     $clientIdValI = null;
                     if (!empty($data['client_db_id'])) {
@@ -2796,6 +2810,7 @@ try {
                         (isset($data['valab']) ? $data['valab'] : '4 zile'),
                         (isset($data['obiectiv']) ? $data['obiectiv'] : ''),
                         (isset($data['mentiuni']) ? $data['mentiuni'] : ''),
+                        (isset($data['conditii']) ? $data['conditii'] : ''),
                         $clientIdValI,
                         $proiectIdValI,
                         (isset($data['subtotalEchip']) ? $data['subtotalEchip'] : 0),
@@ -3048,10 +3063,11 @@ try {
                     if (!$rowS) throw new Exception('Situația nu mai există');
                     $situatieNr = $rowS['situatie_id'];
                     $titluS = 'Situație de plată ' . $clientS . ($obiectivS ? ' ' . $obiectivS : '') . ' Nr. ' . $situatieNr . ' din ' . $dataFmtS;
-                    $db->prepare("UPDATE situatii_plata SET titlu=?, data_situatie=?, obiectiv=?, mentiuni=?, sursa_oferta_id=?, sursa_oferta_nr=?, client_id=?, proiect_id=?, subtotal_echip=?, subtotal_manop=?, total_fara_tva=?, tva=?, total_cu_tva=?, client_nume=?, client_cui=?, client_adresa=?, client_contact=?, updated_by=? WHERE id=?")
+                    $db->prepare("UPDATE situatii_plata SET titlu=?, data_situatie=?, obiectiv=?, mentiuni=?, conditii=?, sursa_oferta_id=?, sursa_oferta_nr=?, client_id=?, proiect_id=?, subtotal_echip=?, subtotal_manop=?, total_fara_tva=?, tva=?, total_cu_tva=?, client_nume=?, client_cui=?, client_adresa=?, client_contact=?, updated_by=? WHERE id=?")
                        ->execute([
                            $titluS, $dataS, $obiectivS,
                            (isset($data['mentiuni']) ? $data['mentiuni'] : ''),
+                           (isset($data['conditii']) ? $data['conditii'] : ''),
                            $sursaDbId, ($sursaNr !== '' ? $sursaNr : null),
                            $clientIdS, $proiectIdS,
                            (isset($data['subtotalEchip']) ? $data['subtotalEchip'] : 0),
@@ -3071,7 +3087,7 @@ try {
                     // să apară. Retry-ul rămâne ca plasă de siguranță: dacă totuși scapă
                     // una (versiune de MySQL fără suport, lock expirat), utilizatorul
                     // primește următorul număr liber, nu o eroare 500.
-                    $stmtIns = $db->prepare("INSERT INTO situatii_plata (situatie_id, sursa_oferta_id, sursa_oferta_nr, titlu, data_situatie, obiectiv, mentiuni, client_id, proiect_id, client_nume, client_cui, client_adresa, client_contact, subtotal_echip, subtotal_manop, total_fara_tva, tva, total_cu_tva, created_by, created_by_name, updated_by) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
+                    $stmtIns = $db->prepare("INSERT INTO situatii_plata (situatie_id, sursa_oferta_id, sursa_oferta_nr, titlu, data_situatie, obiectiv, mentiuni, conditii, client_id, proiect_id, client_nume, client_cui, client_adresa, client_contact, subtotal_echip, subtotal_manop, total_fara_tva, tva, total_cu_tva, created_by, created_by_name, updated_by) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
                     $situatieNr = null;
                     for ($attempt = 1; $attempt <= 5; $attempt++) {
                         $candidat = nextSituatieNr($db, $sursaNr);
@@ -3081,6 +3097,7 @@ try {
                                 $candidat, $sursaDbId, ($sursaNr !== '' ? $sursaNr : null),
                                 $titluS, $dataS, $obiectivS,
                                 (isset($data['mentiuni']) ? $data['mentiuni'] : ''),
+                                (isset($data['conditii']) ? $data['conditii'] : ''),
                                 $clientIdS, $proiectIdS,
                                 $clientS,
                                 (isset($data['cui']) ? $data['cui'] : ''),
