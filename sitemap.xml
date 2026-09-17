@@ -915,4 +915,11 @@
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
+  <!-- adaugat automat de agent 2026-09-17 -->
+  <url>
+    <loc>https://cssi.ro/blog/automatizare-usa-garaj-ce-verifici-inainte-brasov</loc>
+    <lastmod>2026-09-17</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
 </urlset>
