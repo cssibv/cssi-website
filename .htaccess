@@ -199,6 +199,16 @@ Options -Indexes
     Deny from all
 </FilesMatch>
 
+# Blochează surse interne / documente / resturi (nu-s pentru public)
+<FilesMatch "\.(gs|md|docx|doc|xlsx|xls|new|log)$">
+    Order allow,deny
+    Deny from all
+</FilesMatch>
+<FilesMatch "^(secrets\.example\.php|test-deploy\.txt)$">
+    Order allow,deny
+    Deny from all
+</FilesMatch>
+
 # --------------------------------------------------
 # 9. CUSTOM ERROR PAGES (opțional - decomentează dacă ai pagini de eroare)
 # --------------------------------------------------
