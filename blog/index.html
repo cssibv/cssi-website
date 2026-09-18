@@ -36,6 +36,10 @@
     @media(min-width:1024px){.lg\:flex{display:flex!important}.lg\:hidden{display:none!important}}@media(min-width:768px){.md\:flex{display:flex!important}.md\:hidden{display:none!important}}
     /* Fix font inheritance from blog body */
     #mainHeader, #mainHeader a, #mainHeader button, #mainHeader span, #mainHeader div { font-family: 'Sora', sans-serif !important; }
+  
+    /* thumbnail cu imaginea reală de cover (retrofit index_thumbs.py) */
+    .card-thumb.card-cover{height:225px;padding:0;min-height:0;display:block}
+    .card-thumb.card-cover img{width:100%!important;height:100%!important;max-width:none!important;object-fit:cover!important;mix-blend-mode:normal!important;display:block}
   </style>
   <style>
     :root {
@@ -304,7 +308,7 @@
         <article class="featured-card cat-securitate">
           <div class="featured-img" style="padding:0">
             <div class="badge">⭐ Articol recomandat</div>
-            <div style="background:linear-gradient(135deg,#0b1a2e,#1a4b8c);display:flex;flex-direction:column;align-items:center;justify-content:center;width:100%;min-height:220px;padding:24px;position:relative;"><span style="position:absolute;top:16px;left:16px;background:rgba(255,255,255,0.2);color:#fff;font-family:var(--ff-head);font-size:11px;font-weight:700;padding:5px 12px;border-radius:20px;text-transform:uppercase;letter-spacing:0.5px;">GHID COMPLET · 2026</span><span style="font-size:48px;margin-bottom:10px;">🛡️</span><span style="color:#fff;font-family:var(--ff-head);font-size:18px;font-weight:700;text-align:center;line-height:1.3;">Sistem Integrat<br>Efracție · Incendiu · Inundație</span></div>
+            <img class="featured-cover" src="/images/blog/sistem-integrat-securitate-brasov-cover.jpg" alt="Sistem Integrat de Securitate: Efracție + Incendiu + Inundație" loading="lazy">
           </div>
           <div class="featured-content">
             <div>
@@ -334,7 +338,7 @@
       <div class="articles-grid">
         <a href="consum-electric-mare-vara-aer-conditionat-factura-brasov" style="display:contents">
         <article class="article-card cat-instalatii">
-          <div class="card-thumb" style="background:linear-gradient(135deg,#2c1a6b,#5c35c8);display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:180px;padding:16px;position:relative;"><span style="position:absolute;top:12px;left:12px;background:rgba(255,255,255,0.2);color:#fff;font-family:var(--ff-head);font-size:10px;font-weight:700;padding:4px 10px;border-radius:20px;text-transform:uppercase;letter-spacing:0.5px;">NOU · GHID</span><span style="font-size:40px;margin-bottom:8px;">🏖️</span><span style="color:#fff;font-family:var(--ff-head);font-size:14px;font-weight:700;text-align:center;line-height:1.3;">Consum electric<br>mare vara</span></div>
+          <div class="card-thumb card-cover"><img src="/images/blog/consum-electric-vara-ac-cover.jpg" alt="Consum electric mare vara: aer condiționat, factură și soluții" loading="lazy"></div>
           <div class="card-body">
             <div class="card-cat">Instalații</div>
             <h3>Consum electric mare vara: aer condiționat, factură | CSSI</h3>
@@ -346,7 +350,7 @@
 
         <a href="automatizare-usa-garaj-ce-verifici-inainte-brasov" style="display:contents">
         <article class="article-card cat-automatizari">
-          <div class="card-thumb" style="background:linear-gradient(135deg,#7b5e00,#d4830a);display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:180px;padding:16px;position:relative;"><span style="position:absolute;top:12px;left:12px;background:rgba(255,255,255,0.2);color:#fff;font-family:var(--ff-head);font-size:10px;font-weight:700;padding:4px 10px;border-radius:20px;text-transform:uppercase;letter-spacing:0.5px;">NOU · GHID</span><span style="font-size:40px;margin-bottom:8px;">🚪</span><span style="color:#fff;font-family:var(--ff-head);font-size:14px;font-weight:700;text-align:center;line-height:1.3;">Automatizare<br>ușă de garaj</span></div>
+          <div class="card-thumb card-cover"><img src="/images/blog/automatizare-usa-garaj-cover.jpg" alt="Automatizare ușă de garaj: ce verifici înainte" loading="lazy"></div>
           <div class="card-body">
             <div class="card-cat">Automatizări</div>
             <h3>Automatizare ușă de garaj: ce verifici înainte</h3>
@@ -358,7 +362,7 @@
 
         <a href="sonerie-video-vs-videointerfon-clasic-brasov" style="display:contents">
         <article class="article-card cat-camere">
-          <div class="card-thumb" style="background:linear-gradient(135deg,#0d3b2f,#1e7852);display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:180px;padding:16px;position:relative;"><span style="position:absolute;top:12px;left:12px;background:rgba(255,255,255,0.2);color:#fff;font-family:var(--ff-head);font-size:10px;font-weight:700;padding:4px 10px;border-radius:20px;text-transform:uppercase;letter-spacing:0.5px;">NOU · GHID</span><span style="font-size:40px;margin-bottom:8px;">📹</span><span style="color:#fff;font-family:var(--ff-head);font-size:14px;font-weight:700;text-align:center;line-height:1.3;">Sonerie video vs videointerfon<br>clasic</span></div>
+          <div class="card-thumb card-cover"><img src="/images/blog/sonerie-video-vs-videointerfon-cover.jpg" alt="Sonerie video vs videointerfon clasic: ce alegi" loading="lazy"></div>
           <div class="card-body">
             <div class="card-cat">Camere</div>
             <h3>Sonerie video vs videointerfon clasic: ce alegi | CSSI</h3>
@@ -370,7 +374,7 @@
 
         <a href="control-acces-recunoastere-faciala-gdpr-brasov" style="display:contents">
         <article class="article-card cat-securitate">
-          <div class="card-thumb" style="background:linear-gradient(135deg,#0b1a2e,#1a4b8c);display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:180px;padding:16px;position:relative;"><span style="position:absolute;top:12px;left:12px;background:rgba(255,255,255,0.2);color:#fff;font-family:var(--ff-head);font-size:10px;font-weight:700;padding:4px 10px;border-radius:20px;text-transform:uppercase;letter-spacing:0.5px;">NOU · GHID</span><span style="font-size:40px;margin-bottom:8px;">🔒</span><span style="color:#fff;font-family:var(--ff-head);font-size:14px;font-weight:700;text-align:center;line-height:1.3;">Control acces cu recunoaștere<br>facială</span></div>
+          <div class="card-thumb card-cover"><img src="/images/blog/control-acces-recunoastere-faciala-cover.jpg" alt="Control acces cu recunoaștere facială: cum funcționează, GDPR, când merită" loading="lazy"></div>
           <div class="card-body">
             <div class="card-cat">Securitate</div>
             <h3>Control acces cu recunoaștere facială: cum | CSSI</h3>
@@ -382,7 +386,7 @@
 
         <a href="ceata-securitate-fog-cannon-generator-antiefractie-brasov" style="display:contents">
         <article class="article-card cat-securitate">
-          <div class="card-thumb" style="background:linear-gradient(135deg,#0b1a2e,#1a4b8c);display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:180px;padding:16px;position:relative;"><span style="position:absolute;top:12px;left:12px;background:rgba(255,255,255,0.2);color:#fff;font-family:var(--ff-head);font-size:10px;font-weight:700;padding:4px 10px;border-radius:20px;text-transform:uppercase;letter-spacing:0.5px;">NOU · GHID</span><span style="font-size:40px;margin-bottom:8px;">🚨</span><span style="color:#fff;font-family:var(--ff-head);font-size:14px;font-weight:700;text-align:center;line-height:1.3;">Ceață de securitate<br>(fog cannon)</span></div>
+          <div class="card-thumb card-cover"><img src="/images/blog/ceata-securitate-fog-cannon-cover.jpg" alt="Ceață de securitate (fog cannon): cum oprești un jaf în câteva secunde" loading="lazy"></div>
           <div class="card-body">
             <div class="card-cat">Securitate</div>
             <h3>Ceață de securitate (fog cannon): cum oprești un jaf | CSSI</h3>
@@ -394,7 +398,7 @@
 
         <a href="cate-camere-ce-rezolutie-dimensionare-sistem-cctv-brasov" style="display:contents">
         <article class="article-card cat-camere">
-          <div class="card-thumb" style="background:linear-gradient(135deg,#0d3b2f,#1e7852);display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:180px;padding:16px;position:relative;"><span style="position:absolute;top:12px;left:12px;background:rgba(255,255,255,0.2);color:#fff;font-family:var(--ff-head);font-size:10px;font-weight:700;padding:4px 10px;border-radius:20px;text-transform:uppercase;letter-spacing:0.5px;">NOU · GHID</span><span style="font-size:40px;margin-bottom:8px;">📹</span><span style="color:#fff;font-family:var(--ff-head);font-size:14px;font-weight:700;text-align:center;line-height:1.3;">De câte camere și ce<br>rezoluție ai nevoie</span></div>
+          <div class="card-thumb card-cover"><img src="/images/blog/cate-camere-ce-rezolutie-dimensionare-sistem-cctv-brasov-cover.jpg" alt="De câte camere și ce rezoluție ai nevoie: cum dimensionezi un sistem CCTV" loading="lazy"></div>
           <div class="card-body">
             <div class="card-cat">Camere</div>
             <h3>De câte camere și ce rezoluție ai nevoie: cum | CSSI</h3>
@@ -406,7 +410,7 @@
 
         <a href="detector-fum-monoxid-carbon-electric-siguranta-casa-brasov" style="display:contents">
         <article class="article-card cat-instalatii">
-          <div class="card-thumb" style="background:linear-gradient(135deg,#2c1a6b,#5c35c8);display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:180px;padding:16px;position:relative;"><span style="position:absolute;top:12px;left:12px;background:rgba(255,255,255,0.2);color:#fff;font-family:var(--ff-head);font-size:10px;font-weight:700;padding:4px 10px;border-radius:20px;text-transform:uppercase;letter-spacing:0.5px;">NOU · GHID</span><span style="font-size:40px;margin-bottom:8px;">🔥</span><span style="color:#fff;font-family:var(--ff-head);font-size:14px;font-weight:700;text-align:center;line-height:1.3;">Detector de Fum și Monoxid<br>de Carbon +</span></div>
+          <div class="card-thumb card-cover"><img src="/images/blog/detector-fum-co-electric-cover.jpg" alt="Detector de Fum și Monoxid de Carbon + Electric — Siguranța Casei Toamna | CSSI" loading="lazy"></div>
           <div class="card-body">
             <div class="card-cat">Instalații</div>
             <h3>Detector de Fum și Monoxid de Carbon + Electric | CSSI</h3>
@@ -418,7 +422,7 @@
 
         <a href="securitate-depozit-frigorific-industrie-alimentara-brasov" style="display:contents">
         <article class="article-card cat-securitate">
-          <div class="card-thumb" style="background:linear-gradient(135deg,#0b1a2e,#1a4b8c);display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:180px;padding:16px;position:relative;"><span style="position:absolute;top:12px;left:12px;background:rgba(255,255,255,0.2);color:#fff;font-family:var(--ff-head);font-size:10px;font-weight:700;padding:4px 10px;border-radius:20px;text-transform:uppercase;letter-spacing:0.5px;">NOU · GHID</span><span style="font-size:40px;margin-bottom:8px;">🚨</span><span style="color:#fff;font-family:var(--ff-head);font-size:14px;font-weight:700;text-align:center;line-height:1.3;">Securitate și monitorizare<br>pentru depozite</span></div>
+          <div class="card-thumb card-cover"><img src="/images/blog/securitate-depozit-frigorific-cover.jpg" alt="Securitate pentru depozite frigorifice și firme alimentare" loading="lazy"></div>
           <div class="card-body">
             <div class="card-cat">Securitate</div>
             <h3>Securitate și monitorizare pentru depozite | CSSI</h3>
@@ -430,7 +434,7 @@
 
         <a href="instalatie-electrica-productie-alimentara-bucatarie-industriala-brasov" style="display:contents">
         <article class="article-card cat-instalatii">
-          <div class="card-thumb" style="background:linear-gradient(135deg,#2c1a6b,#5c35c8);display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:180px;padding:16px;position:relative;"><span style="position:absolute;top:12px;left:12px;background:rgba(255,255,255,0.2);color:#fff;font-family:var(--ff-head);font-size:10px;font-weight:700;padding:4px 10px;border-radius:20px;text-transform:uppercase;letter-spacing:0.5px;">NOU · GHID</span><span style="font-size:40px;margin-bottom:8px;">⚡</span><span style="color:#fff;font-family:var(--ff-head);font-size:14px;font-weight:700;text-align:center;line-height:1.3;">Instalație electrică<br>pentru producție</span></div>
+          <div class="card-thumb card-cover"><img src="/images/blog/instalatie-electrica-productie-alimentara-cover.jpg" alt="Instalație electrică pentru producție alimentară și bucătării industriale" loading="lazy"></div>
           <div class="card-body">
             <div class="card-cat">Instalații</div>
             <h3>Instalație electrică pentru producție alimentară | CSSI</h3>
@@ -442,7 +446,7 @@
 
         <a href="ce-putere-btu-aer-conditionat-iti-trebuie-brasov" style="display:contents">
         <article class="article-card cat-securitate">
-          <div class="card-thumb" style="background:linear-gradient(135deg,#0b1a2e,#1a4b8c);display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:180px;padding:16px;position:relative;"><span style="position:absolute;top:12px;left:12px;background:rgba(255,255,255,0.2);color:#fff;font-family:var(--ff-head);font-size:10px;font-weight:700;padding:4px 10px;border-radius:20px;text-transform:uppercase;letter-spacing:0.5px;">NOU · GHID</span><span style="font-size:40px;margin-bottom:8px;">🔒</span><span style="color:#fff;font-family:var(--ff-head);font-size:14px;font-weight:700;text-align:center;line-height:1.3;">Ce putere (BTU) de aer<br>condiționat îți</span></div>
+          <div class="card-thumb card-cover"><img src="/images/blog/aer-conditionat-btu-cover.jpg" alt="Ce putere (BTU) de aer condiționat îți trebuie" loading="lazy"></div>
           <div class="card-body">
             <div class="card-cat">Securitate</div>
             <h3>Ce putere (BTU) de aer condiționat îți trebuie</h3>
@@ -454,7 +458,7 @@
 
         <a href="sisteme-antifurt-eas-porti-etichete-taguri-magazine-brasov" style="display:contents">
         <article class="article-card cat-automatizari">
-          <div class="card-thumb" style="background:linear-gradient(135deg,#7b5e00,#d4830a);display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:180px;padding:16px;position:relative;"><span style="position:absolute;top:12px;left:12px;background:rgba(255,255,255,0.2);color:#fff;font-family:var(--ff-head);font-size:10px;font-weight:700;padding:4px 10px;border-radius:20px;text-transform:uppercase;letter-spacing:0.5px;">NOU · GHID</span><span style="font-size:40px;margin-bottom:8px;">🔥</span><span style="color:#fff;font-family:var(--ff-head);font-size:14px;font-weight:700;text-align:center;line-height:1.3;">Sisteme antifurt EAS<br>pentru magazine</span></div>
+          <div class="card-thumb card-cover"><img src="/images/blog/sisteme-antifurt-eas-cover.jpg" alt="Sisteme antifurt EAS pentru magazine: porți, etichete și taguri" loading="lazy"></div>
           <div class="card-body">
             <div class="card-cat">Automatizări</div>
             <h3>Sisteme antifurt EAS pentru magazine: porți, etichete | CSSI</h3>
@@ -466,7 +470,7 @@
 
         <a href="videointerfon-ip-wifi-aplicatie-telefon-brasov" style="display:contents">
         <article class="article-card cat-camere">
-          <div class="card-thumb" style="background:linear-gradient(135deg,#0d3b2f,#1e7852);display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:180px;padding:16px;position:relative;"><span style="position:absolute;top:12px;left:12px;background:rgba(255,255,255,0.2);color:#fff;font-family:var(--ff-head);font-size:10px;font-weight:700;padding:4px 10px;border-radius:20px;text-transform:uppercase;letter-spacing:0.5px;">NOU · GHID</span><span style="font-size:40px;margin-bottom:8px;">📹</span><span style="color:#fff;font-family:var(--ff-head);font-size:14px;font-weight:700;text-align:center;line-height:1.3;">Videointerfon<br>IP cu WiFi</span></div>
+          <div class="card-thumb card-cover"><img src="/images/blog/videointerfon-ip-cover.jpg" alt="Videointerfon IP cu WiFi: vezi și deschizi din app" loading="lazy"></div>
           <div class="card-body">
             <div class="card-cat">Camere</div>
             <h3>Videointerfon IP cu WiFi: vezi și deschizi din app</h3>
@@ -478,7 +482,7 @@
 
         <a href="control-acces-cartela-cod-amprenta-cum-alegi-brasov" style="display:contents">
         <article class="article-card cat-securitate">
-          <div class="card-thumb" style="background:linear-gradient(135deg,#0b1a2e,#1a4b8c);display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:180px;padding:16px;position:relative;"><span style="position:absolute;top:12px;left:12px;background:rgba(255,255,255,0.2);color:#fff;font-family:var(--ff-head);font-size:10px;font-weight:700;padding:4px 10px;border-radius:20px;text-transform:uppercase;letter-spacing:0.5px;">NOU · GHID</span><span style="font-size:40px;margin-bottom:8px;">🔒</span><span style="color:#fff;font-family:var(--ff-head);font-size:14px;font-weight:700;text-align:center;line-height:1.3;">Control<br>acces</span></div>
+          <div class="card-thumb card-cover"><img src="/images/blog/control-acces-metode-cover.jpg" alt="Control acces: cartelă, cod sau amprentă? Cum alegi" loading="lazy"></div>
           <div class="card-body">
             <div class="card-cat">Securitate</div>
             <h3>Control acces: cartelă, cod sau amprentă? Cum alegi</h3>
@@ -490,7 +494,7 @@
 
         <a href="detectoare-miscare-senzori-alarma-pir-dualtech-exterior-brasov" style="display:contents">
         <article class="article-card cat-securitate">
-          <div class="card-thumb" style="background:linear-gradient(135deg,#0b1a2e,#1a4b8c);display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:180px;padding:16px;position:relative;"><span style="position:absolute;top:12px;left:12px;background:rgba(255,255,255,0.2);color:#fff;font-family:var(--ff-head);font-size:10px;font-weight:700;padding:4px 10px;border-radius:20px;text-transform:uppercase;letter-spacing:0.5px;">NOU · GHID</span><span style="font-size:40px;margin-bottom:8px;">🚨</span><span style="color:#fff;font-family:var(--ff-head);font-size:14px;font-weight:700;text-align:center;line-height:1.3;">Detectoare de mișcare<br>și senzori pentru</span></div>
+          <div class="card-thumb card-cover"><img src="/images/blog/detectoare-miscare-senzori-alarma-cover.jpg" alt="Detectoare de mișcare și senzori pentru alarmă: PIR, dual-tech și exterior" loading="lazy"></div>
           <div class="card-body">
             <div class="card-cat">Securitate</div>
             <h3>Detectoare de mișcare și senzori pentru alarmă: PIR | CSSI</h3>
@@ -502,7 +506,7 @@
 
         <a href="securitate-centru-date-camera-servere-firma-brasov" style="display:contents">
         <article class="article-card cat-camere">
-          <div class="card-thumb" style="background:linear-gradient(135deg,#0d3b2f,#1e7852);display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:180px;padding:16px;position:relative;"><span style="position:absolute;top:12px;left:12px;background:rgba(255,255,255,0.2);color:#fff;font-family:var(--ff-head);font-size:10px;font-weight:700;padding:4px 10px;border-radius:20px;text-transform:uppercase;letter-spacing:0.5px;">NOU · GHID</span><span style="font-size:40px;margin-bottom:8px;">📹</span><span style="color:#fff;font-family:var(--ff-head);font-size:14px;font-weight:700;text-align:center;line-height:1.3;">Securitatea camerei<br>de servere</span></div>
+          <div class="card-thumb card-cover"><img src="/images/blog/securitate-camera-servere-cover.jpg" alt="Securitatea camerei de servere: cum protejezi inima IT a firmei" loading="lazy"></div>
           <div class="card-body">
             <div class="card-cat">Camere</div>
             <h3>Securitatea camerei de servere: cum protejezi inima | CSSI</h3>
@@ -514,7 +518,7 @@
 
         <a href="sistem-detectie-semnalizare-incendiu-idsai-firma-brasov" style="display:contents">
         <article class="article-card cat-incendiu">
-          <div class="card-thumb" style="background:linear-gradient(135deg,#7b1a0a,#c0392b);display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:180px;padding:16px;position:relative;"><span style="position:absolute;top:12px;left:12px;background:rgba(255,255,255,0.2);color:#fff;font-family:var(--ff-head);font-size:10px;font-weight:700;padding:4px 10px;border-radius:20px;text-transform:uppercase;letter-spacing:0.5px;">NOU · GHID</span><span style="font-size:40px;margin-bottom:8px;">🔥</span><span style="color:#fff;font-family:var(--ff-head);font-size:14px;font-weight:700;text-align:center;line-height:1.3;">Sistem de detecție și<br>semnalizare incendiu</span></div>
+          <div class="card-thumb card-cover"><img src="/images/blog/sistem-detectie-semnalizare-incendiu-idsai-firma-brasov-cover.jpg" alt="Sistem de detecție și semnalizare incendiu (IDSAI) pentru firme" loading="lazy"></div>
           <div class="card-body">
             <div class="card-cat">Incendiu</div>
             <h3>Sistem de detecție și semnalizare incendiu (IDSAI) | CSSI</h3>
@@ -526,7 +530,7 @@
 
         <a href="cum-alegi-firma-de-securitate-brasov" style="display:contents">
         <article class="article-card cat-securitate">
-          <div class="card-thumb" style="background:linear-gradient(135deg,#0b1a2e,#1a4b8c);display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:180px;padding:16px;position:relative;"><span style="position:absolute;top:12px;left:12px;background:rgba(255,255,255,0.2);color:#fff;font-family:var(--ff-head);font-size:10px;font-weight:700;padding:4px 10px;border-radius:20px;text-transform:uppercase;letter-spacing:0.5px;">NOU · GHID</span><span style="font-size:40px;margin-bottom:8px;">🔒</span><span style="color:#fff;font-family:var(--ff-head);font-size:14px;font-weight:700;text-align:center;line-height:1.3;">Cum alegi o firmă<br>de securitate</span></div>
+          <div class="card-thumb card-cover"><img src="/images/blog/cum-alegi-firma-securitate-cover.jpg" alt="Cum alegi o firmă de securitate: 10 lucruri de verificat" loading="lazy"></div>
           <div class="card-body">
             <div class="card-cat">Securitate</div>
             <h3>Cum alegi o firmă de securitate: 10 lucruri | CSSI</h3>
@@ -538,7 +542,7 @@
 
         <a href="instalatie-electrica-cladire-birouri-open-space-brasov" style="display:contents">
         <article class="article-card cat-instalatii">
-          <div class="card-thumb" style="background:linear-gradient(135deg,#2c1a6b,#5c35c8);display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:180px;padding:16px;position:relative;"><span style="position:absolute;top:12px;left:12px;background:rgba(255,255,255,0.2);color:#fff;font-family:var(--ff-head);font-size:10px;font-weight:700;padding:4px 10px;border-radius:20px;text-transform:uppercase;letter-spacing:0.5px;">NOU · GHID</span><span style="font-size:40px;margin-bottom:8px;">⚡</span><span style="color:#fff;font-family:var(--ff-head);font-size:14px;font-weight:700;text-align:center;line-height:1.3;">Instalație electrică<br>pentru clădire</span></div>
+          <div class="card-thumb card-cover"><img src="/images/blog/instalatie-electrica-birouri-open-space-cover.jpg" alt="Instalație electrică pentru clădire de birouri și open space" loading="lazy"></div>
           <div class="card-body">
             <div class="card-cat">Instalații</div>
             <h3>Instalație electrică pentru clădire de birouri | CSSI</h3>
@@ -550,7 +554,7 @@
 
         <a href="circuit-electric-aer-conditionat-dimensionare-brasov" style="display:contents">
         <article class="article-card cat-instalatii">
-          <div class="card-thumb" style="background:linear-gradient(135deg,#2c1a6b,#5c35c8);display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:180px;padding:16px;position:relative;"><span style="position:absolute;top:12px;left:12px;background:rgba(255,255,255,0.2);color:#fff;font-family:var(--ff-head);font-size:10px;font-weight:700;padding:4px 10px;border-radius:20px;text-transform:uppercase;letter-spacing:0.5px;">NOU · GHID</span><span style="font-size:40px;margin-bottom:8px;">⚡</span><span style="color:#fff;font-family:var(--ff-head);font-size:14px;font-weight:700;text-align:center;line-height:1.3;">Circuit Electric pentru<br>Aer Condiționat |</span></div>
+          <div class="card-thumb card-cover"><img src="/images/blog/circuit-electric-aer-conditionat-brasov-cover.jpg" alt="Circuit Electric pentru Aer Condiționat — Dimensionare Corectă" loading="lazy"></div>
           <div class="card-body">
             <div class="card-cat">Instalații</div>
             <h3>Circuit Electric pentru Aer Condiționat | CSSI</h3>
@@ -562,7 +566,7 @@
 
         <a href="usa-garaj-sectionala-vs-rulou-cum-alegi-brasov" style="display:contents">
         <article class="article-card cat-securitate">
-          <div class="card-thumb" style="background:linear-gradient(135deg,#0b1a2e,#1a4b8c);display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:180px;padding:16px;position:relative;"><span style="position:absolute;top:12px;left:12px;background:rgba(255,255,255,0.2);color:#fff;font-family:var(--ff-head);font-size:10px;font-weight:700;padding:4px 10px;border-radius:20px;text-transform:uppercase;letter-spacing:0.5px;">NOU · GHID</span><span style="font-size:40px;margin-bottom:8px;">🔒</span><span style="color:#fff;font-family:var(--ff-head);font-size:14px;font-weight:700;text-align:center;line-height:1.3;">Ușă de garaj secțională<br>sau rulou? Cum</span></div>
+          <div class="card-thumb card-cover"><img src="/images/blog/usa-garaj-cover.jpg" alt="Ușă de garaj secțională sau rulou? Cum alegi" loading="lazy"></div>
           <div class="card-body">
             <div class="card-cat">Securitate</div>
             <h3>Ușă de garaj secțională sau rulou? Cum alegi</h3>
@@ -574,7 +578,7 @@
 
         <a href="smart-home-brasov-securitate-automatizari-electric" style="display:contents">
         <article class="article-card cat-instalatii">
-          <div class="card-thumb" style="background:linear-gradient(135deg,#2c1a6b,#5c35c8);display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:180px;padding:16px;position:relative;"><span style="position:absolute;top:12px;left:12px;background:rgba(255,255,255,0.2);color:#fff;font-family:var(--ff-head);font-size:10px;font-weight:700;padding:4px 10px;border-radius:20px;text-transform:uppercase;letter-spacing:0.5px;">NOU · GHID</span><span style="font-size:40px;margin-bottom:8px;">🚪</span><span style="color:#fff;font-family:var(--ff-head);font-size:14px;font-weight:700;text-align:center;line-height:1.3;">Smart Home<br>în Brașov</span></div>
+          <div class="card-thumb card-cover"><img src="/images/blog/smart-home-brasov-cover.jpg" alt="Smart Home în Brașov — Securitate, Automatizări și Electric Integrate | CSSI" loading="lazy"></div>
           <div class="card-body">
             <div class="card-cat">Instalații</div>
             <h3>Smart Home în Brașov — Securitate, Automatizări | CSSI</h3>
@@ -586,7 +590,7 @@
 
         <a href="sonorizare-restaurant-magazin-cum-alegi-brasov" style="display:contents">
         <article class="article-card cat-securitate">
-          <div class="card-thumb" style="background:linear-gradient(135deg,#0b1a2e,#1a4b8c);display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:180px;padding:16px;position:relative;"><span style="position:absolute;top:12px;left:12px;background:rgba(255,255,255,0.2);color:#fff;font-family:var(--ff-head);font-size:10px;font-weight:700;padding:4px 10px;border-radius:20px;text-transform:uppercase;letter-spacing:0.5px;">NOU · GHID</span><span style="font-size:40px;margin-bottom:8px;">🔥</span><span style="color:#fff;font-family:var(--ff-head);font-size:14px;font-weight:700;text-align:center;line-height:1.3;">Sonorizare pentru restaurant<br>sau magazin</span></div>
+          <div class="card-thumb card-cover"><img src="/images/blog/sonorizare-cover.jpg" alt="Sonorizare pentru restaurant sau magazin: cum alegi" loading="lazy"></div>
           <div class="card-body">
             <div class="card-cat">Securitate</div>
             <h3>Sonorizare pentru restaurant sau magazin: cum alegi</h3>
@@ -598,7 +602,7 @@
 
         <a href="inlocuire-interfon-bloc-asociatie-ghid-brasov" style="display:contents">
         <article class="article-card cat-securitate">
-          <div class="card-thumb" style="background:linear-gradient(135deg,#0b1a2e,#1a4b8c);display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:180px;padding:16px;position:relative;"><span style="position:absolute;top:12px;left:12px;background:rgba(255,255,255,0.2);color:#fff;font-family:var(--ff-head);font-size:10px;font-weight:700;padding:4px 10px;border-radius:20px;text-transform:uppercase;letter-spacing:0.5px;">NOU · GHID</span><span style="font-size:40px;margin-bottom:8px;">🚪</span><span style="color:#fff;font-family:var(--ff-head);font-size:14px;font-weight:700;text-align:center;line-height:1.3;">Înlocuire interfon<br>în bloc</span></div>
+          <div class="card-thumb card-cover"><img src="/images/blog/interfon-bloc-cover.jpg" alt="Înlocuire interfon în bloc: ghid pentru asociație" loading="lazy"></div>
           <div class="card-body">
             <div class="card-cat">Securitate</div>
             <h3>Înlocuire interfon în bloc: ghid pentru asociație</h3>
@@ -610,7 +614,7 @@
 
         <a href="cum-alegi-bariera-auto-parcare-firma-brasov" style="display:contents">
         <article class="article-card cat-securitate">
-          <div class="card-thumb" style="background:linear-gradient(135deg,#0b1a2e,#1a4b8c);display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:180px;padding:16px;position:relative;"><span style="position:absolute;top:12px;left:12px;background:rgba(255,255,255,0.2);color:#fff;font-family:var(--ff-head);font-size:10px;font-weight:700;padding:4px 10px;border-radius:20px;text-transform:uppercase;letter-spacing:0.5px;">NOU · GHID</span><span style="font-size:40px;margin-bottom:8px;">🔒</span><span style="color:#fff;font-family:var(--ff-head);font-size:14px;font-weight:700;text-align:center;line-height:1.3;">Cum alegi bariera auto<br>pentru parcare sau</span></div>
+          <div class="card-thumb card-cover"><img src="/images/blog/bariera-auto-cover.jpg" alt="Cum alegi bariera auto pentru parcare sau firmă" loading="lazy"></div>
           <div class="card-body">
             <div class="card-cat">Securitate</div>
             <h3>Cum alegi bariera auto pentru parcare sau firmă</h3>
@@ -622,7 +626,7 @@
 
         <a href="pontaj-hartie-vs-electronic-ce-accepta-itm-brasov" style="display:contents">
         <article class="article-card cat-pontaj">
-          <div class="card-thumb" style="background:linear-gradient(135deg,#1a3a5c,#2d6ec8);display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:180px;padding:16px;position:relative;"><span style="position:absolute;top:12px;left:12px;background:rgba(255,255,255,0.2);color:#fff;font-family:var(--ff-head);font-size:10px;font-weight:700;padding:4px 10px;border-radius:20px;text-transform:uppercase;letter-spacing:0.5px;">NOU · GHID</span><span style="font-size:40px;margin-bottom:8px;">⏱️</span><span style="color:#fff;font-family:var(--ff-head);font-size:14px;font-weight:700;text-align:center;line-height:1.3;">Pontaj pe hârtie<br>vs electronic</span></div>
+          <div class="card-thumb card-cover"><img src="/images/blog/pontaj-hartie-vs-electronic-cover.jpg" alt="Pontaj pe hârtie vs electronic: ce acceptă ITM" loading="lazy"></div>
           <div class="card-body">
             <div class="card-cat">Pontaj</div>
             <h3>Pontaj pe hârtie vs electronic: ce acceptă ITM</h3>
@@ -634,7 +638,7 @@
 
         <a href="turnichete-control-acces-pietonal-firme-fabrici-brasov" style="display:contents">
         <article class="article-card cat-securitate">
-          <div class="card-thumb" style="background:linear-gradient(135deg,#0b1a2e,#1a4b8c);display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:180px;padding:16px;position:relative;"><span style="position:absolute;top:12px;left:12px;background:rgba(255,255,255,0.2);color:#fff;font-family:var(--ff-head);font-size:10px;font-weight:700;padding:4px 10px;border-radius:20px;text-transform:uppercase;letter-spacing:0.5px;">NOU · GHID</span><span style="font-size:40px;margin-bottom:8px;">🔒</span><span style="color:#fff;font-family:var(--ff-head);font-size:14px;font-weight:700;text-align:center;line-height:1.3;">Turnichete și control<br>acces pietonal</span></div>
+          <div class="card-thumb card-cover"><img src="/images/blog/turnichete-control-acces-pietonal-cover.jpg" alt="Turnichete și control acces pietonal pentru firme și fabrici" loading="lazy"></div>
           <div class="card-body">
             <div class="card-cat">Securitate</div>
             <h3>Turnichete și control acces pietonal pentru firme | CSSI</h3>
@@ -646,7 +650,7 @@
 
         <a href="comunicator-alarma-cai-transmisie-dispecerat-gsm-ip-dualpath-brasov" style="display:contents">
         <article class="article-card cat-securitate">
-          <div class="card-thumb" style="background:linear-gradient(135deg,#0b1a2e,#1a4b8c);display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:180px;padding:16px;position:relative;"><span style="position:absolute;top:12px;left:12px;background:rgba(255,255,255,0.2);color:#fff;font-family:var(--ff-head);font-size:10px;font-weight:700;padding:4px 10px;border-radius:20px;text-transform:uppercase;letter-spacing:0.5px;">NOU · GHID</span><span style="font-size:40px;margin-bottom:8px;">🚨</span><span style="color:#fff;font-family:var(--ff-head);font-size:14px;font-weight:700;text-align:center;line-height:1.3;">Comunicatoare și căi<br>de transmisie</span></div>
+          <div class="card-thumb card-cover"><img src="/images/blog/comunicator-alarma-transmisie-cover.jpg" alt="Comunicatoare și căi de transmisie a alarmei la dispecerat: GSM, IP, dual-path" loading="lazy"></div>
           <div class="card-body">
             <div class="card-cat">Securitate</div>
             <h3>Comunicatoare și căi de transmisie a alarmei | CSSI</h3>
@@ -658,7 +662,7 @@
 
         <a href="camere-termice-detectie-timpurie-firma-brasov" style="display:contents">
         <article class="article-card cat-camere">
-          <div class="card-thumb" style="background:linear-gradient(135deg,#0d3b2f,#1e7852);display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:180px;padding:16px;position:relative;"><span style="position:absolute;top:12px;left:12px;background:rgba(255,255,255,0.2);color:#fff;font-family:var(--ff-head);font-size:10px;font-weight:700;padding:4px 10px;border-radius:20px;text-transform:uppercase;letter-spacing:0.5px;">NOU · GHID</span><span style="font-size:40px;margin-bottom:8px;">📹</span><span style="color:#fff;font-family:var(--ff-head);font-size:14px;font-weight:700;text-align:center;line-height:1.3;">Camere termice și<br>detecție timpurie</span></div>
+          <div class="card-thumb card-cover"><img src="/images/blog/camere-termice-detectie-timpurie-cover.jpg" alt="Camere termice și detecție timpurie: când merită pentru firma ta" loading="lazy"></div>
           <div class="card-body">
             <div class="card-cat">Camere</div>
             <h3>Camere termice și detecție timpurie: când merită | CSSI</h3>
@@ -670,7 +674,7 @@
 
         <a href="avertizare-vocala-sonorizare-evacuare-evac-isu-brasov" style="display:contents">
         <article class="article-card cat-securitate">
-          <div class="card-thumb" style="background:linear-gradient(135deg,#0b1a2e,#1a4b8c);display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:180px;padding:16px;position:relative;"><span style="position:absolute;top:12px;left:12px;background:rgba(255,255,255,0.2);color:#fff;font-family:var(--ff-head);font-size:10px;font-weight:700;padding:4px 10px;border-radius:20px;text-transform:uppercase;letter-spacing:0.5px;">NOU · GHID</span><span style="font-size:40px;margin-bottom:8px;">🔒</span><span style="color:#fff;font-family:var(--ff-head);font-size:14px;font-weight:700;text-align:center;line-height:1.3;">Avertizare vocală<br>și sonorizare</span></div>
+          <div class="card-thumb card-cover"><img src="/images/blog/avertizare-vocala-evac-isu-cover.jpg" alt="Avertizare vocală și sonorizare de evacuare (EVAC) pentru spații publice: ce cere ISU" loading="lazy"></div>
           <div class="card-body">
             <div class="card-cat">Securitate</div>
             <h3>Avertizare vocală și sonorizare de evacuare (EVAC) | CSSI</h3>
@@ -682,7 +686,7 @@
 
         <a href="securitate-magazin-sezon-sarbatori-black-friday-craciun-brasov" style="display:contents">
         <article class="article-card cat-securitate">
-          <div class="card-thumb" style="background:linear-gradient(135deg,#0b1a2e,#1a4b8c);display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:180px;padding:16px;position:relative;"><span style="position:absolute;top:12px;left:12px;background:rgba(255,255,255,0.2);color:#fff;font-family:var(--ff-head);font-size:10px;font-weight:700;padding:4px 10px;border-radius:20px;text-transform:uppercase;letter-spacing:0.5px;">NOU · GHID</span><span style="font-size:40px;margin-bottom:8px;">🔥</span><span style="color:#fff;font-family:var(--ff-head);font-size:14px;font-weight:700;text-align:center;line-height:1.3;">Securitate pentru magazine<br>în sezonul</span></div>
+          <div class="card-thumb card-cover"><img src="/images/blog/securitate-magazin-sarbatori-cover.jpg" alt="Securitate pentru magazine în sezonul de sărbători (Black Friday–Crăciun)" loading="lazy"></div>
           <div class="card-body">
             <div class="card-cat">Securitate</div>
             <h3>Securitate pentru magazine în sezonul de sărbători | CSSI</h3>
@@ -694,7 +698,7 @@
 
         <a href="pompa-de-caldura-intrebari-frecvente-brasov" style="display:contents">
         <article class="article-card cat-securitate">
-          <div class="card-thumb" style="background:linear-gradient(135deg,#0b1a2e,#1a4b8c);display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:180px;padding:16px;position:relative;"><span style="position:absolute;top:12px;left:12px;background:rgba(255,255,255,0.2);color:#fff;font-family:var(--ff-head);font-size:10px;font-weight:700;padding:4px 10px;border-radius:20px;text-transform:uppercase;letter-spacing:0.5px;">NOU · GHID</span><span style="font-size:40px;margin-bottom:8px;">🔒</span><span style="color:#fff;font-family:var(--ff-head);font-size:14px;font-weight:700;text-align:center;line-height:1.3;">Pompă de<br>căldură</span></div>
+          <div class="card-thumb card-cover"><img src="/images/blog/pompa-caldura-cover.jpg" alt="Pompă de căldură: întrebări frecvente înainte" loading="lazy"></div>
           <div class="card-body">
             <div class="card-cat">Securitate</div>
             <h3>Pompă de căldură: întrebări frecvente înainte</h3>
@@ -706,7 +710,7 @@
 
         <a href="instalatie-electrica-statie-incarcare-ev-comerciala-firma-brasov" style="display:contents">
         <article class="article-card cat-instalatii">
-          <div class="card-thumb" style="background:linear-gradient(135deg,#2c1a6b,#5c35c8);display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:180px;padding:16px;position:relative;"><span style="position:absolute;top:12px;left:12px;background:rgba(255,255,255,0.2);color:#fff;font-family:var(--ff-head);font-size:10px;font-weight:700;padding:4px 10px;border-radius:20px;text-transform:uppercase;letter-spacing:0.5px;">NOU · GHID</span><span style="font-size:40px;margin-bottom:8px;">⚡</span><span style="color:#fff;font-family:var(--ff-head);font-size:14px;font-weight:700;text-align:center;line-height:1.3;">Instalație electrică<br>pentru stație</span></div>
+          <div class="card-thumb card-cover"><img src="/images/blog/statie-ev-comerciala-cover.jpg" alt="Stație de încărcare EV pentru firmă: ce presupune instalația electrică" loading="lazy"></div>
           <div class="card-body">
             <div class="card-cat">Instalații</div>
             <h3>Instalație electrică pentru stație de încărcare EV | CSSI</h3>
@@ -718,7 +722,7 @@
 
         <a href="instalatie-electrica-climatizare-centralizata-chiller-vrv-firma-brasov" style="display:contents">
         <article class="article-card cat-instalatii">
-          <div class="card-thumb" style="background:linear-gradient(135deg,#2c1a6b,#5c35c8);display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:180px;padding:16px;position:relative;"><span style="position:absolute;top:12px;left:12px;background:rgba(255,255,255,0.2);color:#fff;font-family:var(--ff-head);font-size:10px;font-weight:700;padding:4px 10px;border-radius:20px;text-transform:uppercase;letter-spacing:0.5px;">NOU · GHID</span><span style="font-size:40px;margin-bottom:8px;">⚡</span><span style="color:#fff;font-family:var(--ff-head);font-size:14px;font-weight:700;text-align:center;line-height:1.3;">Instalație electrică<br>pentru climatizare</span></div>
+          <div class="card-thumb card-cover"><img src="/images/blog/instalatie-electrica-climatizare-centralizata-cover.jpg" alt="Instalație electrică pentru climatizare centralizată (chiller/VRV) la firmă" loading="lazy"></div>
           <div class="card-body">
             <div class="card-cat">Instalații</div>
             <h3>Instalație electrică pentru climatizare centralizată | CSSI</h3>
@@ -730,7 +734,7 @@
 
         <a href="instalatie-electrica-garaj-atelier-anexa-brasov" style="display:contents">
         <article class="article-card cat-instalatii">
-          <div class="card-thumb" style="background:linear-gradient(135deg,#2c1a6b,#5c35c8);display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:180px;padding:16px;position:relative;"><span style="position:absolute;top:12px;left:12px;background:rgba(255,255,255,0.2);color:#fff;font-family:var(--ff-head);font-size:10px;font-weight:700;padding:4px 10px;border-radius:20px;text-transform:uppercase;letter-spacing:0.5px;">NOU · GHID</span><span style="font-size:40px;margin-bottom:8px;">⚡</span><span style="color:#fff;font-family:var(--ff-head);font-size:14px;font-weight:700;text-align:center;line-height:1.3;">Instalație electrică pentru<br>garaj, atelier</span></div>
+          <div class="card-thumb card-cover"><img src="/images/blog/instalatie-electrica-garaj-cover.jpg" alt="Instalație electrică pentru garaj, atelier sau anexă" loading="lazy"></div>
           <div class="card-body">
             <div class="card-cat">Instalații</div>
             <h3>Instalație electrică pentru garaj, atelier sau anexă | CSSI</h3>
@@ -742,7 +746,7 @@
 
         <a href="securitate-baze-sportive-terenuri-sali-polivalente-brasov" style="display:contents">
         <article class="article-card cat-automatizari">
-          <div class="card-thumb" style="background:linear-gradient(135deg,#7b5e00,#d4830a);display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:180px;padding:16px;position:relative;"><span style="position:absolute;top:12px;left:12px;background:rgba(255,255,255,0.2);color:#fff;font-family:var(--ff-head);font-size:10px;font-weight:700;padding:4px 10px;border-radius:20px;text-transform:uppercase;letter-spacing:0.5px;">NOU · GHID</span><span style="font-size:40px;margin-bottom:8px;">🚪</span><span style="color:#fff;font-family:var(--ff-head);font-size:14px;font-weight:700;text-align:center;line-height:1.3;">Securitate pentru baze<br>sportive, terenuri</span></div>
+          <div class="card-thumb card-cover"><img src="/images/blog/securitate-baze-sportive-cover.jpg" alt="Securitate pentru baze sportive, terenuri și săli polivalente" loading="lazy"></div>
           <div class="card-body">
             <div class="card-cat">Automatizări</div>
             <h3>Securitate pentru baze sportive, terenuri și săli | CSSI</h3>
@@ -754,7 +758,7 @@
 
         <a href="sonorizare-public-address-firme-magazine-brasov" style="display:contents">
         <article class="article-card cat-securitate">
-          <div class="card-thumb" style="background:linear-gradient(135deg,#0b1a2e,#1a4b8c);display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:180px;padding:16px;position:relative;"><span style="position:absolute;top:12px;left:12px;background:rgba(255,255,255,0.2);color:#fff;font-family:var(--ff-head);font-size:10px;font-weight:700;padding:4px 10px;border-radius:20px;text-transform:uppercase;letter-spacing:0.5px;">NOU · GHID</span><span style="font-size:40px;margin-bottom:8px;">🔥</span><span style="color:#fff;font-family:var(--ff-head);font-size:14px;font-weight:700;text-align:center;line-height:1.3;">Sonorizare și public<br>address pentru firme</span></div>
+          <div class="card-thumb card-cover"><img src="/images/blog/sonorizare-public-address-cover.jpg" alt="Sonorizare și public address pentru firme și magazine" loading="lazy"></div>
           <div class="card-body">
             <div class="card-cat">Securitate</div>
             <h3>Sonorizare și public address pentru firme și magazine | CSSI</h3>
@@ -766,7 +770,7 @@
 
         <a href="videointerfon-bloc-asociatie-proprietari-brasov" style="display:contents">
         <article class="article-card cat-camere">
-          <div class="card-thumb" style="background:linear-gradient(135deg,#0d3b2f,#1e7852);display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:180px;padding:16px;position:relative;"><span style="position:absolute;top:12px;left:12px;background:rgba(255,255,255,0.2);color:#fff;font-family:var(--ff-head);font-size:10px;font-weight:700;padding:4px 10px;border-radius:20px;text-transform:uppercase;letter-spacing:0.5px;">NOU · GHID</span><span style="font-size:40px;margin-bottom:8px;">📹</span><span style="color:#fff;font-family:var(--ff-head);font-size:14px;font-weight:700;text-align:center;line-height:1.3;">Interfon &amp; Videointerfon<br>pentru Bloc</span></div>
+          <div class="card-thumb card-cover"><img src="/images/blog/videointerfon-bloc-asociatie-brasov-cover.jpg" alt="Interfon &amp;amp; Videointerfon pentru Bloc și Asociație în Brașov | CSSI" loading="lazy"></div>
           <div class="card-body">
             <div class="card-cat">Camere</div>
             <h3>Interfon &amp; Videointerfon pentru Bloc și Asociație | CSSI</h3>
@@ -778,7 +782,7 @@
 
         <a href="detectie-perimetrala-bariere-ir-cablu-senzor-firma-brasov" style="display:contents">
         <article class="article-card cat-automatizari">
-          <div class="card-thumb" style="background:linear-gradient(135deg,#7b5e00,#d4830a);display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:180px;padding:16px;position:relative;"><span style="position:absolute;top:12px;left:12px;background:rgba(255,255,255,0.2);color:#fff;font-family:var(--ff-head);font-size:10px;font-weight:700;padding:4px 10px;border-radius:20px;text-transform:uppercase;letter-spacing:0.5px;">NOU · GHID</span><span style="font-size:40px;margin-bottom:8px;">🚪</span><span style="color:#fff;font-family:var(--ff-head);font-size:14px;font-weight:700;text-align:center;line-height:1.3;">Detecție perimetrală</span></div>
+          <div class="card-thumb card-cover"><img src="/images/blog/detectie-perimetrala-cover.jpg" alt="Detecție perimetrală: bariere IR, cablu senzor și analitică video" loading="lazy"></div>
           <div class="card-body">
             <div class="card-cat">Automatizări</div>
             <h3>Detecție perimetrală: bariere IR, cablu senzor | CSSI</h3>
@@ -790,7 +794,7 @@
 
         <a href="pontaj-electronic-obligatoriu-lege-amenzi-itm-brasov" style="display:contents">
         <article class="article-card cat-pontaj">
-          <div class="card-thumb" style="background:linear-gradient(135deg,#1a3a5c,#2d6ec8);display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:180px;padding:16px;position:relative;"><span style="position:absolute;top:12px;left:12px;background:rgba(255,255,255,0.2);color:#fff;font-family:var(--ff-head);font-size:10px;font-weight:700;padding:4px 10px;border-radius:20px;text-transform:uppercase;letter-spacing:0.5px;">NOU · GHID</span><span style="font-size:40px;margin-bottom:8px;">⏱️</span><span style="color:#fff;font-family:var(--ff-head);font-size:14px;font-weight:700;text-align:center;line-height:1.3;">Pontaj electronic</span></div>
+          <div class="card-thumb card-cover"><img src="/images/blog/pontaj-electronic-lege-cover.jpg" alt="Pontaj electronic: e obligatoriu? Amenzi ITM și legea" loading="lazy"></div>
           <div class="card-body">
             <div class="card-cat">Pontaj</div>
             <h3>Pontaj electronic: e obligatoriu? Amenzi ITM și legea</h3>
@@ -802,7 +806,7 @@
 
         <a href="control-acces-pontaj-relocare-extindere-birou-brasov" style="display:contents">
         <article class="article-card cat-pontaj">
-          <div class="card-thumb" style="background:linear-gradient(135deg,#1a3a5c,#2d6ec8);display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:180px;padding:16px;position:relative;"><span style="position:absolute;top:12px;left:12px;background:rgba(255,255,255,0.2);color:#fff;font-family:var(--ff-head);font-size:10px;font-weight:700;padding:4px 10px;border-radius:20px;text-transform:uppercase;letter-spacing:0.5px;">NOU · GHID</span><span style="font-size:40px;margin-bottom:8px;">🔒</span><span style="color:#fff;font-family:var(--ff-head);font-size:14px;font-weight:700;text-align:center;line-height:1.3;">Control Acces și Pontaj<br>la Relocarea</span></div>
+          <div class="card-thumb card-cover"><img src="/images/blog/control-acces-pontaj-relocare-birou-cover.jpg" alt="Control Acces și Pontaj la Relocarea Biroului — Checklist Firme" loading="lazy"></div>
           <div class="card-body">
             <div class="card-cat">Pontaj</div>
             <h3>Control Acces și Pontaj la Relocarea Biroului | CSSI</h3>
@@ -814,7 +818,7 @@
 
         <a href="iluminat-siguranta-evacuare-firme-isu-brasov" style="display:contents">
         <article class="article-card cat-securitate">
-          <div class="card-thumb" style="background:linear-gradient(135deg,#0b1a2e,#1a4b8c);display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:180px;padding:16px;position:relative;"><span style="position:absolute;top:12px;left:12px;background:rgba(255,255,255,0.2);color:#fff;font-family:var(--ff-head);font-size:10px;font-weight:700;padding:4px 10px;border-radius:20px;text-transform:uppercase;letter-spacing:0.5px;">NOU · GHID</span><span style="font-size:40px;margin-bottom:8px;">🔒</span><span style="color:#fff;font-family:var(--ff-head);font-size:14px;font-weight:700;text-align:center;line-height:1.3;">Iluminat de siguranță<br>și evacuare pentru</span></div>
+          <div class="card-thumb card-cover"><img src="/images/blog/iluminat-siguranta-evacuare-cover.jpg" alt="Iluminat de siguranță și evacuare pentru firme: ce cere legea (ISU)" loading="lazy"></div>
           <div class="card-body">
             <div class="card-cat">Securitate</div>
             <h3>Iluminat de siguranță și evacuare pentru firme | CSSI</h3>
@@ -826,7 +830,7 @@
 
         <a href="sistem-securitate-firma-noua-de-unde-incepi-brasov" style="display:contents">
         <article class="article-card cat-camere">
-          <div class="card-thumb" style="background:linear-gradient(135deg,#0d3b2f,#1e7852);display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:180px;padding:16px;position:relative;"><span style="position:absolute;top:12px;left:12px;background:rgba(255,255,255,0.2);color:#fff;font-family:var(--ff-head);font-size:10px;font-weight:700;padding:4px 10px;border-radius:20px;text-transform:uppercase;letter-spacing:0.5px;">NOU · GHID</span><span style="font-size:40px;margin-bottom:8px;">🚨</span><span style="color:#fff;font-family:var(--ff-head);font-size:14px;font-weight:700;text-align:center;line-height:1.3;">Sistem de alarmă și<br>supraveghere video</span></div>
+          <div class="card-thumb card-cover"><img src="/images/blog/firma-noua-securitate-cover.jpg" alt="Sistem de alarmă și supraveghere video pentru firmă nouă" loading="lazy"></div>
           <div class="card-body">
             <div class="card-cat">Camere</div>
             <h3>Sistem de alarmă și supraveghere video pentru firmă nouă</h3>
@@ -838,7 +842,7 @@
 
         <a href="ce-faci-cand-se-declanseaza-alarma-firma-ghid-brasov" style="display:contents">
         <article class="article-card cat-securitate">
-          <div class="card-thumb" style="background:linear-gradient(135deg,#0b1a2e,#1a4b8c);display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:180px;padding:16px;position:relative;"><span style="position:absolute;top:12px;left:12px;background:rgba(255,255,255,0.2);color:#fff;font-family:var(--ff-head);font-size:10px;font-weight:700;padding:4px 10px;border-radius:20px;text-transform:uppercase;letter-spacing:0.5px;">NOU · GHID</span><span style="font-size:40px;margin-bottom:8px;">🚨</span><span style="color:#fff;font-family:var(--ff-head);font-size:14px;font-weight:700;text-align:center;line-height:1.3;">Sistem de alarmă<br>firmă</span></div>
+          <div class="card-thumb card-cover"><img src="/images/blog/ce-faci-cand-suna-alarma-cover.jpg" alt="Sistem de alarmă firmă: ce faci când se declanșează" loading="lazy"></div>
           <div class="card-body">
             <div class="card-cat">Securitate</div>
             <h3>Sistem de alarmă firmă: ce faci când se declanșează</h3>
@@ -851,7 +855,7 @@
 
         <a href="cat-costa-refacerea-instalatiei-electrice-apartament-brasov" style="display:contents">
         <article class="article-card cat-instalatii">
-          <div class="card-thumb" style="background:linear-gradient(135deg,#2c1a6b,#5c35c8);display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:180px;padding:16px;position:relative;"><span style="position:absolute;top:12px;left:12px;background:rgba(255,255,255,0.2);color:#fff;font-family:var(--ff-head);font-size:10px;font-weight:700;padding:4px 10px;border-radius:20px;text-transform:uppercase;letter-spacing:0.5px;">NOU · COSTURI</span><span style="font-size:40px;margin-bottom:8px;">🔌</span><span style="color:#fff;font-family:var(--ff-head);font-size:14px;font-weight:700;text-align:center;line-height:1.3;">Refacere instalație<br>la apartament</span></div>
+          <div class="card-thumb card-cover"><img src="/images/blog/cat-costa-refacerea-instalatiei-electrice-apartament-brasov-cover.jpg" alt="Cât Costă Refacerea Instalației Electrice la Apartament în Brașov (2026)" loading="lazy"></div>
           <div class="card-body">
             <div class="card-cat">Instalații</div>
             <h3>Cât Costă Refacerea Instalației Electrice la Apartament în Brașov</h3>
@@ -862,7 +866,7 @@
         </a>
         <a href="siguranta-sare-cauze-solutii-instalatie-electrica" style="display:contents">
         <article class="article-card cat-instalatii">
-          <div class="card-thumb" style="background:linear-gradient(135deg,#7b5e00,#d4830a);display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:180px;padding:16px;position:relative;"><span style="position:absolute;top:12px;left:12px;background:rgba(255,255,255,0.2);color:#fff;font-family:var(--ff-head);font-size:10px;font-weight:700;padding:4px 10px;border-radius:20px;text-transform:uppercase;letter-spacing:0.5px;">NOU · DEPANARE</span><span style="font-size:40px;margin-bottom:8px;">⚡</span><span style="color:#fff;font-family:var(--ff-head);font-size:14px;font-weight:700;text-align:center;line-height:1.3;">Siguranța sare?<br>Cauze & soluții</span></div>
+          <div class="card-thumb card-cover"><img src="/images/blog/siguranta-sare-cauze-solutii-instalatie-electrica-cover.jpg" alt="Siguranța Sare în Tablou? Cauze, Soluții și Când Devine Pericol Real" loading="lazy"></div>
           <div class="card-body">
             <div class="card-cat">Instalații</div>
             <h3>Siguranța Sare în Tablou? Cauze, Soluții și Când Devine Pericol Real</h3>
@@ -873,7 +877,7 @@
         </a>
         <a href="instalatii-electrice-brasov-costuri-anre-2026" style="display:contents">
         <article class="article-card cat-instalatii">
-          <div class="card-thumb" style="background:linear-gradient(135deg,#2c1a6b,#5c35c8);display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:180px;padding:16px;position:relative;"><span style="position:absolute;top:12px;left:12px;background:rgba(255,255,255,0.2);color:#fff;font-family:var(--ff-head);font-size:10px;font-weight:700;padding:4px 10px;border-radius:20px;text-transform:uppercase;letter-spacing:0.5px;">NOU · GHID 2026</span><span style="font-size:40px;margin-bottom:8px;">⚡</span><span style="color:#fff;font-family:var(--ff-head);font-size:14px;font-weight:700;text-align:center;line-height:1.3;">Instalații electrice<br>costuri & ANRE</span></div>
+          <div class="card-thumb card-cover"><img src="/images/blog/instalatii-electrice-brasov-costuri-anre-2026-cover.jpg" alt="Instalații Electrice Brașov 2026 — Costuri, ANRE, Alegerea Electricianului" loading="lazy"></div>
           <div class="card-body">
             <div class="card-cat">Instalații</div>
             <h3>Instalații Electrice Brașov 2026 — Costuri, ANRE și Alegerea Electricianului</h3>
@@ -884,7 +888,7 @@
         </a>
         <a href="studiu-de-caz-vila-bran-securitate-12500-ron" style="display:contents">
         <article class="article-card cat-securitate">
-          <div class="card-thumb" style="background:linear-gradient(135deg,#1a1a2e,#2d3436);display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:180px;padding:16px;position:relative;"><span style="position:absolute;top:12px;left:12px;background:rgba(255,255,255,0.2);color:#fff;font-family:var(--ff-head);font-size:10px;font-weight:700;padding:4px 10px;border-radius:20px;text-transform:uppercase;letter-spacing:0.5px;">NOU · STUDIU DE CAZ</span><span style="font-size:40px;margin-bottom:8px;">🏔</span><span style="color:#fff;font-family:var(--ff-head);font-size:14px;font-weight:700;text-align:center;line-height:1.3;">Vilă Bran<br>12.500 RON</span></div>
+          <div class="card-thumb card-cover"><img src="/images/blog/studiu-de-caz-vila-bran-securitate-12500-ron-cover.jpg" alt="Studiu de Caz: Cum Am Securizat o Vilă de 200 mp în Bran cu 12.500 RON" loading="lazy"></div>
           <div class="card-body">
             <div class="card-cat">Securitate</div>
             <h3>Studiu de Caz: Vilă de 200 mp în Bran, Securizată cu 12.500 RON</h3>
@@ -895,7 +899,7 @@
         </a>
         <a href="instalare-camere-supraveghere-brasov-cost-firma-2026" style="display:contents">
         <article class="article-card cat-camere">
-          <div class="card-thumb" style="background:linear-gradient(135deg,#1a3a5c,#2d6ec8);display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:180px;padding:16px;position:relative;"><span style="position:absolute;top:12px;left:12px;background:rgba(255,255,255,0.2);color:#fff;font-family:var(--ff-head);font-size:10px;font-weight:700;padding:4px 10px;border-radius:20px;text-transform:uppercase;letter-spacing:0.5px;">NOU · COSTURI</span><span style="font-size:40px;margin-bottom:8px;">🔧</span><span style="color:#fff;font-family:var(--ff-head);font-size:14px;font-weight:700;text-align:center;line-height:1.3;">Instalare camere<br>costuri & firmă</span></div>
+          <div class="card-thumb card-cover"><img src="/images/blog/instalare-camere-supraveghere-brasov-cost-firma-2026-cover.jpg" alt="Instalare Camere Supraveghere Brașov — Cât Costă &amp; Cum Alegi Firma (2026)" loading="lazy"></div>
           <div class="card-body">
             <div class="card-cat">Camere</div>
             <h3>Instalare Camere Supraveghere Brașov — Cât Costă & Cum Alegi Firma</h3>
@@ -906,7 +910,7 @@
         </a>
         <a href="alarme-brasov-ajax-vs-paradox-vs-hikvision-2026" style="display:contents">
         <article class="article-card cat-securitate">
-          <div class="card-thumb" style="background:linear-gradient(135deg,#7b1a0a,#c0392b);display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:180px;padding:16px;position:relative;"><span style="position:absolute;top:12px;left:12px;background:rgba(255,255,255,0.2);color:#fff;font-family:var(--ff-head);font-size:10px;font-weight:700;padding:4px 10px;border-radius:20px;text-transform:uppercase;letter-spacing:0.5px;">NOU · COMPARAȚIE</span><span style="font-size:40px;margin-bottom:8px;">🚨</span><span style="color:#fff;font-family:var(--ff-head);font-size:14px;font-weight:700;text-align:center;line-height:1.3;">Ajax vs Paradox<br>vs Hikvision</span></div>
+          <div class="card-thumb card-cover"><img src="/images/blog/alarme-brasov-ajax-vs-paradox-vs-hikvision-2026-cover.jpg" alt="Alarme Antiefracție Brașov — Ajax vs Paradox vs Hikvision (Care e Mai Bun în 2026?)" loading="lazy"></div>
           <div class="card-body">
             <div class="card-cat">Securitate</div>
             <h3>Alarme Antiefracție Brașov — Ajax vs Paradox vs Hikvision (2026)</h3>
@@ -917,7 +921,7 @@
         </a>
         <a href="camere-supraveghere-brasov-ghid-complet-2026" style="display:contents">
         <article class="article-card cat-camere">
-          <div class="card-thumb" style="background:linear-gradient(135deg,#0d3b2f,#1e7852);display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:180px;padding:16px;position:relative;"><span style="position:absolute;top:12px;left:12px;background:rgba(255,255,255,0.2);color:#fff;font-family:var(--ff-head);font-size:10px;font-weight:700;padding:4px 10px;border-radius:20px;text-transform:uppercase;letter-spacing:0.5px;">NOU · GHID 2026</span><span style="font-size:40px;margin-bottom:8px;">📹</span><span style="color:#fff;font-family:var(--ff-head);font-size:14px;font-weight:700;text-align:center;line-height:1.3;">Camere supraveghere<br>Brașov 2026</span></div>
+          <div class="card-thumb card-cover"><img src="/images/blog/camere-supraveghere-brasov-ghid-complet-2026-cover.jpg" alt="Camere Supraveghere Brașov 2026 — Ghid Complet &amp; Prețuri" loading="lazy"></div>
           <div class="card-body">
             <div class="card-cat">Camere</div>
             <h3>Camere Supraveghere Brașov 2026 — Ghid Complet: Instalare, Prețuri, Branduri</h3>
@@ -928,7 +932,7 @@
         </a>
         <a href="securitate-vacanta-vara-2026" style="display:contents">
         <article class="article-card cat-securitate">
-          <div class="card-thumb" style="background:linear-gradient(135deg,#7b5e00,#d4830a);display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:180px;padding:16px;position:relative;"><span style="position:absolute;top:12px;left:12px;background:rgba(255,255,255,0.2);color:#fff;font-family:var(--ff-head);font-size:10px;font-weight:700;padding:4px 10px;border-radius:20px;text-transform:uppercase;letter-spacing:0.5px;">NOU · SEZONAL</span><span style="font-size:40px;margin-bottom:8px;">🏖️</span><span style="color:#fff;font-family:var(--ff-head);font-size:14px;font-weight:700;text-align:center;line-height:1.3;">Securitate<br>vacanță vara 2026</span></div>
+          <div class="card-thumb card-cover"><img src="/images/blog/securitate-vacanta-vara-2026-cover.jpg" alt="Securitate Vacanță Vară 2026: Cum îți Protejezi Casa Neocupată" loading="lazy"></div>
           <div class="card-body">
             <div class="card-cat">Securitate</div>
             <h3>Securitate Vacanță Vară 2026: Cum îți Protejezi Casa Neocupată</h3>
@@ -939,7 +943,7 @@
         </a>
         <a href="cum-alegi-firma-securitate-ghid-complet" style="display:contents">
         <article class="article-card cat-securitate">
-          <div class="card-thumb" style="background:linear-gradient(135deg,#1e293b,#334155);display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:180px;padding:16px;position:relative;"><span style="position:absolute;top:12px;left:12px;background:rgba(255,255,255,0.2);color:#fff;font-family:var(--ff-head);font-size:10px;font-weight:700;padding:4px 10px;border-radius:20px;text-transform:uppercase;letter-spacing:0.5px;">GHID COMPLET</span><span style="font-size:40px;margin-bottom:8px;">🔍</span><span style="color:#fff;font-family:var(--ff-head);font-size:14px;font-weight:700;text-align:center;line-height:1.3;">Cum alegi firma<br>de securitate</span></div>
+          <div class="card-thumb card-cover"><img src="/images/blog/cum-alegi-firma-securitate-ghid-complet-cover.jpg" alt="Cum Alegi Firma de Securitate: 10 Criterii Esențiale | Ghid 2026" loading="lazy"></div>
           <div class="card-body">
             <div class="card-cat">Ghid Cumpărător</div>
             <h3>Cum Alegi Firma de Securitate: 10 Criterii Esențiale</h3>
@@ -950,7 +954,7 @@
         </a>
         <a href="cost-sistem-securitate-complet-2026" style="display:contents">
         <article class="article-card cat-securitate">
-          <div class="card-thumb" style="background:linear-gradient(135deg,#7f1d1d,#dc2626);display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:180px;padding:16px;position:relative;"><span style="position:absolute;top:12px;left:12px;background:rgba(255,255,255,0.2);color:#fff;font-family:var(--ff-head);font-size:10px;font-weight:700;padding:4px 10px;border-radius:20px;text-transform:uppercase;letter-spacing:0.5px;">PREȚURI 2026</span><span style="font-size:40px;margin-bottom:8px;">💰</span><span style="color:#fff;font-family:var(--ff-head);font-size:14px;font-weight:700;text-align:center;line-height:1.3;">Cost sistem<br>securitate complet</span></div>
+          <div class="card-thumb card-cover"><img src="/images/blog/cost-sistem-securitate-complet-2026-cover.jpg" alt="Cât Costă un Sistem de Securitate Complet în 2026: Prețuri Reale" loading="lazy"></div>
           <div class="card-body">
             <div class="card-cat">Ghid Prețuri</div>
             <h3>Cât Costă un Sistem de Securitate Complet în 2026: Prețuri Reale</h3>
@@ -961,7 +965,7 @@
         </a>
         <a href="nice-vs-bft-vs-came-comparatie-automatizari" style="display:contents">
         <article class="article-card cat-securitate">
-          <div class="card-thumb" style="background:linear-gradient(135deg,#1e3a5f,#2563eb);display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:180px;padding:16px;position:relative;"><span style="position:absolute;top:12px;left:12px;background:rgba(255,255,255,0.2);color:#fff;font-family:var(--ff-head);font-size:10px;font-weight:700;padding:4px 10px;border-radius:20px;text-transform:uppercase;letter-spacing:0.5px;">COMPARAȚIE</span><span style="font-size:40px;margin-bottom:8px;">⚙️</span><span style="color:#fff;font-family:var(--ff-head);font-size:14px;font-weight:700;text-align:center;line-height:1.3;">Nice vs BFT<br>vs CAME</span></div>
+          <div class="card-thumb card-cover"><img src="/images/blog/nice-vs-bft-vs-came-comparatie-automatizari-cover.jpg" alt="Nice vs BFT vs CAME: Comparație Completă Automatizări Porți 2026" loading="lazy"></div>
           <div class="card-body">
             <div class="card-cat">Comparație</div>
             <h3>Nice vs BFT vs CAME: Comparație Completă Automatizări Porți 2026</h3>
@@ -972,7 +976,7 @@
         </a>
         <a href="legislatie-securitate-romania-ghid-2026" style="display:contents">
         <article class="article-card cat-securitate">
-          <div class="card-thumb" style="background:linear-gradient(135deg,#14532d,#15803d);display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:180px;padding:16px;position:relative;"><span style="position:absolute;top:12px;left:12px;background:rgba(255,255,255,0.2);color:#fff;font-family:var(--ff-head);font-size:10px;font-weight:700;padding:4px 10px;border-radius:20px;text-transform:uppercase;letter-spacing:0.5px;">LEGISLAȚIE</span><span style="font-size:40px;margin-bottom:8px;">📜</span><span style="color:#fff;font-family:var(--ff-head);font-size:14px;font-weight:700;text-align:center;line-height:1.3;">Legislație<br>securitate 2026</span></div>
+          <div class="card-thumb card-cover"><img src="/images/blog/legislatie-securitate-romania-ghid-2026-cover.jpg" alt="Legislație Securitate România 2026: Ghid Complet" loading="lazy"></div>
           <div class="card-body">
             <div class="card-cat">Legislație</div>
             <h3>Legislație Securitate România 2026: Tot Ce Trebuie Să Știi</h3>
@@ -983,7 +987,7 @@
         </a>
         <a href="usi-garaj-automatizate-ghid-complet-2026" style="display:contents">
         <article class="article-card cat-automatizari">
-          <div class="card-thumb" style="background:linear-gradient(135deg,#78350f,#d97706);display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:180px;padding:16px;position:relative;"><span style="position:absolute;top:12px;left:12px;background:rgba(255,255,255,0.2);color:#fff;font-family:var(--ff-head);font-size:10px;font-weight:700;padding:4px 10px;border-radius:20px;text-transform:uppercase;letter-spacing:0.5px;">GHID COMPLET</span><span style="font-size:40px;margin-bottom:8px;">🏠</span><span style="color:#fff;font-family:var(--ff-head);font-size:14px;font-weight:700;text-align:center;line-height:1.3;">Uși de garaj<br>automatizate</span></div>
+          <div class="card-thumb card-cover"><img src="/images/blog/usi-garaj-automatizate-ghid-complet-2026-cover.jpg" alt="Uși de Garaj Automatizate — Ghid Complet: Tipuri, Prețuri și Montaj 2026" loading="lazy"></div>
           <div class="card-body">
             <div class="card-cat">Ghid Complet</div>
             <h3>Uși de Garaj Automatizate — Tipuri, Prețuri și Montaj 2026</h3>
@@ -994,7 +998,7 @@
         </a>
         <a href="securitate-magazin-retail-ghid-complet" style="display:contents">
         <article class="article-card cat-securitate">
-          <div class="card-thumb" style="background:linear-gradient(135deg,#4a1d96,#7c3aed);display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:180px;padding:16px;position:relative;"><span style="position:absolute;top:12px;left:12px;background:rgba(255,255,255,0.2);color:#fff;font-family:var(--ff-head);font-size:10px;font-weight:700;padding:4px 10px;border-radius:20px;text-transform:uppercase;letter-spacing:0.5px;">SECURITATE RETAIL</span><span style="font-size:40px;margin-bottom:8px;">🏪</span><span style="color:#fff;font-family:var(--ff-head);font-size:14px;font-weight:700;text-align:center;line-height:1.3;">Securitate<br>magazine & retail</span></div>
+          <div class="card-thumb card-cover"><img src="/images/blog/securitate-magazin-retail-ghid-complet-cover.jpg" alt="Securitate pentru Magazine și Retail — Ghid Complet 2026" loading="lazy"></div>
           <div class="card-body">
             <div class="card-cat">Securitate Retail</div>
             <h3>Securitate pentru Magazine și Retail — Camere, Alarme, Antiefracție</h3>
@@ -1005,7 +1009,7 @@
         </a>
         <a href="supraveghere-video-bloc-asociatie-proprietari" style="display:contents">
         <article class="article-card cat-supraveghere">
-          <div class="card-thumb" style="background:linear-gradient(135deg,#164e63,#0891b2);display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:180px;padding:16px;position:relative;"><span style="position:absolute;top:12px;left:12px;background:rgba(255,255,255,0.2);color:#fff;font-family:var(--ff-head);font-size:10px;font-weight:700;padding:4px 10px;border-radius:20px;text-transform:uppercase;letter-spacing:0.5px;">SUPRAVEGHERE</span><span style="font-size:40px;margin-bottom:8px;">🏢</span><span style="color:#fff;font-family:var(--ff-head);font-size:14px;font-weight:700;text-align:center;line-height:1.3;">Camere bloc<br>asociație proprietari</span></div>
+          <div class="card-thumb card-cover"><img src="/images/blog/supraveghere-video-bloc-asociatie-proprietari-cover.jpg" alt="Supraveghere Video pentru Bloc și Asociații de Proprietari — Ghid Complet 2026" loading="lazy"></div>
           <div class="card-body">
             <div class="card-cat">Supraveghere Bloc</div>
             <h3>Supraveghere Video pentru Bloc și Asociații de Proprietari</h3>
@@ -1016,7 +1020,7 @@
         </a>
         <a href="sonorizare-ambientala-comerciala-ghid-complet" style="display:contents">
         <article class="article-card cat-instalatii">
-          <div class="card-thumb" style="background:linear-gradient(135deg,#701a75,#c026d3);display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:180px;padding:16px;position:relative;"><span style="position:absolute;top:12px;left:12px;background:rgba(255,255,255,0.2);color:#fff;font-family:var(--ff-head);font-size:10px;font-weight:700;padding:4px 10px;border-radius:20px;text-transform:uppercase;letter-spacing:0.5px;">INSTALAȚII</span><span style="font-size:40px;margin-bottom:8px;">🔊</span><span style="color:#fff;font-family:var(--ff-head);font-size:14px;font-weight:700;text-align:center;line-height:1.3;">Sonorizare<br>ambientală</span></div>
+          <div class="card-thumb card-cover"><img src="/images/blog/sonorizare-ambientala-comerciala-ghid-complet-cover.jpg" alt="Sonorizare Ambientală și Comercială — Ghid Complet 2026" loading="lazy"></div>
           <div class="card-body">
             <div class="card-cat">Sonorizare</div>
             <h3>Sonorizare Ambientală și Comercială — Sisteme, Prețuri, Instalare</h3>
@@ -1027,7 +1031,7 @@
         </a>
         <a href="studiu-de-caz-cfr-brasov-securitate" style="display:contents">
         <article class="article-card cat-securitate">
-          <div class="card-thumb" style="background:linear-gradient(135deg,#0f172a,#1e3a5f);display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:180px;padding:16px;position:relative;"><span style="position:absolute;top:12px;left:12px;background:rgba(255,255,255,0.2);color:#fff;font-family:var(--ff-head);font-size:10px;font-weight:700;padding:4px 10px;border-radius:20px;text-transform:uppercase;letter-spacing:0.5px;">STUDIU DE CAZ</span><span style="font-size:40px;margin-bottom:8px;">🚂</span><span style="color:#fff;font-family:var(--ff-head);font-size:14px;font-weight:700;text-align:center;line-height:1.3;">CFR Brașov<br>control acces + pontaj</span></div>
+          <div class="card-thumb card-cover"><img src="/images/blog/studiu-de-caz-cfr-brasov-securitate-cover.jpg" alt="Studiu de Caz: CFR Brașov — Control Acces și Pontaj Electronic" loading="lazy"></div>
           <div class="card-body">
             <div class="card-cat" style="background:#fef2f2;color:#dc2626;">Studiu de Caz</div>
             <h3>CFR Brașov — Control Acces și Pontaj Electronic</h3>
@@ -1038,7 +1042,7 @@
         </a>
         <a href="studiu-de-caz-anaf-control-acces-turnichete" style="display:contents">
         <article class="article-card cat-securitate">
-          <div class="card-thumb" style="background:linear-gradient(135deg,#1e3a5f,#2563eb);display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:180px;padding:16px;position:relative;"><span style="position:absolute;top:12px;left:12px;background:rgba(255,255,255,0.2);color:#fff;font-family:var(--ff-head);font-size:10px;font-weight:700;padding:4px 10px;border-radius:20px;text-transform:uppercase;letter-spacing:0.5px;">STUDIU DE CAZ</span><span style="font-size:40px;margin-bottom:8px;">🏛️</span><span style="color:#fff;font-family:var(--ff-head);font-size:14px;font-weight:700;text-align:center;line-height:1.3;">ANAF<br>7 sedii regionale</span></div>
+          <div class="card-thumb card-cover"><img src="/images/blog/studiu-de-caz-anaf-control-acces-turnichete-cover.jpg" alt="Studiu de Caz: ANAF — Control Acces și Turnichete pentru 7 Sedii Regionale" loading="lazy"></div>
           <div class="card-body">
             <div class="card-cat" style="background:#fef2f2;color:#dc2626;">Studiu de Caz</div>
             <h3>ANAF — Control Acces și Turnichete pentru 7 Sedii Regionale</h3>
@@ -1049,7 +1053,7 @@
         </a>
         <a href="studiu-de-caz-alexandrion-securitate" style="display:contents">
         <article class="article-card cat-securitate">
-          <div class="card-thumb" style="background:linear-gradient(135deg,#4a1942,#8b5cf6);display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:180px;padding:16px;position:relative;"><span style="position:absolute;top:12px;left:12px;background:rgba(255,255,255,0.2);color:#fff;font-family:var(--ff-head);font-size:10px;font-weight:700;padding:4px 10px;border-radius:20px;text-transform:uppercase;letter-spacing:0.5px;">STUDIU DE CAZ</span><span style="font-size:40px;margin-bottom:8px;">🏭</span><span style="color:#fff;font-family:var(--ff-head);font-size:14px;font-weight:700;text-align:center;line-height:1.3;">Alexandrion Group<br>CCTV + control patrulă</span></div>
+          <div class="card-thumb card-cover"><img src="/images/blog/studiu-de-caz-alexandrion-securitate-cover.jpg" alt="Studiu de Caz: Alexandrion Group — CCTV și Control Patrulă" loading="lazy"></div>
           <div class="card-body">
             <div class="card-cat" style="background:#fef2f2;color:#dc2626;">Studiu de Caz</div>
             <h3>Alexandrion Group — CCTV și Control Patrulă</h3>
@@ -1060,7 +1064,7 @@
         </a>
         <a href="securitate-depozit-logistica-ghid-complet" style="display:contents">
         <article class="article-card cat-securitate">
-          <div class="card-thumb" style="background:linear-gradient(135deg,#0f2027,#2c5364);display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:180px;padding:16px;position:relative;"><span style="position:absolute;top:12px;left:12px;background:rgba(255,255,255,0.2);color:#fff;font-family:var(--ff-head);font-size:10px;font-weight:700;padding:4px 10px;border-radius:20px;text-transform:uppercase;letter-spacing:0.5px;">SECURITATE B2B</span><span style="font-size:40px;margin-bottom:8px;">🏭</span><span style="color:#fff;font-family:var(--ff-head);font-size:14px;font-weight:700;text-align:center;line-height:1.3;">Securitate<br>depozite & logistică</span></div>
+          <div class="card-thumb card-cover"><img src="/images/blog/securitate-depozit-logistica-ghid-complet-cover.jpg" alt="Securitate pentru Depozite și Logistică: Ghid Complet 2026" loading="lazy"></div>
           <div class="card-body">
             <div class="card-cat">Securitate B2B</div>
             <h3>Securitate pentru Depozite și Logistică: Ghid Complet 2026</h3>
@@ -1071,7 +1075,7 @@
         </a>
         <a href="hikvision-vs-dahua-comparatie-completa-2026" style="display:contents">
         <article class="article-card cat-camere">
-          <div class="card-thumb" style="background:linear-gradient(135deg,#1a1a2e,#16213e);display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:180px;padding:16px;position:relative;"><span style="position:absolute;top:12px;left:12px;background:rgba(255,255,255,0.2);color:#fff;font-family:var(--ff-head);font-size:10px;font-weight:700;padding:4px 10px;border-radius:20px;text-transform:uppercase;letter-spacing:0.5px;">COMPARAȚIE</span><span style="font-size:40px;margin-bottom:8px;">📹</span><span style="color:#fff;font-family:var(--ff-head);font-size:14px;font-weight:700;text-align:center;line-height:1.3;">Hikvision<br>vs Dahua</span></div>
+          <div class="card-thumb card-cover"><img src="/images/blog/hikvision-vs-dahua-comparatie-completa-2026-cover.jpg" alt="Hikvision vs Dahua: Comparație Completă pentru Afaceri 2026" loading="lazy"></div>
           <div class="card-body">
             <div class="card-cat">Camere Supraveghere</div>
             <h3>Hikvision vs Dahua: Comparație Completă pentru Afaceri 2026</h3>
@@ -1082,7 +1086,7 @@
         </a>
         <a href="mentenanta-sisteme-securitate-de-ce-conteaza" style="display:contents">
         <article class="article-card cat-securitate">
-          <div class="card-thumb" style="background:linear-gradient(135deg,#134e5e,#71b280);display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:180px;padding:16px;position:relative;"><span style="position:absolute;top:12px;left:12px;background:rgba(255,255,255,0.2);color:#fff;font-family:var(--ff-head);font-size:10px;font-weight:700;padding:4px 10px;border-radius:20px;text-transform:uppercase;letter-spacing:0.5px;">MENTENANȚĂ</span><span style="font-size:40px;margin-bottom:8px;">🔧</span><span style="color:#fff;font-family:var(--ff-head);font-size:14px;font-weight:700;text-align:center;line-height:1.3;">Mentenanță<br>sisteme securitate</span></div>
+          <div class="card-thumb card-cover"><img src="/images/blog/mentenanta-sisteme-securitate-de-ce-conteaza-cover.jpg" alt="Mentenanță Sisteme de Securitate: De Ce Contează și Cât Costă?" loading="lazy"></div>
           <div class="card-body">
             <div class="card-cat">Mentenanță</div>
             <h3>Mentenanță Sisteme de Securitate: De Ce Contează și Cât Costă?</h3>
@@ -1093,7 +1097,7 @@
         </a>
         <a href="control-acces-firma-ghid-alegere-2026" style="display:contents">
         <article class="article-card cat-securitate">
-          <div class="card-thumb" style="background:linear-gradient(135deg,#1b1464,#3f51b5);display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:180px;padding:16px;position:relative;"><span style="position:absolute;top:12px;left:12px;background:rgba(255,255,255,0.2);color:#fff;font-family:var(--ff-head);font-size:10px;font-weight:700;padding:4px 10px;border-radius:20px;text-transform:uppercase;letter-spacing:0.5px;">GHID COMPLET</span><span style="font-size:40px;margin-bottom:8px;">🚪</span><span style="color:#fff;font-family:var(--ff-head);font-size:14px;font-weight:700;text-align:center;line-height:1.3;">Control acces<br>pentru firme</span></div>
+          <div class="card-thumb card-cover"><img src="/images/blog/control-acces-firma-ghid-alegere-2026-cover.jpg" alt="Control Acces pentru Firme: Ghid Complet de Alegere 2026" loading="lazy"></div>
           <div class="card-body">
             <div class="card-cat">Control Acces</div>
             <h3>Control Acces pentru Firme: Ghid Complet de Alegere 2026</h3>
@@ -1104,7 +1108,7 @@
         </a>
         <a href="pontaj-electronic-ghid-complet" style="display:contents">
         <article class="article-card cat-pontaj">
-          <div class="card-thumb" style="background:linear-gradient(135deg,#78350f,#f59e0b);display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:180px;padding:16px;position:relative;"><span style="position:absolute;top:12px;left:12px;background:rgba(255,255,255,0.2);color:#fff;font-family:var(--ff-head);font-size:10px;font-weight:700;padding:4px 10px;border-radius:20px;text-transform:uppercase;letter-spacing:0.5px;">GHID COMPLET</span><span style="font-size:40px;margin-bottom:8px;">⏱️</span><span style="color:#fff;font-family:var(--ff-head);font-size:14px;font-weight:700;text-align:center;line-height:1.3;">Pontaj electronic<br>ghid complet</span></div>
+          <div class="card-thumb card-cover"><img src="/images/blog/pontaj-electronic-ghid-complet-cover.jpg" alt="Pontaj Electronic 2026: Ghid Complet — Tipuri, Prețuri, Legislație" loading="lazy"></div>
           <div class="card-body">
             <div class="card-cat">Pontaj Electronic</div>
             <h3>Pontaj Electronic 2026: Ghid Complet — Tipuri, Prețuri, Legislație</h3>
@@ -1115,7 +1119,7 @@
         </a>
         <a href="detectie-incendiu-pret-ghid-complet" style="display:contents">
         <article class="article-card cat-incendiu">
-          <div class="card-thumb" style="background:linear-gradient(135deg,#7f1d1d,#ef4444);display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:180px;padding:16px;position:relative;"><span style="position:absolute;top:12px;left:12px;background:rgba(255,255,255,0.2);color:#fff;font-family:var(--ff-head);font-size:10px;font-weight:700;padding:4px 10px;border-radius:20px;text-transform:uppercase;letter-spacing:0.5px;">ISU & INCENDIU</span><span style="font-size:40px;margin-bottom:8px;">🔥</span><span style="color:#fff;font-family:var(--ff-head);font-size:14px;font-weight:700;text-align:center;line-height:1.3;">Detecție incendiu<br>prețuri & aviz ISU</span></div>
+          <div class="card-thumb card-cover"><img src="/images/blog/detectie-incendiu-pret-ghid-complet-cover.jpg" alt="Cât Costă un Sistem de Detecție Incendiu în 2026? Ghid Complet" loading="lazy"></div>
           <div class="card-body">
             <div class="card-cat">Incendiu &amp; ISU</div>
             <h3>Cât Costă un Sistem de Detecție Incendiu în 2026? Ghid Complet Prețuri și Aviz ISU</h3>
@@ -1126,7 +1130,7 @@
         </a>
         <a href="camere-supraveghere-firma-ghid-complet" style="display:contents">
         <article class="article-card cat-camere">
-          <div class="card-thumb" style="background:linear-gradient(135deg,#0c2461,#1e3799);display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:180px;padding:16px;position:relative;"><span style="position:absolute;top:12px;left:12px;background:rgba(255,255,255,0.2);color:#fff;font-family:var(--ff-head);font-size:10px;font-weight:700;padding:4px 10px;border-radius:20px;text-transform:uppercase;letter-spacing:0.5px;">GHID COMPLET</span><span style="font-size:40px;margin-bottom:8px;">📷</span><span style="color:#fff;font-family:var(--ff-head);font-size:14px;font-weight:700;text-align:center;line-height:1.3;">Camere supraveghere<br>pentru firmă</span></div>
+          <div class="card-thumb card-cover"><img src="/images/blog/camere-supraveghere-firma-ghid-complet-cover.jpg" alt="Ghid Complet: Camere de Supraveghere pentru Firmă 2026" loading="lazy"></div>
           <div class="card-body">
             <div class="card-cat">Camere Supraveghere</div>
             <h3>Ghid Complet: Camere de Supraveghere pentru Firmă în 2026 — Ce Să Alegi?</h3>
@@ -1137,7 +1141,7 @@
         </a>
         <a href="ajax-vs-paradox-vs-dsc-comparatie-alarme" style="display:contents">
         <article class="article-card cat-securitate">
-          <div class="card-thumb" style="background:linear-gradient(135deg,#4a0e0e,#b91c1c);display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:180px;padding:16px;position:relative;"><span style="position:absolute;top:12px;left:12px;background:rgba(255,255,255,0.2);color:#fff;font-family:var(--ff-head);font-size:10px;font-weight:700;padding:4px 10px;border-radius:20px;text-transform:uppercase;letter-spacing:0.5px;">COMPARAȚIE</span><span style="font-size:40px;margin-bottom:8px;">🚨</span><span style="color:#fff;font-family:var(--ff-head);font-size:14px;font-weight:700;text-align:center;line-height:1.3;">Ajax vs Paradox<br>vs DSC</span></div>
+          <div class="card-thumb card-cover"><img src="/images/blog/ajax-vs-paradox-vs-dsc-comparatie-alarme-cover.jpg" alt="Ajax vs Paradox vs DSC: Comparație Sisteme de Alarmă 2026" loading="lazy"></div>
           <div class="card-body">
             <div class="card-cat">Securitate</div>
             <h3>Ajax vs Paradox vs DSC: Comparație Sisteme de Alarmă 2026 — Care E Mai Bun?</h3>
@@ -1148,7 +1152,7 @@
         </a>
         <a href="automatizare-poarta-ghid-complet-preturi" style="display:contents">
         <article class="article-card cat-automatizari">
-          <div class="card-thumb" style="background:linear-gradient(135deg,#3e2723,#8d6e63);display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:180px;padding:16px;position:relative;"><span style="position:absolute;top:12px;left:12px;background:rgba(255,255,255,0.2);color:#fff;font-family:var(--ff-head);font-size:10px;font-weight:700;padding:4px 10px;border-radius:20px;text-transform:uppercase;letter-spacing:0.5px;">AUTOMATIZĂRI</span><span style="font-size:40px;margin-bottom:8px;">🚗</span><span style="color:#fff;font-family:var(--ff-head);font-size:14px;font-weight:700;text-align:center;line-height:1.3;">Automatizare<br>poartă</span></div>
+          <div class="card-thumb card-cover"><img src="/images/blog/automatizare-poarta-ghid-complet-preturi-cover.jpg" alt="Automatizare Poartă — Ghid Complet: Prețuri, Tipuri 2026" loading="lazy"></div>
           <div class="card-body">
             <div class="card-cat">Automatizări</div>
             <h3>Automatizare Poartă — Ghid Complet: Prețuri, Tipuri și Ce Trebuie Să Știi în 2026</h3>
@@ -1159,7 +1163,7 @@
         </a>
         <a href="analiza-risc-securitate-fizica-ghid-complet" style="display:contents">
         <article class="article-card cat-securitate">
-          <div class="card-thumb" style="background:linear-gradient(135deg,#4a1525,#991b1b);display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:180px;padding:16px;position:relative;"><span style="position:absolute;top:12px;left:12px;background:rgba(255,255,255,0.2);color:#fff;font-family:var(--ff-head);font-size:10px;font-weight:700;padding:4px 10px;border-radius:20px;text-transform:uppercase;letter-spacing:0.5px;">LEGISLAȚIE</span><span style="font-size:40px;margin-bottom:8px;">📋</span><span style="color:#fff;font-family:var(--ff-head);font-size:14px;font-weight:700;text-align:center;line-height:1.3;">Analiză de risc<br>securitate fizică</span></div>
+          <div class="card-thumb card-cover"><img src="/images/blog/analiza-risc-securitate-fizica-ghid-complet-cover.jpg" alt="Analiza de Risc la Securitate Fizică 2026: Ghid Complet" loading="lazy"></div>
           <div class="card-body">
             <div class="card-cat" style="color:#c0392b">Legislație</div>
             <h3>Analiza de Risc Securitate Fizică 2026: Obligații, Amenzi 10.000–20.000 lei</h3>
@@ -1170,7 +1174,7 @@
         </a>
         <a href="proiect-sistem-securitate-inainte-montaj" style="display:contents">
         <article class="article-card cat-securitate">
-          <div class="card-thumb" style="background:linear-gradient(135deg,#1e293b,#475569);display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:180px;padding:16px;position:relative;"><span style="position:absolute;top:12px;left:12px;background:rgba(255,255,255,0.2);color:#fff;font-family:var(--ff-head);font-size:10px;font-weight:700;padding:4px 10px;border-radius:20px;text-transform:uppercase;letter-spacing:0.5px;">LEGISLAȚIE</span><span style="font-size:40px;margin-bottom:8px;">📐</span><span style="color:#fff;font-family:var(--ff-head);font-size:14px;font-weight:700;text-align:center;line-height:1.3;">Proiect tehnic<br>sistem securitate</span></div>
+          <div class="card-thumb card-cover"><img src="/images/blog/proiect-sistem-securitate-inainte-montaj-cover.jpg" alt="De Ce Ai Nevoie de Proiect Înainte de Montajul unui Sistem de Securitate" loading="lazy"></div>
           <div class="card-body">
             <div class="card-cat" style="color:#2d6ec8">Legislație</div>
             <h3>De Ce Ai Nevoie de Proiect Înainte de Montajul unui Sistem de Securitate</h3>
@@ -1181,7 +1185,7 @@
         </a>
         <a href="camere-supraveghere-gdpr-ghid-complet" style="display:contents">
         <article class="article-card cat-camere">
-          <div class="card-thumb" style="background:linear-gradient(135deg,#065f46,#10b981);display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:180px;padding:16px;position:relative;"><span style="position:absolute;top:12px;left:12px;background:rgba(255,255,255,0.2);color:#fff;font-family:var(--ff-head);font-size:10px;font-weight:700;padding:4px 10px;border-radius:20px;text-transform:uppercase;letter-spacing:0.5px;">GDPR</span><span style="font-size:40px;margin-bottom:8px;">🔒</span><span style="color:#fff;font-family:var(--ff-head);font-size:14px;font-weight:700;text-align:center;line-height:1.3;">Camere & GDPR<br>amenzi ANSPDCP</span></div>
+          <div class="card-thumb card-cover"><img src="/images/blog/camere-supraveghere-gdpr-ghid-complet-cover.jpg" alt="Camere Supraveghere și GDPR 2026: Ce Ai Voie și Ce Nu" loading="lazy"></div>
           <div class="card-body">
             <div class="card-cat">GDPR &amp; Camere</div>
             <h3>Camere Supraveghere și GDPR 2026: Ce Ai Voie — Amenzi ANSPDCP</h3>
@@ -1192,7 +1196,7 @@
         </a>
         <a href="securitate-locuinta-ghid-complet-2026" style="display:contents">
         <article class="article-card cat-securitate">
-          <div class="card-thumb" style="background:linear-gradient(135deg,#1a1a2e,#2d3436);display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:180px;padding:16px;position:relative;"><span style="position:absolute;top:12px;left:12px;background:rgba(255,255,255,0.2);color:#fff;font-family:var(--ff-head);font-size:10px;font-weight:700;padding:4px 10px;border-radius:20px;text-transform:uppercase;letter-spacing:0.5px;">GHID COMPLET</span><span style="font-size:40px;margin-bottom:8px;">🏡</span><span style="color:#fff;font-family:var(--ff-head);font-size:14px;font-weight:700;text-align:center;line-height:1.3;">Securitate<br>locuință</span></div>
+          <div class="card-thumb card-cover"><img src="/images/blog/securitate-locuinta-ghid-complet-2026-cover.jpg" alt="Securitatea Locuinței în 2026: Ghid Complet" loading="lazy"></div>
           <div class="card-body">
             <div class="card-cat">Securitate</div>
             <h3>Securitatea Locuinței 2026: Alarmă, Camere AI, Senzori — Ghid Complet</h3>
@@ -1203,7 +1207,7 @@
         </a>
         <a href="aer-conditionat-ghid-alegere-2026" style="display:contents">
         <article class="article-card cat-instalatii">
-          <div class="card-thumb" style="background:linear-gradient(135deg,#0c4a6e,#38bdf8);display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:180px;padding:16px;position:relative;"><span style="position:absolute;top:12px;left:12px;background:rgba(255,255,255,0.2);color:#fff;font-family:var(--ff-head);font-size:10px;font-weight:700;padding:4px 10px;border-radius:20px;text-transform:uppercase;letter-spacing:0.5px;">INSTALAȚII</span><span style="font-size:40px;margin-bottom:8px;">❄️</span><span style="color:#fff;font-family:var(--ff-head);font-size:14px;font-weight:700;text-align:center;line-height:1.3;">Aer condiționat<br>calcul BTU & prețuri</span></div>
+          <div class="card-thumb card-cover"><img src="/images/blog/aer-conditionat-ghid-alegere-2026-cover.jpg" alt="Cum Alegi Aerul Condiționat în 2026 — Ghid Complet" loading="lazy"></div>
           <div class="card-body">
             <div class="card-cat">Instalații</div>
             <h3>Cum Alegi Aerul Condiționat 2026: Calcul BTU, Branduri, Prețuri</h3>
@@ -1214,7 +1218,7 @@
         </a>
         <a href="smart-home-securitate-control-telefon" style="display:contents">
         <article class="article-card cat-securitate">
-          <div class="card-thumb" style="background:linear-gradient(135deg,#581c87,#a855f7);display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:180px;padding:16px;position:relative;"><span style="position:absolute;top:12px;left:12px;background:rgba(255,255,255,0.2);color:#fff;font-family:var(--ff-head);font-size:10px;font-weight:700;padding:4px 10px;border-radius:20px;text-transform:uppercase;letter-spacing:0.5px;">SMART HOME</span><span style="font-size:40px;margin-bottom:8px;">📱</span><span style="color:#fff;font-family:var(--ff-head);font-size:14px;font-weight:700;text-align:center;line-height:1.3;">Smart Home<br>& securitate</span></div>
+          <div class="card-thumb card-cover"><img src="/images/blog/smart-home-securitate-control-telefon-cover.jpg" alt="Smart Home &amp; Securitate: Control Complet de pe Telefon" loading="lazy"></div>
           <div class="card-body">
             <div class="card-cat">Smart Home</div>
             <h3>Smart Home &amp; Securitate: Controlează Totul de pe Telefon</h3>
@@ -1225,7 +1229,7 @@
         </a>
         <a href="interfon-video-vs-videointerfon-ip-2026" style="display:contents">
         <article class="article-card cat-securitate">
-          <div class="card-thumb" style="background:linear-gradient(135deg,#1e3a5f,#3b82f6);display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:180px;padding:16px;position:relative;"><span style="position:absolute;top:12px;left:12px;background:rgba(255,255,255,0.2);color:#fff;font-family:var(--ff-head);font-size:10px;font-weight:700;padding:4px 10px;border-radius:20px;text-transform:uppercase;letter-spacing:0.5px;">COMPARAȚIE</span><span style="font-size:40px;margin-bottom:8px;">🔔</span><span style="color:#fff;font-family:var(--ff-head);font-size:14px;font-weight:700;text-align:center;line-height:1.3;">Interfon video<br>vs videointerfon IP</span></div>
+          <div class="card-thumb card-cover"><img src="/images/blog/interfon-video-vs-videointerfon-ip-2026-cover.jpg" alt="Interfon Video vs Videointerfon IP 2026: Comparație Completă" loading="lazy"></div>
           <div class="card-body">
             <div class="card-cat" style="color:#2d6ec8">Comparație</div>
             <h3>Interfon Video vs Videointerfon IP 2026: Funcții, Prețuri</h3>
@@ -1236,7 +1240,7 @@
         </a>
         <a href="ventilatie-recuperare-caldura-ghid-2026" style="display:contents">
         <article class="article-card cat-instalatii">
-          <div class="card-thumb" style="background:linear-gradient(135deg,#115e59,#14b8a6);display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:180px;padding:16px;position:relative;"><span style="position:absolute;top:12px;left:12px;background:rgba(255,255,255,0.2);color:#fff;font-family:var(--ff-head);font-size:10px;font-weight:700;padding:4px 10px;border-radius:20px;text-transform:uppercase;letter-spacing:0.5px;">INSTALAȚII</span><span style="font-size:40px;margin-bottom:8px;">💨</span><span style="color:#fff;font-family:var(--ff-head);font-size:14px;font-weight:700;text-align:center;line-height:1.3;">Ventilație cu<br>recuperare căldură</span></div>
+          <div class="card-thumb card-cover"><img src="/images/blog/ventilatie-recuperare-caldura-ghid-2026-cover.jpg" alt="Ventilație cu Recuperare de Căldură: Merită Investiția?" loading="lazy"></div>
           <div class="card-body">
             <div class="card-cat">Instalații</div>
             <h3>Ventilație cu Recuperare Căldură 2026: Costuri și Economii</h3>
@@ -1247,7 +1251,7 @@
         </a>
         <a href="nvr-vs-dvr-vs-cloud-stocare-camere-2026" style="display:contents">
         <article class="article-card cat-camere">
-          <div class="card-thumb" style="background:linear-gradient(135deg,#0f172a,#334155);display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:180px;padding:16px;position:relative;"><span style="position:absolute;top:12px;left:12px;background:rgba(255,255,255,0.2);color:#fff;font-family:var(--ff-head);font-size:10px;font-weight:700;padding:4px 10px;border-radius:20px;text-transform:uppercase;letter-spacing:0.5px;">COMPARAȚIE</span><span style="font-size:40px;margin-bottom:8px;">💾</span><span style="color:#fff;font-family:var(--ff-head);font-size:14px;font-weight:700;text-align:center;line-height:1.3;">NVR vs DVR<br>vs Cloud</span></div>
+          <div class="card-thumb card-cover"><img src="/images/blog/nvr-vs-dvr-vs-cloud-stocare-camere-2026-cover.jpg" alt="NVR vs DVR vs Cloud — Unde Stochezi Înregistrările?" loading="lazy"></div>
           <div class="card-body">
             <div class="card-cat">Camere Supraveghere</div>
             <h3>NVR vs DVR vs Cloud: Unde Stochezi Înregistrările în 2026?</h3>
@@ -1258,7 +1262,7 @@
         </a>
         <a href="bariere-auto-parcari-ghid-complet-2026" style="display:contents">
         <article class="article-card cat-automatizari">
-          <div class="card-thumb" style="background:linear-gradient(135deg,#374151,#6b7280);display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:180px;padding:16px;position:relative;"><span style="position:absolute;top:12px;left:12px;background:rgba(255,255,255,0.2);color:#fff;font-family:var(--ff-head);font-size:10px;font-weight:700;padding:4px 10px;border-radius:20px;text-transform:uppercase;letter-spacing:0.5px;">AUTOMATIZĂRI</span><span style="font-size:40px;margin-bottom:8px;">🚧</span><span style="color:#fff;font-family:var(--ff-head);font-size:14px;font-weight:700;text-align:center;line-height:1.3;">Bariere auto<br>parcări</span></div>
+          <div class="card-thumb card-cover"><img src="/images/blog/bariere-auto-parcari-ghid-complet-2026-cover.jpg" alt="Bariere Auto pentru Parcări 2026: Ghid Complet" loading="lazy"></div>
           <div class="card-body">
             <div class="card-cat">Automatizări</div>
             <h3>Bariere Auto Parcări 2026: Tipuri, Prețuri, Control Acces RFID</h3>
