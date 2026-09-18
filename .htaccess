@@ -27,6 +27,7 @@ RewriteRule ^index\.html$ / [R=301,L]
 # --------------------------------------------------
 RewriteRule ^sistem-integrat-securitate-brasov$ /blog/sistem-integrat-securitate-brasov [R=301,L]
 RewriteRule ^autorizatii/?$ /despre-noi#autorizatii [R=301,L,NE]
+RewriteRule ^blog_index(\.html)?$ /blog/ [R=301,L]
 
 # --------------------------------------------------
 # 2b-bis. FIX 404 URL VECHI → PAGINA CORECTĂ
