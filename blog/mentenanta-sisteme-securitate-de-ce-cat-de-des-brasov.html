@@ -1,0 +1,769 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mentenanța sistemelor de securitate: de ce, cât | CSSI</title>
+<meta name="description" content="Un sistem de securitate care nu e întreținut te lasă exact când ai nevoie de el. Afli de ce contează mentenanța, cât de des se face, ce verifică — CSSI.">
+<link rel="canonical" href="https://cssi.ro/blog/mentenanta-sisteme-securitate-de-ce-cat-de-des-brasov">
+<!-- Open Graph + Twitter Card -->
+<meta property="og:type" content="article">
+<meta property="og:title" content="Mentenanța sistemelor de securitate: de ce, cât de des, ce se verifică | CSSI Brașov">
+<meta property="og:description" content="De ce un sistem de securitate are nevoie de mentenanță, cât de des și ce verifică un tehnician la revizie. Plus partea de securitate cibernetică pe care toți o uită. Ghid pentru Brașov.">
+<meta property="og:url" content="https://cssi.ro/blog/mentenanta-sisteme-securitate-de-ce-cat-de-des-brasov">
+<meta property="og:image" content="https://cssi.ro/images/blog/mentenanta-sisteme-securitate-cover.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:type" content="image/jpeg">
+<meta property="og:locale" content="ro_RO">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Mentenanța sistemelor de securitate: de ce, cât de des, ce se verifică">
+<meta name="twitter:description" content="Un sistem neîntreținut te lasă exact când ai nevoie de el. Ce verifică un tehnician la revizie. CSSI Brașov: 0752 288 400.">
+<meta name="twitter:image" content="https://cssi.ro/images/blog/mentenanta-sisteme-securitate-cover.jpg">
+
+<!-- ===== SCHEMA JSON-LD: Article + BreadcrumbList + FAQPage ===== -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Article",
+      "@id": "https://cssi.ro/blog/mentenanta-sisteme-securitate-de-ce-cat-de-des-brasov#article",
+      "headline": "Mentenanța sistemelor de securitate: de ce, cât de des și ce verifică un tehnician",
+      "description": "Ghid practic despre mentenanța sistemelor de securitate: de ce e nevoie, ce se întâmplă fără ea, cât de des se face, ce verifică un tehnician la o revizie, mentenanța cibernetică (firmware și parole) și contract vs intervenții punctuale.",
+      "image": "https://cssi.ro/images/blog/mentenanta-sisteme-securitate-cover.jpg",
+      "author": {
+        "@type": "Organization",
+        "name": "CSSI Brașov",
+        "url": "https://cssi.ro"
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": "CSSI Brașov",
+        "logo": {
+          "@type": "ImageObject",
+          "url": "https://cssi.ro/images/logo-cssi.webp"
+        }
+      },
+      "datePublished": "2027-11-18",
+      "dateModified": "2027-11-18",
+      "mainEntityOfPage": "https://cssi.ro/blog/mentenanta-sisteme-securitate-de-ce-cat-de-des-brasov",
+      "inLanguage": "ro"
+    },
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Acasă",
+          "item": "https://cssi.ro/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "Blog",
+          "item": "https://cssi.ro/blog"
+        },
+        {
+          "@type": "ListItem",
+          "position": 3,
+          "name": "Mentenanța sistemelor de securitate"
+        }
+      ]
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "De ce are nevoie un sistem de securitate de mentenanță? Doar l-am instalat.",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Pentru că un sistem de securitate nu e un obiect static, ci echipament care lucrează continuu și îmbătrânește. Camerele adună praf și se dezaliniază, bateriile alarmei se descarcă, conexiunile se slăbesc, hard diskul se uzează, iar software-ul are nevoie de actualizări. Toate astea se întâmplă discret — până în ziua când ai nevoie de sistem și descoperi că o cameră nu a înregistrat sau alarma nu a sunat. Mentenanța prinde aceste probleme înainte să te lase descoperit."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Cât de des ar trebui făcută mentenanța?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Orientativ, o verificare periodică planificată (de regulă de câteva ori pe an, în funcție de sistem), plus verificări după evenimente speciale: furtună, pană de curent prelungită, lucrări sau modificări de spațiu. Un obiectiv cu risc ridicat are nevoie de verificări mai dese decât o locuință cu un sistem mic. Îți propunem un calendar potrivit sistemului tău, nu o regulă generală."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Ce verifică concret un tehnician la o revizie?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Camerele și unghiurile (curățare, focalizare, acoperire), înregistrarea și stocarea (recorder, hard disk, durată), senzorii și bateriile alarmei, comunicația cu dispeceratul, controlul accesului (cititoare, încuietori, drepturi), plus partea de software — actualizări firmware și verificarea parolelor și conturilor. La final primești un raport cu starea sistemului și cu ce s-a făcut sau ce trebuie făcut."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Ce se întâmplă dacă nu fac deloc mentenanță?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Cele mai frecvente probleme: alarme false repetate (care te fac să ignori sistemul), camere care „mor\" exact când ai nevoie de dovezi, baterii descărcate care lasă alarma fără backup, și vulnerabilități cibernetice (firmware vechi, parole nesetate). Pe scurt, rămâi cu un sistem care îți dă impresia de protecție, dar care la momentul critic nu funcționează. Costul pagubei e aproape întotdeauna mai mare decât al mentenanței."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "De ce contează mentenanța de securitate cibernetică?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Pentru că o cameră sau un recorder conectat la internet e, în fond, un mic calculator. Cu firmware vechi și parole slabe, devine o ușă deschisă pentru persoane neautorizate. Mentenanța cibernetică înseamnă actualizarea firmware-ului, schimbarea parolelor, verificarea conturilor și securizarea rețelei. E partea pe care toți o uită, dar care neglijată îți transformă protecția în vulnerabilitate. DNSC atrage constant atenția asupra acestui risc."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "E mai bun un contract de mentenanță sau plătesc când se strică ceva?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Depinde de cât de important e sistemul. Un contract înseamnă verificări planificate, prioritate la intervenție, evidență clară și costuri previzibile. Intervențiile „când se strică\" par mai ieftine, dar te lasă descoperit între defecțiuni și vin în momentul cel mai prost. Pentru firme și obiective unde securitatea contează, contractul e de regulă alegerea liniștită. Îți explicăm ambele variante și alegi ce ți se potrivește."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Mentenanța e obligatorie sau opțională?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Pentru multe obiective, mentenanța ține de conformitate: cadrul legal privind sistemele de alarmare și pază (Legea 333/2003 și normele asociate) are în vedere funcționarea corectă și întreținerea, nu doar instalarea. Dincolo de lege, logica e simplă: un sistem are sens doar dacă funcționează la momentul critic, iar asta se asigură prin mentenanță. Îți spunem clar ce cerințe se aplică obiectivului tău."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Cât costă un contract de mentenanță?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Orientativ, pentru 2026, un contract de mentenanță pentru o locuință pornește de la câteva sute de lei pe an, iar pentru o firmă mică-medie de la aproximativ 900 RON pe an în sus, în funcție de numărul de componente și de câte vizite include. Un obiectiv cu risc ridicat sau cu mai multe sedii se calculează individual, după evaluare. Prețul exact ține cont de mărimea sistemului, de distanța până la obiectiv și de timpul de răspuns pe care îl vrei garantat."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Cât durează o vizită de revizie?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Pentru un sistem mic, rezidențial, o revizie completă durează de regulă între 1 și 2 ore. Pentru un sistem de firmă, cu mai multe camere, senzori și puncte de control acces, poate dura o jumătate de zi. Durata depinde și de ce găsim la fața locului — dacă totul e în regulă, vizita e rapidă; dacă apar probleme (baterie de schimbat, cameră de realiniat), timpul crește proporțional."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Tehnicianul care face mentenanța trebuie să fie autorizat?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Pentru sistemele de alarmă și pază, firma care face instalarea și mentenanța trebuie să dețină licență IGPR pentru acest tip de activitate, conform Legii 333/2003. Merită să verifici acest detaliu înainte de a semna un contract, la fel cum ai verifica orice altă autorizație relevantă pentru o lucrare la casa sau firma ta."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Pot face mentenanța cu altă firmă decât cea care mi-a instalat sistemul?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Da, în majoritatea cazurilor. Un tehnician cu experiență poate prelua mentenanța unui sistem instalat de altcineva, cu condiția să aibă acces la documentația sistemului (sau să o reconstituie la prima vizită). Diferența poate apărea la garanția producătorului, dacă aceasta era legată de instalatorul inițial — verificăm acest aspect chiar la prima evaluare, ca să știi exact unde stai."
+          }
+        }
+      ]
+    }
+  ]
+}
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;600;700;800&family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,400;0,8..60,600;1,8..60,400&display=swap" rel="stylesheet" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.js"></script>
+  <script src="/cookie-consent.js" defer></script>
+  <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}</script>
+  <script src="/tracking.js" defer></script>
+  <style>
+    @keyframes subtle-pulse-n { 0%,100%{transform:scale(1)}50%{transform:scale(.92)} }
+    @keyframes badge-pulse-n { 0%,100%{box-shadow:0 0 0 0 rgba(34,197,94,.4)}50%{box-shadow:0 0 0 8px rgba(34,197,94,0)} }
+    .animate-subtle-pulse{animation:subtle-pulse-n 2.5s ease-in-out infinite}
+    .animate-badge-pulse{animation:badge-pulse-n 2s ease-in-out infinite}
+    .dropdown-menu{display:none!important}
+    .dropdown:hover .dropdown-menu{display:block!important}
+    #mobileMenu{display:none}
+    #mobileMenu.open{display:block}
+    #servicesSubmenu{display:none}
+    #servicesSubmenu.open{display:block}
+    .dropdown-scroll::-webkit-scrollbar{width:4px}
+    .dropdown-scroll::-webkit-scrollbar-track{background:#f1f1f1}
+    .dropdown-scroll::-webkit-scrollbar-thumb{background:#cbd5e1;border-radius:4px}
+    @media(min-width:640px){.sm\:block{display:block!important}.sm\:hidden{display:none!important}.sm\:px-6{padding-left:24px;padding-right:24px}}
+    @media(min-width:1024px){.lg\:flex{display:flex!important}.lg\:hidden{display:none!important}}@media(min-width:768px){.md\:flex{display:flex!important}.md\:hidden{display:none!important}}
+    #mainHeader, #mainHeader a, #mainHeader button, #mainHeader span, #mainHeader div { font-family: 'Sora', sans-serif !important; }
+  </style>
+  <style>
+    :root{--brand-dark:#0b1a2e;--brand-navy:#102a4c;--brand-blue:#1a4b8c;--brand-accent:#e63022;--brand-gold:#f5a623;--brand-light:#f0f4f9;--text-main:#1c2b3a;--text-muted:#5a6e82;--text-light:#8fa0b3;--border:#dce6f0;--white:#ffffff;--ff-head:'Sora',sans-serif;--ff-body:'Source Serif 4',Georgia,serif;--radius:10px;--shadow-sm:0 2px 8px rgba(11,26,46,.08);--shadow-md:0 6px 24px rgba(11,26,46,.13);--shadow-lg:0 16px 48px rgba(11,26,46,.18);--max-w:1400px}
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    html{scroll-behavior:smooth}
+    body{font-family:var(--ff-body);font-size:18px;line-height:1.75;color:var(--text-main);background:var(--white);-webkit-font-smoothing:antialiased}
+    img{max-width:100%;height:auto;display:block}
+    a{color:var(--brand-blue);text-decoration:none}
+    a:hover{text-decoration:underline}
+    .breadcrumb{background:var(--brand-dark);border-bottom:none;padding:12px 0;padding-top:104px;font-family:var(--ff-head);font-size:13px;color:rgba(255,255,255,.55)}
+    .breadcrumb .inner{max-width:1280px;margin:0 auto;padding:0 0 12px 24px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+    .breadcrumb a{color:rgba(255,255,255,.7)}
+    .breadcrumb .sep{color:rgba(255,255,255,.3)}
+    .hero{background:var(--brand-dark);background-image:radial-gradient(ellipse 70% 60% at 80% 50%,rgba(26,75,140,.45) 0%,transparent 70%),radial-gradient(ellipse 40% 50% at 10% 80%,rgba(230,48,34,.15) 0%,transparent 60%);color:var(--white);padding:48px 24px 64px;position:relative;overflow:hidden}
+    .hero::before{content:'';position:absolute;inset:0;background-image:url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23ffffff' fill-opacity='0.025'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/svg%3E")}
+        .hero .inner{max-width:var(--max-w);margin:0 auto;position:relative;z-index:1;display:flex;align-items:center;gap:40px}
+    .hero-content{flex:1;min-width:0}
+    .hero-img-wrap{flex:0 0 560px;display:flex;align-items:center;justify-content:center}
+    .hero-img-wrap img{width:560px;height:auto;border-radius:14px;box-shadow:0 8px 32px rgba(0,0,0,.35);border:1px solid rgba(255,255,255,.1);opacity:.92;transition:opacity .3s}
+    .hero-img-wrap img:hover{opacity:1}
+    @media(max-width:900px){.hero .inner{flex-direction:column;gap:24px}.hero-img-wrap{flex:0 0 auto;order:-1}.hero-img-wrap img{width:440px}}
+    @media(max-width:700px){.hero-img-wrap{display:none}}
+    .hero-badge{display:inline-flex;align-items:center;gap:6px;background:rgba(230,48,34,.2);border:1px solid rgba(230,48,34,.4);color:#ff8a80;font-family:var(--ff-head);font-size:12px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;padding:5px 12px;border-radius:100px;margin-bottom:20px}
+    .hero h1{font-family:var(--ff-head);font-size:clamp(26px,4vw,40px);font-weight:800;line-height:1.2;margin-bottom:20px;letter-spacing:-.02em}
+    .hero h1 em{font-style:normal;color:var(--brand-gold)}
+    .hero .lead{font-size:clamp(16px,2vw,19px);line-height:1.65;color:rgba(255,255,255,.82);max-width:620px;margin-bottom:32px}
+    .hero-meta{display:flex;align-items:center;gap:20px;flex-wrap:wrap;font-family:var(--ff-head);font-size:13px;color:rgba(255,255,255,.55)}
+    .hero-meta span{display:flex;align-items:center;gap:5px}
+    .hero-meta .dot{color:rgba(255,255,255,.25)}
+    .topic-pills{display:flex;gap:10px;flex-wrap:wrap;margin-top:28px}
+    .pill{display:flex;align-items:center;gap:8px;padding:8px 16px;border-radius:100px;font-family:var(--ff-head);font-size:13px;font-weight:600;border:1px solid}
+    .pill-red{background:rgba(230,48,34,.15);border-color:rgba(230,48,34,.35);color:#ff8a80}
+    .pill-amber{background:rgba(245,166,35,.12);border-color:rgba(245,166,35,.3);color:#ffd180}
+    .pill-blue{background:rgba(26,75,140,.25);border-color:rgba(26,75,140,.5);color:#82b4ff}
+    .pill-green{background:rgba(39,174,96,.15);border-color:rgba(39,174,96,.35);color:#81c995}
+    .article-wrap{max-width:1440px;margin:0 auto;padding:0 20px;display:grid;grid-template-columns:1fr 280px;gap:32px;align-items:start}
+    .article-body{padding:32px 0}
+    .article-body h2{font-family:var(--ff-head);font-size:clamp(20px,2.5vw,26px);font-weight:700;color:var(--brand-dark);margin:36px 0 14px;padding-top:6px;border-top:3px solid var(--brand-accent);line-height:1.3}
+    .article-body h3{font-family:var(--ff-head);font-size:clamp(17px,2vw,20px);font-weight:600;color:var(--brand-navy);margin:32px 0 12px}
+    .article-body p{margin-bottom:16px;color:var(--text-main)}
+    .article-body ul,.article-body ol{padding-left:24px;margin-bottom:20px}
+    .article-body li{margin-bottom:8px}
+    .article-body strong{color:var(--brand-dark)}
+    .intro-p{font-size:19px;line-height:1.7}
+    .box{border-radius:var(--radius);padding:22px 26px;margin:28px 0;border-left:4px solid}
+    .box-red{background:#fef2f2;border-color:var(--brand-accent)}
+    .box-blue{background:#eff6ff;border-color:var(--brand-blue)}
+    .box-amber{background:#fffbeb;border-color:var(--brand-gold)}
+    .box-green{background:#f0fdf4;border-color:#27ae60}
+    .box h4{font-family:var(--ff-head);font-size:15px;font-weight:700;margin-bottom:8px}
+    .box p{font-size:15px;margin-bottom:8px}
+    .check-list{list-style:none;padding:0}
+    .check-list li{display:flex;gap:10px;padding:6px 0;font-size:16px}
+    .chk{color:#27ae60;font-weight:700;flex-shrink:0}
+    .price-table{width:100%;border-collapse:collapse;margin:24px 0;font-size:15px}
+    .price-table th{background:var(--brand-navy);color:var(--white);font-family:var(--ff-head);font-size:13px;font-weight:600;text-transform:uppercase;letter-spacing:.04em;padding:12px 16px;text-align:left}
+    .price-table td{padding:12px 16px;border-bottom:1px solid var(--border)}
+    .price-table tr:nth-child(even) td{background:var(--brand-light)}
+    .price-table .highlight td{background:#fffbeb;font-weight:600}
+    .cta-banner{background:linear-gradient(135deg,var(--brand-dark),var(--brand-navy));border-radius:var(--radius);padding:28px 32px;color:var(--white);display:flex;align-items:center;justify-content:space-between;gap:20px;flex-wrap:wrap}
+    .cta-banner h3{font-family:var(--ff-head);font-size:18px;font-weight:700;margin-bottom:4px}
+    .cta-banner p{font-size:14px;color:rgba(255,255,255,.7);margin:0}
+    .cta-buttons{display:flex;gap:10px;flex-wrap:wrap}
+    .btn{display:inline-flex;align-items:center;gap:7px;padding:10px 18px;border-radius:8px;font-family:var(--ff-head);font-size:13px;font-weight:600;cursor:pointer;border:none;text-decoration:none!important}
+    .btn-primary{background:var(--brand-accent);color:var(--white)!important;box-shadow:0 4px 14px rgba(230,48,34,.3)}
+    .btn-secondary{background:rgba(255,255,255,.12);color:var(--white)!important;border:1px solid rgba(255,255,255,.25)}
+    .faq-section{margin:48px 0 32px}
+    .faq-item{border:1px solid var(--border);border-radius:var(--radius);margin-bottom:10px;overflow:hidden}
+    .faq-q{display:flex;align-items:center;justify-content:space-between;padding:16px 20px;cursor:pointer;background:var(--white);font-family:var(--ff-head);font-size:15px;font-weight:600;color:var(--brand-dark);border:none;width:100%;text-align:left;gap:12px}
+    .faq-q:hover{background:var(--brand-light)}
+    .faq-a{display:none;padding:0 20px 16px;font-size:15px;color:var(--text-muted);line-height:1.7}
+    .faq-item.open .faq-a{display:block}
+    .faq-item.open .faq-q{background:var(--brand-light);color:var(--brand-blue)}
+    .faq-chevron{transition:transform .2s;flex-shrink:0}
+    .faq-item.open .faq-chevron{transform:rotate(180deg)}
+    .sidebar{position:sticky;top:104px}
+    .sidebar-card{border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;margin-bottom:20px;background:var(--white);box-shadow:var(--shadow-sm)}
+    .sidebar-card-head{background:var(--brand-navy);color:var(--white);font-family:var(--ff-head);font-size:12px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;padding:12px 18px}
+    .sidebar-card-body{padding:16px 18px}
+    .toc-list{list-style:none;padding:0;counter-reset:toc}
+    .toc-list li{counter-increment:toc}
+    .toc-list a{display:flex;align-items:baseline;gap:8px;padding:7px 0;font-family:var(--ff-head);font-size:13px;color:var(--text-muted);border-bottom:1px solid var(--border);text-decoration:none}
+    .toc-list a::before{content:counter(toc,decimal-leading-zero);font-size:11px;font-weight:700;color:var(--text-light)}
+    .toc-list li:last-child a{border-bottom:none}
+    .toc-list a:hover{color:var(--brand-blue)}
+    .contact-info{list-style:none;padding:0}
+    .contact-info li{display:flex;gap:12px;padding:10px 0;border-bottom:1px solid var(--border);align-items:flex-start}
+    .contact-info li:last-child{border-bottom:none}
+    .ci-icon{font-size:20px;flex-shrink:0;margin-top:2px}
+    .contact-info strong{font-family:var(--ff-head);font-size:14px;display:block;color:var(--brand-dark)}
+    .contact-info span{font-size:12px;color:var(--text-light)}
+    .article-footer{background:var(--brand-light);border-top:1px solid var(--border);padding:40px 24px;text-align:center}
+    .article-footer p{font-size:14px;color:var(--text-muted);max-width:500px;margin:0 auto 16px}
+    .tags{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-top:12px}
+    .tag{background:var(--white);border:1px solid var(--border);padding:4px 12px;border-radius:100px;font-family:var(--ff-head);font-size:11px;color:var(--text-muted)}
+    @media(max-width:768px){.article-wrap{grid-template-columns:1fr;gap:32px}.sidebar{position:static;order:2}.cta-banner{flex-direction:column;text-align:center}}
+  
+.discuta-in-grup{background:var(--brand-light);border:1px solid var(--border);border-left:4px solid var(--brand-blue);border-radius:var(--radius);padding:20px 24px;margin:32px 0}
+.discuta-in-grup h3{font-family:var(--ff-head);font-weight:600;font-size:17px;color:var(--brand-navy);margin:0 0 8px}
+.discuta-in-grup p{font-size:15px;color:var(--text-muted);line-height:1.6;margin:0 0 12px}
+.discuta-in-grup a{display:inline-block;font-family:var(--ff-head);font-weight:600;font-size:14px;color:var(--brand-blue);text-decoration:none}
+.discuta-in-grup a:hover{text-decoration:underline}
+
+/* mobfix-v1 */
+.hidden{display:none}
+@media(max-width:900px){.article-wrap{grid-template-columns:minmax(0,1fr)}.sidebar{position:static;top:auto}.article-body table{display:block;overflow-x:auto;max-width:100%}}
+
+/* mobfix-v2 */
+.lg\:hidden .animate-badge-pulse{background:rgba(15,23,42,.9)!important;color:#fff!important;border:1px solid rgba(255,255,255,.25)}
+
+/* buton inapoi-sus */
+#toTop{position:fixed;right:18px;bottom:18px;z-index:45;width:46px;height:46px;border:none;border-radius:50%;background:var(--brand-navy);color:#fff;cursor:pointer;box-shadow:0 6px 18px rgba(11,26,46,.28);opacity:0;visibility:hidden;transform:translateY(8px);transition:opacity .2s,transform .2s,visibility .2s;display:flex;align-items:center;justify-content:center}
+#toTop.show{opacity:1;visibility:visible;transform:none}
+#toTop:hover{background:var(--brand-blue)}
+</style>
+<style>.cta-banner h3{color:#ffffff !important}.cta-banner p{color:rgba(255,255,255,.85) !important}.box-info{background:#eef5ff;border-color:var(--brand-blue)}.box-warn{background:#fff8ec;border-color:var(--brand-gold)}.box-tip{background:#f0faf2;border-color:#27ae60}.box-danger{background:#fef2f2;border-color:#e63022}.box-info .box-title{color:var(--brand-blue)}.box-warn .box-title{color:#b7760a}.box-tip .box-title{color:#1e8c3f}.box-danger .box-title{color:#c0392b}.compare-table{width:100%;border-collapse:collapse;font-size:15px;margin:24px 0;border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow-sm)}.compare-table th{background:var(--brand-navy);color:var(--white);font-family:var(--ff-head);font-weight:600;padding:13px 16px;text-align:left}.compare-table td{padding:12px 16px;border-bottom:1px solid var(--border);vertical-align:top}.compare-table tr:nth-child(even) td{background:var(--brand-light)}.compare-table tr:last-child td{border-bottom:none}.compare-table .yes{color:#27ae60;font-weight:600}.compare-table .no{color:#c0392b}</style></head>
+<body>
+<header id="mainHeader" style="position:fixed;top:0;left:0;right:0;z-index:50;transition:all 0.3s;">
+    <div class="hidden sm:block" style="background:#0f172a;color:#fff;font-size:12px;padding:6px 0;">
+        <div style="max-width:1280px;margin:0 auto;padding:0 24px;display:flex;justify-content:space-between;align-items:center;">
+            <span>⭐ <span style="color:#4ade80;font-weight:600;">Peste 20 ani de experiență</span></span>
+            <div style="display:flex;align-items:center;gap:16px;">
+                <span>⭐ <span style="font-weight:600;">8.700+ proiecte</span></span>
+            </div>
+        </div>
+    </div>
+    <div class="sm:hidden" style="background:#0f172a;color:#fff;font-size:12px;padding:6px 0;">
+        <div style="max-width:1280px;margin:0 auto;padding:0 12px;display:flex;justify-content:space-between;align-items:center;">
+            <span>⭐ <span style="color:#4ade80;font-weight:600;">Peste 20 ani de experiență</span></span>
+            <a href="tel:0752288400" style="display:flex;align-items:center;gap:4px;font-weight:600;color:#4ade80;">📞 Sună acum</a>
+        </div>
+    </div>
+    <div id="navBg" style="transition:all 0.3s;">
+        <div style="max-width:1280px;margin:0 auto;padding:0 12px;display:flex;justify-content:space-between;align-items:center;height:64px;" class="sm:px-6">
+            <a href="../">
+                <img src="https://eu.chat-img.sintra.ai/32c1b29c-0c86-4833-a031-e7c45e21a11e/983d52bb-2eb6-42f1-bed4-f94d769bb634/Logo_CSSI.png" alt="CSSI Logo" id="logoImg" style="height:56px;width:auto;transition:all 0.3s;filter:brightness(0) invert(1) drop-shadow(0 0 1px rgba(255,255,255,0.8));">
+            </a>
+            <nav class="hidden md:flex" style="align-items:center;gap:4px;">
+                <a href="../" id="navLink1" style="padding:6px 12px;font-size:14px;font-weight:500;color:#fff;transition:all 0.2s;border-radius:8px;" onmouseover="this.style.color='#f87171'" onmouseout="this.style.color=navTextColor">🏠 Acasă</a>
+                <div class="dropdown" style="position:relative;">
+                    <button id="navLink2" style="padding:6px 12px;font-size:14px;font-weight:500;color:#fff;transition:all 0.2s;border-radius:8px;background:none;border:none;cursor:pointer;display:flex;align-items:center;font-family:inherit;">
+                        🛠️ Servicii
+                        <svg style="margin-left:4px;width:16px;height:16px;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+                    </button>
+                    <div class="dropdown-menu dropdown-scroll" style="position:absolute;top:100%;left:0;width:280px;background:#fff;box-shadow:0 10px 15px -3px rgba(0,0,0,0.1);border-radius:12px;padding:8px;border:1px solid #f1f5f9;max-height:80vh;overflow-y:auto;z-index:100;">
+                        <a href="../detectie-incendiu-isu" style="display:block;padding:10px 16px;font-size:13px;color:#334155;border-radius:8px;" onmouseover="this.style.background='#fef2f2';this.style.color='#dc2626'" onmouseout="this.style.background='';this.style.color='#334155'">🔥 Detecție Incendiu ISU</a>
+                        <a href="../camere-supraveghere" style="display:block;padding:10px 16px;font-size:13px;color:#334155;border-radius:8px;" onmouseover="this.style.background='#fef2f2';this.style.color='#dc2626'" onmouseout="this.style.background='';this.style.color='#334155'">📹 Camere Supraveghere</a>
+                        <a href="../alarma-antiefractie" style="display:block;padding:10px 16px;font-size:13px;color:#334155;border-radius:8px;" onmouseover="this.style.background='#fef2f2';this.style.color='#dc2626'" onmouseout="this.style.background='';this.style.color='#334155'">🚨 Alarmă Antiefracție</a>
+                        <a href="../control-acces" style="display:block;padding:10px 16px;font-size:13px;color:#334155;border-radius:8px;" onmouseover="this.style.background='#fef2f2';this.style.color='#dc2626'" onmouseout="this.style.background='';this.style.color='#334155'">🚪 Control Acces</a>
+                        <a href="../pontaj-electronic" style="display:block;padding:10px 16px;font-size:13px;color:#334155;border-radius:8px;" onmouseover="this.style.background='#fef2f2';this.style.color='#dc2626'" onmouseout="this.style.background='';this.style.color='#334155'">⏱️ Pontaj Electronic</a>
+                        <a href="../bariere-auto" style="display:block;padding:10px 16px;font-size:13px;color:#334155;border-radius:8px;" onmouseover="this.style.background='#fef2f2';this.style.color='#dc2626'" onmouseout="this.style.background='';this.style.color='#334155'">🚧 Bariere Auto</a>
+                        <a href="../interfoane-videointerfoane" style="display:block;padding:10px 16px;font-size:13px;color:#334155;border-radius:8px;" onmouseover="this.style.background='#fef2f2';this.style.color='#dc2626'" onmouseout="this.style.background='';this.style.color='#334155'">🔔 Interfoane &amp; Videointerfoane</a>
+                        <a href="../sonorizare" style="display:block;padding:10px 16px;font-size:13px;color:#334155;border-radius:8px;" onmouseover="this.style.background='#fef2f2';this.style.color='#dc2626'" onmouseout="this.style.background='';this.style.color='#334155'">🔊 Sonorizare</a>
+                        <a href="../automatizari-porti" style="display:block;padding:10px 16px;font-size:13px;color:#334155;border-radius:8px;" onmouseover="this.style.background='#fef2f2';this.style.color='#dc2626'" onmouseout="this.style.background='';this.style.color='#334155'">🚗 Automatizări Porți</a>
+                        <a href="../usi-garaj" style="display:block;padding:10px 16px;font-size:13px;color:#334155;border-radius:8px;" onmouseover="this.style.background='#fef2f2';this.style.color='#dc2626'" onmouseout="this.style.background='';this.style.color='#334155'">🏠 Uși Garaj</a>
+                        <a href="../aer-conditionat" style="display:block;padding:10px 16px;font-size:13px;color:#334155;border-radius:8px;" onmouseover="this.style.background='#fef2f2';this.style.color='#dc2626'" onmouseout="this.style.background='';this.style.color='#334155'">❄️ Aer Condiționat</a>
+                        <a href="../ventilatie" style="display:block;padding:10px 16px;font-size:13px;color:#334155;border-radius:8px;" onmouseover="this.style.background='#fef2f2';this.style.color='#dc2626'" onmouseout="this.style.background='';this.style.color='#334155'">💨 Ventilație</a>
+                        <a href="../instalatii-electrice" style="display:block;padding:10px 16px;font-size:13px;color:#334155;border-radius:8px;" onmouseover="this.style.background='#fef2f2';this.style.color='#dc2626'" onmouseout="this.style.background='';this.style.color='#334155'">⚡ Instalații Electrice</a>
+                        <a href="../instalatii-termice-sanitare" style="display:block;padding:10px 16px;font-size:13px;color:#334155;border-radius:8px;" onmouseover="this.style.background='#fef2f2';this.style.color='#dc2626'" onmouseout="this.style.background='';this.style.color='#334155'">🔧 Instalații Termice &amp; Sanitare</a>
+                    </div>
+                </div>
+                <a href="../despre-noi" id="navLink3" style="padding:6px 12px;font-size:14px;font-weight:500;color:#fff;transition:all 0.2s;border-radius:8px;" onmouseover="this.style.color='#f87171'" onmouseout="this.style.color=navTextColor">ℹ️ Despre Noi</a>
+                <a href="../portofoliu" id="navLink4" style="padding:6px 12px;font-size:14px;font-weight:500;color:#fff;transition:all 0.2s;border-radius:8px;" onmouseover="this.style.color='#f87171'" onmouseout="this.style.color=navTextColor">📁 Portofoliu</a>
+                <a href="/blog/" style="padding:6px 12px;font-size:14px;font-weight:500;color:#fff;transition:all 0.2s;border-radius:8px;" id="navLinkBlog" onmouseover="this.style.color='#f87171'" onmouseout="this.style.color=navTextColor">📝 Blog</a>
+                <a href="../contact" id="navLink5" style="padding:6px 12px;font-size:14px;font-weight:500;color:#fff;transition:all 0.2s;border-radius:8px;" onmouseover="this.style.color='#f87171'" onmouseout="this.style.color=navTextColor">📍 Contact</a>
+            </nav>
+            <div class="hidden lg:flex" style="align-items:center;gap:12px;">
+                <a href="tel:0752288400" id="phoneLink" style="display:flex;align-items:center;font-size:14px;font-weight:500;color:#fff;transition:all 0.2s;">
+                    <svg style="width:16px;height:16px;margin-right:6px;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/></svg>
+                    0752 288 400
+                </a>
+                <a href="../contact" style="background:linear-gradient(to right,#dc2626,#b91c1c);color:#fff;padding:8px 20px;border-radius:8px;font-size:14px;font-weight:600;box-shadow:0 4px 6px -1px rgba(0,0,0,0.1);transition:all 0.2s;" onmouseover="this.style.background='linear-gradient(to right,#b91c1c,#991b1b)'" onmouseout="this.style.background='linear-gradient(to right,#dc2626,#b91c1c)'">Cere Ofertă</a>
+            </div>
+            <div class="md:hidden" style="display:flex;align-items:center;gap:8px;">
+                <button onclick="toggleMobileMenu()" id="menuBtn" class="animate-subtle-pulse" style="padding:4px;border-radius:6px;border:none;cursor:pointer;background:linear-gradient(to right,#ef4444,#dc2626);color:#fff;">
+                    <svg id="menuIcon" style="width:20px;height:20px;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
+                    <svg id="closeIcon" style="width:20px;height:20px;display:none;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+                </button>
+            </div>
+        </div>
+        <div id="mobileMenu" style="background:#fff;border-radius:16px;box-shadow:0 20px 25px -5px rgba(0,0,0,0.1);margin:8px 12px;padding:8px;max-height:80vh;overflow-y:auto;">
+            <nav style="display:flex;flex-direction:column;gap:4px;">
+                <a href="../" style="padding:10px 16px;font-size:16px;font-weight:500;color:#334155;border-radius:8px;">🏠 Acasă</a>
+                <button onclick="toggleServicesSubmenu()" style="padding:10px 16px;font-size:16px;font-weight:500;color:#334155;border-radius:8px;background:none;border:none;cursor:pointer;display:flex;justify-content:space-between;align-items:center;width:100%;font-family:inherit;text-align:left;">
+                    🛠️ Servicii
+                    <svg id="servicesArrow" style="width:16px;height:16px;transition:transform 0.2s;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+                </button>
+                <div id="servicesSubmenu" style="padding-left:16px;overflow-y:auto;">
+                    <a href="../detectie-incendiu-isu" onclick="closeMobile()" style="display:block;padding:8px 16px;font-size:14px;color:#475569;border-radius:8px;">🔥 Detecție Incendiu ISU</a>
+                    <a href="../camere-supraveghere" onclick="closeMobile()" style="display:block;padding:8px 16px;font-size:14px;color:#475569;border-radius:8px;">📹 Camere Supraveghere</a>
+                    <a href="../alarma-antiefractie" onclick="closeMobile()" style="display:block;padding:8px 16px;font-size:14px;color:#475569;border-radius:8px;">🚨 Alarmă Antiefracție</a>
+                    <a href="../control-acces" onclick="closeMobile()" style="display:block;padding:8px 16px;font-size:14px;color:#475569;border-radius:8px;">🚪 Control Acces</a>
+                    <a href="../pontaj-electronic" onclick="closeMobile()" style="display:block;padding:8px 16px;font-size:14px;color:#475569;border-radius:8px;">⏱️ Pontaj Electronic</a>
+                    <a href="../bariere-auto" onclick="closeMobile()" style="display:block;padding:8px 16px;font-size:14px;color:#475569;border-radius:8px;">🚧 Bariere Auto</a>
+                    <a href="../interfoane-videointerfoane" onclick="closeMobile()" style="display:block;padding:8px 16px;font-size:14px;color:#475569;border-radius:8px;">🔔 Interfoane &amp; Videointerfoane</a>
+                    <a href="../sonorizare" onclick="closeMobile()" style="display:block;padding:8px 16px;font-size:14px;color:#475569;border-radius:8px;">🔊 Sonorizare</a>
+                    <a href="../automatizari-porti" onclick="closeMobile()" style="display:block;padding:8px 16px;font-size:14px;color:#475569;border-radius:8px;">🚗 Automatizări Porți</a>
+                    <a href="../usi-garaj" onclick="closeMobile()" style="display:block;padding:8px 16px;font-size:14px;color:#475569;border-radius:8px;">🏠 Uși Garaj</a>
+                    <a href="../aer-conditionat" onclick="closeMobile()" style="display:block;padding:8px 16px;font-size:14px;color:#475569;border-radius:8px;">❄️ Aer Condiționat</a>
+                    <a href="../ventilatie" onclick="closeMobile()" style="display:block;padding:8px 16px;font-size:14px;color:#475569;border-radius:8px;">💨 Ventilație</a>
+                    <a href="../instalatii-electrice" onclick="closeMobile()" style="display:block;padding:8px 16px;font-size:14px;color:#475569;border-radius:8px;">⚡ Instalații Electrice</a>
+                    <a href="../instalatii-termice-sanitare" onclick="closeMobile()" style="display:block;padding:8px 16px;font-size:14px;color:#475569;border-radius:8px;">🔧 Instalații Termice &amp; Sanitare</a>
+                </div>
+                <a href="../despre-noi" onclick="closeMobile()" style="padding:10px 16px;font-size:16px;font-weight:500;color:#334155;border-radius:8px;">ℹ️ Despre Noi</a>
+                <a href="../portofoliu" onclick="closeMobile()" style="padding:10px 16px;font-size:16px;font-weight:500;color:#334155;border-radius:8px;">📁 Portofoliu</a>
+                <a href="/blog/" onclick="closeMobile()" style="padding:10px 16px;font-size:16px;font-weight:500;color:#334155;border-radius:8px;">📝 Blog</a>
+                <a href="../contact" onclick="closeMobile()" style="padding:10px 16px;font-size:16px;font-weight:500;color:#334155;border-radius:8px;">📍 Contact</a>
+                <div style="padding:12px 8px;">
+                    <a href="../contact" onclick="closeMobile()" style="display:block;text-align:center;background:linear-gradient(to right,#dc2626,#b91c1c);color:#fff;padding:10px 16px;border-radius:12px;font-weight:600;">Cere Ofertă</a>
+                </div>
+            </nav>
+        </div>
+    </div>
+</header>
+
+
+  
+  
+  <nav class="breadcrumb" aria-label="Breadcrumb">
+    <div class="inner">
+      <a href="/">Acasă</a><span class="sep">›</span>
+      <a href="/blog/">Blog</a><span class="sep">›</span>
+      <span style="color:rgba(255,255,255,.9)">Mentenanța sistemelor de securitate: de ce, cât | CSSI</span>
+    </div>
+  </nav>
+
+  <header class="hero">
+    <div class="inner">
+      <div class="hero-content">
+      <div class="hero-badge">🛡 Ghid CSSI · 2026</div>
+      <h1>Mentenanța sistemelor de securitate: de ce, cât de des și ce verifică un tehnician</h1>
+      <p class="lead">Cei mai mulți oameni se gândesc la sistemul de securitate doar de două ori: când îl instalează și când au nevoie de el. Problema e că, între aceste două momente, sistemul lucrează continuu și se uzează discret — camere care se murdăresc, baterii care se descarcă, software care rămâne în urmă. Iar dacă nimeni nu se uită la el, riști să descoperi exact în ziua cea mai proastă că o cameră n-a înregistrat sau că alarma n-a sunat. Mentenanța e tocmai munca „invizibilă" care face ca sistemul să fie acolo, funcțional, atunci când contează. Hai să vedem de ce, cât de des și ce presupune, pe înțelesul tuturor.</p>
+      <div class="hero-meta">
+        <span>✍ CSSI Brașov</span><span class="dot">·</span>
+        <span>📅 20 Sep 2026</span><span class="dot">·</span>
+        <span>⏱ 10 min lectură</span>
+      </div>
+      <div class="topic-pills">
+        <span class="pill pill-blue">🛡 Securitate firme</span>
+        <span class="pill pill-green">📍 Brașov & împrejurimi</span>
+        <span class="pill pill-amber">✅ Ghid practic</span>
+      </div>
+    </div>
+      <div class="hero-img-wrap"><img src="/images/blog/mentenanta-sisteme-securitate-cover.jpg" alt="Mentenanța sistemelor de securitate: de ce, cât | CSSI"></div>
+    </div>
+  </header>
+
+  <div class="article-wrap">
+    <main class="article-body" id="articol">
+<h2 id="raspunsul-scurt">Răspunsul scurt</h2>
+<p>Mentenanța unui sistem de securitate înseamnă verificări periodice care prind uzura înainte să te lase descoperit: <strong>camere</strong> curățate și realiniate, <strong>baterii</strong> testate, <strong>senzori</strong> și comunicator verificați, plus <strong>firmware și parole</strong> actualizate la partea conectată la internet. Orientativ, o revizie completă de câteva ori pe an acoperă majoritatea sistemelor, cu verificări suplimentare după o furtună sau o pană de curent prelungită. Pentru obiective aflate sub incidența Legii 333/2003 (pază și alarmare), mentenanța nu e opțională, ci parte din funcționarea corectă a sistemului. Un contract de mentenanță costă, orientativ, câteva sute de lei pe an pentru un sistem rezidențial și mai mult pentru un obiectiv de firmă, dar aproape întotdeauna mai puțin decât o pagubă neacoperită.</p>
+
+<h2 id="de-ce-un-sistem-de-securitate-are-nevoie">De ce un sistem de securitate are nevoie de mentenanță</h2>
+<p>Un sistem de securitate nu e un obiect static, agățat pe perete și uitat. E <strong>echipament care lucrează non-stop</strong> și, ca orice echipament, îmbătrânește. Camerele adună praf, pânze de păianjen și se pot dezalinia în timp, pierzând exact unghiul care conta. Bateriile din senzorii de alarmă <strong>se descarcă</strong> — încet, dar sigur. Conexiunile se slăbesc, hard diskul recorderului se uzează, iar software-ul (firmware-ul) are nevoie de actualizări de securitate. Toate acestea se întâmplă <strong>discret</strong>, fără semnale evidente, până în ziua în care ai nevoie de sistem și descoperi golul. Mentenanța există tocmai ca să prindă aceste probleme din timp — înainte să te lase descoperit. E diferența dintre „am un sistem" și „am un sistem pe care chiar mă bazez".</p>
+
+
+      <div class="cta-banner" style="margin:32px 0">
+        <div>
+          <h3>Vrei o evaluare pentru firma ta?</h3>
+          <p>Evaluarea la fața locului e gratuită în Brașov și împrejurimi — vii cu nevoia, pleci cu o soluție și un preț defalcat.</p>
+        </div>
+        <div class="cta-buttons">
+          <a href="/contact" class="btn btn-secondary">📩 Cere ofertă</a>
+          <a href="tel:0752288400" class="btn btn-primary">📞 0752 288 400</a>
+          <a target="_blank" rel="noopener" href="https://wa.me/40752288400" class="btn btn-secondary">💬 WhatsApp</a>
+        </div>
+      </div>
+<h2 id="ce-se-intampla-fara-mentenanta">Ce se întâmplă fără mentenanță</h2>
+<p>Ca să înțelegi miza, gândește-te la ce se întâmplă concret când un sistem e lăsat de capul lui. Apar <strong>alarme false repetate</strong> — un senzor murdar sau dezreglat declanșează degeaba, te obosește și, mai grav, te face să ignori sistemul tocmai când ai nevoie de el. Apar <strong>camere care „mor"</strong> sau dau imagine inutilă exact când ți-ar trebui o dovadă. Apar <strong>baterii descărcate</strong> care lasă alarma fără backup la prima pană de curent. Și apar <strong>vulnerabilități cibernetice</strong>: camere cu firmware vechi și parole nesetate, ușor de accesat din afară. Rezultatul comun al tuturor: un sistem care îți dă <em>impresia</em> că ești protejat, dar care la momentul critic nu funcționează. Iar costul unei pagube neacoperite e aproape întotdeauna mult mai mare decât costul unei mentenanțe făcute la timp.</p>
+
+<h2 id="cat-de-des-se-face-mentenanta">Cât de des se face mentenanța</h2>
+<p>Nu există o singură cifră magică, pentru că depinde de sistem. Regula orientativă e o <strong>verificare periodică planificată</strong> — de regulă de câteva ori pe an, în funcție de mărimea și de tipul sistemului — plus <strong>verificări după evenimente speciale</strong>: o furtună puternică, o pană de curent prelungită, lucrări în clădire sau modificări ale spațiului. Un obiectiv cu risc ridicat sau cu multe echipamente are nevoie de verificări mai dese decât o locuință cu un sistem mic. Important e ca mentenanța să fie <strong>planificată</strong>, nu „când ne aducem aminte" — pentru că exact lucrurile pe care le amâni sunt cele care cedează la momentul nepotrivit. La fața locului îți propunem un calendar de mentenanță potrivit sistemului tău, nu o regulă generală aplicată forțat. Un capitol legat e și ce se întâmplă la o pană de curent, despre care am scris în articolul despre sistemul de securitate la pană de curent (backup, UPS, baterii).</p>
+
+<h2 id="ce-verifica-un-tehnician-la-o-revizie">Ce verifică un tehnician la o revizie</h2>
+<p>O revizie completă nu înseamnă „o privire" și gata. Un tehnician verifică, pas cu pas: <strong>camerele și unghiurile lor</strong> — curățare, focalizare, să acopere efectiv ce trebuie; <strong>înregistrarea și stocarea</strong> — recorderul funcționează, hard diskul e sănătos, imaginile se păstrează cât trebuie; <strong>senzorii și bateriile alarmei</strong> — fiecare detector reacționează, bateriile sunt bune; <strong>comunicația cu dispeceratul</strong> — alarma chiar ajunge unde trebuie, nu doar sună local; <strong>controlul accesului</strong> — cititoare, încuietori, drepturi de acces actualizate; și partea de <strong>software</strong> — actualizări de firmware și verificarea parolelor și conturilor. La final primești un <strong>raport</strong> cu starea sistemului și cu ce s-a făcut sau ce ar trebui făcut. Despre senzorii care dau cele mai multe bătăi de cap (și alarme false) am scris separat, în articolul despre detectoare de mișcare, senzori de exterior și alarme false.</p>
+
+
+<h2 id="mentenanta-de-securitate-cibernetica-par">Mentenanța de securitate cibernetică: partea pe care toți o uită</h2>
+<p>Iată un adevăr incomod: o cameră modernă sau un recorder conectat la internet este, de fapt, un <strong>mic calculator</strong>. Și, ca orice calculator, dacă rămâne cu firmware vechi și cu parole slabe sau implicite, devine o <strong>ușă deschisă</strong> — poate fi accesat de persoane neautorizate, exact invers față de scopul pentru care l-ai pus. Mentenanța cibernetică înseamnă lucruri concrete: actualizarea firmware-ului, schimbarea și întărirea parolelor, verificarea conturilor cu acces și securizarea rețelei. E partea pe care aproape toată lumea o ignoră, dar care, neglijată, transformă sistemul tău de protecție într-o vulnerabilitate. Nu e o teamă exagerată — autoritatea națională de profil, <a href="https://www.dnsc.ro" rel="noopener" target="_blank">DNSC</a>, atrage constant atenția asupra acestui risc la dispozitivele conectate. O mentenanță serioasă tratează această parte la fel de atent ca pe șuruburi și baterii.</p>
+
+<h2 id="contract-de-mentenanta-vs-interventii-pu">Contract de mentenanță vs intervenții punctuale</h2>
+<p>Aici e o decizie pe care o au de luat mulți: plătesc un <strong>contract de mentenanță</strong> sau chem pe cineva doar „când se strică ceva"? Contractul înseamnă verificări planificate (prinzi problemele înainte să devină pagube), <strong>prioritate la intervenție</strong> când apare ceva, evidență clară a stării sistemului și, de regulă, costuri previzibile. Intervențiile punctuale par mai ieftine, dar te lasă <strong>descoperit între defecțiuni</strong> și vin adesea exact în momentul cel mai prost — și uneori cu timp de așteptare. Pentru firme și obiective unde securitatea chiar contează, contractul de mentenanță e de obicei alegerea liniștită. Nu e o regulă unică; îți explicăm ambele variante și alegi ce ți se potrivește, în funcție de cât de critic e sistemul pentru tine.</p>
+
+<h2 id="ce-primesti-de-la-noi">Ce primești de la noi</h2>
+<p>Când faci mentenanța cu o echipă serioasă, primești mai mult decât „o vizită". Primești un <strong>raport</strong> după fiecare revizie — știi negru pe alb ce s-a verificat și în ce stare e sistemul. Primești o <strong>evidență în timp</strong> — istoricul sistemului, util și pentru conformitate, și pentru decizii (când merită un upgrade). Și primești <strong>prioritate la intervenție</strong> — ești client cunoscut, cu sistem documentat, nu cineva care sună prima dată în panică. În plus, o echipă care îți întreține sistemul îți poate spune onest când o reparație nu mai merită și e momentul unui upgrade — subiect despre care am scris în articolul despre upgrade-ul de la sistemul vechi analog la IP. Tot ce ține de monitorizarea sistemului de pe telefon, util între revizii, am detaliat în articolul despre <a href="https://cssi.ro/blog/smart-home-securitate-control-telefon">monitorizarea camerelor și a alarmei din aplicație</a>.</p>
+
+<h2 id="de-ce-conformitatea-cere-si-mentenanta-n">De ce conformitatea cere și mentenanță, nu doar instalare</h2>
+<p>Pentru multe obiective, mentenanța nu e doar o idee bună, ci ține de <strong>conformitate</strong>. Cadrul legal privind sistemele de alarmare și pază (Legea 333/2003 și normele asociate) are în vedere <strong>funcționarea corectă</strong> a sistemelor, nu doar montarea lor. Cu alte cuvinte, un sistem instalat și apoi lăsat în paragină nu-ți acoperă obligațiile la fel ca unul întreținut. Dincolo de litera legii, logica e simplă și greu de combătut: un sistem de securitate are sens doar dacă funcționează la momentul critic — iar asta se asigură prin mentenanță. Dacă vrei să verifici cum alegi o firmă care îți face și instalarea, și întreținerea ca lumea, am scris un ghid dedicat despre <a href="https://cssi.ro/blog/cum-alegi-firma-securitate-ghid-complet">cum alegi o firmă de securitate</a>.</p>
+
+<h2 id="programul-de-mentenanta-ce-se-verifica-s">Programul de mentenanță: ce se verifică și cât de des, pe componente</h2>
+<p>Regula generală „de câteva ori pe an" e un bun punct de plecare, dar în practică fiecare componentă a sistemului îmbătrânește în ritm diferit. Un senzor de mișcare cu baterie ține ani de zile, în timp ce o cameră expusă la soare și praf poate avea nevoie de curățare mai des decât una montată la interior. Tabelul de mai jos e un reper orientativ, pe care îl adaptăm la evaluare, în funcție de tipul obiectivului și de cât de intens e folosit sistemul.</p>
+
+<table class="compare-table">
+<thead><tr><th>Componentă</th><th>Ce se verifică</th><th>Periodicitate orientativă</th></tr></thead>
+<tbody>
+<tr><td><strong>Camere video</strong></td><td>Curățare lentilă, focalizare, unghi, cablare/alimentare PoE</td><td>1-2 ori/an, sau după eveniment (furtună, lucrări)</td></tr>
+<tr><td><strong>Recorder/NVR și stocare</strong></td><td>Funcționare, spațiu liber, sănătatea hard diskului, durata de păstrare a înregistrărilor</td><td>1-2 ori/an</td></tr>
+<tr><td><strong>Senzori și centrala de alarmă</strong></td><td>Reacție senzori, stare baterii, zone active/dezactivate</td><td>2-3 ori/an</td></tr>
+<tr><td><strong>Baterii de backup / UPS</strong></td><td>Capacitate reală, timp de autonomie la pană de curent</td><td>1-2 ori/an, plus test după orice pană prelungită</td></tr>
+<tr><td><strong>Comunicator / legătură cu dispeceratul</strong></td><td>Transmisia efectivă a alarmei (GSM/IP), nu doar semnalul local</td><td>Anual, prin test programat</td></tr>
+<tr><td><strong>Control acces (cititoare, încuietori)</strong></td><td>Funcționare cititor, drepturi de acces actualizate, baterii yale electrice</td><td>1-2 ori/an, plus la fiecare modificare de personal</td></tr>
+<tr><td><strong>Firmware și parole (mentenanță cibernetică)</strong></td><td>Versiune firmware, parole implicite/slabe, conturi active</td><td>Cel puțin 1 dată/an, ideal la fiecare revizie</td></tr>
+</tbody>
+</table>
+
+<p>Dacă obiectivul are și detecție de incendiu, aceasta funcționează după un regim propriu de verificare (ISU, normativ P118), separat de calendarul de mai sus, tratat de regulă printr-un contract distinct. Pentru un obiectiv nou, stabilim programul de mentenanță chiar la recepția lucrării, ca să știi din prima zi când urmează prima verificare.</p>
+
+<h2 id="cadrul-legal-legea-333-2003-si-licentier">Cadrul legal: Legea 333/2003 și licențierea firmei de mentenanță</h2>
+<p>Pentru sistemele de alarmă și pază, cadrul legal de referință e <strong>Legea 333/2003</strong> privind paza obiectivelor, bunurilor, valorilor și protecția persoanelor, cu normele metodologice de aplicare. Legea nu se oprește la momentul instalării: are în vedere <strong>funcționarea corectă</strong> a sistemului pe toată durata de folosire, ceea ce include mentenanța. Pentru anumite categorii de obiective (potrivit legii), sistemul de alarmă trebuie precedat de o <strong>analiză de risc la securitatea fizică</strong>, iar mentenanța face parte din modul în care obiectivul rămâne conform pe termen lung, nu doar la recepția inițială.</p>
+<p>Un aspect pe care puțini clienți îl verifică: firma care <strong>instalează și întreține</strong> sisteme de alarmă și pază trebuie să fie <strong>licențiată de IGPR</strong> (Poliția Română) pentru acest tip de activitate. Verifică licența oricărei firme înainte să semnezi un contract de mentenanță, la fel cum ai verifica-o pentru instalare. Dincolo de latura strict legală, dacă sistemul include camere cu funcții de <strong>audio</strong> sau <strong>recunoaștere facială/biometrie</strong>, intervin și limitele impuse de <strong>GDPR</strong> — înregistrarea audio și biometria au reguli mai stricte decât video simplu, iar un tehnician de mentenanță serios te avertizează dacă o configurare depășește ce ai voie să folosești fără măsuri suplimentare.</p>
+
+<div class="box box-info"><div class="box-title">ℹ Verifică licența IGPR a firmei</div><p>Orice firmă care instalează sau face mentenanță la sisteme de alarmă și pază ar trebui să dețină licență IGPR pentru acest tip de activitate. E un detaliu simplu de verificat înainte de a semna un contract, dar care te protejează atât legal, cât și practic — o firmă licențiată are, de regulă, și proceduri, și instruire pe măsură.</p></div>
+
+<div class="box box-warn"><div class="box-title">⚠ Greșeli frecvente la mentenanța sistemelor de securitate</div><p><strong>1. Aștepți să se strice ceva</strong> — mentenanța reactivă costă mai mult decât cea planificată, și vine mereu la momentul prost. <strong>2. Nu schimbi parolele implicite</strong> ale camerelor și recorderului, nici la instalare, nici ulterior. <strong>3. Ignori alarmele false repetate</strong> în loc să cauți cauza — de obicei un senzor murdar sau dezreglat, nu un defect major. <strong>4. Nu testezi bateria de backup</strong> decât la prima pană de curent, când e prea târziu să o mai schimbi la timp. <strong>5. Amâni actualizarea firmware-ului</strong> „pentru că oricum merge" — exact ce lasă camera vulnerabilă. <strong>6. Alegi mentenanța strict pe preț</strong>, fără raport scris, fără prioritate la intervenție și fără să știi ce firmă vine efectiv la tine.</p></div>
+
+<div class="box box-tip"><div class="box-title">✅ Checklist: sistemul tău are nevoie de mentenanță?</div><p>Ai <strong>trecut peste 6 luni</strong> de la ultima verificare a sistemului? Ai avut <strong>alarme false</strong> recente fără explicație? Ai avut o <strong>pană de curent</strong> și nu ai testat bateria de backup după aceea? Camerele au <strong>parole implicite</strong> sau nu mai știi ultima dată când ai schimbat una? Recorderul are <strong>firmware</strong> vechi, nemodificat de la instalare? Ai avut <strong>modificări de personal</strong> și nu ai actualizat drepturile de acces? Dacă ai răspuns „da" la cel puțin două întrebări, e momentul unei revizii.</p></div>
+
+<div class="box box-danger"><div class="box-title">🚨 Riscul real al unui sistem neîntreținut</div><p>Un scenariu frecvent la efracții: se taie curentul din exterior, iar sistemul care ar fi trebuit să funcționeze pe baterie tace, pentru că nimeni n-a testat bateria de backup de ani de zile. Un al doilea scenariu, la fel de real: o cameră sau un recorder cu firmware vechi și parolă implicită poate fi accesat de la distanță de persoane neautorizate, care astfel „văd" exact când nu ești acasă sau la firmă. Amândouă situațiile nu țin de un defect de fabricație, ci de mentenanță neglijată — și amândouă se previn cu verificări periodice simple.</p></div>
+
+<h2 id="costuri-orientative-2026">Costuri orientative 2026</h2>
+<p>Costul mentenanței depinde de mărimea sistemului, de tipul de contract și de cât de departe e obiectivul de baza noastră de operare în județul Brașov. Ca reper orientativ pentru 2026:</p>
+
+<table class="compare-table">
+<thead><tr><th>Componentă</th><th>Interval orientativ</th><th>Observații</th></tr></thead>
+<tbody>
+<tr><td>Revizie unică (fără contract), sistem mic</td><td>250-500 RON</td><td>O vizită, fără prioritate la intervenție ulterioară</td></tr>
+<tr><td>Contract mentenanță anual, locuință</td><td>400-900 RON/an</td><td>De regulă 1-2 vizite planificate incluse</td></tr>
+<tr><td>Contract mentenanță anual, firmă mică-medie</td><td>900-2.500 RON/an</td><td>Depinde de numărul camerelor/senzorilor și de nr. de vizite</td></tr>
+<tr><td>Contract mentenanță, obiectiv risc ridicat/multi-sediu</td><td>de la 2.500 RON/an</td><td>Se calculează individual, după analiza de risc</td></tr>
+<tr><td>Înlocuire baterie senzor/centrală</td><td>20-80 RON/buc</td><td>Preț piesă, montajul intră de regulă în vizită</td></tr>
+<tr><td>Intervenție de urgență în afara contractului</td><td>150-400 RON</td><td>Fără contract, poate implica timp de așteptare mai mare</td></tr>
+</tbody>
+</table>
+
+<p>Ce mută prețul în sus sau în jos: <strong>numărul de componente</strong> (camere, senzori, cititoare de control acces), <strong>numărul de vizite incluse</strong> în contract, <strong>distanța</strong> față de zona în care operăm frecvent, <strong>complexitatea</strong> sistemului (un sistem integrat cu mai multe subsisteme cere mai mult timp de verificare) și <strong>timpul de răspuns garantat</strong> — un contract cu prioritate la intervenție în câteva ore costă mai mult decât unul „la coadă". Cifrele sunt orientative; prețul exact vine după evaluare, cu ofertă defalcată, ca la orice lucrare CSSI.</p>
+
+<h2 id="cum-arata-implementarea-cu-cssi">Cum arată implementarea cu CSSI</h2>
+<p>Fie că vii cu un sistem instalat de altcineva, fie că e sistemul montat de noi, procesul de mentenanță urmează aceiași pași clari:</p>
+<p><strong>1. Evaluare</strong> — venim, vedem ce sistem ai, câte componente, ce vârstă are echipamentul și ce contract (dacă există) ai avut până acum. <strong>2. Ofertă</strong> — îți propunem un plan de mentenanță potrivit (număr de vizite, ce acoperă, cost anual), defalcat, fără costuri ascunse. <strong>3. Prima revizie completă</strong> — verificăm tot, de la camere și baterii până la firmware și parole, și îți dăm un raport clar cu starea reală a sistemului. <strong>4. Programare</strong> — stabilim calendarul următoarelor vizite, plus ce evenimente declanșează o verificare suplimentară (furtună, pană de curent, lucrări). <strong>5. Test</strong> — la final de fiecare vizită, testăm efectiv: alarma sună, camera înregistrează, comunicatorul transmite la dispecerat. <strong>6. Garanție și suport</strong> — rămâi cu un istoric al sistemului și cu prioritate la intervenție dacă apare ceva neprevăzut între vizite.</p>
+<p>Diferența față de o intervenție „la telefon" e evidența: fiecare vizită se documentează, deci știi exact ce s-a verificat, ce s-a reparat și ce ar mai fi de făcut, în loc să te bazezi pe memorie sau pe promisiuni verbale.</p>
+
+<h2 id="mentenanta-pe-tip-de-obiectiv-locuinta-f">Mentenanța pe tip de obiectiv: locuință, firmă, obiectiv cu risc ridicat</h2>
+<p>La o <strong>locuință</strong>, mentenanța e de regulă simplă: un sistem mic, câteva camere, o centrală de alarmă, poate un control de acces la poartă. O verificare pe an sau la doi ani, plus atenție după evenimente (furtună, pană de curent, o vacanță lungă în care sistemul a stat singur), acoperă majoritatea cazurilor. Miza principală aici e liniștea: să știi că, dacă pleci în vacanță, sistemul chiar funcționează, nu doar „pare" că funcționează.</p>
+<p>La o <strong>firmă</strong>, mentenanța devine parte din managementul riscului. Sistemul e de regulă mai mare (mai multe camere, control de acces pe mai multe uși, poate și detecție de incendiu separată), iar o defecțiune costă mai mult decât la o locuință — o cameră oarbă într-un depozit sau un cititor de acces blocat la intrarea angajaților înseamnă pierdere de timp și, potențial, expunere. Aici recomandăm un contract cu vizite mai dese și prioritate la intervenție, plus evidența cerută pentru conformitate.</p>
+<p>La un <strong>obiectiv cu risc ridicat</strong> (valori, date sensibile, trafic mare de persoane), mentenanța nu mai e o opțiune „de bun-simț", ci parte din analiza de risc care a stat la baza sistemului încă din faza de proiectare. Aici verificările sunt mai frecvente, documentația mai detaliată, iar orice abatere de la parametrii stabiliți (baterie sub capacitate, cameră dezaliniată, firmware neactualizat) trebuie corectată rapid, nu la următoarea vizită programată.</p>
+
+<h2 id="citeste-si">Citește și</h2>
+<ul>
+  <li><a href="https://cssi.ro/blog/cum-alegi-firma-securitate-ghid-complet">Cum alegi o firmă de securitate</a> — ce verifici înainte de a semna, inclusiv licențierea.</li>
+  <li><a href="https://cssi.ro/blog/smart-home-securitate-control-telefon">Monitorizarea camerelor și a alarmei din aplicație</a> — ce poți urmări între revizii.</li>
+  <li><a href="https://cssi.ro/blog/comunicator-alarma-cai-transmisie-dispecerat-gsm-ip-dualpath-brasov">Comunicatorul de alarmă: căi de transmisie către dispecerat</a> — componenta pe care o testăm la fiecare revizie.</li>
+  <li><a href="https://cssi.ro/blog/legislatie-securitate-romania-ghid-2026">Legislația securității în România</a> — cadrul legal complet, inclusiv Legea 333/2003.</li>
+</ul>
+      <h2 id="faq">Întrebări frecvente</h2>
+      <div class="faq-wrap">
+        <div class="faq-item">
+          <button class="faq-q" onclick="toggleFaq(this)">De ce are nevoie un sistem de securitate de mentenanță? Doar l-am instalat. <svg class="faq-chevron" width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg></button>
+          <div class="faq-a"><p>Pentru că un sistem de securitate nu e un obiect static, ci echipament care lucrează continuu și îmbătrânește. Camerele adună praf și se dezaliniază, bateriile alarmei se descarcă, conexiunile se slăbesc, hard diskul se uzează, iar software-ul are nevoie de actualizări. Toate astea se întâmplă discret — până în ziua când ai nevoie de sistem și descoperi că o cameră nu a înregistrat sau alarma nu a sunat. Mentenanța prinde aceste probleme înainte să te lase descoperit.</p></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q" onclick="toggleFaq(this)">Cât de des ar trebui făcută mentenanța? <svg class="faq-chevron" width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg></button>
+          <div class="faq-a"><p>Orientativ, o verificare periodică planificată (de regulă de câteva ori pe an, în funcție de sistem), plus verificări după evenimente speciale: furtună, pană de curent prelungită, lucrări sau modificări de spațiu. Un obiectiv cu risc ridicat are nevoie de verificări mai dese decât o locuință cu un sistem mic. Îți propunem un calendar potrivit sistemului tău, nu o regulă generală.</p></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q" onclick="toggleFaq(this)">Ce verifică concret un tehnician la o revizie? <svg class="faq-chevron" width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg></button>
+          <div class="faq-a"><p>Camerele și unghiurile (curățare, focalizare, acoperire), înregistrarea și stocarea (recorder, hard disk, durată), senzorii și bateriile alarmei, comunicația cu dispeceratul, controlul accesului (cititoare, încuietori, drepturi), plus partea de software — actualizări firmware și verificarea parolelor și conturilor. La final primești un raport cu starea sistemului și cu ce s-a făcut sau ce trebuie făcut.</p></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q" onclick="toggleFaq(this)">Ce se întâmplă dacă nu fac deloc mentenanță? <svg class="faq-chevron" width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg></button>
+          <div class="faq-a"><p>Cele mai frecvente probleme: alarme false repetate (care te fac să ignori sistemul), camere care „mor" exact când ai nevoie de dovezi, baterii descărcate care lasă alarma fără backup, și vulnerabilități cibernetice (firmware vechi, parole nesetate). Pe scurt, rămâi cu un sistem care îți dă impresia de protecție, dar care la momentul critic nu funcționează. Costul pagubei e aproape întotdeauna mai mare decât al mentenanței.</p></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q" onclick="toggleFaq(this)">De ce contează mentenanța de securitate cibernetică? <svg class="faq-chevron" width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg></button>
+          <div class="faq-a"><p>Pentru că o cameră sau un recorder conectat la internet e, în fond, un mic calculator. Cu firmware vechi și parole slabe, devine o ușă deschisă pentru persoane neautorizate. Mentenanța cibernetică înseamnă actualizarea firmware-ului, schimbarea parolelor, verificarea conturilor și securizarea rețelei. E partea pe care toți o uită, dar care neglijată îți transformă protecția în vulnerabilitate. DNSC atrage constant atenția asupra acestui risc.</p></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q" onclick="toggleFaq(this)">E mai bun un contract de mentenanță sau plătesc când se strică ceva? <svg class="faq-chevron" width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg></button>
+          <div class="faq-a"><p>Depinde de cât de important e sistemul. Un contract înseamnă verificări planificate, prioritate la intervenție, evidență clară și costuri previzibile. Intervențiile „când se strică" par mai ieftine, dar te lasă descoperit între defecțiuni și vin în momentul cel mai prost. Pentru firme și obiective unde securitatea contează, contractul e de regulă alegerea liniștită. Îți explicăm ambele variante și alegi ce ți se potrivește.</p></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q" onclick="toggleFaq(this)">Mentenanța e obligatorie sau opțională? <svg class="faq-chevron" width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg></button>
+          <div class="faq-a"><p>Pentru multe obiective, mentenanța ține de conformitate: cadrul legal privind sistemele de alarmare și pază (Legea 333/2003 și normele asociate) are în vedere funcționarea corectă și întreținerea, nu doar instalarea. Dincolo de lege, logica e simplă: un sistem are sens doar dacă funcționează la momentul critic, iar asta se asigură prin mentenanță. Îți spunem clar ce cerințe se aplică obiectivului tău.</p></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q" onclick="toggleFaq(this)">Cât costă un contract de mentenanță? <svg class="faq-chevron" width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg></button>
+          <div class="faq-a"><p>Orientativ, pentru 2026, un contract de mentenanță pentru o locuință pornește de la câteva sute de lei pe an, iar pentru o firmă mică-medie de la aproximativ 900 RON pe an în sus, în funcție de numărul de componente și de câte vizite include. Un obiectiv cu risc ridicat sau cu mai multe sedii se calculează individual, după evaluare. Prețul exact ține cont de mărimea sistemului, de distanța până la obiectiv și de timpul de răspuns pe care îl vrei garantat.</p></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q" onclick="toggleFaq(this)">Cât durează o vizită de revizie? <svg class="faq-chevron" width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg></button>
+          <div class="faq-a"><p>Pentru un sistem mic, rezidențial, o revizie completă durează de regulă între 1 și 2 ore. Pentru un sistem de firmă, cu mai multe camere, senzori și puncte de control acces, poate dura o jumătate de zi. Durata depinde și de ce găsim la fața locului — dacă totul e în regulă, vizita e rapidă; dacă apar probleme (baterie de schimbat, cameră de realiniat), timpul crește proporțional.</p></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q" onclick="toggleFaq(this)">Tehnicianul care face mentenanța trebuie să fie autorizat? <svg class="faq-chevron" width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg></button>
+          <div class="faq-a"><p>Pentru sistemele de alarmă și pază, firma care face instalarea și mentenanța trebuie să dețină licență IGPR pentru acest tip de activitate, conform Legii 333/2003. Merită să verifici acest detaliu înainte de a semna un contract, la fel cum ai verifica orice altă autorizație relevantă pentru o lucrare la casa sau firma ta.</p></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q" onclick="toggleFaq(this)">Pot face mentenanța cu altă firmă decât cea care mi-a instalat sistemul? <svg class="faq-chevron" width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg></button>
+          <div class="faq-a"><p>Da, în majoritatea cazurilor. Un tehnician cu experiență poate prelua mentenanța unui sistem instalat de altcineva, cu condiția să aibă acces la documentația sistemului (sau să o reconstituie la prima vizită). Diferența poate apărea la garanția producătorului, dacă aceasta era legată de instalatorul inițial — verificăm acest aspect chiar la prima evaluare, ca să știi exact unde stai.</p></div>
+        </div>
+      </div>
+
+      <aside class="discuta-in-grup">
+        <h3>Ai o întrebare despre asta?</h3>
+        <p>Discutăm subiectul în grupul nostru de pe Facebook, împreună cu electricieni, instalatori și proprietari din Brașov și împrejurimi. Pune întrebarea acolo și primești răspuns de la oameni care lucrează efectiv în domeniu. Suntem deja <!-- MEMBRI-GRUP -->351<!-- /MEMBRI-GRUP --> în grup.</p>
+        <a href="https://www.facebook.com/groups/1970585079825010" rel="noopener" target="_blank">Intră în grupul Instalații Brașov →</a>
+      </aside>
+      <div class="cta-banner">
+        <div>
+          <h3>Pașii următori — cere oferta ta</h3>
+          <p>Fără obligații: vii cu nevoia, pleci cu o soluție și un preț defalcat. CSSI — 20 de ani, 8.700+ proiecte în județul Brașov.</p>
+        </div>
+        <div class="cta-buttons">
+          <a href="/contact" class="btn btn-secondary">📩 Cere ofertă</a>
+          <a href="tel:0752288400" class="btn btn-primary">📞 0752 288 400</a>
+          <a target="_blank" rel="noopener" href="https://wa.me/40752288400" class="btn btn-secondary">💬 WhatsApp</a>
+        </div>
+      </div>
+
+    </main>
+
+    <aside class="sidebar">
+      <div class="sidebar-card">
+        <div class="sidebar-card-head">📑 Cuprins</div>
+        <div class="sidebar-card-body" style="padding:10px 18px">
+          <ol class="toc-list">
+            <li><a href="#raspunsul-scurt">Răspunsul scurt</a></li>
+            <li><a href="#de-ce-un-sistem-de-securitate-are-nevoie">De ce un sistem de securitate are nevoie de mentenanță</a></li>
+            <li><a href="#ce-se-intampla-fara-mentenanta">Ce se întâmplă fără mentenanță</a></li>
+            <li><a href="#cat-de-des-se-face-mentenanta">Cât de des se face mentenanța</a></li>
+            <li><a href="#ce-verifica-un-tehnician-la-o-revizie">Ce verifică un tehnician la o revizie</a></li>
+            <li><a href="#mentenanta-de-securitate-cibernetica-par">Mentenanța de securitate cibernetică: partea pe care toți o uită</a></li>
+            <li><a href="#contract-de-mentenanta-vs-interventii-pu">Contract de mentenanță vs intervenții punctuale</a></li>
+            <li><a href="#ce-primesti-de-la-noi">Ce primești de la noi</a></li>
+            <li><a href="#de-ce-conformitatea-cere-si-mentenanta-n">De ce conformitatea cere și mentenanță, nu doar instalare</a></li>
+            <li><a href="#programul-de-mentenanta-ce-se-verifica-s">Programul de mentenanță: ce se verifică și cât de des, pe componente</a></li>
+            <li><a href="#cadrul-legal-legea-333-2003-si-licentier">Cadrul legal: Legea 333/2003 și licențierea firmei de mentenanță</a></li>
+            <li><a href="#costuri-orientative-2026">Costuri orientative 2026</a></li>
+            <li><a href="#cum-arata-implementarea-cu-cssi">Cum arată implementarea cu CSSI</a></li>
+            <li><a href="#mentenanta-pe-tip-de-obiectiv-locuinta-f">Mentenanța pe tip de obiectiv: locuință, firmă, obiectiv cu risc ridicat</a></li>
+            <li><a href="#citeste-si">Citește și</a></li>
+            <li><a href="#faq">Întrebări frecvente</a></li>
+          </ol>
+        </div>
+      </div>
+      <div class="sidebar-card">
+        <div class="sidebar-card-head">📞 Contact CSSI Brașov</div>
+        <div class="sidebar-card-body">
+          <ul class="contact-info">
+            <li><div class="ci-icon">📞</div><div><strong>0752 288 400</strong><span>Lun–Vin 08:00–18:00</span></div></li>
+            <li><div class="ci-icon">📧</div><div><strong>office@cssi.ro</strong><span>Răspuns în max 24h</span></div></li>
+            <li><div class="ci-icon">📍</div><div><strong>Brașov</strong><span>și județele înconjurătoare</span></div></li>
+          </ul>
+          <a target="_blank" rel="noopener" href="https://wa.me/40752288400" class="btn btn-primary" style="margin-top:12px">💬 Scrie pe WhatsApp</a>
+        </div>
+      </div>
+    </aside>
+  </div>
+
+<footer class="article-footer">
+    <p>Articol scris de echipa <strong>CSSI Brașov</strong> — firmă autorizată IGPR și ISU, cu peste 20 de ani de experiență în sisteme de securitate și instalații.</p>
+    <div class="tags">
+      <span class="tag">camere supraveghere brasov</span>
+      <span class="tag">instalare camere</span>
+      <span class="tag">preturi camere 2026</span>
+      <span class="tag">Hikvision</span>
+      <span class="tag">Dahua</span>
+      <span class="tag">Uniview</span>
+      <span class="tag">CCTV</span>
+      <span class="tag">Brașov</span>
+    </div>
+    <p style="font-size:12px;color:#aaa;margin-top:8px">© 2026 CSSI — Confort, Securitate, Siguranță, Imobil | <a href="/">cssi.ro</a></p>
+  </footer>
+<script>
+    function toggleFaq(btn) {
+      const item = btn.closest('.faq-item');
+      const isOpen = item.classList.contains('open');
+      document.querySelectorAll('.faq-item.open').forEach(el => el.classList.remove('open'));
+      if (!isOpen) item.classList.add('open');
+    }
+    const headings = document.querySelectorAll('h2[id]');
+    const tocLinks = document.querySelectorAll('.toc-list a');
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          tocLinks.forEach(a => a.style.color = '');
+          const active = document.querySelector(`.toc-list a[href="#${entry.target.id}"]`);
+          if (active) active.style.color = 'var(--brand-blue)';
+        }
+      });
+    }, { rootMargin: '-20% 0px -70% 0px' });
+    headings.forEach(h => observer.observe(h));
+  </script>
+  <script>
+    let navTextColor = '#fff';
+    window.addEventListener('scroll', function() {
+        const navBg = document.getElementById('navBg');
+        const logo = document.getElementById('logoImg');
+        const scrolled = window.scrollY > 50;
+        if (scrolled) {
+            navBg.style.background = '#ffffff';
+            navBg.style.backdropFilter = 'blur(12px)';
+            navBg.style.boxShadow = '0 1px 2px rgba(0,0,0,0.05)';
+            if (logo) logo.style.filter = '';
+            navTextColor = '#334155';
+        } else {
+            navBg.style.background = 'transparent';
+            navBg.style.backdropFilter = '';
+            navBg.style.boxShadow = '';
+            if (logo) logo.style.filter = 'brightness(0) invert(1) drop-shadow(0 0 1px rgba(255,255,255,0.8))';
+            navTextColor = '#fff';
+        }
+        ['navLink1','navLink2','navLink3','navLink4','navLinkBlog','navLink5','phoneLink'].forEach(id=>{
+            const el=document.getElementById(id);
+            if(el) el.style.color=navTextColor;
+        });
+    });
+    function toggleMobileMenu(){
+        const menu=document.getElementById('mobileMenu');
+        const menuIcon=document.getElementById('menuIcon');
+        const closeIcon=document.getElementById('closeIcon');
+        const btn=document.getElementById('menuBtn');
+        if(menu.classList.contains('open')){
+            menu.classList.remove('open');
+            menuIcon.style.display='';
+            closeIcon.style.display='none';
+            btn.style.background='linear-gradient(to right,#ef4444,#dc2626)';
+            btn.classList.add('animate-subtle-pulse');
+        } else {
+            menu.classList.add('open');
+            menuIcon.style.display='none';
+            closeIcon.style.display='';
+            btn.style.background='#6b7280';
+            btn.classList.remove('animate-subtle-pulse');
+        }
+    }
+    function closeMobile(){
+        document.getElementById('mobileMenu').classList.remove('open');
+        document.getElementById('menuIcon').style.display='';
+        document.getElementById('closeIcon').style.display='none';
+    }
+    function toggleServicesSubmenu(){
+        const sub=document.getElementById('servicesSubmenu');
+        const arrow=document.getElementById('servicesArrow');
+        if(sub.classList.contains('open')){
+            sub.classList.remove('open');
+            arrow.style.transform='';
+        } else {
+            sub.classList.add('open');
+            arrow.style.transform='rotate(180deg)';
+        }
+    }
+  </script>
+<script>
+// GA4 tracking: phone_call & whatsapp_click
+document.addEventListener('DOMContentLoaded', function() {
+    document.querySelectorAll('a[href^="tel:"]').forEach(function(link) {
+        link.addEventListener('click', function() {
+            if (typeof gtag === 'function') {
+                gtag('event', 'phone_call', {event_category:'Contact', event_label:this.href.replace('tel:',''), value:100, currency:'RON'});
+            }
+        });
+    });
+    document.querySelectorAll('a[href*="wa.me"]').forEach(function(link) {
+        link.addEventListener('click', function() {
+            if (typeof gtag === 'function') {
+                gtag('event', 'whatsapp_click', {event_category:'Contact', event_label:'WhatsApp Direct', value:100, currency:'RON'});
+            }
+        });
+    });
+});
+</script>
+<script src="/tawk-chat.js" defer></script>
+<button id="toTop" aria-label="Înapoi sus" onclick="window.scrollTo({top:0,behavior:&#39;smooth&#39;})"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 15l-6-6-6 6"/></svg></button><script>(function(){var b=document.getElementById("toTop");window.addEventListener("scroll",function(){if(window.scrollY>400)b.classList.add("show");else b.classList.remove("show");});})();</script>
+</body>
+</html>

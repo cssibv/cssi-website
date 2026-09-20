@@ -936,4 +936,11 @@
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
+  <!-- adaugat automat de agent 2026-09-20 -->
+  <url>
+    <loc>https://cssi.ro/blog/mentenanta-sisteme-securitate-de-ce-cat-de-des-brasov</loc>
+    <lastmod>2026-09-20</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
 </urlset>
