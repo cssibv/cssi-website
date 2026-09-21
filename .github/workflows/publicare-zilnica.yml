@@ -49,7 +49,7 @@ jobs:
         run: |
           git config user.name  "cssi-publicare-bot"
           git config user.email "actions@github.com"
-          git add blog/ sitemap.xml
+          git add blog/ sitemap.xml images/blog/
           if git diff --cached --quiet; then
             echo "Nimic de publicat azi — niciun commit."
             echo "published=false" >> "$GITHUB_OUTPUT"
