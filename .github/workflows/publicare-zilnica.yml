@@ -24,17 +24,17 @@ jobs:
       TZ: Europe/Bucharest   # ca datetime.date.today() să fie ziua României
     steps:
       - name: Checkout site (public)
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Checkout conținut (repo privat cssi-content)
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           repository: cssibv/cssi-content
           token: ${{ secrets.CONTENT_TOKEN }}
           path: .publicare
 
       - name: Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v6
         with:
           python-version: '3.12'
 
