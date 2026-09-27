@@ -1,0 +1,757 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cum securizezi rețeaua unui sistem CCTV IP: parole | CSSI</title>
+<meta name="description" content="Multe camere IP rămân cu parolele din fabrică și ajung vulnerabile. Cum protejezi corect rețeaua sistemului de supraveghere din Brașov: parole.">
+<link rel="canonical" href="https://cssi.ro/blog/securizare-retea-cctv-ip-parole-vlan-protectie-brasov">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Cum securizezi rețeaua unui sistem CCTV IP | CSSI Brașov">
+<meta property="og:description" content="Parole din fabrică, camere expuse la internet, firmware vechi — cele mai comune greșeli. Cum securizezi corect rețeaua unui sistem de supraveghere: parole, VLAN, VPN, update-uri.">
+<meta property="og:url" content="https://cssi.ro/blog/securizare-retea-cctv-ip-parole-vlan-protectie-brasov">
+<meta property="og:image" content="https://cssi.ro/images/blog/securizare-retea-cctv-cover.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:type" content="image/jpeg">
+<meta property="og:locale" content="ro_RO">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Cum securizezi rețeaua unui sistem CCTV IP">
+<meta name="twitter:description" content="Parole puternice, fără expunere la internet, VLAN dedicat, firmware actualizat, conturi limitate. Ghid defensiv CSSI Brașov: 0752 288 400.">
+<meta name="twitter:image" content="https://cssi.ro/images/blog/securizare-retea-cctv-cover.jpg">
+
+<!-- ===== SCHEMA JSON-LD: Article + BreadcrumbList + FAQPage ===== -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Article",
+      "@id": "https://cssi.ro/blog/securizare-retea-cctv-ip-parole-vlan-protectie-brasov#article",
+      "headline": "Cum securizezi rețeaua unui sistem CCTV IP: parole, VLAN și protecție",
+      "description": "Multe camere IP rămân cu parolele din fabrică și ajung vulnerabile. Cum protejezi corect rețeaua sistemului de supraveghere: parole puternice, fără expunere la internet, VLAN dedicat, firmware actualizat și conturi cu drepturi limitate.",
+      "image": "https://cssi.ro/images/blog/securizare-retea-cctv-cover.jpg",
+      "author": {"@type": "Organization", "name": "CSSI Brașov", "url": "https://cssi.ro"},
+      "publisher": {"@type": "Organization", "name": "CSSI Brașov", "logo": {"@type": "ImageObject", "url": "https://cssi.ro/images/logo-cssi.webp"}},
+      "datePublished": "2026-09-27",
+      "dateModified": "2026-09-27",
+      "mainEntityOfPage": "https://cssi.ro/blog/securizare-retea-cctv-ip-parole-vlan-protectie-brasov",
+      "inLanguage": "ro"
+    },
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {"@type": "ListItem", "position": 1, "name": "Acasă", "item": "https://cssi.ro/"},
+        {"@type": "ListItem", "position": 2, "name": "Blog", "item": "https://cssi.ro/blog"},
+        {"@type": "ListItem", "position": 3, "name": "Cum securizezi rețeaua unui sistem CCTV IP"}
+      ]
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "De ce sunt periculoase parolele din fabrică la camere?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Pentru că sunt publice și previzibile: combinațiile implicite de utilizator și parolă pentru modelele uzuale se găsesc ușor și sunt încercate automat. O cameră lăsată cu parola din fabrică e practic deschisă. Primul lucru pe care îl facem la o instalare serioasă e schimbarea tuturor parolelor implicite cu parole puternice și unice, diferite de la un dispozitiv la altul și față de rețeaua firmei."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Pot accesa camerele de pe telefon fără să le expun la internet?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Da, și așa și trebuie. În loc de port forwarding (care expune direct camerele la internet), folosești un acces securizat: VPN către rețeaua ta sau serviciul P2P securizat al producătorului. Așa vezi imaginile de oriunde, dar dispozitivele nu sunt vizibile public. Configurăm exact acest tip de acces, ca să ai vizibilitate fără să lași o ușă deschisă."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Ce înseamnă VLAN dedicat pentru camere și de ce contează?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Înseamnă că punem camerele și NVR-ul într-o rețea separată, izolată de rețeaua de birou (calculatoare, e-mail, contabilitate). Dacă un dispozitiv e compromis, problema rămâne izolată și nu trece în rețeaua firmei, și invers. Pe partea de cablare structurată, separarea se gândește din proiect. E o măsură simplă care reduce mult riscul, fără să complice utilizarea de zi cu zi."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Cât de des trebuie actualizat firmware-ul camerelor?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Ori de câte ori producătorul scoate o actualizare de securitate, plus o verificare periodică (de exemplu la mentenanță). Update-urile închid vulnerabilități descoperite între timp; un firmware vechi de ani de zile e un risc. La un sistem aflat în mentenanță cu noi, verificăm și aplicăm actualizările relevante, ca să nu rămână camerele în urmă."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Toată lumea din firmă trebuie să aibă acces la înregistrări?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Nu. Creăm conturi cu drepturi limitate, în funcție de rol: cine doar vede live, cine poate exporta înregistrări, cine administrează sistemul. Un singur cont admin folosit de toată lumea e o practică proastă, pentru că nu mai știi cine a făcut ce și o singură parolă compromisă deschide tot. Drepturile separate, plus o evidență a accesului, țin sistemul sub control."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Contează de la ce producător iau camerele, din punct de vedere al securității?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Da, foarte mult. Producătorii serioși scot actualizări de securitate ani la rând și oferă suport; echipamentele foarte ieftine, fără nume, deseori nu primesc niciun update și rămân vulnerabile. De aceea recomandăm echipamente de la producători cu suport real — diferența nu se vede în prima zi, ci peste câțiva ani, când un sistem mai e protejat, iar celălalt nu."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Am deja camere instalate prost. Ce pot face acum?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Se poate corecta fără să schimbi tot. Venim, facem o evaluare a sistemului existent (parole, expunere la internet, firmware, conturi, segmentare) și remediem ce găsim: schimbăm parolele, închidem expunerea directă la internet, separăm rețeaua acolo unde se poate, actualizăm firmware-ul și refacem conturile. În multe cazuri, igienizarea unui sistem existent costă puțin și schimbă mult nivelul de protecție."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Ce este un VLAN și îmi trebuie echipament special pentru el?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Un VLAN e o rețea separată logic, creată în interiorul aceleiași infrastructuri fizice — nu tragi cabluri suplimentare, ci configurezi switch-urile să țină traficul camerelor izolat de traficul calculatoarelor de birou. Ai nevoie de switch-uri care suportă VLAN-uri (majoritatea celor de nivel „managed\", nu cele mai ieftine, de bază) și de o configurare corectă, făcută la instalare sau adăugată ulterior. Pentru un sistem existent, verificăm dacă switch-urile actuale suportă deja funcția, înainte de a recomanda înlocuirea lor."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Cât costă securizarea rețelei unui sistem CCTV deja instalat?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Pentru un sistem de dimensiune medie, o igienizare completă (parole, conturi, acces de la distanță securizat, separare pe VLAN, actualizare firmware) se încadrează orientativ în 1.500–3.500 RON, fără echipament nou major — costul crește dacă switch-urile actuale nu suportă VLAN și trebuie înlocuite. Costul exact vine după o evaluare la fața locului, unde vedem exact ce echipament ai și ce lipsește."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Pot folosi rețeaua Wi-Fi obișnuită a firmei pentru camere?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Tehnic, da, dar nu e recomandat pentru un sistem serios. Camerele pe aceeași rețea Wi-Fi cu laptopurile și telefoanele angajaților stau alături de restul traficului firmei, fără separarea pe care o oferă un VLAN dedicat. Preferăm fie o rețea cablată dedicată, fie, dacă se folosește Wi-Fi, un SSID separat, izolat logic de rețeaua principală, cu aceleași principii de segmentare aplicate și fără fir."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Cât durează o securizare completă a unui sistem existent?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Pentru un sistem de dimensiune medie, evaluarea și implementarea măsurilor de bază (parole, conturi, acces de la distanță securizat) se fac de regulă într-o singură vizită, de câteva ore. Dacă e nevoie de configurare VLAN sau de înlocuirea unor switch-uri, se adaugă timp pentru partea de rețea. Programăm astfel încât sistemul de supraveghere să rămână funcțional pe toată durata intervenției, fără perioade în care firma rămâne fără imagine."
+          }
+        }
+      ]
+    }
+  ]
+}
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;600;700;800&family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,400;0,8..60,600;1,8..60,400&display=swap" rel="stylesheet" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.js"></script>
+  <script src="/cookie-consent.js" defer></script>
+  <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}</script>
+  <script src="/tracking.js" defer></script>
+  <style>
+    @keyframes subtle-pulse-n { 0%,100%{transform:scale(1)}50%{transform:scale(.92)} }
+    @keyframes badge-pulse-n { 0%,100%{box-shadow:0 0 0 0 rgba(34,197,94,.4)}50%{box-shadow:0 0 0 8px rgba(34,197,94,0)} }
+    .animate-subtle-pulse{animation:subtle-pulse-n 2.5s ease-in-out infinite}
+    .animate-badge-pulse{animation:badge-pulse-n 2s ease-in-out infinite}
+    .dropdown-menu{display:none!important}
+    .dropdown:hover .dropdown-menu{display:block!important}
+    #mobileMenu{display:none}
+    #mobileMenu.open{display:block}
+    #servicesSubmenu{display:none}
+    #servicesSubmenu.open{display:block}
+    .dropdown-scroll::-webkit-scrollbar{width:4px}
+    .dropdown-scroll::-webkit-scrollbar-track{background:#f1f1f1}
+    .dropdown-scroll::-webkit-scrollbar-thumb{background:#cbd5e1;border-radius:4px}
+    @media(min-width:640px){.sm\:block{display:block!important}.sm\:hidden{display:none!important}.sm\:px-6{padding-left:24px;padding-right:24px}}
+    @media(min-width:1024px){.lg\:flex{display:flex!important}.lg\:hidden{display:none!important}}@media(min-width:768px){.md\:flex{display:flex!important}.md\:hidden{display:none!important}}
+    #mainHeader, #mainHeader a, #mainHeader button, #mainHeader span, #mainHeader div { font-family: 'Sora', sans-serif !important; }
+  </style>
+  <style>
+    :root{--brand-dark:#0b1a2e;--brand-navy:#102a4c;--brand-blue:#1a4b8c;--brand-accent:#e63022;--brand-gold:#f5a623;--brand-light:#f0f4f9;--text-main:#1c2b3a;--text-muted:#5a6e82;--text-light:#8fa0b3;--border:#dce6f0;--white:#ffffff;--ff-head:'Sora',sans-serif;--ff-body:'Source Serif 4',Georgia,serif;--radius:10px;--shadow-sm:0 2px 8px rgba(11,26,46,.08);--shadow-md:0 6px 24px rgba(11,26,46,.13);--shadow-lg:0 16px 48px rgba(11,26,46,.18);--max-w:1400px}
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    html{scroll-behavior:smooth}
+    body{font-family:var(--ff-body);font-size:18px;line-height:1.75;color:var(--text-main);background:var(--white);-webkit-font-smoothing:antialiased}
+    img{max-width:100%;height:auto;display:block}
+    a{color:var(--brand-blue);text-decoration:none}
+    a:hover{text-decoration:underline}
+    .breadcrumb{background:var(--brand-dark);border-bottom:none;padding:12px 0;padding-top:104px;font-family:var(--ff-head);font-size:13px;color:rgba(255,255,255,.55)}
+    .breadcrumb .inner{max-width:1280px;margin:0 auto;padding:0 0 12px 24px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+    .breadcrumb a{color:rgba(255,255,255,.7)}
+    .breadcrumb .sep{color:rgba(255,255,255,.3)}
+    .hero{background:var(--brand-dark);background-image:radial-gradient(ellipse 70% 60% at 80% 50%,rgba(26,75,140,.45) 0%,transparent 70%),radial-gradient(ellipse 40% 50% at 10% 80%,rgba(230,48,34,.15) 0%,transparent 60%);color:var(--white);padding:48px 24px 64px;position:relative;overflow:hidden}
+    .hero::before{content:'';position:absolute;inset:0;background-image:url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23ffffff' fill-opacity='0.025'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/svg%3E")}
+        .hero .inner{max-width:var(--max-w);margin:0 auto;position:relative;z-index:1;display:flex;align-items:center;gap:40px}
+    .hero-content{flex:1;min-width:0}
+    .hero-img-wrap{flex:0 0 640px;display:flex;align-items:center;justify-content:center}
+    .hero-img-wrap img{width:640px;height:auto;border-radius:14px;box-shadow:0 8px 32px rgba(0,0,0,.35);border:1px solid rgba(255,255,255,.1);opacity:.92;transition:opacity .3s}
+    .hero-img-wrap img:hover{opacity:1}
+    @media(max-width:900px){.hero .inner{flex-direction:column;gap:24px}.hero-img-wrap{flex:0 0 auto;order:-1}.hero-img-wrap img{width:500px}}
+    @media(max-width:700px){.hero-img-wrap{display:none}}
+    .hero-badge{display:inline-flex;align-items:center;gap:6px;background:rgba(230,48,34,.2);border:1px solid rgba(230,48,34,.4);color:#ff8a80;font-family:var(--ff-head);font-size:12px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;padding:5px 12px;border-radius:100px;margin-bottom:20px}
+    .hero h1{font-family:var(--ff-head);font-size:clamp(26px,4vw,40px);font-weight:800;line-height:1.2;margin-bottom:20px;letter-spacing:-.02em}
+    .hero h1 em{font-style:normal;color:var(--brand-gold)}
+    .hero .lead{font-size:clamp(16px,2vw,19px);line-height:1.65;color:rgba(255,255,255,.82);max-width:620px;margin-bottom:32px}
+    .hero-meta{display:flex;align-items:center;gap:20px;flex-wrap:wrap;font-family:var(--ff-head);font-size:13px;color:rgba(255,255,255,.55)}
+    .hero-meta span{display:flex;align-items:center;gap:5px}
+    .hero-meta .dot{color:rgba(255,255,255,.25)}
+    .topic-pills{display:flex;gap:10px;flex-wrap:wrap;margin-top:28px}
+    .pill{display:flex;align-items:center;gap:8px;padding:8px 16px;border-radius:100px;font-family:var(--ff-head);font-size:13px;font-weight:600;border:1px solid}
+    .pill-red{background:rgba(230,48,34,.15);border-color:rgba(230,48,34,.35);color:#ff8a80}
+    .pill-amber{background:rgba(245,166,35,.12);border-color:rgba(245,166,35,.3);color:#ffd180}
+    .pill-blue{background:rgba(26,75,140,.25);border-color:rgba(26,75,140,.5);color:#82b4ff}
+    .pill-green{background:rgba(39,174,96,.15);border-color:rgba(39,174,96,.35);color:#81c995}
+    .article-wrap{max-width:1440px;margin:0 auto;padding:0 20px;display:grid;grid-template-columns:1fr 280px;gap:32px;align-items:start}
+    .article-body{padding:32px 0}
+    .article-body h2{font-family:var(--ff-head);font-size:clamp(20px,2.5vw,26px);font-weight:700;color:var(--brand-dark);margin:36px 0 14px;padding-top:6px;border-top:3px solid var(--brand-accent);line-height:1.3}
+    .article-body h3{font-family:var(--ff-head);font-size:clamp(17px,2vw,20px);font-weight:600;color:var(--brand-navy);margin:32px 0 12px}
+    .article-body p{margin-bottom:16px;color:var(--text-main)}
+    .article-body ul,.article-body ol{padding-left:24px;margin-bottom:20px}
+    .article-body li{margin-bottom:8px}
+    .article-body strong{color:var(--brand-dark)}
+    .intro-p{font-size:19px;line-height:1.7}
+    .box{border-radius:var(--radius);padding:22px 26px;margin:28px 0;border-left:4px solid}
+    .box-red{background:#fef2f2;border-color:var(--brand-accent)}
+    .box-blue{background:#eff6ff;border-color:var(--brand-blue)}
+    .box-amber{background:#fffbeb;border-color:var(--brand-gold)}
+    .box-green{background:#f0fdf4;border-color:#27ae60}
+    .box h4{font-family:var(--ff-head);font-size:15px;font-weight:700;margin-bottom:8px}
+    .box p{font-size:15px;margin-bottom:8px}
+    .check-list{list-style:none;padding:0}
+    .check-list li{display:flex;gap:10px;padding:6px 0;font-size:16px}
+    .chk{color:#27ae60;font-weight:700;flex-shrink:0}
+    .price-table{width:100%;border-collapse:collapse;margin:24px 0;font-size:15px}
+    .price-table th{background:var(--brand-navy);color:var(--white);font-family:var(--ff-head);font-size:13px;font-weight:600;text-transform:uppercase;letter-spacing:.04em;padding:12px 16px;text-align:left}
+    .price-table td{padding:12px 16px;border-bottom:1px solid var(--border)}
+    .price-table tr:nth-child(even) td{background:var(--brand-light)}
+    .price-table .highlight td{background:#fffbeb;font-weight:600}
+    .cta-banner{background:linear-gradient(135deg,var(--brand-dark),var(--brand-navy));border-radius:var(--radius);padding:28px 32px;color:var(--white);display:flex;align-items:center;justify-content:space-between;gap:20px;flex-wrap:wrap}
+    .cta-banner h3{font-family:var(--ff-head);font-size:18px;font-weight:700;margin-bottom:4px}
+    .cta-banner p{font-size:14px;color:rgba(255,255,255,.7);margin:0}
+    .cta-buttons{display:flex;gap:10px;flex-wrap:wrap}
+    .btn{display:inline-flex;align-items:center;gap:7px;padding:10px 18px;border-radius:8px;font-family:var(--ff-head);font-size:13px;font-weight:600;cursor:pointer;border:none;text-decoration:none!important}
+    .btn-primary{background:var(--brand-accent);color:var(--white)!important;box-shadow:0 4px 14px rgba(230,48,34,.3)}
+    .btn-secondary{background:rgba(255,255,255,.12);color:var(--white)!important;border:1px solid rgba(255,255,255,.25)}
+    .faq-section{margin:48px 0 32px}
+    .faq-item{border:1px solid var(--border);border-radius:var(--radius);margin-bottom:10px;overflow:hidden}
+    .faq-q{display:flex;align-items:center;justify-content:space-between;padding:16px 20px;cursor:pointer;background:var(--white);font-family:var(--ff-head);font-size:15px;font-weight:600;color:var(--brand-dark);border:none;width:100%;text-align:left;gap:12px}
+    .faq-q:hover{background:var(--brand-light)}
+    .faq-a{display:none;padding:0 20px 16px;font-size:15px;color:var(--text-muted);line-height:1.7}
+    .faq-item.open .faq-a{display:block}
+    .faq-item.open .faq-q{background:var(--brand-light);color:var(--brand-blue)}
+    .faq-chevron{transition:transform .2s;flex-shrink:0}
+    .faq-item.open .faq-chevron{transform:rotate(180deg)}
+    .sidebar{position:sticky;top:104px}
+    .sidebar-card{border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;margin-bottom:20px;background:var(--white);box-shadow:var(--shadow-sm)}
+    .sidebar-card-head{background:var(--brand-navy);color:var(--white);font-family:var(--ff-head);font-size:12px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;padding:12px 18px}
+    .sidebar-card-body{padding:16px 18px}
+    .toc-list{list-style:none;padding:0;counter-reset:toc}
+    .toc-list li{counter-increment:toc}
+    .toc-list a{display:flex;align-items:baseline;gap:8px;padding:7px 0;font-family:var(--ff-head);font-size:13px;color:var(--text-muted);border-bottom:1px solid var(--border);text-decoration:none}
+    .toc-list a::before{content:counter(toc,decimal-leading-zero);font-size:11px;font-weight:700;color:var(--text-light)}
+    .toc-list li:last-child a{border-bottom:none}
+    .toc-list a:hover{color:var(--brand-blue)}
+    .contact-info{list-style:none;padding:0}
+    .contact-info li{display:flex;gap:12px;padding:10px 0;border-bottom:1px solid var(--border);align-items:flex-start}
+    .contact-info li:last-child{border-bottom:none}
+    .ci-icon{font-size:20px;flex-shrink:0;margin-top:2px}
+    .contact-info strong{font-family:var(--ff-head);font-size:14px;display:block;color:var(--brand-dark)}
+    .contact-info span{font-size:12px;color:var(--text-light)}
+    .article-footer{background:var(--brand-light);border-top:1px solid var(--border);padding:40px 24px;text-align:center}
+    .article-footer p{font-size:14px;color:var(--text-muted);max-width:500px;margin:0 auto 16px}
+    .tags{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-top:12px}
+    .tag{background:var(--white);border:1px solid var(--border);padding:4px 12px;border-radius:100px;font-family:var(--ff-head);font-size:11px;color:var(--text-muted)}
+    @media(max-width:768px){.article-wrap{grid-template-columns:1fr;gap:32px}.sidebar{position:static;order:2}.cta-banner{flex-direction:column;text-align:center}}
+  
+.discuta-in-grup{background:var(--brand-light);border:1px solid var(--border);border-left:4px solid var(--brand-blue);border-radius:var(--radius);padding:20px 24px;margin:32px 0}
+.discuta-in-grup h3{font-family:var(--ff-head);font-weight:600;font-size:17px;color:var(--brand-navy);margin:0 0 8px}
+.discuta-in-grup p{font-size:15px;color:var(--text-muted);line-height:1.6;margin:0 0 12px}
+.discuta-in-grup a{display:inline-block;font-family:var(--ff-head);font-weight:600;font-size:14px;color:var(--brand-blue);text-decoration:none}
+.discuta-in-grup a:hover{text-decoration:underline}
+
+/* mobfix-v1 */
+.hidden{display:none}
+@media(max-width:900px){.article-wrap{grid-template-columns:minmax(0,1fr)}.sidebar{position:static;top:auto}.article-body table{display:block;overflow-x:auto;max-width:100%}}
+
+/* mobfix-v2 */
+.lg\:hidden .animate-badge-pulse{background:rgba(15,23,42,.9)!important;color:#fff!important;border:1px solid rgba(255,255,255,.25)}
+
+/* buton inapoi-sus */
+#toTop{position:fixed;right:18px;bottom:18px;z-index:45;width:46px;height:46px;border:none;border-radius:50%;background:var(--brand-navy);color:#fff;cursor:pointer;box-shadow:0 6px 18px rgba(11,26,46,.28);opacity:0;visibility:hidden;transform:translateY(8px);transition:opacity .2s,transform .2s,visibility .2s;display:flex;align-items:center;justify-content:center}
+#toTop.show{opacity:1;visibility:visible;transform:none}
+#toTop:hover{background:var(--brand-blue)}
+</style>
+<style>.cta-banner h3{color:#ffffff !important}.cta-banner p{color:rgba(255,255,255,.85) !important}.box-info{background:#eef5ff;border-color:var(--brand-blue)}.box-warn{background:#fff8ec;border-color:var(--brand-gold)}.box-tip{background:#f0faf2;border-color:#27ae60}.box-danger{background:#fef2f2;border-color:#e63022}.box-info .box-title{color:var(--brand-blue)}.box-warn .box-title{color:#b7760a}.box-tip .box-title{color:#1e8c3f}.box-danger .box-title{color:#c0392b}.compare-table{width:100%;border-collapse:collapse;font-size:15px;margin:24px 0;border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow-sm)}.compare-table th{background:var(--brand-navy);color:var(--white);font-family:var(--ff-head);font-weight:600;padding:13px 16px;text-align:left}.compare-table td{padding:12px 16px;border-bottom:1px solid var(--border);vertical-align:top}.compare-table tr:nth-child(even) td{background:var(--brand-light)}.compare-table tr:last-child td{border-bottom:none}.compare-table .yes{color:#27ae60;font-weight:600}.compare-table .no{color:#c0392b}</style></head>
+<body>
+<header id="mainHeader" style="position:fixed;top:0;left:0;right:0;z-index:50;transition:all 0.3s;">
+    <div class="hidden sm:block" style="background:#0f172a;color:#fff;font-size:12px;padding:6px 0;">
+        <div style="max-width:1280px;margin:0 auto;padding:0 24px;display:flex;justify-content:space-between;align-items:center;">
+            <span>⭐ <span style="color:#4ade80;font-weight:600;">Peste 20 ani de experiență</span></span>
+            <div style="display:flex;align-items:center;gap:16px;">
+                <span>⭐ <span style="font-weight:600;">8.700+ proiecte</span></span>
+            </div>
+        </div>
+    </div>
+    <div class="sm:hidden" style="background:#0f172a;color:#fff;font-size:12px;padding:6px 0;">
+        <div style="max-width:1280px;margin:0 auto;padding:0 12px;display:flex;justify-content:space-between;align-items:center;">
+            <span>⭐ <span style="color:#4ade80;font-weight:600;">Peste 20 ani de experiență</span></span>
+            <a href="tel:0752288400" style="display:flex;align-items:center;gap:4px;font-weight:600;color:#4ade80;">📞 Sună acum</a>
+        </div>
+    </div>
+    <div id="navBg" style="transition:all 0.3s;">
+        <div style="max-width:1280px;margin:0 auto;padding:0 12px;display:flex;justify-content:space-between;align-items:center;height:64px;" class="sm:px-6">
+            <a href="../">
+                <img src="https://eu.chat-img.sintra.ai/32c1b29c-0c86-4833-a031-e7c45e21a11e/983d52bb-2eb6-42f1-bed4-f94d769bb634/Logo_CSSI.png" alt="CSSI Logo" id="logoImg" style="height:56px;width:auto;transition:all 0.3s;filter:brightness(0) invert(1) drop-shadow(0 0 1px rgba(255,255,255,0.8));">
+            </a>
+            <nav class="hidden md:flex" style="align-items:center;gap:4px;">
+                <a href="../" id="navLink1" style="padding:6px 12px;font-size:14px;font-weight:500;color:#fff;transition:all 0.2s;border-radius:8px;" onmouseover="this.style.color='#f87171'" onmouseout="this.style.color=navTextColor">🏠 Acasă</a>
+                <div class="dropdown" style="position:relative;">
+                    <button id="navLink2" style="padding:6px 12px;font-size:14px;font-weight:500;color:#fff;transition:all 0.2s;border-radius:8px;background:none;border:none;cursor:pointer;display:flex;align-items:center;font-family:inherit;">
+                        🛠️ Servicii
+                        <svg style="margin-left:4px;width:16px;height:16px;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+                    </button>
+                    <div class="dropdown-menu dropdown-scroll" style="position:absolute;top:100%;left:0;width:280px;background:#fff;box-shadow:0 10px 15px -3px rgba(0,0,0,0.1);border-radius:12px;padding:8px;border:1px solid #f1f5f9;max-height:80vh;overflow-y:auto;z-index:100;">
+                        <a href="../detectie-incendiu-isu" style="display:block;padding:10px 16px;font-size:13px;color:#334155;border-radius:8px;" onmouseover="this.style.background='#fef2f2';this.style.color='#dc2626'" onmouseout="this.style.background='';this.style.color='#334155'">🔥 Detecție Incendiu ISU</a>
+                        <a href="../camere-supraveghere" style="display:block;padding:10px 16px;font-size:13px;color:#334155;border-radius:8px;" onmouseover="this.style.background='#fef2f2';this.style.color='#dc2626'" onmouseout="this.style.background='';this.style.color='#334155'">📹 Camere Supraveghere</a>
+                        <a href="../alarma-antiefractie" style="display:block;padding:10px 16px;font-size:13px;color:#334155;border-radius:8px;" onmouseover="this.style.background='#fef2f2';this.style.color='#dc2626'" onmouseout="this.style.background='';this.style.color='#334155'">🚨 Alarmă Antiefracție</a>
+                        <a href="../control-acces" style="display:block;padding:10px 16px;font-size:13px;color:#334155;border-radius:8px;" onmouseover="this.style.background='#fef2f2';this.style.color='#dc2626'" onmouseout="this.style.background='';this.style.color='#334155'">🚪 Control Acces</a>
+                        <a href="../pontaj-electronic" style="display:block;padding:10px 16px;font-size:13px;color:#334155;border-radius:8px;" onmouseover="this.style.background='#fef2f2';this.style.color='#dc2626'" onmouseout="this.style.background='';this.style.color='#334155'">⏱️ Pontaj Electronic</a>
+                        <a href="../bariere-auto" style="display:block;padding:10px 16px;font-size:13px;color:#334155;border-radius:8px;" onmouseover="this.style.background='#fef2f2';this.style.color='#dc2626'" onmouseout="this.style.background='';this.style.color='#334155'">🚧 Bariere Auto</a>
+                        <a href="../interfoane-videointerfoane" style="display:block;padding:10px 16px;font-size:13px;color:#334155;border-radius:8px;" onmouseover="this.style.background='#fef2f2';this.style.color='#dc2626'" onmouseout="this.style.background='';this.style.color='#334155'">🔔 Interfoane &amp; Videointerfoane</a>
+                        <a href="../sonorizare" style="display:block;padding:10px 16px;font-size:13px;color:#334155;border-radius:8px;" onmouseover="this.style.background='#fef2f2';this.style.color='#dc2626'" onmouseout="this.style.background='';this.style.color='#334155'">🔊 Sonorizare</a>
+                        <a href="../automatizari-porti" style="display:block;padding:10px 16px;font-size:13px;color:#334155;border-radius:8px;" onmouseover="this.style.background='#fef2f2';this.style.color='#dc2626'" onmouseout="this.style.background='';this.style.color='#334155'">🚗 Automatizări Porți</a>
+                        <a href="../usi-garaj" style="display:block;padding:10px 16px;font-size:13px;color:#334155;border-radius:8px;" onmouseover="this.style.background='#fef2f2';this.style.color='#dc2626'" onmouseout="this.style.background='';this.style.color='#334155'">🏠 Uși Garaj</a>
+                        <a href="../aer-conditionat" style="display:block;padding:10px 16px;font-size:13px;color:#334155;border-radius:8px;" onmouseover="this.style.background='#fef2f2';this.style.color='#dc2626'" onmouseout="this.style.background='';this.style.color='#334155'">❄️ Aer Condiționat</a>
+                        <a href="../ventilatie" style="display:block;padding:10px 16px;font-size:13px;color:#334155;border-radius:8px;" onmouseover="this.style.background='#fef2f2';this.style.color='#dc2626'" onmouseout="this.style.background='';this.style.color='#334155'">💨 Ventilație</a>
+                        <a href="../instalatii-electrice" style="display:block;padding:10px 16px;font-size:13px;color:#334155;border-radius:8px;" onmouseover="this.style.background='#fef2f2';this.style.color='#dc2626'" onmouseout="this.style.background='';this.style.color='#334155'">⚡ Instalații Electrice</a>
+                        <a href="../instalatii-termice-sanitare" style="display:block;padding:10px 16px;font-size:13px;color:#334155;border-radius:8px;" onmouseover="this.style.background='#fef2f2';this.style.color='#dc2626'" onmouseout="this.style.background='';this.style.color='#334155'">🔧 Instalații Termice &amp; Sanitare</a>
+                    </div>
+                </div>
+                <a href="../despre-noi" id="navLink3" style="padding:6px 12px;font-size:14px;font-weight:500;color:#fff;transition:all 0.2s;border-radius:8px;" onmouseover="this.style.color='#f87171'" onmouseout="this.style.color=navTextColor">ℹ️ Despre Noi</a>
+                <a href="../portofoliu" id="navLink4" style="padding:6px 12px;font-size:14px;font-weight:500;color:#fff;transition:all 0.2s;border-radius:8px;" onmouseover="this.style.color='#f87171'" onmouseout="this.style.color=navTextColor">📁 Portofoliu</a>
+                <a href="/blog/" style="padding:6px 12px;font-size:14px;font-weight:500;color:#fff;transition:all 0.2s;border-radius:8px;" id="navLinkBlog" onmouseover="this.style.color='#f87171'" onmouseout="this.style.color=navTextColor">📝 Blog</a>
+                <a href="../contact" id="navLink5" style="padding:6px 12px;font-size:14px;font-weight:500;color:#fff;transition:all 0.2s;border-radius:8px;" onmouseover="this.style.color='#f87171'" onmouseout="this.style.color=navTextColor">📍 Contact</a>
+            </nav>
+            <div class="hidden lg:flex" style="align-items:center;gap:12px;">
+                <a href="tel:0752288400" id="phoneLink" style="display:flex;align-items:center;font-size:14px;font-weight:500;color:#fff;transition:all 0.2s;">
+                    <svg style="width:16px;height:16px;margin-right:6px;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/></svg>
+                    0752 288 400
+                </a>
+                <a href="../contact" style="background:linear-gradient(to right,#dc2626,#b91c1c);color:#fff;padding:8px 20px;border-radius:8px;font-size:14px;font-weight:600;box-shadow:0 4px 6px -1px rgba(0,0,0,0.1);transition:all 0.2s;" onmouseover="this.style.background='linear-gradient(to right,#b91c1c,#991b1b)'" onmouseout="this.style.background='linear-gradient(to right,#dc2626,#b91c1c)'">Cere Ofertă</a>
+            </div>
+            <div class="md:hidden" style="display:flex;align-items:center;gap:8px;">
+                <button onclick="toggleMobileMenu()" id="menuBtn" class="animate-subtle-pulse" style="padding:4px;border-radius:6px;border:none;cursor:pointer;background:linear-gradient(to right,#ef4444,#dc2626);color:#fff;">
+                    <svg id="menuIcon" style="width:20px;height:20px;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
+                    <svg id="closeIcon" style="width:20px;height:20px;display:none;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+                </button>
+            </div>
+        </div>
+        <div id="mobileMenu" style="background:#fff;border-radius:16px;box-shadow:0 20px 25px -5px rgba(0,0,0,0.1);margin:8px 12px;padding:8px;max-height:80vh;overflow-y:auto;">
+            <nav style="display:flex;flex-direction:column;gap:4px;">
+                <a href="../" style="padding:10px 16px;font-size:16px;font-weight:500;color:#334155;border-radius:8px;">🏠 Acasă</a>
+                <button onclick="toggleServicesSubmenu()" style="padding:10px 16px;font-size:16px;font-weight:500;color:#334155;border-radius:8px;background:none;border:none;cursor:pointer;display:flex;justify-content:space-between;align-items:center;width:100%;font-family:inherit;text-align:left;">
+                    🛠️ Servicii
+                    <svg id="servicesArrow" style="width:16px;height:16px;transition:transform 0.2s;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+                </button>
+                <div id="servicesSubmenu" style="padding-left:16px;overflow-y:auto;">
+                    <a href="../detectie-incendiu-isu" onclick="closeMobile()" style="display:block;padding:8px 16px;font-size:14px;color:#475569;border-radius:8px;">🔥 Detecție Incendiu ISU</a>
+                    <a href="../camere-supraveghere" onclick="closeMobile()" style="display:block;padding:8px 16px;font-size:14px;color:#475569;border-radius:8px;">📹 Camere Supraveghere</a>
+                    <a href="../alarma-antiefractie" onclick="closeMobile()" style="display:block;padding:8px 16px;font-size:14px;color:#475569;border-radius:8px;">🚨 Alarmă Antiefracție</a>
+                    <a href="../control-acces" onclick="closeMobile()" style="display:block;padding:8px 16px;font-size:14px;color:#475569;border-radius:8px;">🚪 Control Acces</a>
+                    <a href="../pontaj-electronic" onclick="closeMobile()" style="display:block;padding:8px 16px;font-size:14px;color:#475569;border-radius:8px;">⏱️ Pontaj Electronic</a>
+                    <a href="../bariere-auto" onclick="closeMobile()" style="display:block;padding:8px 16px;font-size:14px;color:#475569;border-radius:8px;">🚧 Bariere Auto</a>
+                    <a href="../interfoane-videointerfoane" onclick="closeMobile()" style="display:block;padding:8px 16px;font-size:14px;color:#475569;border-radius:8px;">🔔 Interfoane &amp; Videointerfoane</a>
+                    <a href="../sonorizare" onclick="closeMobile()" style="display:block;padding:8px 16px;font-size:14px;color:#475569;border-radius:8px;">🔊 Sonorizare</a>
+                    <a href="../automatizari-porti" onclick="closeMobile()" style="display:block;padding:8px 16px;font-size:14px;color:#475569;border-radius:8px;">🚗 Automatizări Porți</a>
+                    <a href="../usi-garaj" onclick="closeMobile()" style="display:block;padding:8px 16px;font-size:14px;color:#475569;border-radius:8px;">🏠 Uși Garaj</a>
+                    <a href="../aer-conditionat" onclick="closeMobile()" style="display:block;padding:8px 16px;font-size:14px;color:#475569;border-radius:8px;">❄️ Aer Condiționat</a>
+                    <a href="../ventilatie" onclick="closeMobile()" style="display:block;padding:8px 16px;font-size:14px;color:#475569;border-radius:8px;">💨 Ventilație</a>
+                    <a href="../instalatii-electrice" onclick="closeMobile()" style="display:block;padding:8px 16px;font-size:14px;color:#475569;border-radius:8px;">⚡ Instalații Electrice</a>
+                    <a href="../instalatii-termice-sanitare" onclick="closeMobile()" style="display:block;padding:8px 16px;font-size:14px;color:#475569;border-radius:8px;">🔧 Instalații Termice &amp; Sanitare</a>
+                </div>
+                <a href="../despre-noi" onclick="closeMobile()" style="padding:10px 16px;font-size:16px;font-weight:500;color:#334155;border-radius:8px;">ℹ️ Despre Noi</a>
+                <a href="../portofoliu" onclick="closeMobile()" style="padding:10px 16px;font-size:16px;font-weight:500;color:#334155;border-radius:8px;">📁 Portofoliu</a>
+                <a href="/blog/" onclick="closeMobile()" style="padding:10px 16px;font-size:16px;font-weight:500;color:#334155;border-radius:8px;">📝 Blog</a>
+                <a href="../contact" onclick="closeMobile()" style="padding:10px 16px;font-size:16px;font-weight:500;color:#334155;border-radius:8px;">📍 Contact</a>
+                <div style="padding:12px 8px;">
+                    <a href="../contact" onclick="closeMobile()" style="display:block;text-align:center;background:linear-gradient(to right,#dc2626,#b91c1c);color:#fff;padding:10px 16px;border-radius:12px;font-weight:600;">Cere Ofertă</a>
+                </div>
+            </nav>
+        </div>
+    </div>
+</header>
+
+
+  
+  
+  <nav class="breadcrumb" aria-label="Breadcrumb">
+    <div class="inner">
+      <a href="/">Acasă</a><span class="sep">›</span>
+      <a href="/blog/">Blog</a><span class="sep">›</span>
+      <span style="color:rgba(255,255,255,.9)">Cum securizezi rețeaua unui sistem CCTV IP: parole | CSSI</span>
+    </div>
+  </nav>
+
+  <header class="hero">
+    <div class="inner">
+      <div class="hero-content">
+      <div class="hero-badge">📹 Ghid CSSI · 2026</div>
+      <h1>Cum securizezi rețeaua unui sistem CCTV IP: parole, VLAN și protecție</h1>
+      <p class="lead">Camerele IP sunt, în esență, calculatoare conectate la rețea. Asta le face puternice — le vezi de pe telefon, le integrezi cu alarma, le ții într-o platformă unică — dar le face și o țintă, dacă rămân prost configurate. Cea mai frecventă greșeală nu e una sofisticată: e camera lăsată cu parola din fabrică și expusă direct la internet. Vestea bună e că protejarea unui sistem de supraveghere ține de igienă, nu de magie. Acest ghid este strict defensiv: îți arată ce setări corecte fac diferența între un sistem sigur și o ușă deschisă. Nu conține și nu va conține tehnici de atac.</p>
+      <div class="hero-meta">
+        <span>✍ CSSI Brașov</span><span class="dot">·</span>
+        <span>📅 27 Sep 2026</span><span class="dot">·</span>
+        <span>⏱ 10 min lectură</span>
+      </div>
+      <div class="topic-pills">
+        <span class="pill pill-blue">🛡 Securitate firme</span>
+        <span class="pill pill-green">📍 Brașov & împrejurimi</span>
+        <span class="pill pill-amber">✅ Ghid practic</span>
+      </div>
+    </div>
+      <div class="hero-img-wrap"><img src="/images/blog/securizare-retea-cctv-cover.jpg" alt="Cum securizezi rețeaua unui sistem CCTV IP: parole | CSSI"></div>
+    </div>
+  </header>
+
+  <div class="article-wrap">
+    <main class="article-body" id="articol">
+<h2 id="raspunsul-scurt">Răspunsul scurt</h2>
+<p>Un sistem CCTV IP se securizează pe <strong>șase reguli simple</strong> care lucrează împreună: <strong>schimbi toate parolele din fabrică</strong> cu parole puternice și unice; <strong>nu expui camerele direct la internet</strong> (folosești VPN sau P2P securizat al producătorului, nu port forwarding); <strong>separi rețeaua</strong> printr-un VLAN dedicat camerelor, izolat de rețeaua firmei; <strong>actualizezi firmware-ul</strong> când apar update-uri de securitate; <strong>alegi echipamente de la producători serioși</strong> care oferă suport și actualizări ani la rând; și <strong>creezi conturi cu drepturi limitate</strong>, nu un singur „admin" pentru toți. Esența: un sistem de supraveghere e cât de sigur îl configurezi, iar aceste setări le face un instalator profesionist din start.</p>
+
+
+<h2 id="de-ce-un-sistem-cctv-prost-configurat-e-">De ce un sistem CCTV prost configurat e o ușă deschisă</h2>
+<p>O cameră de supraveghere modernă nu mai e un simplu obiectiv legat cu un cablu coaxial; e un dispozitiv de rețea cu propriul software, propria parolă și propria conexiune. Asta înseamnă că, exact ca un calculator, poate fi protejat corect sau lăsat vulnerabil. Cele două greșeli care apar cel mai des sunt și cele mai ușor de evitat: <strong>parola din fabrică nemodificată</strong> și <strong>accesul din internet neprotejat</strong>. O cameră lăsată cu utilizatorul și parola implicite e practic deschisă, pentru că acele combinații sunt publice. Iar o cameră expusă direct la internet, ca să o poți vedea de pe telefon „repede", devine vizibilă pentru oricine, nu doar pentru tine. Niciuna dintre aceste situații nu cere un atacator priceput — cer doar un sistem configurat în grabă. Diferența dintre o supraveghere care chiar protejează și una care e o vulnerabilitate stă, aproape mereu, în configurarea de la instalare.</p>
+
+      <div class="cta-banner" style="margin:32px 0">
+        <div>
+          <h3>Vrei o evaluare pentru firma ta?</h3>
+          <p>Evaluarea la fața locului e gratuită în Brașov și împrejurimi — vii cu nevoia, pleci cu o soluție și un preț defalcat.</p>
+        </div>
+        <div class="cta-buttons">
+          <a href="/camere-supraveghere-brasov" class="btn btn-secondary">📍 Camere supraveghere în Brașov</a>
+          <a href="/contact" class="btn btn-secondary">📩 Cere ofertă</a>
+          <a href="tel:0752288400" class="btn btn-primary">📞 0752 288 400</a>
+          <a target="_blank" rel="noopener" href="https://wa.me/40752288400" class="btn btn-secondary">💬 WhatsApp</a>
+        </div>
+      </div>
+<h2 id="regula-nr-1-parole-schimbate-si-parole-p">Regula nr. 1: parole schimbate și parole puternice, unice</h2>
+<p>Prima și cea mai importantă măsură e banală și tocmai de aceea e des ignorată: <strong>schimbi toate parolele din fabrică</strong>. Fiecare cameră, NVR-ul, interfața de administrare — totul primește o parolă nouă, <strong>puternică și unică</strong>. „Unică" e cuvântul cheie: nu aceeași parolă peste tot, nu parola rețelei firmei reutilizată, nu o variație ușor de ghicit. O parolă bună e lungă, combină tipuri de caractere și nu e legată de numele firmei sau de o dată. Pentru un sistem cu multe dispozitive, se ține o evidență sigură a credențialelor, nu pe un bilet lipit de monitor. Aceasta e fundația întregii securități: dacă parolele sunt slabe, restul măsurilor contează mult mai puțin.</p>
+
+<h2 id="de-ce-camerele-nu-trebuie-expuse-direct-">De ce camerele nu trebuie expuse direct la internet</h2>
+<p>Mulți vor să-și vadă camerele de pe telefon și aleg cea mai rapidă metodă: „deschiderea unui port" către cameră sau NVR (port forwarding). Problema e că asta face dispozitivul <strong>vizibil public pe internet</strong> — nu doar pentru tine. Soluția corectă oferă același rezultat fără riscul: un <strong>VPN</strong> către rețeaua ta (intri securizat în propria rețea și de acolo vezi camerele) sau <strong>serviciul P2P securizat al producătorului</strong>, gândit exact pentru acces de la distanță fără expunere directă. Așa păstrezi vizibilitatea de oriunde — seara, în weekend, din altă localitate — dar dispozitivele rămân ascunse de internetul deschis. Tot acest principiu îl aplicăm și la <a href="https://cssi.ro/blog/smart-home-securitate-control-telefon">controlul securității din aplicația de telefon</a>: confort, dar pe un canal securizat.</p>
+
+
+<h2 id="separarea-retelei-un-vlan-dedicat-camere">Separarea rețelei: un VLAN dedicat camerelor</h2>
+<p>A treia măsură ține de arhitectură: <strong>camerele nu trebuie să stea în aceeași rețea cu calculatoarele firmei</strong>. Le punem într-un <strong>VLAN dedicat</strong> — o rețea separată logic, izolată de zona de birou unde se află e-mailul, contabilitatea și documentele. Avantajul e dublu: dacă un dispozitiv de supraveghere ar avea o problemă, ea rămâne izolată și nu trece în rețeaua firmei; și invers, o problemă din zona de birou nu ajunge la sistemul de camere. Separarea aceasta se gândește cel mai bine din proiect, împreună cu cablarea structurată și rețeaua de date a firmei. E o măsură care nu complică deloc utilizarea de zi cu zi, dar care ridică semnificativ nivelul de protecție.</p>
+
+<h2 id="firmware-actualizat-si-echipamente-de-la">Firmware actualizat și echipamente de la producători serioși</h2>
+<p>Software-ul camerelor, ca orice software, primește din când în când <strong>actualizări de securitate</strong> care închid vulnerabilități descoperite între timp. Un sistem lăsat cu firmware-ul de acum câțiva ani rămâne expus unor probleme deja rezolvate de producător. De aceea, la sistemele aflate în mentenanță cu noi, verificăm și aplicăm actualizările relevante periodic. Aici intervine și <strong>alegerea echipamentelor</strong>: producătorii serioși scot update-uri și oferă suport ani la rând, în timp ce echipamentele foarte ieftine, fără nume, deseori nu primesc niciodată o actualizare. E exact diferența pe care o explicăm în ghidul despre camerele ieftine online vs. un sistem profesional: ce pare o economie azi devine o vulnerabilitate peste câțiva ani. La fel contează și alegerea tehnologiei potrivite din start — vezi comparația dintre camerele Wi-Fi și cele PoE, unde fiabilitatea conexiunii e parte din ecuația de securitate.</p>
+
+<h2 id="cine-vede-inregistrarile-conturi-cu-drep">Cine vede înregistrările: conturi cu drepturi limitate</h2>
+<p>Ultima regulă ține de oameni, nu de echipamente. Un sistem bine făcut nu folosește <strong>un singur cont „admin" pentru toată lumea</strong>. În schimb, creăm conturi cu <strong>drepturi limitate, în funcție de rol</strong>: cine doar vede imaginea live, cine poate exporta înregistrări, cine administrează sistemul. Logica e aceeași ca la <a href="https://cssi.ro/blog/control-acces-firma-ghid-alegere-2026">controlul accesului fizic al firmei</a>: fiecare are exact accesul de care are nevoie, nici mai mult, nici mai puțin. Avantajul e dublu: o parolă compromisă nu mai deschide tot sistemul, iar evidența accesului îți spune cine a făcut ce. Iar pentru că vorbim de imagini cu persoane, configurarea respectă și principiile din ghidul despre <a href="https://cssi.ro/blog/camere-supraveghere-gdpr-ghid-complet">GDPR și camerele de supraveghere</a>: durată clară de păstrare, acces limitat, scop legitim.</p>
+
+<h2 id="de-ce-un-instalator-profesionist-configu">De ce un instalator profesionist configurează asta din start</h2>
+<p>Toate cele șase reguli de mai sus pot fi bifate la instalare, fără cost suplimentar semnificativ — dacă sunt făcute din start. Problema apare când un sistem e montat „să meargă repede": camerele funcționează, imaginea se vede, dar parolele au rămas implicite, accesul e expus la internet și totul stă în aceeași rețea cu biroul. Aparent e gata; în realitate e o vulnerabilitate. Un instalator profesionist tratează securizarea ca parte din montaj, nu ca un extra opțional. Iar dacă ai deja un sistem instalat prost, vestea bună e că se igienizează fără să schimbi tot: o evaluare urmată de remedierea parolelor, a expunerii, a firmware-ului și a conturilor schimbă mult nivelul de protecție, cu efort mic.</p>
+
+<h2 id="de-unde-sa-incepi">De unde să începi</h2>
+<p><strong>Pasul 1:</strong> o evaluare a sistemului existent — parole, expunere la internet, firmware, conturi, segmentare. <strong>Pasul 2:</strong> schimbarea tuturor parolelor din fabrică cu parole puternice și unice. <strong>Pasul 3:</strong> înlocuirea accesului expus cu VPN sau P2P securizat. <strong>Pasul 4:</strong> separarea rețelei prin VLAN dedicat camerelor. <strong>Pasul 5:</strong> actualizarea firmware-ului și trecerea sistemului în mentenanță periodică. <strong>Pasul 6:</strong> conturi cu drepturi limitate, în funcție de rol. La final ai un sistem de supraveghere care chiar protejează, nu unul care e el însuși o problemă.</p>
+
+<h2 id="cum-ajung-camerele-expuse-la-internet-fa">Cum ajung camerele expuse la internet, fără să-și dea seama nimeni</h2>
+<p>Cele mai multe expuneri accidentale nu sunt rezultatul unei decizii conștiente, ci al unei funcții de „conveniență" lăsate pornită: <strong>UPnP</strong> (Universal Plug and Play) pe router. Când e activ, un dispozitiv din rețea — o cameră, un NVR — poate cere singur routerului să-i deschidă un port către internet, iar routerul acceptă automat, fără să întrebe pe nimeni. Rezultatul: camera devine vizibilă din exterior fără ca instalatorul sau proprietarul să fi bifat vreodată „expune la internet". Dispozitivele cu configurație implicită, lăsate așa, ajung să fie găsite nu pentru că cineva le-a vizat anume, ci pentru că sunt pur și simplu deschise — la fel cum o ușă lăsată descuiată e găsită mai devreme sau mai târziu, indiferent cine trece pe stradă.</p>
+<p>De aceea, una dintre primele verificări la o securizare corectă e simplă: <strong>dezactivarea UPnP pe router</strong> și confirmarea că niciun port al camerelor sau al NVR-ului nu mai răspunde din exterior. Dacă vrei acces de la distanță, îl faci prin VPN sau prin serviciul P2P securizat al producătorului — nu prin porturi deschise manual „pentru un test rapid" și uitate acolo luni de zile. Acest din urmă scenariu e mult mai frecvent decât pare: un port deschis temporar, fără o dată de expirare sau o revizuire ulterioară, devine o gaură permanentă în securitatea rețelei.</p>
+
+<div class="box box-warn"><div class="box-title">⚠ Greșeli frecvente la securizarea rețelei unui sistem CCTV</div><p><strong>1. Parola din fabrică nemodificată</strong> — la cameră, la NVR sau la interfața de administrare, cea mai des întâlnită breșă. <strong>2. Port forwarding „ca să meargă rapid de pe telefon"</strong> — expune direct dispozitivul la internet, în loc de VPN sau P2P securizat. <strong>3. UPnP activ pe router</strong> — permite deschiderea automată de porturi, fără știrea nimănui. <strong>4. Camerele în aceeași rețea cu birourile</strong> — o problemă la un dispozitiv de supraveghere ajunge direct la calculatoarele firmei, și invers. <strong>5. Firmware neactualizat ani la rând</strong> — vulnerabilități deja rezolvate de producător rămân deschise pe echipamentul tău. <strong>6. Un singur cont „admin" pentru toată lumea</strong> — fără evidență de acces și fără posibilitate de a izola o parolă compromisă.</p></div>
+
+<h2 id="ce-risti-daca-reteaua-camerelor-e-compro">Ce riști dacă rețeaua camerelor e compromisă</h2>
+<p>Nu vorbim doar despre „cineva se uită la imagini" — deși și asta e grav, mai ales pentru un spațiu privat. Riscurile practice sunt mai largi. Un NVR sau o cameră compromisă poate fi folosită ca punct de plecare pentru alte probleme: consum de internet și de resurse fără știrea firmei, sau, dacă rețeaua camerelor nu e separată de restul, o cale de acces mai departe spre calculatoarele de birou, contabilitate sau e-mail. Înregistrările pot fi șterse sau devin inaccesibile exact atunci când ai nevoie de ele — de exemplu, ca dovadă după un incident — ceea ce anulează scopul pentru care ai instalat sistemul. Iar pentru un sistem care captează imagini cu persoane, un acces neautorizat înseamnă și o problemă de conformitate, nu doar una tehnică.</p>
+<p>Important de reținut: niciunul dintre aceste scenarii nu cere un atac sofisticat. Toate pornesc, aproape întotdeauna, de la exact cele două greșeli descrise mai sus: o parolă lăsată implicită și un dispozitiv expus direct la internet. Securizarea nu e despre a te apăra de un adversar genial, ci despre a nu lăsa ușile evidente deschise.</p>
+
+<h2 id="dezactivarea-porturilor-si-serviciilor-i">Dezactivarea porturilor și serviciilor inutile</h2>
+<p>Camerele și NVR-urile vin din fabrică cu multe servicii pornite „ca să meargă orice din prima", majoritatea nefolosite niciodată de un utilizator obișnuit: acces la linia de comandă prin protocoale vechi și nesecurizate, transfer de fișiere fără criptare, descoperire automată a dispozitivelor pe toată rețeaua, uneori acces cloud al producătorului activat implicit chiar dacă nu-l folosești niciodată. Fiecare serviciu pornit, chiar dacă nu-l folosești, e o cale suplimentară de acces care există și poate fi găsită. Regula practică pe care o aplicăm la instalare: rămân active <strong>doar</strong> serviciile de care ai nevoie efectiv — interfața securizată de administrare și protocolul folosit între cameră și NVR sau aplicație — tot restul se dezactivează din meniul de configurare al fiecărui dispozitiv.</p>
+
+<table class="compare-table">
+<thead><tr><th>Serviciu / setare</th><th>Recomandare</th><th>De ce contează</th></tr></thead>
+<tbody>
+<tr><td>Interfață de administrare criptată (HTTPS)</td><td class="yes">Păstrezi, activă</td><td>Singurul canal sigur pentru configurare și parole</td></tr>
+<tr><td>Interfață necriptată (HTTP simplu)</td><td>Dezactivezi dacă ai HTTPS</td><td>Traficul, inclusiv parola, circulă necriptat în rețea</td></tr>
+<tr><td>Acces la linia de comandă (protocoale vechi)</td><td>Dezactivezi</td><td>Rar necesar unui utilizator obișnuit, risc mare dacă rămâne activ</td></tr>
+<tr><td>Transfer de fișiere necriptat</td><td>Dezactivezi (dacă nu-l folosești)</td><td>Datele circulă în clar prin rețea</td></tr>
+<tr><td>UPnP pe router</td><td>Dezactivezi</td><td>Deschide porturi automat, fără vreun control al tău</td></tr>
+<tr><td>Acces cloud (P2P) al producătorului</td><td>Păstrezi doar dacă îl folosești, cu parolă proprie</td><td>Comod, dar tot o cale de acces — activat conștient, nu implicit</td></tr>
+<tr><td>Descoperire automată a dispozitivelor pe rețea</td><td>Limitezi la rețeaua camerelor</td><td>Nu trebuie vizibilă din rețeaua de birou</td></tr>
+</tbody>
+</table>
+
+<h2 id="accesul-la-nvr-parola-jurnalul-de-acces-">Accesul la NVR: parola, jurnalul de acces și backup-ul configurației</h2>
+<p>NVR-ul e „creierul" sistemului: acolo se strâng toate fluxurile video, acolo se administrează utilizatorii și tot acolo, dacă cineva ajunge, poate șterge înregistrări sau schimba parola și te poate bloca afară din propriul sistem. Pe lângă parola puternică, discutată la regula nr. 1, NVR-ul trebuie protejat și fizic: montat într-un rack sau dulap încuiat, nu pe un raft accesibil oricui trece prin birou sau depozit. Accesul fizic la NVR e o cale de compromitere la fel de reală ca cea prin rețea — cineva cu acces direct la aparat poate reseta parola din spatele carcasei, poate scoate un hard disk sau poate conecta direct un dispozitiv extern.</p>
+<p>Merită activat și <strong>jurnalul de autentificări</strong> (log-ul de intrări reușite și eșuate), ca să vezi dacă cineva a încercat repetat să intre pe cont propriu. Iar configurația sistemului — lista de camere, utilizatorii, setările de rețea — merită salvată periodic într-un backup separat, ca la o defecțiune, o resetare din greșeală sau o înlocuire de echipament să nu reconfigurezi totul de la zero. Diferențele dintre NVR, DVR și stocarea în cloud, inclusiv ce înseamnă fiecare variantă pentru siguranța datelor, sunt detaliate separat în <a href="https://cssi.ro/blog/nvr-vs-dvr-vs-cloud-stocare-camere-2026">ghidul NVR vs DVR vs cloud</a>.</p>
+
+<div class="box box-tip"><div class="box-title">✅ Checklist rapid de securizare a unui sistem CCTV IP</div><p>Ai schimbat <strong>toate</strong> parolele din fabrică (camere, NVR, interfață de administrare), cu parole unice? Accesul de la distanță se face prin <strong>VPN sau P2P securizat</strong>, nu prin porturi deschise pe router? Camerele și NVR-ul stau într-un <strong>VLAN separat</strong> de calculatoarele de birou? UPnP e <strong>dezactivat</strong> pe router și ai verificat că niciun port nu răspunde din exterior? Firmware-ul e <strong>actualizat</strong> și ai un plan de verificare periodică? Fiecare utilizator are un <strong>cont propriu, cu drepturi limitate</strong> la ce are nevoie? Dacă răspunzi „da" la toate, sistemul e configurat corect. Dacă nu ești sigur la vreun punct, exact pentru asta e evaluarea gratuită.</p></div>
+
+<h2 id="camerele-expuse-public-un-risc-real-nu-t">Camerele expuse public: un risc real, nu teoretic</h2>
+<div class="box box-danger"><div class="box-title">🚨 Dispozitivele cu configurație implicită, expuse la internet, sunt găsite automat</div><p>Nu e nevoie ca cineva să „țintească" firma ta. Dispozitivele conectate la internet cu parole implicite și porturi deschise sunt descoperite prin scanări automate, la scară largă, indiferent de mărimea firmei sau de cât de „interesantă" pare ca țintă. Motivul pentru care insistăm pe cele șase reguli din acest ghid nu e teoretic: sunt exact măsurile care scot un sistem de pe lista dispozitivelor ușor de găsit.</p></div>
+<p>De aceea tratăm securizarea ca parte din instalare, nu ca „ceva de făcut mai târziu, dacă rămâne timp". Diferența de cost între un montaj corect făcut din start și o corectare ulterioară e de regulă mică; diferența de risc, între timp, poate fi mare — mai ales dacă sistemul rămâne luni sau ani cu o configurație implicită.</p>
+
+<h2 id="gdpr-si-camerele-de-supraveghere-partea-">GDPR și camerele de supraveghere: partea care ține de rețea</h2>
+<p>Securizarea rețelei nu e doar o problemă tehnică, e și una de conformitate. Camerele de supraveghere captează imagini cu persoane, deci intră sub incidența <strong>GDPR</strong>. Iar partea de rețea contribuie direct la conformitate: acces limitat la înregistrări prin conturi cu drepturi separate (regula discutată mai sus), protecție împotriva accesului neautorizat prin parole puternice, VPN și VLAN, plus o perioadă clară de păstrare a înregistrărilor — nu „ținem tot la nesfârșit, ca să fim acoperiți". O cameră lăsată expusă la internet, accesibilă practic oricui, e simultan o problemă de securitate și o breșă în obligația de a proteja datele persoanelor filmate.</p>
+<p>Atenție specială la două cazuri, cu reguli mai stricte decât imaginea video obișnuită: <strong>înregistrarea audio</strong> (are limite mult mai stricte și, de regulă, nu se activează fără un motiv legitim clar și documentat) și funcțiile de <strong>recunoaștere facială sau biometrie</strong>, care nu se pornesc „ca să fie", ci doar dacă există un temei legal clar pentru folosirea lor. Tratăm subiectul GDPR pe larg, cu exemple și pași concreți, în <a href="https://cssi.ro/blog/camere-supraveghere-gdpr-ghid-complet">ghidul GDPR și camere de supraveghere</a>; aici ne oprim la partea de rețea și acces, care e fundația practică a conformității — fără o rețea securizată, restul măsurilor GDPR stau pe un teren nesigur.</p>
+<div class="box box-info"><div class="box-title">ℹ Rețea securizată = jumătate din munca de conformitate GDPR</div><p>Conturi cu drepturi limitate, acces de la distanță fără expunere directă și o rețea separată acoperă exact partea tehnică pe care GDPR o cere pentru protecția datelor din imagini: acces limitat, evidență și protecție împotriva accesului neautorizat. Restul (informare, perioadă de păstrare, temei legal) e completat organizatoric, nu tehnic.</p></div>
+
+<h2 id="costuri-orientative-2026">Costuri orientative 2026</h2>
+<p>Prețul unei securizări depinde de câte dispozitive sunt implicate, de cât de „deschis" e sistemul actual și de câtă infrastructură de rețea trebuie schimbată sau adăugată. Ca reper orientativ, pentru un sistem de dimensiune medie (10-20 camere și un NVR) într-o firmă din Brașov, în 2026:</p>
+
+<table class="compare-table">
+<thead><tr><th>Componentă</th><th>Interval orientativ</th><th>Observații</th></tr></thead>
+<tbody>
+<tr><td>Evaluare de securitate a sistemului existent</td><td>de la 300 RON</td><td>Verificare parole, expunere, firmware, conturi, segmentare</td></tr>
+<tr><td>Schimbarea parolelor și configurarea conturilor cu drepturi</td><td>200–500 RON</td><td>Depinde de numărul de dispozitive și utilizatori</td></tr>
+<tr><td>Configurare acces de la distanță (VPN sau P2P securizat)</td><td>300–800 RON</td><td>Variază după infrastructura de rețea existentă</td></tr>
+<tr><td>Switch cu suport VLAN, dacă lipsește</td><td>de la 400 RON</td><td>Necesar pentru separarea rețelei camerelor de rețeaua de birou</td></tr>
+<tr><td>Configurare VLAN dedicat camerelor</td><td>300–700 RON</td><td>Manoperă de configurare, fără echipament suplimentar dacă switch-ul suportă deja VLAN</td></tr>
+<tr><td>Actualizare firmware pe întreg sistemul</td><td>de la 200 RON</td><td>Inclus adesea în evaluarea inițială</td></tr>
+</tbody>
+</table>
+
+<p>Practic, o igienizare completă a unui sistem existent de dimensiune medie se încadrează orientativ în <strong>1.500–3.500 RON</strong>, fără echipament nou major. Ce mută prețul: <strong>numărul de camere și dispozitive</strong> (mai multe conturi și configurări individuale), <strong>infrastructura de rețea existentă</strong> (dacă switch-urile suportă deja VLAN sau trebuie înlocuite), <strong>complexitatea accesului de la distanță dorit</strong> (un VPN simplu pentru un singur utilizator, sau acces pentru mai multe persoane cu drepturi diferite) și <strong>starea inițială a sistemului</strong> (o instalare recentă, doar cu parole implicite, costă mult mai puțin de corectat decât un sistem vechi, cu configurații suprapuse de-a lungul anilor de mai mulți furnizori). La un sistem nou, aceste măsuri sunt incluse din start în costul instalării, nu se adaugă separat — de aceea insistăm ca securizarea să facă parte din oferta inițială, nu dintr-o intervenție ulterioară.</p>
+
+<h2 id="cum-arata-implementarea-cu-cssi">Cum arată implementarea cu CSSI</h2>
+<p>Fie că securizăm un sistem nou-instalat sau corectăm unul existent, pașii sunt aceiași: <strong>1. Evaluare la fața locului</strong> — verificăm parolele, expunerea la internet, firmware-ul, conturile și modul în care e organizată rețeaua. Îți spunem exact ce e în regulă și ce trebuie schimbat. <strong>2. Ofertă defalcată</strong> — fiecare măsură (parole, VPN, VLAN, firmware, conturi) cu costul ei, ca să vezi clar pe ce se duce bugetul. <strong>3. Implementare</strong> — schimbăm parolele, configurăm accesul de la distanță securizat, separăm rețeaua camerelor pe VLAN dedicat și actualizăm firmware-ul. <strong>4. Configurarea conturilor</strong> — creăm utilizatori cu drepturi potrivite fiecărui rol din firmă. <strong>5. Test de verificare</strong> — confirmăm, dintr-un instrument extern, că niciun dispozitiv nu mai răspunde din internet fără protecție, și testăm accesul de la distanță securizat. <strong>6. Documentație și predare</strong> — primești în scris ce a fost configurat, ca informația să rămână la firmă, nu doar în capul instalatorului.</p>
+<p>Ce ne diferențiază: nu tratăm securizarea ca pe un „add-on" scump adăugat după montaj, ci ca parte firească a unei instalări profesioniste — exact cum montajul electric corect nu e un extra, ci o condiție minimă. Dacă ai deja un sistem instalat de altcineva, evaluarea de securitate nu presupune să schimbi tot: de cele mai multe ori, corectarea celor șase reguli de bază pe echipamentul existent aduce cea mai mare parte din beneficiu, cu efort și cost reduse.</p>
+
+<h2 id="mentenanta-verificari-periodice-care-con">Mentenanța: verificări periodice care contează</h2>
+<p>Securizarea inițială nu e un „setează și uită". O dată la câteva luni (sau la fiecare vizită de mentenanță, dacă sistemul e sub contract cu noi), merită verificate: <strong>firmware-ul</strong> (au apărut actualizări de securitate?), <strong>lista de conturi active</strong> (a plecat cineva din firmă și mai are acces?), <strong>jurnalul de autentificări</strong> (apar încercări repetate, neobișnuite?) și, periodic, o <strong>verificare externă</strong> că niciun dispozitiv nu a ajuns, printr-o schimbare de configurare a routerului sau o resetare, expus la internet fără protecție. La firmele cu <a href="https://cssi.ro/blog/mentenanta-sisteme-securitate-de-ce-conteaza">mentenanță planificată a sistemelor de securitate</a>, aceste verificări intră firesc în vizitele periodice, alături de verificarea camerelor și a NVR-ului la nivel fizic. Un sistem verificat periodic rămâne la fel de sigur peste trei-patru ani ca în prima lună; unul lăsat neatins acumulează, în timp, exact vulnerabilitățile pe care le-am descris în acest ghid.</p>
+
+<h2 id="citeste-si">Citește și</h2>
+<ul>
+  <li><a href="https://cssi.ro/blog/camere-supraveghere-gdpr-ghid-complet">GDPR și camere de supraveghere: ghid complet</a> — ce trebuie respectat legal, dincolo de partea de rețea.</li>
+  <li><a href="https://cssi.ro/blog/nvr-vs-dvr-vs-cloud-stocare-camere-2026">NVR vs DVR vs stocare cloud</a> — ce variantă de stocare e mai potrivită și mai sigură pentru firma ta.</li>
+  <li><a href="https://cssi.ro/blog/hikvision-vs-dahua-comparatie-completa-2026">Hikvision vs Dahua: comparație completă</a> — de ce contează producătorul și suportul lui pe termen lung.</li>
+  <li><a href="https://cssi.ro/blog/mentenanta-sisteme-securitate-de-ce-conteaza">Mentenanța sistemelor de securitate: de ce contează</a> — verificările periodice care țin sistemul sigur, nu doar funcțional.</li>
+</ul>
+      <h2 id="faq">Întrebări frecvente</h2>
+      <div class="faq-wrap">
+        <div class="faq-item">
+          <button class="faq-q" onclick="toggleFaq(this)">De ce sunt periculoase parolele din fabrică la camere? <svg class="faq-chevron" width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg></button>
+          <div class="faq-a"><p>Pentru că sunt publice și previzibile: combinațiile implicite de utilizator și parolă pentru modelele uzuale se găsesc ușor și sunt încercate automat. O cameră lăsată cu parola din fabrică e practic deschisă. Primul lucru pe care îl facem la o instalare serioasă e schimbarea tuturor parolelor implicite cu parole puternice și unice, diferite de la un dispozitiv la altul și față de rețeaua firmei.</p></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q" onclick="toggleFaq(this)">Pot accesa camerele de pe telefon fără să le expun la internet? <svg class="faq-chevron" width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg></button>
+          <div class="faq-a"><p>Da, și așa și trebuie. În loc de port forwarding (care expune direct camerele la internet), folosești un acces securizat: VPN către rețeaua ta sau serviciul P2P securizat al producătorului. Așa vezi imaginile de oriunde, dar dispozitivele nu sunt vizibile public. Configurăm exact acest tip de acces, ca să ai vizibilitate fără să lași o ușă deschisă.</p></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q" onclick="toggleFaq(this)">Ce înseamnă VLAN dedicat pentru camere și de ce contează? <svg class="faq-chevron" width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg></button>
+          <div class="faq-a"><p>Înseamnă că punem camerele și NVR-ul într-o rețea separată, izolată de rețeaua de birou (calculatoare, e-mail, contabilitate). Dacă un dispozitiv e compromis, problema rămâne izolată și nu trece în rețeaua firmei, și invers. Pe partea de cablare structurată, separarea se gândește din proiect. E o măsură simplă care reduce mult riscul, fără să complice utilizarea de zi cu zi.</p></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q" onclick="toggleFaq(this)">Cât de des trebuie actualizat firmware-ul camerelor? <svg class="faq-chevron" width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg></button>
+          <div class="faq-a"><p>Ori de câte ori producătorul scoate o actualizare de securitate, plus o verificare periodică (de exemplu la mentenanță). Update-urile închid vulnerabilități descoperite între timp; un firmware vechi de ani de zile e un risc. La un sistem aflat în mentenanță cu noi, verificăm și aplicăm actualizările relevante, ca să nu rămână camerele în urmă.</p></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q" onclick="toggleFaq(this)">Toată lumea din firmă trebuie să aibă acces la înregistrări? <svg class="faq-chevron" width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg></button>
+          <div class="faq-a"><p>Nu. Creăm conturi cu drepturi limitate, în funcție de rol: cine doar vede live, cine poate exporta înregistrări, cine administrează sistemul. Un singur cont admin folosit de toată lumea e o practică proastă, pentru că nu mai știi cine a făcut ce și o singură parolă compromisă deschide tot. Drepturile separate, plus o evidență a accesului, țin sistemul sub control.</p></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q" onclick="toggleFaq(this)">Contează de la ce producător iau camerele, din punct de vedere al securității? <svg class="faq-chevron" width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg></button>
+          <div class="faq-a"><p>Da, foarte mult. Producătorii serioși scot actualizări de securitate ani la rând și oferă suport; echipamentele foarte ieftine, fără nume, deseori nu primesc niciun update și rămân vulnerabile. De aceea recomandăm echipamente de la producători cu suport real — diferența nu se vede în prima zi, ci peste câțiva ani, când un sistem mai e protejat, iar celălalt nu.</p></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q" onclick="toggleFaq(this)">Am deja camere instalate prost. Ce pot face acum? <svg class="faq-chevron" width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg></button>
+          <div class="faq-a"><p>Se poate corecta fără să schimbi tot. Venim, facem o evaluare a sistemului existent (parole, expunere la internet, firmware, conturi, segmentare) și remediem ce găsim: schimbăm parolele, închidem expunerea directă la internet, separăm rețeaua acolo unde se poate, actualizăm firmware-ul și refacem conturile. În multe cazuri, igienizarea unui sistem existent costă puțin și schimbă mult nivelul de protecție.</p></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q" onclick="toggleFaq(this)">Ce este un VLAN și îmi trebuie echipament special pentru el? <svg class="faq-chevron" width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg></button>
+          <div class="faq-a"><p>Un VLAN e o rețea separată logic, creată în interiorul aceleiași infrastructuri fizice — nu tragi cabluri suplimentare, ci configurezi switch-urile să țină traficul camerelor izolat de traficul calculatoarelor de birou. Ai nevoie de switch-uri care suportă VLAN-uri (majoritatea celor de nivel „managed", nu cele mai ieftine, de bază) și de o configurare corectă, făcută la instalare sau adăugată ulterior. Pentru un sistem existent, verificăm dacă switch-urile actuale suportă deja funcția, înainte de a recomanda înlocuirea lor.</p></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q" onclick="toggleFaq(this)">Cât costă securizarea rețelei unui sistem CCTV deja instalat? <svg class="faq-chevron" width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg></button>
+          <div class="faq-a"><p>Pentru un sistem de dimensiune medie, o igienizare completă (parole, conturi, acces de la distanță securizat, separare pe VLAN, actualizare firmware) se încadrează orientativ în 1.500–3.500 RON, fără echipament nou major — costul crește dacă switch-urile actuale nu suportă VLAN și trebuie înlocuite. Costul exact vine după o evaluare la fața locului, unde vedem exact ce echipament ai și ce lipsește.</p></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q" onclick="toggleFaq(this)">Pot folosi rețeaua Wi-Fi obișnuită a firmei pentru camere? <svg class="faq-chevron" width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg></button>
+          <div class="faq-a"><p>Tehnic, da, dar nu e recomandat pentru un sistem serios. Camerele pe aceeași rețea Wi-Fi cu laptopurile și telefoanele angajaților stau alături de restul traficului firmei, fără separarea pe care o oferă un VLAN dedicat. Preferăm fie o rețea cablată dedicată, fie, dacă se folosește Wi-Fi, un SSID separat, izolat logic de rețeaua principală, cu aceleași principii de segmentare aplicate și fără fir.</p></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q" onclick="toggleFaq(this)">Cât durează o securizare completă a unui sistem existent? <svg class="faq-chevron" width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg></button>
+          <div class="faq-a"><p>Pentru un sistem de dimensiune medie, evaluarea și implementarea măsurilor de bază (parole, conturi, acces de la distanță securizat) se fac de regulă într-o singură vizită, de câteva ore. Dacă e nevoie de configurare VLAN sau de înlocuirea unor switch-uri, se adaugă timp pentru partea de rețea. Programăm astfel încât sistemul de supraveghere să rămână funcțional pe toată durata intervenției, fără perioade în care firma rămâne fără imagine.</p></div>
+        </div>
+      </div>
+
+      <aside class="discuta-in-grup">
+        <h3>Ai o întrebare despre asta?</h3>
+        <p>Discutăm subiectul în grupul nostru de pe Facebook, împreună cu electricieni, instalatori și proprietari din Brașov și împrejurimi. Pune întrebarea acolo și primești răspuns de la oameni care lucrează efectiv în domeniu. Suntem deja <!-- MEMBRI-GRUP -->351<!-- /MEMBRI-GRUP --> în grup.</p>
+        <a href="https://www.facebook.com/groups/1970585079825010" rel="noopener" target="_blank">Intră în grupul Instalații Brașov →</a>
+      </aside>
+      <div class="cta-banner">
+        <div>
+          <h3>Pașii următori — cere oferta ta</h3>
+          <p>Fără obligații: vii cu nevoia, pleci cu o soluție și un preț defalcat. CSSI — 20 de ani, 8.700+ proiecte în județul Brașov.</p>
+        </div>
+        <div class="cta-buttons">
+          <a href="/camere-supraveghere-brasov" class="btn btn-secondary">📍 Camere supraveghere în Brașov</a>
+          <a href="/contact" class="btn btn-secondary">📩 Cere ofertă</a>
+          <a href="tel:0752288400" class="btn btn-primary">📞 0752 288 400</a>
+          <a target="_blank" rel="noopener" href="https://wa.me/40752288400" class="btn btn-secondary">💬 WhatsApp</a>
+        </div>
+      </div>
+
+    </main>
+
+    <aside class="sidebar">
+      <div class="sidebar-card">
+        <div class="sidebar-card-head">📑 Cuprins</div>
+        <div class="sidebar-card-body" style="padding:10px 18px">
+          <ol class="toc-list">
+            <li><a href="#raspunsul-scurt">Răspunsul scurt</a></li>
+            <li><a href="#de-ce-un-sistem-cctv-prost-configurat-e-">De ce un sistem CCTV prost configurat e o ușă deschisă</a></li>
+            <li><a href="#regula-nr-1-parole-schimbate-si-parole-p">Regula nr. 1: parole schimbate și parole puternice, unice</a></li>
+            <li><a href="#de-ce-camerele-nu-trebuie-expuse-direct-">De ce camerele nu trebuie expuse direct la internet</a></li>
+            <li><a href="#separarea-retelei-un-vlan-dedicat-camere">Separarea rețelei: un VLAN dedicat camerelor</a></li>
+            <li><a href="#firmware-actualizat-si-echipamente-de-la">Firmware actualizat și echipamente de la producători serioși</a></li>
+            <li><a href="#cine-vede-inregistrarile-conturi-cu-drep">Cine vede înregistrările: conturi cu drepturi limitate</a></li>
+            <li><a href="#de-ce-un-instalator-profesionist-configu">De ce un instalator profesionist configurează asta din start</a></li>
+            <li><a href="#de-unde-sa-incepi">De unde să începi</a></li>
+            <li><a href="#cum-ajung-camerele-expuse-la-internet-fa">Cum ajung camerele expuse la internet, fără să-și dea seama nimeni</a></li>
+            <li><a href="#ce-risti-daca-reteaua-camerelor-e-compro">Ce riști dacă rețeaua camerelor e compromisă</a></li>
+            <li><a href="#dezactivarea-porturilor-si-serviciilor-i">Dezactivarea porturilor și serviciilor inutile</a></li>
+            <li><a href="#accesul-la-nvr-parola-jurnalul-de-acces-">Accesul la NVR: parola, jurnalul de acces și backup-ul configurației</a></li>
+            <li><a href="#camerele-expuse-public-un-risc-real-nu-t">Camerele expuse public: un risc real, nu teoretic</a></li>
+            <li><a href="#gdpr-si-camerele-de-supraveghere-partea-">GDPR și camerele de supraveghere: partea care ține de rețea</a></li>
+            <li><a href="#costuri-orientative-2026">Costuri orientative 2026</a></li>
+            <li><a href="#cum-arata-implementarea-cu-cssi">Cum arată implementarea cu CSSI</a></li>
+            <li><a href="#mentenanta-verificari-periodice-care-con">Mentenanța: verificări periodice care contează</a></li>
+            <li><a href="#citeste-si">Citește și</a></li>
+            <li><a href="#faq">Întrebări frecvente</a></li>
+          </ol>
+        </div>
+      </div>
+      <div class="sidebar-card">
+        <div class="sidebar-card-head">📞 Contact CSSI Brașov</div>
+        <div class="sidebar-card-body">
+          <ul class="contact-info">
+            <li><div class="ci-icon">📞</div><div><strong>0752 288 400</strong><span>Lun–Vin 08:00–18:00</span></div></li>
+            <li><div class="ci-icon">📧</div><div><strong>office@cssi.ro</strong><span>Răspuns în max 24h</span></div></li>
+            <li><div class="ci-icon">📍</div><div><strong>Brașov</strong><span>și județele înconjurătoare</span></div></li>
+          </ul>
+          <a target="_blank" rel="noopener" href="https://wa.me/40752288400" class="btn btn-primary" style="margin-top:12px">💬 Scrie pe WhatsApp</a>
+        </div>
+      </div>
+    </aside>
+  </div>
+
+<footer class="article-footer">
+    <p>Articol scris de echipa <strong>CSSI Brașov</strong> — firmă autorizată IGPR și ISU, cu peste 20 de ani de experiență în sisteme de securitate și instalații.</p>
+    <div class="tags">
+      <span class="tag">camere supraveghere brasov</span>
+      <span class="tag">instalare camere</span>
+      <span class="tag">preturi camere 2026</span>
+      <span class="tag">Hikvision</span>
+      <span class="tag">Dahua</span>
+      <span class="tag">Uniview</span>
+      <span class="tag">CCTV</span>
+      <span class="tag">Brașov</span>
+    </div>
+    <p style="font-size:12px;color:#aaa;margin-top:8px">© 2026 CSSI — Confort, Securitate, Siguranță, Imobil | <a href="/">cssi.ro</a></p>
+  </footer>
+<script>
+    function toggleFaq(btn) {
+      const item = btn.closest('.faq-item');
+      const isOpen = item.classList.contains('open');
+      document.querySelectorAll('.faq-item.open').forEach(el => el.classList.remove('open'));
+      if (!isOpen) item.classList.add('open');
+    }
+    const headings = document.querySelectorAll('h2[id]');
+    const tocLinks = document.querySelectorAll('.toc-list a');
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          tocLinks.forEach(a => a.style.color = '');
+          const active = document.querySelector(`.toc-list a[href="#${entry.target.id}"]`);
+          if (active) active.style.color = 'var(--brand-blue)';
+        }
+      });
+    }, { rootMargin: '-20% 0px -70% 0px' });
+    headings.forEach(h => observer.observe(h));
+  </script>
+  <script>
+    let navTextColor = '#fff';
+    window.addEventListener('scroll', function() {
+        const navBg = document.getElementById('navBg');
+        const logo = document.getElementById('logoImg');
+        const scrolled = window.scrollY > 50;
+        if (scrolled) {
+            navBg.style.background = '#ffffff';
+            navBg.style.backdropFilter = 'blur(12px)';
+            navBg.style.boxShadow = '0 1px 2px rgba(0,0,0,0.05)';
+            if (logo) logo.style.filter = '';
+            navTextColor = '#334155';
+        } else {
+            navBg.style.background = 'transparent';
+            navBg.style.backdropFilter = '';
+            navBg.style.boxShadow = '';
+            if (logo) logo.style.filter = 'brightness(0) invert(1) drop-shadow(0 0 1px rgba(255,255,255,0.8))';
+            navTextColor = '#fff';
+        }
+        ['navLink1','navLink2','navLink3','navLink4','navLinkBlog','navLink5','phoneLink'].forEach(id=>{
+            const el=document.getElementById(id);
+            if(el) el.style.color=navTextColor;
+        });
+    });
+    function toggleMobileMenu(){
+        const menu=document.getElementById('mobileMenu');
+        const menuIcon=document.getElementById('menuIcon');
+        const closeIcon=document.getElementById('closeIcon');
+        const btn=document.getElementById('menuBtn');
+        if(menu.classList.contains('open')){
+            menu.classList.remove('open');
+            menuIcon.style.display='';
+            closeIcon.style.display='none';
+            btn.style.background='linear-gradient(to right,#ef4444,#dc2626)';
+            btn.classList.add('animate-subtle-pulse');
+        } else {
+            menu.classList.add('open');
+            menuIcon.style.display='none';
+            closeIcon.style.display='';
+            btn.style.background='#6b7280';
+            btn.classList.remove('animate-subtle-pulse');
+        }
+    }
+    function closeMobile(){
+        document.getElementById('mobileMenu').classList.remove('open');
+        document.getElementById('menuIcon').style.display='';
+        document.getElementById('closeIcon').style.display='none';
+    }
+    function toggleServicesSubmenu(){
+        const sub=document.getElementById('servicesSubmenu');
+        const arrow=document.getElementById('servicesArrow');
+        if(sub.classList.contains('open')){
+            sub.classList.remove('open');
+            arrow.style.transform='';
+        } else {
+            sub.classList.add('open');
+            arrow.style.transform='rotate(180deg)';
+        }
+    }
+  </script>
+<script>
+// GA4 tracking: phone_call & whatsapp_click
+document.addEventListener('DOMContentLoaded', function() {
+    document.querySelectorAll('a[href^="tel:"]').forEach(function(link) {
+        link.addEventListener('click', function() {
+            if (typeof gtag === 'function') {
+                gtag('event', 'phone_call', {event_category:'Contact', event_label:this.href.replace('tel:',''), value:100, currency:'RON'});
+            }
+        });
+    });
+    document.querySelectorAll('a[href*="wa.me"]').forEach(function(link) {
+        link.addEventListener('click', function() {
+            if (typeof gtag === 'function') {
+                gtag('event', 'whatsapp_click', {event_category:'Contact', event_label:'WhatsApp Direct', value:100, currency:'RON'});
+            }
+        });
+    });
+});
+</script>
+<script src="/tawk-chat.js" defer></script>
+<button id="toTop" aria-label="Înapoi sus" onclick="window.scrollTo({top:0,behavior:&#39;smooth&#39;})"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 15l-6-6-6 6"/></svg></button><script>(function(){var b=document.getElementById("toTop");window.addEventListener("scroll",function(){if(window.scrollY>400)b.classList.add("show");else b.classList.remove("show");});})();</script>
+</body>
+</html>
