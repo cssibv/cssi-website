@@ -1,32 +1,32 @@
-name: Publicare zilnică blog CSSI
+name: Daily blog publish (CSSI)
 
 on:
   schedule:
-    # 03:43 UTC = 06:43 România (iarna 05:43). Minut/oră atipice, alese ca să evite
-    # sloturile aglomerate ale cron-ului GitHub (:00/:30) și ora de vârf → mai puțină întârziere.
+    # 03:43 UTC = 06:43 Romania time (05:43 in winter). Off-peak minute/hour chosen to avoid
+    # GitHub's busy cron slots (:00/:30) and rush hour -> less scheduling delay.
     - cron: '43 3 * * *'
-    # Retry ~5h mai târziu (08:43 UTC = 11:43 RO) dacă primul run a picat sau a fost sărit
-    # de GitHub. E idempotent (dedupe pe canonical) → dacă deja s-a publicat, nu face nimic.
+    # Retry ~5h later (08:43 UTC = 11:43 RO) in case the first run failed or was skipped
+    # by GitHub. Idempotent (dedupe on canonical) -> does nothing if already published.
     - cron: '43 8 * * *'
-  workflow_dispatch: {}   # permite rulare manuală din tab-ul Actions
+  workflow_dispatch: {}   # allows manual runs from the Actions tab
 
 permissions:
   contents: write
 
 concurrency:
-  group: publicare-zilnica
+  group: daily-publish
   cancel-in-progress: false
 
 jobs:
-  publica:
+  publish:
     runs-on: ubuntu-latest
     env:
-      TZ: Europe/Bucharest   # ca datetime.date.today() să fie ziua României
+      TZ: Europe/Bucharest   # so datetime.date.today() is the Romanian date
     steps:
       - name: Checkout site (public)
         uses: actions/checkout@v5
 
-      - name: Checkout conținut (repo privat cssi-content)
+      - name: Checkout content (private repo cssi-content)
         uses: actions/checkout@v5
         with:
           repository: cssibv/cssi-content
@@ -38,57 +38,57 @@ jobs:
         with:
           python-version: '3.12'
 
-      - name: Dependențe
+      - name: Dependencies
         run: pip install openpyxl
 
-      - name: Staging articole de azi
+      - name: Stage today's articles
         run: python .publicare/stage_publicare_azi.py
 
-      - name: Commit + push (doar dacă există modificări)
+      - name: Commit + push (only if there are changes)
         id: commit
         run: |
-          git config user.name  "cssi-publicare-bot"
+          git config user.name  "cssi-publish-bot"
           git config user.email "actions@github.com"
           git add blog/ sitemap.xml images/blog/
           if git diff --cached --quiet; then
-            echo "Nimic de publicat azi — niciun commit."
+            echo "Nothing to publish today, no commit."
             echo "published=false" >> "$GITHUB_OUTPUT"
           else
-            articole=$(git diff --cached --name-only -- blog/ \
+            articles=$(git diff --cached --name-only -- blog/ \
               | grep -E '^blog/.+\.html$' | grep -v '^blog/index\.html$' \
               | sed 's#^blog/##; s#\.html$##' | paste -sd ', ' -)
-            git commit -m "Publicare automată blog $(date +%Y-%m-%d)"
+            git commit -m "Automated blog publish $(date +%Y-%m-%d)"
             git push
             echo "published=true" >> "$GITHUB_OUTPUT"
-            echo "articole=$articole" >> "$GITHUB_OUTPUT"
+            echo "articles=$articles" >> "$GITHUB_OUTPUT"
           fi
 
-      - name: Alertă Telegram — publicat
+      - name: Telegram alert (published)
         if: success() && steps.commit.outputs.published == 'true'
         env:
           TG_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           TG_CHAT: ${{ secrets.TELEGRAM_CHAT_ID }}
         run: |
-          text="✅ cssi.ro — publicat $(date +%Y-%m-%d): ${{ steps.commit.outputs.articole }}"
+          text="✅ cssi.ro: published $(date +%Y-%m-%d): ${{ steps.commit.outputs.articles }}"
           curl -s -X POST "https://api.telegram.org/bot${TG_TOKEN}/sendMessage" \
             -d chat_id="${TG_CHAT}" --data-urlencode text="$text" -o /dev/null
 
-      - name: Alertă Telegram — nimic nou (doar la rulare manuală)
+      - name: Telegram alert (nothing new, manual runs only)
         if: success() && steps.commit.outputs.published != 'true' && github.event_name == 'workflow_dispatch'
         env:
           TG_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           TG_CHAT: ${{ secrets.TELEGRAM_CHAT_ID }}
         run: |
-          text="ℹ️ cssi.ro — rulare manuală $(date +%Y-%m-%d): nimic nou de publicat, deja la zi."
+          text="ℹ️ cssi.ro: manual run $(date +%Y-%m-%d): nothing new to publish, already up to date."
           curl -s -X POST "https://api.telegram.org/bot${TG_TOKEN}/sendMessage" \
             -d chat_id="${TG_CHAT}" --data-urlencode text="$text" -o /dev/null
 
-      - name: Alertă Telegram — eroare
+      - name: Telegram alert (failure)
         if: failure()
         env:
           TG_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           TG_CHAT: ${{ secrets.TELEGRAM_CHAT_ID }}
         run: |
-          text="❌ cssi.ro — publicarea a EȘUAT ($(date +%Y-%m-%d)). Log: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+          text="❌ cssi.ro: publishing FAILED ($(date +%Y-%m-%d)). Log: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
           curl -s -X POST "https://api.telegram.org/bot${TG_TOKEN}/sendMessage" \
             -d chat_id="${TG_CHAT}" --data-urlencode text="$text" -o /dev/null
