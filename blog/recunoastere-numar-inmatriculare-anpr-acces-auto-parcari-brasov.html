@@ -1,0 +1,775 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Recunoaștere număr de înmatriculare (ANPR): acces | CSSI</title>
+<meta name="description" content="Cum funcționează recunoașterea numărului de înmatriculare (ANPR/LPR): deschidere automată a barierei pentru mașini autorizate, evidența intrărilor.">
+<link rel="canonical" href="https://cssi.ro/blog/recunoastere-numar-inmatriculare-anpr-acces-auto-parcari-brasov">
+<!-- Open Graph + Twitter Card -->
+<meta property="og:type" content="article">
+<meta property="og:title" content="Recunoaștere număr de înmatriculare (ANPR): acces auto automat și evidență parcări | CSSI Brașov">
+<meta property="og:description" content="Bariera se deschide singură pentru mașinile autorizate, fără card sau telecomandă. Cum funcționează ANPR, unde merită și ce contează la instalare. Ghid B2B pentru firme, asociații și hoteluri din Brașov.">
+<meta property="og:url" content="https://cssi.ro/blog/recunoastere-numar-inmatriculare-anpr-acces-auto-parcari-brasov">
+<meta property="og:image" content="https://cssi.ro/images/blog/anpr-acces-auto-cover.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:type" content="image/jpeg">
+<meta property="og:locale" content="ro_RO">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="ANPR: acces auto automat după numărul de înmatriculare">
+<meta name="twitter:description" content="Deschidere automată pentru mașini autorizate, evidență intrări, listă albă/neagră. Pentru parcări firme, asociații, hoteluri. CSSI Brașov: 0752 288 400.">
+<meta name="twitter:image" content="https://cssi.ro/images/blog/anpr-acces-auto-cover.jpg">
+
+<!-- ===== SCHEMA JSON-LD: Article + BreadcrumbList + FAQPage ===== -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Article",
+      "@id": "https://cssi.ro/blog/recunoastere-numar-inmatriculare-anpr-acces-auto-parcari-brasov#article",
+      "headline": "Recunoaștere număr de înmatriculare (ANPR): acces auto automat și evidență în parcări",
+      "description": "Ghid B2B despre tehnologia ANPR/LPR de recunoaștere a numărului de înmatriculare: cum funcționează, ce rezolvă (acces auto automat, evidența intrări/iesiri, lista albă/neagra), unde se folosește, ce contează la instalare și regulile GDPR.",
+      "image": "https://cssi.ro/images/blog/anpr-acces-auto-cover.jpg",
+      "author": {
+        "@type": "Organization",
+        "name": "CSSI Brașov",
+        "url": "https://cssi.ro"
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": "CSSI Brașov",
+        "logo": {
+          "@type": "ImageObject",
+          "url": "https://cssi.ro/images/logo-cssi.webp"
+        }
+      },
+      "datePublished": "2026-09-29",
+      "dateModified": "2026-09-29",
+      "mainEntityOfPage": "https://cssi.ro/blog/recunoastere-numar-inmatriculare-anpr-acces-auto-parcari-brasov",
+      "inLanguage": "ro"
+    },
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Acasă",
+          "item": "https://cssi.ro/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "Blog",
+          "item": "https://cssi.ro/blog"
+        },
+        {
+          "@type": "ListItem",
+          "position": 3,
+          "name": "Recunoaștere număr de înmatriculare (ANPR): acces auto automat și evidență în parcări"
+        }
+      ]
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "Ce este ANPR și cum funcționează?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "ANPR (numit și LPR) e o tehnologie prin care o cameră dedicată fotografiază plăcuța de înmatriculare, iar un software citește automat numărul. Dacă numărul e pe lista de mașini autorizate, sistemul deschide bariera sau poarta, fără card și fără telecomandă. În paralel, fiecare intrare/ieșire se înregistrează. E o cameră optimizată pentru citirea plăcuțelor, cu iluminare proprie pentru noapte."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Unde merită un sistem ANPR?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Oriunde ai trafic auto recurent de filtrat sau evidențiat: parcarea unei firme, o asociație de proprietari, un hotel, un depozit cu intrări de marfă, o parcare cu plată. Mașina autorizată intră fără ca șoferul să facă ceva, nu se pierd cartele și ai un jurnal clar. Pentru flux mare, accelerează considerabil accesul."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Ce se întâmplă cu mașinile neautorizate sau cu vizitatorii?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Pentru mașinile care nu sunt pe lista albă, sistemul poate: să nu deschidă (acces refuzat), să trimită o notificare, sau să pornească un flux pentru vizitatori (interfon către recepție, tichet, cod trimis dinainte). Poți avea și o listă neagră. Practic, configurezi reguli diferite pentru angajați, vizitatori așteptați și necunoscuți."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "ANPR funcționează și noaptea sau pe vreme rea?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Camerele ANPR profesionale au iluminare infraroșie proprie, deci citesc și noaptea. Performanța scade dacă plăcuța e foarte murdară, deteriorată, acoperită de zăpadă sau dacă mașina vine prea repede ori sub un unghi nepotrivit. De aceea poziționarea și zona de citire se calculează la instalare, cu un plan B pentru cazurile-limită."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Numărul de înmatriculare e o dată personală? Ce spune GDPR?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Da, poate fi considerat dată cu caracter personal, pentru că permite identificarea indirectă. Un sistem ANPR are nevoie de temei legal (de regulă interesul legitim), semnalizare, durată rezonabilă de păstrare și măsuri de securitate. Nu e un obstacol, ci reguli pe care le respecți prin configurare corectă. Autoritatea de profil este ANSPDCP."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Pot folosi ANPR doar pentru evidență, fără barieră?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Da. Poți instala ANPR doar ca jurnal al mașinilor care intră și ies, fără să acționeze vreo barieră. E util când vrei trasabilitate (depozite, curți logistice), dar accesul fizic e gestionat altfel. Ulterior poți adăuga bariera, dacă vrei să automatizezi și deschiderea."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Se integrează ANPR cu bariera și cu restul sistemului de securitate?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Da. ANPR comandă direct bariera sau poarta și se leagă de controlul accesului, de camere și de software-ul de gestiune. Astfel, intrarea unei mașini autorizate, imaginea ei și evenimentul din jurnal sunt corelate. La o evaluare verificăm ce ai deja și proiectăm integrarea, ca să nu cumperi componente care nu comunică."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Cât costă instalarea unui sistem ANPR în 2026?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Pentru un punct de acces obișnuit, legat de o barieră deja existentă, un sistem ANPR se încadrează orientativ între 4.500 și 9.000 RON (cameră, software, integrare, montaj). Dacă e nevoie și de o barieră nouă sau de un software de gestiune mai complex, bugetul poate depăși 15.000 RON. Prețul exact depinde de numărul de puncte de acces și de echipamentul deja existent — vine după o evaluare la fața locului."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Cât de exact e un sistem ANPR? Poate greși?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Un sistem montat și calibrat corect ajunge la o rată de citire foarte ridicată în condiții normale de trafic. Poate greși ocazional la plăcuțe foarte murdare, deteriorate, acoperite de zăpadă sau la mașini care nu se opresc în zona proiectată pentru citire. De aceea recomandăm întotdeauna un plan B (interfon, cod, telecomandă de rezervă) pentru cazurile în care sistemul nu recunoaște automat o mașină, în loc să se blocheze accesul."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Cât timp se păstrează imaginile și numerele citite de sistem?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Nu există o durată unică valabilă peste tot — se stabilește proporțional cu scopul prelucrării (control acces, eventual investigarea unui incident) și se comunică prin panoul de informare de la intrare. Practic, se configurează o ștergere automată după un interval rezonabil, ca datele să nu rămână stocate nedefinit. La instalare, stabilim împreună această durată și modul în care se aplică tehnic."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Se poate integra ANPR cu o barieră sau poartă pe care o am deja?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "În multe cazuri da, dacă bariera sau poarta poate fi comandată electric printr-un semnal extern (releu, contact uscat sau alt protocol standard). Verificăm la evaluare compatibilitatea echipamentului existent — uneori e nevoie de un modul de interfațare suplimentar. Dacă bariera e foarte veche sau nu permite comandă externă, discutăm și varianta înlocuirii ei."
+          }
+        }
+      ]
+    }
+  ]
+}
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;600;700;800&family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,400;0,8..60,600;1,8..60,400&display=swap" rel="stylesheet" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.js"></script>
+  <script src="/cookie-consent.js" defer></script>
+  <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}</script>
+  <script src="/tracking.js" defer></script>
+  <style>
+    @keyframes subtle-pulse-n { 0%,100%{transform:scale(1)}50%{transform:scale(.92)} }
+    @keyframes badge-pulse-n { 0%,100%{box-shadow:0 0 0 0 rgba(34,197,94,.4)}50%{box-shadow:0 0 0 8px rgba(34,197,94,0)} }
+    .animate-subtle-pulse{animation:subtle-pulse-n 2.5s ease-in-out infinite}
+    .animate-badge-pulse{animation:badge-pulse-n 2s ease-in-out infinite}
+    .dropdown-menu{display:none!important}
+    .dropdown:hover .dropdown-menu{display:block!important}
+    #mobileMenu{display:none}
+    #mobileMenu.open{display:block}
+    #servicesSubmenu{display:none}
+    #servicesSubmenu.open{display:block}
+    .dropdown-scroll::-webkit-scrollbar{width:4px}
+    .dropdown-scroll::-webkit-scrollbar-track{background:#f1f1f1}
+    .dropdown-scroll::-webkit-scrollbar-thumb{background:#cbd5e1;border-radius:4px}
+    @media(min-width:640px){.sm\:block{display:block!important}.sm\:hidden{display:none!important}.sm\:px-6{padding-left:24px;padding-right:24px}}
+    @media(min-width:1024px){.lg\:flex{display:flex!important}.lg\:hidden{display:none!important}}@media(min-width:768px){.md\:flex{display:flex!important}.md\:hidden{display:none!important}}
+    #mainHeader, #mainHeader a, #mainHeader button, #mainHeader span, #mainHeader div { font-family: 'Sora', sans-serif !important; }
+  </style>
+  <style>
+    :root{--brand-dark:#0b1a2e;--brand-navy:#102a4c;--brand-blue:#1a4b8c;--brand-accent:#e63022;--brand-gold:#f5a623;--brand-light:#f0f4f9;--text-main:#1c2b3a;--text-muted:#5a6e82;--text-light:#8fa0b3;--border:#dce6f0;--white:#ffffff;--ff-head:'Sora',sans-serif;--ff-body:'Source Serif 4',Georgia,serif;--radius:10px;--shadow-sm:0 2px 8px rgba(11,26,46,.08);--shadow-md:0 6px 24px rgba(11,26,46,.13);--shadow-lg:0 16px 48px rgba(11,26,46,.18);--max-w:1400px}
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    html{scroll-behavior:smooth}
+    body{font-family:var(--ff-body);font-size:18px;line-height:1.75;color:var(--text-main);background:var(--white);-webkit-font-smoothing:antialiased}
+    img{max-width:100%;height:auto;display:block}
+    a{color:var(--brand-blue);text-decoration:none}
+    a:hover{text-decoration:underline}
+    .breadcrumb{background:var(--brand-dark);border-bottom:none;padding:12px 0;padding-top:104px;font-family:var(--ff-head);font-size:13px;color:rgba(255,255,255,.55)}
+    .breadcrumb .inner{max-width:1280px;margin:0 auto;padding:0 0 12px 24px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+    .breadcrumb a{color:rgba(255,255,255,.7)}
+    .breadcrumb .sep{color:rgba(255,255,255,.3)}
+    .hero{background:var(--brand-dark);background-image:radial-gradient(ellipse 70% 60% at 80% 50%,rgba(26,75,140,.45) 0%,transparent 70%),radial-gradient(ellipse 40% 50% at 10% 80%,rgba(230,48,34,.15) 0%,transparent 60%);color:var(--white);padding:48px 24px 64px;position:relative;overflow:hidden}
+    .hero::before{content:'';position:absolute;inset:0;background-image:url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23ffffff' fill-opacity='0.025'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/svg%3E")}
+        .hero .inner{max-width:var(--max-w);margin:0 auto;position:relative;z-index:1;display:flex;align-items:center;gap:40px}
+    .hero-content{flex:1;min-width:0}
+    .hero-img-wrap{flex:0 0 640px;display:flex;align-items:center;justify-content:center}
+    .hero-img-wrap img{width:640px;height:auto;border-radius:14px;box-shadow:0 8px 32px rgba(0,0,0,.35);border:1px solid rgba(255,255,255,.1);opacity:.92;transition:opacity .3s}
+    .hero-img-wrap img:hover{opacity:1}
+    @media(max-width:900px){.hero .inner{flex-direction:column;gap:24px}.hero-img-wrap{flex:0 0 auto;order:-1}.hero-img-wrap img{width:500px}}
+    @media(max-width:700px){.hero-img-wrap{display:none}}
+    .hero-badge{display:inline-flex;align-items:center;gap:6px;background:rgba(230,48,34,.2);border:1px solid rgba(230,48,34,.4);color:#ff8a80;font-family:var(--ff-head);font-size:12px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;padding:5px 12px;border-radius:100px;margin-bottom:20px}
+    .hero h1{font-family:var(--ff-head);font-size:clamp(26px,4vw,40px);font-weight:800;line-height:1.2;margin-bottom:20px;letter-spacing:-.02em}
+    .hero h1 em{font-style:normal;color:var(--brand-gold)}
+    .hero .lead{font-size:clamp(16px,2vw,19px);line-height:1.65;color:rgba(255,255,255,.82);max-width:620px;margin-bottom:32px}
+    .hero-meta{display:flex;align-items:center;gap:20px;flex-wrap:wrap;font-family:var(--ff-head);font-size:13px;color:rgba(255,255,255,.55)}
+    .hero-meta span{display:flex;align-items:center;gap:5px}
+    .hero-meta .dot{color:rgba(255,255,255,.25)}
+    .topic-pills{display:flex;gap:10px;flex-wrap:wrap;margin-top:28px}
+    .pill{display:flex;align-items:center;gap:8px;padding:8px 16px;border-radius:100px;font-family:var(--ff-head);font-size:13px;font-weight:600;border:1px solid}
+    .pill-red{background:rgba(230,48,34,.15);border-color:rgba(230,48,34,.35);color:#ff8a80}
+    .pill-amber{background:rgba(245,166,35,.12);border-color:rgba(245,166,35,.3);color:#ffd180}
+    .pill-blue{background:rgba(26,75,140,.25);border-color:rgba(26,75,140,.5);color:#82b4ff}
+    .pill-green{background:rgba(39,174,96,.15);border-color:rgba(39,174,96,.35);color:#81c995}
+    .article-wrap{max-width:1440px;margin:0 auto;padding:0 20px;display:grid;grid-template-columns:1fr 280px;gap:32px;align-items:start}
+    .article-body{padding:32px 0}
+    .article-body h2{font-family:var(--ff-head);font-size:clamp(20px,2.5vw,26px);font-weight:700;color:var(--brand-dark);margin:36px 0 14px;padding-top:6px;border-top:3px solid var(--brand-accent);line-height:1.3}
+    .article-body h3{font-family:var(--ff-head);font-size:clamp(17px,2vw,20px);font-weight:600;color:var(--brand-navy);margin:32px 0 12px}
+    .article-body p{margin-bottom:16px;color:var(--text-main)}
+    .article-body ul,.article-body ol{padding-left:24px;margin-bottom:20px}
+    .article-body li{margin-bottom:8px}
+    .article-body strong{color:var(--brand-dark)}
+    .intro-p{font-size:19px;line-height:1.7}
+    .box{border-radius:var(--radius);padding:22px 26px;margin:28px 0;border-left:4px solid}
+    .box-red{background:#fef2f2;border-color:var(--brand-accent)}
+    .box-blue{background:#eff6ff;border-color:var(--brand-blue)}
+    .box-amber{background:#fffbeb;border-color:var(--brand-gold)}
+    .box-green{background:#f0fdf4;border-color:#27ae60}
+    .box h4{font-family:var(--ff-head);font-size:15px;font-weight:700;margin-bottom:8px}
+    .box p{font-size:15px;margin-bottom:8px}
+    .check-list{list-style:none;padding:0}
+    .check-list li{display:flex;gap:10px;padding:6px 0;font-size:16px}
+    .chk{color:#27ae60;font-weight:700;flex-shrink:0}
+    .price-table{width:100%;border-collapse:collapse;margin:24px 0;font-size:15px}
+    .price-table th{background:var(--brand-navy);color:var(--white);font-family:var(--ff-head);font-size:13px;font-weight:600;text-transform:uppercase;letter-spacing:.04em;padding:12px 16px;text-align:left}
+    .price-table td{padding:12px 16px;border-bottom:1px solid var(--border)}
+    .price-table tr:nth-child(even) td{background:var(--brand-light)}
+    .price-table .highlight td{background:#fffbeb;font-weight:600}
+    .cta-banner{background:linear-gradient(135deg,var(--brand-dark),var(--brand-navy));border-radius:var(--radius);padding:28px 32px;color:var(--white);display:flex;align-items:center;justify-content:space-between;gap:20px;flex-wrap:wrap}
+    .cta-banner h3{font-family:var(--ff-head);font-size:18px;font-weight:700;margin-bottom:4px}
+    .cta-banner p{font-size:14px;color:rgba(255,255,255,.7);margin:0}
+    .cta-buttons{display:flex;gap:10px;flex-wrap:wrap}
+    .btn{display:inline-flex;align-items:center;gap:7px;padding:10px 18px;border-radius:8px;font-family:var(--ff-head);font-size:13px;font-weight:600;cursor:pointer;border:none;text-decoration:none!important}
+    .btn-primary{background:var(--brand-accent);color:var(--white)!important;box-shadow:0 4px 14px rgba(230,48,34,.3)}
+    .btn-secondary{background:rgba(255,255,255,.12);color:var(--white)!important;border:1px solid rgba(255,255,255,.25)}
+    .faq-section{margin:48px 0 32px}
+    .faq-item{border:1px solid var(--border);border-radius:var(--radius);margin-bottom:10px;overflow:hidden}
+    .faq-q{display:flex;align-items:center;justify-content:space-between;padding:16px 20px;cursor:pointer;background:var(--white);font-family:var(--ff-head);font-size:15px;font-weight:600;color:var(--brand-dark);border:none;width:100%;text-align:left;gap:12px}
+    .faq-q:hover{background:var(--brand-light)}
+    .faq-a{display:none;padding:0 20px 16px;font-size:15px;color:var(--text-muted);line-height:1.7}
+    .faq-item.open .faq-a{display:block}
+    .faq-item.open .faq-q{background:var(--brand-light);color:var(--brand-blue)}
+    .faq-chevron{transition:transform .2s;flex-shrink:0}
+    .faq-item.open .faq-chevron{transform:rotate(180deg)}
+    .sidebar{position:sticky;top:104px}
+    .sidebar-card{border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;margin-bottom:20px;background:var(--white);box-shadow:var(--shadow-sm)}
+    .sidebar-card-head{background:var(--brand-navy);color:var(--white);font-family:var(--ff-head);font-size:12px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;padding:12px 18px}
+    .sidebar-card-body{padding:16px 18px}
+    .toc-list{list-style:none;padding:0;counter-reset:toc}
+    .toc-list li{counter-increment:toc}
+    .toc-list a{display:flex;align-items:baseline;gap:8px;padding:7px 0;font-family:var(--ff-head);font-size:13px;color:var(--text-muted);border-bottom:1px solid var(--border);text-decoration:none}
+    .toc-list a::before{content:counter(toc,decimal-leading-zero);font-size:11px;font-weight:700;color:var(--text-light)}
+    .toc-list li:last-child a{border-bottom:none}
+    .toc-list a:hover{color:var(--brand-blue)}
+    .contact-info{list-style:none;padding:0}
+    .contact-info li{display:flex;gap:12px;padding:10px 0;border-bottom:1px solid var(--border);align-items:flex-start}
+    .contact-info li:last-child{border-bottom:none}
+    .ci-icon{font-size:20px;flex-shrink:0;margin-top:2px}
+    .contact-info strong{font-family:var(--ff-head);font-size:14px;display:block;color:var(--brand-dark)}
+    .contact-info span{font-size:12px;color:var(--text-light)}
+    .article-footer{background:var(--brand-light);border-top:1px solid var(--border);padding:40px 24px;text-align:center}
+    .article-footer p{font-size:14px;color:var(--text-muted);max-width:500px;margin:0 auto 16px}
+    .tags{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-top:12px}
+    .tag{background:var(--white);border:1px solid var(--border);padding:4px 12px;border-radius:100px;font-family:var(--ff-head);font-size:11px;color:var(--text-muted)}
+    @media(max-width:768px){.article-wrap{grid-template-columns:1fr;gap:32px}.sidebar{position:static;order:2}.cta-banner{flex-direction:column;text-align:center}}
+  
+.discuta-in-grup{background:var(--brand-light);border:1px solid var(--border);border-left:4px solid var(--brand-blue);border-radius:var(--radius);padding:20px 24px;margin:32px 0}
+.discuta-in-grup h3{font-family:var(--ff-head);font-weight:600;font-size:17px;color:var(--brand-navy);margin:0 0 8px}
+.discuta-in-grup p{font-size:15px;color:var(--text-muted);line-height:1.6;margin:0 0 12px}
+.discuta-in-grup a{display:inline-block;font-family:var(--ff-head);font-weight:600;font-size:14px;color:var(--brand-blue);text-decoration:none}
+.discuta-in-grup a:hover{text-decoration:underline}
+
+/* mobfix-v1 */
+.hidden{display:none}
+@media(max-width:900px){.article-wrap{grid-template-columns:minmax(0,1fr)}.sidebar{position:static;top:auto}.article-body table{display:block;overflow-x:auto;max-width:100%}}
+
+/* mobfix-v2 */
+.lg\:hidden .animate-badge-pulse{background:rgba(15,23,42,.9)!important;color:#fff!important;border:1px solid rgba(255,255,255,.25)}
+
+/* buton inapoi-sus */
+#toTop{position:fixed;right:18px;bottom:18px;z-index:45;width:46px;height:46px;border:none;border-radius:50%;background:var(--brand-navy);color:#fff;cursor:pointer;box-shadow:0 6px 18px rgba(11,26,46,.28);opacity:0;visibility:hidden;transform:translateY(8px);transition:opacity .2s,transform .2s,visibility .2s;display:flex;align-items:center;justify-content:center}
+#toTop.show{opacity:1;visibility:visible;transform:none}
+#toTop:hover{background:var(--brand-blue)}
+</style>
+<style>.cta-banner h3{color:#ffffff !important}.cta-banner p{color:rgba(255,255,255,.85) !important}.box-info{background:#eef5ff;border-color:var(--brand-blue)}.box-warn{background:#fff8ec;border-color:var(--brand-gold)}.box-tip{background:#f0faf2;border-color:#27ae60}.box-danger{background:#fef2f2;border-color:#e63022}.box-info .box-title{color:var(--brand-blue)}.box-warn .box-title{color:#b7760a}.box-tip .box-title{color:#1e8c3f}.box-danger .box-title{color:#c0392b}.compare-table{width:100%;border-collapse:collapse;font-size:15px;margin:24px 0;border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow-sm)}.compare-table th{background:var(--brand-navy);color:var(--white);font-family:var(--ff-head);font-weight:600;padding:13px 16px;text-align:left}.compare-table td{padding:12px 16px;border-bottom:1px solid var(--border);vertical-align:top}.compare-table tr:nth-child(even) td{background:var(--brand-light)}.compare-table tr:last-child td{border-bottom:none}.compare-table .yes{color:#27ae60;font-weight:600}.compare-table .no{color:#c0392b}</style></head>
+<body>
+<header id="mainHeader" style="position:fixed;top:0;left:0;right:0;z-index:50;transition:all 0.3s;">
+    <div class="hidden sm:block" style="background:#0f172a;color:#fff;font-size:12px;padding:6px 0;">
+        <div style="max-width:1280px;margin:0 auto;padding:0 24px;display:flex;justify-content:space-between;align-items:center;">
+            <span>⭐ <span style="color:#4ade80;font-weight:600;">Peste 20 ani de experiență</span></span>
+            <div style="display:flex;align-items:center;gap:16px;">
+                <span>⭐ <span style="font-weight:600;">8.700+ proiecte</span></span>
+            </div>
+        </div>
+    </div>
+    <div class="sm:hidden" style="background:#0f172a;color:#fff;font-size:12px;padding:6px 0;">
+        <div style="max-width:1280px;margin:0 auto;padding:0 12px;display:flex;justify-content:space-between;align-items:center;">
+            <span>⭐ <span style="color:#4ade80;font-weight:600;">Peste 20 ani de experiență</span></span>
+            <a href="tel:0752288400" style="display:flex;align-items:center;gap:4px;font-weight:600;color:#4ade80;">📞 Sună acum</a>
+        </div>
+    </div>
+    <div id="navBg" style="transition:all 0.3s;">
+        <div style="max-width:1280px;margin:0 auto;padding:0 12px;display:flex;justify-content:space-between;align-items:center;height:64px;" class="sm:px-6">
+            <a href="../">
+                <img src="https://eu.chat-img.sintra.ai/32c1b29c-0c86-4833-a031-e7c45e21a11e/983d52bb-2eb6-42f1-bed4-f94d769bb634/Logo_CSSI.png" alt="CSSI Logo" id="logoImg" style="height:56px;width:auto;transition:all 0.3s;filter:brightness(0) invert(1) drop-shadow(0 0 1px rgba(255,255,255,0.8));">
+            </a>
+            <nav class="hidden md:flex" style="align-items:center;gap:4px;">
+                <a href="../" id="navLink1" style="padding:6px 12px;font-size:14px;font-weight:500;color:#fff;transition:all 0.2s;border-radius:8px;" onmouseover="this.style.color='#f87171'" onmouseout="this.style.color=navTextColor">🏠 Acasă</a>
+                <div class="dropdown" style="position:relative;">
+                    <button id="navLink2" style="padding:6px 12px;font-size:14px;font-weight:500;color:#fff;transition:all 0.2s;border-radius:8px;background:none;border:none;cursor:pointer;display:flex;align-items:center;font-family:inherit;">
+                        🛠️ Servicii
+                        <svg style="margin-left:4px;width:16px;height:16px;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+                    </button>
+                    <div class="dropdown-menu dropdown-scroll" style="position:absolute;top:100%;left:0;width:280px;background:#fff;box-shadow:0 10px 15px -3px rgba(0,0,0,0.1);border-radius:12px;padding:8px;border:1px solid #f1f5f9;max-height:80vh;overflow-y:auto;z-index:100;">
+                        <a href="../detectie-incendiu-isu" style="display:block;padding:10px 16px;font-size:13px;color:#334155;border-radius:8px;" onmouseover="this.style.background='#fef2f2';this.style.color='#dc2626'" onmouseout="this.style.background='';this.style.color='#334155'">🔥 Detecție Incendiu ISU</a>
+                        <a href="../camere-supraveghere" style="display:block;padding:10px 16px;font-size:13px;color:#334155;border-radius:8px;" onmouseover="this.style.background='#fef2f2';this.style.color='#dc2626'" onmouseout="this.style.background='';this.style.color='#334155'">📹 Camere Supraveghere</a>
+                        <a href="../alarma-antiefractie" style="display:block;padding:10px 16px;font-size:13px;color:#334155;border-radius:8px;" onmouseover="this.style.background='#fef2f2';this.style.color='#dc2626'" onmouseout="this.style.background='';this.style.color='#334155'">🚨 Alarmă Antiefracție</a>
+                        <a href="../control-acces" style="display:block;padding:10px 16px;font-size:13px;color:#334155;border-radius:8px;" onmouseover="this.style.background='#fef2f2';this.style.color='#dc2626'" onmouseout="this.style.background='';this.style.color='#334155'">🚪 Control Acces</a>
+                        <a href="../pontaj-electronic" style="display:block;padding:10px 16px;font-size:13px;color:#334155;border-radius:8px;" onmouseover="this.style.background='#fef2f2';this.style.color='#dc2626'" onmouseout="this.style.background='';this.style.color='#334155'">⏱️ Pontaj Electronic</a>
+                        <a href="../bariere-auto" style="display:block;padding:10px 16px;font-size:13px;color:#334155;border-radius:8px;" onmouseover="this.style.background='#fef2f2';this.style.color='#dc2626'" onmouseout="this.style.background='';this.style.color='#334155'">🚧 Bariere Auto</a>
+                        <a href="../interfoane-videointerfoane" style="display:block;padding:10px 16px;font-size:13px;color:#334155;border-radius:8px;" onmouseover="this.style.background='#fef2f2';this.style.color='#dc2626'" onmouseout="this.style.background='';this.style.color='#334155'">🔔 Interfoane &amp; Videointerfoane</a>
+                        <a href="../sonorizare" style="display:block;padding:10px 16px;font-size:13px;color:#334155;border-radius:8px;" onmouseover="this.style.background='#fef2f2';this.style.color='#dc2626'" onmouseout="this.style.background='';this.style.color='#334155'">🔊 Sonorizare</a>
+                        <a href="../automatizari-porti" style="display:block;padding:10px 16px;font-size:13px;color:#334155;border-radius:8px;" onmouseover="this.style.background='#fef2f2';this.style.color='#dc2626'" onmouseout="this.style.background='';this.style.color='#334155'">🚗 Automatizări Porți</a>
+                        <a href="../usi-garaj" style="display:block;padding:10px 16px;font-size:13px;color:#334155;border-radius:8px;" onmouseover="this.style.background='#fef2f2';this.style.color='#dc2626'" onmouseout="this.style.background='';this.style.color='#334155'">🏠 Uși Garaj</a>
+                        <a href="../aer-conditionat" style="display:block;padding:10px 16px;font-size:13px;color:#334155;border-radius:8px;" onmouseover="this.style.background='#fef2f2';this.style.color='#dc2626'" onmouseout="this.style.background='';this.style.color='#334155'">❄️ Aer Condiționat</a>
+                        <a href="../ventilatie" style="display:block;padding:10px 16px;font-size:13px;color:#334155;border-radius:8px;" onmouseover="this.style.background='#fef2f2';this.style.color='#dc2626'" onmouseout="this.style.background='';this.style.color='#334155'">💨 Ventilație</a>
+                        <a href="../instalatii-electrice" style="display:block;padding:10px 16px;font-size:13px;color:#334155;border-radius:8px;" onmouseover="this.style.background='#fef2f2';this.style.color='#dc2626'" onmouseout="this.style.background='';this.style.color='#334155'">⚡ Instalații Electrice</a>
+                        <a href="../instalatii-termice-sanitare" style="display:block;padding:10px 16px;font-size:13px;color:#334155;border-radius:8px;" onmouseover="this.style.background='#fef2f2';this.style.color='#dc2626'" onmouseout="this.style.background='';this.style.color='#334155'">🔧 Instalații Termice &amp; Sanitare</a>
+                    </div>
+                </div>
+                <a href="../despre-noi" id="navLink3" style="padding:6px 12px;font-size:14px;font-weight:500;color:#fff;transition:all 0.2s;border-radius:8px;" onmouseover="this.style.color='#f87171'" onmouseout="this.style.color=navTextColor">ℹ️ Despre Noi</a>
+                <a href="../portofoliu" id="navLink4" style="padding:6px 12px;font-size:14px;font-weight:500;color:#fff;transition:all 0.2s;border-radius:8px;" onmouseover="this.style.color='#f87171'" onmouseout="this.style.color=navTextColor">📁 Portofoliu</a>
+                <a href="/blog/" style="padding:6px 12px;font-size:14px;font-weight:500;color:#fff;transition:all 0.2s;border-radius:8px;" id="navLinkBlog" onmouseover="this.style.color='#f87171'" onmouseout="this.style.color=navTextColor">📝 Blog</a>
+                <a href="../contact" id="navLink5" style="padding:6px 12px;font-size:14px;font-weight:500;color:#fff;transition:all 0.2s;border-radius:8px;" onmouseover="this.style.color='#f87171'" onmouseout="this.style.color=navTextColor">📍 Contact</a>
+            </nav>
+            <div class="hidden lg:flex" style="align-items:center;gap:12px;">
+                <a href="tel:0752288400" id="phoneLink" style="display:flex;align-items:center;font-size:14px;font-weight:500;color:#fff;transition:all 0.2s;">
+                    <svg style="width:16px;height:16px;margin-right:6px;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/></svg>
+                    0752 288 400
+                </a>
+                <a href="../contact" style="background:linear-gradient(to right,#dc2626,#b91c1c);color:#fff;padding:8px 20px;border-radius:8px;font-size:14px;font-weight:600;box-shadow:0 4px 6px -1px rgba(0,0,0,0.1);transition:all 0.2s;" onmouseover="this.style.background='linear-gradient(to right,#b91c1c,#991b1b)'" onmouseout="this.style.background='linear-gradient(to right,#dc2626,#b91c1c)'">Cere Ofertă</a>
+            </div>
+            <div class="md:hidden" style="display:flex;align-items:center;gap:8px;">
+                <button onclick="toggleMobileMenu()" id="menuBtn" class="animate-subtle-pulse" style="padding:4px;border-radius:6px;border:none;cursor:pointer;background:linear-gradient(to right,#ef4444,#dc2626);color:#fff;">
+                    <svg id="menuIcon" style="width:20px;height:20px;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
+                    <svg id="closeIcon" style="width:20px;height:20px;display:none;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+                </button>
+            </div>
+        </div>
+        <div id="mobileMenu" style="background:#fff;border-radius:16px;box-shadow:0 20px 25px -5px rgba(0,0,0,0.1);margin:8px 12px;padding:8px;max-height:80vh;overflow-y:auto;">
+            <nav style="display:flex;flex-direction:column;gap:4px;">
+                <a href="../" style="padding:10px 16px;font-size:16px;font-weight:500;color:#334155;border-radius:8px;">🏠 Acasă</a>
+                <button onclick="toggleServicesSubmenu()" style="padding:10px 16px;font-size:16px;font-weight:500;color:#334155;border-radius:8px;background:none;border:none;cursor:pointer;display:flex;justify-content:space-between;align-items:center;width:100%;font-family:inherit;text-align:left;">
+                    🛠️ Servicii
+                    <svg id="servicesArrow" style="width:16px;height:16px;transition:transform 0.2s;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+                </button>
+                <div id="servicesSubmenu" style="padding-left:16px;overflow-y:auto;">
+                    <a href="../detectie-incendiu-isu" onclick="closeMobile()" style="display:block;padding:8px 16px;font-size:14px;color:#475569;border-radius:8px;">🔥 Detecție Incendiu ISU</a>
+                    <a href="../camere-supraveghere" onclick="closeMobile()" style="display:block;padding:8px 16px;font-size:14px;color:#475569;border-radius:8px;">📹 Camere Supraveghere</a>
+                    <a href="../alarma-antiefractie" onclick="closeMobile()" style="display:block;padding:8px 16px;font-size:14px;color:#475569;border-radius:8px;">🚨 Alarmă Antiefracție</a>
+                    <a href="../control-acces" onclick="closeMobile()" style="display:block;padding:8px 16px;font-size:14px;color:#475569;border-radius:8px;">🚪 Control Acces</a>
+                    <a href="../pontaj-electronic" onclick="closeMobile()" style="display:block;padding:8px 16px;font-size:14px;color:#475569;border-radius:8px;">⏱️ Pontaj Electronic</a>
+                    <a href="../bariere-auto" onclick="closeMobile()" style="display:block;padding:8px 16px;font-size:14px;color:#475569;border-radius:8px;">🚧 Bariere Auto</a>
+                    <a href="../interfoane-videointerfoane" onclick="closeMobile()" style="display:block;padding:8px 16px;font-size:14px;color:#475569;border-radius:8px;">🔔 Interfoane &amp; Videointerfoane</a>
+                    <a href="../sonorizare" onclick="closeMobile()" style="display:block;padding:8px 16px;font-size:14px;color:#475569;border-radius:8px;">🔊 Sonorizare</a>
+                    <a href="../automatizari-porti" onclick="closeMobile()" style="display:block;padding:8px 16px;font-size:14px;color:#475569;border-radius:8px;">🚗 Automatizări Porți</a>
+                    <a href="../usi-garaj" onclick="closeMobile()" style="display:block;padding:8px 16px;font-size:14px;color:#475569;border-radius:8px;">🏠 Uși Garaj</a>
+                    <a href="../aer-conditionat" onclick="closeMobile()" style="display:block;padding:8px 16px;font-size:14px;color:#475569;border-radius:8px;">❄️ Aer Condiționat</a>
+                    <a href="../ventilatie" onclick="closeMobile()" style="display:block;padding:8px 16px;font-size:14px;color:#475569;border-radius:8px;">💨 Ventilație</a>
+                    <a href="../instalatii-electrice" onclick="closeMobile()" style="display:block;padding:8px 16px;font-size:14px;color:#475569;border-radius:8px;">⚡ Instalații Electrice</a>
+                    <a href="../instalatii-termice-sanitare" onclick="closeMobile()" style="display:block;padding:8px 16px;font-size:14px;color:#475569;border-radius:8px;">🔧 Instalații Termice &amp; Sanitare</a>
+                </div>
+                <a href="../despre-noi" onclick="closeMobile()" style="padding:10px 16px;font-size:16px;font-weight:500;color:#334155;border-radius:8px;">ℹ️ Despre Noi</a>
+                <a href="../portofoliu" onclick="closeMobile()" style="padding:10px 16px;font-size:16px;font-weight:500;color:#334155;border-radius:8px;">📁 Portofoliu</a>
+                <a href="/blog/" onclick="closeMobile()" style="padding:10px 16px;font-size:16px;font-weight:500;color:#334155;border-radius:8px;">📝 Blog</a>
+                <a href="../contact" onclick="closeMobile()" style="padding:10px 16px;font-size:16px;font-weight:500;color:#334155;border-radius:8px;">📍 Contact</a>
+                <div style="padding:12px 8px;">
+                    <a href="../contact" onclick="closeMobile()" style="display:block;text-align:center;background:linear-gradient(to right,#dc2626,#b91c1c);color:#fff;padding:10px 16px;border-radius:12px;font-weight:600;">Cere Ofertă</a>
+                </div>
+            </nav>
+        </div>
+    </div>
+</header>
+
+
+  
+  
+  <nav class="breadcrumb" aria-label="Breadcrumb">
+    <div class="inner">
+      <a href="/">Acasă</a><span class="sep">›</span>
+      <a href="/blog/">Blog</a><span class="sep">›</span>
+      <span style="color:rgba(255,255,255,.9)">Recunoaștere număr de înmatriculare (ANPR): acces | CSSI</span>
+    </div>
+  </nav>
+
+  <header class="hero">
+    <div class="inner">
+      <div class="hero-content">
+      <div class="hero-badge">🛡 Ghid CSSI · 2026</div>
+      <h1>Recunoaștere număr de înmatriculare (ANPR): acces auto automat și evidență în parcări</h1>
+      <p class="lead">Imaginează-ți o parcare în care mașina angajatului sau a locatarului intră singură: se apropie de barieră, o cameră îi citește numărul, iar bariera se ridică — fără card, fără telecomandă, fără să coboare geamul. În spate, un jurnal notează cine a intrat și la ce oră. Asta face un sistem ANPR, iar pentru firme, asociații, hoteluri și depozite din Brașov e una dintre cele mai practice tehnologii de acces auto. Hai să vedem cum funcționează, unde merită cu adevărat și ce trebuie făcut bine ca să citească corect.</p>
+      <div class="hero-meta">
+        <span>✍ CSSI Brașov</span><span class="dot">·</span>
+        <span>📅 29 Sep 2026</span><span class="dot">·</span>
+        <span>⏱ 9 min lectură</span>
+      </div>
+      <div class="topic-pills">
+        <span class="pill pill-blue">🛡 Securitate firme</span>
+        <span class="pill pill-green">📍 Brașov & împrejurimi</span>
+        <span class="pill pill-amber">✅ Ghid practic</span>
+      </div>
+    </div>
+      <div class="hero-img-wrap"><img src="/images/blog/anpr-acces-auto-cover.jpg" alt="Recunoaștere număr de înmatriculare (ANPR): acces | CSSI"></div>
+    </div>
+  </header>
+
+  <div class="article-wrap">
+    <main class="article-body" id="articol">
+<h2 id="raspunsul-scurt">Răspunsul scurt</h2>
+<p><strong>ANPR</strong> (recunoașterea automată a numărului de înmatriculare, numită și <strong>LPR</strong>) folosește o <strong>cameră dedicată</strong> care fotografiază plăcuța și un software care îi <strong>citește numărul</strong>. Dacă mașina e pe <strong>lista albă</strong>, sistemul deschide automat bariera sau poarta; în paralel, ține <strong>evidența</strong> intrărilor și ieșirilor. Avantajul față de card/telecomandă: mașina autorizată intră <strong>fără ca șoferul să facă ceva</strong>, nu se pierd cartele și ai un jurnal clar. Merită la <strong>parcări de firme, asociații, hoteluri și depozite</strong>. Funcționează și noaptea (iluminare infraroșie), dar performanța depinde de <strong>poziționarea camerei</strong> și de starea plăcuței. Numărul de înmatriculare e <strong>dată cu caracter personal</strong>, deci sistemul trebuie să respecte regulile GDPR (temei, semnalizare, durată de păstrare).</p>
+
+
+<h2 id="ce-este-anpr-si-cum-functioneaza-pe-inte">Ce este ANPR și cum funcționează, pe înțelesul tuturor</h2>
+<p>ANPR vine de la <em>Automatic Number Plate Recognition</em> — recunoașterea automată a numărului de înmatriculare. Concret, ai o <strong>cameră specializată</strong> (nu o cameră obișnuită de supraveghere) montată să „privească" zona în care se oprește mașina la intrare. Când o mașină se apropie, camera face o captură a plăcuței, iar un <strong>software</strong> transformă imaginea în text — adică „citește" numărul, exact ca un om care îl notează, doar că în fracțiuni de secundă. Numărul citit e comparat cu o <strong>listă de mașini autorizate</strong>. Dacă există potrivire, sistemul trimite comanda de <strong>deschidere</strong> către barieră sau poartă. Camera are de obicei <strong>iluminare infraroșie proprie</strong>, ca să citească și noaptea, și e calibrată pentru unghiul și distanța de la punctul de oprire. Această specializare e diferența dintre ANPR și o cameră de supraveghere clasică — despre care am scris în <a href="https://cssi.ro/blog/camere-supraveghere-brasov-ghid-complet-2026">ghidul complet de camere de supraveghere</a>.</p>
+
+      <div class="cta-banner" style="margin:32px 0">
+        <div>
+          <h3>Vrei o evaluare pentru firma ta?</h3>
+          <p>Evaluarea la fața locului e gratuită în Brașov și împrejurimi — vii cu nevoia, pleci cu o soluție și un preț defalcat.</p>
+        </div>
+        <div class="cta-buttons">
+          <a href="/contact" class="btn btn-secondary">📩 Cere ofertă</a>
+          <a href="tel:0752288400" class="btn btn-primary">📞 0752 288 400</a>
+          <a target="_blank" rel="noopener" href="https://wa.me/40752288400" class="btn btn-secondary">💬 WhatsApp</a>
+        </div>
+      </div>
+<h2 id="ce-rezolva-concret">Ce rezolvă, concret</h2>
+<p>Un sistem ANPR aduce trei lucruri pe care un acces cu card sau telecomandă nu le dă la fel de bine: <strong>(1) acces fără efort</strong> — mașina autorizată intră fără ca șoferul să caute cartela sau să apese ceva, ceea ce contează enorm la flux mare, la ore de vârf; <strong>(2) zero cartele pierdute sau împrumutate</strong> — autorizarea e legată de numărul mașinii, nu de un obiect care circulă; <strong>(3) evidență automată</strong> — fiecare intrare și ieșire e înregistrată, deci știi cine a fost în incintă și când. La acestea se adaugă posibilitatea unei <strong>liste albe</strong> (cine are voie) și a unei <strong>liste negre</strong> (cui îi blochezi explicit accesul). Practic, treci de la „cine are cartela intră" la reguli flexibile, ușor de actualizat dintr-un calculator.</p>
+
+<h2 id="unde-se-foloseste-cel-mai-bine">Unde se folosește cel mai bine</h2>
+<p>ANPR strălucește oriunde ai <strong>trafic auto recurent care trebuie filtrat sau evidențiat</strong>. <strong>Parcarea unei firme</strong> — angajații intră automat, vizitatorii pe alt flux. <strong>Asociație de proprietari</strong> cu parcare proprie — doar mașinile locatarilor, fără să mai împarți zeci de telecomenzi care se pierd; vezi și articolul despre <a href="https://cssi.ro/blog/supraveghere-video-bloc-asociatie-proprietari">securitatea parcării și a spațiilor comune la asociațiile de proprietari</a>. <strong>Hotel sau pensiune</strong> — accesul oaspeților cu rezervare. <strong>Depozit sau curte logistică</strong> — evidența clară a mașinilor de marfă care intră. <strong>Parcare cu plată/abonament</strong> — abonații intră automat, restul iau tichet. În toate aceste cazuri, ANPR înlocuiește un proces manual sau o grămadă de cartele cu ceva automat și trasabil.</p>
+
+
+<h2 id="anpr-bariera-sau-anpr-doar-pentru-eviden">ANPR + barieră sau ANPR doar pentru evidență</h2>
+<p>Sistemul se folosește în două moduri. Cel mai comun: <strong>ANPR cuplat cu bariera sau poarta auto</strong> — camera citește, sistemul decide, bariera se ridică. Aici ANPR-ul se leagă de echipamentul de acces, fie că ai deja o barieră, fie că o montăm — vezi articolele despre <a href="https://cssi.ro/blog/bariere-auto-parcari-ghid-complet-2026">bariere auto</a> și despre <a href="https://cssi.ro/blog/automatizare-poarta-ghid-complet-preturi">automatizarea porților</a>. Al doilea mod: <strong>ANPR doar pentru evidență</strong>, fără să acționeze nicio barieră — pur și simplu un jurnal al mașinilor care intră și ies, util la depozite, curți logistice sau obiective unde contează trasabilitatea, dar accesul fizic e gestionat altfel. Avantajul abordării pe etape: poți începe cu evidența și adăuga bariera mai târziu, sau invers.</p>
+
+<h2 id="ce-conteaza-la-o-instalare-care-chiar-ci">Ce contează la o instalare care chiar citește corect</h2>
+<p>Aici se vede diferența dintre un sistem care „merge pe hârtie" și unul care funcționează zi de zi. Factorii care decid rata de citire: <strong>poziția camerei</strong> (înălțime, lateral sau frontal față de mașină), <strong>unghiul</strong> față de plăcuță (prea oblic = erori), <strong>zona de oprire</strong> (mașina trebuie să fie într-un punct previzibil când e citită), <strong>iluminarea</strong> (infraroșu propriu pentru noapte, fără să fie „orbită" de faruri sau soare) și <strong>viteza</strong> mașinii (prea repede = ratează cadrul). Toate astea se calculează la fața locului, în funcție de geometria intrării tale. De aceea ANPR nu e „cumperi camera și o pui": e un sistem care se <strong>proiectează</strong> pentru punctul concret. Un montaj corect ajunge la o rată de citire foarte mare în condiții normale, cu un plan B pentru cazurile-limită.</p>
+
+<h2 id="limitele-reale-fara-promisiuni-goale">Limitele reale, fără promisiuni goale</h2>
+<p>Ca să iei o decizie bună, trebuie să știi și ce poate să meargă prost. O <strong>plăcuță foarte murdară, deteriorată sau acoperită de zăpadă</strong> poate fi greu de citit — relevant în iernile din zona Brașovului. O <strong>plăcuță străină</strong> cu format neobișnuit poate cere reglaje. <strong>Vremea extremă</strong> (ninsoare densă, ceață) reduce performanța. Și, ca la orice automatizare, vrei un <strong>plan de rezervă</strong> pentru momentele în care citirea nu reușește: un interfon către recepție, un cod, o telecomandă de backup pentru cazuri speciale. Niciuna dintre aceste limite nu anulează valoarea sistemului — toate se gestionează prin proiectare corectă și prin acel plan B. Important e să le cunoști dinainte, nu să le descoperi după instalare.</p>
+
+<h2 id="gdpr-numarul-de-inmatriculare-e-data-per">GDPR: numărul de înmatriculare e dată personală</h2>
+<p>Acesta e aspectul pe care multe firme îl ignoră — și nu ar trebui. Numărul de înmatriculare poate fi <strong>dată cu caracter personal</strong>, pentru că permite identificarea indirectă a unei persoane. Un sistem ANPR trebuie, prin urmare, să aibă un <strong>temei legal</strong> (de regulă interesul legitim de a controla accesul într-o parcare privată), <strong>semnalizare</strong> la intrare, o <strong>durată rezonabilă</strong> de păstrare a înregistrărilor și <strong>măsuri de securitate</strong> a datelor. Nu e un obstacol, ci un set de reguli pe care le respecți prin configurare corectă de la început. Principiile generale le-am detaliat în articolul despre <a href="https://cssi.ro/blog/camere-supraveghere-gdpr-ghid-complet">GDPR și camerele de supraveghere</a>; autoritatea de profil în România este ANSPDCP. Acest articol e informativ, nu consultanță juridică — pentru situații specifice, un specialist în protecția datelor te ajută cu documentația.</p>
+
+<h2 id="integrarea-cu-restul-sistemului">Integrarea cu restul sistemului</h2>
+<p>ANPR dă cel mai mult randament când <strong>nu e izolat</strong>. Se leagă de bariera/poarta auto, de <a href="https://cssi.ro/blog/control-acces-firma-ghid-alegere-2026">sistemul de control acces</a> (ca accesul pietonal și cel auto să fie gestionate unitar), de camerele de supraveghere și, la nevoie, de un software de gestiune (abonamente, locuri, rapoarte). Așa, intrarea unei mașini autorizate, imaginea ei și evenimentul din jurnal sunt corelate — util la o investigație sau pentru rapoarte de trafic. La o evaluare verificăm ce echipamente ai deja și proiectăm integrarea, ca să nu cumperi componente care nu comunică între ele.</p>
+
+<h2 id="componentele-unui-sistem-anpr">Componentele unui sistem ANPR</h2>
+<p>Un sistem ANPR nu e o singură cutie, ci un lanț de componente care trebuie să lucreze împreună. <strong>Camera ANPR</strong> e piesa centrală: un senzor optimizat pentru citirea plăcuțelor, cu obiectiv variabil (focală ajustată la distanța de citire) și <strong>iluminare infraroșie proprie</strong>, integrată sau montată separat, ca să „vadă" plăcuța indiferent de oră. E diferită de o cameră de supraveghere obișnuită, care e făcută să acopere o scenă largă, nu să citească un text mic de la o distanță și un unghi precise.</p>
+<p>În spatele camerei stă <strong>software-ul de recunoaștere</strong> (motorul OCR specializat pe plăcuțe), care rulează fie direct pe cameră (procesare „on-edge", mai rapidă și mai puțin dependentă de rețea), fie pe un server sau NVR dedicat din centrala de securitate. Software-ul ține <strong>lista albă</strong> (mașini autorizate) și, dacă e cazul, <strong>lista neagră</strong>, plus <strong>jurnalul</strong> de evenimente: dată, oră, număr citit, fotografie a momentului. La sisteme mai complexe, acest jurnal se poate exporta sau conecta la un software de gestiune a parcării (abonamente, locuri disponibile, rapoarte de trafic).</p>
+<p>A treia componentă e <strong>legătura cu echipamentul de acces</strong>: releul sau modulul care trimite comanda către barieră, poartă sau turnichet, de regulă printr-o intrare dedicată sau un protocol de comunicație (releu uscat, Wiegand, TCP/IP). Aici contează compatibilitatea: nu orice cameră ANPR „vorbește" cu orice barieră fără un modul intermediar, motiv pentru care integrarea se verifică înainte de cumpărare, nu după. Nu în ultimul rând, sistemul are nevoie de <strong>alimentare stabilă</strong> și, la instalațiile serioase, de o sursă de rezervă (UPS), ca accesul să funcționeze și la o pană scurtă de curent.</p>
+
+<h2 id="anpr-versus-celelalte-metode-de-acces-au">ANPR versus celelalte metode de acces auto</h2>
+<p>ANPR nu exclude celelalte metode, dar le schimbă rolul: din soluție principală devin rezervă sau completare. Iată cum se compară, pentru un flux de mașini la o barieră:</p>
+
+<table class="compare-table">
+<thead><tr><th>Metodă de acces</th><th>Cum funcționează</th><th>Avantaje</th><th>Limite</th></tr></thead>
+<tbody>
+<tr><td><strong>Telecomandă</strong></td><td>Șoferul apasă un buton, semnal radio deschide bariera</td><td>Simplă, ieftină, fiabilă</td><td>Se pierde, se împrumută, nu ține evidență</td></tr>
+<tr><td><strong>Card / breloc RFID</strong></td><td>Se apropie de un cititor montat la intrare</td><td>Evidență pe cititor, ușor de dezactivat un card pierdut</td><td>Șoferul trebuie să coboare geamul și să acționeze ceva</td></tr>
+<tr><td><strong>Cod / tastatură</strong></td><td>Se introduce un cod la o tastatură</td><td>Fără obiect fizic de purtat, cod temporar pentru vizitatori</td><td>Codul poate fi împărtășit necontrolat dacă nu se schimbă periodic</td></tr>
+<tr><td><strong>ANPR</strong></td><td>Camera citește automat plăcuța și decide</td><td>Fără acțiune din partea șoferului, evidență automată, listă albă/neagră ușor de actualizat</td><td>Depinde de starea plăcuței și de condiții; are nevoie de plan B</td></tr>
+</tbody>
+</table>
+
+<p>Combinația cea mai solidă, mai ales la firme și asociații, e <strong>ANPR ca metodă principală + o rezervă</strong> (telecomandă pentru mașinile de serviciu, interfon pentru vizitatori). Așa acoperi și situația în care o plăcuță e greu de citit, fără să blochezi accesul cuiva care are, de fapt, dreptul să intre.</p>
+
+<h2 id="ce-influenteaza-precizia-citirii-in-deta">Ce influențează precizia citirii, în detaliu</h2>
+<p>Rata de citire a unui sistem ANPR nu e o cifră fixă „din fabrică" — depinde de cum e proiectată instalarea pentru punctul concret. Câțiva factori decisivi:</p>
+<p><strong>Unghiul camerei față de plăcuță</strong> — cu cât camera „vede" plăcuța mai frontal, cu atât citirea e mai sigură; un unghi prea oblic (montaj lateral extrem sau prea sus) deformează textul și crește erorile. <strong>Distanța și zona de oprire</strong> — mașina trebuie să ajungă într-un punct previzibil (de obicei marcat vizual sau impus de geometria intrării) când e citită; o zonă de oprire nedefinită, cu mașini care se opresc în locuri diferite, scade acuratețea. <strong>Viteza</strong> — la o barieră, mașinile circulă oricum lent, deci nu e de regulă o problemă, dar la o intrare fără obstacol fizic, o mașină care nu încetinește poate „rata" cadrul optim.</p>
+<p><strong>Iluminarea</strong> contează dublu: camera trebuie să aibă propria sursă infraroșie pentru noapte, dar și să nu fie „orbită" de faruri puternice din față sau de soare rasant dimineața sau seara — o problemă reală la intrările orientate est-vest. <strong>Starea plăcuței</strong> e factorul pe care nici cea mai bună cameră nu-l poate compensa: o plăcuță murdară, deteriorată, îndoită sau parțial acoperită de zăpadă (frecvent iarna în zona Brașovului) reduce rata de citire, la fel ca o folie sau un cadru care acoperă cifre. <strong>Plăcuțele străine</strong>, cu format diferit de cel românesc, pot cere reglaje suplimentare ale software-ului. Niciunul dintre acești factori nu se rezolvă „din birou" — se verifică la fața locului, la ora și în condițiile reale de trafic ale punctului de acces.</p>
+
+<div class="box box-warn"><div class="box-title">⚠ Greșeli frecvente la instalarea ANPR</div><p><strong>1. Cameră poziționată „pe ochi", fără calcul de unghi și distanță</strong> — funcționează la testul din prima zi, apoi rata de citire scade cu prima ploaie sau cu prima mașină oprită „strâmb". <strong>2. Fără plan B pentru citire eșuată</strong> — dacă sistemul nu recunoaște o plăcuță, nu există interfon sau cod de rezervă, iar mașina blochează coada. <strong>3. Fără semnalizare GDPR la intrare</strong> — persoanele care intră în parcare nu sunt informate că sunt filmate și că numărul e prelucrat automat. <strong>4. Integrare „pe hârtie" cu bariera</strong> — se cumpără o cameră ANPR și o barieră de la producători diferiți, fără verificare de compatibilitate, iar comanda de deschidere nu ajunge corect. <strong>5. Fără mentenanță</strong> — lentila se murdărește, unghiul se dezaxează după o lovitură minoră, iar rata de citire scade treptat, fără ca nimeni să observe până apar reclamații. <strong>6. Listă albă neactualizată</strong> — angajați plecați rămân cu acces, mașini noi nu sunt adăugate la timp, iar sistemul „nu recunoaște" mașini care ar trebui să intre.</p></div>
+
+<h2 id="costuri-orientative-2026">Costuri orientative 2026</h2>
+<p>Prețul unui sistem ANPR variază mult în funcție de câte puncte de acces ai, dacă integrezi și o barieră nouă sau doar te legi de una existentă, și de complexitatea software-ului (listă simplă versus gestiune completă cu rapoarte). Ca reper orientativ pentru un punct de acces obișnuit, în 2026:</p>
+
+<table class="compare-table">
+<thead><tr><th>Componentă</th><th>Interval orientativ</th><th>Observații</th></tr></thead>
+<tbody>
+<tr><td>Cameră ANPR dedicată (cu IR propriu)</td><td>2.500–6.000 RON / cameră</td><td>Variază cu rezoluția și distanța de citire proiectată</td></tr>
+<tr><td>Software / licență recunoaștere</td><td>1.500–4.000 RON</td><td>O dată sau abonament, în funcție de furnizor</td></tr>
+<tr><td>Integrare cu bariera existentă</td><td>500–1.500 RON</td><td>Depinde de compatibilitatea echipamentelor</td></tr>
+<tr><td>Barieră auto nouă (dacă lipsește)</td><td>de la 6.000 RON</td><td>Vezi și ghidul separat despre bariere auto</td></tr>
+<tr><td>Montaj, cablare și configurare</td><td>800–2.000 RON</td><td>Depinde de distanța până la tablou/rețea</td></tr>
+<tr><td>Mentenanță anuală (opțională)</td><td>de la 400 RON/an</td><td>Curățare lentilă, verificare unghi, actualizare listă</td></tr>
+</tbody>
+</table>
+
+<p>Practic, un sistem ANPR simplu, legat de o barieră deja existentă, se poate încadra orientativ între <strong>4.500 și 9.000 RON</strong>, în timp ce un sistem complet, cu barieră nouă și software de gestiune, poate depăși <strong>15.000 RON</strong>. Ce mută prețul: <strong>numărul de puncte de acces</strong> (intrare și ieșire separate dublează camerele), <strong>distanța de citire necesară</strong> (camere cu focală mai lungă costă mai mult), <strong>complexitatea software-ului</strong> (listă albă simplă versus gestiune cu abonamente și rapoarte), <strong>echipamentul existent</strong> (integrare cu o barieră deja montată e mai ieftină decât o instalare de la zero) și <strong>cerințele de rețea</strong> (dacă trebuie tras cablu de date până la punctul de acces). Cifrele sunt orientative — prețul exact vine după o evaluare la fața locului, cu o ofertă defalcată pe componente.</p>
+
+<div class="box box-tip"><div class="box-title">✅ Checklist înainte de a instala ANPR</div><p>Ai un <strong>punct de oprire previzibil</strong> pentru mașini la intrare (nu un spațiu larg unde se opresc oriunde)? Știi dacă bariera sau poarta existentă poate fi comandată electric de un sistem terț? Ai stabilit ce faci cu <strong>mașinile neautorizate sau vizitatorii</strong> (interfon, cod, tichet)? Ești pregătit să pui un <strong>panou de informare GDPR</strong> la intrare? Știi cine va <strong>actualiza lista albă</strong> când vine sau pleacă un angajat sau un locatar? Dacă nu ești sigur la vreun punct, exact pentru asta e evaluarea gratuită la fața locului.</p></div>
+
+<h2 id="cadrul-legal-mai-in-detaliu-ce-inseamna-">Cadrul legal, mai în detaliu: ce înseamnă „conform GDPR" pentru ANPR</h2>
+<p>Un sistem ANPR prelucrează automat o dată cu caracter personal de fiecare dată când citește o plăcuță, chiar dacă nu stochează nimic altceva despre șofer. Practic, funcționarea corectă din punct de vedere legal se sprijină pe câteva elemente concrete, pe care le stabilim la fiecare instalare:</p>
+<p><strong>Temeiul legal</strong> — de regulă, interesul legitim al proprietarului sau administratorului parcării de a controla accesul și de a preveni intrările neautorizate; la spații publice sau semi-publice, evaluarea temeiului se face de la caz la caz. <strong>Informarea</strong> — un panou vizibil la intrarea în parcare, care anunță că locul e monitorizat video și că accesul e gestionat prin recunoaștere automată a numărului de înmatriculare, cu detalii despre operator și modul de contact. <strong>Durata de păstrare</strong> — imaginile și numerele citite nu se păstrează nelimitat; se stabilește o perioadă rezonabilă, proporțională cu scopul (control acces, eventual investigarea unui incident), după care datele se șterg automat. <strong>Măsurile de securitate</strong> — acces restricționat la baza de date și la jurnalul de intrări (parolă, conturi separate pe roluri), astfel încât nu oricine din firmă poate vedea istoricul de deplasări al colegilor.</p>
+<p>Persoanele ale căror date sunt prelucrate (angajați, vizitatori, locatari) au, ca la orice prelucrare de date personale, dreptul de a fi informate și, în anumite condiții, dreptul de a solicita acces la datele proprii sau ștergerea lor. Nerespectarea acestor reguli poate atrage sancțiuni din partea ANSPDCP, dar mai important din punct de vedere practic, poate genera plângeri și neîncredere din partea celor monitorizați. Configurarea corectă de la început, nu remedierea ulterioară, e abordarea care costă cel mai puțin, atât financiar cât și ca timp.</p>
+
+<div class="box box-danger"><div class="box-title">🚨 Riscul care se ignoră cel mai des: date stocate „la nesfârșit", fără informare</div><p>Un sistem ANPR instalat „tehnic corect", dar fără panou de informare la intrare și fără o politică clară de ștergere a datelor, e o prelucrare de date personale neconformă, indiferent cât de bine citește plăcuțele. Riscul nu e teoretic: o sesizare din partea unei persoane monitorizate poate declanșa un control. La montaj, stabilim împreună cu tine temeiul legal, textul de informare și durata de retenție, ca sistemul să fie funcțional și corect din prima zi, nu „reparat" ulterior.</p></div>
+
+<h2 id="cum-arata-implementarea-cu-cssi">Cum arată implementarea cu CSSI</h2>
+<p>Un sistem ANPR bun se vede în funcționarea zilnică, nu doar în ziua instalării. Pașii unei lucrări corecte, așa cum o facem în Brașov și împrejurimi: <strong>1. Evaluare la fața locului</strong> — analizăm geometria intrării (unghi, distanță, punct de oprire), echipamentul existent (barieră, poartă, cititoare) și fluxul de trafic (câte mașini, la ce ore, câte puncte de acces). <strong>2. Proiectare</strong> — alegem camera și poziția potrivite pentru punctul concret, stabilim modul de integrare cu bariera și structura listei albe/negre. <strong>3. Ofertă defalcată</strong> — fiecare componentă (cameră, software, integrare, montaj) cu prețul ei, ca să vezi clar pe ce dai banii. <strong>4. Montaj și configurare</strong> — instalăm camera, o calibrăm pentru unghi și distanță, legăm sistemul de barieră și încărcăm lista de mașini autorizate. <strong>5. Configurare conformă GDPR</strong> — stabilim temeiul legal, textul de informare pentru panoul de la intrare și durata de retenție a datelor. <strong>6. Test în condiții reale</strong> — verificăm citirea ziua, noaptea și, dacă se poate, pe vreme nefavorabilă, plus planul B pentru mașinile care nu sunt recunoscute. <strong>7. Garanție și mentenanță</strong> — rămânem disponibili pentru reglaje, actualizări de listă și verificări periodice.</p>
+<p>Ce ne diferențiază: nu instalăm o cameră „la colț de stradă" fără să verificăm dacă vorbește cu bariera ta, îți explicăm clar ce înseamnă configurarea GDPR (nu doar „am bifat-o"), și îți arătăm în ziua recepției exact cât de bine citește sistemul, cu teste reale, nu doar cu o mașină pusă perfect în față. Aceeași echipă poate integra ANPR cu <a href="https://cssi.ro/blog/camere-supraveghere-brasov-ghid-complet-2026">camerele de supraveghere existente</a> sau cu restul controlului de acces, ca să ai un singur interlocutor pentru tot sistemul.</p>
+
+<h2 id="mentenanta-sistemului-anpr">Mentenanța sistemului ANPR</h2>
+<p>Un sistem ANPR montat corect cere puțin, dar constant. Periodic (recomandat trimestrial, mai des la trafic intens) merită verificate: <strong>curățarea lentilei</strong> (praf, ceață, urme de la spălarea intrării), <strong>alinierea camerei</strong> (un unghi ușor deplasat, uneori dintr-o lovitură accidentală sau din vibrații, poate scădea rata de citire fără să fie evident), <strong>actualizarea listei albe</strong> (angajați și locatari noi adăugați, cei plecați eliminați) și <strong>funcționarea integrării cu bariera</strong> (comanda de deschidere ajunge corect și rapid). Merită verificată și <strong>durata de păstrare a datelor</strong>, ca ștergerea automată să funcționeze conform politicii stabilite, nu doar „pe hârtie".</p>
+<p>Semnele că sistemul cere atenție: rata de citire a scăzut vizibil, apar tot mai des cazuri „necunoscute" pentru mașini care ar trebui recunoscute, sau bariera răspunde cu întârziere la comandă. La parcările cu trafic mare, un contract de mentenanță periodică previne exact aceste situații, prinzând uzura sau dezalinierea înainte să devină o coadă de mașini la intrare.</p>
+
+<h2 id="citeste-si">Citește și</h2>
+<ul>
+  <li><a href="https://cssi.ro/blog/bariere-auto-parcari-ghid-complet-2026">Bariere auto pentru parcări: ghid complet 2026</a> — tipuri de bariere și cum se integrează cu ANPR.</li>
+  <li><a href="https://cssi.ro/blog/automatizare-poarta-ghid-complet-preturi">Automatizare poartă: ghid complet și prețuri</a> — pentru accesul auto printr-o poartă automată.</li>
+  <li><a href="https://cssi.ro/blog/camere-supraveghere-gdpr-ghid-complet">GDPR și camerele de supraveghere</a> — principiile generale, valabile și pentru ANPR.</li>
+  <li><a href="https://cssi.ro/blog/control-acces-firma-ghid-alegere-2026">Control acces pentru firmă: ghid de alegere</a> — cum se leagă accesul auto de cel pietonal.</li>
+</ul>
+      <h2 id="faq">Întrebări frecvente</h2>
+      <div class="faq-wrap">
+        <div class="faq-item">
+          <button class="faq-q" onclick="toggleFaq(this)">Ce este ANPR și cum funcționează? <svg class="faq-chevron" width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg></button>
+          <div class="faq-a"><p>ANPR (numit și LPR) e o tehnologie prin care o cameră dedicată fotografiază plăcuța de înmatriculare, iar un software citește automat numărul. Dacă numărul e pe lista de mașini autorizate, sistemul deschide bariera sau poarta, fără card și fără telecomandă. În paralel, fiecare intrare/ieșire se înregistrează. E o cameră optimizată pentru citirea plăcuțelor, cu iluminare proprie pentru noapte.</p></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q" onclick="toggleFaq(this)">Unde merită un sistem ANPR? <svg class="faq-chevron" width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg></button>
+          <div class="faq-a"><p>Oriunde ai trafic auto recurent de filtrat sau evidențiat: parcarea unei firme, o asociație de proprietari, un hotel, un depozit cu intrări de marfă, o parcare cu plată. Mașina autorizată intră fără ca șoferul să facă ceva, nu se pierd cartele și ai un jurnal clar. Pentru flux mare, accelerează considerabil accesul.</p></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q" onclick="toggleFaq(this)">Ce se întâmplă cu mașinile neautorizate sau cu vizitatorii? <svg class="faq-chevron" width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg></button>
+          <div class="faq-a"><p>Pentru mașinile care nu sunt pe lista albă, sistemul poate: să nu deschidă (acces refuzat), să trimită o notificare, sau să pornească un flux pentru vizitatori (interfon către recepție, tichet, cod trimis dinainte). Poți avea și o listă neagră. Practic, configurezi reguli diferite pentru angajați, vizitatori așteptați și necunoscuți.</p></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q" onclick="toggleFaq(this)">ANPR funcționează și noaptea sau pe vreme rea? <svg class="faq-chevron" width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg></button>
+          <div class="faq-a"><p>Camerele ANPR profesionale au iluminare infraroșie proprie, deci citesc și noaptea. Performanța scade dacă plăcuța e foarte murdară, deteriorată, acoperită de zăpadă sau dacă mașina vine prea repede ori sub un unghi nepotrivit. De aceea poziționarea și zona de citire se calculează la instalare, cu un plan B pentru cazurile-limită.</p></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q" onclick="toggleFaq(this)">Numărul de înmatriculare e o dată personală? Ce spune GDPR? <svg class="faq-chevron" width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg></button>
+          <div class="faq-a"><p>Da, poate fi considerat dată cu caracter personal, pentru că permite identificarea indirectă. Un sistem ANPR are nevoie de temei legal (de regulă interesul legitim), semnalizare, durată rezonabilă de păstrare și măsuri de securitate. Nu e un obstacol, ci reguli pe care le respecți prin configurare corectă. Autoritatea de profil este ANSPDCP.</p></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q" onclick="toggleFaq(this)">Pot folosi ANPR doar pentru evidență, fără barieră? <svg class="faq-chevron" width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg></button>
+          <div class="faq-a"><p>Da. Poți instala ANPR doar ca jurnal al mașinilor care intră și ies, fără să acționeze vreo barieră. E util când vrei trasabilitate (depozite, curți logistice), dar accesul fizic e gestionat altfel. Ulterior poți adăuga bariera, dacă vrei să automatizezi și deschiderea.</p></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q" onclick="toggleFaq(this)">Se integrează ANPR cu bariera și cu restul sistemului de securitate? <svg class="faq-chevron" width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg></button>
+          <div class="faq-a"><p>Da. ANPR comandă direct bariera sau poarta și se leagă de controlul accesului, de camere și de software-ul de gestiune. Astfel, intrarea unei mașini autorizate, imaginea ei și evenimentul din jurnal sunt corelate. La o evaluare verificăm ce ai deja și proiectăm integrarea, ca să nu cumperi componente care nu comunică.</p></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q" onclick="toggleFaq(this)">Cât costă instalarea unui sistem ANPR în 2026? <svg class="faq-chevron" width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg></button>
+          <div class="faq-a"><p>Pentru un punct de acces obișnuit, legat de o barieră deja existentă, un sistem ANPR se încadrează orientativ între 4.500 și 9.000 RON (cameră, software, integrare, montaj). Dacă e nevoie și de o barieră nouă sau de un software de gestiune mai complex, bugetul poate depăși 15.000 RON. Prețul exact depinde de numărul de puncte de acces și de echipamentul deja existent — vine după o evaluare la fața locului.</p></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q" onclick="toggleFaq(this)">Cât de exact e un sistem ANPR? Poate greși? <svg class="faq-chevron" width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg></button>
+          <div class="faq-a"><p>Un sistem montat și calibrat corect ajunge la o rată de citire foarte ridicată în condiții normale de trafic. Poate greși ocazional la plăcuțe foarte murdare, deteriorate, acoperite de zăpadă sau la mașini care nu se opresc în zona proiectată pentru citire. De aceea recomandăm întotdeauna un plan B (interfon, cod, telecomandă de rezervă) pentru cazurile în care sistemul nu recunoaște automat o mașină, în loc să se blocheze accesul.</p></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q" onclick="toggleFaq(this)">Cât timp se păstrează imaginile și numerele citite de sistem? <svg class="faq-chevron" width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg></button>
+          <div class="faq-a"><p>Nu există o durată unică valabilă peste tot — se stabilește proporțional cu scopul prelucrării (control acces, eventual investigarea unui incident) și se comunică prin panoul de informare de la intrare. Practic, se configurează o ștergere automată după un interval rezonabil, ca datele să nu rămână stocate nedefinit. La instalare, stabilim împreună această durată și modul în care se aplică tehnic.</p></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q" onclick="toggleFaq(this)">Se poate integra ANPR cu o barieră sau poartă pe care o am deja? <svg class="faq-chevron" width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg></button>
+          <div class="faq-a"><p>În multe cazuri da, dacă bariera sau poarta poate fi comandată electric printr-un semnal extern (releu, contact uscat sau alt protocol standard). Verificăm la evaluare compatibilitatea echipamentului existent — uneori e nevoie de un modul de interfațare suplimentar. Dacă bariera e foarte veche sau nu permite comandă externă, discutăm și varianta înlocuirii ei.</p></div>
+        </div>
+      </div>
+
+      <aside class="discuta-in-grup">
+        <h3>Ai o întrebare despre asta?</h3>
+        <p>Discutăm subiectul în grupul nostru de pe Facebook, împreună cu electricieni, instalatori și proprietari din Brașov și împrejurimi. Pune întrebarea acolo și primești răspuns de la oameni care lucrează efectiv în domeniu. Suntem deja <!-- MEMBRI-GRUP -->351<!-- /MEMBRI-GRUP --> în grup.</p>
+        <a href="https://www.facebook.com/groups/1970585079825010" rel="noopener" target="_blank">Intră în grupul Instalații Brașov →</a>
+      </aside>
+      <div class="cta-banner">
+        <div>
+          <h3>Pașii următori — cere oferta ta</h3>
+          <p>Fără obligații: vii cu nevoia, pleci cu o soluție și un preț defalcat. CSSI — 20 de ani, 8.700+ proiecte în județul Brașov.</p>
+        </div>
+        <div class="cta-buttons">
+          <a href="/contact" class="btn btn-secondary">📩 Cere ofertă</a>
+          <a href="tel:0752288400" class="btn btn-primary">📞 0752 288 400</a>
+          <a target="_blank" rel="noopener" href="https://wa.me/40752288400" class="btn btn-secondary">💬 WhatsApp</a>
+        </div>
+      </div>
+
+    </main>
+
+    <aside class="sidebar">
+      <div class="sidebar-card">
+        <div class="sidebar-card-head">📑 Cuprins</div>
+        <div class="sidebar-card-body" style="padding:10px 18px">
+          <ol class="toc-list">
+            <li><a href="#raspunsul-scurt">Răspunsul scurt</a></li>
+            <li><a href="#ce-este-anpr-si-cum-functioneaza-pe-inte">Ce este ANPR și cum funcționează, pe înțelesul tuturor</a></li>
+            <li><a href="#ce-rezolva-concret">Ce rezolvă, concret</a></li>
+            <li><a href="#unde-se-foloseste-cel-mai-bine">Unde se folosește cel mai bine</a></li>
+            <li><a href="#anpr-bariera-sau-anpr-doar-pentru-eviden">ANPR + barieră sau ANPR doar pentru evidență</a></li>
+            <li><a href="#ce-conteaza-la-o-instalare-care-chiar-ci">Ce contează la o instalare care chiar citește corect</a></li>
+            <li><a href="#limitele-reale-fara-promisiuni-goale">Limitele reale, fără promisiuni goale</a></li>
+            <li><a href="#gdpr-numarul-de-inmatriculare-e-data-per">GDPR: numărul de înmatriculare e dată personală</a></li>
+            <li><a href="#integrarea-cu-restul-sistemului">Integrarea cu restul sistemului</a></li>
+            <li><a href="#componentele-unui-sistem-anpr">Componentele unui sistem ANPR</a></li>
+            <li><a href="#anpr-versus-celelalte-metode-de-acces-au">ANPR versus celelalte metode de acces auto</a></li>
+            <li><a href="#ce-influenteaza-precizia-citirii-in-deta">Ce influențează precizia citirii, în detaliu</a></li>
+            <li><a href="#costuri-orientative-2026">Costuri orientative 2026</a></li>
+            <li><a href="#cadrul-legal-mai-in-detaliu-ce-inseamna-">Cadrul legal, mai în detaliu: ce înseamnă „conform GDPR" pentru ANPR</a></li>
+            <li><a href="#cum-arata-implementarea-cu-cssi">Cum arată implementarea cu CSSI</a></li>
+            <li><a href="#mentenanta-sistemului-anpr">Mentenanța sistemului ANPR</a></li>
+            <li><a href="#citeste-si">Citește și</a></li>
+            <li><a href="#faq">Întrebări frecvente</a></li>
+          </ol>
+        </div>
+      </div>
+      <div class="sidebar-card">
+        <div class="sidebar-card-head">📞 Contact CSSI Brașov</div>
+        <div class="sidebar-card-body">
+          <ul class="contact-info">
+            <li><div class="ci-icon">📞</div><div><strong>0752 288 400</strong><span>Lun–Vin 08:00–18:00</span></div></li>
+            <li><div class="ci-icon">📧</div><div><strong>office@cssi.ro</strong><span>Răspuns în max 24h</span></div></li>
+            <li><div class="ci-icon">📍</div><div><strong>Brașov</strong><span>și județele înconjurătoare</span></div></li>
+          </ul>
+          <a target="_blank" rel="noopener" href="https://wa.me/40752288400" class="btn btn-primary" style="margin-top:12px">💬 Scrie pe WhatsApp</a>
+        </div>
+      </div>
+    </aside>
+  </div>
+
+<footer class="article-footer">
+    <p>Articol scris de echipa <strong>CSSI Brașov</strong> — firmă autorizată IGPR și ISU, cu peste 20 de ani de experiență în sisteme de securitate și instalații.</p>
+    <div class="tags">
+      <span class="tag">camere supraveghere brasov</span>
+      <span class="tag">instalare camere</span>
+      <span class="tag">preturi camere 2026</span>
+      <span class="tag">Hikvision</span>
+      <span class="tag">Dahua</span>
+      <span class="tag">Uniview</span>
+      <span class="tag">CCTV</span>
+      <span class="tag">Brașov</span>
+    </div>
+    <p style="font-size:12px;color:#aaa;margin-top:8px">© 2026 CSSI — Confort, Securitate, Siguranță, Imobil | <a href="/">cssi.ro</a></p>
+  </footer>
+<script>
+    function toggleFaq(btn) {
+      const item = btn.closest('.faq-item');
+      const isOpen = item.classList.contains('open');
+      document.querySelectorAll('.faq-item.open').forEach(el => el.classList.remove('open'));
+      if (!isOpen) item.classList.add('open');
+    }
+    const headings = document.querySelectorAll('h2[id]');
+    const tocLinks = document.querySelectorAll('.toc-list a');
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          tocLinks.forEach(a => a.style.color = '');
+          const active = document.querySelector(`.toc-list a[href="#${entry.target.id}"]`);
+          if (active) active.style.color = 'var(--brand-blue)';
+        }
+      });
+    }, { rootMargin: '-20% 0px -70% 0px' });
+    headings.forEach(h => observer.observe(h));
+  </script>
+  <script>
+    let navTextColor = '#fff';
+    window.addEventListener('scroll', function() {
+        const navBg = document.getElementById('navBg');
+        const logo = document.getElementById('logoImg');
+        const scrolled = window.scrollY > 50;
+        if (scrolled) {
+            navBg.style.background = '#ffffff';
+            navBg.style.backdropFilter = 'blur(12px)';
+            navBg.style.boxShadow = '0 1px 2px rgba(0,0,0,0.05)';
+            if (logo) logo.style.filter = '';
+            navTextColor = '#334155';
+        } else {
+            navBg.style.background = 'transparent';
+            navBg.style.backdropFilter = '';
+            navBg.style.boxShadow = '';
+            if (logo) logo.style.filter = 'brightness(0) invert(1) drop-shadow(0 0 1px rgba(255,255,255,0.8))';
+            navTextColor = '#fff';
+        }
+        ['navLink1','navLink2','navLink3','navLink4','navLinkBlog','navLink5','phoneLink'].forEach(id=>{
+            const el=document.getElementById(id);
+            if(el) el.style.color=navTextColor;
+        });
+    });
+    function toggleMobileMenu(){
+        const menu=document.getElementById('mobileMenu');
+        const menuIcon=document.getElementById('menuIcon');
+        const closeIcon=document.getElementById('closeIcon');
+        const btn=document.getElementById('menuBtn');
+        if(menu.classList.contains('open')){
+            menu.classList.remove('open');
+            menuIcon.style.display='';
+            closeIcon.style.display='none';
+            btn.style.background='linear-gradient(to right,#ef4444,#dc2626)';
+            btn.classList.add('animate-subtle-pulse');
+        } else {
+            menu.classList.add('open');
+            menuIcon.style.display='none';
+            closeIcon.style.display='';
+            btn.style.background='#6b7280';
+            btn.classList.remove('animate-subtle-pulse');
+        }
+    }
+    function closeMobile(){
+        document.getElementById('mobileMenu').classList.remove('open');
+        document.getElementById('menuIcon').style.display='';
+        document.getElementById('closeIcon').style.display='none';
+    }
+    function toggleServicesSubmenu(){
+        const sub=document.getElementById('servicesSubmenu');
+        const arrow=document.getElementById('servicesArrow');
+        if(sub.classList.contains('open')){
+            sub.classList.remove('open');
+            arrow.style.transform='';
+        } else {
+            sub.classList.add('open');
+            arrow.style.transform='rotate(180deg)';
+        }
+    }
+  </script>
+<script>
+// GA4 tracking: phone_call & whatsapp_click
+document.addEventListener('DOMContentLoaded', function() {
+    document.querySelectorAll('a[href^="tel:"]').forEach(function(link) {
+        link.addEventListener('click', function() {
+            if (typeof gtag === 'function') {
+                gtag('event', 'phone_call', {event_category:'Contact', event_label:this.href.replace('tel:',''), value:100, currency:'RON'});
+            }
+        });
+    });
+    document.querySelectorAll('a[href*="wa.me"]').forEach(function(link) {
+        link.addEventListener('click', function() {
+            if (typeof gtag === 'function') {
+                gtag('event', 'whatsapp_click', {event_category:'Contact', event_label:'WhatsApp Direct', value:100, currency:'RON'});
+            }
+        });
+    });
+});
+</script>
+<script src="/tawk-chat.js" defer></script>
+<button id="toTop" aria-label="Înapoi sus" onclick="window.scrollTo({top:0,behavior:&#39;smooth&#39;})"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 15l-6-6-6 6"/></svg></button><script>(function(){var b=document.getElementById("toTop");window.addEventListener("scroll",function(){if(window.scrollY>400)b.classList.add("show");else b.classList.remove("show");});})();</script>
+</body>
+</html>
