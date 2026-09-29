@@ -219,6 +219,55 @@ tr:hover td{background:rgba(59,130,246,0.03);}
 .loading-bar.active{display:block;}
 .loading-bar::after{content:'';display:block;width:30%;height:100%;background:var(--red);border-radius:2px;animation:loadSlide 1.2s infinite ease-in-out;}
 @keyframes loadSlide{0%{margin-left:-30%}100%{margin-left:100%}}
+
+/* Calendar execuție (vizibil doar pe etapa Execuție din pipeline) */
+.xc{background:#fff;border-radius:var(--radius);padding:14px;box-shadow:0 1px 3px rgba(0,0,0,0.06);margin-bottom:16px;}
+.xc-bar{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-bottom:12px;}
+.xc-nav{display:flex;align-items:center;gap:6px;}
+.xc-btn{padding:8px 12px;border:1px solid var(--gray-b);background:#fff;border-radius:10px;font-size:12px;font-weight:700;color:var(--dark);}
+.xc-btn:hover{background:var(--gray-bg);}
+.xc-label{font-size:15px;font-weight:800;color:var(--dark);margin-left:4px;}
+.xc-seg{display:flex;background:var(--gray-bg);border-radius:10px;padding:3px;}
+.xc-seg button{padding:7px 12px;border:none;background:transparent;border-radius:8px;font-size:12px;font-weight:700;color:var(--gray);}
+.xc-seg button.active{background:#fff;color:var(--dark);box-shadow:0 1px 3px rgba(0,0,0,0.08);}
+.xc-add{padding:8px 14px;border:none;background:var(--orange);color:#fff;border-radius:10px;font-size:12px;font-weight:800;}
+.xc-add:hover{filter:brightness(0.95);}
+.xc-legend{display:flex;gap:14px;font-size:11px;color:var(--gray);font-weight:600;margin-bottom:10px;flex-wrap:wrap;}
+.xc-legend i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:5px;vertical-align:-1px;}
+.xc-week{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:8px;}
+.xc-day{background:var(--gray-bg);border-radius:12px;padding:8px;min-height:140px;min-width:0;}
+.xc-day.today{box-shadow:inset 0 0 0 2px var(--blue);}
+.xc-dh{font-size:11px;font-weight:800;color:var(--gray);text-transform:uppercase;margin-bottom:6px;display:flex;justify-content:space-between;}
+.xc-dh b{color:var(--dark);font-size:13px;}
+.xc-ev{display:block;width:100%;text-align:left;border:none;border-left:4px solid var(--teal);background:#fff;border-radius:8px;padding:6px 8px;margin-bottom:6px;font-size:11px;color:var(--dark);box-shadow:0 1px 2px rgba(0,0,0,0.05);}
+.xc-ev:hover{box-shadow:0 3px 8px rgba(0,0,0,0.1);}
+.xc-ev.int{border-left-color:var(--orange);}
+.xc-ev .t{font-weight:800;}
+.xc-ev .c{font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.xc-ev .o{color:var(--gray);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.xc-tag{display:inline-block;font-size:9px;font-weight:800;padding:1px 6px;border-radius:6px;background:#ccfbf1;color:#0f766e;margin-left:4px;}
+.xc-ev.int .xc-tag{background:#ffedd5;color:#c2410c;}
+.xc-empty{font-size:11px;color:var(--gray-l);text-align:center;padding-top:20px;}
+.xc-month{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:4px;}
+.xc-mh{font-size:11px;font-weight:800;color:var(--gray);text-align:center;padding:4px 0;text-transform:uppercase;}
+.xc-cell{background:var(--gray-bg);border-radius:8px;min-height:92px;padding:5px;min-width:0;cursor:pointer;}
+.xc-cell.out{opacity:0.45;}
+.xc-cell.today{box-shadow:inset 0 0 0 2px var(--blue);}
+.xc-cell .n{font-size:12px;font-weight:800;color:var(--dark);margin-bottom:3px;}
+.xc-chip{display:block;width:100%;text-align:left;border:none;font-size:10px;font-weight:700;padding:3px 5px;border-radius:5px;margin-bottom:3px;background:#ccfbf1;color:#0f766e;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.xc-chip.int{background:#ffedd5;color:#c2410c;}
+.xc-more{font-size:10px;font-weight:800;color:var(--blue);}
+.xc-type{display:inline-block;padding:6px 12px;border-radius:10px;font-size:13px;font-weight:800;margin-bottom:12px;background:#ccfbf1;color:#0f766e;}
+.xc-type.int{background:#ffedd5;color:#c2410c;}
+.xc-tech{display:flex;flex-wrap:wrap;gap:8px;}
+.xc-tech label{display:flex;align-items:center;gap:5px;font-size:12px;font-weight:700;background:var(--gray-bg);padding:6px 10px;border-radius:8px;cursor:pointer;}
+@media(max-width:900px){
+  .xc-week{grid-template-columns:1fr;}
+  .xc-day{min-height:0;}
+  .xc-empty{padding-top:0;text-align:left;}
+  .xc-cell{min-height:64px;}
+  .xc-chip{font-size:9px;}
+}
 </style>
 <script src="/admin/access-guard.js" defer></script>
 </head>
@@ -263,8 +312,62 @@ tr:hover td{background:rgba(59,130,246,0.03);}
 
     <div id="cardList" class="cards"></div>
     <div id="tableWrap" class="table-wrap" style="display:none"></div>
+    <div id="execCal" class="xc" style="display:none"></div>
 
     <div class="footer">Portal CSSI 3.0 · Modul CRM Clienți v3.0</div>
+</div>
+
+<!-- CALENDAR EXECUȚIE: detalii lucrare -->
+<div id="xcEvModal" class="modal-overlay" onclick="if(event.target===this)xcCloseEv()">
+<div class="modal">
+    <div class="modal-head"><div class="modal-title" id="xcEvTitle">Lucrare</div><button class="modal-close" onclick="xcCloseEv()">✕</button></div>
+    <div class="modal-body" id="xcEvBody"></div>
+</div>
+</div>
+
+<!-- CALENDAR EXECUȚIE: intervenție nouă (același endpoint ca în Planificare) -->
+<div id="xcAddModal" class="modal-overlay" onclick="if(event.target===this)xcCloseAdd()">
+<div class="modal">
+    <div class="modal-head"><div class="modal-title">⚡ Intervenție nouă</div><button class="modal-close" onclick="xcCloseAdd()">✕</button></div>
+    <div class="modal-body">
+        <form onsubmit="xcSubmitAdd(event)">
+            <div class="form-group">
+                <label class="form-label">Client <span class="req">*</span></label>
+                <select class="form-select" id="xcCli" onchange="xcCliChange()">
+                    <option value="">— Alege client existent —</option>
+                    <option value="__nou">➕ Client nou</option>
+                </select>
+            </div>
+            <div class="form-row" id="xcCliNou" style="display:none">
+                <div class="form-group"><label class="form-label">Nume client <span class="req">*</span></label><input type="text" class="form-input" id="xcCliNume" placeholder="Nume sau firmă"></div>
+                <div class="form-group"><label class="form-label">Telefon</label><input type="tel" class="form-input" id="xcCliTel" placeholder="07xx xxx xxx"></div>
+            </div>
+            <div class="form-group"><label class="form-label">Ce se face <span class="req">*</span></label><input type="text" class="form-input" id="xcTitlu" required placeholder="Ex: Înlocuire cameră defectă, reglaj poartă"></div>
+            <div class="form-row">
+                <div class="form-group"><label class="form-label">Serviciu</label><select class="form-select" id="xcServ"></select></div>
+                <div class="form-group"><label class="form-label">Adresă</label><input type="text" class="form-input" id="xcAdresa" placeholder="Str., nr., oraș"></div>
+            </div>
+            <div class="form-row">
+                <div class="form-group"><label class="form-label">Data <span class="req">*</span></label><input type="date" class="form-input" id="xcData" required></div>
+                <div class="form-group"><label class="form-label">Ora</label><input type="time" class="form-input" id="xcOra" value="09:00"></div>
+            </div>
+            <div class="form-row">
+                <div class="form-group"><label class="form-label">Durată (ore)</label><input type="number" class="form-input" id="xcDurata" value="2" min="0.5" step="0.5"></div>
+                <div class="form-group"><label class="form-label">Prioritate</label>
+                    <select class="form-select" id="xcPrio">
+                        <option value="Urgentă">🔴 Urgentă</option>
+                        <option value="Ridicată">🟠 Ridicată</option>
+                        <option value="Normală" selected>🔵 Normală</option>
+                        <option value="Scăzută">⚪ Scăzută</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group"><label class="form-label">Echipă</label><div class="xc-tech" id="xcTech"></div></div>
+            <div class="form-group"><label class="form-label">Detalii</label><textarea class="form-textarea" id="xcNote" placeholder="Ce a raportat clientul, acces, persoană de contact..."></textarea></div>
+            <button type="submit" class="form-submit" id="xcAddBtn">⚡ Creează intervenția</button>
+        </form>
+    </div>
+</div>
 </div>
 
 <!-- Bottom Nav -->
@@ -575,6 +678,16 @@ function updateSyncStatus() {
 function render() {
     renderSummary();
     renderPipeline();
+    // Etapa Execuție → calendarul lucrărilor în locul listei
+    var isExec = currentFilter === 's-negociere';
+    document.querySelector('.filters').style.display = isExec ? 'none' : '';
+    document.getElementById('execCal').style.display = isExec ? '' : 'none';
+    if (isExec) {
+        document.getElementById('cardList').style.display = 'none';
+        document.getElementById('tableWrap').style.display = 'none';
+        xcShow();
+        return;
+    }
     if (currentView === 'cards') {
         renderCards();
         document.getElementById('cardList').style.display = '';
@@ -1224,6 +1337,267 @@ function pdfOferta(ofertaId) {
 }
 
 // ═══════ HELPERS ═══════
+
+// ═══════════════════════════════════════════════════
+// CALENDAR EXECUȚIE — doar citire din getExecutie + getInterventii;
+// singura scriere e „+ Intervenție", prin createInterventie (ca în Planificare).
+// Tip: „Din contract" = programare pe un proiect din pipeline;
+//      „Intervenție" = proiect cu status Interventie / cu PV de intervenție / reparație programată.
+// ═══════════════════════════════════════════════════
+var XC_TECH = [
+    {id:'zoli',name:'Zoli'},{id:'sanyi',name:'Sanyi'},{id:'bogdan',name:'Bogdan'},
+    {id:'cezar',name:'Cezar'},{id:'cristi',name:'Cristi'},{id:'denes',name:'Denes'}
+];
+var XC_DAYS = ['Lun','Mar','Mie','Joi','Vin','Sâm','Dum'];
+var XC_MONTHS = ['Ianuarie','Februarie','Martie','Aprilie','Mai','Iunie','Iulie','August','Septembrie','Octombrie','Noiembrie','Decembrie'];
+var XC = { mode:'week', ref:new Date(), items:[], byId:{}, key:'', intSet:null, clientiLoaded:false };
+
+function xcYmd(d){ return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0'); }
+function xcParse(s){ var p=String(s||'').split('-'); return new Date(+p[0], (+p[1]||1)-1, +p[2]||1); }
+function xcMonday(d){ var x=new Date(d.getFullYear(),d.getMonth(),d.getDate()); var wd=(x.getDay()+6)%7; x.setDate(x.getDate()-wd); return x; }
+function xcAdd(d,n){ var x=new Date(d.getFullYear(),d.getMonth(),d.getDate()); x.setDate(x.getDate()+n); return x; }
+function xcTechName(id){ for(var i=0;i<XC_TECH.length;i++){ if(XC_TECH[i].id===id) return XC_TECH[i].name; } return id; }
+
+function xcRange(){
+    if (XC.mode === 'week') { var s=xcMonday(XC.ref); return {from:s, to:xcAdd(s,6)}; }
+    var first=new Date(XC.ref.getFullYear(), XC.ref.getMonth(), 1);
+    var last=new Date(XC.ref.getFullYear(), XC.ref.getMonth()+1, 0);
+    var s2=xcMonday(first); var e2=xcAdd(xcMonday(last),6);
+    return {from:s2, to:e2};
+}
+
+function xcShow(){
+    var r = xcRange();
+    var key = XC.mode+'|'+xcYmd(r.from)+'|'+xcYmd(r.to);
+    xcRender();
+    if (key !== XC.key) xcLoad(r, key);
+}
+
+function xcLoad(r, key){
+    XC.key = key;
+    showLoading(true);
+    var qs = '&planner=1&from='+xcYmd(r.from)+'&to='+xcYmd(r.to)+'&_t='+Date.now();
+    var pExec = fetch(API_DB+'?action=getExecutie'+qs,{credentials:'include'}).then(function(x){return x.json();});
+    var pInt = XC.intSet ? Promise.resolve(null)
+        : fetch(API_DB+'?action=getInterventii&_t='+Date.now(),{credentials:'include'}).then(function(x){return x.json();}).catch(function(){return null;});
+    Promise.all([pExec, pInt]).then(function(res){
+        showLoading(false);
+        if (XC.key !== key) return; // între timp s-a navigat în altă perioadă
+        var ex = res[0], iv = res[1];
+        if (iv && iv.success && Array.isArray(iv.data)) {
+            XC.intSet = {};
+            iv.data.forEach(function(p){ if(p.proiect_db_id) XC.intSet[p.proiect_db_id]=true; });
+        }
+        if (!ex || !ex.success || !ex.data) throw new Error((ex && ex.error) || 'Eroare la încărcare');
+        var proj = {};
+        (ex.data.proiecte||[]).forEach(function(p){ proj[p.proiect_db_id]=p; });
+        XC.items = []; XC.byId = {};
+        (ex.data.programari||[]).forEach(function(pg){
+            var isRep = pg.tip === 'reparatie';
+            var p = isRep ? {} : (proj[pg.proiect_id] || {});
+            var isInt = isRep || p.proiect_status === 'Interventie' || !!(XC.intSet && XC.intSet[pg.proiect_id]);
+            var srv = isRep ? pg.serviciu : p.serviciu;
+            var it = {
+                id: String(pg.id),
+                date: pg.data_programata,
+                ora: String(pg.ora_start||'08:00').slice(0,5),
+                durata: parseFloat(pg.durata_ore)||0,
+                status: pg.status || '',
+                isInt: isInt,
+                isRep: isRep,
+                client: isRep ? (pg.client_nume||'') : (p.client_nume||''),
+                tel: isRep ? (pg.client_telefon||'') : (p.client_telefon||''),
+                adresa: isRep ? (pg.adresa_obiectiv||'') : (p.adresa_obiectiv||''),
+                serviciu: SERV_DB_TO_UI[srv] || srv || '',
+                cod: isRep ? (pg.proiect_cod||'') : (p.proiect_id||''),
+                proiectDbId: isRep ? null : pg.proiect_id,
+                obiectiv: pg.obiectiv || p.obiectiv || '',
+                note: pg.note || '',
+                prioritate: pg.prioritate || '',
+                echipa: (pg.atribuiri||[]).map(xcTechName)
+            };
+            XC.items.push(it); XC.byId[it.id] = it;
+        });
+        XC.items.sort(function(a,b){ return (a.date+a.ora).localeCompare(b.date+b.ora); });
+        xcRender();
+    }).catch(function(e){
+        showLoading(false);
+        XC.key = '';
+        toast('⚠️ Calendar: '+(e.message||e),'error');
+    });
+}
+
+function xcItemsOn(ymd){ return XC.items.filter(function(i){ return i.date === ymd; }); }
+
+function xcRender(){
+    var box = document.getElementById('execCal');
+    var r = xcRange();
+    var label;
+    if (XC.mode === 'week') {
+        var a=r.from, b=r.to;
+        label = a.getDate()+(a.getMonth()!==b.getMonth()?' '+XC_MONTHS[a.getMonth()].slice(0,3):'')+' – '+b.getDate()+' '+XC_MONTHS[b.getMonth()].slice(0,3)+' '+b.getFullYear();
+    } else {
+        label = XC_MONTHS[XC.ref.getMonth()]+' '+XC.ref.getFullYear();
+    }
+    var nC = XC.items.filter(function(i){return !i.isInt;}).length, nI = XC.items.length - nC;
+    var html = '<div class="xc-bar">'
+        + '<div class="xc-nav"><button class="xc-btn" onclick="xcNav(-1)" aria-label="Înapoi">‹</button>'
+        + '<button class="xc-btn" onclick="xcToday()">Azi</button>'
+        + '<button class="xc-btn" onclick="xcNav(1)" aria-label="Înainte">›</button>'
+        + '<span class="xc-label">'+label+'</span></div>'
+        + '<div class="xc-nav"><div class="xc-seg">'
+        + '<button class="'+(XC.mode==='week'?'active':'')+'" onclick="xcMode(\'week\')">Pe săptămână</button>'
+        + '<button class="'+(XC.mode==='month'?'active':'')+'" onclick="xcMode(\'month\')">Pe lună</button></div>'
+        + '<button class="xc-add" onclick="xcOpenAdd()">+ Intervenție</button></div>'
+        + '</div>'
+        + '<div class="xc-legend"><span><i style="background:var(--teal)"></i>Din contract ('+nC+')</span>'
+        + '<span><i style="background:var(--orange)"></i>Intervenție ('+nI+')</span></div>';
+    var todayY = xcYmd(new Date());
+    if (XC.mode === 'week') {
+        html += '<div class="xc-week">';
+        for (var d=0; d<7; d++) {
+            var day = xcAdd(r.from,d), y = xcYmd(day), list = xcItemsOn(y);
+            html += '<div class="xc-day'+(y===todayY?' today':'')+'"><div class="xc-dh">'+XC_DAYS[d]+' <b>'+day.getDate()+'</b></div>';
+            if (!list.length) html += '<div class="xc-empty">—</div>';
+            list.forEach(function(i){
+                html += '<button class="xc-ev'+(i.isInt?' int':'')+'" onclick="xcOpenEv(\''+esc(i.id)+'\')">'
+                    + '<div><span class="t">'+esc(i.ora)+'</span><span class="xc-tag">'+(i.isInt?'Intervenție':'Din contract')+'</span></div>'
+                    + '<div class="c">'+esc(i.client||'—')+'</div>'
+                    + '<div class="o">'+esc(i.obiectiv||i.serviciu)+'</div>'
+                    + (i.echipa.length?'<div class="o">👷 '+esc(i.echipa.join(', '))+'</div>':'')
+                    + '</button>';
+            });
+            html += '</div>';
+        }
+        html += '</div>';
+    } else {
+        html += '<div class="xc-month">';
+        XC_DAYS.forEach(function(n){ html += '<div class="xc-mh">'+n+'</div>'; });
+        var cur = r.from, m = XC.ref.getMonth();
+        while (cur <= r.to) {
+            var y2 = xcYmd(cur), list2 = xcItemsOn(y2);
+            html += '<div class="xc-cell'+(cur.getMonth()!==m?' out':'')+(y2===todayY?' today':'')+'" onclick="xcGoWeek(\''+y2+'\')">'
+                + '<div class="n">'+cur.getDate()+'</div>';
+            list2.slice(0,3).forEach(function(i){
+                html += '<button class="xc-chip'+(i.isInt?' int':'')+'" onclick="event.stopPropagation();xcOpenEv(\''+esc(i.id)+'\')" title="'+esc((i.isInt?'Intervenție':'Din contract')+' · '+i.client)+'">'
+                    + esc(i.ora+' '+(i.client||'—'))+'</button>';
+            });
+            if (list2.length > 3) html += '<div class="xc-more">+'+(list2.length-3)+' mai multe</div>';
+            html += '</div>';
+            cur = xcAdd(cur,1);
+        }
+        html += '</div>';
+    }
+    box.innerHTML = html;
+}
+
+function xcNav(n){
+    if (XC.mode === 'week') XC.ref = xcAdd(XC.ref, 7*n);
+    else XC.ref = new Date(XC.ref.getFullYear(), XC.ref.getMonth()+n, 1);
+    xcShow();
+}
+function xcToday(){ XC.ref = new Date(); xcShow(); }
+function xcMode(m){ XC.mode = m; xcShow(); }
+function xcGoWeek(ymd){ XC.ref = xcParse(ymd); XC.mode = 'week'; xcShow(); }
+
+function xcOpenEv(id){
+    var i = XC.byId[id]; if (!i) return;
+    var d = xcParse(i.date);
+    var dayName = ['Duminică','Luni','Marți','Miercuri','Joi','Vineri','Sâmbătă'][d.getDay()];
+    document.getElementById('xcEvTitle').textContent = i.client || 'Lucrare';
+    var h = '<div class="xc-type'+(i.isInt?' int':'')+'">'+(i.isInt?'⚡ Intervenție':'📄 Din contract')+'</div>';
+    // infoRow nu escapează — tot ce vine din DB trece prin esc()
+    h += infoRow('📅 Data', dayName+', '+d.getDate()+' '+XC_MONTHS[d.getMonth()]+' '+d.getFullYear());
+    h += infoRow('🕘 Ora', esc(i.ora)+(i.durata?' · '+i.durata+' h':''));
+    if (i.obiectiv) h += infoRow('🛠️ Lucrare', esc(i.obiectiv));
+    if (i.serviciu) h += infoRow('🏷️ Serviciu', esc(i.serviciu));
+    if (i.adresa) h += infoRow('📍 Adresă', esc(i.adresa));
+    if (i.tel) h += infoRow('📞 Telefon', '<a href="tel:'+esc(i.tel)+'" style="color:var(--blue)">'+esc(i.tel)+'</a>');
+    h += infoRow('👷 Echipă', i.echipa.length ? esc(i.echipa.join(', ')) : 'Neatribuită');
+    if (i.status) h += infoRow('🔄 Status', esc(i.status));
+    if (i.prioritate) h += infoRow('⚠️ Prioritate', esc(i.prioritate));
+    if (i.cod) h += infoRow('🔗 Proiect', esc(i.cod));
+    if (i.note) h += infoRow('📝 Note', esc(i.note));
+    if (i.proiectDbId) h += '<a class="form-submit" style="display:block;text-align:center;margin-top:14px" href="executie-proiect.html?id='+encodeURIComponent(i.proiectDbId)+'">Deschide lucrarea →</a>';
+    else if (i.isRep) h += '<a class="form-submit" style="display:block;text-align:center;margin-top:14px" href="interventii.html">Deschide în Intervenții →</a>';
+    document.getElementById('xcEvBody').innerHTML = h;
+    document.getElementById('xcEvModal').classList.add('active');
+}
+function xcCloseEv(){ document.getElementById('xcEvModal').classList.remove('active'); }
+
+function xcOpenAdd(){
+    var serv = document.getElementById('xcServ');
+    if (!serv.options.length) {
+        serv.innerHTML = CRM_SERVICII.map(function(s){ return '<option value="'+esc(s.db)+'">'+esc(s.ui)+'</option>'; }).join('');
+        serv.value = 'Complex';
+        document.getElementById('xcTech').innerHTML = XC_TECH.map(function(t){
+            return '<label><input type="checkbox" value="'+t.id+'"> '+t.name+'</label>';
+        }).join('');
+    }
+    if (!XC.clientiLoaded) {
+        fetch(API_DB+'?action=getClienti&_t='+Date.now(),{credentials:'include'}).then(function(x){return x.json();}).then(function(res){
+            if (!res.success) return;
+            XC.clientiLoaded = true;
+            var sel = document.getElementById('xcCli');
+            var opts = (res.data||[]).slice().sort(function(a,b){return String(a.nume||'').localeCompare(String(b.nume||''),'ro');})
+                .map(function(c){ return '<option value="'+c.id+'">'+esc(c.nume)+(c.telefon?' · '+esc(c.telefon):'')+'</option>'; }).join('');
+            sel.innerHTML = '<option value="">— Alege client existent —</option><option value="__nou">➕ Client nou</option>'+opts;
+        }).catch(function(){});
+    }
+    var r = xcRange(), today = new Date();
+    var def = (today >= r.from && today <= r.to) ? today : (XC.mode==='week' ? r.from : new Date(XC.ref.getFullYear(), XC.ref.getMonth(), 1));
+    document.getElementById('xcData').value = xcYmd(def);
+    document.getElementById('xcAddModal').classList.add('active');
+}
+function xcCloseAdd(){ document.getElementById('xcAddModal').classList.remove('active'); }
+function xcCliChange(){
+    document.getElementById('xcCliNou').style.display = document.getElementById('xcCli').value === '__nou' ? '' : 'none';
+}
+function xcSubmitAdd(ev){
+    ev.preventDefault();
+    var cv = document.getElementById('xcCli').value;
+    var isNou = cv === '__nou';
+    var clientId = (!isNou && cv) ? parseInt(cv) : 0;
+    var clientNume = isNou ? document.getElementById('xcCliNume').value.trim() : '';
+    var titlu = document.getElementById('xcTitlu').value.trim();
+    if (!clientId && !clientNume) { toast('⚠️ Alege un client sau completează numele clientului nou','error'); return; }
+    if (!titlu) { toast('⚠️ Completează ce se face','error'); return; }
+    var payload = {
+        action: 'createInterventie',
+        client_id: clientId || null,
+        client_nume: clientNume,
+        telefon: isNou ? document.getElementById('xcCliTel').value.trim() : '',
+        titlu: titlu,
+        serviciu: document.getElementById('xcServ').value,
+        adresa: document.getElementById('xcAdresa').value.trim(),
+        prioritate: document.getElementById('xcPrio').value,
+        data: document.getElementById('xcData').value,
+        ora_start: document.getElementById('xcOra').value || '09:00',
+        durata_ore: parseFloat(document.getElementById('xcDurata').value) || 2,
+        tehnicieni: [].slice.call(document.querySelectorAll('#xcTech input:checked')).map(function(i){return i.value;}),
+        note: document.getElementById('xcNote').value.trim(),
+        user: sessionStorage.getItem('cssi-user') || role || 'Admin'
+    };
+    var btn = document.getElementById('xcAddBtn'), orig = btn.textContent;
+    btn.disabled = true; btn.textContent = '⏳ Se creează...';
+    fetch(API_DB+'?action=createInterventie',{method:'POST',credentials:'include',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)})
+        .then(function(x){return x.json();})
+        .then(function(res){
+            btn.disabled = false; btn.textContent = orig;
+            if (!res.success) throw new Error(res.error||'Eroare');
+            xcCloseAdd();
+            ev.target.reset(); xcCliChange();
+            if (isNou) XC.clientiLoaded = false;
+            toast('⚡ Intervenție creată: '+(res.proiect_id||''),'success');
+            XC.intSet = null; XC.key = '';
+            XC.ref = xcParse(payload.data);
+            xcShow();
+        })
+        .catch(function(e){
+            btn.disabled = false; btn.textContent = orig;
+            toast('❌ '+(e.message||e),'error');
+        });
+}
 
 function formatRON(val) {
     if (!val) return '0 RON';

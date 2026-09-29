@@ -182,7 +182,7 @@ function actionModules() {
         'getInterventiePV'      => ['interventii'],
         'saveInterventiePV'     => ['interventii'],
         'migrateReclamatii'     => ['interventii'],
-        'getExecutie'           => ['executie','planificare'],
+        'getExecutie'           => ['executie','planificare','crm'],
         'getProiectExecutie'    => ['executie'],
         'saveProgramare'        => ['executie','interventii','planificare'],
         'deleteProgramare'      => ['executie','interventii','planificare'],
