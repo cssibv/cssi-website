@@ -1559,7 +1559,7 @@ function xcRender(){
         var cur = r.from, m = XC.ref.getMonth();
         while (cur <= r.to) {
             var y2 = xcYmd(cur), list2 = xcItemsOn(y2);
-            html += '<div class="xc-cell'+(cur.getMonth()!==m?' out':'')+(y2===todayY?' today':'')+'" onclick="xcGoWeek(\''+y2+'\')">'
+            html += '<div class="xc-cell'+(cur.getMonth()!==m?' out':'')+(y2===todayY?' today':'')+'" onclick="xcOpenDay(\''+y2+'\')">'
                 + '<div class="n">'+cur.getDate()+'</div>';
             list2.slice(0,3).forEach(function(i){
                 html += '<button class="xc-chip'+(i.isInt?' int':'')+'" onclick="event.stopPropagation();xcOpenEv(\''+esc(i.id)+'\')" title="'+esc((i.isInt?'Intervenție':'Din contract')+' · '+i.client)+'">'
@@ -1792,7 +1792,26 @@ document.addEventListener('keydown', function(e){
     xcNav(e.key === 'ArrowLeft' ? -1 : 1);
 });
 function xcMode(m){ XC.mode = m; XC.pickOpen = false; xcShow(); }
-function xcGoWeek(ymd){ XC.ref = xcParse(ymd); XC.mode = 'week'; xcShow(); }
+// Click pe o zi (vederea lunară): lista completă a zilei + intervenție nouă cu data completată
+function xcOpenDay(ymd){
+    var d = xcParse(ymd), list = xcItemsOn(ymd);
+    var DZ = ['Duminică','Luni','Marți','Miercuri','Joi','Vineri','Sâmbătă'];
+    document.getElementById('xcEvTitle').textContent = DZ[d.getDay()]+', '+d.getDate()+' '+XC_MONTHS[d.getMonth()]+' '+d.getFullYear();
+    var h = '';
+    if (!list.length) h += '<div class="xc-list-empty" style="padding:24px 12px">Nicio lucrare în ziua asta.</div>';
+    list.forEach(function(i){
+        h += '<button class="xc-ev'+(i.isInt?' int':'')+'" style="padding:10px 12px;font-size:13px" onclick="xcCloseEv();xcOpenEv(\''+esc(i.id)+'\')">'
+            + '<div><span class="t">'+esc(i.ora)+'</span><span class="xc-tag">'+(i.isInt?'Intervenție':'Din contract')+'</span></div>'
+            + '<div class="c">'+esc(i.client||'—')+'</div>'
+            + '<div class="o">'+esc(i.obiectiv||i.serviciu)+'</div>'
+            + '<div class="o">👷 '+esc(i.echipa.length?i.echipa.join(', '):'Neatribuită')+'</div>'
+            + '</button>';
+    });
+    if (ymd >= xcYmd(new Date()))
+        h += '<button class="form-submit" style="margin-top:12px;background:var(--orange)" onclick="xcCloseEv();xcOpenAdd(\''+ymd+'\')">+ Intervenție în ziua asta</button>';
+    document.getElementById('xcEvBody').innerHTML = h;
+    document.getElementById('xcEvModal').classList.add('active');
+}
 
 function xcOpenEv(id){
     var i = XC.byId[id]; if (!i) return;
@@ -1819,7 +1838,7 @@ function xcOpenEv(id){
 }
 function xcCloseEv(){ document.getElementById('xcEvModal').classList.remove('active'); }
 
-function xcOpenAdd(){
+function xcOpenAdd(presetYmd){
     var serv = document.getElementById('xcServ');
     if (!serv.options.length) {
         serv.innerHTML = CRM_SERVICII.map(function(s){ return '<option value="'+esc(s.db)+'">'+esc(s.ui)+'</option>'; }).join('');
@@ -1840,7 +1859,7 @@ function xcOpenAdd(){
     }
     var r = xcRange(), today = new Date();
     var def = (today >= r.from && today <= r.to) ? today : (XC.mode==='week' ? r.from : new Date(XC.ref.getFullYear(), XC.ref.getMonth(), 1));
-    document.getElementById('xcData').value = xcYmd(def);
+    document.getElementById('xcData').value = (typeof presetYmd === 'string' && presetYmd) ? presetYmd : xcYmd(def);
     document.getElementById('xcAddModal').classList.add('active');
 }
 function xcCloseAdd(){ document.getElementById('xcAddModal').classList.remove('active'); }
