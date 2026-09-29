@@ -1458,6 +1458,16 @@ try {
             jsonResponse(['success' => true, 'modules' => getAllowedModules($db, $u), 'role' => $u['role'], 'is_tehnician' => $u['is_tehnician']]);
             break;
 
+        // Echipa de teren pentru formularele de programare: conturile active marcate
+        // „Tehnician teren” în Utilizatori. Doar username + nume afișat, nimic sensibil.
+        case 'getTehnicieni':
+            requireAuth();
+            $rows = $db->query("SELECT username, display_name FROM users WHERE is_tehnician = 1 AND active = 1 ORDER BY display_name, username")->fetchAll();
+            $out = [];
+            foreach ($rows as $r) $out[] = ['id' => $r['username'], 'name' => $r['display_name'] ?: $r['username']];
+            jsonResponse(['success' => true, 'data' => $out]);
+            break;
+
         case 'checkModuleAccess':
             requireAuth();
             $module = isset($_GET['module']) ? trim($_GET['module']) : '';
