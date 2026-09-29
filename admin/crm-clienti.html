@@ -1512,7 +1512,7 @@ function xcRender(){
         onToday = now.getMonth()===mm && now.getFullYear()===yy;
     }
     var visC = vis.filter(function(i){return !i.isInt;}), visI = vis.filter(function(i){return i.isInt;});
-    function lg(l){ var n = xcProjCount(l); return n+(n===1?' proiect':' proiecte')+' · '+l.length+(l.length===1?' zi':' zile'); }
+    function lg(l){ var n = xcProjCount(l); return n+(n===1?' proiect':' proiecte'); }
     var html = '<div class="xc-bar">'
         + '<div class="xc-seg">'
         + '<button class="'+(XC.mode==='month'?'active':'')+'" onclick="xcMode(\'month\')">Pe lună</button>'
