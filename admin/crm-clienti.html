@@ -1365,7 +1365,7 @@ var XC_TECH = [
 ];
 var XC_DAYS = ['Lun','Mar','Mie','Joi','Vin','Sâm','Dum'];
 var XC_MONTHS = ['Ianuarie','Februarie','Martie','Aprilie','Mai','Iunie','Iulie','August','Septembrie','Octombrie','Noiembrie','Decembrie'];
-var XC = { mode:'month', ref:new Date(), items:[], byId:{}, projects:[], intervList:[], projByKey:{}, loaded:false, loading:false, intSet:null, clientiLoaded:false, listF:'toate' };
+var XC = { mode:'month', ref:new Date(), items:[], cal:[], byId:{}, projects:[], intervList:[], projByKey:{}, loaded:false, loading:false, intSet:null, clientiLoaded:false, listF:'toate' };
 
 function xcYmd(d){ return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0'); }
 function xcParse(s){ var p=String(s||'').split('-'); return new Date(+p[0], (+p[1]||1)-1, +p[2]||1); }
@@ -1468,6 +1468,9 @@ function xcLoad(){
         });
         XC.projects.sort(sortP); XC.intervList.sort(sortP);
         XC.projects.concat(XC.intervList).forEach(function(p){ XC.projByKey[p.key] = p; });
+        // Calendarul arată aceleași lucrări ca lista: proiectele din Execuție + intervențiile.
+        // Zilele proiectelor ieșite deja din Execuție (Recepție, Facturat...) nu mai apar.
+        XC.cal = XC.items.filter(function(it){ return it.isRep || !!XC.projByKey['p' + it.proiectDbId]; });
         XC.loaded = true;
         xcRender();
     }).catch(function(e){
@@ -1477,9 +1480,11 @@ function xcLoad(){
     });
 }
 
-function xcItemsOn(ymd){ return XC.items.filter(function(i){ return i.date === ymd; }); }
-function xcItemsBetween(a, b){ var fa=xcYmd(a), fb=xcYmd(b); return XC.items.filter(function(i){ return i.date >= fa && i.date <= fb; }); }
-function xcCountMonth(y, m){ var pre = y+'-'+String(m+1).padStart(2,'0'); return XC.items.filter(function(i){ return i.date.slice(0,7) === pre; }).length; }
+function xcKey(i){ return i.isRep ? 'r' + i.id : 'p' + i.proiectDbId; }
+function xcProjCount(list){ var k = {}; list.forEach(function(i){ k[xcKey(i)] = 1; }); return Object.keys(k).length; }
+function xcItemsOn(ymd){ return XC.cal.filter(function(i){ return i.date === ymd; }); }
+function xcItemsBetween(a, b){ var fa=xcYmd(a), fb=xcYmd(b); return XC.cal.filter(function(i){ return i.date >= fa && i.date <= fb; }); }
+function xcCountMonth(y, m){ var pre = y+'-'+String(m+1).padStart(2,'0'); return xcProjCount(XC.cal.filter(function(i){ return i.date.slice(0,7) === pre; })); }
 function xcCnt(n){ return n ? ' <b class="xc-cnt">'+n+'</b>' : ''; }
 
 function xcRender(){
@@ -1493,8 +1498,8 @@ function xcRender(){
     } else if (XC.mode === 'week') {
         var a=r.from, b=r.to;
         label = a.getDate()+(a.getMonth()!==b.getMonth()?' '+XC_MONTHS[a.getMonth()].slice(0,3):'')+' – '+b.getDate()+' '+XC_MONTHS[b.getMonth()].slice(0,3)+' '+b.getFullYear();
-        prevL = 'Săpt. anterioară'+xcCnt(xcItemsBetween(xcAdd(a,-7), xcAdd(a,-1)).length);
-        nextL = 'Săpt. următoare'+xcCnt(xcItemsBetween(xcAdd(b,1), xcAdd(b,7)).length);
+        prevL = 'Săpt. anterioară'+xcCnt(xcProjCount(xcItemsBetween(xcAdd(a,-7), xcAdd(a,-1))));
+        nextL = 'Săpt. următoare'+xcCnt(xcProjCount(xcItemsBetween(xcAdd(b,1), xcAdd(b,7))));
         vis = xcItemsBetween(a, b);
         onToday = now >= a && now < xcAdd(b,1);
     } else {
@@ -1506,7 +1511,8 @@ function xcRender(){
         vis = xcItemsBetween(new Date(yy, mm, 1), new Date(yy, mm+1, 0));
         onToday = now.getMonth()===mm && now.getFullYear()===yy;
     }
-    var nC = vis.filter(function(i){return !i.isInt;}).length, nI = vis.length - nC;
+    var visC = vis.filter(function(i){return !i.isInt;}), visI = vis.filter(function(i){return i.isInt;});
+    function lg(l){ var n = xcProjCount(l); return n+(n===1?' proiect':' proiecte')+' · '+l.length+(l.length===1?' zi':' zile'); }
     var html = '<div class="xc-bar">'
         + '<div class="xc-seg">'
         + '<button class="'+(XC.mode==='month'?'active':'')+'" onclick="xcMode(\'month\')">Pe lună</button>'
@@ -1525,8 +1531,8 @@ function xcRender(){
         + '<button class="xc-btn" onclick="xcToday()"'+(onToday?' disabled':'')+'>↺ Azi</button>'
         + '<button class="xc-add" onclick="xcOpenAdd()">+ Intervenție</button></div>'
         + '</div>'
-        + (isList ? xcFiltersHtml() : '<div class="xc-legend"><span><i style="background:var(--teal)"></i>Din contract ('+nC+')</span>'
-        + '<span><i style="background:var(--orange)"></i>Intervenție ('+nI+')</span></div>');
+        + (isList ? xcFiltersHtml() : '<div class="xc-legend"><span><i style="background:var(--teal)"></i>Din contract: '+lg(visC)+'</span>'
+        + '<span><i style="background:var(--orange)"></i>Intervenții: '+lg(visI)+'</span></div>');
     var todayY = xcYmd(new Date());
     if (isList) {
         html += xcListHtml();
