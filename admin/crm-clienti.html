@@ -222,11 +222,11 @@ tr:hover td{background:rgba(59,130,246,0.03);}
 
 /* Calendar execuție (vizibil doar pe etapa Execuție din pipeline) */
 .xc{background:linear-gradient(135deg,var(--dark),var(--dark2));border-radius:var(--radius);padding:16px;box-shadow:0 8px 24px -8px rgba(15,23,42,0.35);margin-bottom:16px;}
-.xc-bar{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-bottom:12px;}
+.xc-bar{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:10px;margin-bottom:12px;}.xc-bar>.xc-seg{justify-self:start;}.xc-bar>.xc-nav{justify-self:end;}
 .xc-nav{display:flex;align-items:center;gap:6px;}
 .xc-btn{padding:8px 12px;border:1px solid rgba(255,255,255,0.18);background:rgba(255,255,255,0.08);border-radius:10px;font-size:12px;font-weight:700;color:#fff;}
 .xc-btn:hover{background:rgba(255,255,255,0.16);}
-.xc-label{font-size:18px;font-weight:800;color:#fff;min-width:190px;text-align:center;}.xc-pager{display:flex;align-items:center;gap:10px;}.xc-arrow{display:inline-flex;align-items:center;gap:8px;padding:8px 14px;border:1px solid rgba(255,255,255,0.18);background:rgba(255,255,255,0.08);border-radius:12px;color:#fff;font-size:13px;font-weight:700;}.xc-arrow span{font-size:20px;line-height:1;}.xc-arrow em{font-style:normal;color:#cbd5e1;}.xc-arrow:hover{background:rgba(255,255,255,0.18);}.xc-arrow:hover em{color:#fff;}@media(max-width:1100px){.xc-pager{order:-1;width:100%;justify-content:space-between;}}@media(max-width:600px){.xc-arrow em{display:none;}.xc-label{min-width:0;font-size:16px;}}
+.xc-pager{display:flex;align-items:center;gap:10px;position:relative;}.xc-label{width:230px;padding:8px 12px;border:1px solid transparent;background:transparent;border-radius:12px;font-size:18px;font-weight:800;color:#fff;text-align:center;white-space:nowrap;}.xc-label:hover,.xc-label.open{background:rgba(255,255,255,0.1);border-color:rgba(255,255,255,0.18);}.xc-label small{font-size:11px;color:#94a3b8;margin-left:6px;}.xc-arrow{display:inline-flex;align-items:center;justify-content:space-between;gap:8px;width:170px;padding:8px 14px;border:1px solid rgba(255,255,255,0.18);background:rgba(255,255,255,0.08);border-radius:12px;color:#fff;font-size:13px;font-weight:700;}.xc-arrow span{font-size:20px;line-height:1;}.xc-arrow em{font-style:normal;color:#cbd5e1;flex:1;text-align:center;}.xc-arrow:hover{background:rgba(255,255,255,0.18);}.xc-arrow:hover em{color:#fff;}.xc-btn:disabled{opacity:0.35;cursor:default;}.xc-btn:disabled:hover{background:rgba(255,255,255,0.08);}.xc-pick{position:absolute;top:calc(100% + 8px);left:50%;transform:translateX(-50%);z-index:50;width:300px;background:#fff;border-radius:14px;padding:12px;box-shadow:0 18px 40px -10px rgba(15,23,42,0.5);}.xc-pick-y{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;}.xc-pick-y b{font-size:16px;font-weight:800;color:var(--dark);}.xc-pick-y button{width:34px;height:34px;border:1px solid var(--gray-b);background:#fff;border-radius:10px;font-size:18px;color:var(--dark);}.xc-pick-y button:hover{background:var(--gray-bg);}.xc-pick-m{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;}.xc-pick-m button{padding:10px 0;border:1px solid var(--gray-b);background:#fff;border-radius:10px;font-size:13px;font-weight:700;color:var(--dark);}.xc-pick-m button:hover{background:#eff6ff;border-color:var(--blue);}.xc-pick-m button.sel{background:var(--dark);border-color:var(--dark);color:#fff;}.xc-pick-m button.now{box-shadow:inset 0 0 0 2px var(--blue);}@media(max-width:1100px){.xc-bar{grid-template-columns:1fr auto;}.xc-pager{grid-column:1 / -1;order:-1;justify-content:space-between;}}@media(max-width:600px){.xc-arrow{width:auto;}.xc-arrow em{display:none;}.xc-label{width:auto;flex:1;font-size:16px;}}
 .xc-seg{display:flex;background:rgba(255,255,255,0.1);border-radius:10px;padding:3px;}
 .xc-seg button{padding:7px 12px;border:none;background:transparent;border-radius:8px;font-size:12px;font-weight:700;color:#cbd5e1;}
 .xc-seg button.active{background:#fff;color:var(--dark);box-shadow:0 1px 3px rgba(0,0,0,0.08);}
@@ -1455,11 +1455,13 @@ function xcRender(){
         + '<button class="'+(XC.mode==='week'?'active':'')+'" onclick="xcMode(\'week\')">Pe săptămână</button></div>'
         + '<div class="xc-pager">'
         + '<button class="xc-arrow" onclick="xcNav(-1)" title="Tasta ←"><span>‹</span><em>'+prevL+'</em></button>'
-        + '<span class="xc-label">'+label+'</span>'
+        + '<button class="xc-label'+(XC.pickOpen?' open':'')+'" onclick="xcTogglePick(event)" title="Alege luna și anul">'+label+'<small>▾</small></button>'
         + '<button class="xc-arrow" onclick="xcNav(1)" title="Tasta →"><em>'+nextL+'</em><span>›</span></button>'
+        + (XC.pickOpen ? xcPickHtml() : '')
         + '</div>'
         + '<div class="xc-nav">'
-        + (onToday ? '' : '<button class="xc-btn" onclick="xcToday()">↺ '+(XC.mode==='month'?'Luna curentă':'Săpt. curentă')+'</button>')
+        // Mereu prezent (doar dezactivat pe perioada curentă), ca bara să nu-și schimbe forma
+        + '<button class="xc-btn" onclick="xcToday()"'+(onToday?' disabled':'')+'>↺ Azi</button>'
         + '<button class="xc-add" onclick="xcOpenAdd()">+ Intervenție</button></div>'
         + '</div>'
         + '<div class="xc-legend"><span><i style="background:var(--teal)"></i>Din contract ('+nC+')</span>'
@@ -1504,13 +1506,42 @@ function xcRender(){
 }
 
 function xcNav(n){
+    XC.pickOpen = false;
     if (XC.mode === 'week') XC.ref = xcAdd(XC.ref, 7*n);
     else XC.ref = new Date(XC.ref.getFullYear(), XC.ref.getMonth()+n, 1);
     xcShow();
 }
-function xcToday(){ XC.ref = new Date(); xcShow(); }
+function xcToday(){ XC.ref = new Date(); XC.pickOpen = false; xcShow(); }
+
+// Selector rapid lună + an (click pe titlul perioadei)
+function xcPickHtml(){
+    var y = XC.pickYear, now = new Date();
+    var h = '<div class="xc-pick" onclick="event.stopPropagation()">'
+        + '<div class="xc-pick-y"><button onclick="xcPickYear(-1)" aria-label="Anul anterior">‹</button><b>'+y+'</b>'
+        + '<button onclick="xcPickYear(1)" aria-label="Anul următor">›</button></div><div class="xc-pick-m">';
+    for (var m=0; m<12; m++) {
+        var cls = (m===XC.ref.getMonth() && y===XC.ref.getFullYear()) ? 'sel' : '';
+        if (m===now.getMonth() && y===now.getFullYear()) cls += ' now';
+        h += '<button class="'+cls+'" onclick="xcPickMonth('+m+')">'+XC_MONTHS[m].slice(0,3)+'</button>';
+    }
+    return h + '</div></div>';
+}
+function xcTogglePick(e){
+    if (e) e.stopPropagation();
+    XC.pickOpen = !XC.pickOpen;
+    XC.pickYear = XC.ref.getFullYear();
+    xcRender();
+}
+function xcPickYear(n){ XC.pickYear += n; xcRender(); }
+function xcPickMonth(m){
+    XC.ref = new Date(XC.pickYear, m, 1);
+    XC.pickOpen = false;
+    xcShow();
+}
+document.addEventListener('click', function(){ if (XC.pickOpen) { XC.pickOpen = false; xcRender(); } });
 // Săgețile ← → schimbă luna/săptămâna cât timp calendarul e vizibil (nu în formulare / ferestre)
 document.addEventListener('keydown', function(e){
+    if (e.key === 'Escape' && XC.pickOpen) { XC.pickOpen = false; xcRender(); return; }
     if (e.key !== 'ArrowLeft' && e.key !== 'ArrowRight') return;
     var cal = document.getElementById('execCal');
     if (!cal || cal.style.display === 'none') return;
@@ -1520,7 +1551,7 @@ document.addEventListener('keydown', function(e){
     e.preventDefault();
     xcNav(e.key === 'ArrowLeft' ? -1 : 1);
 });
-function xcMode(m){ XC.mode = m; xcShow(); }
+function xcMode(m){ XC.mode = m; XC.pickOpen = false; xcShow(); }
 function xcGoWeek(ymd){ XC.ref = xcParse(ymd); XC.mode = 'week'; xcShow(); }
 
 function xcOpenEv(id){
