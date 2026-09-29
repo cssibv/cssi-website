@@ -668,9 +668,17 @@ function renderTable(){
 }
 
 // ═══════ STATUS CHANGE ═══════
-function changeStatus(projectId,newStatus){
+function changeStatus(projectId,newStatus,execSel){
     var p=PROJECTS.find(function(x){return x.id===projectId});
     if(!p) return;
+    // Intrarea în Execuție cere data de început (≥ azi), vezi /admin/exec-start.js
+    if(newStatus==='Execuție' && p.status!=='Execuție' && !execSel){
+        cssiExecStart({subtitlu:(p.client||'')+' · '+projectId}).then(function(sel){
+            if(!sel){ renderAll(); return; }
+            changeStatus(projectId,newStatus,sel);
+        });
+        return;
+    }
     var oldStatus=p.status;
     p.status=newStatus;
     renderAll();
@@ -683,7 +691,11 @@ function changeStatus(projectId,newStatus){
     })
     .then(function(r){return r.json()})
     .then(function(res){
-        if(res.success){showToast('✅ Status actualizat','success');loadProjects();}
+        if(res.success){
+            showToast('✅ Status actualizat','success');
+            if(execSel) cssiAfterExecStart(p.dbId, execSel, p.obiectiv, showToast).then(loadProjects);
+            else loadProjects();
+        }
         else{showToast('❌ '+(res.error||'Eroare'),'error');p.status=oldStatus;renderAll();}
     })
     .catch(function(err){showToast('❌ Eroare rețea','error');p.status=oldStatus;renderAll();});
@@ -714,10 +726,15 @@ function preiaProiect(projectId){
 // ═══════ ADD PROJECT ═══════
 function openModal(){document.getElementById('addProjectModal').classList.add('active');}
 function closeModal(){document.getElementById('addProjectModal').classList.remove('active');}
-function addProject(e){
-    e.preventDefault();
+function addProject(e, execSel){
+    if(e&&e.preventDefault) e.preventDefault();
     var f=document.getElementById('addProjectForm');
     var d=new FormData(f);
+    // Proiect creat direct în Execuție → cere data de început (≥ azi), vezi /admin/exec-start.js
+    if((d.get('status')||'')==='Execuție' && !execSel){
+        cssiExecStart({subtitlu:(d.get('client')||'Proiect nou')}).then(function(sel){ if(sel) addProject(null, sel); });
+        return;
+    }
     var btn=f.querySelector('button[type=submit]');
     btn.disabled=true;btn.textContent='⏳ Se creează...';showLoading(true);
     var pd={client:d.get('client')||'',cui:d.get('cui')||'',adresa:d.get('locatie')||'Brașov',contact:d.get('contact')||'',telefon:d.get('telefon')||'',serviciu:d.get('serviciu')||'',obiectiv:d.get('obiectiv')||'',status:d.get('status')||'Lead',valoare:parseInt(d.get('valoare'))||0,responsabil:d.get('responsabil')||'',note:d.get('note')||''};
@@ -738,7 +755,11 @@ function addProject(e){
     .then(function(r){return r.json()})
     .then(function(res){
         showLoading(false);btn.disabled=false;btn.textContent='Creează Proiect';
-        if(res.success){showToast('✅ Proiect '+(res.proiect_id||'')+' creat!','success');closeModal();f.reset();loadProjects();}
+        if(res.success){
+            showToast('✅ Proiect '+(res.proiect_id||'')+' creat!','success');closeModal();f.reset();
+            if(execSel && res.id) cssiAfterExecStart(res.id, execSel, pd.obiectiv, showToast).then(loadProjects);
+            else loadProjects();
+        }
         else{showToast('❌ '+(res.error||'Eroare'),'error');}
     })
     .catch(function(err){showLoading(false);btn.disabled=false;btn.textContent='Creează Proiect';showToast('❌ '+err.message,'error');});
@@ -774,12 +795,18 @@ function openEditModal(projectId){
 }
 function closeEditModal(){document.getElementById('editProjectModal').classList.remove('active');}
 
-function saveEditProject(e){
-    e.preventDefault();
+function saveEditProject(e, execSel){
+    if(e&&e.preventDefault) e.preventDefault();
     var btn=document.getElementById('editSubmitBtn');
-    btn.disabled=true;btn.textContent='⏳ Se salvează...';
     var dbId=document.getElementById('eDbId').value;
     var pid=document.getElementById('ePid').value;
+    // Mutare în Execuție din formularul de editare → cere data de început (≥ azi)
+    var prev=PROJECTS.find(function(x){return String(x.dbId)===String(dbId)});
+    if(document.getElementById('eStatus').value==='Execuție' && prev && prev.status!=='Execuție' && !execSel){
+        cssiExecStart({subtitlu:(prev.client||'')+' · '+pid}).then(function(sel){ if(sel) saveEditProject(null, sel); });
+        return;
+    }
+    btn.disabled=true;btn.textContent='⏳ Se salvează...';
     var servDB=SERV_UI_TO_DB[document.getElementById('eServiciu').value]||document.getElementById('eServiciu').value;
     var statDB=STAT_UI_TO_DB[document.getElementById('eStatus').value]||document.getElementById('eStatus').value;
     var payload={
@@ -801,7 +828,11 @@ function saveEditProject(e){
     .then(function(r){return r.json()})
     .then(function(res){
         btn.disabled=false;btn.textContent='💾 Salvează Modificările';
-        if(res.success){showToast('✅ '+pid+' actualizat!','success');closeEditModal();loadProjects();}
+        if(res.success){
+            showToast('✅ '+pid+' actualizat!','success');closeEditModal();
+            if(execSel) cssiAfterExecStart(dbId, execSel, payload.obiectiv, showToast).then(loadProjects);
+            else loadProjects();
+        }
         else{showToast('❌ '+(res.error||'Eroare'),'error');}
     })
     .catch(function(err){btn.disabled=false;btn.textContent='💾 Salvează Modificările';showToast('❌ '+err.message,'error');});
@@ -1397,6 +1428,7 @@ loadProjects=function(){_origLoadProjects.apply(this,arguments);setTimeout(_load
 <script>
 if('serviceWorker' in navigator){navigator.serviceWorker.register('../sw.js').then(function(r){console.log('[PWA] SW registered, scope:',r.scope)}).catch(function(e){console.log('[PWA] SW failed:',e)});var __reloaded=false;navigator.serviceWorker.addEventListener('controllerchange',function(){if(__reloaded)return;__reloaded=true;window.location.reload();});}
 </script>
+<script src="/admin/exec-start.js?v=1"></script>
 <script src="/admin/notifications.js" defer></script>
 </body>
 </html>

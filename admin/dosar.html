@@ -747,12 +747,23 @@ function pickStage(val){
   });
 }
 
-function submitAvanseaza(){
+function submitAvanseaza(execSel){
   if (!STATE.selectedStage){ toast('⚠ Alege o etapă','error'); return; }
+  // Intrarea în Execuție cere data de început (≥ azi), vezi /admin/exec-start.js
+  var curStage = (STATE.dosar && STATE.dosar.stage && STATE.dosar.stage.stage) || '';
+  if (STATE.selectedStage === 'Executie' && curStage !== 'Executie' && !execSel) {
+    cssiExecStart({}).then(function(sel){ if (sel) submitAvanseaza(sel); });
+    return;
+  }
   var nota = document.getElementById('avNotaInput').value.trim();
-  fetch(API+'?action=dosarAvanseazaStage',{method:'POST',credentials:'include',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'dosarAvanseazaStage',proiect_id:STATE.proiectId,status_nou:STATE.selectedStage,nota:nota})})
+  var stageNou = STATE.selectedStage, pid = STATE.proiectId;
+  fetch(API+'?action=dosarAvanseazaStage',{method:'POST',credentials:'include',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'dosarAvanseazaStage',proiect_id:pid,status_nou:stageNou,nota:nota})})
     .then(function(r){return r.json();}).then(function(res){
-      if(res.success){ toast('✅ Avansat la '+STATE.selectedStage,'success'); closeModal('avanseazaModal'); refreshData(); }
+      if(res.success){
+        toast('✅ Avansat la '+stageNou,'success'); closeModal('avanseazaModal');
+        if (execSel) cssiAfterExecStart(pid, execSel, '', toast).then(refreshData);
+        else refreshData();
+      }
       else toast('❌ '+(res.error||'Eroare'),'error');
     });
 }
@@ -765,6 +776,7 @@ if('serviceWorker' in navigator){
   navigator.serviceWorker.register('../sw.js').then(function(r){console.log('[PWA] SW registered, scope:',r.scope)}).catch(function(e){console.log('[PWA] SW failed:',e)});
 }
 </script>
+<script src="/admin/exec-start.js?v=1"></script>
 <script src="/admin/notifications.js" defer></script>
 </body>
 </html>

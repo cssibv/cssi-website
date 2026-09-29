@@ -555,14 +555,19 @@ function deleteDoc(id){
 
 function predaLaExecutie(){
     if(!STATE.gata_predat){toast('Mai sunt item-uri nebifate','error');return;}
-    if(!confirm('Sigur predai proiectul la Execuție? Statusul se schimbă din "Proiectare" în "Execuție".')) return;
     var dbId = STATE.proiect.proiect_db_id;
-    fetch(API_DB+'?action=updateStatus',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'updateStatus',id:dbId,status:'Executie',user:userName})})
-        .then(function(r){return r.json()}).then(function(res){
-            if(!res.success) throw new Error(res.error||'Eroare');
-            toast('✅ Predat la Execuție!','success');
-            setTimeout(function(){window.location.href='executie-proiect.html?id='+dbId;},800);
-        }).catch(function(e){toast('❌ '+(e.message||e),'error');});
+    // Fereastra cu data de început ține loc și de confirmare (Renunță = nu se predă)
+    cssiExecStart({titlu:'🔧 Predare la Execuție', subtitlu:'Statusul trece din „Proiectare” în „Execuție”. Alege data de început.'}).then(function(sel){
+        if(!sel) return;
+        fetch(API_DB+'?action=updateStatus',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'updateStatus',id:dbId,status:'Executie',user:userName})})
+            .then(function(r){return r.json()}).then(function(res){
+                if(!res.success) throw new Error(res.error||'Eroare');
+                toast('✅ Predat la Execuție!','success');
+                return cssiAfterExecStart(dbId, sel, STATE.proiect.obiectiv, toast);
+            }).then(function(){
+                setTimeout(function(){window.location.href='executie-proiect.html?id='+dbId;},900);
+            }).catch(function(e){toast('❌ '+(e.message||e),'error');});
+    });
 }
 
 refreshData();
@@ -577,6 +582,7 @@ if('serviceWorker' in navigator){
     });
 }
 </script>
+<script src="/admin/exec-start.js?v=1"></script>
 <script src="/admin/notifications.js" defer></script>
 </body>
 </html>
