@@ -226,7 +226,7 @@ tr:hover td{background:rgba(59,130,246,0.03);}
 .xc-nav{display:flex;align-items:center;gap:6px;}
 .xc-btn{padding:8px 12px;border:1px solid rgba(255,255,255,0.18);background:rgba(255,255,255,0.08);border-radius:10px;font-size:12px;font-weight:700;color:#fff;}
 .xc-btn:hover{background:rgba(255,255,255,0.16);}
-.xc-label{font-size:15px;font-weight:800;color:#fff;margin-left:4px;}
+.xc-label{font-size:18px;font-weight:800;color:#fff;min-width:190px;text-align:center;}.xc-pager{display:flex;align-items:center;gap:10px;}.xc-arrow{display:inline-flex;align-items:center;gap:8px;padding:8px 14px;border:1px solid rgba(255,255,255,0.18);background:rgba(255,255,255,0.08);border-radius:12px;color:#fff;font-size:13px;font-weight:700;}.xc-arrow span{font-size:20px;line-height:1;}.xc-arrow em{font-style:normal;color:#cbd5e1;}.xc-arrow:hover{background:rgba(255,255,255,0.18);}.xc-arrow:hover em{color:#fff;}@media(max-width:1100px){.xc-pager{order:-1;width:100%;justify-content:space-between;}}@media(max-width:600px){.xc-arrow em{display:none;}.xc-label{min-width:0;font-size:16px;}}
 .xc-seg{display:flex;background:rgba(255,255,255,0.1);border-radius:10px;padding:3px;}
 .xc-seg button{padding:7px 12px;border:none;background:transparent;border-radius:8px;font-size:12px;font-weight:700;color:#cbd5e1;}
 .xc-seg button.active{background:#fff;color:var(--dark);box-shadow:0 1px 3px rgba(0,0,0,0.08);}
@@ -1351,7 +1351,7 @@ var XC_TECH = [
 ];
 var XC_DAYS = ['Lun','Mar','Mie','Joi','Vin','Sâm','Dum'];
 var XC_MONTHS = ['Ianuarie','Februarie','Martie','Aprilie','Mai','Iunie','Iulie','August','Septembrie','Octombrie','Noiembrie','Decembrie'];
-var XC = { mode:'week', ref:new Date(), items:[], byId:{}, key:'', intSet:null, clientiLoaded:false };
+var XC = { mode:'month', ref:new Date(), items:[], byId:{}, key:'', intSet:null, clientiLoaded:false };
 
 function xcYmd(d){ return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0'); }
 function xcParse(s){ var p=String(s||'').split('-'); return new Date(+p[0], (+p[1]||1)-1, +p[2]||1); }
@@ -1441,14 +1441,25 @@ function xcRender(){
         label = XC_MONTHS[XC.ref.getMonth()]+' '+XC.ref.getFullYear();
     }
     var nC = XC.items.filter(function(i){return !i.isInt;}).length, nI = XC.items.length - nC;
+    // Etichetele săgeților: luna vecină (mod lună) / săptămâna vecină (mod săptămână)
+    var prevL, nextL;
+    if (XC.mode === 'month') {
+        var pm = new Date(XC.ref.getFullYear(), XC.ref.getMonth()-1, 1), nm = new Date(XC.ref.getFullYear(), XC.ref.getMonth()+1, 1);
+        prevL = XC_MONTHS[pm.getMonth()]; nextL = XC_MONTHS[nm.getMonth()];
+    } else { prevL = 'Săpt. anterioară'; nextL = 'Săpt. următoare'; }
+    var now = new Date(), onToday = now >= r.from && now < xcAdd(r.to,1);
+    if (XC.mode === 'month') onToday = now.getMonth()===XC.ref.getMonth() && now.getFullYear()===XC.ref.getFullYear();
     var html = '<div class="xc-bar">'
-        + '<div class="xc-nav"><button class="xc-btn" onclick="xcNav(-1)" aria-label="Înapoi">‹</button>'
-        + '<button class="xc-btn" onclick="xcToday()">Azi</button>'
-        + '<button class="xc-btn" onclick="xcNav(1)" aria-label="Înainte">›</button>'
-        + '<span class="xc-label">'+label+'</span></div>'
-        + '<div class="xc-nav"><div class="xc-seg">'
-        + '<button class="'+(XC.mode==='week'?'active':'')+'" onclick="xcMode(\'week\')">Pe săptămână</button>'
-        + '<button class="'+(XC.mode==='month'?'active':'')+'" onclick="xcMode(\'month\')">Pe lună</button></div>'
+        + '<div class="xc-seg">'
+        + '<button class="'+(XC.mode==='month'?'active':'')+'" onclick="xcMode(\'month\')">Pe lună</button>'
+        + '<button class="'+(XC.mode==='week'?'active':'')+'" onclick="xcMode(\'week\')">Pe săptămână</button></div>'
+        + '<div class="xc-pager">'
+        + '<button class="xc-arrow" onclick="xcNav(-1)" title="Tasta ←"><span>‹</span><em>'+prevL+'</em></button>'
+        + '<span class="xc-label">'+label+'</span>'
+        + '<button class="xc-arrow" onclick="xcNav(1)" title="Tasta →"><em>'+nextL+'</em><span>›</span></button>'
+        + '</div>'
+        + '<div class="xc-nav">'
+        + (onToday ? '' : '<button class="xc-btn" onclick="xcToday()">↺ '+(XC.mode==='month'?'Luna curentă':'Săpt. curentă')+'</button>')
         + '<button class="xc-add" onclick="xcOpenAdd()">+ Intervenție</button></div>'
         + '</div>'
         + '<div class="xc-legend"><span><i style="background:var(--teal)"></i>Din contract ('+nC+')</span>'
@@ -1498,6 +1509,17 @@ function xcNav(n){
     xcShow();
 }
 function xcToday(){ XC.ref = new Date(); xcShow(); }
+// Săgețile ← → schimbă luna/săptămâna cât timp calendarul e vizibil (nu în formulare / ferestre)
+document.addEventListener('keydown', function(e){
+    if (e.key !== 'ArrowLeft' && e.key !== 'ArrowRight') return;
+    var cal = document.getElementById('execCal');
+    if (!cal || cal.style.display === 'none') return;
+    if (document.querySelector('.modal-overlay.active')) return;
+    var tg = (e.target && e.target.tagName) || '';
+    if (tg === 'INPUT' || tg === 'TEXTAREA' || tg === 'SELECT') return;
+    e.preventDefault();
+    xcNav(e.key === 'ArrowLeft' ? -1 : 1);
+});
 function xcMode(m){ XC.mode = m; xcShow(); }
 function xcGoWeek(ymd){ XC.ref = xcParse(ymd); XC.mode = 'week'; xcShow(); }
 
