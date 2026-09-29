@@ -574,7 +574,22 @@ var DASHBOARD_STATS={rezumat:{},board:{}};
 
 
 // ═══════ AUTH ═══════
-var role="";
+var role="";      // username (cheia din ROLES)
+var userRole="";  // rolul real din DB (admin/sales/org/mkt/tech)
+
+// Profil pentru conturile create din Utilizatori, care nu au intrare fixă în ROLES.
+// Se construiește din rolul real, pornind de la profilul existent cel mai apropiat.
+function buildFallbackProfile(u){
+    var name = u.display_name || u.username;
+    var tpl, label;
+    if (u.role === 'admin')      { tpl = ROLES.admin;    label = '🔑 ' + name + ' — Admin'; }
+    else if (u.is_tehnician)     { tpl = ROLES.zoli;     label = '🔧 ' + name + ' — Execuție'; }
+    else if (u.role === 'sales') { tpl = ROLES.mihai;    label = '💰 ' + name + ' — Vânzări'; }
+    else if (u.role === 'org')   { tpl = ROLES.roxana;   label = '📋 ' + name + ' — Organizare'; }
+    else if (u.role === 'mkt')   { tpl = ROLES.cristina; label = '📊 ' + name + ' — Marketing'; }
+    else                         { tpl = ROLES.valentin; label = '📐 ' + name + ' — Tehnic'; }
+    return Object.assign({}, tpl, { name: name, greeting: '👋 Salut, ' + name + '!', pill: label });
+}
 function doLogin(e){
     e.preventDefault();
     var u = document.getElementById('username').value.trim().toLowerCase();
@@ -1071,8 +1086,9 @@ function renderAlerts(){
 // Modulele permise utilizatorului curent — populat din /api.php?action=getMyModules
 var MY_ALLOWED_MODULES = null;
 function userCanSee(m){
-    if(m.id==='utilizatori' && role!=='admin') return false;
-    if(role==='admin') return true;
+    var isAdm = (role==='admin' || userRole==='admin');
+    if(m.id==='utilizatori' && !isAdm) return false;
+    if(isAdm) return true;
     // Dacă lista din DB e încărcată, folosim DOAR ea (sursa de adevăr)
     if(MY_ALLOWED_MODULES !== null){
         return MY_ALLOWED_MODULES.indexOf(m.id) >= 0;
@@ -1312,6 +1328,8 @@ function bootDashboard(){
             showLogin(); return;
         }
         role = meRes.user.username;
+        userRole = meRes.user.role || '';
+        if(!ROLES[role]) ROLES[role] = buildFallbackProfile(meRes.user);
         sessionStorage.setItem('cssi-role', role);
         sessionStorage.setItem('cssi-user', meRes.user.display_name || role);
         // Încarcă lista modulelor permise (din DB user_config sau defaults per rol)
