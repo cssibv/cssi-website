@@ -262,8 +262,9 @@ tr:hover td{background:rgba(59,130,246,0.03);}
 /* Calendar lunar ca hartă de încărcare: fundalul căsuței arată cât de plină e ziua */
 .xc-cell{position:relative;background:#fff;}
 .xc-cell.we{background:#f8fafc;}
-.xc-cell.h1{background:#f0fdfa;}.xc-cell.h2{background:#ccfbf1;}.xc-cell.h3{background:#99f6e4;}.xc-cell.h4{background:#5eead4;}
-.xc-cell:hover{background:#fff;filter:brightness(0.97);}
+.xc-cell:hover{filter:brightness(0.96);}
+.xc-cell.h1{background:#ccfbf1;}.xc-cell.h2{background:#99f6e4;}.xc-cell.h3{background:#5eead4;}.xc-cell.h4{background:#2dd4bf;}
+.xc-cell.h4 .xc-dcnt,.xc-cell.h4 .xc-dcnt span{color:#042f2e;}
 .xc-cell.out{background:rgba(255,255,255,0.06);}.xc-cell.out .n{color:#64748b;}
 .xc-cell.out:hover{background:rgba(255,255,255,0.1);filter:none;}
 .xc-cell .n{font-size:12px;font-weight:700;color:var(--dark);width:22px;height:22px;display:flex;align-items:center;justify-content:center;border-radius:50%;margin:-2px 0 0 -2px;}
@@ -1631,7 +1632,7 @@ function xcRender(){
         + '</div>'
         + (isList ? xcFiltersHtml() : '<div class="xc-legend"><span><i style="background:var(--teal)"></i>Din contract: '+lg(visC)+'</span>'
         + '<span><i style="background:var(--orange)"></i>Intervenții: '+lg(visI)+'</span>'
-        + (XC.mode === 'month' ? '<span class="xc-heat">Zi liberă<i style="background:#fff"></i><i style="background:#ccfbf1"></i><i style="background:#99f6e4"></i><i style="background:#5eead4"></i>Zi plină</span>' : '')
+        + (XC.mode === 'month' ? '<span class="xc-heat">Zi liberă<i style="background:#fff"></i><i style="background:#ccfbf1"></i><i style="background:#99f6e4"></i><i style="background:#5eead4"></i><i style="background:#2dd4bf"></i>Zi plină</span>' : '')
         + '</div>');
     var todayY = xcYmd(new Date());
     if (isList) {
