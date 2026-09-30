@@ -94,7 +94,7 @@ function cssiFmtRON($n) { return number_format($n, 0, ',', '.'); }
 
 function cssiRenderRaportText($d) {
     $k = $d['kpi'];
-    $b  = "📊 RAPORT ZILNIC CSSI — " . date('d.m.Y') . "\n";
+    $b  = "📊 RAPORT ZILNIC CSSI · " . date('d.m.Y') . "\n";
     $b .= "═══════════════════════════════════\n\n";
     $b .= "📋 Proiecte active:       {$k['proiecte_active']} / {$k['proiecte_total']}\n";
     $b .= "📞 Lead-uri noi:          {$k['leaduri']}\n";
@@ -108,7 +108,7 @@ function cssiRenderRaportText($d) {
     if (!empty($d['programari_azi'])) {
         $b .= "📅 PROGRAMĂRI AZI (" . count($d['programari_azi']) . "):\n";
         foreach ($d['programari_azi'] as $p) {
-            $b .= "  • " . substr($p['ora_start'], 0, 5) . " — " . ($p['client_nume'] ?? '?') . " (" . $p['durata_ore'] . "h)";
+            $b .= "  • " . substr($p['ora_start'], 0, 5) . " · " . ($p['client_nume'] ?? '?') . " (" . $p['durata_ore'] . "h)";
             if (!empty($p['echipa'])) $b .= " · echipa: " . implode(', ', $p['echipa']);
             $b .= "\n";
         }
@@ -116,9 +116,9 @@ function cssiRenderRaportText($d) {
     }
 
     if (!empty($d['contracte_asteapta'])) {
-        $b .= "📄 CONTRACTE — așteaptă date client:\n";
+        $b .= "📄 CONTRACTE · așteaptă date client:\n";
         foreach ($d['contracte_asteapta'] as $c) {
-            $b .= "  • " . $c['contract_nr'] . " — " . ($c['client_nume'] ?? '?') . "\n";
+            $b .= "  • " . $c['contract_nr'] . " · " . ($c['client_nume'] ?? '?') . "\n";
         }
         $b .= "\n";
     }
@@ -126,7 +126,7 @@ function cssiRenderRaportText($d) {
     if (!empty($d['leaduri_24h'])) {
         $b .= "📞 LEAD-URI NOI (ultimele 24h):\n";
         foreach ($d['leaduri_24h'] as $l) {
-            $b .= "  • " . $l['proiect_id'] . " — " . ($l['nume'] ?? '?') . "\n";
+            $b .= "  • " . $l['proiect_id'] . " · " . ($l['nume'] ?? '?') . "\n";
         }
         $b .= "\n";
     }
@@ -135,7 +135,7 @@ function cssiRenderRaportText($d) {
         $b .= "🔄 MENTENANȚE SCADENTE (urm. 14 zile):\n";
         foreach ($d['mentenante_scadente'] as $m) {
             $zile = max(0, ceil((strtotime($m['data_scadenta']) - time()) / 86400));
-            $b .= "  • " . ($m['client_nume'] ?? '?') . " — în {$zile} zile (" . $m['data_scadenta'] . ")\n";
+            $b .= "  • " . ($m['client_nume'] ?? '?') . ", în {$zile} zile (" . $m['data_scadenta'] . ")\n";
         }
         $b .= "\n";
     }
@@ -168,7 +168,7 @@ function cssiRenderRaportHtml($d) {
     $h .= '<tr>' . _kpiCellHtml('📐', 'La proiectare', (string)$k['la_proiectare'], '#14b8a6');
     $h .=        _kpiCellHtml('🔧', 'În execuție', (string)$k['in_executie'], '#f97316') . '</tr>';
     if ($k['expirate_oferte']) {
-        $h .= '<tr><td colspan="2" style="padding:10px"><div style="background:#fef2f2;border-left:4px solid #dc2626;padding:10px 14px;border-radius:6px;color:#991b1b;font-size:13px"><strong>⏱️ ' . $k['expirate_oferte'] . ' oferte expirate</strong> — necesită follow-up</div></td></tr>';
+        $h .= '<tr><td colspan="2" style="padding:10px"><div style="background:#fef2f2;border-left:4px solid #dc2626;padding:10px 14px;border-radius:6px;color:#991b1b;font-size:13px"><strong>⏱️ ' . $k['expirate_oferte'] . ' oferte expirate</strong>, necesită follow-up</div></td></tr>';
     }
     $h .= '</table></td></tr>';
 
@@ -183,7 +183,7 @@ function cssiRenderRaportHtml($d) {
     }
 
     if (!empty($d['contracte_asteapta'])) {
-        $h .= '<tr><td style="padding:0 30px 14px"><h3 style="margin:14px 0 8px;color:#0f172a;font-size:14px;border-bottom:2px solid #f1f5f9;padding-bottom:6px">📄 Contracte — așteaptă date client</h3>';
+        $h .= '<tr><td style="padding:0 30px 14px"><h3 style="margin:14px 0 8px;color:#0f172a;font-size:14px;border-bottom:2px solid #f1f5f9;padding-bottom:6px">📄 Contracte · așteaptă date client</h3>';
         $h .= '<table width="100%" cellpadding="6" cellspacing="0" style="font-size:13px">';
         foreach ($d['contracte_asteapta'] as $c) {
             $h .= '<tr><td style="padding:6px 8px;border-bottom:1px solid #f1f5f9"><strong>' . htmlspecialchars($c['contract_nr']) . '</strong> · ' . htmlspecialchars($c['client_nume'] ?? '?') . '</td></tr>';
@@ -206,7 +206,7 @@ function cssiRenderRaportHtml($d) {
         foreach ($d['mentenante_scadente'] as $m) {
             $zile = max(0, ceil((strtotime($m['data_scadenta']) - time()) / 86400));
             $color = $zile <= 3 ? '#dc2626' : '#f97316';
-            $h .= '<tr><td style="padding:6px 8px;border-bottom:1px solid #f1f5f9">' . htmlspecialchars($m['client_nume'] ?? '?') . ' — <strong style="color:' . $color . '">în ' . $zile . ' zile</strong> (' . $m['data_scadenta'] . ')</td></tr>';
+            $h .= '<tr><td style="padding:6px 8px;border-bottom:1px solid #f1f5f9">' . htmlspecialchars($m['client_nume'] ?? '?') . ' · <strong style="color:' . $color . '">în ' . $zile . ' zile</strong> (' . $m['data_scadenta'] . ')</td></tr>';
         }
         $h .= '</table></td></tr>';
     }

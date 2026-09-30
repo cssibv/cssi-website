@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Proiecte — Portal CSSI 3.0</title>
+<title>Proiecte · Portal CSSI 3.0</title>
 <meta name="robots" content="noindex, nofollow">
 <link rel="icon" type="image/x-icon" href="/images/favicon.ico">
 <meta name="theme-color" content="#dc2626">
@@ -322,11 +322,11 @@ a{text-decoration:none;color:inherit;}button{font-family:inherit;cursor:pointer;
             <div class="form-row">
                 <div class="form-group"><label class="form-label">Responsabil</label>
                     <select class="form-select" name="responsabil" id="eResponsabil">
-                        <option value="">— Neselectat —</option>
-                        <option value="Mihai">💰 Mihai — Ofertare</option>
-                        <option value="Roxana">📋 Roxana — Contracte</option>
-                        <option value="Valentin">📐 Valentin — Proiectare</option>
-                        <option value="Cristina">📞 Cristina — Lead-uri</option>
+                        <option value="">Neselectat</option>
+                        <option value="Mihai">💰 Mihai · Ofertare</option>
+                        <option value="Roxana">📋 Roxana · Contracte</option>
+                        <option value="Valentin">📐 Valentin · Proiectare</option>
+                        <option value="Cristina">📞 Cristina · Lead-uri</option>
                         <option value="Admin">🔑 Admin</option>
                     </select>
                 </div>
@@ -373,7 +373,7 @@ a{text-decoration:none;color:inherit;}button{font-family:inherit;cursor:pointer;
             <div class="form-group"><label class="form-label">Serviciu <span class="req">*</span></label>
                 <!-- Opțiunile sunt populate din CRM_SERVICII (populateServiceSelects) -->
                 <select class="form-select" name="serviciu" id="addServiciu" required>
-                    <option value="">— Alege —</option>
+                    <option value="">Alege</option>
                 </select>
             </div>
             <div class="form-row">
@@ -391,7 +391,7 @@ a{text-decoration:none;color:inherit;}button{font-family:inherit;cursor:pointer;
             <div class="form-group"><label class="form-label">Obiectiv / Descriere lucrare</label><input type="text" class="form-input" name="obiectiv" placeholder="Ex: Sistem supraveghere depozit"></div>
             <div class="form-group"><label class="form-label">Responsabil</label>
                     <select class="form-select" name="responsabil">
-                        <option value="">— Neselectat —</option>
+                        <option value="">Neselectat</option>
                         <option value="Mihai">💰 Mihai</option>
                         <option value="Roxana">📋 Roxana</option>
                         <option value="Valentin">📐 Valentin</option>
@@ -437,12 +437,12 @@ SERV_UI_TO_DB['Automatizări']        = 'Automatizari';
 
 function populateServiceSelects() {
     var opts = CRM_SERVICII.map(function(s){
-        return '<option value="' + s.ui + '">' + s.tag + ' — ' + s.ui + '</option>';
+        return '<option value="' + s.ui + '">' + s.tag + ' · ' + s.ui + '</option>';
     }).join('');
     var edit = document.getElementById('eServiciu');
     if (edit) edit.innerHTML = opts;
     var add = document.getElementById('addServiciu');
-    if (add) add.innerHTML = '<option value="">— Alege —</option>' + opts;
+    if (add) add.innerHTML = '<option value="">Alege</option>' + opts;
 }
 var STAT_DB_TO_UI={'Lead':'Lead','Oferta':'Ofertă','Contract':'Contract','Proiectare':'Proiectare','Executie':'Execuție','Receptie':'Recepție','Facturat':'Facturat','Mentenanta':'Mentenanță','Finalizat':'Finalizat','Anulat':'Anulat'};
 var STAT_UI_TO_DB={'Lead':'Lead','Ofertă':'Oferta','Contract':'Contract','Proiectare':'Proiectare','Execuție':'Executie','Recepție':'Receptie','Facturat':'Facturat','Mentenanță':'Mentenanta','Finalizat':'Finalizat','Anulat':'Anulat'};
@@ -582,9 +582,9 @@ function renderKanban(){
         col.ondrop=function(ev){ev.preventDefault();col.style.background='';var pid=ev.dataTransfer.getData('text/plain');if(pid)changeStatus(pid,st.name);};
         col.innerHTML='<div class="kcol-head '+st.cls+'"><span class="kcol-name">'+(STATUS_ICONS[st.name]||'')+' '+st.name+'</span><span class="kcol-count">'+prj.length+'</span></div>';
         var body=document.createElement('div');body.className='kcol-body';
-        if(!prj.length){body.innerHTML='<div class="kanban-empty">—</div>';}
+        if(!prj.length){body.innerHTML='<div class="kanban-empty">-</div>';}
         else{prj.forEach(function(p){
-            var t=SERVICE_TAGS[p.serviciu]||{cls:'install',s:p.serviciu||'—'};
+            var t=SERVICE_TAGS[p.serviciu]||{cls:'install',s:p.serviciu||'-'};
             var isNepreluat=!p.preluat_de&&st.id!=='lead'&&st.id!=='contract'&&st.id!=='facturat'&&st.id!=='mentenanta';
             var respHtml='';
             if(p.preluat_de){
@@ -634,18 +634,18 @@ function renderTable(){
         return;
     }
     filtered.forEach(function(p){
-        var t=SERVICE_TAGS[p.serviciu]||{cls:'install',s:p.serviciu||'—'};
+        var t=SERVICE_TAGS[p.serviciu]||{cls:'install',s:p.serviciu||'-'};
         var opts=Object.keys(STATUS_MAP).map(function(s){return '<option value="'+s+'"'+(p.status===s?' selected':'')+'>'+STATUS_ICONS[s]+' '+s+'</option>';}).join('');
         opts+='<option value="Finalizat"'+(p.status==='Finalizat'?' selected':'')+'>✅ Finalizat</option>';
         opts+='<option value="Anulat"'+(p.status==='Anulat'?' selected':'')+'>❌ Anulat</option>';
-        var respName=p.preluat_de||p.responsabil||'—';
+        var respName=p.preluat_de||p.responsabil||'-';
         var respIcon=RESP_ICONS[respName]||'';
         var valDisplay=p.valoareContract?(p.valoareContract).toLocaleString('ro-RO'):(p.oferteTotal?(p.oferteTotal).toLocaleString('ro-RO'):(p.valoare||0).toLocaleString('ro-RO'));
         var valColor=p.valoareContract?'var(--green)':(p.oferteTotal?'var(--orange)':'var(--dark)');
         var valLabel=p.valoareContract?' contract':(p.oferteTotal?' oferte':'');
-        var oferteDisplay=p.oferteCount?(p.oferteCount+' of.'+(p.oferteAcceptate?' / '+p.oferteAcceptate+' acc.':'')):'—';
+        var oferteDisplay=p.oferteCount?(p.oferteCount+' of.'+(p.oferteAcceptate?' / '+p.oferteAcceptate+' acc.':'')):'-';
         var age=timeAgo(p.dataCreare);
-        var ageHtml=age?'<span class="kcard-age '+age.cls+'">'+age.text+'</span>':'—';
+        var ageHtml=age?'<span class="kcard-age '+age.cls+'">'+age.text+'</span>':'-';
         var tr=document.createElement('tr');
         tr.style.cursor='pointer';
         tr.onclick=function(){openProjectDetail(p.id);};
@@ -855,7 +855,7 @@ function openProjectDetail(projectId){
             var statusName=STAT_DB_TO_UI[h.status]||h.status||'?';
             var icon=STATUS_ICONS[statusName]||'📌';
             var dotColor=isLast?'var(--blue)':'var(--gray-b)';
-            timelineHtml+='<li class="tl-item"><div class="tl-dot'+(isLast?' active':'')+'" style="background:'+dotColor+'"></div><div class="tl-line"></div><div class="tl-content"><span class="tl-status">'+icon+' '+statusName+'</span><div class="tl-date">'+(h.data||'—')+'</div>'+(h.user?'<div class="tl-user">👤 '+esc(h.user)+'</div>':'')+'</div></li>';
+            timelineHtml+='<li class="tl-item"><div class="tl-dot'+(isLast?' active':'')+'" style="background:'+dotColor+'"></div><div class="tl-line"></div><div class="tl-content"><span class="tl-status">'+icon+' '+statusName+'</span><div class="tl-date">'+(h.data||'-')+'</div>'+(h.user?'<div class="tl-user">👤 '+esc(h.user)+'</div>':'')+'</div></li>';
         });
         timelineHtml+='</ul></div>';
     }
@@ -878,14 +878,14 @@ function openProjectDetail(projectId){
         (p.obiectiv?'<div style="font-size:12px;color:var(--gray);margin-bottom:8px">📋 '+esc(p.obiectiv)+'</div>':'')+
         preluatHtml+
         '<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;font-size:12px;margin-bottom:12px">'+
-        '<div><strong>Serviciu:</strong> '+(p.serviciu||'—')+'</div>'+
+        '<div><strong>Serviciu:</strong> '+(p.serviciu||'-')+'</div>'+
         valHtml+
-        '<div><strong>Locație:</strong> '+(p.loc||'—')+'</div>'+
-        '<div><strong>Telefon:</strong> '+(p.telefon||'—')+'</div>'+
-        '<div><strong>CUI:</strong> '+(p.cui||'—')+'</div>'+
-        '<div><strong>Contact:</strong> '+(p.contact||'—')+'</div>'+
-        '<div><strong>Creat:</strong> '+(p.dataCreare||'—')+'</div>'+
-        '<div><strong>Responsabil:</strong> '+(RESP_ICONS[p.responsabil]||'')+' '+(p.responsabil||'—')+'</div>'+
+        '<div><strong>Locație:</strong> '+(p.loc||'-')+'</div>'+
+        '<div><strong>Telefon:</strong> '+(p.telefon||'-')+'</div>'+
+        '<div><strong>CUI:</strong> '+(p.cui||'-')+'</div>'+
+        '<div><strong>Contact:</strong> '+(p.contact||'-')+'</div>'+
+        '<div><strong>Creat:</strong> '+(p.dataCreare||'-')+'</div>'+
+        '<div><strong>Responsabil:</strong> '+(RESP_ICONS[p.responsabil]||'')+' '+(p.responsabil||'-')+'</div>'+
         '</div>'+
         (p.note?'<div style="font-size:11px;color:var(--gray);padding:8px;background:var(--gray-bg);border-radius:8px;margin-bottom:12px">📝 '+esc(p.note)+'</div>':'')+
         timelineHtml+
@@ -905,7 +905,7 @@ function openProjectDetail(projectId){
         overlay.innerHTML='<div class="modal wide"><div class="modal-head"><div class="modal-title" id="detailTitle"></div><button class="modal-close" onclick="closeDetailModal()">✕</button></div><div class="modal-body" id="detailBody"></div></div>';
         document.body.appendChild(overlay);
     }
-    document.getElementById('detailTitle').textContent='📋 '+p.id+' — '+esc(p.client);
+    document.getElementById('detailTitle').textContent='📋 '+p.id+' · '+esc(p.client);
     document.getElementById('detailBody').innerHTML=html;
     overlay.classList.add('active');
     loadProjectOferte(p.dbId, p.clientDbId);
@@ -938,7 +938,7 @@ function renderOferteSection(container, oferte){
         acceptate.forEach(function(o){
             var total=parseFloat(o.total_cu_tva)||0;
             html+='<div style="display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px solid #dcfce7;font-size:12px">';
-            html+='<div><strong>'+esc(o.oferta_id)+'</strong> — '+esc(o.titlu||o.oferta_id)+'<div style="font-size:10px;color:var(--gray)">'+(o.data_oferta||'')+'</div></div>';
+            html+='<div><strong>'+esc(o.oferta_id)+'</strong> · '+esc(o.titlu||o.oferta_id)+'<div style="font-size:10px;color:var(--gray)">'+(o.data_oferta||'')+'</div></div>';
             html+='<div style="display:flex;align-items:center;gap:6px"><button onclick="window.open('+Q+'calculator-pret.html?pdf_offer='+o.id+Q+')" style="padding:3px 8px;border-radius:6px;background:#f0fdf4;color:var(--green);font-size:10px;font-weight:700;cursor:pointer;border:1px solid #bbf7d0">📄 PDF</button><span style="font-weight:900;color:var(--green);white-space:nowrap">'+total.toLocaleString("ro-RO")+' RON</span></div></div>';
         });
         html+='<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0 0;font-size:14px;font-weight:900;border-top:2px solid #bbf7d0;margin-top:4px">';
@@ -947,20 +947,20 @@ function renderOferteSection(container, oferte){
     if(trimise.length){
         html+='<div style="background:#eff6ff;border:1px solid #bfdbfe;border-radius:10px;padding:10px;margin-bottom:8px">';
         html+='<div style="font-size:11px;font-weight:700;color:var(--blue);margin-bottom:6px">📤 Trimise ('+trimise.length+')</div>';
-        trimise.forEach(function(o){ html+='<div style="font-size:12px;padding:3px 0"><strong>'+esc(o.oferta_id)+'</strong> — '+(parseFloat(o.total_cu_tva)||0).toLocaleString("ro-RO")+' RON</div>'; });
+        trimise.forEach(function(o){ html+='<div style="font-size:12px;padding:3px 0"><strong>'+esc(o.oferta_id)+'</strong> · '+(parseFloat(o.total_cu_tva)||0).toLocaleString("ro-RO")+' RON</div>'; });
         html+='</div>';
     }
     if(drafts.length){
         html+='<div style="background:var(--gray-bg);border:1px solid var(--gray-b);border-radius:10px;padding:10px;margin-bottom:8px">';
         html+='<div style="font-size:11px;font-weight:700;color:var(--gray);margin-bottom:6px">📝 Draft ('+drafts.length+')</div>';
-        drafts.forEach(function(o){ html+='<div style="font-size:12px;padding:3px 0"><strong>'+esc(o.oferta_id)+'</strong> — '+(parseFloat(o.total_cu_tva)||0).toLocaleString("ro-RO")+' RON</div>'; });
+        drafts.forEach(function(o){ html+='<div style="font-size:12px;padding:3px 0"><strong>'+esc(o.oferta_id)+'</strong> · '+(parseFloat(o.total_cu_tva)||0).toLocaleString("ro-RO")+' RON</div>'; });
         html+='</div>';
     }
     if(refuzate.length){
         html+='<div style="background:#fef2f2;border:1px solid #fecaca;border-radius:10px;padding:10px;margin-bottom:8px">';
         html+='<div style="font-size:11px;font-weight:700;color:var(--red);margin-bottom:6px">❌ Refuzate ('+refuzate.length+')</div>';
         refuzate.forEach(function(o){
-            html+='<div style="font-size:12px;padding:3px 0"><strong>'+esc(o.oferta_id)+'</strong> — '+(parseFloat(o.total_cu_tva)||0).toLocaleString("ro-RO")+' RON';
+            html+='<div style="font-size:12px;padding:3px 0"><strong>'+esc(o.oferta_id)+'</strong> · '+(parseFloat(o.total_cu_tva)||0).toLocaleString("ro-RO")+' RON';
             if(o.motiv_respingere) html+=' <span style="font-size:10px;color:var(--red)">('+esc(o.motiv_respingere)+')</span>';
             html+='</div>';
         });
@@ -1104,7 +1104,7 @@ function closeFinalizareModal(){document.getElementById('finModal').classList.re
 function _finalizareCalcGarantieEnd(){
     var start=document.getElementById('finGarantieStart').value;
     var luni=parseInt(document.getElementById('finGarantieLuni').value)||24;
-    if(!start){document.getElementById('finGarantieEnd').textContent='—';return;}
+    if(!start){document.getElementById('finGarantieEnd').textContent='-';return;}
     var d=new Date(start);
     d.setMonth(d.getMonth()+luni);
     document.getElementById('finGarantieEnd').textContent=d.toISOString().slice(0,10);
@@ -1232,10 +1232,10 @@ function _buildPVHtml(p,d){
         pozeHtml+='</div></div>';
     }
     var ment=d.mentenanta_da?
-        '<tr><td>Contract mentenanță</td><td><strong>DA</strong> — '+esc(d.mentenanta_tip)+' / '+esc(d.mentenanta_frecventa)+' / '+(d.mentenanta_valoare||0).toLocaleString('ro-RO')+' RON/lună (start '+esc(d.mentenanta_start)+')</td></tr>':
+        '<tr><td>Contract mentenanță</td><td><strong>DA</strong> · '+esc(d.mentenanta_tip)+' / '+esc(d.mentenanta_frecventa)+' / '+(d.mentenanta_valoare||0).toLocaleString('ro-RO')+' RON/lună (start '+esc(d.mentenanta_start)+')</td></tr>':
         '<tr><td>Contract mentenanță</td><td>NU</td></tr>';
     var garEnd=document.getElementById('finGarantieEnd').textContent;
-    var h='<!DOCTYPE html><html lang="ro"><head><meta charset="UTF-8"><title>Proces Verbal Finalizare — '+esc(p.id)+'</title>';
+    var h='<!DOCTYPE html><html lang="ro"><head><meta charset="UTF-8"><title>Proces Verbal Finalizare · '+esc(p.id)+'</title>';
     h+='<style>@page{size:A4;margin:14mm 12mm}*{margin:0;padding:0;box-sizing:border-box;font-family:"Segoe UI",Tahoma,sans-serif}';
     h+='body{padding:18px;color:#0f172a;background:#f1f5f9}';
     h+='.no-print{position:sticky;top:0;background:#0f172a;color:#fff;padding:11px 18px;border-radius:10px;margin-bottom:16px;display:flex;justify-content:space-between;align-items:center;gap:10px;z-index:10}';
@@ -1256,25 +1256,25 @@ function _buildPVHtml(p,d){
     h+='.foot{text-align:center;font-size:9px;color:#94a3b8;margin-top:18px;padding-top:10px;border-top:1px solid #e2e8f0}';
     h+='@media print{body{background:#fff;padding:0}.no-print{display:none!important}.sheet{box-shadow:none;border-radius:0;max-width:100%}}';
     h+='</style></head><body>';
-    h+='<div class="no-print"><div><strong>📄 Proces Verbal Finalizare</strong> — '+esc(p.id)+'</div>';
+    h+='<div class="no-print"><div><strong>📄 Proces Verbal Finalizare</strong> · '+esc(p.id)+'</div>';
     h+='<div><button class="p" onclick="window.print()">🖨️ Printează / PDF</button> <button class="c" onclick="window.close()">✕ Închide</button></div></div>';
     h+='<div class="sheet">';
     h+='<div class="hdr"><div><div class="tag">CSSI • Break Sistems SRL</div><div class="title">Proces Verbal Finalizare Lucrare</div><div class="nr">Nr. '+esc(p.id)+' / '+esc(d.data_finalizare)+'</div></div>';
     h+='<div class="right"><div style="font-size:10px;color:#94a3b8">www.cssi.ro</div><div style="font-size:11px;color:#64748b">contact@cssi.ro • 0752 288 400</div></div></div>';
-    h+='<div class="intro">Subscrisa <strong>Break Sistems SRL</strong> (brand CSSI), prin reprezentantul său, confirmă finalizarea lucrărilor contractate cu beneficiarul <strong>'+esc(p.client)+'</strong> pentru obiectivul <strong>'+esc(p.obiectiv||p.adresa||'—')+'</strong>.</div>';
+    h+='<div class="intro">Subscrisa <strong>Break Sistems SRL</strong> (brand CSSI), prin reprezentantul său, confirmă finalizarea lucrărilor contractate cu beneficiarul <strong>'+esc(p.client)+'</strong> pentru obiectivul <strong>'+esc(p.obiectiv||p.adresa||'-')+'</strong>.</div>';
     h+='<div class="sec"><h3>Date proiect</h3><table>';
     h+='<tr><td>Cod proiect</td><td><strong>'+esc(p.id)+'</strong></td></tr>';
     h+='<tr><td>Beneficiar</td><td>'+esc(p.client)+(p.cui?' (CUI '+esc(p.cui)+')':'')+'</td></tr>';
-    h+='<tr><td>Obiectiv</td><td>'+esc(p.obiectiv||'—')+'</td></tr>';
-    h+='<tr><td>Adresă</td><td>'+esc(p.adresa||'—')+'</td></tr>';
-    h+='<tr><td>Serviciu</td><td>'+esc(p.serviciu||'—')+'</td></tr>';
+    h+='<tr><td>Obiectiv</td><td>'+esc(p.obiectiv||'-')+'</td></tr>';
+    h+='<tr><td>Adresă</td><td>'+esc(p.adresa||'-')+'</td></tr>';
+    h+='<tr><td>Serviciu</td><td>'+esc(p.serviciu||'-')+'</td></tr>';
     h+='<tr><td>Valoare contract</td><td><strong>'+(p.valoareContract||p.valoare||0).toLocaleString('ro-RO')+' RON</strong></td></tr>';
     h+='<tr><td>Data finalizare</td><td><strong>'+esc(d.data_finalizare)+'</strong></td></tr>';
     h+='</table></div>';
-    h+='<div class="sec"><h3>Checklist predare</h3><table>'+(checklistRows||'<tr><td colspan="2">—</td></tr>')+'</table></div>';
+    h+='<div class="sec"><h3>Checklist predare</h3><table>'+(checklistRows||'<tr><td colspan="2">-</td></tr>')+'</table></div>';
     h+='<div class="sec"><h3>Financiar</h3><table>';
-    h+='<tr><td>Factură finală</td><td>'+(d.factura_finala_nr?esc(d.factura_finala_nr)+' / '+esc(d.factura_finala_data||'—'):'—')+'</td></tr>';
-    h+='<tr><td>Stare achitare</td><td>'+esc(d.achitat_status||'—')+'</td></tr>';
+    h+='<tr><td>Factură finală</td><td>'+(d.factura_finala_nr?esc(d.factura_finala_nr)+' / '+esc(d.factura_finala_data||'-'):'-')+'</td></tr>';
+    h+='<tr><td>Stare achitare</td><td>'+esc(d.achitat_status||'-')+'</td></tr>';
     h+='</table></div>';
     h+='<div class="sec"><h3>Garanție & mentenanță</h3><table>';
     h+='<tr><td>Garanție</td><td><strong>'+d.garantie_luni+' luni</strong> (de la '+esc(d.garantie_start)+' până la '+esc(garEnd)+')</td></tr>';
@@ -1341,7 +1341,7 @@ loadProjects=function(){_origLoadProjects.apply(this,arguments);setTimeout(_load
 
 <div class="fin-sec">
 <h3><span class="num">1</span>Checklist predare</h3>
-<label class="fin-check"><input type="checkbox" data-key="materiale_100"><span>Toate materialele sunt montate (100%) — verificat în tab Materiale</span></label>
+<label class="fin-check"><input type="checkbox" data-key="materiale_100"><span>Toate materialele sunt montate (100%), verificat în tab Materiale</span></label>
 <label class="fin-check"><input type="checkbox" data-key="poze_finale"><span>Poze finale încărcate (PV, instalație, etichete)</span></label>
 <label class="fin-check"><input type="checkbox" data-key="pv_semnat"><span>PV semnat de beneficiar (uploadat în Documente proiect)</span></label>
 <label class="fin-check"><input type="checkbox" data-key="instruire"><span>Instruire beneficiar realizată (utilizare echipamente, cod alarmă, app mobile)</span></label>
@@ -1352,7 +1352,7 @@ loadProjects=function(){_origLoadProjects.apply(this,arguments);setTimeout(_load
 <div class="fin-sec">
 <h3><span class="num">2</span>Financiar</h3>
 <div class="fin-row">
-<div class="col" style="flex:2"><label>Valoare contract</label><div id="finValContract" style="padding:7px 10px;font-size:13px;font-weight:700;color:#15803d">—</div></div>
+<div class="col" style="flex:2"><label>Valoare contract</label><div id="finValContract" style="padding:7px 10px;font-size:13px;font-weight:700;color:#15803d">-</div></div>
 <div class="col"><label>Stare achitare</label><select id="finAchitat"><option>Nu</option><option>Parțial</option><option>Da</option></select></div>
 </div>
 <div class="fin-row">
@@ -1366,7 +1366,7 @@ loadProjects=function(){_origLoadProjects.apply(this,arguments);setTimeout(_load
 <div class="fin-row">
 <div class="col"><label>Durată (luni)</label><input type="number" id="finGarantieLuni" min="0" value="24" onchange="_finalizareCalcGarantieEnd()"></div>
 <div class="col"><label>Început garanție</label><input type="date" id="finGarantieStart" onchange="_finalizareCalcGarantieEnd()"></div>
-<div class="col"><label>Expiră la</label><div id="finGarantieEnd" style="padding:7px 10px;font-size:13px;font-weight:700;color:#dc2626;background:#fef2f2;border-radius:6px">—</div></div>
+<div class="col"><label>Expiră la</label><div id="finGarantieEnd" style="padding:7px 10px;font-size:13px;font-weight:700;color:#dc2626;background:#fef2f2;border-radius:6px">-</div></div>
 </div>
 </div>
 
@@ -1402,7 +1402,7 @@ loadProjects=function(){_origLoadProjects.apply(this,arguments);setTimeout(_load
 
 <div class="fin-sec">
 <h3><span class="num">7</span>Observații finale</h3>
-<textarea id="finObs" placeholder="Note specifice acestei finalizări — situații neprevăzute, recomandări către client, etc."></textarea>
+<textarea id="finObs" placeholder="Note specifice acestei finalizări, situații neprevăzute, recomandări către client, etc."></textarea>
 </div>
 
 <div class="fin-sec">
@@ -1428,7 +1428,7 @@ loadProjects=function(){_origLoadProjects.apply(this,arguments);setTimeout(_load
 <script>
 if('serviceWorker' in navigator){navigator.serviceWorker.register('../sw.js').then(function(r){console.log('[PWA] SW registered, scope:',r.scope)}).catch(function(e){console.log('[PWA] SW failed:',e)});var __reloaded=false;navigator.serviceWorker.addEventListener('controllerchange',function(){if(__reloaded)return;__reloaded=true;window.location.reload();});}
 </script>
-<script src="/admin/exec-start.js?v=4"></script>
-<script src="/admin/notifications.js?v=2" defer></script>
+<script src="/admin/exec-start.js?v=5"></script>
+<script src="/admin/notifications.js?v=3" defer></script>
 </body>
 </html>

@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Utilizatori — Portal CSSI 3.0</title>
+<title>Utilizatori · Portal CSSI 3.0</title>
 <meta name="robots" content="noindex, nofollow">
 <meta name="theme-color" content="#0f172a">
 <link rel="manifest" href="../manifest.json">
@@ -171,7 +171,7 @@ a{text-decoration:none;color:inherit;}button{font-family:inherit;cursor:pointer;
 <!-- MODAL: SET PASSWORD -->
 <div id="setPwModal" class="modal-overlay" onclick="if(event.target===this)closeSetPwModal()">
 <div class="modal">
-    <div class="modal-head"><div class="modal-title">🔑 Setează parolă pentru <strong id="setPwUser">—</strong></div><button class="modal-close" onclick="closeSetPwModal()">✕</button></div>
+    <div class="modal-head"><div class="modal-title">🔑 Setează parolă pentru <strong id="setPwUser">-</strong></div><button class="modal-close" onclick="closeSetPwModal()">✕</button></div>
     <div class="modal-body">
         <form onsubmit="doSetPassword(event)">
             <input type="hidden" id="setPwUserId">
@@ -240,7 +240,7 @@ a{text-decoration:none;color:inherit;}button{font-family:inherit;cursor:pointer;
 <!-- MODAL: MODULE ACCESS -->
 <div id="modulesModal" class="modal-overlay" onclick="if(event.target===this)closeModulesModal()">
 <div class="modal" style="max-width:540px">
-    <div class="modal-head"><div class="modal-title">🔐 Module accesibile pentru <strong id="modUser">—</strong></div><button class="modal-close" onclick="closeModulesModal()">✕</button></div>
+    <div class="modal-head"><div class="modal-title">🔐 Module accesibile pentru <strong id="modUser">-</strong></div><button class="modal-close" onclick="closeModulesModal()">✕</button></div>
     <div class="modal-body">
         <div id="modStatus" style="font-size:12px;color:var(--gray);background:var(--gray-bg);padding:10px 14px;border-radius:8px;margin-bottom:12px"></div>
         <div style="font-size:11px;color:var(--gray);font-weight:700;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:8px">Bifează modulele permise:</div>
@@ -265,7 +265,7 @@ a{text-decoration:none;color:inherit;}button{font-family:inherit;cursor:pointer;
 <!-- MODAL: EDIT USER -->
 <div id="editModal" class="modal-overlay" onclick="if(event.target===this)closeEditModal()">
 <div class="modal">
-    <div class="modal-head"><div class="modal-title">✏️ Editează <strong id="editUser">—</strong></div><button class="modal-close" onclick="closeEditModal()">✕</button></div>
+    <div class="modal-head"><div class="modal-title">✏️ Editează <strong id="editUser">-</strong></div><button class="modal-close" onclick="closeEditModal()">✕</button></div>
     <div class="modal-body">
         <form onsubmit="doEdit(event)">
             <input type="hidden" id="editUserId">
@@ -561,7 +561,7 @@ function openModulesModal(uid, name){
             if(!res.success){document.getElementById('modStatus').textContent='❌ '+(res.error||'Eroare');return;}
             var d = res.data;
             var status = d.has_override
-                ? '✏️ <strong>Custom override</strong> — folosește lista de mai jos.'
+                ? '✏️ <strong>Custom override</strong>, folosește lista de mai jos.'
                 : '🔄 <strong>Defaults per rol</strong> ('+d.defaults.length+' module). Bifele de mai jos sunt cele active. Modifică-le pentru a suprascrie.';
             document.getElementById('modStatus').innerHTML = status;
             // Render checkbox-uri
@@ -618,6 +618,6 @@ if('serviceWorker' in navigator){
     navigator.serviceWorker.addEventListener('controllerchange',function(){if(__reloaded)return;__reloaded=true;window.location.reload();});
 }
 </script>
-<script src="/admin/notifications.js?v=2" defer></script>
+<script src="/admin/notifications.js?v=3" defer></script>
 </body>
 </html>

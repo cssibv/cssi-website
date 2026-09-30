@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Proiect Execuție — Portal CSSI 3.0</title>
+<title>Proiect Execuție · Portal CSSI 3.0</title>
 <meta name="robots" content="noindex, nofollow">
 <link rel="icon" type="image/x-icon" href="/images/favicon.ico">
 <meta name="theme-color" content="#dc2626">
@@ -254,7 +254,7 @@ a{text-decoration:none;color:inherit;}button{font-family:inherit;cursor:pointer;
     <!-- TAB MATERIALE -->
     <div class="tab-panel" id="tabMateriale">
         <div class="section">
-            <div class="section-title">📦 <span>Cuantificare montaj</span> <span style="color:var(--gray-l);font-weight:600;text-transform:none;letter-spacing:0;font-size:11px;margin-left:8px">— bifează ce ai montat din ofertă</span><button class="btn-print-mat" onclick="printMaterialeList()" title="Generează PDF: proces verbal (pag. 1) + listă materiale (verso)">🖨️ PV + Listă PDF</button></div>
+            <div class="section-title">📦 <span>Cuantificare montaj</span> <span style="color:var(--gray-l);font-weight:600;text-transform:none;letter-spacing:0;font-size:11px;margin-left:8px">bifează ce ai montat din ofertă</span><button class="btn-print-mat" onclick="printMaterialeList()" title="Generează PDF: proces verbal (pag. 1) + listă materiale (verso)">🖨️ PV + Listă PDF</button></div>
             <div id="materialeList"><div class="empty-state"><div class="ei">⏳</div>Se încarcă...</div></div>
         </div>
     </div>
@@ -394,7 +394,7 @@ function predaReceptie(){
     showLoading(true);
     fetch(API_DB+'?action=updateStatus',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'updateStatus',id:STATE.id,status:'Receptie',user:(sessionStorage.getItem('cssi-user')||sessionStorage.getItem('cssi-role')||'Admin')})})
         .then(function(r){return r.json()}).then(function(res){
-            if(res.success){ toast('✅ Trecut la Recepție — finalizează din pagina Proiecte','success'); refreshData(); }
+            if(res.success){ toast('✅ Trecut la Recepție, finalizează din pagina Proiecte','success'); refreshData(); }
             else toast('❌ '+(res.error||'Eroare'),'error');
         }).catch(function(e){ toast('❌ '+(e.message||e),'error'); }).finally(function(){ showLoading(false); });
 }
@@ -508,7 +508,7 @@ function renderMateriale(){
             // Header: info + progres (NU mai e click toggle aici)
             html += '<div class="mat-row-head">';
             html += '<div class="mat-row-info">';
-            html += l.cod ? '<span class="mat-row-cod">'+esc(l.cod)+'</span>' : '<span class="mat-row-cod empty">— fără cod —</span>';
+            html += l.cod ? '<span class="mat-row-cod">'+esc(l.cod)+'</span>' : '<span class="mat-row-cod empty">fără cod</span>';
             html += '<div class="mat-row-name" title="'+esc(l.denumire||'')+'">'+esc(l.denumire||'')+'</div>';
             html += '</div>';
             html += '<div class="mat-row-progress">';
@@ -714,15 +714,15 @@ async function buildMaterialePdf(pvBytes, fontRegBytes, fontBoldBytes, p, oferte
     y -= 26;
     // ── Info proiect ──
     txt('Client', M, y, 9, font, MUT);
-    txt(fit(p.client_nume||'—', fontB, 10, 250), M+58, y, 10, fontB);
+    txt(fit(p.client_nume||'-', fontB, 10, 250), M+58, y, 10, fontB);
     txt('Telefon', M+318, y, 9, font, MUT);
-    txt(fit(p.client_telefon||'—', fontB, 9, tableW-(318+50)), M+368, y, 9, fontB);
+    txt(fit(p.client_telefon||'-', fontB, 9, tableW-(318+50)), M+368, y, 9, fontB);
     y -= 15;
     txt('Serviciu', M, y, 9, font, MUT);
-    txt(fit(p.serviciu||'—', font, 9, tableW-58), M+58, y, 9, font);
+    txt(fit(p.serviciu||'-', font, 9, tableW-58), M+58, y, 9, font);
     y -= 15;
     txt('Adresă', M, y, 9, font, MUT);
-    var addrLines = wrap(p.adresa_obiectiv||'—', font, 9, tableW-58);
+    var addrLines = wrap(p.adresa_obiectiv||'-', font, 9, tableW-58);
     for(var ai=0;ai<addrLines.length;ai++){ txt(addrLines[ai], M+58, y-ai*12, 9, font); }
     y -= Math.max(addrLines.length,1)*12 + 10;
 
@@ -730,10 +730,10 @@ async function buildMaterialePdf(pvBytes, fontRegBytes, fontBoldBytes, p, oferte
     tableHead();
     var total = 0;
     oferte.forEach(function(o){
-        if(oferte.length > 1){ groupRow('Ofertă '+(o.oferta_id||'')+(o.obiectiv ? '   —   '+o.obiectiv : '')); }
+        if(oferte.length > 1){ groupRow('Ofertă '+(o.oferta_id||'')+(o.obiectiv ? ' · '+o.obiectiv : '')); }
         o.linii.forEach(function(l){
             total++;
-            dataRow({ nr:total, cod:l.cod||'—', den:l.denumire||'—', cant:fmtN(l.cant_planificata)+' '+(l.um||'buc') });
+            dataRow({ nr:total, cod:l.cod||'-', den:l.denumire||'-', cant:fmtN(l.cant_planificata)+' '+(l.um||'buc') });
         });
     });
 
@@ -956,7 +956,7 @@ function sendReviewSMS(btn){
             if(waWin){ waWin.location.href = res.whatsapp_url; }
             else { window.location.href = res.whatsapp_url; }
             btn.classList.add('sent'); btn.innerHTML='✅ WhatsApp deschis'; btn.disabled=true;
-            toast(res.nota||'WhatsApp deschis — apasă SEND pentru a trimite','success');
+            toast(res.nota||'WhatsApp deschis, apasă SEND pentru a trimite','success');
         } else {
             if(waWin) try{ waWin.close(); }catch(e){}
             btn.disabled=false; btn.innerHTML='💬 Cerere recenzie';
@@ -995,6 +995,6 @@ if('serviceWorker' in navigator){
     });
 }
 </script>
-<script src="/admin/notifications.js?v=2" defer></script>
+<script src="/admin/notifications.js?v=3" defer></script>
 </body>
 </html>

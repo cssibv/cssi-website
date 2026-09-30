@@ -109,7 +109,7 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(circle
         <button class="back-btn" onclick="goBack()" type="button">← Înapoi</button>
         <div class="user-pick">
             <div class="av-circle xl" id="avBigInit"></div>
-            <div class="user-name-lg" id="userNameLg">—</div>
+            <div class="user-name-lg" id="userNameLg">-</div>
             <div class="user-greeting">Introdu parola pentru a intra</div>
         </div>
         <form class="pw-form" onsubmit="doLogin(event)">
@@ -247,6 +247,6 @@ if('serviceWorker' in navigator){
     navigator.serviceWorker.register('../sw.js').catch(function(){});
 }
 </script>
-<script src="/admin/notifications.js?v=2" defer></script>
+<script src="/admin/notifications.js?v=3" defer></script>
 </body>
 </html>

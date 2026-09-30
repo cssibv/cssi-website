@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Planificare — Portal CSSI 3.0</title>
+<title>Planificare · Portal CSSI 3.0</title>
 <meta name="robots" content="noindex, nofollow">
 <link rel="icon" type="image/x-icon" href="/images/favicon.ico">
 <meta name="theme-color" content="#dc2626">
@@ -198,7 +198,7 @@ tr:hover td{background:#f8fafc;}
     <div class="summary" id="summary"></div>
 
     <div class="week-nav">
-        <div class="week-label" id="weekLabel">—</div>
+        <div class="week-label" id="weekLabel">-</div>
         <div class="week-btns">
             <button class="wn-btn" onclick="changeWeek(-1)" title="Săpt. anterioară">◀ Anterioară</button>
             <button class="wn-btn today" onclick="goToday()">Azi</button>
@@ -262,7 +262,7 @@ tr:hover td{background:#f8fafc;}
                 </div>
                 <div id="cliExistBlock">
                     <select class="form-select" id="iClientId">
-                        <option value="">— Alege client —</option>
+                        <option value="">Alege client</option>
                     </select>
                 </div>
                 <div id="cliNouBlock" style="display:none">
@@ -352,7 +352,7 @@ tr:hover td{background:#f8fafc;}
             <div class="form-group">
                 <label class="form-label">Proiect <span class="req">*</span></label>
                 <select class="form-select" id="fProiectId" required>
-                    <option value="">— Alege proiect din Execuție —</option>
+                    <option value="">Alege proiect din Execuție</option>
                 </select>
             </div>
             <div class="form-row-3">
@@ -473,7 +473,7 @@ function updateSync(state){
 function applyRoleUI(){
     if(isTehnician){
         document.getElementById('pageHeader').classList.add('tech');
-        document.getElementById('pageTitle').textContent = '📅 Programul meu — '+(userName||role);
+        document.getElementById('pageTitle').textContent = '📅 Programul meu · '+(userName||role);
         document.getElementById('addBtn').style.display = 'none';
     }
     // populate filtru tehnician
@@ -666,7 +666,7 @@ function renderList(){
         html += '<td><strong>'+esc(pj.client_nume||'?')+'</strong>'+(isRep(p)?' <span class="rep-tag">🔧</span>':'')+'</td>';
         html += '<td><span style="color:var(--blue);font-weight:700">'+esc(pj.proiect_id||'?')+'</span></td>';
         html += '<td>'+((p.atribuiri||[]).length?(p.atribuiri||[]).map(techName).join(', '):'<span style="color:var(--gray-l)">Neatribuit</span>')+'</td>';
-        html += '<td>'+(isRep(p)?'—':p.durata_ore+'h')+'</td>';
+        html += '<td>'+(isRep(p)?'-':p.durata_ore+'h')+'</td>';
         html += '<td><span class="acard-status '+sc+'">'+esc(p.status)+'</span></td>';
         html += '</tr>';
     });
@@ -677,11 +677,11 @@ function renderList(){
 // ═══ MODAL programare ═══
 function populateProiecteSelect(selectedId){
     var sel = document.getElementById('fProiectId');
-    sel.innerHTML = '<option value="">— Alege proiect din Execuție —</option>';
+    sel.innerHTML = '<option value="">Alege proiect din Execuție</option>';
     STATE.proiecte.forEach(function(p){
         var o = document.createElement('option');
         o.value = p.proiect_db_id;
-        o.textContent = p.proiect_id+' — '+(p.client_nume||'?');
+        o.textContent = p.proiect_id+' · '+(p.client_nume||'?');
         if(String(selectedId)===String(p.proiect_db_id)) o.selected = true;
         sel.appendChild(o);
     });
@@ -780,7 +780,7 @@ function openInterventieModal(){
         fetch(API_DB+'?action=getClienti&_t='+Date.now(),{credentials:'include'})
             .then(function(r){return r.json();})
             .then(function(res){
-                var opts = '<option value="">— Alege client —</option>';
+                var opts = '<option value="">Alege client</option>';
                 if(res.success && res.data){
                     res.data.sort(function(a,b){return (a.nume||'').localeCompare(b.nume||'');});
                     res.data.forEach(function(c){
@@ -884,6 +884,6 @@ if('serviceWorker' in navigator){
     });
 }
 </script>
-<script src="/admin/notifications.js?v=2" defer></script>
+<script src="/admin/notifications.js?v=3" defer></script>
 </body>
 </html>

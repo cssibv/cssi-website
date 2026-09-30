@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Dosar — Portal CSSI 3.0</title>
+<title>Dosar · Portal CSSI 3.0</title>
 <meta name="robots" content="noindex, nofollow">
 <link rel="icon" type="image/x-icon" href="/images/favicon.ico">
 <meta name="theme-color" content="#0f172a">
@@ -262,7 +262,7 @@ body{padding:14px;}
     </div>
     <label class="modal-label">Motiv pierdere (obligatoriu pentru analytics)</label>
     <select class="modal-select" id="pierdutMotivSel">
-      <option value="">— alege motiv —</option>
+      <option value="">alege motiv</option>
       <option value="pret">💰 Preț prea mare</option>
       <option value="alt_furnizor">🏢 A ales alt furnizor</option>
       <option value="amanat">⏸ Amânat / abandonat de client</option>
@@ -285,10 +285,10 @@ body{padding:14px;}
 <div class="modal">
   <div class="modal-head"><div class="modal-title">🎯 Avansează în următoarea etapă</div><button class="modal-close" onclick="closeModal('avanseazaModal')">✕</button></div>
   <div class="modal-body">
-    <div style="font-size:12px;color:var(--gray);margin-bottom:10px;">Stage curent: <strong id="avCurrentLbl" style="color:var(--dark)">—</strong></div>
+    <div style="font-size:12px;color:var(--gray);margin-bottom:10px;">Stage curent: <strong id="avCurrentLbl" style="color:var(--dark)">-</strong></div>
     <label class="modal-label">Selectează etapa nouă</label>
     <div class="stage-opt-grid" id="avStageGrid"></div>
-    <label class="modal-label">Notă (opțional — apare în istoric)</label>
+    <label class="modal-label">Notă (opțional, apare în istoric)</label>
     <textarea class="modal-textarea" id="avNotaInput" placeholder="Ex: contract semnat azi, încep proiectarea săptămâna viitoare..." maxlength="500"></textarea>
     <div class="modal-actions">
       <button class="btn secondary" onclick="closeModal('avanseazaModal')">Anulează</button>
@@ -325,7 +325,7 @@ STATE.cod = urlParams.get('cod') || '';
 
 // ═══ UTILS ═══
 function esc(s){var d=document.createElement('div');d.textContent=s==null?'':String(s);return d.innerHTML;}
-function fmtDate(s){if(!s)return '—';var d=new Date(s);if(isNaN(d))return s;var m=['ian','feb','mar','apr','mai','iun','iul','aug','sep','oct','noi','dec'];return d.getDate()+' '+m[d.getMonth()]+' '+d.getFullYear();}
+function fmtDate(s){if(!s)return '-';var d=new Date(s);if(isNaN(d))return s;var m=['ian','feb','mar','apr','mai','iun','iul','aug','sep','oct','noi','dec'];return d.getDate()+' '+m[d.getMonth()]+' '+d.getFullYear();}
 function fmtDateShort(s){if(!s)return '';var d=new Date(s);if(isNaN(d))return s;return ('0'+d.getDate()).slice(-2)+'.'+('0'+(d.getMonth()+1)).slice(-2)+'.'+d.getFullYear();}
 function fmtMoney(n){return new Intl.NumberFormat('ro-RO',{style:'currency',currency:'RON',maximumFractionDigits:0}).format(Number(n)||0);}
 function fmtAgo(s){if(!s)return '';var d=(Date.now()-new Date(s.replace(' ','T')).getTime())/1000;if(d<60)return 'acum';if(d<3600)return Math.floor(d/60)+'m';if(d<86400)return Math.floor(d/3600)+'h';if(d<172800)return 'ieri';return Math.floor(d/86400)+'z';}
@@ -401,7 +401,7 @@ function renderDosareLista(client, proiecte, oferteFP){
   var html = '';
   if (client){
     html += '<div class="client-card">';
-    html += '<div><div class="nume">'+esc(client.nume||'—')+'</div>';
+    html += '<div><div class="nume">'+esc(client.nume||'-')+'</div>';
     html += '<div class="meta" style="margin-top:6px">';
     if (client.tip) html += '<span class="tip-chip">'+esc(client.tip)+'</span>';
     if (client.telefon) html += '<span>📞 <a href="'+telHref(client.telefon)+'">'+esc(client.telefon)+'</a></span>';
@@ -424,9 +424,9 @@ function renderDosareLista(client, proiecte, oferteFP){
       html += '<a class="dosar-card" href="dosar.html?proiect='+p.id+'">';
       html += '<div class="top">';
       html += '<span class="cod">'+esc(p.proiect_id||'#'+p.id)+'</span>';
-      html += '<span class="stage-mini">'+esc(st.label||st.stage||'—')+'</span>';
+      html += '<span class="stage-mini">'+esc(st.label||st.stage||'-')+'</span>';
       html += '</div>';
-      html += '<div class="obj">'+esc(p.obiectiv||p.serviciu||'— fără obiectiv —')+'</div>';
+      html += '<div class="obj">'+esc(p.obiectiv||p.serviciu||'fără obiectiv')+'</div>';
       html += '<div class="desc">';
       if (p.adresa_obiectiv) html += '📍 '+esc(p.adresa_obiectiv)+' · ';
       html += p.nr_oferte+' ofert' + (p.nr_oferte===1?'ă':'e');
@@ -444,9 +444,9 @@ function renderDosareLista(client, proiecte, oferteFP){
       html += '<a class="dosar-card" href="oferte.html">';
       html += '<div class="top">';
       html += '<span class="cod">'+esc(o.oferta_id||'#'+o.id)+'</span>';
-      html += '<span class="stage-mini" style="background:var(--orange)">'+esc(o.status||'—')+'</span>';
+      html += '<span class="stage-mini" style="background:var(--orange)">'+esc(o.status||'-')+'</span>';
       html += '</div>';
-      html += '<div class="obj">'+esc(o.obiectiv||'— fără obiectiv —')+'</div>';
+      html += '<div class="obj">'+esc(o.obiectiv||'fără obiectiv')+'</div>';
       html += '<div class="desc">'+fmtDate(o.data_oferta)+' · '+fmtMoney(o.total_cu_tva)+'</div>';
       html += '</a>';
     });
@@ -466,7 +466,7 @@ function renderDosar(){
   document.getElementById('pageTitle').textContent = '📁 ' + (c.nume || 'Dosar');
   var sub = '';
   if (p){
-    sub = (p.obiectiv || p.serviciu || '— fără obiectiv —');
+    sub = (p.obiectiv || p.serviciu || 'fără obiectiv');
     if (p.proiect_id) sub += ' · ' + p.proiect_id;
   } else {
     sub = 'Vedere agregată client (fără proiect activ)';
@@ -481,7 +481,7 @@ function renderDosar(){
 
   // Card client
   html += '<div class="client-card">';
-  html += '<div style="flex:1;min-width:200px"><div class="nume">'+esc(c.nume||'—')+'</div>';
+  html += '<div style="flex:1;min-width:200px"><div class="nume">'+esc(c.nume||'-')+'</div>';
   html += '<div class="meta" style="margin-top:6px">';
   if (c.tip) html += '<span class="tip-chip">'+esc(c.tip)+'</span>';
   if (c.cui_cnp) html += '<span>CUI: <strong>'+esc(c.cui_cnp)+'</strong></span>';
@@ -495,7 +495,7 @@ function renderDosar(){
   html += '<div class="stage-head"' + (isLost?' style="background:linear-gradient(135deg,#991b1b,#dc2626)"':'') + '>';
   html += '<div class="stage-row1">';
   html += '<div class="stage-current">';
-  html += '<div><div class="label">Stadiu curent</div><div class="name">'+esc(s.label||s.stage||'—')+'</div>';
+  html += '<div><div class="label">Stadiu curent</div><div class="name">'+esc(s.label||s.stage||'-')+'</div>';
   if (s.idx >= 0) html += '<div class="step">Pas '+(s.idx+1)+' din '+s.total+'</div>';
   html += '</div></div>';
   html += '<div class="stage-actions">';
@@ -633,7 +633,7 @@ function renderTimelineHTML(d){
       date: j0.data_pontaj || j0.created_at,
       kind: 'done',
       icon: '📔',
-      title: 'Jurnal teren — '+d.jurnal.length+' intrare/intrări',
+      title: 'Jurnal teren · '+d.jurnal.length+' intrare/intrări',
       sub: 'Ultima: '+fmtDate(j0.data_pontaj)+(j0.persoane?' · '+esc(j0.persoane):'')+(j0.ore?' · '+j0.ore+'h':''),
       sub2: j0.descriere ? esc(j0.descriere).substring(0,140) : '',
       link: 'jurnal-teren.html'
@@ -705,7 +705,7 @@ function submitPierdut(){
   var detail = document.getElementById('pierdutDetailInput').value.trim();
   if (!motivSel){ toast('⚠ Alege un motiv','error'); return; }
   var motivLbl = document.getElementById('pierdutMotivSel').options[document.getElementById('pierdutMotivSel').selectedIndex].text;
-  var motiv = motivLbl + (detail ? ' — ' + detail : '');
+  var motiv = motivLbl + (detail ? ' · ' + detail : '');
   if (!confirm('Confirmi că dosarul e PIERDUT?\n\nMotiv: '+motiv+'\n\nAcțiunea marchează proiectul ca Anulat (reversibil).')) return;
   fetch(API+'?action=dosarMarcheazaPierdut',{method:'POST',credentials:'include',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'dosarMarcheazaPierdut',proiect_id:STATE.proiectId,client_id:STATE.clientId,motiv:motiv})})
     .then(function(r){return r.json();}).then(function(res){
@@ -717,7 +717,7 @@ function submitPierdut(){
 function openAvanseaza(){
   if (!STATE.proiectId){ toast('⚠ Necesită proiect (nu doar client)','error'); return; }
   var s = (STATE.dosar && STATE.dosar.stage) || {};
-  document.getElementById('avCurrentLbl').textContent = s.label || s.stage || '—';
+  document.getElementById('avCurrentLbl').textContent = s.label || s.stage || '-';
   // Construiesc grila cu opțiuni (etape posibile + Anulat)
   var opts = [
     {val:'Oferta',     lbl:'📤 Ofertă'},
@@ -776,7 +776,7 @@ if('serviceWorker' in navigator){
   navigator.serviceWorker.register('../sw.js').then(function(r){console.log('[PWA] SW registered, scope:',r.scope)}).catch(function(e){console.log('[PWA] SW failed:',e)});
 }
 </script>
-<script src="/admin/exec-start.js?v=4"></script>
-<script src="/admin/notifications.js?v=2" defer></script>
+<script src="/admin/exec-start.js?v=5"></script>
+<script src="/admin/notifications.js?v=3" defer></script>
 </body>
 </html>

@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Marketing — Portal CSSI</title>
+<title>Marketing · Portal CSSI</title>
 <meta name="robots" content="noindex, nofollow">
 <link rel="icon" type="image/x-icon" href="/images/favicon.ico">
 <meta name="theme-color" content="#dc2626">
@@ -553,9 +553,9 @@ function generateAiText(){
             if(res.image_prompt){
                 var ip=document.getElementById('aiImgPrompt');if(ip)ip.value=res.image_prompt;
                 var box=document.getElementById('aiImgBox');if(box)box.classList.add('active');
-                toast('✅ Text + prompt poză generate — copiază promptul (nanobanana) sau generează imaginea','success');
+                toast('✅ Text + prompt poză generate, copiază promptul (nanobanana) sau generează imaginea','success');
             }else{
-                toast('✅ Text generat — verifică și ajustează','success');
+                toast('✅ Text generat, verifică și ajustează','success');
             }
         }else{
             toast('❌ '+(res.error||'Eroare generare'),'error');
@@ -794,12 +794,12 @@ function openApproveModal(p){
         html+='<div style="padding:14px">';
         html+='<div style="display:flex;gap:10px;align-items:center;margin-bottom:10px">';
         html+='<div style="width:36px;height:36px;border-radius:50%;background:var(--gray-bg);display:flex;align-items:center;justify-content:center;font-size:18px">'+avatar+'</div>';
-        html+='<div><div style="font-weight:700;font-size:13px">'+brandName+(p.brand==='cssi'?' — Securitate & Instalații':' — Camping Conca Verde')+'</div><div style="font-size:11px;color:var(--gray)">'+(p.data?p.data+(p.ora?' · '+p.ora:''):'va fi publicat acum')+' · '+platName+'</div></div>';
+        html+='<div><div style="font-weight:700;font-size:13px">'+brandName+(p.brand==='cssi'?' · Securitate & Instalații':' · Camping Conca Verde')+'</div><div style="font-size:11px;color:var(--gray)">'+(p.data?p.data+(p.ora?' · '+p.ora:''):'va fi publicat acum')+' · '+platName+'</div></div>';
         html+='</div>';
         // Conținut (truncat la limita platformei)
         var displayContent=over?p.content.substring(0,limit)+'…':p.content;
         html+='<div style="font-size:13px;line-height:1.6;color:var(--dark2);white-space:pre-wrap;margin-bottom:10px'+(over?';position:relative':'')+'">'+esc(displayContent)+'</div>';
-        if(over) html+='<div style="font-size:11px;color:var(--red);font-weight:700;margin-bottom:10px">⚠️ Textul depășește '+limit+' caractere — '+platName+' îl va trunchia automat. Recomand să-l scurtezi.</div>';
+        if(over) html+='<div style="font-size:11px;color:var(--red);font-weight:700;margin-bottom:10px">⚠️ Textul depășește '+limit+' caractere · '+platName+' îl va trunchia automat. Recomand să-l scurtezi.</div>';
         // Media preview
         if(firstMedia){
             if(firstMedia.type==='video') html+='<video src="'+esc(firstMedia.url)+'" muted style="width:100%;max-height:180px;object-fit:cover;border-radius:8px;background:#000"></video>';
@@ -810,7 +810,7 @@ function openApproveModal(p){
         if(plat==='ig'&&!firstMedia) warnings.push('Instagram necesită cel puțin o imagine sau video');
         if(plat==='tiktok'&&(!firstMedia||firstMedia.type!=='video')) warnings.push('TikTok necesită video (nu imagine)');
         if(plat==='yt'&&(!firstMedia||firstMedia.type!=='video')) warnings.push('YouTube necesită video');
-        if(plat==='x'&&p.content.length>280) warnings.push('Twitter/X limită 280 caractere — restul se va pierde');
+        if(plat==='x'&&p.content.length>280) warnings.push('Twitter/X limită 280 caractere, restul se va pierde');
         if(warnings.length){
             html+='<div style="margin-top:10px;padding:8px 12px;background:#fef2f2;border-left:3px solid var(--red);border-radius:6px;font-size:11px;color:var(--red);font-weight:600">';
             warnings.forEach(function(w){html+='⚠️ '+w+'<br>';});
@@ -881,10 +881,10 @@ function openDetailModal(id){
     html+='<div style="background:var(--gray-bg);padding:16px;border-radius:12px;font-size:14px;line-height:1.7;white-space:pre-wrap">'+esc(p.content)+'</div>';
     html+='<div style="display:flex;flex-wrap:wrap;gap:6px;font-size:13px">'+platIcons(p.platforme)+'</div>';
     html+='<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;font-size:13px">';
-    html+='<div style="padding:10px;background:#fff;border-radius:8px;border:1px solid var(--gray-b)"><strong>Data</strong><br>'+(p.data||'—')+(p.ora?' · '+p.ora:'')+'</div>';
-    html+='<div style="padding:10px;background:#fff;border-radius:8px;border:1px solid var(--gray-b)"><strong>Tip</strong><br>'+(p.tip||'—')+'</div>';
+    html+='<div style="padding:10px;background:#fff;border-radius:8px;border:1px solid var(--gray-b)"><strong>Data</strong><br>'+(p.data||'-')+(p.ora?' · '+p.ora:'')+'</div>';
+    html+='<div style="padding:10px;background:#fff;border-radius:8px;border:1px solid var(--gray-b)"><strong>Tip</strong><br>'+(p.tip||'-')+'</div>';
     html+='<div style="padding:10px;background:#fff;border-radius:8px;border:1px solid var(--gray-b)"><strong>Caractere</strong><br>'+p.content.length+'</div>';
-    html+='<div style="padding:10px;background:#fff;border-radius:8px;border:1px solid var(--gray-b)"><strong>Creat</strong><br>'+(p.created_at||'—').substring(0,10)+'</div>';
+    html+='<div style="padding:10px;background:#fff;border-radius:8px;border:1px solid var(--gray-b)"><strong>Creat</strong><br>'+(p.created_at||'-').substring(0,10)+'</div>';
     html+='</div>';
     if(p.note) html+='<div style="font-size:13px;color:var(--gray);font-style:italic;padding:10px 14px;background:var(--gray-bg);border-radius:8px">📝 '+esc(p.note)+'</div>';
     html+='<div style="display:flex;gap:8px;flex-wrap:wrap">';
@@ -1054,7 +1054,7 @@ function runGenWeek(){
         btn.disabled=false;btn.innerHTML='✨ Generează postările';
         if(res.success){
             closeGenWeek();
-            toast('✅ '+res.created+' postări generate — verifică textul și adaugă poze','success');
+            toast('✅ '+res.created+' postări generate, verifică textul și adaugă poze','success');
             // comut pe Listă filtrat pe Draft ca să le verifici
             document.getElementById('filterStatus').value='Draft';
             kpiFilter='';
@@ -1152,7 +1152,7 @@ function deleteRecenzie(smsId,clientNume){
 function resetAll(){
     if(!RDATA.length){toast('Nimic de șters','info');return;}
     if(!confirm('ATENȚIE: Ștergi TOATE cele '+RDATA.length+' cereri de recenzie? Acțiunea nu poate fi anulată.'))return;
-    if(!confirm('Confirmi din nou — chiar vrei să ștergi tot istoricul de cereri?'))return;
+    if(!confirm('Confirmi din nou, chiar vrei să ștergi tot istoricul de cereri?'))return;
     fetch(API+'?action=deleteRecenzie',{method:'POST',credentials:'include',headers:{'Content-Type':'application/json'},body:JSON.stringify({all:true})})
     .then(function(r){return r.json()}).then(function(res){
         if(res.success){toast('Toate cererile au fost șterse ('+(res.deleted||0)+')','success');loadRecenzii();}else toast(res.error||'Eroare','error');
@@ -1166,69 +1166,69 @@ function resetAll(){
 var SEO_TEMPLATES=[
     {
         cat:'LinkedIn B2B',icon:'💼',plat:['linkedin'],brand:'cssi',
-        title:'Lecție din 20 ani — autoritate Mihai',
-        content:'După 20 de ani și 9.000 de proiecte, am învățat un lucru:\n\nCea mai mare diferență între o instalație care durează și una care eșuează nu sunt echipamentele.\n\nEste procesul de consultanță prealabilă.\n\nIată ce verific de fiecare dată înainte de a propune o soluție:\n\n→ [punct 1 — ex: harta blind spots reali, nu „pe planuri"]\n→ [punct 2 — ex: integrare cu infrastructura existentă]\n→ [punct 3 — ex: planul de mentenanță pe 5 ani, nu doar instalare]\n\nCifrele celor care sar peste consultanță: 30-40% revin la noi în 2 ani pentru re-cablare completă.\n\nCifrele celor cu care facem consultanță corectă: zero recablări în 8 ani.\n\nCare e abordarea ta când evaluezi un sistem nou? Comentează mai jos.\n\n#B2B #Securitate #FacilityManagement #CSSI #Brasov',
+        title:'Lecție din 20 ani, autoritate Mihai',
+        content:'După 20 de ani și 9.000 de proiecte, am învățat un lucru:\n\nCea mai mare diferență între o instalație care durează și una care eșuează nu sunt echipamentele.\n\nEste procesul de consultanță prealabilă.\n\nIată ce verific de fiecare dată înainte de a propune o soluție:\n\n→ [punct 1, ex: harta blind spots reali, nu „pe planuri"]\n→ [punct 2, ex: integrare cu infrastructura existentă]\n→ [punct 3, ex: planul de mentenanță pe 5 ani, nu doar instalare]\n\nCifrele celor care sar peste consultanță: 30-40% revin la noi în 2 ani pentru re-cablare completă.\n\nCifrele celor cu care facem consultanță corectă: zero recablări în 8 ani.\n\nCare e abordarea ta când evaluezi un sistem nou? Comentează mai jos.\n\n#B2B #Securitate #FacilityManagement #CSSI #Brasov',
         tips:'Sweet spot 1.200-1.500 char · Primele 2 linii = hook înainte de „see more" (210 char) · CTA în final cu întrebare → comentarii 15+ cuvinte = 15x weight algoritm 2026 · Postează marți-joi 9-11 dim.'
     },
     {
         cat:'LinkedIn B2B',icon:'💼',plat:['linkedin'],brand:'cssi',
-        title:'Legea 333/2003 — diferențiator legal',
-        content:'80%.\n\nAtât din instalațiile pe care le evaluăm pentru re-bid au fost făcute de firme fără autorizație IGPR.\n\nLegea 333/2003 te obligă să folosești o firmă licențiată pentru sisteme de securitate.\n\nCe înseamnă pentru afacerea ta dacă nu o respecți:\n\n• Amenzi 5.000-30.000 RON\n• Asigurarea NU plătește la incident — sistemul instalat ilegal e considerat inexistent\n• Răspundere directă pentru date personale (GDPR)\n• Riscuri penale dacă incidentul cauzează prejudiciu\n\nCSSI = firmă autorizată IGPR + ISU + ANRE. 9.000 proiecte. 20 ani.\n\nVrei un audit gratuit al sistemului actual? Comentează „audit" — îți trimit ghidul PDF cu tot ce trebuie verificat.\n\n#Compliance #Legea333 #SecuritateAfacere #IGPR #CSSI',
-        tips:'Hook cu cifră șocantă în prima linie · Listă bullets → easy scan · Lead gen prin comentariu „audit" → DM cu PDF (boost engagement) · NU pune link extern (-40% reach 2026) — pune în comentariu după primele engagement-uri.'
+        title:'Legea 333/2003, diferențiator legal',
+        content:'80%.\n\nAtât din instalațiile pe care le evaluăm pentru re-bid au fost făcute de firme fără autorizație IGPR.\n\nLegea 333/2003 te obligă să folosești o firmă licențiată pentru sisteme de securitate.\n\nCe înseamnă pentru afacerea ta dacă nu o respecți:\n\n• Amenzi 5.000-30.000 RON\n• Asigurarea NU plătește la incident, sistemul instalat ilegal e considerat inexistent\n• Răspundere directă pentru date personale (GDPR)\n• Riscuri penale dacă incidentul cauzează prejudiciu\n\nCSSI = firmă autorizată IGPR + ISU + ANRE. 9.000 proiecte. 20 ani.\n\nVrei un audit gratuit al sistemului actual? Comentează „audit", îți trimit ghidul PDF cu tot ce trebuie verificat.\n\n#Compliance #Legea333 #SecuritateAfacere #IGPR #CSSI',
+        tips:'Hook cu cifră șocantă în prima linie · Listă bullets → easy scan · Lead gen prin comentariu „audit" → DM cu PDF (boost engagement) · NU pune link extern (-40% reach 2026), pune în comentariu după primele engagement-uri.'
     },
     {
         cat:'LinkedIn B2B',icon:'💼',plat:['linkedin'],brand:'cssi',
-        title:'PDF Carousel — Studiu caz Schaeffler',
+        title:'PDF Carousel · Studiu caz Schaeffler',
         content:'Cum am securizat 8.500 mp de hală fără să oprim producția nici 1 minut.\n\nProvocare: 1.200 angajați, 47 camere, control acces complex, 3 zile termen.\n\nÎn carusele de mai jos: planul, soluția, rezultatul.\n\n→ Swipe pentru detalii\n\n#StudiuCaz #B2B #Securitate #CSSI',
         tips:'Format PDF carousel = 6.6% engagement (CEL MAI MARE LinkedIn 2026) · 10 slide-uri PDF: hook → context → provocare → soluție → echipament → calendar → rezultat → ROI → quote client → CTA · Saves = #1 metric algoritm. Încheie cu „Salvează pentru când vei avea nevoie."'
     },
     {
         cat:'Instagram Reel',icon:'📸',plat:['ig','tiktok'],brand:'cssi',
-        title:'Time-lapse montaj cameră — 15 sec viral',
-        content:'Hala asta avea ZERO camere acum 3 ore.\n\nAcum are 12. 🎥\n\nTime-lapse complet în 15 sec ⬇️\n\n[Adaugă trending audio — +42% engagement]\n[Text overlay frame 1: „Hala 8.500 mp · 12 camere · 3 ore"]\n\n.\n.\n.\n#CSSI #CamereSupraveghere #Brasov #TimeLapse #Securitate #B2B #FirmaAutorizata',
+        title:'Time-lapse montaj cameră · 15 sec viral',
+        content:'Hala asta avea ZERO camere acum 3 ore.\n\nAcum are 12. 🎥\n\nTime-lapse complet în 15 sec ⬇️\n\n[Adaugă trending audio · +42% engagement]\n[Text overlay frame 1: „Hala 8.500 mp · 12 camere · 3 ore"]\n\n.\n.\n.\n#CSSI #CamereSupraveghere #Brasov #TimeLapse #Securitate #B2B #FirmaAutorizata',
         tips:'Hook în primele 3 sec (50% drop-off altfel) · Text mare frame 1 (Reels watched fără sunet 50% timp) · Trending audio = +42% engagement 2026 · 15-30 sec sweet spot · CTA: „Salvează pentru când îți va trebui" → saves = #2 signal · Hashtag-uri în comentariu sau la final după 3 enter-uri.'
     },
     {
         cat:'Instagram Reel',icon:'📸',plat:['ig','tiktok'],brand:'cssi',
-        title:'5 semne că ai nevoie de camere — list format',
+        title:'5 semne că ai nevoie de camere, list format',
         content:'Dacă ai chiar și 1 din astea, e timpul. ⚠️\n\n1️⃣ Stoc care „dispare" inexplicabil\n2️⃣ Reclamații angajați nedrepte fără probă\n3️⃣ Furt de la mașini în parcare\n4️⃣ Acces neautorizat în zone sensibile\n5️⃣ Asigurarea cere camere pentru reînnoire\n\nNu aștepta să se întâmple. Trimite asta unui prieten care are firmă. 📤\n\n.\n.\n.\n#CSSI #CamereSupraveghere #Brasov #SecuritateFirma #B2B',
         tips:'Format „list" viral 2026 · Numerotat vizual cu emojis · CTA „Trimite asta unui prieten" → sends per reach = #1 signal algoritm 2026 · 7-15 sec optim · Subtitrare auto-generată în reel.'
     },
     {
         cat:'Facebook',icon:'📘',plat:['fb'],brand:'cssi',
-        title:'Studiu caz CFR Călători — social proof B2B',
-        content:'🚆 CFR Călători — 10 ani parteneriat.\n\n47 stații securizate. Zero incidente majore în ultimii 5 ani.\n\nProvocarea: rețea distribuită, 24/7 operațiuni, fără toleranță pentru downtime.\n\nSoluția noastră:\n• Sisteme CCTV integrate cu monitorizare centralizată\n• Control acces zonal pentru personal autorizat\n• Mentenanță predictivă — verificare lunară\n• SLA contractual răspuns 1-12h\n\nRezultat:\n→ Zero incidente majore în 5 ani\n→ Reducere 40% timp investigație incidente minore\n→ Renewal contract pentru încă 5 ani\n\nEști o instituție publică sau privată cu nevoi similare?\n\n📞 0752 288 400\n💬 WhatsApp: wa.me/40752288400\n\n#CSSI #B2B #StudiuCaz #SecuritateInstitutii',
-        tips:'Format lung Facebook (algoritm 2026 favorizează dwell time) · Story-driven: provocare → soluție → rezultat măsurabil · CTA dual (telefon + WhatsApp) · NU pune link extern în body — pune în comentariu primul.'
+        title:'Studiu caz CFR Călători, social proof B2B',
+        content:'🚆 CFR Călători · 10 ani parteneriat.\n\n47 stații securizate. Zero incidente majore în ultimii 5 ani.\n\nProvocarea: rețea distribuită, 24/7 operațiuni, fără toleranță pentru downtime.\n\nSoluția noastră:\n• Sisteme CCTV integrate cu monitorizare centralizată\n• Control acces zonal pentru personal autorizat\n• Mentenanță predictivă, verificare lunară\n• SLA contractual răspuns 1-12h\n\nRezultat:\n→ Zero incidente majore în 5 ani\n→ Reducere 40% timp investigație incidente minore\n→ Renewal contract pentru încă 5 ani\n\nEști o instituție publică sau privată cu nevoi similare?\n\n📞 0752 288 400\n💬 WhatsApp: wa.me/40752288400\n\n#CSSI #B2B #StudiuCaz #SecuritateInstitutii',
+        tips:'Format lung Facebook (algoritm 2026 favorizează dwell time) · Story-driven: provocare → soluție → rezultat măsurabil · CTA dual (telefon + WhatsApp) · NU pune link extern în body, pune în comentariu primul.'
     },
     {
         cat:'Facebook',icon:'📘',plat:['fb'],brand:'cssi',
-        title:'Comparativ „autorizat vs neautorizat" — diferențiator',
-        content:'⚠️ De ce contează ca firma ta de securitate să fie autorizată IGPR?\n\nFIRMĂ AUTORIZATĂ (CSSI ✅)\n✓ Asigurare profesională validă\n✓ Conformitate Legea 333/2003\n✓ GDPR compliance pentru CCTV\n✓ Răspundere clară la incident\n✓ Certificate IGPR + ISU + ANRE\n\nFIRMĂ NEAUTORIZATĂ ❌\n✗ Asigurare NU plătește la incident\n✗ Tu răspunzi penal/civil\n✗ Sistemul = inexistent legal\n✗ Risc amenzi 5.000-30.000 RON\n✗ Date personale neprotejate\n\n80% dintre concurenții cu prețuri mici NU au autorizația. Doar nu îți spun.\n\nCSSI — firmă autorizată din 2005. 20 ani. 9.000+ proiecte.\n\nCere audit gratuit: 0752 288 400\n\n#FirmaAutorizata #IGPR #Securitate #Brasov #CSSI',
+        title:'Comparativ „autorizat vs neautorizat", diferențiator',
+        content:'⚠️ De ce contează ca firma ta de securitate să fie autorizată IGPR?\n\nFIRMĂ AUTORIZATĂ (CSSI ✅)\n✓ Asigurare profesională validă\n✓ Conformitate Legea 333/2003\n✓ GDPR compliance pentru CCTV\n✓ Răspundere clară la incident\n✓ Certificate IGPR + ISU + ANRE\n\nFIRMĂ NEAUTORIZATĂ ❌\n✗ Asigurare NU plătește la incident\n✗ Tu răspunzi penal/civil\n✗ Sistemul = inexistent legal\n✗ Risc amenzi 5.000-30.000 RON\n✗ Date personale neprotejate\n\n80% dintre concurenții cu prețuri mici NU au autorizația. Doar nu îți spun.\n\nCSSI, firmă autorizată din 2005. 20 ani. 9.000+ proiecte.\n\nCere audit gratuit: 0752 288 400\n\n#FirmaAutorizata #IGPR #Securitate #Brasov #CSSI',
         tips:'Format comparativ → vizual scanabil · Diferențiator legal puternic (din audit) · CTA telefon · Hashtag-uri în finalul postării.'
     },
     {
         cat:'GBP Post',icon:'📍',plat:['fb'],brand:'cssi',
-        title:'GBP Săptămânal — lucrare finalizată',
-        content:'✅ Săptămâna asta am finalizat instalarea sistemului CCTV pentru [tip locație — ex: depozit logistic 1.200 mp] în [localitate — ex: Codlea].\n\n📷 [număr] camere IP Hikvision 4K\n🔐 Control acces 24 angajați\n💻 Software monitorizare centralizat\n📅 Mentenanță inclusă 12 luni\n\nFirmă autorizată IGPR + ISU + ANRE.\n\nSună pentru ofertă: 0268 414 740',
+        title:'GBP Săptămânal, lucrare finalizată',
+        content:'✅ Săptămâna asta am finalizat instalarea sistemului CCTV pentru [tip locație, ex: depozit logistic 1.200 mp] în [localitate, ex: Codlea].\n\n📷 [număr] camere IP Hikvision 4K\n🔐 Control acces 24 angajați\n💻 Software monitorizare centralizat\n📅 Mentenanță inclusă 12 luni\n\nFirmă autorizată IGPR + ISU + ANRE.\n\nSună pentru ofertă: 0268 414 740',
         tips:'1 post/săptămână OBLIGATORIU în GBP (semnal de activitate Google 2026) · GBP = 32% factor ranking local · Foto reală neapărat · Localitate menționată = SEO local.'
     },
     {
         cat:'Blog SEO',icon:'📝',plat:['fb','linkedin'],brand:'cssi',
-        title:'Anunț blog — „Cât costă CCTV firmă 2026 Brașov"',
-        content:'💰 Cât costă un sistem CCTV pentru firma ta în 2026?\n\nAm publicat ghidul complet — cu prețuri orientative reale pe Brașov pentru 2026.\n\nÎn articol găsești:\n→ Tabel kit 4 camere casă (1.500-3.000 RON)\n→ 8 camere magazin/birou (3.500-8.000 RON)\n→ 16 camere hală industrială (12.000-25.000 RON)\n→ Factori care influențează prețul real\n→ Greșeli frecvente la achiziție\n→ Ce întreabă firma autorizată vs cea care vrea doar să vândă\n\nCitește ghidul complet: [link în comentariu]\n\n#CSSI #CCTV #Brasov #Ghid2026',
+        title:'Anunț blog · „Cât costă CCTV firmă 2026 Brașov"',
+        content:'💰 Cât costă un sistem CCTV pentru firma ta în 2026?\n\nAm publicat ghidul complet, cu prețuri orientative reale pe Brașov pentru 2026.\n\nÎn articol găsești:\n→ Tabel kit 4 camere casă (1.500-3.000 RON)\n→ 8 camere magazin/birou (3.500-8.000 RON)\n→ 16 camere hală industrială (12.000-25.000 RON)\n→ Factori care influențează prețul real\n→ Greșeli frecvente la achiziție\n→ Ce întreabă firma autorizată vs cea care vrea doar să vândă\n\nCitește ghidul complet: [link în comentariu]\n\n#CSSI #CCTV #Brasov #Ghid2026',
         tips:'Anunț blog cu listă valoare clară · Link în comentariu (algoritm 2026 penalizează link în body) · Tabel prețuri → atrage căutări „cât costă X" · CTA „citește".'
     },
     {
         cat:'YouTube',icon:'▶️',plat:['yt'],brand:'cssi',
-        title:'YT Title — Tutorial control acces RFID',
-        content:'TITLE OPTIMIZAT YT (max 60 char):\nCum Funcționează Controlul Acces RFID pentru Firme | CSSI\n\nDESCRIPTION (primele 100 char critice):\nGhid complet 2026 despre control acces RFID pentru fabrici și firme: cum alegi, cum instalezi, ROI real, integrare HR. Demo live + studiu caz Schaeffler.\n\n0:00 Intro\n0:45 Ce este controlul acces RFID\n2:00 Tipuri de cititoare\n4:30 Integrarea cu HR/ERP\n6:30 ROI — cazul Schaeffler\n8:00 Cum alegi pentru firma ta\n\nWebsite: cssi.ro\nWhatsApp: 0752 288 400\n\n#ControlAcces #RFID #B2B #CSSI #Brasov',
+        title:'YT Title · Tutorial control acces RFID',
+        content:'TITLE OPTIMIZAT YT (max 60 char):\nCum Funcționează Controlul Acces RFID pentru Firme | CSSI\n\nDESCRIPTION (primele 100 char critice):\nGhid complet 2026 despre control acces RFID pentru fabrici și firme: cum alegi, cum instalezi, ROI real, integrare HR. Demo live + studiu caz Schaeffler.\n\n0:00 Intro\n0:45 Ce este controlul acces RFID\n2:00 Tipuri de cititoare\n4:30 Integrarea cu HR/ERP\n6:30 ROI, cazul Schaeffler\n8:00 Cum alegi pentru firma ta\n\nWebsite: cssi.ro\nWhatsApp: 0752 288 400\n\n#ControlAcces #RFID #B2B #CSSI #Brasov',
         tips:'Title SEO YouTube cu cuvânt cheie principal + tip conținut + brand · Description first 100 char = ce arată în search · Timestamps obligatorii (boost retention) · Tag-uri în descriere + manual în YT Studio.'
     },
     {
         cat:'Conca-Verde',icon:'🌲',plat:['fb','ig'],brand:'conca-verde',
-        title:'Camping — promovare sejur weekend',
-        content:'🌲 Weekend la munte fără bătăi de cap?\n\nConca Verde Camping — Râșnov\n\n🏕️ Locuri rulote/corturi cu electricitate\n🍳 Bucătărie comună + duș cald\n🌅 Hiking dimineața în Bucegi\n🐕 Animale binevenite\n📶 WiFi free în restaurant\n\nDe la 60 RON/noapte. Disponibil weekend-ul acesta!\n\nRezervare: 0752 288 400\nwww.conca-verde.ro\n\n#ConcaVerde #Camping #Brasov #Rasnov #Weekend #Bucegi #Hiking',
-        tips:'Conca Verde — voce mai casual decât CSSI · Emojis abundente OK · Hashtag-uri turism local · CTA rezervare clar.'
+        title:'Camping, promovare sejur weekend',
+        content:'🌲 Weekend la munte fără bătăi de cap?\n\nConca Verde Camping · Râșnov\n\n🏕️ Locuri rulote/corturi cu electricitate\n🍳 Bucătărie comună + duș cald\n🌅 Hiking dimineața în Bucegi\n🐕 Animale binevenite\n📶 WiFi free în restaurant\n\nDe la 60 RON/noapte. Disponibil weekend-ul acesta!\n\nRezervare: 0752 288 400\nwww.conca-verde.ro\n\n#ConcaVerde #Camping #Brasov #Rasnov #Weekend #Bucegi #Hiking',
+        tips:'Conca Verde, voce mai casual decât CSSI · Emojis abundente OK · Hashtag-uri turism local · CTA rezervare clar.'
     }
 ];
 
@@ -1272,7 +1272,7 @@ function useTemplate(idx){
     updateCharCount();
     updatePlatformLimits();
     closeTemplateModal();
-    toast('📚 Șablon „'+t.title+'" încărcat — modifică [text între paranteze]','success');
+    toast('📚 Șablon „'+t.title+'" încărcat, modifică [text între paranteze]','success');
 }
 
 function updatePlatformLimits(){
@@ -1314,7 +1314,7 @@ function updatePlatformLimits(){
                     document.getElementById('fContent').value=d.content||'';
                     updateCharCount();updatePlatformLimits();
                     sessionStorage.removeItem('cssi-idea-template');
-                    toast('💡 Idee încărcată — completează detaliile','info');
+                    toast('💡 Idee încărcată, completează detaliile','info');
                 },500);
             }
         }catch(e){}
@@ -1322,6 +1322,6 @@ function updatePlatformLimits(){
 })();
 loadPosts();
 </script>
-<script src="/admin/notifications.js?v=2" defer></script>
+<script src="/admin/notifications.js?v=3" defer></script>
 </body>
 </html>

@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Proiectare — Portal CSSI 3.0</title>
+<title>Proiectare · Portal CSSI 3.0</title>
 <meta name="robots" content="noindex, nofollow">
 <link rel="icon" type="image/x-icon" href="/images/favicon.ico">
 <meta name="theme-color" content="#dc2626">
@@ -162,7 +162,7 @@ a{text-decoration:none;color:inherit;}button{font-family:inherit;cursor:pointer;
         <div class="page-meta" id="pageMeta"></div>
         <div class="hdr-progress" id="hdrProgress" style="display:none">
             <div class="hdr-progress-fill" id="hdrProgressFill" style="width:0"></div>
-            <div class="hdr-progress-text" id="hdrProgressText">—</div>
+            <div class="hdr-progress-text" id="hdrProgressText">-</div>
         </div>
         <div class="hdr-actions" id="hdrActions"></div>
     </div>
@@ -224,8 +224,8 @@ a{text-decoration:none;color:inherit;}button{font-family:inherit;cursor:pointer;
         <button class="modal-close" onclick="closeNoteModal()">✕</button>
     </div>
     <div class="modal-body">
-        <label>Notă (opțional — ex: motivul "n/a", număr aviz, observații...)</label>
-        <textarea id="noteText" placeholder="Ex: Nu este necesar aviz ISU — clădire <2500mp / fără aglomerări persoane..."></textarea>
+        <label>Notă (opțional, ex: motivul "n/a", număr aviz, observații...)</label>
+        <textarea id="noteText" placeholder="Ex: Nu este necesar aviz ISU, clădire <2500mp / fără aglomerări persoane..."></textarea>
         <button class="save-btn" onclick="saveNote()">💾 Salvează nota</button>
     </div>
 </div>
@@ -384,7 +384,7 @@ function renderChecklist(){
                 html += '<div class="item '+cls+'" id="item-'+it.id+'">';
                 html += '<div class="item-checkbox" role="checkbox" tabindex="0" aria-checked="'+(it.status==='done'?'true':'false')+'" onclick="toggleStatus('+it.id+')" onkeydown="if(event.key===\' \'||event.key===\'Enter\'){event.preventDefault();toggleStatus('+it.id+')}" title="Click pentru bifa/debifa">'+checkSym+'</div>';
                 html += '<div class="item-content">';
-                html += '<div class="item-label">'+highlight(it.label, q)+(req?' <span class="req-badge" title="Item obligatoriu de conformitate — trebuie bifat efectiv, nu poate fi N/A">★ obligatoriu</span>':'')+'</div>';
+                html += '<div class="item-label">'+highlight(it.label, q)+(req?' <span class="req-badge" title="Item obligatoriu de conformitate, trebuie bifat efectiv, nu poate fi N/A">★ obligatoriu</span>':'')+'</div>';
                 if(it.checked_at){
                     html += '<div class="item-meta">';
                     html += '<span><span class="av">'+esc((it.checked_by||'?').charAt(0).toUpperCase())+'</span> '+esc(it.checked_by||'?')+'</span>';
@@ -395,7 +395,7 @@ function renderChecklist(){
                 html += '</div>';
                 html += '<div class="item-actions">';
                 if(req){
-                    html += '<span class="item-btn-na" style="opacity:0.4;cursor:not-allowed" title="Item obligatoriu — nu poate fi marcat N/A">N/A</span>';
+                    html += '<span class="item-btn-na" style="opacity:0.4;cursor:not-allowed" title="Item obligatoriu, nu poate fi marcat N/A">N/A</span>';
                 } else {
                     html += '<button class="item-btn-na" onclick="markNa('+it.id+')" title="Marchează ca neaplicabil">N/A</button>';
                 }
@@ -494,7 +494,7 @@ function markNa(id){
     var it = STATE.items.find(function(i){return i.id===id;});
     if(!it) return;
     if(REQUIRED_KEYS[it.item_key] && it.status !== 'n/a'){
-        toast('Item obligatoriu de conformitate — trebuie bifat efectiv, nu poate fi N/A','error');
+        toast('Item obligatoriu de conformitate, trebuie bifat efectiv, nu poate fi N/A','error');
         return;
     }
     var newStatus = it.status === 'n/a' ? 'todo' : 'n/a';
@@ -582,7 +582,7 @@ if('serviceWorker' in navigator){
     });
 }
 </script>
-<script src="/admin/exec-start.js?v=4"></script>
-<script src="/admin/notifications.js?v=2" defer></script>
+<script src="/admin/exec-start.js?v=5"></script>
+<script src="/admin/notifications.js?v=3" defer></script>
 </body>
 </html>

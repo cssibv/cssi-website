@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Oferte — Portal CSSI 3.0</title>
+<title>Oferte · Portal CSSI 3.0</title>
 <meta name="robots" content="noindex, nofollow">
 <link rel="icon" type="image/x-icon" href="/images/favicon.ico">
 <meta name="theme-color" content="#dc2626">
@@ -288,7 +288,7 @@ a{text-decoration:none;color:inherit;}button{font-family:inherit;cursor:pointer;
 <!-- MODAL: schimbă status -->
 <div id="statusModal" class="modal-overlay" onclick="if(event.target===this)closeStatusModal()">
 <div class="modal">
-    <div class="modal-head"><div class="modal-title">🎯 Schimbă status — <span id="smTitle">—</span></div><button class="modal-close" onclick="closeStatusModal()">✕</button></div>
+    <div class="modal-head"><div class="modal-title">🎯 Schimbă status · <span id="smTitle">-</span></div><button class="modal-close" onclick="closeStatusModal()">✕</button></div>
     <div class="modal-body">
         <div class="modal-label">Selectează status nou:</div>
         <div class="status-grid">
@@ -356,7 +356,7 @@ function statusInfo(s){
         'Refuzata':    {ic:'❌', lbl:'Refuzată'},
         'Expirata':    {ic:'⏱️', lbl:'Expirată'}
     };
-    return map[s] || {ic:'❓', lbl:s||'—'};
+    return map[s] || {ic:'❓', lbl:s||'-'};
 }
 function ofStatus(o){return o.oferta_status || o.status || 'Draft';}
 
@@ -465,7 +465,7 @@ function render(){
         STATE.oferte.forEach(function(o){
             var key;
             if(STATE.filters.group === 'month') key = (o.data_oferta||'').substring(0,7);
-            else if(STATE.filters.group === 'client') key = o.client_nume || '— necunoscut —';
+            else if(STATE.filters.group === 'client') key = o.client_nume || 'necunoscut';
             else if(STATE.filters.group === 'status') key = ofStatus(o);
             if(!groups[key]) groups[key] = {items:[], sum:0};
             groups[key].items.push(o);
@@ -508,7 +508,7 @@ function renderCard(o){
     html += '<div class="oc-top">';
     html += '<input type="checkbox" class="oc-check" '+ckBox+' onchange="toggleSelect('+o.id+',this.checked);event.stopPropagation()" onclick="event.stopPropagation()">';
     html += '<div class="oc-main" onclick="openOfertaView('+o.id+')" style="cursor:pointer">';
-    html += '<div class="oc-client">'+esc(o.client_nume||'— fără client —')+'</div>';
+    html += '<div class="oc-client">'+esc(o.client_nume||'fără client')+'</div>';
     if(o.obiectiv) html += '<div class="oc-obiectiv">'+esc(o.obiectiv)+'</div>';
     html += motivHtml;
     html += trimisHtml;
@@ -522,7 +522,7 @@ function renderCard(o){
     var dosarUrl = o.proiect_db_id ? ('dosar.html?proiect='+o.proiect_db_id) : (o.client_db_id ? ('dosar.html?client='+o.client_db_id) : '');
     if (dosarUrl) html += '<a class="oc-btn" href="'+dosarUrl+'" onclick="event.stopPropagation()" title="Vezi dosar complet">📁</a>';
     html += '<a class="oc-btn" href="calculator-pret.html?edit='+esc(o.oferta_id)+'" onclick="event.stopPropagation()" title="Editează în calculator">✏️</a>';
-    html += '<a class="oc-btn" href="calculator-pret.html?situatie_din='+esc(o.oferta_id)+'" onclick="event.stopPropagation()" title="Situație de plată — pornește din ofertă și o ajustezi cu ce s-a montat efectiv">📑</a>';
+    html += '<a class="oc-btn" href="calculator-pret.html?situatie_din='+esc(o.oferta_id)+'" onclick="event.stopPropagation()" title="Situație de plată, pornește din ofertă și o ajustezi cu ce s-a montat efectiv">📑</a>';
     if(o.archived_at){
         html += '<button class="oc-btn warn" onclick="event.stopPropagation();doUnarchive('+o.id+')" title="Dezarhivează">📤</button>';
     } else {
@@ -716,7 +716,7 @@ function renderOfertaView(o){
     html += '</div>';
     // Beneficiar
     html += '<div class="vm-meta-line">';
-    html += '<span><strong>Client:</strong> '+esc(o.client_nume||'—')+'</span>';
+    html += '<span><strong>Client:</strong> '+esc(o.client_nume||'-')+'</span>';
     if(o.client_cui)     html += '<span><strong>CUI:</strong> '+esc(o.client_cui)+'</span>';
     if(o.client_adresa)  html += '<span><strong>Adresă:</strong> '+esc(o.client_adresa)+'</span>';
     if(o.client_contact) html += '<span><strong>Contact:</strong> '+esc(o.client_contact)+'</span>';
@@ -737,7 +737,7 @@ function renderOfertaView(o){
             html += '<tr>';
             var lnk = (l.link_extern||'').trim();
             var lnkOk = /^https?:\/\//i.test(lnk);
-            html += '<td data-lbl="Cod">'+(l.cod?'<span class="cod">'+esc(l.cod)+'</span>':'<span style="color:var(--gray-l)">—</span>')+'</td>';
+            html += '<td data-lbl="Cod">'+(l.cod?'<span class="cod">'+esc(l.cod)+'</span>':'<span style="color:var(--gray-l)">-</span>')+'</td>';
             html += '<td data-lbl="Denumire" class="name">'+richToHtml(l.denumire||'')
                  + (lnkOk?'<br><a href="'+esc(lnk)+'" target="_blank" rel="noopener noreferrer" title="'+esc(lnk)+'" style="font-size:10px;font-weight:600;color:var(--blue);background:#eff6ff;padding:1px 6px;border-radius:5px;text-decoration:none;display:inline-block;margin-top:3px">🔗 sursă: '+esc(lnkDomain(lnk))+'</a>':'')
                  + '</td>';
@@ -783,7 +783,7 @@ function renderOfertaView(o){
     html += '<div class="vm-actions">';
     html += '<a class="vm-act-btn primary" href="calculator-pret.html?edit='+esc(o.oferta_id)+'">✏️ Editează în calculator</a>';
     html += '<a class="vm-act-btn secondary" href="calculator-pret.html?view_offer='+esc(o.oferta_id)+'" target="_blank">📄 Export PDF</a>';
-    html += '<a class="vm-act-btn secondary" href="calculator-pret.html?situatie_din='+esc(o.oferta_id)+'" title="Documentul final, cu ce s-a montat efectiv — se dă clientului odată cu factura">📑 Situație de plată</a>';
+    html += '<a class="vm-act-btn secondary" href="calculator-pret.html?situatie_din='+esc(o.oferta_id)+'" title="Documentul final, cu ce s-a montat efectiv, se dă clientului odată cu factura">📑 Situație de plată</a>';
     html += '<button class="vm-act-btn warn" onclick="closeViewModal();openStatusModal('+o.id+',\''+esc((o.client_nume||'').replace(/\047/g,'')).replace(/'/g,"\\'")+'\')">🎯 Schimbă status</button>';
     html += '</div>';
     document.getElementById('vmBody').innerHTML = html;
@@ -797,6 +797,6 @@ if('serviceWorker' in navigator){
     navigator.serviceWorker.register('../sw.js').then(function(r){console.log('[PWA] SW registered, scope:',r.scope)}).catch(function(e){console.log('[PWA] SW failed:',e)});
 }
 </script>
-<script src="/admin/notifications.js?v=2" defer></script>
+<script src="/admin/notifications.js?v=3" defer></script>
 </body>
 </html>

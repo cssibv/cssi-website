@@ -153,7 +153,7 @@ try {
     }
 
     if (!$dumpOk) {
-        throw new Exception('Backup eșuat — fișier inexistent sau prea mic');
+        throw new Exception('Backup eșuat, fișier inexistent sau prea mic');
     }
 
     $fileSize = filesize($backupFile);

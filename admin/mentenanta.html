@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Mentenanță — Portal CSSI 3.0</title>
+<title>Mentenanță · Portal CSSI 3.0</title>
 <meta name="robots" content="noindex, nofollow">
 <link rel="icon" type="image/x-icon" href="/images/favicon.ico">
 <meta name="theme-color" content="#dc2626">
@@ -218,7 +218,7 @@ tr:hover td{background:rgba(59,130,246,0.03);}
                 <div class="form-group"><label class="form-label">Telefon client</label><input type="tel" class="form-input" name="telefon" id="fTelefon" placeholder="07xxxxxxxx"></div>
                 <div class="form-group"><label class="form-label">Echipa asignată</label>
                     <select class="form-select" name="echipa" id="fEchipa">
-                        <option value="">— Nealocat —</option>
+                        <option value="">Nealocat</option>
                         <option>Echipa Mihai</option><option>Echipa Alex</option><option>Echipa Radu</option>
                     </select>
                 </div>
@@ -289,14 +289,14 @@ var DEMO_CONTRACTS = [
     {id:7, row:7, client:'Benzinărie MOL Ghimbav', pid:'', tip:'Standard', frecventa:'Semestrial', ultima:'2025-09-01', urmatoarea:'2026-03-01', status:'Activ', valoare:1800, telefon:'0268789012', echipa:'Echipa Alex', note:'CCTV 8 camere + alarmă, contract vechi din 2023.', history:['2025-03-05','2025-09-01']},
     {id:8, row:8, client:'SC Macon SA', pid:'', tip:'Standard', frecventa:'Trimestrial', ultima:'2025-06-15', urmatoarea:'2025-09-15', status:'Expirat', valoare:3600, telefon:'0268890123', echipa:'', note:'Contract nerenovat. Încercare recontactare.', history:['2025-03-12','2025-06-15']},
     {id:9, row:9, client:'Selgros Cash&Carry', pid:'', tip:'Premium', frecventa:'Trimestrial', ultima:'2026-02-28', urmatoarea:'2026-05-28', status:'Activ', valoare:9600, telefon:'0268901234', echipa:'Echipa Radu', note:'CCTV 48 camere, detecție incendiu, control acces 4 puncte.', history:['2025-11-25','2026-02-28']},
-    {id:10, row:10, client:'Parcul Industrial Brașov', pid:'', tip:'Standard', frecventa:'Semestrial', ultima:'2025-11-20', urmatoarea:'2026-05-20', status:'Suspendat', valoare:4200, telefon:'0268012345', echipa:'', note:'Suspendat — se renegociază contractul.', history:['2025-05-18','2025-11-20']}
+    {id:10, row:10, client:'Parcul Industrial Brașov', pid:'', tip:'Standard', frecventa:'Semestrial', ultima:'2025-11-20', urmatoarea:'2026-05-20', status:'Suspendat', valoare:4200, telefon:'0268012345', echipa:'', note:'Suspendat, se renegociază contractul.', history:['2025-05-18','2025-11-20']}
 ];
 
 // ═══════ HELPERS ═══════
 function esc(s){if(!s)return '';var d=document.createElement('div');d.textContent=s;return d.innerHTML;}
 function getProjectName(pid){var p=PROJECTS.find(function(x){return x.id===pid});return p?p.client:'';}
 function daysUntil(d){if(!d)return 999;return Math.ceil((new Date(d+'T00:00:00')-new Date().setHours(0,0,0,0))/(86400000));}
-function fmtRON(v){return v?Number(v).toLocaleString('ro-RO')+' RON':'—';}
+function fmtRON(v){return v?Number(v).toLocaleString('ro-RO')+' RON':'-';}
 function calcNext(ultima,frecventa){var d=new Date(ultima+'T00:00:00');var m=FREQ_MONTHS[frecventa]||3;d.setMonth(d.getMonth()+m);return d.toISOString().split('T')[0];}
 function showLoading(s){document.getElementById('loadBar').classList.toggle('active',s);}
 function toast(msg,type){var c=document.getElementById('toastContainer');var t=document.createElement('div');t.className='toast '+(type||'info');t.textContent=msg;c.appendChild(t);setTimeout(function(){t.style.opacity='0';t.style.transform='translateX(100px)';t.style.transition='all 0.3s'},3000);setTimeout(function(){t.remove()},3500);}
@@ -377,17 +377,17 @@ function renderCards(filtered){
         var days=daysUntil(c.urmatoarea);
         var cardCls=c.status==='Expirat'?'expired':c.status==='Suspendat'?'suspendat':days<=0?'danger':days<=14?'warning':'';
         var badgeCls=c.status==='Activ'?'activ':c.status==='Expirat'?'expirat':'suspendat';
-        var alertCls='ok',alertText='✅ OK — '+days+' zile rămase';
+        var alertCls='ok',alertText='✅ OK · '+days+' zile rămase';
         if(c.status!=='Activ'){alertCls='';alertText='';}
-        else if(days<=0){alertCls='urgent';alertText='⚠️ DEPĂȘIT cu '+Math.abs(days)+' zile — necesită verificare URGENTĂ!';}
-        else if(days<=7){alertCls='urgent';alertText='🔴 Urgent — '+days+' zile rămase!';}
+        else if(days<=0){alertCls='urgent';alertText='⚠️ DEPĂȘIT cu '+Math.abs(days)+' zile, necesită verificare URGENTĂ!';}
+        else if(days<=7){alertCls='urgent';alertText='🔴 Urgent · '+days+' zile rămase!';}
         else if(days<=14){alertCls='warn';alertText='🟠 Scadent în '+days+' zile';}
 
         var statusOpts=['Activ','Expirat','Suspendat'].map(function(s){return '<option'+(c.status===s?' selected':'')+'>'+s+'</option>'}).join('');
 
         html+='<div class="mcard '+cardCls+'">';
         html+='<div class="mcard-top"><div class="mcard-client">'+esc(c.client)+'</div><span class="mcard-badge '+badgeCls+'">'+c.status+'</span></div>';
-        if(c.pid) html+='<div class="mcard-pid">🔗 '+c.pid+' — '+esc(getProjectName(c.pid))+'</div>';
+        if(c.pid) html+='<div class="mcard-pid">🔗 '+c.pid+' · '+esc(getProjectName(c.pid))+'</div>';
         html+='<div class="mcard-tags">';
         html+='<span class="mcard-tag tip" style="color:'+TIP_COLORS[c.tip]+'">'+c.tip+'</span>';
         html+='<span class="mcard-tag freq">🔁 '+c.frecventa+'</span>';
@@ -419,14 +419,14 @@ function renderTable(filtered){
         var stColor=c.status==='Activ'?'var(--green)':c.status==='Expirat'?'var(--gray)':'var(--yellow)';
         html+='<tr style="cursor:pointer" onclick="openDetailModal('+c.id+')">';
         html+='<td style="font-weight:700">'+esc(c.client)+'</td>';
-        html+='<td>'+(c.pid?'<span style="color:var(--blue);font-weight:600">'+c.pid+'</span>':'—')+'</td>';
+        html+='<td>'+(c.pid?'<span style="color:var(--blue);font-weight:600">'+c.pid+'</span>':'-')+'</td>';
         html+='<td style="color:'+TIP_COLORS[c.tip]+';font-weight:700">'+c.tip+'</td>';
         html+='<td>'+c.frecventa+'</td>';
         html+='<td>'+c.ultima+'</td>';
         html+='<td style="color:'+dlColor+';font-weight:700">'+c.urmatoarea+'</td>';
         html+='<td style="color:'+stColor+';font-weight:700">'+c.status+'</td>';
         html+='<td>'+fmtRON(c.valoare)+'</td>';
-        html+='<td>'+(c.echipa?(TEAM_ICONS[c.echipa]||'')+' '+c.echipa:'—')+'</td>';
+        html+='<td>'+(c.echipa?(TEAM_ICONS[c.echipa]||'')+' '+c.echipa:'-')+'</td>';
         html+='</tr>';
     });
     html+='</tbody></table>';
@@ -462,7 +462,7 @@ function markDone(id){
     if(!c.history)c.history=[];
     c.history.push(today);
     if(API_URL)apiPost({action:'markMentenantaDone',row:c.row,ultima:c.ultima,urmatoarea:c.urmatoarea,history:JSON.stringify(c.history)}).catch(function(){});
-    render(); toast('✅ '+c.client+' — verificat! Următoarea: '+c.urmatoarea,'success');
+    render(); toast('✅ '+c.client+', verificat! Următoarea: '+c.urmatoarea,'success');
 }
 
 // ═══════ DETAIL MODAL ═══════
@@ -479,7 +479,7 @@ function openDetailModal(id){
     html+='<div style="text-align:center;padding:16px 0"><div style="font-size:48px">'+stIcon+'</div><div style="font-size:16px;font-weight:800;color:'+stColor+';margin-top:4px">'+(c.status==='Activ'?(days<=0?'Depășit cu '+Math.abs(days)+' zile':days+' zile rămase'):c.status)+'</div></div>';
 
     html+=infoRow('🏢 Client','<strong>'+esc(c.client)+'</strong>');
-    if(c.pid) html+=infoRow('🔗 Proiect','<span style="color:var(--blue);font-weight:700">'+c.pid+'</span> — '+esc(getProjectName(c.pid)));
+    if(c.pid) html+=infoRow('🔗 Proiect','<span style="color:var(--blue);font-weight:700">'+c.pid+'</span> · '+esc(getProjectName(c.pid)));
     html+=infoRow('📋 Tip contract','<span style="color:'+TIP_COLORS[c.tip]+';font-weight:700">'+c.tip+'</span>');
     html+=infoRow('🔁 Frecvență',c.frecventa);
     html+=infoRow('📅 Ultima verificare',c.ultima);
@@ -585,8 +585,8 @@ function saveContract(e){
 
 // ═══════ DROPDOWNS ═══════
 function populateDropdowns(){
-    var opts='<option value="">— Fără proiect —</option>';
-    PROJECTS.forEach(function(p){opts+='<option value="'+p.id+'">'+p.id+' — '+esc(p.client)+'</option>'});
+    var opts='<option value="">Fără proiect</option>';
+    PROJECTS.forEach(function(p){opts+='<option value="'+p.id+'">'+p.id+' · '+esc(p.client)+'</option>'});
     document.getElementById('fProiect').innerHTML=opts;
 }
 
@@ -599,6 +599,6 @@ if(API_URL) refreshData();
 <script>
 if('serviceWorker' in navigator){navigator.serviceWorker.register('../sw.js').then(function(r){console.log('[PWA] SW registered, scope:',r.scope)}).catch(function(e){console.log('[PWA] SW failed:',e)});var __reloaded=false;navigator.serviceWorker.addEventListener('controllerchange',function(){if(__reloaded)return;__reloaded=true;window.location.reload();});}
 </script>
-<script src="/admin/notifications.js?v=2" defer></script>
+<script src="/admin/notifications.js?v=3" defer></script>
 </body>
 </html>

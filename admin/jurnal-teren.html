@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Jurnal de Teren — Portal CSSI 3.0</title>
+<title>Jurnal de Teren · Portal CSSI 3.0</title>
 <meta name="robots" content="noindex, nofollow">
 <link rel="icon" type="image/x-icon" href="/images/favicon.ico">
 <meta name="theme-color" content="#dc2626">
@@ -211,7 +211,7 @@ a{text-decoration:none;color:inherit;}button{font-family:inherit;cursor:pointer;
             <button id="vbTeam" class="vt-btn" onclick="switchView('team')">👷 Echipă</button>
         </div>
         <button class="nav-btn" onclick="shiftMonth(-1)" title="Luna anterioară">◀</button>
-        <div class="cal-month" id="calMonthLbl">—</div>
+        <div class="cal-month" id="calMonthLbl">-</div>
         <button class="nav-btn" onclick="shiftMonth(1)" title="Luna următoare">▶</button>
         <button class="nav-today" onclick="goToday()">Astăzi</button>
         <div class="cal-legend" id="calLegend"></div>
@@ -244,7 +244,7 @@ a{text-decoration:none;color:inherit;}button{font-family:inherit;cursor:pointer;
             <div class="fg"><label>Locație / Obiectiv <span class="req">*</span></label><input type="text" id="jtLoc" placeholder="Ex: Hală Logistic Park, Brașov" required></div>
             <div class="fg">
                 <label>Proiect asociat (opțional)</label>
-                <select id="jtProj"><option value="">— Fără proiect / lucrare generală —</option></select>
+                <select id="jtProj"><option value="">Fără proiect / lucrare generală</option></select>
             </div>
             <div class="fg"><label>Ce au făcut <span class="req">*</span></label><textarea id="jtDesc" placeholder="Ex: tras cablu pe traseul principal, montat 6 camere exterior, configurat NVR..." required></textarea></div>
             <button type="submit" class="form-submit" id="jtSubmit">💾 Salvează</button>
@@ -323,7 +323,7 @@ function populateTehFilter(){
     sel.value=cur;
 }
 function populateProjSelects(){
-    var opts='<option value="">— Fără proiect / lucrare generală —</option>'+STATE.proiecte.map(function(p){
+    var opts='<option value="">Fără proiect / lucrare generală</option>'+STATE.proiecte.map(function(p){
         return '<option value="'+p.id+'">'+esc((p.proiect_id||('#'+p.id))+' · '+(p.client_nume||'?'))+'</option>';
     }).join('');
     document.getElementById('jtProj').innerHTML=opts;
@@ -414,7 +414,7 @@ function render(){
 
     var tip0='';
     if(!STATE.entries.length){
-        tip0='<div class="cal-tip">📝 Niciun jurnal încă — apasă pe o zi sau pe „➕ Adaugă zi de teren" și notează unde au fost băieții și ce au făcut.</div>';
+        tip0='<div class="cal-tip">📝 Niciun jurnal încă, apasă pe o zi sau pe „➕ Adaugă zi de teren" și notează unde au fost băieții și ce au făcut.</div>';
     }
     c.innerHTML = tip0 + (STATE.view==='team' ? buildTeam(monthEntries,y,m) : buildCalendar(monthEntries,y,m));
     renderLegend(monthEntries);
@@ -462,7 +462,7 @@ function buildCalendar(monthEntries,y,m){
                     var avs=tehs.slice(0,3).map(function(id){return '<span class="bt">'+esc(tehName(id).charAt(0).toUpperCase())+'</span>';}).join('');
                     var more=tehs.length>3?('<span class="bt">+'+(tehs.length-3)+'</span>'):'';
                     var span=sg.c1-sg.c0+1;
-                    html+='<button class="cal-bar'+(sg.clipL?' s0':'')+(sg.clipR?' e0':'')+'" style="grid-column:'+(sg.c0+1)+'/span '+span+';background:'+color+'" title="'+escAttr(barTip(e))+'" onclick=\'event.stopPropagation();editEntry('+JSON.stringify(e.id)+')\'>'+avs+more+'<span class="lbl-loc">'+esc(e.locatie||'—')+'</span></button>';
+                    html+='<button class="cal-bar'+(sg.clipL?' s0':'')+(sg.clipR?' e0':'')+'" style="grid-column:'+(sg.c0+1)+'/span '+span+';background:'+color+'" title="'+escAttr(barTip(e))+'" onclick=\'event.stopPropagation();editEntry('+JSON.stringify(e.id)+')\'>'+avs+more+'<span class="lbl-loc">'+esc(e.locatie||'-')+'</span></button>';
                 });
                 html+='</div>';
             });
@@ -516,7 +516,7 @@ function buildTeam(monthEntries,y,m){
             html+='<div class="tm-lane" style="'+tmpl+'">';
             laneSegs.forEach(function(sg){
                 var e=sg.e, color=colorFor(e), span=sg.b-sg.a+1;
-                html+='<button class="tm-bar'+(sg.clipL?' s0':'')+(sg.clipR?' e0':'')+'" style="grid-column:'+sg.a+'/span '+span+';background:'+color+'" title="'+escAttr(barTip(e))+'" onclick=\'editEntry('+JSON.stringify(e.id)+')\'><span class="lbl-loc">'+esc(e.locatie||'—')+'</span><span class="lbl-d">'+span+'z</span></button>';
+                html+='<button class="tm-bar'+(sg.clipL?' s0':'')+(sg.clipR?' e0':'')+'" style="grid-column:'+sg.a+'/span '+span+';background:'+color+'" title="'+escAttr(barTip(e))+'" onclick=\'editEntry('+JSON.stringify(e.id)+')\'><span class="lbl-loc">'+esc(e.locatie||'-')+'</span><span class="lbl-d">'+span+'z</span></button>';
             });
             html+='</div>';
         });
@@ -554,7 +554,7 @@ function renderDayDetail(){
         items.forEach(function(e){
             var tehs=tehList(e.tehnicieni), hasProj=!!e.proiect_id;
             html+='<div class="jt-card'+(hasProj?'':' noproj')+'" style="border-left-color:'+colorFor(e)+'">';
-            html+='<div><span class="jt-loc">📍 '+esc(e.locatie||'—')+'</span><span class="jt-range">'+esc(fmtRange(e.data_start,e.data_end))+' · '+nDays(e.data_start,e.data_end)+' zile</span></div>';
+            html+='<div><span class="jt-loc">📍 '+esc(e.locatie||'-')+'</span><span class="jt-range">'+esc(fmtRange(e.data_start,e.data_end))+' · '+nDays(e.data_start,e.data_end)+' zile</span></div>';
             if(hasProj){
                 html+='<a href="proiectare-proiect.html?id='+e.proiect_id+'" class="jt-proj">📐 '+esc((e.proiect_cod||('#'+e.proiect_id))+(e.client_nume?(' · '+e.client_nume):''))+'</a>';
             } else {
@@ -562,7 +562,7 @@ function renderDayDetail(){
             }
             html+='<div class="jt-desc">'+esc(e.descriere||'')+'</div>';
             html+='<div class="jt-tehs">'+tehs.map(function(id){var nm=tehName(id);return '<span class="teh-badge"><span class="teh-av">'+esc(nm.charAt(0).toUpperCase())+'</span>'+esc(nm)+'</span>';}).join('')+'</div>';
-            html+='<div class="jt-foot"><span>✍️ '+esc(e.created_by||'—')+'</span><span class="sp"></span>';
+            html+='<div class="jt-foot"><span>✍️ '+esc(e.created_by||'-')+'</span><span class="sp"></span>';
             html+='<button class="jt-btn" onclick=\'editEntry('+JSON.stringify(e.id)+')\'>✏️ Editează</button>';
             html+='<button class="jt-btn del" onclick=\'delEntry('+JSON.stringify(e.id)+')\'>🗑️ Șterge</button></div>';
             html+='</div>';
@@ -667,7 +667,7 @@ function saveEntry(ev){
 function delEntry(id){
     var e=STATE.entries.find(function(x){return x.id==id;});
     if(!e)return;
-    if(!confirm('Ștergi intrarea din '+fmtRange(e.data_start,e.data_end)+' — '+(e.locatie||'')+' ?\n\nAcțiunea nu poate fi anulată.')) return;
+    if(!confirm('Ștergi intrarea din '+fmtRange(e.data_start,e.data_end)+' · '+(e.locatie||'')+' ?\n\nAcțiunea nu poate fi anulată.')) return;
     fetch(API_DB+'?action=deleteJurnalTeren',{method:'POST',credentials:'include',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'deleteJurnalTeren',id:parseInt(id)})})
     .then(function(r){return r.json();})
     .then(function(res){
@@ -687,6 +687,6 @@ if('serviceWorker' in navigator){
     });
 }
 </script>
-<script src="/admin/notifications.js?v=2" defer></script>
+<script src="/admin/notifications.js?v=3" defer></script>
 </body>
 </html>

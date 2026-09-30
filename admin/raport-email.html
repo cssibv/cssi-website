@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Raport Email Zilnic — Portal CSSI 3.0</title>
+<title>Raport Email Zilnic · Portal CSSI 3.0</title>
 <meta name="robots" content="noindex, nofollow">
 <link rel="icon" type="image/x-icon" href="/images/favicon.ico">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
@@ -93,7 +93,7 @@ a{text-decoration:none;color:inherit;}button{font-family:inherit;cursor:pointer;
             <code>/usr/bin/php /home/USERNAME/public_html/admin/cron-raport-zilnic.php</code><br><br>
             <strong>Înainte de a porni cron-ul, setează în <code>admin/secrets.php</code>:</strong><br>
             <code>define('CRON_SECRET', 'random_min_32_chars_here');</code><br>
-            <code>define('REPORT_RECIPIENTS', 'email1,email2,...');</code> <em>(opțional — poate folosi setarea de mai sus)</em>
+            <code>define('REPORT_RECIPIENTS', 'email1,email2,...');</code> <em>(opțional, poate folosi setarea de mai sus)</em>
         </div>
     </div>
 
@@ -199,6 +199,6 @@ function renderLog(rows){
 loadRecipients();
 loadLog();
 </script>
-<script src="/admin/notifications.js?v=2" defer></script>
+<script src="/admin/notifications.js?v=3" defer></script>
 </body>
 </html>

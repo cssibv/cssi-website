@@ -56,26 +56,26 @@ function onFormSubmit(e) {
     
     // Detectează tipul formularului
     if (sheetId === CONFIG.SHEET_CHECKLIST || sheetId.includes('Checklist')) {
-      subject = '✅ Raport Montaj Nou — CSSI Portal';
+      subject = '✅ Raport Montaj Nou · CSSI Portal';
       body = '🔧 Un tehnician a completat un raport de montaj.\n\n';
     } else if (sheetId === CONFIG.SHEET_MATERIALE || sheetId.includes('Material')) {
-      subject = '📦 Solicitare Material — CSSI Portal';
+      subject = '📦 Solicitare Material · CSSI Portal';
       body = '📦 S-a solicitat un material nou.\n\n';
       // Verifică urgență
       const dataStr = data.join(' ').toLowerCase();
       if (dataStr.includes('urgent') || dataStr.includes('🔴')) {
-        subject = '🔴 URGENT: Solicitare Material — CSSI Portal';
+        subject = '🔴 URGENT: Solicitare Material · CSSI Portal';
         urgent = true;
       }
     } else if (sheetId === CONFIG.SHEET_SOCIAL || sheetId.includes('Social')) {
-      subject = '🚀 Postare Nouă Programată — CSSI Portal';
+      subject = '🚀 Postare Nouă Programată · CSSI Portal';
       body = '📱 O nouă postare a fost programată.\n\n';
     } else if (sheetId === CONFIG.SHEET_CRM || sheetId.includes('CRM')) {
-      subject = '💰 Lead NOU — CSSI Portal';
+      subject = '💰 Lead NOU · CSSI Portal';
       body = '📞 Un lead nou a fost adăugat în CRM!\n\n';
       urgent = true;
     } else {
-      subject = '📝 Formular Completat — CSSI Portal';
+      subject = '📝 Formular Completat · CSSI Portal';
       body = '📋 Un formular a fost completat.\n\n';
     }
     
@@ -89,7 +89,7 @@ function onFormSubmit(e) {
     body += '━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n';
     body += `🔗 Vezi în Sheet: https://docs.google.com/spreadsheets/d/${sheetId}/edit\n`;
     body += `🏠 Portal CSSI: https://cssibv.github.io/cssi-website/admin.html\n\n`;
-    body += '— Portal CSSI v2.0';
+    body += 'Portal CSSI v2.0';
     
     // Trimite email
     MailApp.sendEmail({
@@ -124,7 +124,7 @@ function dailyReport() {
     const today = new Date();
     const dateStr = Utilities.formatDate(today, 'Europe/Bucharest', 'dd/MM/yyyy');
     
-    let report = `📊 RAPORT ZILNIC CSSI — ${dateStr}\n`;
+    let report = `📊 RAPORT ZILNIC CSSI · ${dateStr}\n`;
     report += '━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n';
     
     // CRM Stats
@@ -217,11 +217,11 @@ function dailyReport() {
     
     report += '━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n';
     report += '🏠 Portal: https://cssibv.github.io/cssi-website/admin.html\n';
-    report += '— Generat automat de Portal CSSI v2.0\n';
+    report += 'Generat automat de Portal CSSI v2.0\n';
     
     MailApp.sendEmail({
       to: CONFIG.EMAIL_ADMIN,
-      subject: `📊 Raport Zilnic CSSI — ${dateStr}`,
+      subject: `📊 Raport Zilnic CSSI · ${dateStr}`,
       body: report
     });
     
@@ -345,7 +345,7 @@ function doPost(e) {
     // Notificare email
     MailApp.sendEmail({
       to: CONFIG.EMAIL_ADMIN,
-      subject: '🌐 Lead NOU de pe site — CSSI',
+      subject: '🌐 Lead NOU de pe site · CSSI',
       body: `Un vizitator a completat formularul de contact pe site!\n\n` +
             `👤 Nume: ${data.name || 'N/A'}\n` +
             `📞 Telefon: ${data.phone || 'N/A'}\n` +
@@ -414,8 +414,8 @@ function installTriggers() {
 function testEmailNotification() {
   MailApp.sendEmail({
     to: CONFIG.EMAIL_ADMIN,
-    subject: '🧪 Test Notificare — CSSI Portal',
-    body: 'Dacă primești acest email, notificările funcționează corect!\n\n— Portal CSSI v2.0'
+    subject: '🧪 Test Notificare · CSSI Portal',
+    body: 'Dacă primești acest email, notificările funcționează corect!\n\nPortal CSSI v2.0'
   });
   Logger.log('✅ Email test trimis la: ' + CONFIG.EMAIL_ADMIN);
 }

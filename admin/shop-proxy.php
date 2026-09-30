@@ -108,7 +108,7 @@ if ($code === '' && $directUrl === '') {
 }
 // Link direct acceptat DOAR de pe shop-security.ro (anti-SSRF)
 if ($directUrl !== '' && !preg_match('#^https?://(www\.)?shop-security\.ro/#i', $directUrl)) {
-    echo json_encode(['found' => false, 'error' => 'Link invalid — acceptăm doar adrese de pe shop-security.ro']);
+    echo json_encode(['found' => false, 'error' => 'Link invalid, acceptăm doar adrese de pe shop-security.ro']);
     exit;
 }
 

@@ -383,9 +383,9 @@ function autoExpireOferte($db) {
             foreach ($preList as $o) {
                 $tel = trim((string)($o['client_telefon'] ?? ''));
                 if (!$tel) $tel = extractPhoneFromContact($o['client_contact'] ?? '');
-                $clientLbl = $o['client_db_nume'] ?: ($o['client_nume'] ?: '—');
+                $clientLbl = $o['client_db_nume'] ?: ($o['client_nume'] ?: '-');
                 $sumLbl = number_format((float)$o['total_cu_tva'], 0, ',', '.') . ' lei';
-                $mesaj = '⏰ Sună mâine ' . $clientLbl . ' — oferta ' . ($o['oferta_id'] ?: '#'.$o['id']) . ' (' . $sumLbl . ') expiră mâine'
+                $mesaj = '⏰ Sună mâine ' . $clientLbl . ', oferta ' . ($o['oferta_id'] ?: '#'.$o['id']) . ' (' . $sumLbl . ') expiră mâine'
                        . ($tel ? ' · 📞 ' . $tel : '');
                 $insN->execute([
                     $o['cod_proiect'] ?: null,
@@ -426,9 +426,9 @@ function autoExpireOferte($db) {
             foreach ($expList as $o) {
                 $tel = trim((string)($o['client_telefon'] ?? ''));
                 if (!$tel) $tel = extractPhoneFromContact($o['client_contact'] ?? '');
-                $clientLbl = $o['client_db_nume'] ?: ($o['client_nume'] ?: '—');
+                $clientLbl = $o['client_db_nume'] ?: ($o['client_nume'] ?: '-');
                 $sumLbl = number_format((float)$o['total_cu_tva'], 0, ',', '.') . ' lei';
-                $mesaj = '📞 Resună ' . $clientLbl . ' — oferta ' . ($o['oferta_id'] ?: '#'.$o['id']) . ' (' . $sumLbl . ') a expirat — întreabă dacă o mai vrea'
+                $mesaj = '📞 Resună ' . $clientLbl . ', oferta ' . ($o['oferta_id'] ?: '#'.$o['id']) . ' (' . $sumLbl . ') a expirat, întreabă dacă o mai vrea'
                        . ($tel ? ' · 📞 ' . $tel : '');
                 $insN->execute([
                     $o['cod_proiect'] ?: null,
@@ -769,7 +769,7 @@ function dosarComputeStage($proiect, $oferte = [], $contracte = []) {
 function encryptSensitive($plain) {
     if ($plain === '' || $plain === null) return '';
     if (!defined('CONTRACT_ENCRYPTION_KEY') || strlen(CONTRACT_ENCRYPTION_KEY) < 32) {
-        error_log('CONTRACT_ENCRYPTION_KEY missing — date sensibile in clear text');
+        error_log('CONTRACT_ENCRYPTION_KEY missing, date sensibile in clear text');
         return $plain;  // fallback graceful
     }
     $key = substr(hash('sha256', CONTRACT_ENCRYPTION_KEY, true), 0, 32);
@@ -930,7 +930,7 @@ function advanceProiectStatus($db, $idOrCode, $newStatus, $user = 'Admin', $rese
         $db->prepare("UPDATE proiecte SET status = ?, istoric_status = ? WHERE id = ?")
            ->execute([$newStatus, json_encode($istoric, JSON_UNESCAPED_UNICODE), $row['id']]);
     }
-    $mesaj = '📌 ' . $row['proiect_id'] . ' (' . ($row['client_nume'] ?: '—') . ') — ' . $oldStatus . ' → ' . $newStatus . ' (de ' . $user . ')';
+    $mesaj = '📌 ' . $row['proiect_id'] . ' (' . ($row['client_nume'] ?: '-') . ') · ' . $oldStatus . ' → ' . $newStatus . ' (de ' . $user . ')';
     try {
         $db->prepare("INSERT INTO notificari (proiect_id, mesaj, tip, de_la, etapa_noua) VALUES (?,?,?,?,?)")
            ->execute([$row['id'], $mesaj, 'status_change', $user, $newStatus]);
@@ -1008,7 +1008,7 @@ function proiectareTemplate() {
         ['key'=>'e2_acces',              'cat'=>'e2', 'label'=>'Puncte de acces identificate (uși, ferestre, lucarne)'],
         ['key'=>'e2_alimentare',         'cat'=>'e2', 'label'=>'Alimentare electrică verificată (tablou, capacitate, RCD)'],
         ['key'=>'e2_internet',           'cat'=>'e2', 'label'=>'Conexiune internet verificată (CCTV cloud, IP)'],
-        ['key'=>'e2_zone_gdpr',          'cat'=>'e2', 'label'=>'Zone NO-FILMARE identificate (toalete, vestiare — GDPR)'],
+        ['key'=>'e2_zone_gdpr',          'cat'=>'e2', 'label'=>'Zone NO-FILMARE identificate (toalete, vestiare · GDPR)'],
         // E3 — Analize
         ['key'=>'e3_analiza_risc',       'cat'=>'e3', 'label'=>'Analiză de risc securitate (L. 333) semnată de evaluator atestat'],
         ['key'=>'e3_grad_securitate',    'cat'=>'e3', 'label'=>'Grad securitate stabilit (1-4 conform SR EN 50131-1)'],
@@ -1267,15 +1267,16 @@ function callClaude($system, $userPrompt, $maxTokens = 3000) {
 // marketing-psychology. Aplicat la generarea AI (o postare + săptămânal).
 function cssiCopyGuidelines() {
     return "GHID DE COPYWRITING (aplică-l strict):\n"
-        ."• HOOK: prima linie oprește scroll-ul — curiozitate, o întrebare retorică, o cifră concretă sau o afirmație îndrăzneață. Fără introduceri lungi de încălzire.\n"
+        ."• HOOK: prima linie oprește scroll-ul: curiozitate, o întrebare retorică, o cifră concretă sau o afirmație îndrăzneață. Fără introduceri lungi de încălzire.\n"
         ."• CLARITATE peste creativitate: propoziții scurte, limbaj simplu, voce activă. Fără umplutură de tip „soluții inovatoare\", „optimizăm\", „de top\", „lider de piață\".\n"
         ."• BENEFICII, nu specificații: spune ce câștigă clientul (liniște, mai puține furturi, control de oriunde), nu doar ce face produsul.\n"
         ."• SPECIFIC, nu vag: cifre și rezultate concrete (20 de ani, 9.000+ proiecte, montaj rapid) în loc de generalități.\n"
-        ."• AUTORITATE & dovezi reale ca social proof: autorizați IGPR + ISU + ANRE, experiență, număr de proiecte — fără a inventa cifre/clienți.\n"
-        ."• EMOȚIE utilă (etic): atinge frica reală de pierdere (efracție, incendiu, lipsă de control) și soluția care aduce siguranță — fără alarmism exagerat.\n"
+        ."• AUTORITATE & dovezi reale ca social proof: autorizați IGPR + ISU + ANRE, experiență, număr de proiecte, fără a inventa cifre/clienți.\n"
+        ."• EMOȚIE utilă (etic): atinge frica reală de pierdere (efracție, incendiu, lipsă de control) și soluția care aduce siguranță, fără alarmism exagerat.\n"
         ."• Maxim un semn de exclamare, doar dacă e chiar necesar. Diacritice corecte.\n"
+        ."• NU folosi liniuța lungă (—) nicăieri în text: în locul ei pune virgulă, două puncte sau punct.\n"
         ."• CTA clar la final: ce să facă cititorul (sună, scrie pe WhatsApp, cere ofertă). Pe LinkedIn, un CTA sub formă de întrebare care invită la comentarii.\n"
-        ."• SEO: integrează NATURAL 2-4 fraze-cheie de căutare relevante pentru serviciu (ex. „camere de supraveghere Brașov\") + SEO local (Brașov și împrejurimi: Codlea, Săcele, Ghimbav, Râșnov, Zărnești, Făgăraș) — în text, nu doar în hashtag-uri. Fără keyword stuffing: frazele trebuie să sune firesc.\n"
+        ."• SEO: integrează NATURAL 2-4 fraze-cheie de căutare relevante pentru serviciu (ex. „camere de supraveghere Brașov\") + SEO local (Brașov și împrejurimi: Codlea, Săcele, Ghimbav, Râșnov, Zărnești, Făgăraș), în text, nu doar în hashtag-uri. Fără keyword stuffing: frazele trebuie să sune firesc.\n"
         ."• Reguli de platformă: LinkedIn = profunzime, hook în primele 2 linii, FĂRĂ linkuri externe în corp; Instagram/Facebook = scanabil, emoji cu măsură, hashtag-urile la final.";
 }
 // Catalog servicii CSSI (nume natural + hashtag) — sursa unică pentru promptul AI.
@@ -1306,7 +1307,7 @@ function cssiEditorialWeek($brand, $weekStart) {
             ['dow'=>1,'ora'=>'10:00','platforme'=>['fb','ig'],'tip'=>'Foto','serviciu'=>'','hashtag'=>'#ConcaVerde #Camping #Brasov #Rasnov','unghi'=>'Promovare weekend la Conca Verde Camping (Râșnov). Ton casual, primitor. CTA rezervare 0752 288 400 + www.conca-verde.ro.'],
             ['dow'=>2,'ora'=>'10:00','platforme'=>['linkedin'],'tip'=>'Text','serviciu'=>'','hashtag'=>'#TeamBuilding #Corporate #Camping','unghi'=>'B2B: Conca Verde ca destinație de team building corporate / retreat în natură. Ton profesional.'],
             ['dow'=>3,'ora'=>'10:00','platforme'=>['fb','ig'],'tip'=>'Foto','serviciu'=>'','hashtag'=>'#ConcaVerde #Camping','unghi'=>'Format listă viral: 5 motive să alegi Conca Verde weekendul acesta. Scanabil, share-able.'],
-            ['dow'=>5,'ora'=>'17:00','platforme'=>['fb','ig'],'tip'=>'Foto','serviciu'=>'','hashtag'=>'#ConcaVerde #BehindTheScenes','unghi'=>'Behind the scenes — pregătiri pentru weekend la camping. Autenticitate.'],
+            ['dow'=>5,'ora'=>'17:00','platforme'=>['fb','ig'],'tip'=>'Foto','serviciu'=>'','hashtag'=>'#ConcaVerde #BehindTheScenes','unghi'=>'Behind the scenes, pregătiri pentru weekend la camping. Autenticitate.'],
             ['dow'=>6,'ora'=>'12:00','platforme'=>['fb','ig'],'tip'=>'Foto','serviciu'=>'','hashtag'=>'#ConcaVerde #Camping #Brasov #Weekend','unghi'=>'Foto aesthetic de weekend din natură. Scurt, vizual.'],
         ];
     }
@@ -1318,14 +1319,14 @@ function cssiEditorialWeek($brand, $weekStart) {
     $s2 = $keys[($weekNo * 3 + 1) % $n];
     $s3 = $keys[($weekNo * 3 + 2) % $n];
     return [
-        ['dow'=>1,'ora'=>'10:00','platforme'=>['fb','ig'],'tip'=>'Foto','serviciu'=>$s1,'hashtag'=>$cat[$s1]['hashtag'].' #CSSI #CSSIBrasov #Brasov','unghi'=>'Lucrare finalizată săptămâna trecută — showcase instalare '.$cat[$s1]['nume'].'. Ton cald, mulțumește clientului pentru încredere. CTA telefon 0752 288 400 + WhatsApp.'],
+        ['dow'=>1,'ora'=>'10:00','platforme'=>['fb','ig'],'tip'=>'Foto','serviciu'=>$s1,'hashtag'=>$cat[$s1]['hashtag'].' #CSSI #CSSIBrasov #Brasov','unghi'=>'Lucrare finalizată săptămâna trecută, showcase instalare '.$cat[$s1]['nume'].'. Ton cald, mulțumește clientului pentru încredere. CTA telefon 0752 288 400 + WhatsApp.'],
         ['dow'=>1,'ora'=>'09:00','platforme'=>['linkedin'],'tip'=>'Text','serviciu'=>$s1,'hashtag'=>$cat[$s1]['hashtag'].' #B2B #Securitate','unghi'=>'Knowledge B2B: 3 lucruri pe care le verifici înainte de a propune '.$cat[$s1]['nume'].' unei firme. Hook puternic în primele 2 linii, CTA cu întrebare la final pentru comentarii.'],
         ['dow'=>2,'ora'=>'10:00','platforme'=>['linkedin'],'tip'=>'Carusel','serviciu'=>$s2,'hashtag'=>$cat[$s2]['hashtag'].' #StudiuCaz #B2B','unghi'=>'Studiu de caz B2B pentru '.$cat[$s2]['nume'].': provocare → soluția CSSI → rezultat măsurabil. Storytelling, încheie cu CTA „comentează audit".'],
         ['dow'=>3,'ora'=>'10:00','platforme'=>['fb','ig'],'tip'=>'Foto','serviciu'=>$s2,'hashtag'=>$cat[$s2]['hashtag'].' #CSSI #Brasov','unghi'=>'Educațional: 3 lucruri de verificat înainte să cumperi '.$cat[$s2]['nume'].'. Numerotat, scanabil pe mobil, ton de consultant de încredere.'],
         ['dow'=>4,'ora'=>'09:00','platforme'=>['linkedin'],'tip'=>'Foto','serviciu'=>$s1,'hashtag'=>'#CulturaOrganizationala #CSSI #Brasov','unghi'=>'Cultură organizațională / echipa CSSI. Autenticitate, nu vânzare directă. Poate include recrutare (hr@cssi.ro).'],
-        ['dow'=>5,'ora'=>'17:00','platforme'=>['fb','ig'],'tip'=>'Foto','serviciu'=>$s3,'hashtag'=>'#CSSI #BehindTheScenes #Echipa','unghi'=>'Behind the scenes — săptămâna asta în CSSI. Ton uman, relaxat, autentic.'],
-        ['dow'=>5,'ora'=>'09:00','platforme'=>['linkedin'],'tip'=>'Text','serviciu'=>$s1,'hashtag'=>'#Reflectie #B2B #Leadership','unghi'=>'Reflecție de final de săptămână pe profilul PERSONAL al lui Mihai (nu pagina firmei). Thought leadership, autentic, semnat „— Mihai".'],
-        ['dow'=>6,'ora'=>'12:00','platforme'=>['fb','ig'],'tip'=>'Foto','serviciu'=>$s3,'hashtag'=>$cat[$s3]['hashtag'].' #CSSI #Brasov','unghi'=>'Foto aesthetic de weekend — cea mai frumoasă lucrare '.$cat[$s3]['nume'].' din săptămână. Vizual, scurt, invită la feedback.'],
+        ['dow'=>5,'ora'=>'17:00','platforme'=>['fb','ig'],'tip'=>'Foto','serviciu'=>$s3,'hashtag'=>'#CSSI #BehindTheScenes #Echipa','unghi'=>'Behind the scenes, săptămâna asta în CSSI. Ton uman, relaxat, autentic.'],
+        ['dow'=>5,'ora'=>'09:00','platforme'=>['linkedin'],'tip'=>'Text','serviciu'=>$s1,'hashtag'=>'#Reflectie #B2B #Leadership','unghi'=>'Reflecție de final de săptămână pe profilul PERSONAL al lui Mihai (nu pagina firmei). Thought leadership, autentic, semnat „Mihai".'],
+        ['dow'=>6,'ora'=>'12:00','platforme'=>['fb','ig'],'tip'=>'Foto','serviciu'=>$s3,'hashtag'=>$cat[$s3]['hashtag'].' #CSSI #Brasov','unghi'=>'Foto aesthetic de weekend, cea mai frumoasă lucrare '.$cat[$s3]['nume'].' din săptămână. Vizual, scurt, invită la feedback.'],
     ];
 }
 
@@ -1823,7 +1824,7 @@ try {
                 jsonResponse([
                     'success'         => false,
                     'error'           => 'Clientul "' . $cliRow['nume'] . '" are ' . implode(' și ', $motive) .
-                                         '. Nu poate fi șters automat — gestionează manual aceste înregistrări.',
+                                         '. Nu poate fi șters automat, gestionează manual aceste înregistrări.',
                     'code'            => 'HAS_ACTIVITY',
                     'oferte_acceptate'=> $nOferteAcceptate,
                     'proiecte_active' => $nProiecteActive,
@@ -2320,7 +2321,7 @@ try {
                     // Jurnal teren (best-effort)
                     try {
                         $now = date('Y-m-d H:i:s');
-                        $desc = "📄 Proces verbal $pvNr — stare: $stare." .
+                        $desc = "📄 Proces verbal $pvNr, stare: $stare." .
                                 (!empty($fields['problema_constatata']) ? ' Problemă: ' . $fields['problema_constatata'] . '.' : '') .
                                 (!empty($fields['solutie_aplicata']) ? ' Soluție: ' . $fields['solutie_aplicata'] . '.' : '');
                         $db->prepare("INSERT INTO jurnal_teren (proiect_id, data_start, data_end, tehnicieni, locatie, descriere, created_by) VALUES (?,?,?,?,?,?,?)")
@@ -2329,7 +2330,7 @@ try {
                     // Notificare (best-effort)
                     try {
                         $db->prepare("INSERT INTO notificari (proiect_id, mesaj, tip, de_la, etapa_noua) VALUES (?,?,?,?,?)")
-                           ->execute([$pid, '🏁 Intervenție FINALIZATĂ — PV ' . $pvNr . ' (' . $stare . ')', 'finalizare', $userName, 'Finalizat']);
+                           ->execute([$pid, '🏁 Intervenție FINALIZATĂ · PV ' . $pvNr . ' (' . $stare . ')', 'finalizare', $userName, 'Finalizat']);
                     } catch (Exception $e) {}
                 }
 
@@ -3469,7 +3470,7 @@ try {
                         if ($pxRow) {
                             $db->prepare("INSERT INTO notificari (proiect_id, mesaj, tip, de_la) VALUES (?,?,?,?)")->execute([
                                 $pxRow['proiect_id'],
-                                '📄 Contract draft creat (' . $contractNr . ') — trimite link client pentru completare date',
+                                '📄 Contract draft creat (' . $contractNr . '), trimite link client pentru completare date',
                                 'contract',
                                 $user
                             ]);
@@ -3493,7 +3494,7 @@ try {
                 if ($row && $row['cod']) {
                     $db->prepare("INSERT INTO notificari (proiect_id, mesaj, tip, de_la) VALUES (?,?,?,?)")->execute([
                         $row['cod'],
-                        '❌ Ofertă refuzată — Motiv: ' . ($motiv ?: 'nespecificat'),
+                        '❌ Ofertă refuzată · Motiv: ' . ($motiv ?: 'nespecificat'),
                         'alerta',
                         $user
                     ]);
@@ -3929,10 +3930,10 @@ try {
             if (!empty($data['to'])) {
                 $recipients = array_filter(array_map('trim', explode(',', $data['to'])));
             }
-            if (!$recipients) jsonResponse(['success' => false, 'error' => 'Niciun destinatar — setează REPORT_RECIPIENTS în secrets.php sau prin setReportRecipients'], 400);
+            if (!$recipients) jsonResponse(['success' => false, 'error' => 'Niciun destinatar, setează REPORT_RECIPIENTS în secrets.php sau prin setReportRecipients'], 400);
 
             $rData = cssiCollectRaportData($db);
-            $subject = '📊 Raport Zilnic CSSI — ' . date('d.m.Y') . ' (manual)';
+            $subject = '📊 Raport Zilnic CSSI · ' . date('d.m.Y') . ' (manual)';
             $bodyHtml = cssiRenderRaportHtml($rData);
             $bodyText = cssiRenderRaportText($rData);
             $result = cssiSendRaportEmail($recipients, $subject, $bodyHtml, $bodyText);
@@ -4047,15 +4048,15 @@ try {
 
             // Beneficiar bloc
             if ($tipPj) {
-                $benefBloc = htmlspecialchars($d['denumire'] ?? '— denumire firmă —', ENT_QUOTES, 'UTF-8');
-                $benefBloc .= ', cu sediul în ' . htmlspecialchars($d['sediu'] ?? '— sediu —', ENT_QUOTES, 'UTF-8');
+                $benefBloc = htmlspecialchars($d['denumire'] ?? 'denumire firmă', ENT_QUOTES, 'UTF-8');
+                $benefBloc .= ', cu sediul în ' . htmlspecialchars($d['sediu'] ?? 'sediu', ENT_QUOTES, 'UTF-8');
                 if (!empty($d['reg_com'])) $benefBloc .= ', înregistrată la Registrul Comerțului sub nr. ' . htmlspecialchars($d['reg_com'], ENT_QUOTES, 'UTF-8');
                 if (!empty($d['cui']))     $benefBloc .= ', CIF ' . htmlspecialchars($d['cui'], ENT_QUOTES, 'UTF-8');
                 if (!empty($d['cont_iban'])) $benefBloc .= ', cont IBAN ' . htmlspecialchars($d['cont_iban'], ENT_QUOTES, 'UTF-8') . (!empty($d['banca']) ? ' deschis la ' . htmlspecialchars($d['banca'], ENT_QUOTES, 'UTF-8') : '');
                 if (!empty($d['reprezentant'])) $benefBloc .= ', reprezentată prin ' . htmlspecialchars($d['reprezentant'], ENT_QUOTES, 'UTF-8') . (!empty($d['functia']) ? ', în calitate de ' . htmlspecialchars($d['functia'], ENT_QUOTES, 'UTF-8') : '');
                 $benefSemnatura = htmlspecialchars(($d['denumire'] ?? '') . ($d['reprezentant'] ? ' (prin ' . $d['reprezentant'] . ')' : ''), ENT_QUOTES, 'UTF-8');
             } else {
-                $benefBloc = 'Dl./Dna. ' . htmlspecialchars($d['nume'] ?? '— nume —', ENT_QUOTES, 'UTF-8');
+                $benefBloc = 'Dl./Dna. ' . htmlspecialchars($d['nume'] ?? 'nume', ENT_QUOTES, 'UTF-8');
                 if (!empty($d['domiciliu'])) $benefBloc .= ', cu domiciliul în ' . htmlspecialchars($d['domiciliu'], ENT_QUOTES, 'UTF-8');
                 if (!empty($d['ci_seria']) || !empty($d['ci_numar'])) $benefBloc .= ', legitimat cu CI seria ' . htmlspecialchars($d['ci_seria'] ?? '', ENT_QUOTES, 'UTF-8') . ' nr. ' . htmlspecialchars($d['ci_numar'] ?? '', ENT_QUOTES, 'UTF-8');
                 if (!empty($d['cnp'])) $benefBloc .= ', CNP ' . htmlspecialchars($d['cnp'], ENT_QUOTES, 'UTF-8');
@@ -4113,7 +4114,7 @@ p { margin: 0; }
 <p style="text-indent:9pt">I. OBIECTUL CONTRACTULUI</p>
 <p>Art.1. PRESTATORUL asigura instalarea unui sistem de <?= htmlspecialchars($sistem) ?> conform <?= $c['oferta_cod'] ? 'ofertei nr ' . htmlspecialchars($c['oferta_cod']) . ($oferta_data ? '  din ' . $oferta_data : '') . ' , atasata la contract' : 'specificatiilor agreate' ?>.</p>
 <p>&nbsp;</p>
-<p>Art.2 . Lucrarea se va efectua in <?= htmlspecialchars($adresa ?: '— adresa instalare —') ?>.</p>
+<p>Art.2 . Lucrarea se va efectua in <?= htmlspecialchars($adresa ?: 'adresa instalare') ?>.</p>
 <p>&nbsp;</p>
 
 <p class="j">&nbsp;&nbsp;<b>II.</b>&nbsp;<b>TERMENUL CONTRACTULUI</b> </p>
@@ -4186,7 +4187,7 @@ p { margin: 0; }
 <table class="sigtbl">
 <tr><td>&nbsp;&nbsp;&nbsp; PRESTATOR,</td><td>BENEFICIAR,</td></tr>
 <tr><td>&nbsp;</td><td>&nbsp;</td></tr>
-<tr><td>&nbsp;<?= htmlspecialchars($p['denumire']) ?></td><td><?= $benefSemnatura ?: '—' ?></td></tr>
+<tr><td>&nbsp;<?= htmlspecialchars($p['denumire']) ?></td><td><?= $benefSemnatura ?: '-' ?></td></tr>
 </table>
 </div>
 
@@ -5228,7 +5229,7 @@ p { margin: 0; }
             $itRow = $itStmt->fetch();
             if (!$itRow) { jsonResponse(['success' => false, 'error' => 'Item inexistent'], 404); break; }
             if ($status === 'n/a' && in_array($itRow['item_key'], proiectareRequiredKeys(), true)) {
-                jsonResponse(['success' => false, 'error' => 'Item obligatoriu de conformitate — trebuie bifat efectiv, nu poate fi marcat N/A.'], 400);
+                jsonResponse(['success' => false, 'error' => 'Item obligatoriu de conformitate, trebuie bifat efectiv, nu poate fi marcat N/A.'], 400);
                 break;
             }
             if ($status === 'todo') {
@@ -5518,7 +5519,7 @@ p { margin: 0; }
             foreach ($stmt->fetchAll() as $r) {
                 $val = number_format($r['total_cu_tva'], 0, ',', '.');
                 $activitate[] = [
-                    'text' => '📋 Ofertă ' . $r['oferta_id'] . ' — ' . $r['client_nume'] . ($r['obiectiv'] ? ' (' . $r['obiectiv'] . ')' : '') . ', ' . $val . ' RON',
+                    'text' => '📋 Ofertă ' . $r['oferta_id'] . ' · ' . $r['client_nume'] . ($r['obiectiv'] ? ' (' . $r['obiectiv'] . ')' : '') . ', ' . $val . ' RON',
                     'color' => $r['status'] === 'Acceptata' ? 'var(--green)' : ($r['status'] === 'Refuzata' ? 'var(--red)' : 'var(--blue)'),
                     'time' => $r['created_at'],
                     'type' => 'oferta'
@@ -5530,9 +5531,9 @@ p { margin: 0; }
             foreach ($stmt->fetchAll() as $r) {
                 $isNew = (strtotime($r['updated_at']) - strtotime($r['created_at'])) < 60;
                 if ($isNew) {
-                    $txt = '🆕 Proiect nou: ' . $r['proiect_id'] . ' — ' . $r['client_nume'] . ' (' . $r['serviciu'] . ')';
+                    $txt = '🆕 Proiect nou: ' . $r['proiect_id'] . ' · ' . $r['client_nume'] . ' (' . $r['serviciu'] . ')';
                 } else {
-                    $txt = '🔄 ' . $r['proiect_id'] . ' — ' . $r['client_nume'] . ' → status: ' . $r['status'];
+                    $txt = '🔄 ' . $r['proiect_id'] . ' · ' . $r['client_nume'] . ' → status: ' . $r['status'];
                 }
                 $statusColors = ['Lead'=>'var(--blue)','Oferta'=>'var(--purple)','Contract'=>'var(--teal)','Proiectare'=>'var(--orange)','Executie'=>'var(--green)','Receptie'=>'var(--green)','Facturat'=>'var(--red)','Mentenanta'=>'var(--teal)','Finalizat'=>'var(--green)','Anulat'=>'var(--gray)'];
                 $activitate[] = [
@@ -5547,7 +5548,7 @@ p { margin: 0; }
             $stmt = $db->query("SELECT c.client_id, c.nume, c.tip, c.oras, c.created_at FROM clienti c ORDER BY c.created_at DESC LIMIT 10");
             foreach ($stmt->fetchAll() as $r) {
                 $activitate[] = [
-                    'text' => '👤 Client nou: ' . $r['nume'] . ($r['oras'] ? ' — ' . $r['oras'] : '') . ' (' . $r['tip'] . ')',
+                    'text' => '👤 Client nou: ' . $r['nume'] . ($r['oras'] ? ' · ' . $r['oras'] : '') . ' (' . $r['tip'] . ')',
                     'color' => 'var(--teal)',
                     'time' => $r['created_at'],
                     'type' => 'client'
@@ -5910,7 +5911,7 @@ p { margin: 0; }
             $stmt->execute([$pid, $pid]);
             $p = $stmt->fetch();
             if ($p) {
-                $mesaj = '✅ ' . $user . ' a preluat proiectul ' . $p['proiect_id'] . ' (' . $p['nume'] . ') — etapa: ' . $p['status'];
+                $mesaj = '✅ ' . $user . ' a preluat proiectul ' . $p['proiect_id'] . ' (' . $p['nume'] . '), etapa: ' . $p['status'];
                 $db->prepare("INSERT INTO notificari (proiect_id, mesaj, tip, de_la, etapa_noua, preluat_de, preluat_la) VALUES (?,?,?,?,?,?,NOW())")
                    ->execute([$p['proiect_id'], $mesaj, 'assignment', $user, $p['status'], $user]);
             }
@@ -6037,9 +6038,9 @@ p { margin: 0; }
             if ($minLimit === 99999) $minLimit = 2200;
 
             if ($brand === 'conca-verde') {
-                $brandVoice = "Conca Verde Camping (Râșnov) — voce casual, primitoare, turism local. Contact: 0752 288 400, www.conca-verde.ro.";
+                $brandVoice = "Conca Verde Camping (Râșnov), voce casual, primitoare, turism local. Contact: 0752 288 400, www.conca-verde.ro.";
             } else {
-                $brandVoice = "CSSI Brașov — firmă de securitate și instalații, autorizată IGPR + ISU + ANRE, 20 de ani experiență, 9.000+ proiecte. Ton profesional, autoritar, de încredere. Contact: telefon 0752 288 400, WhatsApp wa.me/40752288400, fix 0268 414 740.";
+                $brandVoice = "CSSI Brașov, firmă de securitate și instalații, autorizată IGPR + ISU + ANRE, 20 de ani experiență, 9.000+ proiecte. Ton profesional, autoritar, de încredere. Contact: telefon 0752 288 400, WhatsApp wa.me/40752288400, fix 0268 414 740.";
             }
             $seoRef = '';
             if ($brand !== 'conca-verde') {
@@ -6047,7 +6048,7 @@ p { margin: 0; }
                 $seoRef = "\n\nDOMENIILE CSSI și frazele-cheie SEO (alege-le pe cele potrivite subiectului și integrează-le natural în text):\n" . $seoRef;
             }
             $systemS = "Ești copywriter senior de social media pentru {$brandVoice}\n\n"
-                ."Scrii O SINGURĂ postare COMPLETĂ, gata de publicat — fără NICIUN placeholder, fără paranteze drepte [ ], fără text de completat. Omul doar va atașa o fotografie.\n\n"
+                ."Scrii O SINGURĂ postare COMPLETĂ, gata de publicat, fără NICIUN placeholder, fără paranteze drepte [ ], fără text de completat. Omul doar va atașa o fotografie.\n\n"
                 ."Reguli de calitate (best practices 2026):\n"
                 ."- Platforme: ".implode('+', $plats)." · format {$tip} · maximum {$minLimit} caractere.\n"
                 ."- Hook puternic în prima linie. LinkedIn: profunzime + CTA cu întrebare la final; Instagram/Facebook: scanabil, emoji moderat.\n"
@@ -6055,7 +6056,7 @@ p { margin: 0; }
                 ."- Nu inventa cifre/clienți falși specifici; rămâi la mesaje generale credibile.\n\n"
                 .cssiCopyGuidelines().$seoRef."\n\n"
                 ."Răspunzi DOAR cu un obiect JSON valid, fără text în plus, fără ```. Format exact:\n"
-                ."{\"continut\": \"textul complet al postării, gata de publicat\", \"image_prompt\": \"un prompt DETALIAT în ENGLEZĂ pentru un generator AI de imagini (nanobanana / Midjourney / etc.) care descrie o fotografie realistă și profesională potrivită postării — subiect, cadru, unghi, lumină, atmosferă, stil; fără text, watermark sau logo în imagine\"}";
+                ."{\"continut\": \"textul complet al postării, gata de publicat\", \"image_prompt\": \"un prompt DETALIAT în ENGLEZĂ pentru un generator AI de imagini (nanobanana / Midjourney / etc.) care descrie o fotografie realistă și profesională potrivită postării, subiect, cadru, unghi, lumină, atmosferă, stil; fără text, watermark sau logo în imagine\"}";
             $userPromptS = "Scrie postarea despre / folosind aceste cuvinte cheie sau subiect:\n".$topic;
 
             $resS = callClaude($systemS, $userPromptS, 2000);
@@ -6124,21 +6125,21 @@ p { margin: 0; }
                 $minLimit = 99999;
                 foreach ($s['platforme'] as $p) { if (isset($platLimits[$p]) && $platLimits[$p] < $minLimit) $minLimit = $platLimits[$p]; }
                 $seoKw = ($s['serviciu'] !== '' && isset($svcCat[$s['serviciu']]['seo'])) ? "\n   Fraze-cheie SEO de integrat natural în text: ".$svcCat[$s['serviciu']]['seo'] : '';
-                $slotLines[] = "Slot {$i} — ".($dayNames[$s['dow']] ?? '')." ".$s['ora']." · ".implode('+', $plats)." · format {$s['tip']} · max {$minLimit} caractere\n"
+                $slotLines[] = "Slot {$i} · ".($dayNames[$s['dow']] ?? '')." ".$s['ora']." · ".implode('+', $plats)." · format {$s['tip']} · max {$minLimit} caractere\n"
                     ."   Brief: ".$s['unghi']."\n"
                     ."   Hashtag-uri de inclus la final: ".$s['hashtag'].$seoKw;
             }
             $slotsText = implode("\n\n", $slotLines);
 
             if ($brand === 'conca-verde') {
-                $brandVoice = "Conca Verde Camping (Râșnov) — voce casual, primitoare, turism local. Contact: 0752 288 400, www.conca-verde.ro.";
+                $brandVoice = "Conca Verde Camping (Râșnov), voce casual, primitoare, turism local. Contact: 0752 288 400, www.conca-verde.ro.";
             } else {
-                $brandVoice = "CSSI Brașov — firmă de securitate și instalații, autorizată IGPR + ISU + ANRE, 20 de ani experiență, 9.000+ proiecte. Ton profesional, autoritar, de încredere. Contact: telefon 0752 288 400, WhatsApp wa.me/40752288400, fix 0268 414 740.";
+                $brandVoice = "CSSI Brașov, firmă de securitate și instalații, autorizată IGPR + ISU + ANRE, 20 de ani experiență, 9.000+ proiecte. Ton profesional, autoritar, de încredere. Contact: telefon 0752 288 400, WhatsApp wa.me/40752288400, fix 0268 414 740.";
             }
             $locText = $location ? " Localitatea de referință pentru această săptămână: {$location} (menționeaz-o natural unde se potrivește, pentru SEO local)." : "";
 
             $system = "Ești copywriter senior de social media pentru {$brandVoice}\n\n"
-                ."Scrii postări COMPLETE, gata de publicat — fără NICIUN placeholder, fără paranteze drepte [ ], fără „[adaugă...]\", fără text de completat ulterior. Omul doar va atașa o fotografie, atât.\n\n"
+                ."Scrii postări COMPLETE, gata de publicat, fără NICIUN placeholder, fără paranteze drepte [ ], fără „[adaugă...]\", fără text de completat ulterior. Omul doar va atașa o fotografie, atât.\n\n"
                 ."Reguli de calitate (best practices 2026):\n"
                 ."- LinkedIn: hook în primele 2 linii (înainte de „...vezi mai mult\"), profunzime > superficial, CTA cu întrebare la final pentru comentarii. NU pune linkuri externe în corp.\n"
                 ."- Instagram/Facebook: hook în prima linie, scanabil, emoji moderat, hashtag-urile la final.\n"
@@ -6148,7 +6149,7 @@ p { margin: 0; }
                 ."- Nu inventa cifre/clienți falși specifici; rămâi la mesaje generale credibile despre serviciu.{$locText}\n\n"
                 .cssiCopyGuidelines()."\n\n"
                 ."Răspunzi DOAR cu un array JSON valid, fără text în plus, fără ```. Format exact:\n"
-                ."[{\"slot\":0,\"continut\":\"textul complet al postării...\"}, ...] — câte un obiect per slot primit.";
+                ."[{\"slot\":0,\"continut\":\"textul complet al postării...\"}, ...], câte un obiect per slot primit.";
 
             $userPrompt = "Generează textul pentru următoarele ".count($slots)." sloturi din calendarul editorial al săptămânii. Întoarce un obiect per slot, cu indexul corect.\n\n".$slotsText;
 
@@ -6159,7 +6160,7 @@ p { margin: 0; }
             $txt = trim($res['text']);
             if (preg_match('/\[[\s\S]*\]/', $txt, $mJson)) $txt = $mJson[0];
             $aiPosts = json_decode($txt, true);
-            if (!is_array($aiPosts)) { jsonResponse(['success' => false, 'error' => 'Răspuns AI neparsabil — reîncearcă.'], 502); break; }
+            if (!is_array($aiPosts)) { jsonResponse(['success' => false, 'error' => 'Răspuns AI neparsabil, reîncearcă.'], 502); break; }
 
             // Indexez după slot
             $byIdx = [];
@@ -6181,7 +6182,7 @@ p { margin: 0; }
                 $ins->execute([$brand, $continut, json_encode($s['platforme']), $s['tip'], 'Draft', $dt, '', null, $note, 'AI']);
                 $created++;
             }
-            if ($created === 0) { jsonResponse(['success' => false, 'error' => 'AI nu a returnat conținut utilizabil — reîncearcă.'], 502); break; }
+            if ($created === 0) { jsonResponse(['success' => false, 'error' => 'AI nu a returnat conținut utilizabil, reîncearcă.'], 502); break; }
             jsonResponse(['success' => true, 'created' => $created, 'weekStart' => $weekStart]);
             break;
 
@@ -6436,7 +6437,7 @@ p { margin: 0; }
             $salutare = $prenume !== '' ? 'Bună ziua, ' . $prenume . '!' : 'Bună ziua!';
             $reviewUrl = 'https://cssi.ro/r/' . $token;
             $mesaj = $salutare . "\n"
-                   . "Vă mulțumim pentru încrederea acordată echipei CSSI. Dacă a fost totul în regulă, am aprecia mult o recenzie pe Google — durează mai puțin de un minut:\n"
+                   . "Vă mulțumim pentru încrederea acordată echipei CSSI. Dacă a fost totul în regulă, am aprecia mult o recenzie pe Google, durează mai puțin de un minut:\n"
                    . $reviewUrl . "\n\n"
                    . "Cu stimă,\n"
                    . "Echipa CSSI";
@@ -6466,7 +6467,7 @@ p { margin: 0; }
                ->execute([$smsId, $token]);
 
             // Adaugă notificare
-            $notifMsg = '💬 Cerere recenzie WhatsApp pregătită pentru ' . $row['nume'] . ' (' . $phoneDisplay . ') — ' . $row['proiect_id'];
+            $notifMsg = '💬 Cerere recenzie WhatsApp pregătită pentru ' . $row['nume'] . ' (' . $phoneDisplay . ') · ' . $row['proiect_id'];
             $db->prepare("INSERT INTO notificari (proiect_id, mesaj, tip, de_la) VALUES (?,?,?,?)")
                ->execute([$row['id'], $notifMsg, 'sms_recenzie', $user]);
 
@@ -6476,7 +6477,7 @@ p { margin: 0; }
                 'telefon' => $phoneDisplay,
                 'mesaj' => $mesaj,
                 'whatsapp_url' => $whatsappUrl,
-                'nota' => 'WhatsApp se deschide cu mesajul pre-completat — apasă SEND pentru a trimite'
+                'nota' => 'WhatsApp se deschide cu mesajul pre-completat, apasă SEND pentru a trimite'
             ]);
             break;
 
@@ -6742,7 +6743,7 @@ p { margin: 0; }
                 }
 
                 // 3) Notificare în sistem
-                $msg = '🏁 ' . $proj['proiect_id'] . ' (' . $proj['client_nume'] . ') — FINALIZAT de ' . $userName . ' la ' . $dataFinalizare . ($mentenantaDa ? ' • Contract mentenanță creat' : '');
+                $msg = '🏁 ' . $proj['proiect_id'] . ' (' . $proj['client_nume'] . ') · FINALIZAT de ' . $userName . ' la ' . $dataFinalizare . ($mentenantaDa ? ' • Contract mentenanță creat' : '');
                 try {
                     $db->prepare("INSERT INTO notificari (proiect_id, mesaj, tip, de_la, etapa_noua) VALUES (?,?,?,?,?)")
                        ->execute([$pid, $msg, 'finalizare', $userName, $newStatus]);
@@ -6816,7 +6817,7 @@ p { margin: 0; }
             $stmt->execute([$id, $id]);
             $proj = $stmt->fetch(PDO::FETCH_ASSOC);
             if (!$proj) { jsonResponse(['success'=>false,'error'=>'Proiect negăsit'],404); break; }
-            $subject = '✅ Proces Verbal Finalizare — ' . $proj['proiect_id'] . ' • CSSI';
+            $subject = '✅ Proces Verbal Finalizare · ' . $proj['proiect_id'] . ' • CSSI';
             $boundary = 'cssi-pv-' . md5(uniqid());
             $headers = "From: CSSI <noreply@cssi.ro>\r\n";
             $headers .= "Reply-To: contact@cssi.ro\r\n";

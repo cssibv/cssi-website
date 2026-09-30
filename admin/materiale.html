@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Inventar & Stocuri — Portal CSSI 3.0</title>
+<title>Inventar & Stocuri · Portal CSSI 3.0</title>
 <meta name="robots" content="noindex, nofollow">
 <link rel="icon" type="image/x-icon" href="/images/favicon.ico">
 <meta name="theme-color" content="#dc2626">
@@ -312,9 +312,9 @@ function renderCards(filtered){
         html+='<div class="icard-stock"><div><span class="icard-qty" style="color:'+clr+'">'+i.stoc+'</span> <span class="icard-unit">'+i.unit+'</span></div>';
         html+='<div style="flex:1"><div class="icard-bar"><div class="icard-bar-fill" style="width:'+pct+'%;background:'+clr+'"></div></div>';
         html+='<div style="font-size:10px;color:var(--gray);margin-top:2px;text-align:right">min: '+i.minim+'</div></div></div>';
-        if(lvl==='out') html+='<div class="icard-alert" style="background:#fef2f2;color:var(--red)">⛔ EPUIZAT — necesită comandă urgentă</div>';
+        if(lvl==='out') html+='<div class="icard-alert" style="background:#fef2f2;color:var(--red)">⛔ EPUIZAT, necesită comandă urgentă</div>';
         else if(lvl==='critical') html+='<div class="icard-alert" style="background:#fef2f2;color:var(--red)">🔴 Sub stocul minim!</div>';
-        else if(lvl==='low') html+='<div class="icard-alert" style="background:#fff7ed;color:var(--orange)">🟠 Stoc scăzut — planifică aprovizionare</div>';
+        else if(lvl==='low') html+='<div class="icard-alert" style="background:#fff7ed;color:var(--orange)">🟠 Stoc scăzut, planifică aprovizionare</div>';
         html+='<div class="icard-meta"><span>💰 '+fmt(i.pret)+' RON/'+i.unit+'</span>';
         if(i.furnizor) html+='<span>🏭 '+esc(i.furnizor)+'</span>';
         if(i.locatie) html+='<span>📍 '+esc(i.locatie)+'</span>';
@@ -419,7 +419,7 @@ function doMove(){
     if(API_URL) apiPost({action:'updateInventarStock',row:i.row,stoc:i.stoc,history:JSON.stringify(i.history)}).catch(function(){});
 
     closeMoveModal();render();
-    toast((moveType==='in'?'📥 +':'📤 -')+qty+' '+i.unit+' — '+i.nume,'success');
+    toast((moveType==='in'?'📥 +':'📤 -')+qty+' '+i.unit+' · '+i.nume,'success');
 }
 
 // ═══════ ADD/EDIT ═══════
@@ -482,6 +482,6 @@ if(API_URL) refreshData();
 <script>
 if('serviceWorker' in navigator){navigator.serviceWorker.register('../sw.js').then(function(r){console.log('[PWA] SW registered, scope:',r.scope)}).catch(function(e){console.log('[PWA] SW failed:',e)});var __reloaded=false;navigator.serviceWorker.addEventListener('controllerchange',function(){if(__reloaded)return;__reloaded=true;window.location.reload();});}
 </script>
-<script src="/admin/notifications.js?v=2" defer></script>
+<script src="/admin/notifications.js?v=3" defer></script>
 </body>
 </html>

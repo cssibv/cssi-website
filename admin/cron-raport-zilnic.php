@@ -81,9 +81,9 @@ try {
     $markPre = $db->prepare("UPDATE oferte SET notificat_pre_expirare_la = NOW() WHERE id = ?");
     foreach ($stPre->fetchAll() as $o) {
         $tel = trim((string)($o['client_telefon'] ?? '')); if (!$tel) $tel = $extractTel($o['client_contact'] ?? '');
-        $clientLbl = $o['client_db_nume'] ?: ($o['client_nume'] ?: '—');
+        $clientLbl = $o['client_db_nume'] ?: ($o['client_nume'] ?: '-');
         $sumLbl = number_format((float)$o['total_cu_tva'], 0, ',', '.') . ' lei';
-        $mesaj = '⏰ Sună mâine ' . $clientLbl . ' — oferta ' . ($o['oferta_id'] ?: '#'.$o['id']) . ' (' . $sumLbl . ') expiră mâine' . ($tel ? ' · 📞 ' . $tel : '');
+        $mesaj = '⏰ Sună mâine ' . $clientLbl . ', oferta ' . ($o['oferta_id'] ?: '#'.$o['id']) . ' (' . $sumLbl . ') expiră mâine' . ($tel ? ' · 📞 ' . $tel : '');
         $insN->execute([$o['cod_proiect'] ?: null, $mesaj, 'oferta_pre_exp', 'Sistem', '/admin/oferte.html', $tel ?: null]);
         $markPre->execute([$o['id']]);
     }
@@ -96,9 +96,9 @@ try {
     $markExp = $db->prepare("UPDATE oferte SET notificat_expirare_la = NOW() WHERE id = ?");
     foreach ($expList as $o) {
         $tel = trim((string)($o['client_telefon'] ?? '')); if (!$tel) $tel = $extractTel($o['client_contact'] ?? '');
-        $clientLbl = $o['client_db_nume'] ?: ($o['client_nume'] ?: '—');
+        $clientLbl = $o['client_db_nume'] ?: ($o['client_nume'] ?: '-');
         $sumLbl = number_format((float)$o['total_cu_tva'], 0, ',', '.') . ' lei';
-        $mesaj = '📞 Resună ' . $clientLbl . ' — oferta ' . ($o['oferta_id'] ?: '#'.$o['id']) . ' (' . $sumLbl . ') a expirat — întreabă dacă o mai vrea' . ($tel ? ' · 📞 ' . $tel : '');
+        $mesaj = '📞 Resună ' . $clientLbl . ', oferta ' . ($o['oferta_id'] ?: '#'.$o['id']) . ' (' . $sumLbl . ') a expirat, întreabă dacă o mai vrea' . ($tel ? ' · 📞 ' . $tel : '');
         $insN->execute([$o['cod_proiect'] ?: null, $mesaj, 'oferta_expirata', 'Sistem', '/admin/oferte.html', $tel ?: null]);
         $markExp->execute([$o['id']]);
     }
@@ -107,7 +107,7 @@ try {
 }
 
 $data = cssiCollectRaportData($db);
-$subject = '📊 Raport Zilnic CSSI — ' . date('d.m.Y');
+$subject = '📊 Raport Zilnic CSSI · ' . date('d.m.Y');
 $bodyHtml = cssiRenderRaportHtml($data);
 $bodyText = cssiRenderRaportText($data);
 

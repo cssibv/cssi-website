@@ -59,7 +59,7 @@ function cronGuard($scriptName = '') {
 
     // Întârziere mică — descurajează ghicirea prin încercări repetate.
     usleep(500000);
-    cronGuardDeny(403, 'Forbidden — trimite secretul prin headerul X-Cron-Key');
+    cronGuardDeny(403, 'Forbidden, trimite secretul prin headerul X-Cron-Key');
 }
 
 function cronGuardDeny($code, $msg) {

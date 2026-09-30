@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Contracte — Portal CSSI 3.0</title>
+<title>Contracte · Portal CSSI 3.0</title>
 <meta name="robots" content="noindex, nofollow">
 <link rel="icon" type="image/x-icon" href="/images/favicon.ico">
 <meta name="theme-color" content="#dc2626">
@@ -215,7 +215,7 @@ function render(){
 
 function renderCard(c){
     var st = STATUS_INFO[c.status] || {ic:'❓', lbl:c.status};
-    var clientNume = c.client_nume || (c.date_completate && (c.date_completate.nume || c.date_completate.denumire)) || '— fără nume —';
+    var clientNume = c.client_nume || (c.date_completate && (c.date_completate.nume || c.date_completate.denumire)) || 'fără nume';
     var html = '<div class="contract-card s-'+c.status+'">';
     html += '<div class="cc-top">';
     html += '<span class="cc-nr">'+esc(c.contract_nr||'#'+c.id)+'</span>';
@@ -390,7 +390,7 @@ function openAuditLog(id){
         });
 }
 function det(lbl, val){
-    var v = val ? esc(val) : '<span class="val empty">— necompletat —</span>';
+    var v = val ? esc(val) : '<span class="val empty">necompletat</span>';
     return '<span class="lbl">'+lbl+':</span><span class="val">'+v+'</span>';
 }
 
@@ -422,7 +422,7 @@ function cfField(id, label, val, req){
            '<input id="'+id+'" type="text" value="'+esc(val||'')+'" style="width:100%;padding:9px 12px;border:1px solid var(--gray-b);border-radius:8px;font-size:13px;font-family:inherit"></div>';
 }
 function renderCompleteForm(c){
-    document.getElementById('dmTitle').textContent = '📝 ' + (c.contract_nr || ('#'+c.id)) + ' — date beneficiar';
+    document.getElementById('dmTitle').textContent = '📝 ' + (c.contract_nr || ('#'+c.id)) + ' · date beneficiar';
     var d = c.date_completate || {};
     var tip = c.tip_client || 'PF';
     var html = '';
@@ -521,7 +521,7 @@ function renderMateriale(data){
     var mats = data.materiale || [];
     MAT_CACHE = mats;
     var html = '';
-    if(data.oferta_cod) html += '<div style="font-size:12px;color:var(--gray);margin-bottom:12px">📋 Oferta <strong>#'+esc(data.oferta_cod)+'</strong>'+(data.oferta_titlu?' — '+esc(data.oferta_titlu):'')+'</div>';
+    if(data.oferta_cod) html += '<div style="font-size:12px;color:var(--gray);margin-bottom:12px">📋 Oferta <strong>#'+esc(data.oferta_cod)+'</strong>'+(data.oferta_titlu?' · '+esc(data.oferta_titlu):'')+'</div>';
     if(!mats.length){
         html += '<div class="empty-msg" style="padding:30px;text-align:center;color:var(--gray-l)">Oferta nu are linii de materiale (echipamente).</div>';
         document.getElementById('dmBody').innerHTML = html;
@@ -541,7 +541,7 @@ function renderMateriale(data){
     mats.forEach(function(m, i){
         html += '<tr style="border-bottom:1px solid var(--gray-b)">'+
                 '<td style="padding:7px 6px;color:var(--gray-l)">'+(i+1)+'</td>'+
-                '<td style="padding:7px 6px;font-family:\'Courier New\',monospace;font-weight:700;color:#6b21a8">'+esc(m.cod||'—')+'</td>'+
+                '<td style="padding:7px 6px;font-family:\'Courier New\',monospace;font-weight:700;color:#6b21a8">'+esc(m.cod||'-')+'</td>'+
                 '<td style="padding:7px 6px">'+esc(m.denumire||'')+'</td>'+
                 '<td style="padding:7px 6px;text-align:right;font-weight:800;font-variant-numeric:tabular-nums;white-space:nowrap">'+fmtQty(m.cantitate)+' '+esc(m.um||'buc')+'</td></tr>';
     });
@@ -550,7 +550,7 @@ function renderMateriale(data){
 }
 function matLines(){
     return MAT_CACHE.map(function(m){
-        return (m.cod||'—')+'\t'+fmtQty(m.cantitate)+' '+(m.um||'buc')+'\t'+(m.denumire||'');
+        return (m.cod||'-')+'\t'+fmtQty(m.cantitate)+' '+(m.um||'buc')+'\t'+(m.denumire||'');
     }).join('\n');
 }
 function copyMateriale(){
@@ -560,12 +560,12 @@ function copyMateriale(){
 function printMateriale(){
     if(!MAT_CACHE.length) return;
     var rows = MAT_CACHE.map(function(m,i){
-        return '<tr><td>'+(i+1)+'</td><td style="font-family:monospace;font-weight:bold">'+esc(m.cod||'—')+'</td><td>'+esc(m.denumire||'')+'</td><td style="text-align:right">'+fmtQty(m.cantitate)+' '+esc(m.um||'buc')+'</td></tr>';
+        return '<tr><td>'+(i+1)+'</td><td style="font-family:monospace;font-weight:bold">'+esc(m.cod||'-')+'</td><td>'+esc(m.denumire||'')+'</td><td style="text-align:right">'+fmtQty(m.cantitate)+' '+esc(m.um||'buc')+'</td></tr>';
     }).join('');
     var w = window.open('', '_blank');
     if(!w){ toast('Permite pop-up pentru printare','error'); return; }
     w.document.write('<html><head><title>Listă materiale</title><style>body{font-family:Arial,sans-serif;padding:20px}h2{margin:0 0 12px}table{width:100%;border-collapse:collapse;font-size:13px}th,td{border:1px solid #ccc;padding:6px 8px;text-align:left}th{background:#f1f5f9}</style></head><body>'+
-        '<h2>Listă materiale — comandă</h2>'+
+        '<h2>Listă materiale pentru comandă</h2>'+
         '<table><thead><tr><th>#</th><th>Cod produs</th><th>Denumire</th><th style="text-align:right">Cant.</th></tr></thead><tbody>'+rows+'</tbody></table>'+
         '<scr'+'ipt>window.onload=function(){window.print();}</scr'+'ipt></body></html>');
     w.document.close();
@@ -585,6 +585,6 @@ refreshData();
 <script>
 if('serviceWorker' in navigator){navigator.serviceWorker.register('../sw.js').catch(function(){});}
 </script>
-<script src="/admin/notifications.js?v=2" defer></script>
+<script src="/admin/notifications.js?v=3" defer></script>
 </body>
 </html>

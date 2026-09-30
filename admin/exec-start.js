@@ -76,7 +76,7 @@
                     if (pg.status === 'Anulat' || pg.status === 'Finalizat') return;
                     var s2 = toMin(String(pg.ora_start||'08:00').slice(0,5)), e2 = s2 + (parseFloat(pg.durata_ore)||8)*60;
                     if (!(s1 < e2 && s2 < e1)) return;
-                    var client = pg.client_nume || (proj[pg.proiect_id] && proj[pg.proiect_id].client_nume) || '—';
+                    var client = pg.client_nume || (proj[pg.proiect_id] && proj[pg.proiect_id].client_nume) || '-';
                     (pg.atribuiri||[]).forEach(function(u){
                         if (want[u]) out.push({ tech: names[u] || u, data: String(pg.data_programata).slice(0,10),
                                                 de: hhmm(s2), pana: hhmm(e2), client: client });
@@ -240,7 +240,7 @@
                         warn.innerHTML = '<b>⚠️ Echipa e deja programată în acel interval</b><ul>' + shown.map(function(c){
                             return '<li><strong>'+esc(c.tech)+'</strong> · '+esc(fmt(c.data))+' '+esc(c.de)+'–'+esc(c.pana)+' · '+esc(c.client)+'</li>';
                         }).join('') + (list.length > shown.length ? '<li>… și încă '+(list.length-shown.length)+'</li>' : '') + '</ul>'
-                            + '<div style="margin-top:6px">Schimbă ora, data sau echipa — ori apasă din nou ca să programezi oricum.</div>';
+                            + '<div style="margin-top:6px">Schimbă ora, data sau echipa, ori apasă din nou ca să programezi oricum.</div>';
                         warn.style.display = 'block';
                         okBtn.textContent = '⚠️ Programează oricum'; okBtn.classList.add('force');
                     });

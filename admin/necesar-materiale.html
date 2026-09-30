@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Necesar Materiale — Portal CSSI 3.0</title>
+<title>Necesar Materiale · Portal CSSI 3.0</title>
 <meta name="robots" content="noindex, nofollow">
 <link rel="icon" type="image/x-icon" href="/images/favicon.ico">
 <meta name="theme-color" content="#dc2626">
@@ -225,7 +225,7 @@ mark{background:#fef08a;color:var(--dark);padding:0 2px;border-radius:3px;font-w
             <div class="page-subtitle">
                 <span id="syncStatus"><span class="sync-indicator sync-off"></span>Date locale</span>
                 <span class="sub-sep">·</span>
-                <span id="lastRefreshLabel">—</span>
+                <span id="lastRefreshLabel">-</span>
             </div>
         </div>
         <div class="page-actions">
@@ -327,7 +327,7 @@ function toast(msg, type){
 }
 function countTotalLinii(){var n=0;STATE.data.forEach(function(c){c.oferte.forEach(function(o){n+=o.linii.length});});return n;}
 function relTime(d){
-    if(!d) return '—';
+    if(!d) return '-';
     var diff = Math.floor((Date.now()-d)/1000);
     if(diff<5) return 'acum';
     if(diff<60) return 'acum '+diff+'s';
@@ -349,7 +349,7 @@ function updateSync(state){
     if(state==='loading') el.innerHTML='<span class="sync-indicator sync-loading"></span>Se încarcă...';
     else if(STATE.isLive) el.innerHTML='<span class="sync-indicator sync-ok"></span>MySQL · '+countTotalLinii()+' materiale';
     else el.innerHTML='<span class="sync-indicator sync-off"></span>Indisponibil';
-    document.getElementById('lastRefreshLabel').textContent = STATE.lastRefresh ? 'Actualizat '+relTime(STATE.lastRefresh) : '—';
+    document.getElementById('lastRefreshLabel').textContent = STATE.lastRefresh ? 'Actualizat '+relTime(STATE.lastRefresh) : '-';
 }
 setInterval(function(){ if(STATE.lastRefresh) document.getElementById('lastRefreshLabel').textContent='Actualizat '+relTime(STATE.lastRefresh); }, 15000);
 
@@ -477,8 +477,8 @@ function numeFurnizor(n){ return n===FURNIZOR_NEALOCAT ? '❓ De alocat' : n; }
 // Text simplu, pentru lipit în email/WhatsApp către distribuitor.
 function textComanda(grup){
     var linii = grup.items.map(function(it){
-        var b = (it.cod ? it.cod + ' — ' : '') + plainText(it.denumire);
-        return b + ' — ' + fmtQty(it.cantitate) + ' ' + it.um;
+        var b = (it.cod ? it.cod + ' · ' : '') + plainText(it.denumire);
+        return b + ' · ' + fmtQty(it.cantitate) + ' ' + it.um;
     });
     return numeFurnizor(grup.furnizor) + '\n' + linii.join('\n');
 }
@@ -544,7 +544,7 @@ function renderComanda(filtered){
              +  '<div class="cmd-group-meta">'+g.items.length+' poziții · '+fmtQty(buc)+' buc.</div>'
              +  '<button type="button" class="btn-copy" onclick="copiazaComanda('+gi+')" title="Copiază lista pentru acest furnizor">📋 Copiază lista</button></div>';
         if(nealocat){
-            html += '<div class="cmd-hint">Alege distribuitorul pentru fiecare poziție — se ține minte pentru toate comenzile viitoare.</div>';
+            html += '<div class="cmd-hint">Alege distribuitorul pentru fiecare poziție, se ține minte pentru toate comenzile viitoare.</div>';
         }
         html += '<div class="mat-table-wrap"><table class="mat-table"><thead><tr>'
              +  '<th style="width:20%">Cod</th><th>Denumire</th><th style="width:60px">UM</th>'
@@ -553,7 +553,7 @@ function renderComanda(filtered){
         g.items.forEach(function(it){
             var f = getFilters();
             html += '<tr>';
-            html += '<td>'+(it.cod?'<span class="mat-cod">'+highlight(it.cod,f.q)+'</span>':'<span class="mat-cod empty">— fără cod —</span>')+'</td>';
+            html += '<td>'+(it.cod?'<span class="mat-cod">'+highlight(it.cod,f.q)+'</span>':'<span class="mat-cod empty">fără cod</span>')+'</td>';
             html += '<td><div class="mat-denumire" title="'+esc(plainText(it.denumire))+'">'+highlight(plainText(it.denumire),f.q)+'</div>';
             if(it.link) html += '<a class="mat-link" href="'+esc(it.link)+'" target="_blank" rel="noopener noreferrer">🔗 '+esc(linkDomain(it.link))+'</a>';
             html += '</td>';
@@ -562,7 +562,7 @@ function renderComanda(filtered){
             html += '<td>';
             if(it.cod){
                 var cur = STATE.furnizori[it.cod] || '';
-                var opts = '<option value="'+FURNIZOR_NEALOCAT+'"'+(cur?'':' selected')+'>— alege —</option>';
+                var opts = '<option value="'+FURNIZOR_NEALOCAT+'"'+(cur?'':' selected')+'>alege</option>';
                 var lista = DISTRIBUITORI.slice();
                 if(cur && lista.indexOf(cur)<0) lista.push(cur);   // păstrează valori venite din link
                 lista.forEach(function(d){
@@ -574,7 +574,7 @@ function renderComanda(filtered){
             }
             html += '</td>';
             var titluri = it.surse.map(function(s){
-                return (s.proiect||'?')+' · '+s.client+(s.obiectiv?' · '+s.obiectiv:'')+' — '+fmtQty(s.cant)+' '+it.um+(s.comandat?' (comandat)':'');
+                return (s.proiect||'?')+' · '+s.client+(s.obiectiv?' · '+s.obiectiv:'')+' · '+fmtQty(s.cant)+' '+it.um+(s.comandat?' (comandat)':'');
             }).join('\n');
             html += '<td><span class="cmd-proiecte" title="'+esc(titluri)+'">'+it.surse.length+' '+(it.surse.length===1?'proiect':'proiecte')+'</span></td>';
             html += '</tr>';
@@ -754,7 +754,7 @@ function render(){
                     // ca să poată fi găsit de cine face comanda.
                     var codDisplay = l.cod
                         ? '<span class="mat-cod">'+highlight(l.cod, f.q)+'</span>'
-                        : (isSafeLink ? '<span class="mat-cod empty">— produs extern —</span>' : '<span class="mat-cod empty">— fără cod —</span>');
+                        : (isSafeLink ? '<span class="mat-cod empty">produs extern</span>' : '<span class="mat-cod empty">fără cod</span>');
                     var den = l.denumire||'';
                     html += '<tr>';
                     html += '<td>'+codDisplay+'</td>';
@@ -878,11 +878,11 @@ if('serviceWorker' in navigator){
     var __reloaded=false;
     navigator.serviceWorker.addEventListener('controllerchange',function(){
         if(__reloaded)return;__reloaded=true;
-        console.log('[PWA] SW nou activ — reload pentru cache curat');
+        console.log('[PWA] SW nou activ, reload pentru cache curat');
         window.location.reload();
     });
 }
 </script>
-<script src="/admin/notifications.js?v=2" defer></script>
+<script src="/admin/notifications.js?v=3" defer></script>
 </body>
 </html>

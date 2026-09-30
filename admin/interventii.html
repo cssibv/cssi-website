@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Intervenții & Reparații — Portal CSSI 3.0</title>
+<title>Intervenții & Reparații · Portal CSSI 3.0</title>
 <meta name="robots" content="noindex, nofollow">
 <link rel="icon" type="image/x-icon" href="/images/favicon.ico">
 <meta name="theme-color" content="#9333ea">
@@ -233,7 +233,7 @@ a{text-decoration:none;color:inherit;}button{font-family:inherit;cursor:pointer;
                     <button type="button" class="seg-btn" id="segCliNou" onclick="setCliMode('nou')">➕ Client nou</button>
                 </div>
                 <div id="cliExistBlock">
-                    <select class="form-select" id="iClientId"><option value="">— Alege client —</option></select>
+                    <select class="form-select" id="iClientId"><option value="">Alege client</option></select>
                 </div>
                 <div id="cliNouBlock" style="display:none">
                     <input type="text" class="form-input" id="iClientNume" placeholder="Nume client / firmă" style="margin-bottom:6px">
@@ -306,7 +306,7 @@ a{text-decoration:none;color:inherit;}button{font-family:inherit;cursor:pointer;
                     </div>
                 </div>
             </div>
-            <div id="laterHint" style="display:none;font-size:12px;color:#9a3412;background:#fff7ed;border-radius:8px;padding:8px 12px;margin-bottom:14px">🕓 Intervenție „de programat" — apare în listă fără dată; o programezi mai târziu (buton 📅) când te sincronizezi cu clientul.</div>
+            <div id="laterHint" style="display:none;font-size:12px;color:#9a3412;background:#fff7ed;border-radius:8px;padding:8px 12px;margin-bottom:14px">🕓 Intervenție „de programat", apare în listă fără dată; o programezi mai târziu (buton 📅) când te sincronizezi cu clientul.</div>
             <div class="form-group">
                 <label class="form-label">Echipa / tehnicieni</label>
                 <div class="tech-pick" id="iTehnicieni"></div>
@@ -604,7 +604,7 @@ function cardHtml(it){
     });
     // Intervenție activă fără programare → invită la programare (apare apoi în calendar)
     if(!fin && !(it.programari&&it.programari.length)){
-        h+='<div class="icard-prg deprogramat" onclick="openNewPrg('+it.proiect_db_id+')">🗓️ De programat — adaugă în calendar</div>';
+        h+='<div class="icard-prg deprogramat" onclick="openNewPrg('+it.proiect_db_id+')">🗓️ De programat, adaugă în calendar</div>';
     }
     if(team.length){
         h+='<div class="icard-team">'+team.map(function(uid){return '<span class="team-chip"><span class="av">'+techInitial(uid)+'</span>'+esc(techName(uid))+'</span>';}).join('')+'</div>';
@@ -615,7 +615,7 @@ function cardHtml(it){
     h+='<div class="icard-actions">';
     h+='<button class="act-btn detail" onclick="openDetail('+it.proiect_db_id+')" title="Deschide detalii">ℹ️ Detalii</button>';
     h+='<button class="act-btn pv" onclick="openPv('+it.proiect_db_id+')">📄 '+(it.pv?'Vezi/Editează PV':'Completează PV')+'</button>';
-    h+='<button class="act-btn blank" onclick="printBlankPv('+it.proiect_db_id+')" title="PV gol — de completat/printat pentru teren">🖨️ PV gol</button>';
+    h+='<button class="act-btn blank" onclick="printBlankPv('+it.proiect_db_id+')" title="PV gol, de completat/printat pentru teren">🖨️ PV gol</button>';
     if(!fin) h+='<button class="act-btn prg" onclick="openNewPrg('+it.proiect_db_id+')" title="Adaugă programare echipă">📅</button>';
     if(it.adresa_obiectiv) h+='<a class="act-btn waze" href="'+wazeUrl(it.adresa_obiectiv)+'" target="_blank" rel="noopener" title="Navighează cu Waze">🚗</a>';
     if(!isTehnician) h+='<button class="act-btn del" onclick="deleteInterventie('+it.proiect_db_id+')" title="Șterge intervenția">🗑️</button>';
@@ -644,7 +644,7 @@ function openDetail(pid){
     h+='<div style="font-weight:700;font-size:12px;margin:12px 0 4px">📅 Programări</div>';
     if(prgs.length){ prgs.forEach(function(p){
         h+='<div class="icard-prg" onclick="closeDetail();openEditPrg('+p.id+','+it.proiect_db_id+')"><span class="prg-when">'+fmtDate(p.data_programata)+' · '+fmtTime(p.ora_start)+((p.atribuiri&&p.atribuiri.length)?' · '+p.atribuiri.map(techName).join(', '):'')+'</span><span class="prg-st '+statusKey(p.status)+'">'+esc(p.status)+'</span></div>';
-    }); } else { h+='<div style="font-size:12px;color:var(--orange)">🗓️ Neprogramată — nu apare încă în calendar</div>'; }
+    }); } else { h+='<div style="font-size:12px;color:var(--orange)">🗓️ Neprogramată, nu apare încă în calendar</div>'; }
     if(it.pv) h+='<div class="pv-badge" style="margin-top:8px">📄 '+esc(it.pv.pv_nr||'PV')+' · '+esc(it.pv.stare_finala||'')+'</div>';
     h+='<div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:16px">';
     h+='<button class="act-btn pv" style="flex:1;justify-content:center" onclick="closeDetail();openPv('+it.proiect_db_id+')">📄 '+(it.pv?'Vezi/Editează PV':'Completează PV')+'</button>';
@@ -707,7 +707,7 @@ function openInterventieModal(){
     if(!_clientiLoaded){
         document.getElementById('iClientId').innerHTML='<option value="">⏳ Se încarcă...</option>';
         fetch(API_DB+'?action=getClienti&_t='+Date.now(),{credentials:'include'}).then(function(r){return r.json();}).then(function(res){
-            var opts='<option value="">— Alege client —</option>';
+            var opts='<option value="">Alege client</option>';
             if(res.success&&res.data){
                 res.data.sort(function(a,b){return (a.nume||'').localeCompare(b.nume||'');});
                 res.data.forEach(function(c){opts+='<option value="'+c.id+'">'+esc(c.nume)+(c.telefon?' · '+esc(c.telefon):'')+'</option>';});
@@ -923,7 +923,7 @@ function printPv(){
     var p=STATE.prestator||{}, proj=(PV_CTX&&PV_CTX.proiect)||{};
     var mats=readMateriale();
     var matRows=mats.length?mats.map(function(m,i){return '<tr><td>'+(i+1)+'</td><td>'+esc(m.denumire)+'</td><td style="text-align:center">'+esc(m.cant||'')+'</td><td style="text-align:center">'+esc(m.um||'')+'</td></tr>';}).join('')
-        :'<tr><td colspan="4" style="text-align:center;color:#888">— fără materiale —</td></tr>';
+        :'<tr><td colspan="4" style="text-align:center;color:#888">fără materiale</td></tr>';
     var sig=sigDataUrl();
     var nr=document.getElementById('pvNr').value||'';
     var dataPv=document.getElementById('pvData').value||todayStr();
@@ -1051,7 +1051,7 @@ function importReclamatii(){
         .then(function(res){
             if(!res.success) throw new Error(res.error||'Eroare');
             var r=res.data||{};
-            if(!r.total){ toast('✅ Nimic de importat — totul e deja în Intervenții','info'); return null; }
+            if(!r.total){ toast('✅ Nimic de importat, totul e deja în Intervenții','info'); return null; }
             if(!confirm('Mut '+r.total+' reclamații ca intervenții?\n\nFiecare e recreată ca intervenție (cu datele ei), cele cu dată apar în planificator, iar reclamația veche se șterge.')) return null;
             return fetch(API_DB+'?action=migrateReclamatii',{method:'POST',credentials:'include',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'migrateReclamatii'})})
                 .then(function(r2){return r2.json();})
@@ -1080,6 +1080,6 @@ if('serviceWorker' in navigator){
     navigator.serviceWorker.register('../sw.js').then(function(r){console.log('[PWA] SW registered:',r.scope)}).catch(function(e){console.log('[PWA] SW failed:',e)});
 }
 </script>
-<script src="/admin/notifications.js?v=2" defer></script>
+<script src="/admin/notifications.js?v=3" defer></script>
 </body>
 </html>

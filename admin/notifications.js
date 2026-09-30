@@ -156,7 +156,7 @@
             html += '>';
             html += '<button type="button" class="cssi-notif-x" title="Închide notificarea" aria-label="Închide notificarea">✕</button>';
             html += '<div style="flex:1">';
-            html += '<div>' + escHtml(n.mesaj) + '</div>';
+            html += '<div>' + escHtml(String(n.mesaj == null ? '' : n.mesaj).replace(/\s*—\s*/g, ' · ')) + '</div>';
             html += '<div class="time">' + fmtAgo(n.created_at);
             if (n.cod_proiect) html += ' · ' + escHtml(n.cod_proiect);
             if (n.preluat_de) html += ' · ✅ ' + escHtml(n.preluat_de);

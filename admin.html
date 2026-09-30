@@ -377,7 +377,7 @@ a{text-decoration:none;color:inherit;}button{font-family:inherit;cursor:pointer;
             </div>
             <div class="form-group"><label class="form-label">Serviciu <span class="req">*</span></label>
                 <select class="form-select" name="serviciu" required>
-                    <option value="">— Alege serviciul —</option>
+                    <option value="">Alege serviciul</option>
                     <option value="Detecție Incendiu">🔥 Detecție Incendiu</option>
                     <option value="Alarmă Antiefracție">🚨 Alarmă Antiefracție</option>
                     <option value="Supraveghere Video">📹 Supraveghere Video</option>
@@ -485,38 +485,38 @@ var TECHNICIANS=['zoli','sanyi','bogdan','cezar','cristi','denes'];
 
 // ═══════ ROLE CONFIG ═══════
 var ROLES={
-    admin:{name:"Administrator",greeting:"👋 Salut, Admin!",sub:"Acces total — toate modulele portalului",pill:"🔑 Admin",gradient:"admin",
+    admin:{name:"Administrator",greeting:"👋 Salut, Admin!",sub:"Acces total, toate modulele portalului",pill:"🔑 Admin",gradient:"admin",
         actions:[{l:"+ Proiect Nou",h:"javascript:openModal()",i:"📋"},{l:"Board Proiecte",h:"/admin/proiecte.html",i:"📌"},{l:"CRM Clienți",h:"/admin/crm-clienti.html",i:"💰"},{l:"Financiar",h:"/admin/financiar.html",i:"💳"},{l:"Mentenanță",h:"/admin/mentenanta.html",i:"🔄"}],
         showKanban:true,showKpi:true,showQuick:true,showAlerts:true},
-    mihai:{name:"Mihai",greeting:"👋 Salut, Mihai!",sub:"Ofertare · Vânzări · Acces complet",pill:"💰 Mihai — Ofertare",gradient:"admin",
+    mihai:{name:"Mihai",greeting:"👋 Salut, Mihai!",sub:"Ofertare · Vânzări · Acces complet",pill:"💰 Mihai · Ofertare",gradient:"admin",
         actions:[{l:"Oferte",h:"/admin/calculator-pret.html",i:"📝"},{l:"CRM Clienți",h:"/admin/crm-clienti.html",i:"💰"},{l:"+ Proiect Nou",h:"javascript:openModal()",i:"📋"},{l:"Board Proiecte",h:"/admin/proiecte.html",i:"📌"},{l:"Financiar",h:"/admin/financiar.html",i:"💳"}],
         showKanban:true,showKpi:true,showQuick:true,showAlerts:true},
-    roxana:{name:"Roxana",greeting:"👋 Salut, Roxana!",sub:"Contractare · Facturare · Acces complet",pill:"📋 Roxana — Contracte",gradient:"admin",
+    roxana:{name:"Roxana",greeting:"👋 Salut, Roxana!",sub:"Contractare · Facturare · Acces complet",pill:"📋 Roxana · Contracte",gradient:"admin",
         actions:[{l:"Board Proiecte",h:"/admin/proiecte.html",i:"📌"},{l:"Financiar",h:"/admin/financiar.html",i:"💳"},{l:"CRM Clienți",h:"/admin/crm-clienti.html",i:"💰"},{l:"Documente",h:"/admin/documente.html",i:"📁"},{l:"Mentenanță",h:"/admin/mentenanta.html",i:"🔄"}],
         showKanban:true,showKpi:true,showQuick:true,showAlerts:true},
-    valentin:{name:"Valentin",greeting:"👋 Salut, Valentin!",sub:"Proiectare · Execuție · Acces complet",pill:"📐 Valentin — Proiectare",gradient:"admin",
+    valentin:{name:"Valentin",greeting:"👋 Salut, Valentin!",sub:"Proiectare · Execuție · Acces complet",pill:"📐 Valentin · Proiectare",gradient:"admin",
         actions:[{l:"Proiectare",h:"/admin/proiectare.html",i:"📐"},{l:"Board Proiecte",h:"/admin/proiecte.html",i:"📌"},{l:"Execuție",h:"/admin/executie.html",i:"🔧"},{l:"Materiale",h:"/admin/materiale.html",i:"📦"},{l:"Necesar",h:"/admin/necesar-materiale.html",i:"🛒"}],
         showKanban:true,showKpi:true,showQuick:true,showAlerts:true},
-    cristina:{name:"Cristina",greeting:"👋 Salut, Cristina!",sub:"Lead-uri · Prospectare · Acces complet",pill:"📞 Cristina — Lead-uri",gradient:"admin",
+    cristina:{name:"Cristina",greeting:"👋 Salut, Cristina!",sub:"Lead-uri · Prospectare · Acces complet",pill:"📞 Cristina · Lead-uri",gradient:"admin",
         actions:[{l:"+ Lead Nou",h:"javascript:openModal()",i:"📞"},{l:"CRM Clienți",h:"/admin/crm-clienti.html",i:"💰"},{l:"Board Proiecte",h:"/admin/proiecte.html",i:"📌"},{l:"Oferte",h:"/admin/calculator-pret.html",i:"📝"},{l:"Marketing",h:"/admin/marketing.html",i:"📊"}],
         showKanban:true,showKpi:true,showQuick:true,showAlerts:true},
     // ═══ TEHNICIENI — echipa de execuție pe teren ═══
-    zoli:{name:"Zoli",greeting:"👋 Salut, Zoli!",sub:"Tehnician execuție · Lucrări pe teren",pill:"🔧 Zoli — Execuție",gradient:"tech",
+    zoli:{name:"Zoli",greeting:"👋 Salut, Zoli!",sub:"Tehnician execuție · Lucrări pe teren",pill:"🔧 Zoli · Execuție",gradient:"tech",
         actions:[{l:"Execuția mea",h:"/admin/executie.html",i:"🔧"},{l:"Programul meu",h:"/admin/planificare.html",i:"📅"},{l:"Necesar materiale",h:"/admin/necesar-materiale.html",i:"🛒"}],
         showKanban:false,showKpi:false,showQuick:false,showAlerts:true},
-    sanyi:{name:"Sanyi",greeting:"👋 Salut, Sanyi!",sub:"Tehnician execuție · Lucrări pe teren",pill:"🔧 Sanyi — Execuție",gradient:"tech",
+    sanyi:{name:"Sanyi",greeting:"👋 Salut, Sanyi!",sub:"Tehnician execuție · Lucrări pe teren",pill:"🔧 Sanyi · Execuție",gradient:"tech",
         actions:[{l:"Execuția mea",h:"/admin/executie.html",i:"🔧"},{l:"Programul meu",h:"/admin/planificare.html",i:"📅"},{l:"Necesar materiale",h:"/admin/necesar-materiale.html",i:"🛒"}],
         showKanban:false,showKpi:false,showQuick:false,showAlerts:true},
-    bogdan:{name:"Bogdan",greeting:"👋 Salut, Bogdan!",sub:"Tehnician execuție · Lucrări pe teren",pill:"🔧 Bogdan — Execuție",gradient:"tech",
+    bogdan:{name:"Bogdan",greeting:"👋 Salut, Bogdan!",sub:"Tehnician execuție · Lucrări pe teren",pill:"🔧 Bogdan · Execuție",gradient:"tech",
         actions:[{l:"Execuția mea",h:"/admin/executie.html",i:"🔧"},{l:"Programul meu",h:"/admin/planificare.html",i:"📅"},{l:"Necesar materiale",h:"/admin/necesar-materiale.html",i:"🛒"}],
         showKanban:false,showKpi:false,showQuick:false,showAlerts:true},
-    cezar:{name:"Cezar",greeting:"👋 Salut, Cezar!",sub:"Tehnician execuție · Lucrări pe teren",pill:"🔧 Cezar — Execuție",gradient:"tech",
+    cezar:{name:"Cezar",greeting:"👋 Salut, Cezar!",sub:"Tehnician execuție · Lucrări pe teren",pill:"🔧 Cezar · Execuție",gradient:"tech",
         actions:[{l:"Execuția mea",h:"/admin/executie.html",i:"🔧"},{l:"Programul meu",h:"/admin/planificare.html",i:"📅"},{l:"Necesar materiale",h:"/admin/necesar-materiale.html",i:"🛒"}],
         showKanban:false,showKpi:false,showQuick:false,showAlerts:true},
-    cristi:{name:"Cristi",greeting:"👋 Salut, Cristi!",sub:"Tehnician execuție · Lucrări pe teren",pill:"🔧 Cristi — Execuție",gradient:"tech",
+    cristi:{name:"Cristi",greeting:"👋 Salut, Cristi!",sub:"Tehnician execuție · Lucrări pe teren",pill:"🔧 Cristi · Execuție",gradient:"tech",
         actions:[{l:"Execuția mea",h:"/admin/executie.html",i:"🔧"},{l:"Programul meu",h:"/admin/planificare.html",i:"📅"},{l:"Necesar materiale",h:"/admin/necesar-materiale.html",i:"🛒"}],
         showKanban:false,showKpi:false,showQuick:false,showAlerts:true},
-    denes:{name:"Denes",greeting:"👋 Salut, Denes!",sub:"Tehnician execuție · Lucrări pe teren",pill:"🔧 Denes — Execuție",gradient:"tech",
+    denes:{name:"Denes",greeting:"👋 Salut, Denes!",sub:"Tehnician execuție · Lucrări pe teren",pill:"🔧 Denes · Execuție",gradient:"tech",
         actions:[{l:"Execuția mea",h:"/admin/executie.html",i:"🔧"},{l:"Programul meu",h:"/admin/planificare.html",i:"📅"},{l:"Necesar materiale",h:"/admin/necesar-materiale.html",i:"🛒"}],
         showKanban:false,showKpi:false,showQuick:false,showAlerts:true}
 };
@@ -588,12 +588,12 @@ var userRole="";  // rolul real din DB (admin/sales/org/mkt/tech)
 function buildFallbackProfile(u){
     var name = u.display_name || u.username;
     var tpl, label;
-    if (u.role === 'admin')      { tpl = ROLES.admin;    label = '🔑 ' + name + ' — Admin'; }
-    else if (u.is_tehnician)     { tpl = ROLES.zoli;     label = '🔧 ' + name + ' — Execuție'; }
-    else if (u.role === 'sales') { tpl = ROLES.mihai;    label = '💰 ' + name + ' — Vânzări'; }
-    else if (u.role === 'org')   { tpl = ROLES.roxana;   label = '📋 ' + name + ' — Organizare'; }
-    else if (u.role === 'mkt')   { tpl = ROLES.cristina; label = '📊 ' + name + ' — Marketing'; }
-    else                         { tpl = ROLES.valentin; label = '📐 ' + name + ' — Tehnic'; }
+    if (u.role === 'admin')      { tpl = ROLES.admin;    label = '🔑 ' + name + ' · Admin'; }
+    else if (u.is_tehnician)     { tpl = ROLES.zoli;     label = '🔧 ' + name + ' · Execuție'; }
+    else if (u.role === 'sales') { tpl = ROLES.mihai;    label = '💰 ' + name + ' · Vânzări'; }
+    else if (u.role === 'org')   { tpl = ROLES.roxana;   label = '📋 ' + name + ' · Organizare'; }
+    else if (u.role === 'mkt')   { tpl = ROLES.cristina; label = '📊 ' + name + ' · Marketing'; }
+    else                         { tpl = ROLES.valentin; label = '📐 ' + name + ' · Tehnic'; }
     return Object.assign({}, tpl, { name: name, greeting: '👋 Salut, ' + name + '!', pill: label });
 }
 function doLogin(e){
@@ -782,7 +782,7 @@ function renderDeFacut(){
     // Proiecte nepreluate (orice etapă activă, mai puțin Lead)
     PROJECTS.forEach(function(p){
         if(!p.preluat_de&&p.status!=='Lead'&&CLOSED_STATUSES.indexOf(p.status)<0){
-            items.push({icon:'⚠️',text:p.id+' ('+p.client+') — nepreluat',color:'var(--red)',link:'/admin/proiecte.html'});
+            items.push({icon:'⚠️',text:p.id+' ('+p.client+'), nepreluat',color:'var(--red)',link:'/admin/proiecte.html'});
         }
     });
 
@@ -793,7 +793,7 @@ function renderDeFacut(){
         var days=Math.floor((now-new Date(String(ref).replace(' ','T')).getTime())/86400000);
         var prag=STUCK_DAYS[p.status]||14;
         if(days>prag){
-            items.push({icon:'⏰',text:p.id+' ('+p.client+') — '+days+'z fără mișcare pe '+p.status,color:'var(--orange)',link:'/admin/proiecte.html'});
+            items.push({icon:'⏰',text:p.id+' ('+p.client+') · '+days+'z fără mișcare pe '+p.status,color:'var(--orange)',link:'/admin/proiecte.html'});
         }
     });
 
@@ -820,7 +820,7 @@ function loadAlerte(){
             EXTRA_ALERTE=(res.data||[]).map(function(g){
                 var z=Number(g.zile_ramase);
                 var txt=z<0?('garanție EXPIRATĂ acum '+Math.abs(z)+'z'):('garanție expiră în '+z+'z');
-                return {icon:'🛡️',text:(g.proiect_id||'')+' ('+(g.client_nume||'')+') — '+txt,color:z<0?'var(--red)':'var(--orange)',link:'/admin/mentenanta.html'};
+                return {icon:'🛡️',text:(g.proiect_id||'')+' ('+(g.client_nume||'')+') · '+txt,color:z<0?'var(--red)':'var(--orange)',link:'/admin/mentenanta.html'};
             });
             renderDeFacut();
         }).catch(function(){});
@@ -838,7 +838,7 @@ function renderKanban(){
         var sumaHtml=sumaCol>0?'<div class="kcol-suma">'+fmtRONShort(sumaCol)+'</div>':'';
         col.innerHTML='<div class="kcol-head '+st.cls+'"><span class="kcol-name">'+st.icon+' '+st.name+'</span><span class="kcol-count">'+prj.length+'</span></div>'+sumaHtml;
         var body=document.createElement('div');body.className='kcol-body';
-        if(!prj.length){body.innerHTML='<div class="kanban-empty">—</div>'}
+        if(!prj.length){body.innerHTML='<div class="kanban-empty">-</div>'}
         else{prj.forEach(function(p){
             var t=SERVICE_TAGS[p.serviciu]||{cls:"install",s:p.serviciu};
             var isNepreluat=!p.preluat_de&&p.status!=='Lead';
@@ -852,7 +852,7 @@ function renderKanban(){
             var srcInfo=SRC_INFO[p.valoareSursa]||SRC_INFO.estimata;
             var valHtml=p.valoare>0
                 ? '<div class="kcard-val" title="Sursă: '+srcInfo.lbl+'">'+srcInfo.ic+' '+p.valoare.toLocaleString('ro-RO')+' RON</div>'
-                : '<div class="kcard-val" style="color:var(--gray-l);font-weight:500">— fără valoare —</div>';
+                : '<div class="kcard-val" style="color:var(--gray-l);font-weight:500">fără valoare</div>';
             c.innerHTML='<div class="kcard-id">'+p.id+'</div><div class="kcard-title">'+p.client+'</div><div class="kcard-meta"><span class="kcard-tag '+t.cls+'">'+t.s+'</span><span>📍 '+p.loc+'</span></div>'+valHtml+preluatHtml;
             c.title='Click pentru fișa completă client + proiect';
             (function(prj){c.onclick=function(){openCardFull(prj);};})(p);
@@ -919,7 +919,7 @@ function renderCardFull(d,prj,err){
     var html='';
     html+='<div class="cf-hero">';
     html+='<div class="cf-tip">'+cfEsc(c.tip||'Client')+(c.cui?' · CUI: '+cfEsc(c.cui):'')+'</div>';
-    html+='<div class="cf-nm">'+cfEsc(c.nume||prj.client||'—')+'</div>';
+    html+='<div class="cf-nm">'+cfEsc(c.nume||prj.client||'-')+'</div>';
     var cb=[], tel=c.telefon||prj.telefon;
     if(tel) cb.push('📞 <a href="tel:'+cfEsc(tel)+'">'+cfEsc(tel)+'</a>');
     if(c.email) cb.push('✉️ <a href="mailto:'+cfEsc(c.email)+'">'+cfEsc(c.email)+'</a>');
@@ -929,7 +929,7 @@ function renderCardFull(d,prj,err){
     html+='</div>';
     var days=cfDaysAgo(prj.dataCreare);
     html+='<div class="cf-prj">';
-    html+='<div class="cf-prj-top"><span class="cf-prj-nr">'+cfEsc(prj.id)+'</span><span>'+cfEsc(prj.serviciu||'—')+'</span><span class="cf-badge" style="background:#dbeafe;color:#1d4ed8">'+cfEsc(prj.status)+'</span>';
+    html+='<div class="cf-prj-top"><span class="cf-prj-nr">'+cfEsc(prj.id)+'</span><span>'+cfEsc(prj.serviciu||'-')+'</span><span class="cf-badge" style="background:#dbeafe;color:#1d4ed8">'+cfEsc(prj.status)+'</span>';
     if(prj.status!=='Lead'){
         if(prj.preluat_de) html+='<span class="cf-badge verde">✅ '+cfEsc(prj.preluat_de)+'</span>';
         else html+='<span class="cf-badge rosu">⚠️ Nepreluat</span>';
@@ -981,7 +981,7 @@ function renderCardFull(d,prj,err){
         else{d.proiecte.forEach(function(p){
             var cur=(p.proiect_id===prj.id)?' current':'';
             html+='<div class="cf-row'+cur+'" onclick="window.open(\'/admin/proiecte.html\',\'_self\')">';
-            html+='<span class="ico">📐</span><div class="info"><span class="nr">'+cfEsc(p.proiect_id||('#'+p.id))+'</span> <span class="meta">· '+cfEsc(p.serviciu||'—')+'</span>';
+            html+='<span class="ico">📐</span><div class="info"><span class="nr">'+cfEsc(p.proiect_id||('#'+p.id))+'</span> <span class="meta">· '+cfEsc(p.serviciu||'-')+'</span>';
             if(p.adresa_obiectiv) html+='<div class="name">📍 '+cfEsc(p.adresa_obiectiv)+'</div>';
             html+='</div><span class="pill" style="background:#dbeafe;color:#1d4ed8">'+cfEsc(p.status)+'</span>';
             if(p.valoare_contract>0) html+='<span class="rval">'+cfMoney(p.valoare_contract)+'</span>';
@@ -991,7 +991,7 @@ function renderCardFull(d,prj,err){
         if(d.mentenante&&d.mentenante.length){
             html+='<div class="cf-section"><div class="cf-section-title">🔄 Mentenanță <span class="badge-num">'+d.mentenante.length+'</span></div>';
             d.mentenante.forEach(function(m){
-                html+='<div class="cf-row"><span class="ico">🔄</span><div class="info"><div class="name">'+cfEsc(m.tip||'Mentenanță')+'</div><div class="meta">Scadență: '+(m.data_scadenta?cfDate(m.data_scadenta):'—')+'</div></div><span class="pill" style="background:#dcfce7;color:#166534">'+cfEsc(m.status||'')+'</span></div>';
+                html+='<div class="cf-row"><span class="ico">🔄</span><div class="info"><div class="name">'+cfEsc(m.tip||'Mentenanță')+'</div><div class="meta">Scadență: '+(m.data_scadenta?cfDate(m.data_scadenta):'-')+'</div></div><span class="pill" style="background:#dcfce7;color:#166534">'+cfEsc(m.status||'')+'</span></div>';
             });
             html+='</div>';
         }
@@ -1234,7 +1234,7 @@ res.data.forEach(function(n){
 var cls=n.citit?'':'unread';
 var ago='';var diff=(Date.now()/1000)-new Date(n.created_at).getTime()/1000;
 if(diff<60)ago='Acum';else if(diff<3600)ago=Math.floor(diff/60)+'m';else if(diff<86400)ago=Math.floor(diff/3600)+'h';else if(diff<172800)ago='Ieri';else ago=Math.floor(diff/86400)+'z';
-html+='<div class="notif-item '+cls+'" onclick="markNotifRead('+n.id+',this)"><button type="button" class="notif-x" title="Închide notificarea" aria-label="Închide notificarea" onclick="event.stopPropagation();hideNotif('+n.id+',this.parentNode)">✕</button><div style="flex:1"><div>'+n.mesaj+'</div><div class="notif-time">'+ago;
+html+='<div class="notif-item '+cls+'" onclick="markNotifRead('+n.id+',this)"><button type="button" class="notif-x" title="Închide notificarea" aria-label="Închide notificarea" onclick="event.stopPropagation();hideNotif('+n.id+',this.parentNode)">✕</button><div style="flex:1"><div>'+String(n.mesaj==null?'':n.mesaj).replace(/\s*—\s*/g,' · ')+'</div><div class="notif-time">'+ago;
 if(n.preluat_de){html+=' · ✅ Preluat: '+n.preluat_de;}
 else if(n.etapa_noua&&n.tip==='status_change'){html+=' · <button class="notif-btn" style="background:var(--blue);color:#fff" onclick="event.stopPropagation();preiaProiect(\''+n.proiect_id+'\')">🤚 Preia</button>';}
 html+='</div></div></div>';
@@ -1364,7 +1364,7 @@ if('serviceWorker' in navigator){
     var refreshed=false;
     navigator.serviceWorker.addEventListener('controllerchange',function(){
         if(refreshed)return;refreshed=true;
-        console.log('[PWA] SW nou activ — reload pentru cache curat');
+        console.log('[PWA] SW nou activ, reload pentru cache curat');
         window.location.reload();
     });
 }
