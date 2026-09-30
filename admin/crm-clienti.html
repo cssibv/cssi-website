@@ -259,14 +259,21 @@ tr:hover td{background:rgba(59,130,246,0.03);}
 .xc-pick-ev::after{content:'›';position:absolute;right:12px;top:50%;transform:translateY(-50%);font-size:22px;font-weight:700;color:var(--gray-l);}
 .xc-pick-ev:hover{border-color:var(--teal);}.xc-pick-ev.int:hover{border-color:var(--orange);}
 .xc-pick-ev:hover::after{color:var(--dark);}
-.xc-cell.out:hover{background:#475569;}
-.xc-cell.today{box-shadow:inset 0 0 0 3px var(--blue);}
-.xc-cell .n{font-size:12px;font-weight:800;color:var(--dark);margin-bottom:3px;}
-.xc-cell{position:relative;}
-.xc-dn{position:absolute;left:0;right:0;top:50%;transform:translateY(-35%);text-align:center;font-size:24px;font-weight:900;color:var(--dark);line-height:1;pointer-events:none;}
-.xc-cell.out .xc-dn{color:#cbd5e1;}
-.xc-dbar{position:absolute;left:6px;right:6px;bottom:6px;height:5px;border-radius:3px;overflow:hidden;display:flex;background:var(--gray-b);pointer-events:none;}
-.xc-dbar i{display:block;height:100%;}
+/* Calendar lunar ca hartă de încărcare: fundalul căsuței arată cât de plină e ziua */
+.xc-cell{position:relative;background:#fff;}
+.xc-cell.we{background:#f8fafc;}
+.xc-cell.h1{background:#f0fdfa;}.xc-cell.h2{background:#ccfbf1;}.xc-cell.h3{background:#99f6e4;}.xc-cell.h4{background:#5eead4;}
+.xc-cell:hover{background:#fff;filter:brightness(0.97);}
+.xc-cell.out{background:rgba(255,255,255,0.06);}.xc-cell.out .n{color:#64748b;}
+.xc-cell.out:hover{background:rgba(255,255,255,0.1);filter:none;}
+.xc-cell .n{font-size:12px;font-weight:700;color:var(--dark);width:22px;height:22px;display:flex;align-items:center;justify-content:center;border-radius:50%;margin:-2px 0 0 -2px;}
+.xc-cell.today .n{background:var(--blue);color:#fff;}
+.xc-dcnt{position:absolute;left:8px;bottom:6px;font-size:12px;font-weight:800;color:#134e4a;pointer-events:none;}
+.xc-dcnt span{font-weight:600;color:#0f766e;}
+.xc-div{position:absolute;right:6px;top:6px;display:flex;align-items:center;gap:3px;font-size:11px;font-weight:800;color:#c2410c;pointer-events:none;}
+.xc-div i{width:7px;height:7px;border-radius:50%;background:var(--orange);}
+.xc-heat{display:inline-flex;align-items:center;gap:3px;}
+.xc-heat i{width:12px;height:10px;border-radius:3px;margin:0!important;}
 .xc-type{display:inline-block;padding:6px 12px;border-radius:10px;font-size:13px;font-weight:800;margin-bottom:12px;background:#ccfbf1;color:#0f766e;}
 .xc-type.int{background:#ffedd5;color:#c2410c;}
 .xc-tech{display:flex;flex-wrap:wrap;gap:8px;}
@@ -303,7 +310,6 @@ tr:hover td{background:rgba(59,130,246,0.03);}
   .xc-day{min-height:0;}
   .xc-empty{padding-top:0;text-align:left;}
   .xc-cell{min-height:64px;}
-  .xc-dn{font-size:20px;}
 }
 </style>
 <script src="/admin/access-guard.js" defer></script>
@@ -544,13 +550,15 @@ tr:hover td{background:rgba(59,130,246,0.03);}
   .card-actions{flex-wrap:wrap;}
   .card-actions select{min-width:0;}
 
-  /* Calendar lunar: numărul coborât sub ziua lunii, ca să nu se atingă */
+  /* Calendar lunar pe telefon: doar numărul, centrat jos; intervențiile ca punct */
   .xc{padding:12px;}
   .xc-month{gap:3px;}
-  .xc-cell{min-height:52px;padding:4px;border-radius:6px;}
-  .xc-cell .n{font-size:11px;margin-bottom:2px;}
-  .xc-dn{top:auto;bottom:11px;transform:none;font-size:17px;}
-  .xc-dbar{left:4px;right:4px;bottom:4px;height:4px;}
+  .xc-cell{min-height:54px;padding:4px;border-radius:6px;}
+  .xc-cell .n{font-size:11px;width:19px;height:19px;margin:-1px 0 0 -1px;}
+  .xc-dcnt{left:0;right:0;bottom:5px;text-align:center;font-size:14px;}
+  .xc-dcnt span{display:none;}
+  .xc-div{top:5px;right:4px;}
+  .xc-div span{display:none;}
 }
 </style>
 
@@ -1622,7 +1630,9 @@ function xcRender(){
         + '<button class="xc-add" onclick="xcOpenAdd()">+ Intervenție</button></div>'
         + '</div>'
         + (isList ? xcFiltersHtml() : '<div class="xc-legend"><span><i style="background:var(--teal)"></i>Din contract: '+lg(visC)+'</span>'
-        + '<span><i style="background:var(--orange)"></i>Intervenții: '+lg(visI)+'</span></div>');
+        + '<span><i style="background:var(--orange)"></i>Intervenții: '+lg(visI)+'</span>'
+        + (XC.mode === 'month' ? '<span class="xc-heat">Zi liberă<i style="background:#fff"></i><i style="background:#ccfbf1"></i><i style="background:#99f6e4"></i><i style="background:#5eead4"></i>Zi plină</span>' : '')
+        + '</div>');
     var todayY = xcYmd(new Date());
     if (isList) {
         html += xcListHtml();
@@ -1650,16 +1660,19 @@ function xcRender(){
         while (cur <= r.to) {
             var y2 = xcYmd(cur), list2 = xcItemsOn(y2);
             // Orice click în căsuță (și pe lucrările din ea) deschide ziua; alegi lucrarea din listă
-            html += '<div class="xc-cell'+(cur.getMonth()!==m?' out':'')+(y2===todayY?' today':'')+'" role="button" tabindex="0"'
+            // Hartă de încărcare: culoarea căsuței crește cu numărul de lucrări (1-2 / 3-5 / 6-10 / 11+)
+            var tot = list2.length, heat = tot >= 11 ? 4 : tot >= 6 ? 3 : tot >= 3 ? 2 : tot >= 1 ? 1 : 0;
+            var isOut = cur.getMonth() !== m, isWe = cur.getDay() === 0 || cur.getDay() === 6;
+            html += '<div class="xc-cell'+(isOut?' out':'')+(isWe&&!isOut?' we':'')+(heat&&!isOut?' h'+heat:'')+(y2===todayY?' today':'')+'" role="button" tabindex="0"'
                 + ' aria-label="'+cur.getDate()+' '+XC_MONTHS[cur.getMonth()]+(list2.length?', '+list2.length+(list2.length===1?' lucrare':' lucrări'):'')+'"'
                 + ' onclick="xcOpenDay(\''+y2+'\')" onkeydown="if(event.key===\'Enter\'||event.key===\' \'){event.preventDefault();xcOpenDay(\''+y2+'\')}">'
                 + '<div class="n">'+cur.getDate()+'</div>';
-            // În căsuță doar numărul de lucrări + bara verde/portocaliu (din contract / intervenții)
-            if (list2.length) {
-                var nI = list2.filter(function(i){ return i.isInt; }).length, nK = list2.length - nI;
-                html += '<div class="xc-dn" title="'+nK+' din contract · '+nI+(nI===1?' intervenție':' intervenții')+'">'+list2.length+'</div>'
-                    + '<div class="xc-dbar"><i style="width:'+(nK/list2.length*100)+'%;background:var(--teal)"></i>'
-                    + '<i style="width:'+(nI/list2.length*100)+'%;background:var(--orange)"></i></div>';
+            // Jos: „6 lucrări”; sus-dreapta: punct portocaliu cu numărul de intervenții (dacă sunt)
+            if (tot) {
+                var nI = list2.filter(function(i){ return i.isInt; }).length;
+                html += '<div class="xc-dcnt" title="'+(tot-nI)+' din contract · '+nI+(nI===1?' intervenție':' intervenții')+'">'
+                    + tot+' <span>'+(tot===1?'lucrare':'lucrări')+'</span></div>';
+                if (nI) html += '<div class="xc-div" title="'+nI+(nI===1?' intervenție':' intervenții')+'"><i></i><span>'+nI+'</span></div>';
             }
             html += '</div>';
             cur = xcAdd(cur,1);
