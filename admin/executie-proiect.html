@@ -85,7 +85,17 @@ a{text-decoration:none;color:inherit;}button{font-family:inherit;cursor:pointer;
 .j-entry{padding:12px 14px;background:var(--gray-bg);border-radius:var(--radius-sm);border-left:3px solid var(--orange);position:relative;}
 .j-entry-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;font-size:11px;color:var(--gray);font-weight:600;}
 .j-entry-user{display:inline-flex;align-items:center;gap:6px;font-weight:800;color:var(--dark);}
-.j-entry-text{font-size:13px;color:var(--dark);line-height:1.5;white-space:pre-wrap;}
+.j-entry-text{font-size:14px;color:var(--dark);line-height:1.55;white-space:pre-wrap;overflow-wrap:anywhere;}
+.j-entry-head{flex-wrap:wrap;gap:4px 10px;}
+.j-entry.mine .j-entry-head{padding-right:44px;}
+.j-entry-meta{display:inline-flex;flex-wrap:wrap;gap:2px 6px;}
+.j-stamp.ed{color:#b45309;}
+.j-entry-act{display:flex;justify-content:flex-end;gap:8px;margin-top:8px;}
+.j-btn{padding:7px 12px;border:1px solid var(--gray-b);background:#fff;border-radius:8px;font-size:12px;font-weight:700;color:var(--gray);cursor:pointer;font-family:inherit;}
+.j-btn:hover{border-color:var(--orange);color:var(--orange);}
+.j-btn.ok{background:var(--orange);border-color:var(--orange);color:#fff;}
+.j-btn:disabled{opacity:0.6;cursor:wait;}
+@media(max-width:480px){.j-entry-act .j-btn{flex:1;}.j-entry.mine .j-entry-head{padding-right:48px;}}
 .j-entry-del{position:absolute;top:8px;right:8px;width:36px;height:36px;border-radius:50%;border:1px solid var(--gray-b);background:#fff;color:var(--gray-l);font-size:14px;cursor:pointer;display:flex;align-items:center;justify-content:center;-webkit-tap-highlight-color:transparent;opacity:0.4;transition:all 0.15s;}
 .j-entry:hover .j-entry-del,.j-entry-del:focus{opacity:1;}
 .j-entry-del:hover,.j-entry-del:active{background:#fef2f2;color:var(--red);border-color:var(--red);opacity:1;}
@@ -413,16 +423,30 @@ function renderJurnal(){
     if(!STATE.jurnal.length){ l.innerHTML='<div class="empty-state"><div class="ei">📭</div>Niciun pontaj încă. Folosește formularul de sus.</div>'; return; }
     var html='';
     STATE.jurnal.forEach(function(j){
-        html += '<div class="j-entry">';
-        html += '<button class="j-entry-del" onclick="deleteJ('+j.id+')" title="Șterge">×</button>';
+        var nume = j.user_name || techName(j.user_id) || j.user_id;
+        var stamp;
+        if(j.updated_at){
+            var by = (j.updated_by && String(j.updated_by).toLowerCase()!==String(j.user_id).toLowerCase()) ? ' de '+(j.updated_by_name||j.updated_by) : '';
+            stamp = '<span class="j-stamp ed" title="Adăugat la '+esc(fmtStamp(j.created_at))+'">✏️ Editat la '+esc(fmtStamp(j.updated_at)+by)+'</span>';
+        } else {
+            stamp = '<span class="j-stamp">Adăugat la '+esc(fmtStamp(j.created_at))+'</span>';
+        }
+        html += '<div class="j-entry'+(j.can_edit?' mine':'')+'" id="je-'+j.id+'">';
+        if(j.can_edit) html += '<button class="j-entry-del" onclick="deleteJ('+j.id+')" title="Șterge">×</button>';
         html += '<div class="j-entry-head">';
-        html += '<span class="j-entry-user"><span class="av-mini">'+techInit(j.user_id)+'</span>'+esc(techName(j.user_id)||j.user_id)+'</span>';
-        html += '<span>'+fmtDate(j.data_intrare)+' · scris '+fmtDateTime(j.created_at)+'</span>';
+        html += '<span class="j-entry-user"><span class="av-mini">'+esc(String(nume).charAt(0).toUpperCase())+'</span>'+esc(nume)+'</span>';
+        html += '<span class="j-entry-meta">📅 '+fmtDate(j.data_intrare)+' · '+stamp+'</span>';
         html += '</div>';
         html += '<div class="j-entry-text">'+esc(j.text)+'</div>';
+        if(j.can_edit) html += '<div class="j-entry-act"><button class="j-btn" onclick="editJ('+j.id+')">✏️ Editează</button></div>';
         html += '</div>';
     });
     l.innerHTML = html;
+}
+// „2026-09-30 14:05:00” → „30.09.2026, 14:05” (fără conversii de fus orar)
+function fmtStamp(s){
+    var m = String(s||'').match(/^(\d{4})-(\d{2})-(\d{2})[ T](\d{2}):(\d{2})/);
+    return m ? m[3]+'.'+m[2]+'.'+m[1]+', '+m[4]+':'+m[5] : String(s||'');
 }
 function renderFiles(){
     var pv = STATE.fisiere.filter(function(f){return f.tip==='pv';});
@@ -812,6 +836,22 @@ function saveJurnal(btn){
             toast('✅ Pontaj salvat','success');
             return refreshData();
         }).catch(function(e){ toast('❌ '+(e.message||e),'error'); }));
+}
+function editJ(id){
+    var j = STATE.jurnal.filter(function(x){return String(x.id)===String(id);})[0];
+    var el = document.getElementById('je-'+id); if(!j||!el) return;
+    el.querySelector('.j-entry-text').outerHTML = '<textarea class="jurnal-textarea" id="jeT-'+id+'" style="margin-top:4px">'+esc(j.text)+'</textarea>';
+    el.querySelector('.j-entry-act').innerHTML = '<button class="j-btn" onclick="renderJurnal()">Renunță</button>'
+        + '<button class="j-btn ok" onclick="saveEditJ('+id+',this)">💾 Salvează</button>';
+    var ta = document.getElementById('jeT-'+id); ta.style.height = Math.min(ta.scrollHeight + 6, 360) + 'px'; ta.focus(); ta.setSelectionRange(ta.value.length, ta.value.length);
+}
+function saveEditJ(id, btn){
+    var txt = (document.getElementById('jeT-'+id)||{}).value;
+    txt = (txt||'').trim();
+    if(!txt){ toast('⚠️ Notița nu poate fi goală','error'); return; }
+    withBusy(btn, '⏳', postJSON('updateJurnalEntryExec',{id:id,text:txt})
+        .then(function(){ toast('💾 Notiță actualizată','success'); return refreshData(); })
+        .catch(function(e){ toast('❌ '+(e.message||e),'error'); }));
 }
 function deleteJ(id){
     if(!confirm('Ștergi această intrare din jurnal?')) return;

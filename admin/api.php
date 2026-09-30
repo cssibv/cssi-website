@@ -28,6 +28,54 @@ date_default_timezone_set('Europe/Bucharest');
 $action = (isset($_GET['action']) ? $_GET['action'] : ((isset($_POST['action']) ? $_POST['action'] : '')));
 $data = getPostData();
 
+// ─── Helper: jurnal / notițe execuție (idempotent migration) ─────────────
+// Orele se scriu din PHP (Europe/Bucharest), nu din CURRENT_TIMESTAMP-ul serverului MySQL.
+function ensureExecJurnal($db) {
+    static $checked = false;
+    if ($checked) return;
+    $checked = true;
+    $db->exec("CREATE TABLE IF NOT EXISTS executie_jurnal (
+        id INT PRIMARY KEY AUTO_INCREMENT,
+        proiect_id INT NOT NULL,
+        data_intrare DATE NOT NULL,
+        user_id VARCHAR(60) NOT NULL,
+        text TEXT NOT NULL,
+        created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+        updated_at DATETIME NULL DEFAULT NULL,
+        updated_by VARCHAR(60) NULL DEFAULT NULL,
+        KEY idx_proiect (proiect_id),
+        KEY idx_data (data_intrare)
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4");
+    try {
+        $cols = $db->query("SHOW COLUMNS FROM executie_jurnal")->fetchAll(PDO::FETCH_COLUMN);
+        if (!in_array('updated_at', $cols)) $db->exec("ALTER TABLE executie_jurnal ADD COLUMN updated_at DATETIME NULL DEFAULT NULL");
+        if (!in_array('updated_by', $cols)) $db->exec("ALTER TABLE executie_jurnal ADD COLUMN updated_by VARCHAR(60) NULL DEFAULT NULL");
+    } catch (Exception $e) { /* coloanele lipsă nu blochează citirea */ }
+}
+
+// Notițele unui proiect, cu numele afișat al autorului și dreptul de editare al userului curent.
+function execJurnalRows($db, $pid) {
+    $stmt = $db->prepare("SELECT * FROM executie_jurnal WHERE proiect_id = ? ORDER BY created_at DESC, id DESC");
+    $stmt->execute([$pid]);
+    $rows = $stmt->fetchAll();
+    $names = [];
+    try {
+        foreach ($db->query("SELECT username, display_name FROM users")->fetchAll() as $u) {
+            $names[strtolower($u['username'])] = $u['display_name'] ?: $u['username'];
+        }
+    } catch (Exception $e) {}
+    $me = currentUser();
+    $meName = strtolower($me['username'] ?? '');
+    foreach ($rows as &$r) {
+        $uid = strtolower($r['user_id']);
+        $r['user_name'] = $names[$uid] ?? $r['user_id'];
+        $r['updated_by_name'] = !empty($r['updated_by']) ? ($names[strtolower($r['updated_by'])] ?? $r['updated_by']) : null;
+        $r['can_edit'] = isAdmin() || ($meName !== '' && $uid === $meName);
+    }
+    unset($r);
+    return $rows;
+}
+
 // ─── Helper: schemă oferte (idempotent migration) ─────────────
 function ensureOferteColumns($db) {
     static $checked = false;
@@ -4774,16 +4822,7 @@ p { margin: 0; }
         // EXECUȚIE — pagină proiect (jurnal + fișiere)
         // ══════════════════════════════════════
         case 'getProiectExecutie':
-            $db->exec("CREATE TABLE IF NOT EXISTS executie_jurnal (
-                id INT PRIMARY KEY AUTO_INCREMENT,
-                proiect_id INT NOT NULL,
-                data_intrare DATE NOT NULL,
-                user_id VARCHAR(60) NOT NULL,
-                text TEXT NOT NULL,
-                created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-                KEY idx_proiect (proiect_id),
-                KEY idx_data (data_intrare)
-            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4");
+            ensureExecJurnal($db);
             $db->exec("CREATE TABLE IF NOT EXISTS executie_files (
                 id INT PRIMARY KEY AUTO_INCREMENT,
                 proiect_id INT NOT NULL,
@@ -4829,9 +4868,7 @@ p { margin: 0; }
             unset($p);
 
             // Jurnal
-            $stmtJ = $db->prepare("SELECT * FROM executie_jurnal WHERE proiect_id = ? ORDER BY created_at DESC");
-            $stmtJ->execute([$pid]);
-            $jurnal = $stmtJ->fetchAll();
+            $jurnal = execJurnalRows($db, $pid);
 
             // Fișiere
             $stmtF = $db->prepare("SELECT * FROM executie_files WHERE proiect_id = ? ORDER BY uploaded_at DESC");
@@ -4852,16 +4889,7 @@ p { margin: 0; }
             break;
 
         case 'addJurnalEntryExec':
-            $db->exec("CREATE TABLE IF NOT EXISTS executie_jurnal (
-                id INT PRIMARY KEY AUTO_INCREMENT,
-                proiect_id INT NOT NULL,
-                data_intrare DATE NOT NULL,
-                user_id VARCHAR(60) NOT NULL,
-                text TEXT NOT NULL,
-                created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-                KEY idx_proiect (proiect_id),
-                KEY idx_data (data_intrare)
-            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4");
+            ensureExecJurnal($db);
             // SECURITATE: user_id forțat la cel din sesiune (anti-spoofing)
             $sessUser = currentUser();
             $pid = isset($data['proiect_id']) ? intval($data['proiect_id']) : 0;
@@ -4869,9 +4897,33 @@ p { margin: 0; }
             $txt = isset($data['text']) ? trim($data['text']) : '';
             $dt  = isset($data['data']) && $data['data'] ? trim($data['data']) : date('Y-m-d');
             if (!$pid || !$txt) { jsonResponse(['success' => false, 'error' => 'proiect_id + text obligatorii'], 400); break; }
-            $db->prepare("INSERT INTO executie_jurnal (proiect_id, data_intrare, user_id, text) VALUES (?,?,?,?)")
-               ->execute([$pid, $dt, $usr, $txt]);
+            $db->prepare("INSERT INTO executie_jurnal (proiect_id, data_intrare, user_id, text, created_at) VALUES (?,?,?,?,?)")
+               ->execute([$pid, $dt, $usr, $txt, date('Y-m-d H:i:s')]);
             jsonResponse(['success' => true, 'id' => $db->lastInsertId()]);
+            break;
+
+        case 'updateJurnalEntryExec':
+            // SECURITATE: doar autorul sau admin poate edita
+            ensureExecJurnal($db);
+            $id  = isset($data['id']) ? intval($data['id']) : 0;
+            $txt = isset($data['text']) ? trim($data['text']) : '';
+            if (!$id || !$txt) { jsonResponse(['success' => false, 'error' => 'id + text obligatorii'], 400); break; }
+            $stmt = $db->prepare("SELECT user_id FROM executie_jurnal WHERE id=?");
+            $stmt->execute([$id]);
+            $row = $stmt->fetch();
+            if (!$row) { jsonResponse(['success' => false, 'error' => 'Notița nu mai există'], 404); break; }
+            $u = requireOwnerOrAdmin($row['user_id']);
+            $db->prepare("UPDATE executie_jurnal SET text=?, updated_at=?, updated_by=? WHERE id=?")
+               ->execute([$txt, date('Y-m-d H:i:s'), $u['username'], $id]);
+            jsonResponse(['success' => true]);
+            break;
+
+        // Doar notițele (fără programări/fișiere) — pentru fereastra lucrării din CRM
+        case 'getJurnalExec':
+            ensureExecJurnal($db);
+            $pid = isset($_GET['id']) ? intval($_GET['id']) : 0;
+            if (!$pid) { jsonResponse(['success' => false, 'error' => 'id obligatoriu'], 400); break; }
+            jsonResponse(['success' => true, 'data' => execJurnalRows($db, $pid)]);
             break;
 
         case 'deleteJurnalEntryExec':

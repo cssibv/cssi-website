@@ -191,7 +191,9 @@ function actionModules() {
         'getProiectMateriale'   => ['executie'],
         'addProgresMaterial'    => ['executie'],
         'deleteProgresMaterial' => ['executie'],
-        'addJurnalEntryExec'    => ['executie'],
+        'addJurnalEntryExec'    => ['executie','crm'],
+        'updateJurnalEntryExec' => ['executie','crm'],
+        'getJurnalExec'         => ['executie','crm'],
         'deleteJurnalEntryExec' => ['executie'],
 
         // ── Proiectare ───────────────────────────────────────────

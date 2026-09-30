@@ -16,7 +16,7 @@
 //   cssiTechList() → Promise<[{id, name}]>   – echipa de teren din Utilizatori (getTehnicieni)
 //   cssiFindConflicts({zile, ora, durata, atribuiri, excludeIds}) → Promise<[conflict]>
 //
-// Data nu poate fi în trecut (min = azi; la modificare, min = data existentă dacă e mai veche).
+// Data poate fi și în trecut (lucrări începute deja / înregistrate retroactiv).
 // ============================================================
 (function () {
     // Rezervă dacă getTehnicieni nu răspunde (ex. API vechi în cache).
@@ -159,7 +159,7 @@
             document.getElementById('cssiEsDataLbl').textContent = opts.single ? 'Data *' : 'Data de început *';
             document.getElementById('cssiEsRow').classList.toggle('single', !!opts.single);
             inp.value = init.data || today;
-            inp.min = (init.data && init.data < today) ? init.data : today;
+            inp.removeAttribute('min');
             document.getElementById('cssiEsOra').value = init.ora || '08:00';
             document.getElementById('cssiEsDur').value = init.durata || '8';
             zileInp.value = '1';
@@ -218,7 +218,6 @@
                 var v = inp.value;
                 err.style.display = 'none';
                 if (!v) { err.textContent = 'Alege data.'; err.style.display = 'block'; return; }
-                if (v < inp.min) { err.textContent = 'Data nu poate fi în trecut.'; err.style.display = 'block'; return; }
                 if (!opts.single) {
                     var zRaw = parseInt(zileInp.value, 10);
                     if (!(zRaw >= 1 && zRaw <= 60)) { err.textContent = 'Durata trebuie să fie între 1 și 60 de zile lucrătoare.'; err.style.display = 'block'; return; }

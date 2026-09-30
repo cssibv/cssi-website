@@ -262,6 +262,33 @@ tr:hover td{background:rgba(59,130,246,0.03);}
 .xc-type.int{background:#ffedd5;color:#c2410c;}
 .xc-tech{display:flex;flex-wrap:wrap;gap:8px;}
 .xc-tech label{display:flex;align-items:center;gap:5px;font-size:12px;font-weight:700;background:var(--gray-bg);padding:6px 10px;border-radius:8px;cursor:pointer;}
+/* Notițe lucrare (tabela executie_jurnal, comună cu pagina lucrării) */
+.xc-block{margin:10px 0 2px;padding:10px 12px;background:var(--gray-bg);border-radius:10px;}
+.xc-block>span{display:block;font-size:12px;font-weight:700;color:var(--gray);margin-bottom:4px;}
+.xc-block>div{font-size:14px;line-height:1.5;color:var(--dark);white-space:pre-wrap;overflow-wrap:anywhere;}
+.xc-notes{margin-top:18px;padding-top:14px;border-top:2px solid var(--gray-bg);}
+.xc-notes-h{display:flex;align-items:center;gap:8px;font-size:12px;font-weight:800;color:var(--gray);text-transform:uppercase;margin-bottom:10px;}
+.xc-notes-h b{min-width:20px;padding:0 6px;border-radius:9px;background:var(--orange);color:#fff;font-size:11px;line-height:18px;text-align:center;}
+.xc-note-form{display:flex;flex-direction:column;gap:8px;margin-bottom:12px;}
+.xc-note-ta{width:100%;box-sizing:border-box;min-height:76px;padding:10px 12px;border:2px solid var(--gray-b);border-radius:10px;font-size:14px;line-height:1.5;font-family:inherit;resize:vertical;background:#fff;color:var(--dark);}
+.xc-note-ta:focus{outline:none;border-color:var(--orange);}
+.xc-note-btn{align-self:flex-end;padding:9px 16px;border:none;border-radius:10px;font-size:13px;font-weight:800;background:var(--orange);color:#fff;}
+.xc-note-btn.ghost{background:#fff;color:var(--gray);border:1px solid var(--gray-b);}
+.xc-note-btn:disabled{opacity:0.6;cursor:wait;}
+.xc-note-list{display:flex;flex-direction:column;gap:8px;}
+.xc-note{background:#fff;border:1px solid var(--gray-b);border-left:3px solid var(--orange);border-radius:10px;padding:10px 12px;min-width:0;}
+.xc-note-top{display:flex;flex-wrap:wrap;align-items:baseline;justify-content:space-between;gap:2px 10px;}
+.xc-note-who{font-size:13px;font-weight:800;color:var(--dark);}
+.xc-note-who small{font-weight:600;color:var(--gray);}
+.xc-note-when{font-size:11px;font-weight:600;color:var(--gray);}
+.xc-note-when.ed{color:#b45309;}
+.xc-note-txt{margin-top:6px;font-size:14px;line-height:1.55;color:var(--dark);white-space:pre-wrap;overflow-wrap:anywhere;}
+.xc-note-act{display:flex;justify-content:flex-end;gap:8px;margin-top:8px;}
+.xc-note-act .xc-note-btn{align-self:auto;padding:7px 12px;font-size:12px;}
+.xc-note-edit{padding:6px 10px;border:1px solid var(--gray-b);background:#fff;border-radius:8px;font-size:12px;font-weight:700;color:var(--gray);}
+.xc-note-edit:hover{border-color:var(--orange);color:var(--orange);}
+.xc-note-empty{font-size:13px;color:var(--gray);padding:10px 0;}
+@media(max-width:480px){#xcEvModal .modal-body{padding:16px;}#xcEvModal .modal-head{padding:16px;}.xc-note-btn{align-self:stretch;}.xc-note-act .xc-note-btn{flex:1;}}
 @media(max-width:900px){
   .xc-week{grid-template-columns:1fr;}
   .xc-day{min-height:0;}
@@ -1692,8 +1719,105 @@ function xcOpenProj(key){
     if (p.state === 'terminat' && !p.isRep) h += '<button class="form-submit" style="margin-top:8px;background:#fff;color:var(--gray);border:1px solid var(--gray-b)" onclick="xcCloseEv();xcMarkDone(\''+esc(p.key)+'\',false)">↺ Redeschide (nu e terminat)</button>';
     if (p.proiectDbId) h += '<a class="form-submit" style="display:block;text-align:center;margin-top:8px" href="executie-proiect.html?id='+encodeURIComponent(p.proiectDbId)+'">Deschide lucrarea →</a>';
     else if (p.isRep) h += '<a class="form-submit" style="display:block;text-align:center;margin-top:8px" href="interventii.html">Deschide în Intervenții →</a>';
+    if (p.proiectDbId) h += xcNotesHtml(p.proiectDbId);
     document.getElementById('xcEvBody').innerHTML = h;
     document.getElementById('xcEvModal').classList.add('active');
+    if (p.proiectDbId) xcNotesLoad(p.proiectDbId);
+}
+
+// ═══ NOTIȚE LUCRARE ═══
+// Aceeași tabelă ca jurnalul din pagina lucrării (executie_jurnal): ce scriu tehnicienii
+// acolo apare aici și invers. Oricine are CRM poate adăuga; editează autorul sau un admin.
+var XN = { pid: null, rows: [], draft: {} };
+function xcStamp(s){
+    // „2026-09-30 14:05:00” → „30.09.2026, 14:05” (fără conversii de fus orar)
+    var m = String(s||'').match(/^(\d{4})-(\d{2})-(\d{2})[ T](\d{2}):(\d{2})/);
+    return m ? m[3]+'.'+m[2]+'.'+m[1]+', '+m[4]+':'+m[5] : String(s||'');
+}
+function xcNotesHtml(pid){
+    return '<div class="xc-notes">'
+        + '<div class="xc-notes-h">📝 Notițe <b id="xcNotesCnt">…</b></div>'
+        + '<div class="xc-note-form">'
+        + '<textarea class="xc-note-ta" id="xcNoteNew" placeholder="Scrie o notiță: ce s-a discutat, ce lipsește, acces, observații..." oninput="XN.draft['+pid+']=this.value">'+esc(XN.draft[pid]||'')+'</textarea>'
+        + '<button type="button" class="xc-note-btn" onclick="xcNoteAdd(this)">＋ Adaugă notița</button></div>'
+        + '<div class="xc-note-list" id="xcNotesList"><div class="xc-note-empty">⏳ Se încarcă notițele...</div></div>'
+        + '</div>';
+}
+function xcNotesLoad(pid){
+    XN.pid = pid;
+    fetch(API_DB+'?action=getJurnalExec&id='+encodeURIComponent(pid)+'&_t='+Date.now(),{credentials:'include'})
+        .then(function(r){ return r.json(); })
+        .then(function(res){
+            if (XN.pid !== pid) return;   // între timp s-a deschis altă lucrare
+            if (!res || !res.success) throw new Error((res && res.error) || 'Eroare');
+            XN.rows = res.data || [];
+            xcNotesRender();
+        })
+        .catch(function(e){
+            var l = document.getElementById('xcNotesList');
+            if (l && XN.pid === pid) l.innerHTML = '<div class="xc-note-empty">⚠️ Notițele nu s-au încărcat: '+esc(e.message||e)+'</div>';
+        });
+}
+function xcNotesRender(){
+    var l = document.getElementById('xcNotesList'); if (!l) return;
+    var cnt = document.getElementById('xcNotesCnt'); if (cnt) cnt.textContent = XN.rows.length;
+    if (!XN.rows.length) { l.innerHTML = '<div class="xc-note-empty">Nicio notiță încă.</div>'; return; }
+    l.innerHTML = XN.rows.map(function(n){
+        var created = String(n.created_at||'').slice(0,10);
+        var zi = (n.data_intrare && created && n.data_intrare !== created) ? ' <small>· pentru '+esc(xcFmtD(n.data_intrare))+'</small>' : '';
+        var when;
+        if (n.updated_at) {
+            var by = (n.updated_by && String(n.updated_by).toLowerCase() !== String(n.user_id).toLowerCase()) ? ' de '+(n.updated_by_name||n.updated_by) : '';
+            when = '<span class="xc-note-when ed" title="Adăugat la '+esc(xcStamp(n.created_at))+'">✏️ Editat la '+esc(xcStamp(n.updated_at)+by)+'</span>';
+        } else {
+            when = '<span class="xc-note-when">Adăugat la '+esc(xcStamp(n.created_at))+'</span>';
+        }
+        return '<div class="xc-note" id="xcn-'+esc(n.id)+'">'
+            + '<div class="xc-note-top"><span class="xc-note-who">👤 '+esc(n.user_name||n.user_id)+zi+'</span>'+when+'</div>'
+            + '<div class="xc-note-txt">'+esc(n.text)+'</div>'
+            + (n.can_edit ? '<div class="xc-note-act"><button type="button" class="xc-note-edit" onclick="xcNoteEdit(\''+esc(n.id)+'\')">✏️ Editează</button></div>' : '')
+            + '</div>';
+    }).join('');
+}
+function xcNotePost(action, body){
+    body.action = action;
+    return fetch(API_DB+'?action='+action,{method:'POST',credentials:'include',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)})
+        .then(function(r){ return r.json(); })
+        .then(function(res){ if (!res || !res.success) throw new Error((res && res.error) || 'Eroare'); return res; });
+}
+function xcNoteAdd(btn){
+    var ta = document.getElementById('xcNoteNew'), pid = XN.pid;
+    var txt = ta.value.trim();
+    if (!txt) { toast('⚠️ Scrie ceva în notiță','error'); ta.focus(); return; }
+    btn.disabled = true; btn.textContent = '⏳ Se salvează...';
+    xcNotePost('addJurnalEntryExec', { proiect_id: parseInt(pid,10), text: txt, data: xcYmd(new Date()) })
+        .then(function(){
+            ta.value = ''; delete XN.draft[pid];
+            toast('📝 Notiță adăugată','success');
+            xcNotesLoad(pid);
+        })
+        .catch(function(e){ toast('❌ '+(e.message||e),'error'); })
+        .then(function(){ btn.disabled = false; btn.textContent = '＋ Adaugă notița'; });
+}
+function xcNoteEdit(id){
+    var n = XN.rows.filter(function(r){ return String(r.id) === String(id); })[0];
+    var el = document.getElementById('xcn-'+id); if (!n || !el) return;
+    el.querySelector('.xc-note-txt').outerHTML = '<textarea class="xc-note-ta" id="xcnE-'+esc(id)+'" style="margin-top:8px">'+esc(n.text)+'</textarea>';
+    var act = el.querySelector('.xc-note-act');
+    act.innerHTML = '<button type="button" class="xc-note-btn ghost" onclick="xcNotesRender()">Renunță</button>'
+        + '<button type="button" class="xc-note-btn" onclick="xcNoteSave(\''+esc(id)+'\',this)">💾 Salvează</button>';
+    var ta = document.getElementById('xcnE-'+id);
+    ta.style.height = Math.min(ta.scrollHeight + 6, 360) + 'px';
+    ta.focus(); ta.setSelectionRange(ta.value.length, ta.value.length);
+}
+function xcNoteSave(id, btn){
+    var ta = document.getElementById('xcnE-'+id), pid = XN.pid;
+    var txt = ta ? ta.value.trim() : '';
+    if (!txt) { toast('⚠️ Notița nu poate fi goală','error'); return; }
+    btn.disabled = true; btn.textContent = '⏳';
+    xcNotePost('updateJurnalEntryExec', { id: parseInt(id,10), text: txt })
+        .then(function(){ toast('💾 Notiță actualizată','success'); xcNotesLoad(pid); })
+        .catch(function(e){ toast('❌ '+(e.message||e),'error'); btn.disabled = false; btn.textContent = '💾 Salvează'; });
 }
 
 // Neprogramat → alegi prima zi (≥ azi); se salvează prin saveProgramare (ca în Planificare)
@@ -1837,12 +1961,14 @@ function xcOpenEv(id){
     if (i.status) h += infoRow('🔄 Status', esc(i.status));
     if (i.prioritate) h += infoRow('⚠️ Prioritate', esc(i.prioritate));
     if (i.cod) h += infoRow('🔗 Proiect', esc(i.cod));
-    if (i.note) h += infoRow('📝 Note', esc(i.note));
+    if (i.note) h += '<div class="xc-block"><span>📝 Instrucțiuni pentru ziua asta</span><div>'+esc(i.note)+'</div></div>';
     if (i.raw) h += '<button class="form-submit" style="margin-top:14px;background:var(--teal)" onclick="xcCloseEv();xcEditDay(\''+esc(i.id)+'\')">✏️ Modifică ziua (dată, oră, echipă)</button>';
     if (i.proiectDbId) h += '<a class="form-submit" style="display:block;text-align:center;margin-top:8px" href="executie-proiect.html?id='+encodeURIComponent(i.proiectDbId)+'">Deschide lucrarea →</a>';
     else if (i.isRep) h += '<a class="form-submit" style="display:block;text-align:center;margin-top:14px" href="interventii.html">Deschide în Intervenții →</a>';
+    if (i.proiectDbId) h += xcNotesHtml(i.proiectDbId);
     document.getElementById('xcEvBody').innerHTML = h;
     document.getElementById('xcEvModal').classList.add('active');
+    if (i.proiectDbId) xcNotesLoad(i.proiectDbId);
 }
 function xcCloseEv(){ document.getElementById('xcEvModal').classList.remove('active'); }
 
@@ -2246,7 +2372,7 @@ if('serviceWorker' in navigator){navigator.serviceWorker.register('../sw.js').th
 </div>
 </div>
 
-<script src="/admin/exec-start.js?v=3"></script>
+<script src="/admin/exec-start.js?v=4"></script>
 <script src="/admin/notifications.js" defer></script>
 </body>
 </html>
