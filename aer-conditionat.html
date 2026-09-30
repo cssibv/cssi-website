@@ -40,13 +40,11 @@
         .dropdown-menu{display:none;}.dropdown:hover .dropdown-menu{display:block;}
         .dropdown-scroll::-webkit-scrollbar{width:4px;}.dropdown-scroll::-webkit-scrollbar-thumb{background:#cbd5e1;border-radius:4px;}
         #mobileMenu{display:none;}#mobileMenu.open{display:block;}
-        #chatPanel{display:none;}#chatPanel.open{display:flex;}
         .accordion-item{transition:all 0.3s;}.accordion-item:hover{box-shadow:0 4px 6px -1px rgba(0,0,0,0.07);}
         @media(min-width:1024px){.lg\:flex{display:flex!important;}.lg\:hidden{display:none!important;}}
         @media(max-width:1023px){.hidden{display:none!important;}.lg\:flex{display:none!important;}.lg\:hidden{display:block!important;}}
         @media(min-width:640px){.sm\:block{display:block!important;}.sm\:hidden{display:none!important;}.sm\:px-6{padding-left:24px!important;padding-right:24px!important;}}
         @media(max-width:639px){.hidden.sm\:block{display:none!important;}.sm\:hidden{display:block!important;}}
-        @media(max-width:640px){#chatPanel{width:calc(100vw - 48px)!important;right:24px!important;}}
         @media(max-width:768px){button,a[href]{min-height:44px;}}
         .comp-grid{display:grid;grid-template-columns:1fr;gap:16px;margin-top:16px;}
         @media(min-width:640px){.comp-grid{grid-template-columns:repeat(2,1fr);}}
@@ -531,9 +529,6 @@
 <script>
 function toggleMobileMenu(){var m=document.getElementById('mobileMenu'),a=document.getElementById('menuIcon'),b=document.getElementById('closeIcon'),c=document.getElementById('menuBtn');if(m.classList.contains('open')){m.classList.remove('open');a.style.display='';b.style.display='none';c.style.background='linear-gradient(to right,#ef4444,#dc2626)';c.classList.add('animate-subtle-pulse');}else{m.classList.add('open');a.style.display='none';b.style.display='';c.style.background='#6b7280';c.classList.remove('animate-subtle-pulse');}}
 function closeMobile(){document.getElementById('mobileMenu').classList.remove('open');document.getElementById('menuIcon').style.display='';document.getElementById('closeIcon').style.display='none';}
-var chatR={'servicii':'Oferim o gamă completă de servicii:\n\n🔥 Detecție incendiu ISU\n📹 Camere supraveghere\n🚨 Alarme antiefracție\n🔐 Control acces\n⏱️ Pontaj electronic\n🚧 Bariere auto\n🔔 Interfoane\n🔊 Sonorizare\n🚗 Automatizări porți\n🏠 Uși garaj\n❄️ Aer condiționat\n💨 Ventilație\n⚡ Instalații electrice\n🔧 Instalații termice','preturi':'Prețurile variază. Pentru ofertă personalizată:\n\n📞 0268 414 740\n💬 WhatsApp: 0752 288 400\n📧 office@cssi.ro','contact':'📞 0268 414 740\n💬 0752 288 400\n📧 office@cssi.ro\n📍 Brașov\nL-V: 08:00-17:00','clima':'Aer condiționat disponibil:\n\n🏠 Split rezidențial (Inverter)\n🏢 Multi-split (2-5 unități)\n🏗️ Casetă tavan\n🔄 Duct canalizat\n🏭 VRF/VRV centralizat\n📱 Smart & WiFi\n\nPentru ofertă: 0752 288 400','default':'Mulțumim! 😊\n📞 0268 414 740\n💬 0752 288 400\nSau scrieți: servicii, clima, prețuri, contact'};
-function toggleChat(){var p=document.getElementById('chatPanel'),a=document.getElementById('chatOpenIcon'),b=document.getElementById('chatCloseIcon'),c=document.getElementById('chatBtn');if(p.classList.contains('open')){p.classList.remove('open');a.style.display='';b.style.display='none';c.style.background='linear-gradient(to right,#06b6d4,#10b981)';c.classList.add('animate-subtle-pulse');}else{p.classList.add('open');a.style.display='none';b.style.display='';c.style.background='#6b7280';c.classList.remove('animate-subtle-pulse');}}
-function sendChat(){var i=document.getElementById('chatInput'),t=i.value.trim();if(!t)return;var m=document.getElementById('chatMessages');m.innerHTML+='<div style="display:flex;justify-content:flex-end;"><div style="max-width:80%;padding:12px;border-radius:16px;border-top-right-radius:0;background:#dc2626;color:#fff;font-size:14px;">'+t+'</div></div>';i.value='';var l=t.toLowerCase(),r=chatR.default;for(var k in chatR){if(k!=='default'&&l.includes(k)){r=chatR[k];break;}}setTimeout(function(){m.innerHTML+='<div style="display:flex;justify-content:flex-start;"><div style="max-width:80%;padding:12px;border-radius:16px;border-top-left-radius:0;background:#fff;color:#374151;font-size:14px;box-shadow:0 1px 2px rgba(0,0,0,0.05);white-space:pre-line;">'+r+'</div></div>';m.scrollTop=m.scrollHeight;},500);m.scrollTop=m.scrollHeight;}
 </script>
 
 <script>
@@ -568,31 +563,31 @@ document.querySelectorAll('.faq-item').forEach(function(item){
   "mainEntity": [
     {
       "@type": "Question",
-      "name": "Ce tip de aer condiționat recomandați?",
+      "name": "Ce capacitate de aer condiționat am nevoie?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "Pentru uz rezidențial recomandăm split-uri inverter (Daikin, Mitsubishi, Samsung) — eficiente energetic, silențioase. Pentru spații mari, sisteme multi-split sau VRV/VRF."
+        "text": "Regula generală: 100W/mp pentru spații standard. O cameră de 20 mp necesită 9.000-12.000 BTU. CSSI calculează exact în funcție de expunere, izolație și destinație."
       }
     },
     {
       "@type": "Question",
-      "name": "Cât costă un aer condiționat cu montaj?",
+      "name": "Cât consumă un aparat de aer condiționat?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "Un sistem split 12.000 BTU cu montaj profesional (traseu max 3m) pornește de la 2.800 RON. Prețul variază în funcție de puterea și brandul ales."
+        "text": "Un inverter modern de 12.000 BTU consumă aproximativ 0.3-0.8 kW/h. Clasele energetice A++ sau A+++ reduc costurile cu până la 60%."
       }
     },
     {
       "@type": "Question",
-      "name": "Cât durează montajul?",
+      "name": "Faceți și mentenanță/igienizare?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "Montajul unui split standard durează 3-4 ore. Pentru sisteme multi-split sau comerciale, 1-2 zile. Programăm instalarea la ora convenabilă."
+        "text": "Da, oferim servicii de curățare filtre, igienizare cu ozon, verificare nivel freon și diagnosticare completă."
       }
     },
     {
       "@type": "Question",
-      "name": "Există soluții fără unitate exterioară?",
+      "name": "Pot instala aer condiționat fără unitate exterioară?",
       "acceptedAnswer": {
         "@type": "Answer",
         "text": "Există soluții monobloc fără unitate exterioară, dar eficiența e mai redusă. Recomandăm split-uri clasice pentru performanță optimă."
@@ -600,10 +595,10 @@ document.querySelectorAll('.faq-item').forEach(function(item){
     },
     {
       "@type": "Question",
-      "name": "Cât de des trebuie curățat aerul condiționat?",
+      "name": "Cât durează montajul?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "Recomandăm igienizarea la fiecare 6 luni (primăvară și toamnă). Filtrele trebuie curățate lunar în sezonul de utilizare intensă. Oferim servicii de mentenanță."
+        "text": "Pentru un split standard: 2-4 ore. Multi-split (mai multe unități interioare): 1-2 zile. Include traseu, montaj, vacuum și verificare."
       }
     }
   ]

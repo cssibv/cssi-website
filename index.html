@@ -68,8 +68,6 @@
         #servicesSubmenu.open { display: block; }
 
         /* Chatbot */
-        #chatPanel { display: none; }
-        #chatPanel.open { display: flex; }
 
         /* Exit popup */
         #exitPopup { display: none; }
@@ -755,9 +753,6 @@
         .hero-subtitle { font-size: 1.25rem !important; margin-bottom: 16px !important; }
         .hero-stats { gap: 8px !important; margin-bottom: 24px !important; }
     }
-    @media (max-width: 640px) {
-        #chatPanel { width: calc(100vw - 48px) !important; right: 24px !important; }
-    }
 </style>
 
 <!-- ========== JAVASCRIPT ========== -->
@@ -933,61 +928,6 @@
         return false;
     }
 
-    // ===== CHATBOT =====
-    const chatResponses = {
-        'servicii': 'Oferim o gamă completă de servicii:\n\n📹 Camere supraveghere\n🚨 Alarme antiefracție\n🚪 Control acces\n⏱️ Pontaj electronic\n🚧 Bariere auto\n🔔 Interfoane\n🔊 Sonorizare\n🚗 Automatizări porți\n🏠 Uși garaj\n❄️ Aer condiționat\n💨 Ventilație\n⚡ Instalații electrice\n🔧 Instalații termice\n\nPentru detalii, contactați-ne!',
-        'preturi': 'Prețurile variază în funcție de complexitatea proiectului. Pentru o ofertă personalizată:\n\n📞 Sunați: 0268 414 740\n💬 WhatsApp: 0752 288 400\n📧 Email: office@cssi.ro',
-        'contact': 'Ne puteți contacta prin:\n\n📞 Telefon: 0268 414 740\n💬 WhatsApp: 0752 288 400\n📧 Email: office@cssi.ro\n📍 Locație: Brașov\n\nProgram: Luni-Vineri, 08:00-17:00',
-        'default': 'Vă mulțumim pentru mesaj! 😊\n\nPentru asistență rapidă:\n📞 0268 414 740\n💬 WhatsApp: 0752 288 400\n\nSau scrieți: servicii, prețuri, contact'
-    };
-
-    function toggleChat() {
-        const panel = document.getElementById('chatPanel');
-        const openIcon = document.getElementById('chatOpenIcon');
-        const closeIcon = document.getElementById('chatCloseIcon');
-        const btn = document.getElementById('chatBtn');
-        
-        if (panel.classList.contains('open')) {
-            panel.classList.remove('open');
-            openIcon.style.display = '';
-            closeIcon.style.display = 'none';
-            btn.style.background = 'linear-gradient(to right,#06b6d4,#10b981)';
-            btn.classList.add('animate-subtle-pulse');
-        } else {
-            panel.classList.add('open');
-            openIcon.style.display = 'none';
-            closeIcon.style.display = '';
-            btn.style.background = '#6b7280';
-            btn.classList.remove('animate-subtle-pulse');
-        }
-    }
-
-    function sendChat() {
-        const input = document.getElementById('chatInput');
-        const text = input.value.trim();
-        if (!text) return;
-
-        const msgs = document.getElementById('chatMessages');
-        
-        // User message
-        msgs.innerHTML += '<div style="display:flex;justify-content:flex-end;"><div style="max-width:80%;padding:12px;border-radius:16px;border-top-right-radius:0;background:#dc2626;color:#fff;font-size:14px;">' + text + '</div></div>';
-        input.value = '';
-        
-        // Bot response
-        const lower = text.toLowerCase();
-        let response = chatResponses.default;
-        for (const [key, val] of Object.entries(chatResponses)) {
-            if (key !== 'default' && lower.includes(key)) { response = val; break; }
-        }
-        
-        setTimeout(() => {
-            msgs.innerHTML += '<div style="display:flex;justify-content:flex-start;"><div style="max-width:80%;padding:12px;border-radius:16px;border-top-left-radius:0;background:#fff;color:#374151;font-size:14px;box-shadow:0 1px 2px rgba(0,0,0,0.05);white-space:pre-line;">' + response + '</div></div>';
-            msgs.scrollTop = msgs.scrollHeight;
-        }, 500);
-        
-        msgs.scrollTop = msgs.scrollHeight;
-    }
-
     // ===== EXIT INTENT POPUP (90s timer) =====
     function closeExitPopup() {
         document.getElementById('exitPopup').classList.remove('show');
@@ -1056,7 +996,7 @@
     "longitude": "25.5887"
   },
   "logo": "https://cssi.ro/images/cssi-logo.png",
-  "image": "https://cssi.ro/images/og-cssi.jpg",
+  "image": "https://cssi.ro/images/og-cssi.png",
   "sameAs": [
     "https://www.facebook.com/profile.php?id=61582239908148",
     "https://www.instagram.com/cssi.ro/",
