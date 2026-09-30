@@ -253,6 +253,13 @@ tr:hover td{background:rgba(59,130,246,0.03);}
 .xc-cell{background:#f8fafc;border-radius:8px;min-height:92px;padding:5px;min-width:0;cursor:pointer;}
 .xc-cell.out{background:#334155;}.xc-cell.out .n{color:#94a3b8;}
 .xc-cell:hover{background:#fff;}
+.xc-cell:focus-visible{outline:3px solid var(--orange);outline-offset:1px;}
+.xc-day-hint{font-size:12px;font-weight:700;color:var(--gray);margin-bottom:10px;}
+.xc-pick-ev{position:relative;padding:12px 36px 12px 12px;font-size:13px;margin-bottom:8px;border:1px solid var(--gray-b);border-left-width:4px;}
+.xc-pick-ev::after{content:'›';position:absolute;right:12px;top:50%;transform:translateY(-50%);font-size:22px;font-weight:700;color:var(--gray-l);}
+.xc-pick-ev:hover{border-color:var(--teal);}.xc-pick-ev.int:hover{border-color:var(--orange);}
+.xc-pick-ev:hover::after{color:var(--dark);}
+.xc-cell.out:hover{background:#475569;}
 .xc-cell.today{box-shadow:inset 0 0 0 3px var(--blue);}
 .xc-cell .n{font-size:12px;font-weight:800;color:var(--dark);margin-bottom:3px;}
 .xc-chip{display:block;width:100%;text-align:left;border:none;font-size:10px;font-weight:700;padding:3px 5px;border-radius:5px;margin-bottom:3px;background:#ccfbf1;color:#0f766e;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
@@ -1640,11 +1647,14 @@ function xcRender(){
         var cur = r.from, m = XC.ref.getMonth();
         while (cur <= r.to) {
             var y2 = xcYmd(cur), list2 = xcItemsOn(y2);
-            html += '<div class="xc-cell'+(cur.getMonth()!==m?' out':'')+(y2===todayY?' today':'')+'" onclick="xcOpenDay(\''+y2+'\')">'
+            // Orice click în căsuță (și pe lucrările din ea) deschide ziua; alegi lucrarea din listă
+            html += '<div class="xc-cell'+(cur.getMonth()!==m?' out':'')+(y2===todayY?' today':'')+'" role="button" tabindex="0"'
+                + ' aria-label="'+cur.getDate()+' '+XC_MONTHS[cur.getMonth()]+(list2.length?', '+list2.length+(list2.length===1?' lucrare':' lucrări'):'')+'"'
+                + ' onclick="xcOpenDay(\''+y2+'\')" onkeydown="if(event.key===\'Enter\'||event.key===\' \'){event.preventDefault();xcOpenDay(\''+y2+'\')}">'
                 + '<div class="n">'+cur.getDate()+'</div>';
             list2.slice(0,3).forEach(function(i){
-                html += '<button class="xc-chip'+(i.isInt?' int':'')+'" onclick="event.stopPropagation();xcOpenEv(\''+esc(i.id)+'\')" title="'+esc(xcSpan(i)+' · '+(i.isInt?'Intervenție':'Din contract')+' · '+i.client)+'">'
-                    + esc(i.ora+' '+(i.client||'—'))+'</button>';
+                html += '<span class="xc-chip'+(i.isInt?' int':'')+'" title="'+esc(xcSpan(i)+' · '+(i.isInt?'Intervenție':'Din contract')+' · '+i.client)+'">'
+                    + esc(i.ora+' '+(i.client||'—'))+'</span>';
             });
             if (list2.length > 3) html += '<div class="xc-more">+'+(list2.length-3)+' mai multe</div>';
             html += '</div>';
@@ -1978,8 +1988,9 @@ function xcOpenDay(ymd){
     document.getElementById('xcEvTitle').textContent = DZ[d.getDay()]+', '+d.getDate()+' '+XC_MONTHS[d.getMonth()]+' '+d.getFullYear();
     var h = '';
     if (!list.length) h += '<div class="xc-list-empty" style="padding:24px 12px">Nicio lucrare în ziua asta.</div>';
+    else h += '<div class="xc-day-hint">'+list.length+(list.length===1?' lucrare':' lucrări')+' · alege la ce te uiți</div>';
     list.forEach(function(i){
-        h += '<button class="xc-ev'+(i.isInt?' int':'')+'" style="padding:10px 12px;font-size:13px" onclick="xcCloseEv();xcOpenEv(\''+esc(i.id)+'\')">'
+        h += '<button class="xc-ev xc-pick-ev'+(i.isInt?' int':'')+'" onclick="xcCloseEv();xcOpenEv(\''+esc(i.id)+'\')">'
             + '<div><span class="t">'+esc(xcSpan(i))+'</span><span class="xc-tag">'+(i.isInt?'Intervenție':'Din contract')+'</span></div>'
             + '<div class="c">'+esc(i.client||'—')+'</div>'
             + '<div class="o">'+esc(i.obiectiv||i.serviciu)+'</div>'
