@@ -17,6 +17,7 @@
 <script src="/admin/access-guard.js" defer></script>
 <!-- Imaginile documentelor printabile — fișier separat ca să fie cache-uit; incrementează ?v= dacă se schimbă logo-ul sau ștampila -->
 <script src="/admin/pdf-assets.js?v=1"></script>
+<link rel="stylesheet" href="/admin/portal.css?v=1">
 </head>
 <body data-module="calculator">
 <div class="loading-bar" id="loadBar"></div>
@@ -36,7 +37,7 @@
 <div id="tab-situatii" class="tab-panel"><div style="background:#eff6ff;border:1px solid #bfdbfe;border-radius:12px;padding:10px 14px;margin-bottom:12px;font-size:12px;color:#1e40af;line-height:1.5">📑 <strong>Situațiile de plată</strong> se creează dintr-o ofertă salvată, deschide oferta din tabul <strong>💾 Salvate</strong> și apasă <strong>📑 Situație</strong>. Aici le regăsești pe cele existente, pentru editare și export.</div><div class="search-bar"><input type="text" id="situatiiSearch" placeholder="Caută situație (client, nr., obiectiv)..." oninput="renderSituatii()"></div><div id="situatiiList"></div></div>
 <div class="footer">Portal CSSI 3.0 · Generator Oferte v1.0 · Break Sistems SRL</div>
 </div>
-<div class="bottom-nav"><a href="/admin.html" class="bn-item"><span class="bn-icon">🏠</span>Acasă</a><a href="/admin/proiecte.html" class="bn-item"><span class="bn-icon">📋</span>Proiecte</a><a href="/admin/crm-clienti.html" class="bn-item"><span class="bn-icon">💰</span>CRM</a><a href="/admin/executie.html" class="bn-item"><span class="bn-icon">🔧</span>Execuție</a><a href="/admin/financiar.html" class="bn-item"><span class="bn-icon">📄</span>Facturi</a></div>
+<div class="bottom-nav"><a href="/admin.html" class="bn-item"><span class="bn-icon">🏠</span>Acasă</a><a href="/admin/proiecte.html" class="bn-item"><span class="bn-icon">📋</span>Proiecte</a><a href="/admin/crm-clienti.html" class="bn-item"><span class="bn-icon">💰</span>CRM</a><a href="/admin/executie.html" class="bn-item"><span class="bn-icon">🦺</span>Execuție</a><a href="/admin/financiar.html" class="bn-item"><span class="bn-icon">📄</span>Facturi</a></div>
 <div id="codeModal" class="modal-overlay" onclick="if(event.target===this)closeCodeModal()"><div class="modal"><div class="modal-head"><div class="modal-title">🔍 Import după cod produs</div><button class="modal-close" onclick="closeCodeModal()">✕</button></div><div class="modal-body"><div class="form-group"><label class="form-label">Cod produs / SKU</label><div style="display:flex;gap:8px"><input type="text" class="form-input" id="codeInput" placeholder="Ex: DS-2SE2C400MWG-E/14" style="flex:1" onkeydown="searchByCodeEnter(event)"><button class="btn btn-green" onclick="searchByCode()" id="codeSearchBtn">🔍 Caută</button></div><div class="form-hint">Caută pe shop-security.ro după codul produsului</div></div><div id="codeResult" style="margin-top:12px"></div></div></div></div>
 <div id="matModal" class="modal-overlay" onclick="if(event.target===this)closeMaterialList()"><div class="modal" style="max-width:780px"><div class="modal-head"><div class="modal-title">🧾 Listă materiale (intern)</div><button class="modal-close" onclick="closeMaterialList()">✕</button></div><div class="modal-body"><div id="matInfo" style="font-size:11px;color:var(--gray);margin-bottom:10px"></div><div id="matBody" style="max-height:48vh;overflow:auto;border:1px solid var(--gray-bg);border-radius:10px"></div><div id="matFoot" style="margin-top:12px"></div></div></div></div>
 <div id="priceUpdateModal" class="modal-overlay" onclick="if(event.target===this)closePriceUpdate()"><div class="modal" style="max-width:720px"><div class="modal-head"><div class="modal-title">🔄 Actualizare prețuri</div><button class="modal-close" onclick="closePriceUpdate()">✕</button></div><div class="modal-body"><div id="puStatus" style="font-size:11px;color:var(--gray);margin-bottom:10px"></div><div id="puBody" style="max-height:50vh;overflow-y:auto;border:1px solid var(--gray-bg);border-radius:10px"></div><div id="puFoot" style="margin-top:12px"></div></div></div></div>
@@ -1999,6 +2000,6 @@ if(!__isEditUrl){
 })();
 </script>
 <script>if('serviceWorker' in navigator){navigator.serviceWorker.register('../sw.js').then(function(r){console.log('[PWA] SW registered, scope:',r.scope)}).catch(function(e){console.log('[PWA] SW failed:',e)});var __reloaded=false;navigator.serviceWorker.addEventListener('controllerchange',function(){if(__reloaded)return;__reloaded=true;window.location.reload();});}</script>
-<script src="/admin/notifications.js?v=3" defer></script>
+<script src="/admin/notifications.js?v=4" defer></script>
 </body>
 </html>

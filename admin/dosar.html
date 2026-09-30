@@ -198,6 +198,7 @@ body{padding:14px;}
 }
 </style>
 <script src="/admin/access-guard.js" defer></script>
+<link rel="stylesheet" href="/admin/portal.css?v=1">
 </head>
 <body data-module="proiecte">
 <div class="loading-bar" id="loadBar"></div>
@@ -618,7 +619,7 @@ function renderTimelineHTML(d){
     items.push({
       date: ex.data_start || ex.created_at,
       kind: 'done',
-      icon: '🔧',
+      icon: '🦺',
       title: 'Execuție programată',
       sub: '<span class="tl-tag orange">'+esc(ex.status||'')+'</span>'+(ex.echipa?' · '+esc(ex.echipa):'')+(ex.data_end?' → '+fmtDate(ex.data_end):''),
       sub2: ex.note ? esc(ex.note) : '',
@@ -723,7 +724,7 @@ function openAvanseaza(){
     {val:'Oferta',     lbl:'📤 Ofertă'},
     {val:'Contract',   lbl:'📑 Contract'},
     {val:'Proiectare', lbl:'📐 Proiectare'},
-    {val:'Executie',   lbl:'🔧 Execuție'},
+    {val:'Executie',   lbl:'🦺 Execuție'},
     {val:'Receptie',   lbl:'📋 Recepție'},
     {val:'Facturare',  lbl:'💰 Facturare'},
     {val:'Finalizat',  lbl:'✅ Finalizat'},
@@ -777,6 +778,6 @@ if('serviceWorker' in navigator){
 }
 </script>
 <script src="/admin/exec-start.js?v=5"></script>
-<script src="/admin/notifications.js?v=3" defer></script>
+<script src="/admin/notifications.js?v=4" defer></script>
 </body>
 </html>

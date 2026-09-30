@@ -696,7 +696,7 @@ function dosarComputeStage($proiect, $oferte = [], $contracte = []) {
         'Acceptat'   => '🤝 Acceptat',
         'Contract'   => '📑 Contract',
         'Proiectare' => '📐 Proiectare',
-        'Executie'   => '🔧 Execuție',
+        'Executie'   => '🦺 Execuție',
         'Receptie'   => '📋 Recepție',
         'Facturare'  => '💰 Facturare',
         'Finalizat'  => '✅ Finalizat',

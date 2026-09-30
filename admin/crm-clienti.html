@@ -305,6 +305,7 @@ tr:hover td{background:rgba(59,130,246,0.03);}
 }
 </style>
 <script src="/admin/access-guard.js" defer></script>
+<link rel="stylesheet" href="/admin/portal.css?v=1">
 </head>
 <body data-module="crm">
 
@@ -410,7 +411,7 @@ tr:hover td{background:rgba(59,130,246,0.03);}
     <a href="../admin.html" class="bn-item"><span class="bn-icon">🏠</span>Acasă</a>
     <a href="proiecte.html" class="bn-item"><span class="bn-icon">📋</span>Proiecte</a>
     <a href="crm-clienti.html" class="bn-item active"><span class="bn-icon">💰</span>CRM</a>
-    <a href="executie.html" class="bn-item"><span class="bn-icon">🔧</span>Execuție</a>
+    <a href="executie.html" class="bn-item"><span class="bn-icon">🦺</span>Execuție</a>
     <a href="financiar.html" class="bn-item"><span class="bn-icon">📄</span>Facturi</a>
 </div>
 
@@ -635,7 +636,7 @@ var CRM_STATUSES = [
     {id:'lead', name:'Lead', cls:'s-nou', icon:'📞', color:'var(--blue)'},
     {id:'oferta', name:'Ofertă', cls:'s-oferta', icon:'📋', color:'var(--orange)'},
     {id:'contract', name:'Contract', cls:'s-castigat', icon:'✅', color:'var(--green)'},
-    {id:'executie', name:'Execuție', cls:'s-negociere', icon:'🔧', color:'var(--teal)'},
+    {id:'executie', name:'Execuție', cls:'s-negociere', icon:'🦺', color:'var(--teal)'},
     {id:'facturat', name:'Facturat', cls:'s-contactat', icon:'💳', color:'var(--purple)'},
     {id:'anulat', name:'Anulat', cls:'s-pierdut', icon:'❌', color:'var(--gray)'}
 ];
@@ -2432,6 +2433,6 @@ if('serviceWorker' in navigator){navigator.serviceWorker.register('../sw.js').th
 </div>
 
 <script src="/admin/exec-start.js?v=5"></script>
-<script src="/admin/notifications.js?v=3" defer></script>
+<script src="/admin/notifications.js?v=4" defer></script>
 </body>
 </html>

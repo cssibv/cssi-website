@@ -157,6 +157,7 @@ a{text-decoration:none;color:inherit;}button{font-family:inherit;cursor:pointer;
 @keyframes loadSlide{0%{margin-left:-30%}100%{margin-left:100%}}
 </style>
 <script src="/admin/access-guard.js" defer></script>
+<link rel="stylesheet" href="/admin/portal.css?v=1">
 </head>
 <body data-module="interventii">
 <div class="loading-bar" id="loadBar"></div>
@@ -210,7 +211,7 @@ a{text-decoration:none;color:inherit;}button{font-family:inherit;cursor:pointer;
     <a href="../admin.html" class="bn-item"><span class="bn-icon">🏠</span>Acasă</a>
     <a href="planificare.html" class="bn-item"><span class="bn-icon">📅</span>Plan</a>
     <a href="interventii.html" class="bn-item active"><span class="bn-icon">⚡</span>Intervenții</a>
-    <a href="executie.html" class="bn-item"><span class="bn-icon">🔧</span>Execuție</a>
+    <a href="executie.html" class="bn-item"><span class="bn-icon">🦺</span>Execuție</a>
     <a href="mentenanta.html" class="bn-item"><span class="bn-icon">🔄</span>Mentenanță</a>
 </div>
 
@@ -1080,6 +1081,6 @@ if('serviceWorker' in navigator){
     navigator.serviceWorker.register('../sw.js').then(function(r){console.log('[PWA] SW registered:',r.scope)}).catch(function(e){console.log('[PWA] SW failed:',e)});
 }
 </script>
-<script src="/admin/notifications.js?v=3" defer></script>
+<script src="/admin/notifications.js?v=4" defer></script>
 </body>
 </html>

@@ -150,6 +150,7 @@ a{text-decoration:none;color:inherit;}button{font-family:inherit;cursor:pointer;
 .footer{text-align:center;color:var(--gray-xl);font-size:11px;padding:24px 0 100px;}
 </style>
 <script src="/admin/access-guard.js" defer></script>
+<link rel="stylesheet" href="/admin/portal.css?v=1">
 </head>
 <body data-module="proiectare">
 <div class="loading-bar" id="loadBar"></div>
@@ -557,7 +558,7 @@ function predaLaExecutie(){
     if(!STATE.gata_predat){toast('Mai sunt item-uri nebifate','error');return;}
     var dbId = STATE.proiect.proiect_db_id;
     // Fereastra cu data de început ține loc și de confirmare (Renunță = nu se predă)
-    cssiExecStart({titlu:'🔧 Predare la Execuție', subtitlu:'Statusul trece din „Proiectare” în „Execuție”. Alege data de început.'}).then(function(sel){
+    cssiExecStart({titlu:'🦺 Predare la Execuție', subtitlu:'Statusul trece din „Proiectare” în „Execuție”. Alege data de început.'}).then(function(sel){
         if(!sel) return;
         fetch(API_DB+'?action=updateStatus',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'updateStatus',id:dbId,status:'Executie',user:userName})})
             .then(function(r){return r.json()}).then(function(res){
@@ -583,6 +584,6 @@ if('serviceWorker' in navigator){
 }
 </script>
 <script src="/admin/exec-start.js?v=5"></script>
-<script src="/admin/notifications.js?v=3" defer></script>
+<script src="/admin/notifications.js?v=4" defer></script>
 </body>
 </html>

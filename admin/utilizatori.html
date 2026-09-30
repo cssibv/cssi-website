@@ -138,6 +138,7 @@ a{text-decoration:none;color:inherit;}button{font-family:inherit;cursor:pointer;
 .footer{text-align:center;color:var(--gray-xl);font-size:11px;padding:24px 0 40px;}
 .loading{text-align:center;padding:60px 20px;color:var(--gray-l);}
 </style>
+<link rel="stylesheet" href="/admin/portal.css?v=1">
 </head>
 <script src="/admin/access-guard.js" defer></script>
 <body data-module="utilizatori">
@@ -219,7 +220,7 @@ a{text-decoration:none;color:inherit;}button{font-family:inherit;cursor:pointer;
                     <label class="form-label">Tip cont</label>
                     <select class="form-select" id="cuTehnician">
                         <option value="0">🏢 Birou</option>
-                        <option value="1">🔧 Tehnician teren</option>
+                        <option value="1">🦺 Tehnician teren</option>
                     </select>
                 </div>
             </div>
@@ -292,7 +293,7 @@ a{text-decoration:none;color:inherit;}button{font-family:inherit;cursor:pointer;
                     <label class="form-label">Tip cont</label>
                     <select class="form-select" id="editTehnician">
                         <option value="0">🏢 Birou</option>
-                        <option value="1">🔧 Tehnician teren</option>
+                        <option value="1">🦺 Tehnician teren</option>
                     </select>
                 </div>
             </div>
@@ -362,7 +363,7 @@ function renderStats(){
         '<div class="stat"><div class="stat-icon" style="background:#eff6ff">👥</div><div><div class="stat-val" style="color:var(--blue)">'+total+'</div><div class="stat-label">Total useri</div></div></div>'+
         '<div class="stat"><div class="stat-icon" style="background:#f0fdf4">✓</div><div><div class="stat-val" style="color:var(--green)">'+active+'</div><div class="stat-label">Activi</div></div></div>'+
         '<div class="stat"><div class="stat-icon" style="background:#fef2f2">🔒</div><div><div class="stat-val" style="color:var(--red)">'+locked+'</div><div class="stat-label">Blocați</div></div></div>'+
-        '<div class="stat"><div class="stat-icon" style="background:#fff7ed">🔧</div><div><div class="stat-val" style="color:var(--orange)">'+tech+'</div><div class="stat-label">Tehnicieni teren</div></div></div>';
+        '<div class="stat"><div class="stat-icon" style="background:#fff7ed">🦺</div><div><div class="stat-val" style="color:var(--orange)">'+tech+'</div><div class="stat-label">Tehnicieni teren</div></div></div>';
 }
 
 function renderFilterChips(){
@@ -382,7 +383,7 @@ function renderFilterChips(){
         chip('locked','🔒 Blocați') +
         chip('inactive','⊘ Inactivi') +
         chip('admin','🔑 Admin') +
-        chip('tehnician','🔧 Tehnicieni');
+        chip('tehnician','🦺 Tehnicieni');
 }
 
 function setFilter(f){STATE.filter=f;renderUsers();renderFilterChips();}
@@ -535,7 +536,7 @@ var MODULE_CATALOG = [
     {id:'calculator',  icon:'📝', name:'Oferte (Generator)'},
     {id:'contracte',   icon:'📄', name:'Contracte'},
     {id:'planificare', icon:'📅', name:'Planificare'},
-    {id:'executie',    icon:'🔧', name:'Execuție'},
+    {id:'executie',    icon:'🦺', name:'Execuție'},
     {id:'proiectare',  icon:'📐', name:'Proiectare'},
     {id:'mentenanta',  icon:'🔄', name:'Mentenanță'},
     {id:'financiar',   icon:'💳', name:'Financiar'},
@@ -618,6 +619,6 @@ if('serviceWorker' in navigator){
     navigator.serviceWorker.addEventListener('controllerchange',function(){if(__reloaded)return;__reloaded=true;window.location.reload();});
 }
 </script>
-<script src="/admin/notifications.js?v=3" defer></script>
+<script src="/admin/notifications.js?v=4" defer></script>
 </body>
 </html>

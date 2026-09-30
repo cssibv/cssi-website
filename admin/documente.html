@@ -91,6 +91,7 @@ a{text-decoration:none;color:inherit;}button{font-family:inherit;cursor:pointer;
 .footer{text-align:center;color:var(--gray-xl);font-size:11px;padding:24px 0 100px;}
 </style>
 <script src="/admin/access-guard.js" defer></script>
+<link rel="stylesheet" href="/admin/portal.css?v=1">
 </head>
 <body data-module="documente">
 <div class="toast-container" id="toastContainer"></div>
@@ -138,7 +139,7 @@ a{text-decoration:none;color:inherit;}button{font-family:inherit;cursor:pointer;
     <a href="../admin.html" class="bn-item"><span class="bn-icon">🏠</span>Acasă</a>
     <a href="proiecte.html" class="bn-item"><span class="bn-icon">📋</span>Proiecte</a>
     <a href="crm-clienti.html" class="bn-item"><span class="bn-icon">💰</span>CRM</a>
-    <a href="executie.html" class="bn-item"><span class="bn-icon">🔧</span>Execuție</a>
+    <a href="executie.html" class="bn-item"><span class="bn-icon">🦺</span>Execuție</a>
     <a href="financiar.html" class="bn-item"><span class="bn-icon">📄</span>Facturi</a>
 </div>
 
@@ -318,6 +319,6 @@ renderFolders();
 <script>
 if('serviceWorker' in navigator){navigator.serviceWorker.register('../sw.js').then(function(r){console.log('[PWA] SW registered, scope:',r.scope)}).catch(function(e){console.log('[PWA] SW failed:',e)});var __reloaded=false;navigator.serviceWorker.addEventListener('controllerchange',function(){if(__reloaded)return;__reloaded=true;window.location.reload();});}
 </script>
-<script src="/admin/notifications.js?v=3" defer></script>
+<script src="/admin/notifications.js?v=4" defer></script>
 </body>
 </html>

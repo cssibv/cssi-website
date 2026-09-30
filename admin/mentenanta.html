@@ -131,6 +131,7 @@ tr:hover td{background:rgba(59,130,246,0.03);}
 .confirm-btns button{padding:10px 24px;border-radius:10px;border:none;font-weight:700;font-size:13px;cursor:pointer;}
 </style>
 <script src="/admin/access-guard.js" defer></script>
+<link rel="stylesheet" href="/admin/portal.css?v=1">
 </head>
 <body data-module="mentenanta">
 
@@ -185,7 +186,7 @@ tr:hover td{background:rgba(59,130,246,0.03);}
     <a href="../admin.html" class="bn-item"><span class="bn-icon">🏠</span>Acasă</a>
     <a href="proiecte.html" class="bn-item"><span class="bn-icon">📋</span>Proiecte</a>
     <a href="crm-clienti.html" class="bn-item"><span class="bn-icon">💰</span>CRM</a>
-    <a href="executie.html" class="bn-item"><span class="bn-icon">🔧</span>Execuție</a>
+    <a href="executie.html" class="bn-item"><span class="bn-icon">🦺</span>Execuție</a>
     <a href="financiar.html" class="bn-item"><span class="bn-icon">📄</span>Facturi</a>
 </div>
 
@@ -599,6 +600,6 @@ if(API_URL) refreshData();
 <script>
 if('serviceWorker' in navigator){navigator.serviceWorker.register('../sw.js').then(function(r){console.log('[PWA] SW registered, scope:',r.scope)}).catch(function(e){console.log('[PWA] SW failed:',e)});var __reloaded=false;navigator.serviceWorker.addEventListener('controllerchange',function(){if(__reloaded)return;__reloaded=true;window.location.reload();});}
 </script>
-<script src="/admin/notifications.js?v=3" defer></script>
+<script src="/admin/notifications.js?v=4" defer></script>
 </body>
 </html>

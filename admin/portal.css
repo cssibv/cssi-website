@@ -1,0 +1,51 @@
+/* ============================================================
+   CSSI Portal — reguli comune pentru paginile admin
+   Se încarcă DUPĂ stilurile fiecărei pagini, deci le corectează.
+   Aici stă doar ce e la fel peste tot: antetul, butoanele din
+   antet și clopoțelul de notificări. Stilurile de pagină rămân
+   în pagină.
+   ============================================================ */
+
+/* Nimic nu mai împinge pagina lateral pe telefon */
+html, body { max-width: 100%; }
+.page-header { position: relative; min-width: 0; }
+.page-header > * { min-width: 0; }
+.page-title { overflow-wrap: anywhere; }
+
+/* Clopoțelul de notificări așezat în antet (notifications.js îl mută aici) */
+.cssi-notif-bell.in-header {
+    position: relative; top: auto; right: auto; left: auto;
+    flex: 0 0 auto; width: 40px; height: 40px; font-size: 18px;
+    box-shadow: none; animation: none; order: 99;
+}
+/* Pe ecran mare: butoanele rămân lipite în dreapta, lângă clopoțel */
+.page-header.has-bell > .page-actions { margin-left: auto; }
+.page-header.bell-dark .cssi-notif-bell.in-header {
+    background: rgba(255,255,255,0.12); border-color: rgba(255,255,255,0.22);
+}
+.page-header.bell-dark .cssi-notif-bell.in-header:hover { background: rgba(255,255,255,0.2); }
+.page-header.bell-dark .cssi-notif-bell.in-header .cssi-notif-badge { border-color: transparent; }
+
+@media (max-width: 600px) {
+    .page-header {
+        padding: 16px; border-radius: 16px; gap: 12px;
+        flex-wrap: wrap; align-items: flex-start;
+    }
+    .page-header > :first-child { flex: 1 1 100%; }
+    .page-title { font-size: 20px; line-height: 1.2; }
+
+    /* Butoanele din antet: pe rânduri, pe toată lățimea, fără să iasă din ecran */
+    .page-actions { width: 100%; flex-wrap: wrap; gap: 8px; }
+    .page-actions > * {
+        flex: 1 1 auto; min-width: 0; justify-content: center; text-align: center;
+        white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+
+    .page-actions > .icon-only { flex: 0 0 44px; padding-left: 0; padding-right: 0; }
+
+    /* Clopoțelul stă în colțul antetului; titlul îi lasă loc */
+    .page-header.has-bell > :first-child { padding-right: 48px; }
+    .cssi-notif-bell.in-header {
+        position: absolute; top: 12px; right: 12px; width: 38px; height: 38px; font-size: 17px;
+    }
+}

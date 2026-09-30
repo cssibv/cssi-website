@@ -177,6 +177,7 @@ tr:hover td{background:#f8fafc;}
 @keyframes loadSlide{0%{margin-left:-30%}100%{margin-left:100%}}
 </style>
 <script src="/admin/access-guard.js" defer></script>
+<link rel="stylesheet" href="/admin/portal.css?v=1">
 </head>
 <body data-module="planificare">
 <div class="loading-bar" id="loadBar"></div>
@@ -190,7 +191,7 @@ tr:hover td{background:#f8fafc;}
             <div class="page-subtitle" id="syncStatus"><span class="sync-indicator sync-off"></span>Se încarcă...</div>
         </div>
         <div class="page-actions">
-            <a href="executie.html" class="page-btn secondary">🔧 Execuție</a>
+            <a href="executie.html" class="page-btn secondary">🦺 Execuție</a>
             <button class="page-btn secondary" id="refreshBtn" onclick="refreshData()"><span class="spin-icon">🔄</span> Reîncarcă</button>
         </div>
     </div>
@@ -238,7 +239,7 @@ tr:hover td{background:#f8fafc;}
     <a href="../admin.html" class="bn-item"><span class="bn-icon">🏠</span>Acasă</a>
     <a href="proiecte.html" class="bn-item"><span class="bn-icon">📋</span>Proiecte</a>
     <a href="planificare.html" class="bn-item active"><span class="bn-icon">📅</span>Plan</a>
-    <a href="executie.html" class="bn-item"><span class="bn-icon">🔧</span>Execuție</a>
+    <a href="executie.html" class="bn-item"><span class="bn-icon">🦺</span>Execuție</a>
     <a href="financiar.html" class="bn-item"><span class="bn-icon">📄</span>Facturi</a>
 </div>
 
@@ -884,6 +885,6 @@ if('serviceWorker' in navigator){
     });
 }
 </script>
-<script src="/admin/notifications.js?v=3" defer></script>
+<script src="/admin/notifications.js?v=4" defer></script>
 </body>
 </html>

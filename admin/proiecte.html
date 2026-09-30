@@ -179,6 +179,9 @@ a{text-decoration:none;color:inherit;}button{font-family:inherit;cursor:pointer;
 .kanban-col.empty{flex-grow:0!important;width:80px!important;min-width:80px!important;opacity:0.6;}
 .kanban-col.empty .kcol-body{min-height:80px;}
 .kanban-col.empty .kanban-empty{font-size:10px;padding:10px;}
+/* Coloană goală (îngustă): numele deasupra numărului, ca să nu se suprapună */
+.kanban-col.empty .kcol-head{flex-direction:column;justify-content:center;gap:4px;padding:10px 6px;}
+.kanban-col.empty .kcol-name{font-size:10px;letter-spacing:0;max-width:100%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;text-align:center;}
 .kanban.dragging-active .kanban-col.empty{opacity:1;border:2px dashed var(--blue);background:rgba(59,130,246,0.03);}
 .kanban.dragging-active .kanban-col.empty .kcol-body{min-height:120px;}
 .kcard-age{font-size:9px;font-weight:600;padding:2px 6px;border-radius:4px;display:inline-block;margin-top:4px;}
@@ -237,6 +240,7 @@ a{text-decoration:none;color:inherit;}button{font-family:inherit;cursor:pointer;
 .fin-actions .submit:disabled{background:#94a3b8;cursor:not-allowed}
 </style>
 <script src="/admin/access-guard.js" defer></script>
+<link rel="stylesheet" href="/admin/portal.css?v=1">
 </head>
 <body data-module="proiecte">
 <div class="loading-bar" id="loadBar"></div>
@@ -271,7 +275,7 @@ a{text-decoration:none;color:inherit;}button{font-family:inherit;cursor:pointer;
         <button class="filter-chip" data-filter="Lead" onclick="setFilter('Lead',this)">📞 Lead</button>
         <button class="filter-chip" data-filter="Ofertă" onclick="setFilter('Ofertă',this)">📋 Ofertă</button>
         <button class="filter-chip" data-filter="Contract" onclick="setFilter('Contract',this)">✅ Contract</button>
-        <button class="filter-chip" data-filter="Execuție" onclick="setFilter('Execuție',this)">🔧 Execuție</button>
+        <button class="filter-chip" data-filter="Execuție" onclick="setFilter('Execuție',this)">🦺 Execuție</button>
         <button class="filter-chip" data-filter="Facturat" onclick="setFilter('Facturat',this)">💳 Facturat</button>
         <button class="filter-chip" data-filter="Mentenanță" onclick="setFilter('Mentenanță',this)">🔄 Mentenanță</button>
         <button class="filter-chip" data-filter="Anulat" onclick="setFilter('Anulat',this);switchView('table',document.querySelectorAll('.tab')[1])" style="border-color:#fecaca;color:var(--red)">❌ Anulate</button>
@@ -334,7 +338,7 @@ a{text-decoration:none;color:inherit;}button{font-family:inherit;cursor:pointer;
                     <select class="form-select" name="status" id="eStatus">
                         <option value="Lead">📞 Lead</option><option value="Ofertă">📋 Ofertă</option>
                         <option value="Contract">✅ Contract</option><option value="Proiectare">📐 Proiectare</option>
-                        <option value="Execuție">🔧 Execuție</option><option value="Recepție">📸 Recepție</option>
+                        <option value="Execuție">🦺 Execuție</option><option value="Recepție">📸 Recepție</option>
                         <option value="Facturat">💳 Facturat</option><option value="Mentenanță">🔄 Mentenanță</option>
                         <option value="Finalizat">✅ Finalizat</option><option value="Anulat">❌ Anulat</option>
                     </select>
@@ -354,7 +358,7 @@ a{text-decoration:none;color:inherit;}button{font-family:inherit;cursor:pointer;
     <a href="../admin.html" class="bn-item"><span class="bn-icon">🏠</span>Acasă</a>
     <a href="proiecte.html" class="bn-item active"><span class="bn-icon">📋</span>Proiecte</a>
     <a href="crm-clienti.html" class="bn-item"><span class="bn-icon">💰</span>CRM</a>
-    <a href="executie.html" class="bn-item"><span class="bn-icon">🔧</span>Execuție</a>
+    <a href="executie.html" class="bn-item"><span class="bn-icon">🦺</span>Execuție</a>
     <a href="financiar.html" class="bn-item"><span class="bn-icon">📄</span>Facturi</a>
 </div>
 
@@ -384,7 +388,7 @@ a{text-decoration:none;color:inherit;}button{font-family:inherit;cursor:pointer;
                 <select class="form-select" name="status" required>
                     <option value="Lead">📞 Lead</option><option value="Ofertă">📋 Ofertă</option>
                     <option value="Contract">✅ Contract</option><option value="Proiectare">📐 Proiectare</option>
-                    <option value="Execuție">🔧 Execuție</option><option value="Recepție">📸 Recepție</option>
+                    <option value="Execuție">🦺 Execuție</option><option value="Recepție">📸 Recepție</option>
                     <option value="Facturat">💳 Facturat</option><option value="Mentenanță">🔄 Mentenanță</option>
                 </select>
             </div>
@@ -459,7 +463,7 @@ var STATUS_MAP={'Lead':'lead','Ofertă':'oferta','Contract':'contract','Proiecta
 var SERVICE_TAGS={};
 CRM_SERVICII.forEach(function(s){ SERVICE_TAGS[s.ui]={cls:s.cls, s:s.tag.replace(/^\S+\s/, '')}; });
 SERVICE_TAGS['Instalații Sanitare']={cls:'install',s:'Sanitare'};
-var STATUS_ICONS={'Lead':'📞','Ofertă':'📋','Contract':'✅','Proiectare':'📐','Execuție':'🔧','Recepție':'📸','Facturat':'💳','Mentenanță':'🔄'};
+var STATUS_ICONS={'Lead':'📞','Ofertă':'📋','Contract':'✅','Proiectare':'📐','Execuție':'🦺','Recepție':'📸','Facturat':'💳','Mentenanță':'🔄'};
 
 // ═══════ STATE ═══════
 var PROJECTS=[];
@@ -890,7 +894,7 @@ function openProjectDetail(projectId){
         (p.note?'<div style="font-size:11px;color:var(--gray);padding:8px;background:var(--gray-bg);border-radius:8px;margin-bottom:12px">📝 '+esc(p.note)+'</div>':'')+
         timelineHtml+
         '<div id="oferteSection" style="margin-bottom:12px"><div style="text-align:center;padding:12px;color:var(--gray-l);font-size:12px">⏳ Se încarcă ofertele...</div></div>'+
-        (p.status==='Contract'?'<div style="background:linear-gradient(135deg,#f0fdfa,#eff6ff);border:2px solid var(--teal);border-radius:12px;padding:16px;margin-bottom:12px"><div style="font-size:13px;font-weight:800;margin-bottom:10px;color:var(--dark)">➡️ Următorul pas:</div><div style="display:flex;gap:8px"><button onclick="sendToStatus('+Q+p.id+Q+','+Q+'Proiectare'+Q+')" style="flex:1;padding:12px;border-radius:10px;border:none;background:var(--teal);color:#fff;font-weight:700;font-size:13px;cursor:pointer">📐 Trimite la Proiectare</button><button onclick="sendToStatus('+Q+p.id+Q+','+Q+'Execu\u021bie'+Q+')" style="flex:1;padding:12px;border-radius:10px;border:none;background:var(--orange);color:#fff;font-weight:700;font-size:13px;cursor:pointer">🔧 Execuție directă</button></div><div style="font-size:10px;color:var(--gray);margin-top:8px">📐 Proiectare = necesită scheme, avize IGPR/ISU · 🔧 Execuție = montaj direct</div></div>':'')+
+        (p.status==='Contract'?'<div style="background:linear-gradient(135deg,#f0fdfa,#eff6ff);border:2px solid var(--teal);border-radius:12px;padding:16px;margin-bottom:12px"><div style="font-size:13px;font-weight:800;margin-bottom:10px;color:var(--dark)">➡️ Următorul pas:</div><div style="display:flex;gap:8px"><button onclick="sendToStatus('+Q+p.id+Q+','+Q+'Proiectare'+Q+')" style="flex:1;padding:12px;border-radius:10px;border:none;background:var(--teal);color:#fff;font-weight:700;font-size:13px;cursor:pointer">📐 Trimite la Proiectare</button><button onclick="sendToStatus('+Q+p.id+Q+','+Q+'Execu\u021bie'+Q+')" style="flex:1;padding:12px;border-radius:10px;border:none;background:var(--orange);color:#fff;font-weight:700;font-size:13px;cursor:pointer">🦺 Execuție directă</button></div><div style="font-size:10px;color:var(--gray);margin-top:8px">📐 Proiectare = necesită scheme, avize IGPR/ISU · 🦺 Execuție = montaj direct</div></div>':'')+
         '<div style="display:flex;gap:8px;flex-wrap:wrap">'+
         '<button onclick="openEditModal('+Q+p.id+Q+')" style="flex:1;padding:10px;border-radius:10px;border:none;background:var(--blue);color:#fff;font-weight:700;font-size:13px;cursor:pointer">✏️ Editează</button>'+
         '<button onclick="cancelProject('+Q+p.id+Q+')" style="padding:10px 14px;border-radius:10px;border:none;background:#fef2f2;color:var(--red);font-weight:700;font-size:13px;cursor:pointer" title="Anulează proiectul">❌ Anulează</button>'+
@@ -1429,6 +1433,6 @@ loadProjects=function(){_origLoadProjects.apply(this,arguments);setTimeout(_load
 if('serviceWorker' in navigator){navigator.serviceWorker.register('../sw.js').then(function(r){console.log('[PWA] SW registered, scope:',r.scope)}).catch(function(e){console.log('[PWA] SW failed:',e)});var __reloaded=false;navigator.serviceWorker.addEventListener('controllerchange',function(){if(__reloaded)return;__reloaded=true;window.location.reload();});}
 </script>
 <script src="/admin/exec-start.js?v=5"></script>
-<script src="/admin/notifications.js?v=3" defer></script>
+<script src="/admin/notifications.js?v=4" defer></script>
 </body>
 </html>

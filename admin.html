@@ -47,6 +47,19 @@ a{text-decoration:none;color:inherit;}button{font-family:inherit;cursor:pointer;
 .topbar-pill{display:inline-flex;align-items:center;gap:5px;padding:6px 12px;background:var(--dark);color:#fff;border-radius:99px;font-size:12px;font-weight:600;}
 .topbar-logout{background:none;border:1px solid var(--gray-b);color:var(--gray);font-size:12px;padding:6px 14px;border-radius:99px;font-weight:600;transition:all 0.2s;}
 .topbar-logout:hover{color:var(--red);border-color:var(--red);background:#fef2f2;}
+.topbar-pill{white-space:nowrap;max-width:100%;overflow:hidden;text-overflow:ellipsis;}
+#syncBadge{white-space:nowrap;}
+/* Telefon: bara de sus pe două rânduri. Sus: logo + clopoțel + parolă + ieșire; jos: numele/rolul și sincronizarea */
+@media(max-width:600px){
+  .topbar{display:grid;grid-template-columns:minmax(0,1fr) auto auto auto;align-items:center;column-gap:8px;row-gap:10px;padding:10px 0 12px;}
+  .topbar-right{display:contents;}
+  .topbar-left{grid-column:1;grid-row:1;min-width:0;gap:10px;}
+  #notifBell{grid-column:2;grid-row:1;margin-right:0!important;width:38px;height:38px;display:flex;align-items:center;justify-content:center;border:1px solid var(--gray-b);border-radius:50%;background:#fff;}
+  .topbar-right>button[title]{grid-column:3;grid-row:1;margin-right:0!important;height:38px;}
+  .topbar-right>button:last-child{grid-column:4;grid-row:1;height:38px;}
+  #rolePill{grid-column:1 / 3;grid-row:2;justify-self:start;min-width:0;}
+  #syncBadge{grid-column:3 / 5;grid-row:2;justify-self:end;}
+}
 .sync-dot{width:8px;height:8px;border-radius:50%;display:inline-block;margin-right:4px;}
 .sync-dot.ok{background:var(--green);box-shadow:0 0 6px rgba(34,197,94,0.5);}.sync-dot.off{background:var(--gray-l);}
 
@@ -272,7 +285,7 @@ a{text-decoration:none;color:inherit;}button{font-family:inherit;cursor:pointer;
         <div id="err" class="auth-error"></div>
         <button type="submit" class="auth-btn" id="loginBtn">Intră în Portal</button>
     </form>
-    <a href="/admin/teren.html" style="display:block;margin-top:18px;padding:12px;background:linear-gradient(135deg,#fff7ed,#ffedd5);border:1px solid #fed7aa;border-radius:12px;text-align:center;font-size:13px;font-weight:700;color:#9a3412;text-decoration:none;transition:all 0.2s">🔧 Ești tehnician? <span style="color:var(--orange);text-decoration:underline">Acces echipă teren →</span></a>
+    <a href="/admin/teren.html" style="display:block;margin-top:18px;padding:12px;background:linear-gradient(135deg,#fff7ed,#ffedd5);border:1px solid #fed7aa;border-radius:12px;text-align:center;font-size:13px;font-weight:700;color:#9a3412;text-decoration:none;transition:all 0.2s">🦺 Ești tehnician? <span style="color:var(--orange);text-decoration:underline">Acces echipă teren →</span></a>
     <p class="auth-footer">CSSI · Confort, Securitate, Siguranță, Imobil</p>
 </div>
 </div>
@@ -360,7 +373,7 @@ a{text-decoration:none;color:inherit;}button{font-family:inherit;cursor:pointer;
     <a href="/admin.html" class="bn-item active"><span class="bn-icon">🏠</span>Acasă</a>
     <a href="/admin/proiecte.html" class="bn-item"><span class="bn-icon">📋</span>Proiecte</a>
     <a href="/admin/crm-clienti.html" class="bn-item"><span class="bn-icon">💰</span>CRM</a>
-    <a href="/admin/executie.html" class="bn-item"><span class="bn-icon">🔧</span>Execuție</a>
+    <a href="/admin/executie.html" class="bn-item"><span class="bn-icon">🦺</span>Execuție</a>
     <a href="/admin/financiar.html" class="bn-item"><span class="bn-icon">📄</span>Facturi</a>
 </div>
 
@@ -395,7 +408,7 @@ a{text-decoration:none;color:inherit;}button{font-family:inherit;cursor:pointer;
             <div class="form-group"><label class="form-label">Status inițial <span class="req">*</span></label>
                 <select class="form-select" name="status" required>
                     <option value="Lead">📞 Lead</option><option value="Ofertă">📋 Ofertă</option><option value="Contract">✅ Contract</option>
-                    <option value="Proiectare">📐 Proiectare</option><option value="Execuție">🔧 Execuție</option><option value="Recepție">📸 Recepție</option>
+                    <option value="Proiectare">📐 Proiectare</option><option value="Execuție">🦺 Execuție</option><option value="Recepție">📸 Recepție</option>
                     <option value="Facturat">💳 Facturat</option><option value="Mentenanță">🔄 Mentenanță</option>
                 </select>
             </div>
@@ -495,29 +508,29 @@ var ROLES={
         actions:[{l:"Board Proiecte",h:"/admin/proiecte.html",i:"📌"},{l:"Financiar",h:"/admin/financiar.html",i:"💳"},{l:"CRM Clienți",h:"/admin/crm-clienti.html",i:"💰"},{l:"Documente",h:"/admin/documente.html",i:"📁"},{l:"Mentenanță",h:"/admin/mentenanta.html",i:"🔄"}],
         showKanban:true,showKpi:true,showQuick:true,showAlerts:true},
     valentin:{name:"Valentin",greeting:"👋 Salut, Valentin!",sub:"Proiectare · Execuție · Acces complet",pill:"📐 Valentin · Proiectare",gradient:"admin",
-        actions:[{l:"Proiectare",h:"/admin/proiectare.html",i:"📐"},{l:"Board Proiecte",h:"/admin/proiecte.html",i:"📌"},{l:"Execuție",h:"/admin/executie.html",i:"🔧"},{l:"Materiale",h:"/admin/materiale.html",i:"📦"},{l:"Necesar",h:"/admin/necesar-materiale.html",i:"🛒"}],
+        actions:[{l:"Proiectare",h:"/admin/proiectare.html",i:"📐"},{l:"Board Proiecte",h:"/admin/proiecte.html",i:"📌"},{l:"Execuție",h:"/admin/executie.html",i:"🦺"},{l:"Materiale",h:"/admin/materiale.html",i:"📦"},{l:"Necesar",h:"/admin/necesar-materiale.html",i:"🛒"}],
         showKanban:true,showKpi:true,showQuick:true,showAlerts:true},
     cristina:{name:"Cristina",greeting:"👋 Salut, Cristina!",sub:"Lead-uri · Prospectare · Acces complet",pill:"📞 Cristina · Lead-uri",gradient:"admin",
         actions:[{l:"+ Lead Nou",h:"javascript:openModal()",i:"📞"},{l:"CRM Clienți",h:"/admin/crm-clienti.html",i:"💰"},{l:"Board Proiecte",h:"/admin/proiecte.html",i:"📌"},{l:"Oferte",h:"/admin/calculator-pret.html",i:"📝"},{l:"Marketing",h:"/admin/marketing.html",i:"📊"}],
         showKanban:true,showKpi:true,showQuick:true,showAlerts:true},
     // ═══ TEHNICIENI — echipa de execuție pe teren ═══
-    zoli:{name:"Zoli",greeting:"👋 Salut, Zoli!",sub:"Tehnician execuție · Lucrări pe teren",pill:"🔧 Zoli · Execuție",gradient:"tech",
-        actions:[{l:"Execuția mea",h:"/admin/executie.html",i:"🔧"},{l:"Programul meu",h:"/admin/planificare.html",i:"📅"},{l:"Necesar materiale",h:"/admin/necesar-materiale.html",i:"🛒"}],
+    zoli:{name:"Zoli",greeting:"👋 Salut, Zoli!",sub:"Tehnician execuție · Lucrări pe teren",pill:"🦺 Zoli · Execuție",gradient:"tech",
+        actions:[{l:"Execuția mea",h:"/admin/executie.html",i:"🦺"},{l:"Programul meu",h:"/admin/planificare.html",i:"📅"},{l:"Necesar materiale",h:"/admin/necesar-materiale.html",i:"🛒"}],
         showKanban:false,showKpi:false,showQuick:false,showAlerts:true},
-    sanyi:{name:"Sanyi",greeting:"👋 Salut, Sanyi!",sub:"Tehnician execuție · Lucrări pe teren",pill:"🔧 Sanyi · Execuție",gradient:"tech",
-        actions:[{l:"Execuția mea",h:"/admin/executie.html",i:"🔧"},{l:"Programul meu",h:"/admin/planificare.html",i:"📅"},{l:"Necesar materiale",h:"/admin/necesar-materiale.html",i:"🛒"}],
+    sanyi:{name:"Sanyi",greeting:"👋 Salut, Sanyi!",sub:"Tehnician execuție · Lucrări pe teren",pill:"🦺 Sanyi · Execuție",gradient:"tech",
+        actions:[{l:"Execuția mea",h:"/admin/executie.html",i:"🦺"},{l:"Programul meu",h:"/admin/planificare.html",i:"📅"},{l:"Necesar materiale",h:"/admin/necesar-materiale.html",i:"🛒"}],
         showKanban:false,showKpi:false,showQuick:false,showAlerts:true},
-    bogdan:{name:"Bogdan",greeting:"👋 Salut, Bogdan!",sub:"Tehnician execuție · Lucrări pe teren",pill:"🔧 Bogdan · Execuție",gradient:"tech",
-        actions:[{l:"Execuția mea",h:"/admin/executie.html",i:"🔧"},{l:"Programul meu",h:"/admin/planificare.html",i:"📅"},{l:"Necesar materiale",h:"/admin/necesar-materiale.html",i:"🛒"}],
+    bogdan:{name:"Bogdan",greeting:"👋 Salut, Bogdan!",sub:"Tehnician execuție · Lucrări pe teren",pill:"🦺 Bogdan · Execuție",gradient:"tech",
+        actions:[{l:"Execuția mea",h:"/admin/executie.html",i:"🦺"},{l:"Programul meu",h:"/admin/planificare.html",i:"📅"},{l:"Necesar materiale",h:"/admin/necesar-materiale.html",i:"🛒"}],
         showKanban:false,showKpi:false,showQuick:false,showAlerts:true},
-    cezar:{name:"Cezar",greeting:"👋 Salut, Cezar!",sub:"Tehnician execuție · Lucrări pe teren",pill:"🔧 Cezar · Execuție",gradient:"tech",
-        actions:[{l:"Execuția mea",h:"/admin/executie.html",i:"🔧"},{l:"Programul meu",h:"/admin/planificare.html",i:"📅"},{l:"Necesar materiale",h:"/admin/necesar-materiale.html",i:"🛒"}],
+    cezar:{name:"Cezar",greeting:"👋 Salut, Cezar!",sub:"Tehnician execuție · Lucrări pe teren",pill:"🦺 Cezar · Execuție",gradient:"tech",
+        actions:[{l:"Execuția mea",h:"/admin/executie.html",i:"🦺"},{l:"Programul meu",h:"/admin/planificare.html",i:"📅"},{l:"Necesar materiale",h:"/admin/necesar-materiale.html",i:"🛒"}],
         showKanban:false,showKpi:false,showQuick:false,showAlerts:true},
-    cristi:{name:"Cristi",greeting:"👋 Salut, Cristi!",sub:"Tehnician execuție · Lucrări pe teren",pill:"🔧 Cristi · Execuție",gradient:"tech",
-        actions:[{l:"Execuția mea",h:"/admin/executie.html",i:"🔧"},{l:"Programul meu",h:"/admin/planificare.html",i:"📅"},{l:"Necesar materiale",h:"/admin/necesar-materiale.html",i:"🛒"}],
+    cristi:{name:"Cristi",greeting:"👋 Salut, Cristi!",sub:"Tehnician execuție · Lucrări pe teren",pill:"🦺 Cristi · Execuție",gradient:"tech",
+        actions:[{l:"Execuția mea",h:"/admin/executie.html",i:"🦺"},{l:"Programul meu",h:"/admin/planificare.html",i:"📅"},{l:"Necesar materiale",h:"/admin/necesar-materiale.html",i:"🛒"}],
         showKanban:false,showKpi:false,showQuick:false,showAlerts:true},
-    denes:{name:"Denes",greeting:"👋 Salut, Denes!",sub:"Tehnician execuție · Lucrări pe teren",pill:"🔧 Denes · Execuție",gradient:"tech",
-        actions:[{l:"Execuția mea",h:"/admin/executie.html",i:"🔧"},{l:"Programul meu",h:"/admin/planificare.html",i:"📅"},{l:"Necesar materiale",h:"/admin/necesar-materiale.html",i:"🛒"}],
+    denes:{name:"Denes",greeting:"👋 Salut, Denes!",sub:"Tehnician execuție · Lucrări pe teren",pill:"🦺 Denes · Execuție",gradient:"tech",
+        actions:[{l:"Execuția mea",h:"/admin/executie.html",i:"🦺"},{l:"Programul meu",h:"/admin/planificare.html",i:"📅"},{l:"Necesar materiale",h:"/admin/necesar-materiale.html",i:"🛒"}],
         showKanban:false,showKpi:false,showQuick:false,showAlerts:true}
 };
 
@@ -525,7 +538,7 @@ var ROLES={
 var STATUSES=[
     {id:"lead",name:"Lead",icon:"📞",cls:"lead"},{id:"oferta",name:"Ofertă",icon:"📋",cls:"oferta"},
     {id:"contract",name:"Contract",icon:"✅",cls:"contract"},{id:"proiectare",name:"Proiectare",icon:"📐",cls:"proiectare"},
-    {id:"executie",name:"Execuție",icon:"🔧",cls:"executie"},{id:"interventie",name:"Intervenție",icon:"⚡",cls:"executie"},
+    {id:"executie",name:"Execuție",icon:"🦺",cls:"executie"},{id:"interventie",name:"Intervenție",icon:"⚡",cls:"executie"},
     {id:"receptie",name:"Recepție",icon:"📸",cls:"receptie"},
     {id:"facturat",name:"Facturat",icon:"💳",cls:"facturat"},{id:"mentenanta",name:"Mentenanță",icon:"🔄",cls:"mentenanta"},
     {id:"finalizat",name:"Finalizate",icon:"🏁",cls:"finalizat"}
@@ -589,7 +602,7 @@ function buildFallbackProfile(u){
     var name = u.display_name || u.username;
     var tpl, label;
     if (u.role === 'admin')      { tpl = ROLES.admin;    label = '🔑 ' + name + ' · Admin'; }
-    else if (u.is_tehnician)     { tpl = ROLES.zoli;     label = '🔧 ' + name + ' · Execuție'; }
+    else if (u.is_tehnician)     { tpl = ROLES.zoli;     label = '🦺 ' + name + ' · Execuție'; }
     else if (u.role === 'sales') { tpl = ROLES.mihai;    label = '💰 ' + name + ' · Vânzări'; }
     else if (u.role === 'org')   { tpl = ROLES.roxana;   label = '📋 ' + name + ' · Organizare'; }
     else if (u.role === 'mkt')   { tpl = ROLES.cristina; label = '📊 ' + name + ' · Marketing'; }
@@ -728,7 +741,7 @@ function renderKPI(){
     html+=kpiCard('📄','#f5f3ff',OFERTE_STATS.total,'Oferte trimise','var(--purple)');
     html+=kpiCard('🎯','#f0fdf4',OFERTE_STATS.acceptate,'Oferte acceptate','var(--green)');
     html+=kpiCard('📐','#f0fdfa',proiectare,'La proiectare','var(--teal)');
-    html+=kpiCard('🔧','#fff7ed',executie,'În execuție','var(--orange)');
+    html+=kpiCard('🦺','#fff7ed',executie,'În execuție','var(--orange)');
     if(blocate>0) html+=kpiCard('⚠️','#fef2f2',blocate,'Blocate >14 zile','var(--red)');
     if(neprelate>0) html+=kpiCard('🚨','#fef2f2',neprelate,'Neprelate','var(--red)');
     document.getElementById('kpiGrid').innerHTML=html;
@@ -884,7 +897,7 @@ function cfStageActions(prj){
     } else if(st==='Proiectare'){
         A.push({cls:'primary',ic:'📐',txt:'Deschide proiectare',url:dbId?'/admin/proiectare-proiect.html?id='+dbId:'/admin/proiectare.html'});
     } else if(st==='Execuție'||st==='Intervenție'||st==='Recepție'){
-        A.push({cls:'primary',ic:'🔧',txt:'Deschide execuție',url:dbId?'/admin/executie-proiect.html?id='+dbId:'/admin/executie.html'});
+        A.push({cls:'primary',ic:'🦺',txt:'Deschide execuție',url:dbId?'/admin/executie-proiect.html?id='+dbId:'/admin/executie.html'});
         if(st==='Recepție') A.push({cls:'sms-review',ic:'📱',txt:'Cerere recenzie SMS',action:'sendReviewSMS',pid:dbId||prj.id});
     } else if(st==='Facturat'){
         A.push({cls:'primary',ic:'💳',txt:'Financiar',url:'/admin/financiar.html'});
@@ -1289,7 +1302,7 @@ function renderKPIFromStats(s){
     html+=kpiCard('💰','#fff7ed',fmtRON(s.pipelineValoare||0),'Pipeline (în așteptare)','var(--orange)',pipelineSub);
     html+=kpiCard('🤝','#f0fdf4',fmtRON(s.castigatLuna||0),'Câștigat luna asta','var(--green)',castigatLunaSub);
     html+=kpiCard('🎯','#f0fdf4',(s.conversionRate||0)+'%','Rată conversie',convCls,(s.oferteAcceptateTotal||0)+' acceptate total');
-    html+=kpiCard('🔧','#fff7ed',s.inExecutie||0,'În execuție','var(--orange)');
+    html+=kpiCard('🦺','#fff7ed',s.inExecutie||0,'În execuție','var(--orange)');
     html+=kpiCard('📐','#f0fdfa',s.laProiectare||0,'La proiectare','var(--teal)');
     html+=kpiCard('⏱️','#fef2f2',s.expirate||0,'Oferte expirate',expCls,(s.expirate||0)>0?'necesită follow-up':'totul OK');
     var g=document.getElementById('kpiGrid');if(g)g.innerHTML=html;

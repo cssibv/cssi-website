@@ -174,6 +174,7 @@ a{text-decoration:none;color:inherit;}button{font-family:inherit;cursor:pointer;
 .footer{text-align:center;color:var(--gray-xl);font-size:11px;padding:24px 0 60px;}
 </style>
 <script src="/admin/access-guard.js" defer></script>
+<link rel="stylesheet" href="/admin/portal.css?v=1">
 </head>
 <body data-module="calculator">
 <div class="loading-bar" id="loadBar"></div>
@@ -797,6 +798,6 @@ if('serviceWorker' in navigator){
     navigator.serviceWorker.register('../sw.js').then(function(r){console.log('[PWA] SW registered, scope:',r.scope)}).catch(function(e){console.log('[PWA] SW failed:',e)});
 }
 </script>
-<script src="/admin/notifications.js?v=3" defer></script>
+<script src="/admin/notifications.js?v=4" defer></script>
 </body>
 </html>

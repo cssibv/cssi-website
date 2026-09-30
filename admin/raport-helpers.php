@@ -99,7 +99,7 @@ function cssiRenderRaportText($d) {
     $b .= "📋 Proiecte active:       {$k['proiecte_active']} / {$k['proiecte_total']}\n";
     $b .= "📞 Lead-uri noi:          {$k['leaduri']}\n";
     $b .= "📐 La proiectare:         {$k['la_proiectare']}\n";
-    $b .= "🔧 În execuție:           {$k['in_executie']}\n";
+    $b .= "🦺 În execuție:           {$k['in_executie']}\n";
     $b .= "💰 Pipeline oferte:       {$k['pipeline_oferte_n']} oferte (" . cssiFmtRON($k['pipeline_oferte_v']) . " RON)\n";
     $b .= "🤝 Acceptate luna asta:   {$k['acceptate_luna_n']} (" . cssiFmtRON($k['acceptate_luna_v']) . " RON)\n";
     if ($k['expirate_oferte']) $b .= "⏱️ Oferte expirate:       {$k['expirate_oferte']}\n";
@@ -166,7 +166,7 @@ function cssiRenderRaportHtml($d) {
     $h .= '<tr>' . _kpiCellHtml('💰', 'Pipeline oferte', $k['pipeline_oferte_n'] . ' oferte · ' . cssiFmtRON($k['pipeline_oferte_v']) . ' RON', '#f97316');
     $h .=        _kpiCellHtml('📞', 'Lead-uri', (string)$k['leaduri'], '#8b5cf6') . '</tr>';
     $h .= '<tr>' . _kpiCellHtml('📐', 'La proiectare', (string)$k['la_proiectare'], '#14b8a6');
-    $h .=        _kpiCellHtml('🔧', 'În execuție', (string)$k['in_executie'], '#f97316') . '</tr>';
+    $h .=        _kpiCellHtml('🦺', 'În execuție', (string)$k['in_executie'], '#f97316') . '</tr>';
     if ($k['expirate_oferte']) {
         $h .= '<tr><td colspan="2" style="padding:10px"><div style="background:#fef2f2;border-left:4px solid #dc2626;padding:10px 14px;border-radius:6px;color:#991b1b;font-size:13px"><strong>⏱️ ' . $k['expirate_oferte'] . ' oferte expirate</strong>, necesită follow-up</div></td></tr>';
     }

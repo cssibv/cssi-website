@@ -78,6 +78,7 @@ a{text-decoration:none;color:inherit;}button{font-family:inherit;cursor:pointer;
 @media(max-width:600px){.proj-card{flex-wrap:wrap;}.proj-progress{order:5;width:100%;align-items:flex-start;margin-top:8px;}.proj-arrow{display:none;}}
 </style>
 <script src="/admin/access-guard.js" defer></script>
+<link rel="stylesheet" href="/admin/portal.css?v=1">
 </head>
 <body data-module="proiectare">
 <div class="loading-bar" id="loadBar"></div>
@@ -92,7 +93,7 @@ a{text-decoration:none;color:inherit;}button{font-family:inherit;cursor:pointer;
         </div>
         <div class="page-actions">
             <a href="jurnal-teren.html" class="page-btn primary">📋 Jurnal de teren</a>
-            <a href="executie.html" class="page-btn secondary">🔧 Execuție</a>
+            <a href="executie.html" class="page-btn secondary">🦺 Execuție</a>
             <button class="page-btn secondary" onclick="refreshData()">🔄 Reîncarcă</button>
         </div>
     </div>
@@ -113,7 +114,7 @@ a{text-decoration:none;color:inherit;}button{font-family:inherit;cursor:pointer;
     <a href="../admin.html" class="bn-item"><span class="bn-icon">🏠</span>Acasă</a>
     <a href="proiecte.html" class="bn-item"><span class="bn-icon">📋</span>Proiecte</a>
     <a href="proiectare.html" class="bn-item active"><span class="bn-icon">📐</span>Proiectare</a>
-    <a href="executie.html" class="bn-item"><span class="bn-icon">🔧</span>Execuție</a>
+    <a href="executie.html" class="bn-item"><span class="bn-icon">🦺</span>Execuție</a>
     <a href="financiar.html" class="bn-item"><span class="bn-icon">📄</span>Facturi</a>
 </div>
 
@@ -213,6 +214,6 @@ if('serviceWorker' in navigator){
     });
 }
 </script>
-<script src="/admin/notifications.js?v=3" defer></script>
+<script src="/admin/notifications.js?v=4" defer></script>
 </body>
 </html>

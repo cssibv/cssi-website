@@ -112,7 +112,21 @@
                 '<div class="cssi-notif-empty"><div class="icon">⏳</div>Se încarcă...</div>' +
             '</div>';
 
-        document.body.appendChild(bell);
+        // Pe paginile cu antet, clopoțelul stă în antet (vezi portal.css), nu plutește peste el
+        var header = document.querySelector('.page-header');
+        if (header) {
+            bell.classList.add('in-header');
+            header.classList.add('has-bell');
+            var m = (getComputedStyle(header).color || '').match(/\d+/g);
+            if (m && (0.299*m[0] + 0.587*m[1] + 0.114*m[2]) > 160) header.classList.add('bell-dark');
+            header.appendChild(bell);
+            // Butoanele din antet care au doar iconiță (🔄, 🔑...) rămân pătrate pe telefon, nu se întind pe tot rândul
+            [].forEach.call(header.querySelectorAll('.page-actions > *'), function(b){
+                if (!/[A-Za-z0-9À-ɏ]/.test(b.textContent || '')) b.classList.add('icon-only');
+            });
+        } else {
+            document.body.appendChild(bell);
+        }
         document.body.appendChild(panel);
 
         document.getElementById('cssiNotifMarkAll').addEventListener('click', function(e){
