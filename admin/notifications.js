@@ -27,8 +27,13 @@
 '.cssi-notif-head{padding:14px 18px;background:#0f172a;color:#fff;font-weight:800;font-size:14px;display:flex;justify-content:space-between;align-items:center;gap:8px;}' +
 '.cssi-notif-head button{background:rgba(255,255,255,0.15);border:none;color:#fff;padding:5px 10px;border-radius:6px;font-size:11px;font-weight:700;cursor:pointer;font-family:inherit;}' +
 '.cssi-notif-head button:hover{background:rgba(255,255,255,0.25);}' +
+'.cssi-notif-acts{display:flex;align-items:center;gap:8px;}' +
+'.cssi-notif-head .cssi-notif-close{width:30px;height:30px;padding:0;border-radius:50%;font-size:14px;line-height:1;display:flex;align-items:center;justify-content:center;}' +
 '.cssi-notif-body{max-height:calc(75vh - 50px);overflow-y:auto;padding:8px;}' +
-'.cssi-notif-item{display:flex;gap:10px;padding:11px 12px;border-radius:10px;margin-bottom:4px;cursor:pointer;transition:background 0.15s;font-size:12px;line-height:1.45;color:#0f172a;}' +
+'.cssi-notif-item{position:relative;display:flex;gap:10px;padding:11px 40px 11px 12px;border-radius:10px;margin-bottom:4px;cursor:pointer;transition:background 0.15s,opacity 0.18s;font-size:12px;line-height:1.45;color:#0f172a;}' +
+'.cssi-notif-item.gone{opacity:0;}' +
+'.cssi-notif-x{position:absolute;top:6px;right:6px;width:30px;height:30px;border-radius:50%;border:none;background:transparent;color:#94a3b8;font-size:14px;line-height:1;cursor:pointer;display:flex;align-items:center;justify-content:center;font-family:inherit;-webkit-tap-highlight-color:transparent;}' +
+'.cssi-notif-x:hover,.cssi-notif-x:focus-visible{background:#e2e8f0;color:#0f172a;outline:none;}' +
 '.cssi-notif-item:hover{background:#f1f5f9;}' +
 '.cssi-notif-item.unread{background:#fef2f2;border-left:3px solid #dc2626;}' +
 '.cssi-notif-item .time{font-size:10px;color:#94a3b8;margin-top:3px;font-weight:600;}' +
@@ -100,7 +105,8 @@
         panel.innerHTML =
             '<div class="cssi-notif-head">' +
                 '<span>🔔 Notificări</span>' +
-                '<button id="cssiNotifMarkAll">Marchează tot ca citit</button>' +
+                '<span class="cssi-notif-acts"><button id="cssiNotifMarkAll">Marchează tot ca citit</button>' +
+                '<button id="cssiNotifClose" class="cssi-notif-close" title="Închide" aria-label="Închide notificările">✕</button></span>' +
             '</div>' +
             '<div class="cssi-notif-body" id="cssiNotifBody">' +
                 '<div class="cssi-notif-empty"><div class="icon">⏳</div>Se încarcă...</div>' +
@@ -112,6 +118,14 @@
         document.getElementById('cssiNotifMarkAll').addEventListener('click', function(e){
             e.stopPropagation();
             markAll();
+        });
+
+        document.getElementById('cssiNotifClose').addEventListener('click', function(e){
+            e.stopPropagation();
+            panel.classList.remove('active');
+        });
+        document.addEventListener('keydown', function(e){
+            if (e.key === 'Escape') panel.classList.remove('active');
         });
 
         document.addEventListener('click', function(e){
@@ -140,6 +154,7 @@
             html += '<div class="cssi-notif-item ' + cls + '" data-id="' + n.id + '"';
             if (url) html += ' data-url="' + escHtml(url) + '"';
             html += '>';
+            html += '<button type="button" class="cssi-notif-x" title="Închide notificarea" aria-label="Închide notificarea">✕</button>';
             html += '<div style="flex:1">';
             html += '<div>' + escHtml(n.mesaj) + '</div>';
             html += '<div class="time">' + fmtAgo(n.created_at);
@@ -158,6 +173,12 @@
                 // Daca s-a apasat exact butonul "Sună", las link-ul tel: sa preia
                 // (markez ca citit dar NU navighez catre URL-ul ofertei)
                 var tgt = ev.target;
+                // X → scoate notificarea din listă (doar pentru userul curent), fără navigare
+                if (tgt && tgt.closest && tgt.closest('.cssi-notif-x')) {
+                    ev.stopPropagation();
+                    hideNotif(el);
+                    return;
+                }
                 if (tgt && tgt.closest && tgt.closest('.cssi-notif-call')) {
                     var id = el.getAttribute('data-id');
                     if (id) markRead(id);
@@ -222,6 +243,23 @@
             headers: {'Content-Type': 'application/json'},
             body: JSON.stringify({id: id})
         }).then(loadNotifications).catch(function(){});
+    }
+
+    function hideNotif(el){
+        var id = el.getAttribute('data-id');
+        if (!id) return;
+        el.classList.add('gone');
+        setTimeout(function(){
+            if (el.parentNode) el.parentNode.removeChild(el);
+            var body = document.getElementById('cssiNotifBody');
+            if (body && !body.querySelector('.cssi-notif-item'))
+                body.innerHTML = '<div class="cssi-notif-empty"><div class="icon">📭</div>Nicio notificare</div>';
+        }, 180);
+        fetch(API_DB + '?action=hideNotificare', {
+            method: 'POST', credentials: 'include',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({id: id})
+        }).then(loadNotifications).catch(loadNotifications);
     }
 
     function markAll(){

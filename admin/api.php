@@ -76,6 +76,19 @@ function execJurnalRows($db, $pid) {
     return $rows;
 }
 
+// ─── Helper: notificări închise cu X (per user; notificările rămân pentru ceilalți) ───
+function ensureNotifAscunse($db) {
+    static $checked = false;
+    if ($checked) return;
+    $checked = true;
+    $db->exec("CREATE TABLE IF NOT EXISTS notificari_ascunse (
+        user_id VARCHAR(60) NOT NULL,
+        notificare_id INT NOT NULL,
+        created_at DATETIME NULL DEFAULT NULL,
+        PRIMARY KEY (user_id, notificare_id)
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4");
+}
+
 // ─── Helper: schemă oferte (idempotent migration) ─────────────
 function ensureOferteColumns($db) {
     static $checked = false;
@@ -5576,11 +5589,16 @@ p { margin: 0; }
                 $cititCol = 'citit_' . $user;
             }
             
-            $stmt = $db->prepare("SELECT n.*, p.proiect_id AS cod_proiect, p.status AS status_proiect, p.preluat_de 
-                FROM notificari n 
-                LEFT JOIN proiecte p ON n.proiect_id = p.id 
+            // Notificările închise cu X de userul logat nu se mai trimit (doar pentru el)
+            ensureNotifAscunse($db);
+            $stmt = $db->prepare("SELECT n.*, p.proiect_id AS cod_proiect, p.status AS status_proiect, p.preluat_de
+                FROM notificari n
+                LEFT JOIN proiecte p ON n.proiect_id = p.id
+                LEFT JOIN notificari_ascunse h ON h.notificare_id = n.id AND h.user_id = ?
+                WHERE h.notificare_id IS NULL
                 ORDER BY n.created_at DESC LIMIT ?");
-            $stmt->bindValue(1, $limit, PDO::PARAM_INT);
+            $stmt->bindValue(1, strtolower($sessUser['username']), PDO::PARAM_STR);
+            $stmt->bindValue(2, $limit, PDO::PARAM_INT);
             $stmt->execute();
             $notifs = $stmt->fetchAll();
             
@@ -5604,6 +5622,22 @@ p { margin: 0; }
             }
             $col = 'citit_' . $user;
             $db->prepare("UPDATE notificari SET $col = 1 WHERE id = ?")->execute([$nid]);
+            jsonResponse(['success' => true]);
+            break;
+
+        case 'hideNotificare':
+            // X pe o notificare: o ascunde DOAR pentru userul logat (notificările sunt comune tuturor)
+            ensureNotifAscunse($db);
+            $sessUser = currentUser();
+            $nid = isset($data['id']) ? intval($data['id']) : 0;
+            $user = strtolower($sessUser['username']);
+            if (!$nid) { jsonResponse(['success' => false, 'error' => 'id obligatoriu'], 400); break; }
+            $db->prepare("INSERT IGNORE INTO notificari_ascunse (user_id, notificare_id, created_at) VALUES (?,?,?)")
+               ->execute([$user, $nid, date('Y-m-d H:i:s')]);
+            if (in_array($user, ['mihai','roxana','valentin','cristina'])) {
+                $col = 'citit_' . $user;
+                $db->prepare("UPDATE notificari SET $col = 1 WHERE id = ?")->execute([$nid]);
+            }
             jsonResponse(['success' => true]);
             break;
 
