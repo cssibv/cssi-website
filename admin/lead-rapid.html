@@ -178,8 +178,9 @@ textarea.input{resize:vertical;min-height:84px;line-height:1.4;font-weight:500;f
                     <input class="input" id="fNume" type="text" placeholder="Nume sau firmă" autocapitalize="words" autocomplete="off">
                 </div>
                 <div class="field">
-                    <label class="label" for="fTip">Solicitare</label>
-                    <input class="input" id="fTip" type="text" placeholder="Ce vrea, pe scurt" autocapitalize="sentences" autocomplete="off">
+                    <label class="label" for="fTip">Solicitare <span class="req">*</span></label>
+                    <input class="input" id="fTip" type="text" placeholder="Ce vrea, pe scurt" autocapitalize="sentences" autocomplete="off" aria-required="true">
+                    <div class="hint-err" id="tipErr">Scrie ce solicită sau apasă una din variantele de mai jos.</div>
                     <div class="sug-hint">Apasă una ca să începi, apoi completezi:</div>
                     <div class="chips sugestii" id="sugestii"></div>
                 </div>
@@ -330,7 +331,7 @@ $('sugestii').addEventListener('click', function(e){
     var b = e.target.closest('.chip'); if (!b) return;
     // Sugestia pornește textul, apoi continui tu („Ofertă camere”)
     $('fTip').value = b.textContent + ' ';
-    $('fTip').focus(); saveDraft();
+    $('fTip').focus(); tipErr(false); saveDraft();
 });
 
 // Ciornă: ce ai tastat rămâne dacă se închide pagina
@@ -345,18 +346,24 @@ function restoreDraft(){
 function telOk(){ return $('fTel').value.replace(/\D/g, '').length >= 10; }
 function telErr(on){ $('fTel').classList.toggle('bad', on); $('telErr').classList.toggle('show', on); }
 $('fTel').addEventListener('input', function(){ if (telOk()) telErr(false); });
+function tipOk(){ return $('fTip').value.trim() !== ''; }
+function tipErr(on){ $('fTip').classList.toggle('bad', on); $('tipErr').classList.toggle('show', on); }
+$('fTip').addEventListener('input', function(){ if (tipOk()) tipErr(false); });
 
 function saveLead(ev){
     ev.preventDefault();
     hideMsg();
     var tel = $('fTel').value.trim(), nume = $('fNume').value.trim();
-    if (!telOk()) { telErr(true); $('fTel').focus(); return; }
+    var okTel = telOk(), okTip = tipOk();
+    telErr(!okTel); tipErr(!okTip);
+    if (!okTel) { $('fTel').focus(); return; }
+    if (!okTip) { $('fTip').focus(); return; }
     var btn = $('btnSave'); btn.disabled = true; btn.textContent = 'Se salvează...';
     call('addLeadRapid', {telefon:tel, nume:nume, tip:$('fTip').value.trim(), detalii:$('fDet').value.trim()})
     .then(function(res){
         btn.disabled = false; btn.textContent = 'Adaugă';
         if (!res.success) throw new Error(res.error || 'Nesalvat');
-        $('addView').reset(); telErr(false);
+        $('addView').reset(); telErr(false); tipErr(false);
         try { localStorage.removeItem(KEY_DRAFT); } catch(e){}
         showMsg('Salvat: ' + (nume || tel) + '. E în listă, cu status Nou.', 'ok');
         loadLeads();
