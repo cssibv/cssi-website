@@ -7096,11 +7096,11 @@ p { margin: 0; }
                         'ext'  => $ext,
                         'img'  => in_array($ext, ['jpg', 'png', 'webp'], true),
                         'nume' => !empty($f['original_name']) ? $f['original_name'] : ('fisier.' . $ext),
+                        'can_delete' => isAdmin() || $by === $meName,   // cel care l-a urcat sau admin
                     ];
                     if (isset($f['tip']) && $f['tip'] === 'oferta') {
                         $item['de'] = isset($names[$by]) ? $names[$by] : $f['uploaded_by'];
                         $item['la'] = $f['created_at'];
-                        $item['can_delete'] = isAdmin() || $by === $meName;
                         $oferte[intval($f['lead_id'])][] = $item;
                     } else {
                         $foto[intval($f['lead_id'])][] = $item;
