@@ -38,11 +38,12 @@ button{cursor:pointer;border:none;background:none;color:inherit;}
 .card{background:#fff;border:1px solid var(--gray-b);border-radius:16px;padding:16px;margin-bottom:12px;}
 .field{margin-bottom:14px;}
 .field:last-child{margin-bottom:0;}
-.label{display:block;font-size:12px;font-weight:700;color:var(--gray);text-transform:uppercase;letter-spacing:0.4px;margin-bottom:6px;}
+.label{display:block;font-size:13px;font-weight:800;color:var(--dark2);text-transform:uppercase;letter-spacing:0.4px;margin-bottom:6px;}
 /* 16px minim pe câmpuri: sub atât iPhone-ul face zoom la focus */
-.input{width:100%;padding:13px 14px;border:1.5px solid var(--gray-b);border-radius:12px;font-size:17px;font-weight:600;color:var(--dark);background:#fff;outline:none;}
-.input:focus{border-color:var(--dark);}
-.input::placeholder{color:var(--gray-l);font-weight:500;}
+/* Câmpul gol trebuie să se vadă ca un câmp: contur mai închis + fundal ușor gri, alb la focus */
+.input{width:100%;padding:13px 14px;border:1.5px solid #b6c2d2;border-radius:12px;font-size:17px;font-weight:600;color:var(--dark);background:#f8fafc;outline:none;}
+.input:focus{border-color:var(--dark);background:#fff;box-shadow:0 0 0 3px rgba(15,23,42,0.08);}
+.input::placeholder{color:#7b8aa0;font-weight:500;}
 textarea.input{resize:vertical;min-height:84px;line-height:1.4;font-weight:500;font-size:16px;}
 
 .chips{display:flex;flex-wrap:wrap;gap:6px;}
