@@ -62,17 +62,15 @@ textarea.input{resize:vertical;min-height:84px;line-height:1.4;font-weight:500;f
 .hint-err{display:none;font-size:13px;font-weight:600;color:var(--red-d);margin-top:6px;}
 .hint-err.show{display:block;}
 
-/* Formularul „Adaugă”, strâns pe înălțime: telefon și nume pe același rând */
+/* Formularul „Adaugă”, strâns pe înălțime ca să încapă pe un ecran de telefon */
 #addView .card{padding:12px;margin-bottom:10px;}
-#addView .field{margin-bottom:10px;}
+#addView .field{margin-bottom:9px;}
 #addView .field:last-child{margin-bottom:0;}
 #addView .label{font-size:11px;margin-bottom:5px;}
-#addView .input{padding:10px 12px;font-size:16px;}
-#addView textarea.input{min-height:62px;}
+#addView .input{padding:9px 12px;font-size:16px;}
+#addView textarea.input{min-height:58px;}
 #addView .hint-err{font-size:12px;margin-top:4px;}
 #addView .btn.block{padding:14px;}
-.row2{display:flex;gap:10px;}
-.row2 .field{flex:1 1 0;min-width:0;}
 #addView .chip.sug{padding:7px 12px;font-size:13px;}
 
 /* Poze atașate */
@@ -214,17 +212,15 @@ textarea.input{resize:vertical;min-height:84px;line-height:1.4;font-weight:500;f
         <!-- Adaugă -->
         <form id="addView" class="hidden" onsubmit="saveLead(event)" autocomplete="off">
             <div class="card">
-                <div class="row2">
-                    <div class="field">
-                        <label class="label" for="fTel">Telefon <span class="req">*</span></label>
-                        <input class="input" id="fTel" type="tel" inputmode="tel" placeholder="07xx xxx xxx" autocomplete="off" aria-required="true">
-                    </div>
-                    <div class="field">
-                        <label class="label" for="fNume">Nume</label>
-                        <input class="input" id="fNume" type="text" placeholder="Nume sau firmă" autocapitalize="words" autocomplete="off">
-                    </div>
+                <div class="field">
+                    <label class="label" for="fTel">Telefon <span class="req">*</span></label>
+                    <input class="input" id="fTel" type="tel" inputmode="tel" placeholder="07xx xxx xxx" autocomplete="off" aria-required="true">
+                    <div class="hint-err" id="telErr">Telefonul trebuie să aibă minim 10 cifre.</div>
                 </div>
-                <div class="hint-err" id="telErr" style="margin:-4px 0 10px">Telefonul trebuie să aibă minim 10 cifre.</div>
+                <div class="field">
+                    <label class="label" for="fNume">Nume</label>
+                    <input class="input" id="fNume" type="text" placeholder="Nume sau firmă" autocapitalize="words" autocomplete="off">
+                </div>
                 <div class="field">
                     <label class="label" for="fTip">Solicitare <span class="req">*</span></label>
                     <input class="input" id="fTip" type="text" placeholder="Ce vrea, pe scurt" autocapitalize="sentences" autocomplete="off" aria-required="true">
