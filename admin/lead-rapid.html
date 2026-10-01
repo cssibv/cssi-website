@@ -255,7 +255,7 @@ textarea.input{resize:vertical;min-height:84px;line-height:1.4;font-weight:500;f
                         <input class="vh" id="fFoto" type="file" accept="image/*,.pdf,.doc,.docx,.xls,.xlsx,.csv,application/pdf" multiple>
                         <div class="thumbs" id="thumbs"></div>
                     </div>
-                    <div class="att-info">Poze, PDF, Word, Excel, CSV · max. 10, câte 10 MB</div>
+                    <div class="att-info">Poze, PDF, Word, Excel, CSV · max. 10, câte 25 MB</div>
                 </div>
             </div>
             <button type="submit" class="btn primary block" id="btnSave">Adaugă</button>
@@ -432,7 +432,7 @@ $('fTip').addEventListener('input', function(){ if (tipOk()) tipErr(false); });
 // ═══ Atașamente (opțional): pozele se micșorează în telefon înainte de trimitere, documentele merg ca atare ═══
 var FOTO = [];        // [{blob, url, name, ext}]  ext = '' la poze
 var MAX_FOTO = 10;
-var MAX_DOC = 10 * 1024 * 1024;
+var MAX_DOC = 25 * 1024 * 1024;
 var DOC_EXT = ['pdf', 'doc', 'docx', 'xls', 'xlsx', 'csv'];
 function extOf(name){ var m = /\.([a-z0-9]+)$/i.exec(name || ''); return m ? m[1].toLowerCase() : ''; }
 function fotoUrl(id){ return API + '?action=leadRapidFoto&f=' + id; }
@@ -472,7 +472,7 @@ $('fFoto').addEventListener('change', function(){
                     FOTO.push({blob:blob, url:URL.createObjectURL(blob), name:'poza.jpg', ext:''}); renderThumbs();
                 });
             }
-            if (file.size > MAX_DOC) { showMsg('„' + file.name + '” e prea mare (maxim 10 MB).', 'err'); return; }
+            if (file.size > MAX_DOC) { showMsg('„' + file.name + '” e prea mare (maxim 25 MB).', 'err'); return; }
             FOTO.push({blob:file, url:'', name:file.name || ('document.' + ext), ext:ext}); renderThumbs();
         });
     }, Promise.resolve());
@@ -662,7 +662,7 @@ $('fOferta').addEventListener('change', function(){
     this.value = '';
     if (!file || !id) return;
     if (file.type !== 'application/pdf' && extOf(file.name) !== 'pdf') { showMsg('Oferta trebuie să fie PDF.', 'err'); return; }
-    if (file.size > MAX_DOC) { showMsg('Oferta e prea mare (maxim 10 MB).', 'err'); return; }
+    if (file.size > MAX_DOC) { showMsg('Oferta e prea mare (maxim 25 MB).', 'err'); return; }
     showMsg('Se urcă oferta...', 'ok');
     uploadFoto(id, {blob:file, name:file.name || 'oferta.pdf'}, 'oferta').then(function(motiv){
         if (motiv) showMsg('Oferta nu s-a urcat: ' + motiv + '.', 'err'); else showMsg('Oferta a fost atașată.', 'ok');

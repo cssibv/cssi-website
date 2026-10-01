@@ -7252,7 +7252,7 @@ p { margin: 0; }
             $f = $_FILES['file'];
             if ($f['error'] === UPLOAD_ERR_INI_SIZE || $f['error'] === UPLOAD_ERR_FORM_SIZE) { jsonResponse(['success' => false, 'error' => 'Fișier prea mare pentru server'], 400); break; }
             if ($f['error'] !== UPLOAD_ERR_OK) { jsonResponse(['success' => false, 'error' => 'Upload eșuat (cod ' . $f['error'] . ')'], 400); break; }
-            if ($f['size'] > 10 * 1024 * 1024) { jsonResponse(['success' => false, 'error' => 'Fișier prea mare (max 10 MB)'], 400); break; }
+            if ($f['size'] > 25 * 1024 * 1024) { jsonResponse(['success' => false, 'error' => 'Fișier prea mare (max 25 MB)'], 400); break; }
             $ext = leadRapidTipFisier($f['tmp_name'], $f['name']);
             if ($ext === '') { jsonResponse(['success' => false, 'error' => 'Tip neacceptat (merg poze, PDF, Word, Excel, CSV)'], 400); break; }
             if ($eOferta && $ext !== 'pdf') { jsonResponse(['success' => false, 'error' => 'Oferta trebuie să fie PDF'], 400); break; }
