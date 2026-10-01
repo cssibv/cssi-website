@@ -7224,7 +7224,7 @@ p { margin: 0; }
             break;
 
         // Fișier la o cerere (multipart: id + file [+ tip=oferta]).
-        // Atașament = poză (micșorată de pagină înainte), PDF, Word, Excel sau CSV, maxim 6.
+        // Atașament = poză (micșorată de pagină înainte), PDF, Word, Excel sau CSV, maxim 10.
         // Ofertă = un singur PDF pe cerere, pus de cel care a preluat-o; unul nou îl înlocuiește pe cel vechi.
         case 'uploadLeadRapidFoto':
             requireLeadRapid();
@@ -7246,7 +7246,7 @@ p { margin: 0; }
             } else {
                 $stmt = $db->prepare("SELECT COUNT(*) FROM lead_rapid_foto WHERE lead_id = ? AND tip <> 'oferta'");
                 $stmt->execute([$id]);
-                if (intval($stmt->fetchColumn()) >= 6) { jsonResponse(['success' => false, 'error' => 'Maxim 6 fișiere pe cerere'], 400); break; }
+                if (intval($stmt->fetchColumn()) >= 10) { jsonResponse(['success' => false, 'error' => 'Maxim 10 fișiere pe cerere'], 400); break; }
             }
 
             $f = $_FILES['file'];

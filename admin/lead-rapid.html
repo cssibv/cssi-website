@@ -255,7 +255,7 @@ textarea.input{resize:vertical;min-height:84px;line-height:1.4;font-weight:500;f
                         <input class="vh" id="fFoto" type="file" accept="image/*,.pdf,.doc,.docx,.xls,.xlsx,.csv,application/pdf" multiple>
                         <div class="thumbs" id="thumbs"></div>
                     </div>
-                    <div class="att-info">Poze, PDF, Word, Excel, CSV · max. 6, câte 10 MB</div>
+                    <div class="att-info">Poze, PDF, Word, Excel, CSV · max. 10, câte 10 MB</div>
                 </div>
             </div>
             <button type="submit" class="btn primary block" id="btnSave">Adaugă</button>
@@ -431,7 +431,7 @@ $('fTip').addEventListener('input', function(){ if (tipOk()) tipErr(false); });
 
 // ═══ Atașamente (opțional): pozele se micșorează în telefon înainte de trimitere, documentele merg ca atare ═══
 var FOTO = [];        // [{blob, url, name, ext}]  ext = '' la poze
-var MAX_FOTO = 6;
+var MAX_FOTO = 10;
 var MAX_DOC = 10 * 1024 * 1024;
 var DOC_EXT = ['pdf', 'doc', 'docx', 'xls', 'xlsx', 'csv'];
 function extOf(name){ var m = /\.([a-z0-9]+)$/i.exec(name || ''); return m ? m[1].toLowerCase() : ''; }
