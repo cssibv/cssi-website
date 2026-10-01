@@ -156,6 +156,25 @@ function leadRapidTipFisier($tmp, $nume) {
     return '';
 }
 
+// Nume de afișat unic în cadrul unei cereri: al doilea „Oferta.pdf” devine „Oferta (2).pdf”.
+// (Pe disc fișierele au oricum nume aleatoare, deci nu se suprascriu; aici e vorba doar de etichetă.)
+function leadRapidNumeUnic($db, $leadId, $nume) {
+    if ($nume === '') return $nume;
+    $stmt = $db->prepare("SELECT original_name FROM lead_rapid_foto WHERE lead_id = ?");
+    $stmt->execute([$leadId]);
+    $luate = [];
+    foreach ($stmt->fetchAll(PDO::FETCH_COLUMN) as $n) $luate[mb_strtolower((string)$n)] = true;
+    if (!isset($luate[mb_strtolower($nume)])) return $nume;
+    $punct = mb_strrpos($nume, '.');
+    $baza  = ($punct === false || $punct === 0) ? $nume : mb_substr($nume, 0, $punct);
+    $ext   = ($punct === false || $punct === 0) ? '' : mb_substr($nume, $punct);
+    for ($i = 2; $i < 1000; $i++) {
+        $incerc = $baza . ' (' . $i . ')' . $ext;
+        if (!isset($luate[mb_strtolower($incerc)])) return $incerc;
+    }
+    return $nume;
+}
+
 // Șterge un fișier atașat (de pe disc și din tabel)
 function leadRapidStergeFisier($db, $row) {
     @unlink(leadRapidFotoDir() . basename($row['filename']));
@@ -7268,13 +7287,13 @@ p { margin: 0; }
             $numeFisier = bin2hex(random_bytes(16)) . '.' . $ext;
             if (!move_uploaded_file($f['tmp_name'], leadRapidFotoDir() . $numeFisier)) { jsonResponse(['success' => false, 'error' => 'Salvare eșuată'], 500); break; }
             $now = date('Y-m-d H:i:s');
+            $numeUrcat = leadRapidNumeUnic($db, $id, mb_substr(basename((string)$f['name']), 0, 240));
             $db->prepare("INSERT INTO lead_rapid_foto (lead_id, filename, original_name, tip, uploaded_by, created_at) VALUES (?,?,?,?,?,?)")
-               ->execute([$id, $numeFisier, mb_substr(basename((string)$f['name']), 0, 255), $eOferta ? 'oferta' : 'atasament', $meName, $now]);
+               ->execute([$id, $numeFisier, $numeUrcat, $eOferta ? 'oferta' : 'atasament', $meName, $now]);
             $fotoId = intval($db->lastInsertId());
             $db->prepare("UPDATE lead_rapid SET updated_at = ? WHERE id = ?")->execute([$now, $id]);
             // Istoric: ofertele mereu; atașamentele doar când sunt adăugate ulterior (ulterior=1),
             // nu și cele puse odată cu cererea, ca să nu umple istoricul la creare
-            $numeUrcat = mb_substr(basename((string)$f['name']), 0, 255);
             if ($eOferta) {
                 leadRapidAddDetaliu($db, $id, 'A atașat oferta: ' . $numeUrcat, 1);
             } elseif (!empty($_POST['ulterior'])) {
