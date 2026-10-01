@@ -3,13 +3,13 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<title>Lead rapid · Portal CSSI</title>
+<title>Cereri rapide · Portal CSSI</title>
 <meta name="robots" content="noindex, nofollow">
 <meta name="theme-color" content="#0f172a">
 <link rel="manifest" href="../manifest.json">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="Lead rapid">
+<meta name="apple-mobile-web-app-title" content="Cereri rapide">
 <link rel="apple-touch-icon" sizes="180x180" href="../icons/apple-touch-icon.png">
 <link rel="icon" type="image/png" sizes="96x96" href="../icons/favicon-96x96.png">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -182,7 +182,7 @@ textarea.input{resize:vertical;min-height:84px;line-height:1.4;font-weight:500;f
 <div class="container">
     <div class="top">
         <a href="../admin.html" class="top-back" aria-label="Înapoi la dashboard"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 6l-6 6 6 6"/></svg></a>
-        <div class="top-title">Lead rapid</div>
+        <div class="top-title">Cereri rapide</div>
         <div class="top-user" id="who">Se verifică...</div>
     </div>
 
@@ -201,7 +201,7 @@ textarea.input{resize:vertical;min-height:84px;line-height:1.4;font-weight:500;f
         <button type="submit" class="btn primary block" id="btnLogin">Intră</button>
     </form>
 
-    <div class="card center hidden" id="deniedCard">Contul tău nu are acces la lead-urile rapide.<br>Vorbește cu administratorul.</div>
+    <div class="card center hidden" id="deniedCard">Contul tău nu are acces la cererile rapide.<br>Vorbește cu administratorul.</div>
 
     <div id="app" class="hidden">
         <div class="tabs">
@@ -320,7 +320,7 @@ function waHref(t){
     return 'https://wa.me/' + d;
 }
 
-// ═══ Acces: sesiune validă + cont cu drept la lead-uri rapide (decide serverul, la getLeadRapid) ═══
+// ═══ Acces: sesiune validă + cont cu drept la cereri rapide (decide serverul, la getLeadRapid) ═══
 function checkAccess(){
     fetch(API + '?action=me&_t=' + Date.now(), {credentials:'include'})
         .then(function(r){ return r.json(); })

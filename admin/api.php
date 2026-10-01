@@ -89,7 +89,7 @@ function ensureNotifAscunse($db) {
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4");
 }
 
-// ─── Helper: lead-uri rapide (pagina /admin/lead-rapid) ───────────────────
+// ─── Helper: cereri rapide (pagina /admin/lead-rapid) ───────────────────
 // Listă comună de solicitări notate din mers. Status: Nou → Preluat → In progres → Finalizat.
 // Detaliile sunt intrări separate, fiecare cu autor și oră; schimbările de status se
 // notează automat tot acolo (sistem = 1), ca să rămână istoricul la vedere.
@@ -142,7 +142,7 @@ function leadRapidFotoDir() {
     return $dir;
 }
 
-// Acces la lead-urile rapide: conturile admin + mihai, roxana, valentin.
+// Acces la cererile rapide: conturile admin + mihai, roxana, valentin.
 function leadRapidAllowed() {
     $u = currentUser();
     if (!$u) return false;
@@ -152,7 +152,7 @@ function leadRapidAllowed() {
 function requireLeadRapid() {
     requireAuth();
     if (!leadRapidAllowed()) {
-        jsonResponse(['success' => false, 'error' => 'Nu ai acces la lead-urile rapide.', 'code' => 'LEAD_RAPID_DENIED'], 403);
+        jsonResponse(['success' => false, 'error' => 'Nu ai acces la cererile rapide.', 'code' => 'LEAD_RAPID_DENIED'], 403);
     }
 }
 
@@ -5665,7 +5665,7 @@ p { margin: 0; }
             
             // Notificările închise cu X de userul logat nu se mai trimit (doar pentru el)
             ensureNotifAscunse($db);
-            // Notificările de lead rapid le văd doar cei cu acces la pagină
+            // Notificările de cerere rapidă le văd doar cei cu acces la pagină
             $faraLR = leadRapidAllowed() ? '' : " AND (n.tip IS NULL OR n.tip <> 'lead_rapid')";
             $stmt = $db->prepare("SELECT n.*, p.proiect_id AS cod_proiect, p.status AS status_proiect, p.preluat_de
                 FROM notificari n
@@ -7017,7 +7017,7 @@ p { margin: 0; }
             break;
 
         // ══════════════════════════════════════
-        // LEAD-URI RAPIDE — doar conturile din leadRapidAllowed()
+        // CERERI RAPIDE — doar conturile din leadRapidAllowed()
         // ══════════════════════════════════════
         case 'getLeadRapid':
             requireLeadRapid();
@@ -7105,7 +7105,7 @@ p { margin: 0; }
             // Clopoțelul îi anunță pe ceilalți că e ceva de preluat (nu blochează salvarea)
             try {
                 $cine = $me['display_name'] ?: $me['username'];
-                $msg  = '📞 Lead rapid nou: ' . ($nume !== '' ? $nume : $tel) . ($tip !== '' ? ' · ' . $tip : '');
+                $msg  = '📞 Cerere rapidă nouă: ' . ($nume !== '' ? $nume : $tel) . ($tip !== '' ? ' · ' . $tip : '');
                 $db->prepare("INSERT INTO notificari (proiect_id, mesaj, tip, de_la, action_url) VALUES (?,?,?,?,?)")
                    ->execute([null, $msg, 'lead_rapid', $cine, '/admin/lead-rapid.html']);
             } catch (Exception $e) {}
