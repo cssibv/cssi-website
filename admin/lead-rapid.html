@@ -82,10 +82,28 @@ textarea.input{resize:vertical;min-height:84px;line-height:1.4;font-weight:500;f
 .thumbs::-webkit-scrollbar{display:none;}
 .thumb{position:relative;flex:0 0 auto;width:44px;height:44px;}
 .thumb img{width:100%;height:100%;object-fit:cover;border-radius:10px;display:block;}
+.thumb .fx{width:100%;height:100%;border-radius:10px;font-size:11px;font-weight:800;display:flex;align-items:flex-end;justify-content:center;padding-bottom:5px;text-transform:uppercase;}
+.att-info{font-size:12px;color:var(--gray);margin-top:6px;}
+/* Culoare pe tip de fișier */
+.fx-pdf{background:#fee2e2;color:#991b1b;}
+.fx-doc{background:#dbeafe;color:#1e40af;}
+.fx-xls{background:#dcfce7;color:#166534;}
 .thumb button{position:absolute;top:2px;right:2px;width:20px;height:20px;border-radius:50%;background:rgba(15,23,42,0.85);color:#fff;font-size:12px;font-weight:800;line-height:20px;text-align:center;}
 .fotos{display:flex;gap:6px;flex-wrap:wrap;margin-top:10px;}
 .fotos button{width:64px;height:64px;border-radius:10px;overflow:hidden;background:var(--gray-bg);}
 .fotos img{width:100%;height:100%;object-fit:cover;display:block;}
+.docs{display:flex;flex-direction:column;gap:6px;margin-top:10px;}
+.doc{display:flex;align-items:center;gap:10px;padding:9px 12px;border:1px solid var(--gray-b);border-radius:12px;background:#f8fafc;font-size:14px;font-weight:600;color:var(--dark2);}
+.doc .tag{flex:0 0 auto;min-width:38px;text-align:center;padding:3px 6px;border-radius:6px;font-size:11px;font-weight:800;letter-spacing:0.4px;text-transform:uppercase;}
+/* Oferta: un loc dedicat pe fiecare cerere preluată */
+.of-add{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;margin-top:12px;padding:12px;border:2px dashed #86efac;border-radius:12px;background:#f0fdf4;color:#166534;font-size:14px;font-weight:700;}
+.of-add svg,.of svg{width:19px;height:19px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;flex:0 0 auto;}
+.of{display:flex;align-items:center;gap:10px;margin-top:12px;padding:10px 12px;border:2px solid #86efac;border-radius:12px;background:#f0fdf4;color:#166534;}
+.of .of-txt{flex:1;min-width:0;}
+.of .of-cap{font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:0.6px;}
+.of .of-nm{font-size:14px;font-weight:700;color:var(--dark);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.of .of-meta{font-size:12px;color:var(--gray);}
+.doc .nm{flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
 .lb{position:fixed;inset:0;z-index:100;background:rgba(2,6,23,0.92);display:flex;align-items:center;justify-content:center;padding:12px;}
 .lb img{max-width:100%;max-height:100%;border-radius:8px;}
 .lb-x{position:absolute;top:calc(10px + env(safe-area-inset-top));right:12px;width:40px;height:40px;border-radius:50%;background:rgba(255,255,255,0.16);color:#fff;font-size:20px;font-weight:700;}
@@ -169,7 +187,7 @@ textarea.input{resize:vertical;min-height:84px;line-height:1.4;font-weight:500;f
 .add-det{display:flex;gap:8px;margin-top:12px;}
 .add-det .input{font-size:16px;font-weight:500;padding:11px 12px;}
 .add-det .btn{flex:0 0 auto;}
-.more-links{display:flex;gap:18px;margin-top:12px;}
+.more-links{display:flex;flex-wrap:wrap;gap:4px 18px;margin-top:12px;}
 .link{font-size:13px;font-weight:700;color:var(--gray);padding:6px 0;}
 .link.danger{color:var(--red);}
 
@@ -231,10 +249,13 @@ textarea.input{resize:vertical;min-height:84px;line-height:1.4;font-weight:500;f
                     <label class="label" for="fDet">Detalii</label>
                     <textarea class="input" id="fDet" placeholder="Unde, când să-l suni, ce a mai zis..."></textarea>
                 </div>
-                <div class="field attach">
-                    <label class="att-btn" for="fFoto"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 8h3l2-3h6l2 3h3v11H4z"/><circle cx="12" cy="13" r="3.5"/></svg>Atașează poze</label>
-                    <input class="vh" id="fFoto" type="file" accept="image/*" multiple>
-                    <div class="thumbs" id="thumbs"></div>
+                <div class="field">
+                    <div class="attach">
+                        <label class="att-btn" for="fFoto"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 11.5l-8.2 8.2a5 5 0 0 1-7.1-7.1l8.5-8.5a3.4 3.4 0 0 1 4.8 4.8l-8.4 8.4a1.8 1.8 0 0 1-2.5-2.5l7.6-7.6"/></svg>Atașează fișiere</label>
+                        <input class="vh" id="fFoto" type="file" accept="image/*,.pdf,.doc,.docx,.xls,.xlsx,.csv,application/pdf" multiple>
+                        <div class="thumbs" id="thumbs"></div>
+                    </div>
+                    <div class="att-info">Poze, PDF, Word, Excel, CSV · max. 6, câte 10 MB</div>
                 </div>
             </div>
             <button type="submit" class="btn primary block" id="btnSave">Adaugă</button>
@@ -248,6 +269,7 @@ textarea.input{resize:vertical;min-height:84px;line-height:1.4;font-weight:500;f
     </div>
 </div>
 
+<input class="vh" id="fOferta" type="file" accept=".pdf,application/pdf">
 <div class="lb hidden" id="lb"><button type="button" class="lb-x" aria-label="Închide">✕</button><img id="lbImg" alt=""></div>
 
 <script>
@@ -273,6 +295,10 @@ var ICO_WA = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M17.472 14.38
 var ICO_CHECK = '<svg class="chk" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>';
 var ICO_UNDO = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 14L4 9l5-5"/><path d="M4 9h10a6 6 0 0 1 0 12h-3"/></svg>';
 var ICO_DOWN = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>';
+var ICO_FILE = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5"/><path d="M9 13h6M9 17h4"/></svg>';
+var ICO_UP = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 16V5"/><path d="M7 10l5-5 5 5"/><path d="M5 19h14"/></svg>';
+// Clasa de culoare după extensie: PDF roșu, Word albastru, Excel/CSV verde
+function fxCls(ext){ return ext === 'pdf' ? 'fx-pdf' : (ext === 'doc' || ext === 'docx') ? 'fx-doc' : 'fx-xls'; }
 var PASI = [['Preluat','Preluat','s-preluat'], ['In progres','În progres','s-progres'], ['Finalizat','Finalizat','s-finalizat']];
 
 function $(id){ return document.getElementById(id); }
@@ -403,9 +429,12 @@ function tipOk(){ return $('fTip').value.trim() !== ''; }
 function tipErr(on){ $('fTip').classList.toggle('bad', on); $('tipErr').classList.toggle('show', on); }
 $('fTip').addEventListener('input', function(){ if (tipOk()) tipErr(false); });
 
-// ═══ Poze atașate (opțional): se micșorează în telefon înainte de trimitere ═══
-var FOTO = [];        // [{blob, url}]
+// ═══ Atașamente (opțional): pozele se micșorează în telefon înainte de trimitere, documentele merg ca atare ═══
+var FOTO = [];        // [{blob, url, name, ext}]  ext = '' la poze
 var MAX_FOTO = 6;
+var MAX_DOC = 10 * 1024 * 1024;
+var DOC_EXT = ['pdf', 'doc', 'docx', 'xls', 'xlsx', 'csv'];
+function extOf(name){ var m = /\.([a-z0-9]+)$/i.exec(name || ''); return m ? m[1].toLowerCase() : ''; }
 function fotoUrl(id){ return API + '?action=leadRapidFoto&f=' + id; }
 function shrink(file){
     return new Promise(function(done){
@@ -424,31 +453,42 @@ function shrink(file){
 }
 function renderThumbs(){
     $('thumbs').innerHTML = FOTO.map(function(f, i){
-        return '<div class="thumb"><img src="' + f.url + '" alt=""><button type="button" data-i="' + i + '" aria-label="Scoate poza">✕</button></div>';
+        return '<div class="thumb">' + (f.ext ? '<div class="fx ' + fxCls(f.ext) + '" title="' + esc(f.name) + '">' + esc(f.ext) + '</div>' : '<img src="' + f.url + '" alt="">') +
+               '<button type="button" data-i="' + i + '" aria-label="Scoate fișierul">✕</button></div>';
     }).join('');
 }
-function clearFoto(){ FOTO.forEach(function(f){ URL.revokeObjectURL(f.url); }); FOTO = []; renderThumbs(); }
+function clearFoto(){ FOTO.forEach(function(f){ if (f.url) URL.revokeObjectURL(f.url); }); FOTO = []; renderThumbs(); }
 $('fFoto').addEventListener('change', function(){
     var files = Array.prototype.slice.call(this.files || []);
     this.value = '';
-    if (FOTO.length + files.length > MAX_FOTO) showMsg('Se pot atașa cel mult ' + MAX_FOTO + ' poze.', 'err');
+    if (FOTO.length + files.length > MAX_FOTO) showMsg('Se pot atașa cel mult ' + MAX_FOTO + ' fișiere.', 'err');
     files.slice(0, MAX_FOTO - FOTO.length).reduce(function(p, file){
-        return p.then(function(){ return shrink(file); }).then(function(blob){
-            FOTO.push({blob:blob, url:URL.createObjectURL(blob)}); renderThumbs();
+        return p.then(function(){
+            var ext = extOf(file.name);
+            if (file.type === 'application/pdf') ext = 'pdf';
+            if (DOC_EXT.indexOf(ext) < 0) {
+                if (file.type && file.type.indexOf('image/') !== 0) { showMsg('„' + file.name + '” nu e un tip acceptat (poze, PDF, Word, Excel, CSV).', 'err'); return; }
+                return shrink(file).then(function(blob){
+                    FOTO.push({blob:blob, url:URL.createObjectURL(blob), name:'poza.jpg', ext:''}); renderThumbs();
+                });
+            }
+            if (file.size > MAX_DOC) { showMsg('„' + file.name + '” e prea mare (maxim 10 MB).', 'err'); return; }
+            FOTO.push({blob:file, url:'', name:file.name || ('document.' + ext), ext:ext}); renderThumbs();
         });
     }, Promise.resolve());
 });
 $('thumbs').addEventListener('click', function(e){
     var b = e.target.closest('button'); if (!b) return;
-    var f = FOTO.splice(+b.dataset.i, 1)[0]; if (f) URL.revokeObjectURL(f.url);
+    var f = FOTO.splice(+b.dataset.i, 1)[0]; if (f && f.url) URL.revokeObjectURL(f.url);
     renderThumbs();
 });
-function uploadFoto(id, blob){
-    var fd = new FormData(); fd.append('id', id); fd.append('file', blob, 'poza.jpg');
+// Întoarce '' la succes sau motivul pentru care fișierul nu a urcat
+function uploadFoto(id, f, tip){
+    var fd = new FormData(); fd.append('id', id); if (tip) fd.append('tip', tip); fd.append('file', f.blob, f.name);
     return fetch(API + '?action=uploadLeadRapidFoto', {method:'POST', credentials:'include', headers:{'X-Requested-With':'fetch'}, body:fd})
         .then(function(r){ return r.json(); })
-        .then(function(j){ return !!j.success; })
-        .catch(function(){ return false; });
+        .then(function(j){ return j.success ? '' : (j.error || 'eroare la urcare'); })
+        .catch(function(){ return 'fără conexiune sau fișier prea mare pentru server'; });
 }
 
 function saveLead(ev){
@@ -463,19 +503,19 @@ function saveLead(ev){
     call('addLeadRapid', {telefon:tel, nume:nume, tip:$('fTip').value.trim(), detalii:$('fDet').value.trim()})
     .then(function(res){
         if (!res.success) throw new Error(res.error || 'Nesalvat');
-        // Intrarea e salvată; pozele urcă pe rând, iar una eșuată nu o pierde
-        var poze = FOTO.slice(), esuate = 0;
+        // Intrarea e salvată; fișierele urcă pe rând, iar unul eșuat nu o pierde
+        var poze = FOTO.slice(), esuate = [];
         return poze.reduce(function(p, f, i){
             return p.then(function(){
-                btn.textContent = 'Se urcă pozele ' + (i + 1) + '/' + poze.length + '...';
-                return uploadFoto(res.id, f.blob).then(function(ok){ if (!ok) esuate++; });
+                btn.textContent = 'Se urcă fișierele ' + (i + 1) + '/' + poze.length + '...';
+                return uploadFoto(res.id, f).then(function(motiv){ if (motiv) esuate.push(motiv); });
             });
         }, Promise.resolve()).then(function(){ return esuate; });
     }).then(function(esuate){
         btn.disabled = false; btn.textContent = 'Adaugă';
         $('addView').reset(); telErr(false); tipErr(false); clearFoto();
         try { localStorage.removeItem(KEY_DRAFT); } catch(e){}
-        if (esuate) showMsg('Salvat: ' + (nume || tel) + ', dar ' + esuate + (esuate === 1 ? ' poză nu s-a urcat.' : ' poze nu s-au urcat.'), 'err');
+        if (esuate.length) showMsg('Salvat: ' + (nume || tel) + ', dar ' + (esuate.length === 1 ? 'un fișier nu s-a urcat' : esuate.length + ' fișiere nu s-au urcat') + ' (' + esuate[0] + ').', 'err');
         else showMsg('Salvat: ' + (nume || tel) + '. E în listă, cu status Nou.', 'ok');
         loadLeads();
     }).catch(function(err){
@@ -542,12 +582,24 @@ function renderList(){
         if (l.tip) h += '<div class="lead-tip">' + esc(l.tip) + '</div>';
         h += '<div class="lead-meta">' + (l.nume && l.telefon ? esc(l.telefon) + ' · ' : '') + when(l.created_at) + ' · adăugat de ' + esc(l.creat_nume) + '</div>';
         if (ultim && !open) h += '<div class="lead-last">' + esc(ultim.text) + '</div>';
-        if (l.foto && l.foto.length) {
-            h += '<div class="fotos">' + l.foto.map(function(f){
-                return '<button type="button" data-foto="' + f + '" aria-label="Deschide poza"><img loading="lazy" src="' + esc(fotoUrl(f)) + '" alt=""></button>';
+        var poze = (l.foto || []).filter(function(f){ return f.img; }), docs = (l.foto || []).filter(function(f){ return !f.img; });
+        if (poze.length) {
+            h += '<div class="fotos">' + poze.map(function(f){
+                return '<button type="button" data-foto="' + f.id + '" aria-label="Deschide poza"><img loading="lazy" src="' + esc(fotoUrl(f.id)) + '" alt=""></button>';
             }).join('') + '</div>';
         }
-
+        if (docs.length) {
+            h += '<div class="docs">' + docs.map(function(f){
+                return '<a class="doc" href="' + esc(fotoUrl(f.id)) + '" target="_blank" rel="noopener"><span class="tag ' + fxCls(f.ext) + '">' + esc(f.ext) + '</span><span class="nm">' + esc(f.nume) + '</span></a>';
+            }).join('') + '</div>';
+        }
+        // Oferta: se vede la toți; o pune (sau o înlocuiește) cel care a preluat cererea
+        if (l.oferta) {
+            h += '<a class="of" href="' + esc(fotoUrl(l.oferta.id)) + '" target="_blank" rel="noopener">' + ICO_FILE +
+                 '<span class="of-txt"><span class="of-cap">Ofertă</span><div class="of-nm">' + esc(l.oferta.nume) + '</div><div class="of-meta">' + esc(l.oferta.de) + ' · ' + when(l.oferta.la) + '</div></span></a>';
+        } else if (l.can_act && l.status !== 'Nou') {
+            h += '<button type="button" class="of-add" data-oferta="1">' + ICO_UP + 'Atașează oferta (PDF)</button>';
+        }
         if (l.can_act && l.status === 'Nou') h += '<button type="button" class="btn primary take" data-st="Preluat">Preia</button>';
         if (l.telefon) {
             h += '<div class="contact">';
@@ -564,7 +616,8 @@ function renderList(){
             }).join('') || '<div class="lead-meta">Fără detalii încă.</div>';
             h += '<div class="add-det"><input class="input" type="text" placeholder="Adaugă un detaliu" data-det="1"><button type="button" class="btn dark" data-send="1">Adaugă</button></div>';
             var links = '';
-            if (l.can_delete) links += '<button type="button" class="link danger" data-del="1">Șterge</button>';
+            if (l.oferta && l.can_act) links += '<button type="button" class="link" data-oferta="1">Înlocuiește oferta</button><button type="button" class="link" data-delof="' + l.oferta.id + '">Șterge oferta</button>';
+            if (l.can_delete) links += '<button type="button" class="link danger" data-del="1">Șterge cererea</button>';
             if (links) h += '<div class="more-links">' + links + '</div>';
             h += '</div>';
         }
@@ -593,6 +646,8 @@ function sendDetaliu(card){
 $('list').addEventListener('click', function(e){
     var card = e.target.closest('.lead'); if (!card) return;
     var id = +card.dataset.id, b = e.target.closest('button'); if (!b) return;
+    if (b.dataset.oferta) { ofertaId = id; $('fOferta').click(); return; }
+    if (b.dataset.delof) { if (confirm('Ștergi oferta atașată?')) act('deleteLeadRapidFoto', {id:+b.dataset.delof}, b); return; }
     if (b.dataset.foto) { $('lbImg').src = fotoUrl(b.dataset.foto); show('lb', true); return; }
     if (b.dataset.menu) { menuId = (menuId === id) ? 0 : id; renderList(); return; }
     if (b.dataset.toggle) { if (openIds[id]) delete openIds[id]; else openIds[id] = 1; renderList(); return; }
@@ -600,6 +655,21 @@ $('list').addEventListener('click', function(e){
     if (b.dataset.send) { sendDetaliu(card); return; }
     if (b.dataset.del && confirm('Ștergi definitiv această intrare?')) { delete openIds[id]; act('deleteLeadRapid', {id:id}, b); }
 });
+// Oferta: un singur PDF pe cerere, ales din telefon și urcat pe loc
+var ofertaId = 0;
+$('fOferta').addEventListener('change', function(){
+    var file = (this.files || [])[0], id = ofertaId;
+    this.value = '';
+    if (!file || !id) return;
+    if (file.type !== 'application/pdf' && extOf(file.name) !== 'pdf') { showMsg('Oferta trebuie să fie PDF.', 'err'); return; }
+    if (file.size > MAX_DOC) { showMsg('Oferta e prea mare (maxim 10 MB).', 'err'); return; }
+    showMsg('Se urcă oferta...', 'ok');
+    uploadFoto(id, {blob:file, name:file.name || 'oferta.pdf'}, 'oferta').then(function(motiv){
+        if (motiv) showMsg('Oferta nu s-a urcat: ' + motiv + '.', 'err'); else showMsg('Oferta a fost atașată.', 'ok');
+        loadLeads();
+    });
+});
+
 $('lb').addEventListener('click', function(){ show('lb', false); $('lbImg').removeAttribute('src'); });
 
 // Meniul de status se închide la tap în afara lui sau la Escape

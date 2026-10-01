@@ -124,13 +124,41 @@ function ensureLeadRapid($db) {
         id INT PRIMARY KEY AUTO_INCREMENT,
         lead_id INT NOT NULL,
         filename VARCHAR(80) NOT NULL,
+        original_name VARCHAR(255) NULL DEFAULT NULL,
+        tip VARCHAR(20) NOT NULL DEFAULT 'atasament',
         uploaded_by VARCHAR(60) NOT NULL,
         created_at DATETIME NOT NULL,
         KEY idx_lead (lead_id)
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4");
+    try {
+        $cols = $db->query("SHOW COLUMNS FROM lead_rapid_foto")->fetchAll(PDO::FETCH_COLUMN);
+        if (!in_array('original_name', $cols)) $db->exec("ALTER TABLE lead_rapid_foto ADD COLUMN original_name VARCHAR(255) NULL DEFAULT NULL");
+        if (!in_array('tip', $cols)) $db->exec("ALTER TABLE lead_rapid_foto ADD COLUMN tip VARCHAR(20) NOT NULL DEFAULT 'atasament'");
+    } catch (Exception $e) {}
 }
 
-// Pozele lead-urilor rapide: nume aleatoare, într-un folder fără acces direct din web
+// Tipul real al unui fișier urcat, stabilit din conținut (extensia contează doar la
+// formatele Office/CSV, unde conținutul nu le deosebește între ele). '' = neacceptat.
+function leadRapidTipFisier($tmp, $nume) {
+    $info = @getimagesize($tmp);
+    $img  = [IMAGETYPE_JPEG => 'jpg', IMAGETYPE_PNG => 'png', IMAGETYPE_WEBP => 'webp'];
+    if ($info && isset($img[$info[2]])) return $img[$info[2]];
+    $cap = (string)@file_get_contents($tmp, false, null, 0, 4096);
+    $ext = strtolower(pathinfo((string)$nume, PATHINFO_EXTENSION));
+    if (strpos(substr($cap, 0, 1024), '%PDF-') !== false) return 'pdf';
+    if (strncmp($cap, "PK\x03\x04", 4) === 0 && in_array($ext, ['docx', 'xlsx'], true)) return $ext;
+    if (strncmp($cap, "\xD0\xCF\x11\xE0\xA1\xB1\x1A\xE1", 8) === 0 && in_array($ext, ['doc', 'xls'], true)) return $ext;
+    if ($ext === 'csv' && $cap !== '' && strpos($cap, "\0") === false) return 'csv';
+    return '';
+}
+
+// Șterge un fișier atașat (de pe disc și din tabel)
+function leadRapidStergeFisier($db, $row) {
+    @unlink(leadRapidFotoDir() . basename($row['filename']));
+    $db->prepare("DELETE FROM lead_rapid_foto WHERE id = ?")->execute([$row['id']]);
+}
+
+// Fișierele cererilor rapide (atașamente + oferta): nume aleatoare, într-un folder fără acces direct din web
 // (se servesc doar prin api.php?action=leadRapidFoto, după verificarea contului).
 function leadRapidFotoDir() {
     $dir = UPLOAD_DIR . 'lead-rapid/';
@@ -7056,10 +7084,27 @@ p { margin: 0; }
                 }
             }
             $foto = [];
+            $oferte = [];
             if ($rows) {
-                $stmtF = $db->prepare("SELECT id, lead_id FROM lead_rapid_foto WHERE lead_id IN ($ph) ORDER BY id ASC");
+                $stmtF = $db->prepare("SELECT * FROM lead_rapid_foto WHERE lead_id IN ($ph) ORDER BY id ASC");
                 $stmtF->execute($ids);
-                foreach ($stmtF->fetchAll() as $f) $foto[intval($f['lead_id'])][] = intval($f['id']);
+                foreach ($stmtF->fetchAll() as $f) {
+                    $ext = strtolower(pathinfo($f['filename'], PATHINFO_EXTENSION));
+                    $by  = strtolower((string)$f['uploaded_by']);
+                    $item = [
+                        'id'   => intval($f['id']),
+                        'ext'  => $ext,
+                        'img'  => in_array($ext, ['jpg', 'png', 'webp'], true),
+                        'nume' => !empty($f['original_name']) ? $f['original_name'] : ('fisier.' . $ext),
+                    ];
+                    if (isset($f['tip']) && $f['tip'] === 'oferta') {
+                        $item['de'] = isset($names[$by]) ? $names[$by] : $f['uploaded_by'];
+                        $item['la'] = $f['created_at'];
+                        $oferte[intval($f['lead_id'])] = $item;   // una singură pe cerere: cea mai nouă
+                    } else {
+                        $foto[intval($f['lead_id'])][] = $item;
+                    }
+                }
             }
             $out = [];
             foreach ($rows as $r) {
@@ -7081,6 +7126,7 @@ p { margin: 0; }
                     'can_delete'   => isAdmin() || $author === $meName,
                     'detalii'      => isset($detalii[$id]) ? $detalii[$id] : [],
                     'foto'         => isset($foto[$id]) ? $foto[$id] : [],
+                    'oferta'       => isset($oferte[$id]) ? $oferte[$id] : null,
                 ];
             }
             jsonResponse(['success' => true, 'data' => $out]);
@@ -7177,51 +7223,96 @@ p { margin: 0; }
             jsonResponse(['success' => true]);
             break;
 
-        // Poză atașată unei intrări (multipart: id + file). Pagina o micșorează înainte de trimitere.
+        // Fișier la o cerere (multipart: id + file [+ tip=oferta]).
+        // Atașament = poză (micșorată de pagină înainte), PDF, Word, Excel sau CSV, maxim 6.
+        // Ofertă = un singur PDF pe cerere, pus de cel care a preluat-o; unul nou îl înlocuiește pe cel vechi.
         case 'uploadLeadRapidFoto':
             requireLeadRapid();
             ensureLeadRapid($db);
-            $me = currentUser();
-            $id = isset($_POST['id']) ? intval($_POST['id']) : 0;
+            $me      = currentUser();
+            $meName  = strtolower($me['username']);
+            $id      = isset($_POST['id']) ? intval($_POST['id']) : 0;
+            $eOferta = isset($_POST['tip']) && $_POST['tip'] === 'oferta';
             if (!$id || !isset($_FILES['file'])) { jsonResponse(['success' => false, 'error' => 'id + file obligatorii'], 400); break; }
-            $stmt = $db->prepare("SELECT id FROM lead_rapid WHERE id = ?");
+            $stmt = $db->prepare("SELECT * FROM lead_rapid WHERE id = ?");
             $stmt->execute([$id]);
-            if (!$stmt->fetch()) { jsonResponse(['success' => false, 'error' => 'Intrarea nu mai există'], 404); break; }
-            $stmt = $db->prepare("SELECT COUNT(*) FROM lead_rapid_foto WHERE lead_id = ?");
-            $stmt->execute([$id]);
-            if (intval($stmt->fetchColumn()) >= 6) { jsonResponse(['success' => false, 'error' => 'Maxim 6 poze pe intrare'], 400); break; }
+            $lead = $stmt->fetch();
+            if (!$lead) { jsonResponse(['success' => false, 'error' => 'Intrarea nu mai există'], 404); break; }
+            if ($eOferta) {
+                $holder = strtolower((string)$lead['preluat_de']);
+                if (!isAdmin() && $holder !== '' && $holder !== $meName) {
+                    jsonResponse(['success' => false, 'error' => 'Doar cel care a preluat cererea poate atașa oferta'], 403); break;
+                }
+            } else {
+                $stmt = $db->prepare("SELECT COUNT(*) FROM lead_rapid_foto WHERE lead_id = ? AND tip <> 'oferta'");
+                $stmt->execute([$id]);
+                if (intval($stmt->fetchColumn()) >= 6) { jsonResponse(['success' => false, 'error' => 'Maxim 6 fișiere pe cerere'], 400); break; }
+            }
 
             $f = $_FILES['file'];
+            if ($f['error'] === UPLOAD_ERR_INI_SIZE || $f['error'] === UPLOAD_ERR_FORM_SIZE) { jsonResponse(['success' => false, 'error' => 'Fișier prea mare pentru server'], 400); break; }
             if ($f['error'] !== UPLOAD_ERR_OK) { jsonResponse(['success' => false, 'error' => 'Upload eșuat (cod ' . $f['error'] . ')'], 400); break; }
-            if ($f['size'] > 8 * 1024 * 1024) { jsonResponse(['success' => false, 'error' => 'Poză prea mare (max 8 MB)'], 400); break; }
-            // Tipul se stabilește din conținut, nu din numele trimis
-            $info = @getimagesize($f['tmp_name']);
-            $exts = [IMAGETYPE_JPEG => 'jpg', IMAGETYPE_PNG => 'png', IMAGETYPE_WEBP => 'webp'];
-            if (!$info || !isset($exts[$info[2]])) { jsonResponse(['success' => false, 'error' => 'Doar imagini JPG, PNG sau WebP'], 400); break; }
+            if ($f['size'] > 10 * 1024 * 1024) { jsonResponse(['success' => false, 'error' => 'Fișier prea mare (max 10 MB)'], 400); break; }
+            $ext = leadRapidTipFisier($f['tmp_name'], $f['name']);
+            if ($ext === '') { jsonResponse(['success' => false, 'error' => 'Tip neacceptat (merg poze, PDF, Word, Excel, CSV)'], 400); break; }
+            if ($eOferta && $ext !== 'pdf') { jsonResponse(['success' => false, 'error' => 'Oferta trebuie să fie PDF'], 400); break; }
 
-            $numeFisier = bin2hex(random_bytes(16)) . '.' . $exts[$info[2]];
+            $numeFisier = bin2hex(random_bytes(16)) . '.' . $ext;
             if (!move_uploaded_file($f['tmp_name'], leadRapidFotoDir() . $numeFisier)) { jsonResponse(['success' => false, 'error' => 'Salvare eșuată'], 500); break; }
+            if ($eOferta) {
+                $stmt = $db->prepare("SELECT * FROM lead_rapid_foto WHERE lead_id = ? AND tip = 'oferta'");
+                $stmt->execute([$id]);
+                foreach ($stmt->fetchAll() as $veche) leadRapidStergeFisier($db, $veche);
+            }
             $now = date('Y-m-d H:i:s');
-            $db->prepare("INSERT INTO lead_rapid_foto (lead_id, filename, uploaded_by, created_at) VALUES (?,?,?,?)")
-               ->execute([$id, $numeFisier, strtolower($me['username']), $now]);
+            $db->prepare("INSERT INTO lead_rapid_foto (lead_id, filename, original_name, tip, uploaded_by, created_at) VALUES (?,?,?,?,?,?)")
+               ->execute([$id, $numeFisier, mb_substr(basename((string)$f['name']), 0, 255), $eOferta ? 'oferta' : 'atasament', $meName, $now]);
             $fotoId = intval($db->lastInsertId());
             $db->prepare("UPDATE lead_rapid SET updated_at = ? WHERE id = ?")->execute([$now, $id]);
+            if ($eOferta) leadRapidAddDetaliu($db, $id, 'A atașat oferta', 1);
             jsonResponse(['success' => true, 'id' => $fotoId]);
             break;
 
-        // Servește o poză doar conturilor cu acces (folderul nu e accesibil direct)
+        // Șterge oferta sau un atașament: cel care l-a urcat sau admin
+        case 'deleteLeadRapidFoto':
+            requireLeadRapid();
+            ensureLeadRapid($db);
+            $fid = isset($data['id']) ? intval($data['id']) : 0;
+            if (!$fid) { jsonResponse(['success' => false, 'error' => 'id obligatoriu'], 400); break; }
+            $stmt = $db->prepare("SELECT * FROM lead_rapid_foto WHERE id = ?");
+            $stmt->execute([$fid]);
+            $row = $stmt->fetch();
+            if ($row) {
+                requireOwnerOrAdmin($row['uploaded_by']);
+                leadRapidStergeFisier($db, $row);
+                if (isset($row['tip']) && $row['tip'] === 'oferta') leadRapidAddDetaliu($db, intval($row['lead_id']), 'A șters oferta', 1);
+            }
+            jsonResponse(['success' => true]);
+            break;
+
+        // Servește un atașament doar conturilor cu acces (folderul nu e accesibil direct)
         case 'leadRapidFoto':
             requireLeadRapid();
             ensureLeadRapid($db);
             $fid = isset($_GET['f']) ? intval($_GET['f']) : 0;
-            $stmt = $db->prepare("SELECT filename FROM lead_rapid_foto WHERE id = ?");
+            $stmt = $db->prepare("SELECT * FROM lead_rapid_foto WHERE id = ?");
             $stmt->execute([$fid]);
             $row  = $stmt->fetch();
             $path = $row ? leadRapidFotoDir() . basename($row['filename']) : '';
-            if (!$row || !is_file($path)) { jsonResponse(['success' => false, 'error' => 'Poza nu mai există'], 404); break; }
-            $tipuri = ['jpg' => 'image/jpeg', 'png' => 'image/png', 'webp' => 'image/webp'];
+            if (!$row || !is_file($path)) { jsonResponse(['success' => false, 'error' => 'Fișierul nu mai există'], 404); break; }
+            $tipuri = [
+                'jpg' => 'image/jpeg', 'png' => 'image/png', 'webp' => 'image/webp', 'pdf' => 'application/pdf',
+                'doc' => 'application/msword', 'xls' => 'application/vnd.ms-excel', 'csv' => 'text/csv',
+                'docx' => 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+                'xlsx' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+            ];
             $ext = strtolower(pathinfo($path, PATHINFO_EXTENSION));
             header('Content-Type: ' . (isset($tipuri[$ext]) ? $tipuri[$ext] : 'application/octet-stream'));
+            if (!in_array($ext, ['jpg', 'png', 'webp'], true)) {
+                // PDF-ul se deschide în browser; Word/Excel/CSV se descarcă
+                $numeAfisat = preg_replace('/[^A-Za-z0-9._ -]/', '_', pathinfo(!empty($row['original_name']) ? $row['original_name'] : 'fisier', PATHINFO_FILENAME)) . '.' . $ext;
+                header('Content-Disposition: ' . ($ext === 'pdf' ? 'inline' : 'attachment') . '; filename="' . $numeAfisat . '"');
+            }
             header('Content-Length: ' . filesize($path));
             header('Cache-Control: private, max-age=86400');
             header_remove('Pragma');
