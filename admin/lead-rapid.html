@@ -99,15 +99,16 @@ textarea.input{resize:vertical;min-height:84px;line-height:1.4;font-weight:500;f
 .cbtn.wa{background:#128c4a;}
 .cbtn.wa:active{background:#0e6f3b;}
 
-/* Status: „Preia” pe cele noi, apoi un comutator cu trei pași, un singur tap */
-.take{width:100%;margin-top:10px;padding:14px;font-size:16px;}
-.st-label{font-size:12px;font-weight:700;color:var(--gray);text-transform:uppercase;letter-spacing:0.4px;margin:14px 0 6px;}
-.steps{display:flex;background:var(--gray-bg);border-radius:12px;padding:4px;gap:4px;}
-.step{flex:1;padding:11px 4px;border-radius:9px;font-size:13px;font-weight:700;color:var(--gray);white-space:nowrap;}
-.step.on.s-preluat{background:#f59e0b;color:#fff;}
-.step.on.s-progres{background:#2563eb;color:#fff;}
-.step.on.s-finalizat{background:#16a34a;color:#fff;}
-.step:disabled{opacity:0.6;}
+/* Status: „Preia” pe cele noi, apoi un buton-listă colorat după status (select nativ, transparent, peste el) */
+.take{width:100%;margin-top:12px;padding:14px;font-size:16px;}
+.st-drop{position:relative;display:flex;align-items:center;gap:10px;margin-top:12px;padding:13px 14px;border-radius:12px;color:#fff;}
+.st-drop.s-preluat{background:#d97706;}
+.st-drop.s-progres{background:#1e3a8a;}
+.st-drop.s-finalizat{background:#16a34a;}
+.st-drop .st-cap{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;opacity:0.85;}
+.st-drop .st-val{flex:1;font-size:16px;font-weight:800;}
+.st-drop svg{width:20px;height:20px;fill:none;stroke:#fff;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round;flex:0 0 auto;}
+.st-drop select{position:absolute;inset:0;width:100%;height:100%;opacity:0;font-size:16px;cursor:pointer;-webkit-appearance:none;appearance:none;}
 
 .toggle{display:flex;align-items:center;justify-content:space-between;width:100%;margin-top:12px;padding:12px 2px 0;border-top:1px solid var(--gray-b);font-size:14px;font-weight:700;color:var(--dark2);}
 .toggle svg{width:18px;height:18px;fill:none;stroke:var(--gray);stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round;}
@@ -409,21 +410,20 @@ function renderList(){
         h += '<div class="lead-meta">' + (l.nume && l.telefon ? esc(l.telefon) + ' · ' : '') + when(l.created_at) + ' · adăugat de ' + esc(l.creat_nume) + '</div>';
         if (ultim && !open) h += '<div class="lead-last">' + esc(ultim.text) + '</div>';
 
+        if (l.can_act) {
+            if (l.status === 'Nou') h += '<button type="button" class="btn primary take" data-st="Preluat">Preia</button>';
+            else {
+                h += '<div class="st-drop ' + st.cls + '"><span class="st-cap">Status</span><span class="st-val">' + esc(l.status === 'In progres' ? 'În progres' : l.status) + '</span>' + ICO_DOWN;
+                h += '<select data-status="1" aria-label="Schimbă statusul">' + PASI.map(function(p){
+                    return '<option value="' + p[0] + '"' + (l.status === p[0] ? ' selected' : '') + '>' + p[1] + '</option>';
+                }).join('') + '</select></div>';
+            }
+        }
         if (l.telefon) {
             h += '<div class="contact">';
             h += '<a class="cbtn call" href="tel:' + esc(telHref(l.telefon)) + '">' + ICO_CALL + 'Sună</a>';
             h += '<a class="cbtn wa" href="' + esc(waHref(l.telefon)) + '" target="_blank" rel="noopener">' + ICO_WA + 'WhatsApp</a>';
             h += '</div>';
-        }
-        if (l.can_act) {
-            if (l.status === 'Nou') h += '<button type="button" class="btn primary take" data-st="Preluat">Preia</button>';
-            else {
-                h += '<div class="st-label">Status (apasă ca să-l schimbi)</div><div class="steps">';
-                h += PASI.map(function(p){
-                    return '<button type="button" class="step ' + p[2] + (l.status === p[0] ? ' on' : '') + '" data-st="' + p[0] + '">' + p[1] + '</button>';
-                }).join('');
-                h += '</div>';
-            }
         }
         h += '<button type="button" class="toggle' + (open ? ' open' : '') + '" data-toggle="1"><span>' + (open ? 'Ascunde detaliile' : 'Detalii și istoric (' + texte.length + ')') + '</span>' + ICO_DOWN + '</button>';
 
@@ -469,6 +469,10 @@ $('list').addEventListener('click', function(e){
     if (b.dataset.send) { sendDetaliu(card); return; }
     if (b.dataset.del && confirm('Ștergi definitiv această intrare?')) { delete openIds[id]; act('deleteLeadRapid', {id:id}, b); }
 });
+$('list').addEventListener('change', function(e){
+    var sel = e.target; if (!sel.dataset || !sel.dataset.status) return;
+    act('setLeadRapidStatus', {id:+sel.closest('.lead').dataset.id, status:sel.value}, sel);
+});
 $('list').addEventListener('keydown', function(e){
     if (e.key === 'Enter' && e.target.dataset && e.target.dataset.det) { e.preventDefault(); sendDetaliu(e.target.closest('.lead')); }
 });
@@ -476,7 +480,8 @@ $('list').addEventListener('keydown', function(e){
 // Lista se împrospătează la revenirea în pagină și la un minut, dar nu peste ce scrii într-o intrare desfăcută
 function autoRefresh(){
     if (!USER || document.hidden || $('app').classList.contains('hidden')) return;
-    var scriu = Array.prototype.some.call(document.querySelectorAll('[data-det]'), function(i){ return i.value || i === document.activeElement; });
+    var scriu = Array.prototype.some.call(document.querySelectorAll('[data-det]'), function(i){ return i.value || i === document.activeElement; })
+             || (document.activeElement && document.activeElement.dataset && document.activeElement.dataset.status);
     if (!scriu) loadLeads();
 }
 document.addEventListener('visibilitychange', autoRefresh);
