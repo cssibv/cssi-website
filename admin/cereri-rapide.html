@@ -148,7 +148,8 @@ textarea.input{resize:vertical;min-height:84px;line-height:1.4;font-weight:500;f
 
 /* Lista */
 .filters{margin-bottom:12px;}
-.cerere{padding:14px;border-left:4px solid var(--gray-b);}
+.cerere{padding:14px;border:1px solid #c7d2e0;border-left:4px solid var(--gray-b);box-shadow:0 2px 8px rgba(15,23,42,0.07);}
+.cerere:not(.mini){border-top-color:#94a3b8;border-right-color:#94a3b8;border-bottom-color:#94a3b8;box-shadow:0 8px 24px rgba(15,23,42,0.14);}
 .cerere.s-nou{border-left-color:var(--red);}
 .cerere.s-preluat{border-left-color:#f59e0b;}
 .cerere.s-progres{border-left-color:#3b82f6;}
@@ -158,12 +159,14 @@ textarea.input{resize:vertical;min-height:84px;line-height:1.4;font-weight:500;f
 /* Cererile stau restrânse; numele + solicitarea sunt butonul care le extinde / restrânge */
 .cerere-head{flex:1;min-width:0;display:block;text-align:left;color:inherit;}
 .cerere.mini{padding:12px 14px;}
-.collapse svg{width:18px;height:18px;fill:none;stroke:var(--gray);stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round;flex:0 0 auto;}
+.cerere{scroll-margin-top:10px;}
+.collapse svg{width:18px;height:18px;fill:none;stroke:var(--dark2);stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round;flex:0 0 auto;}
 .mini-take{margin-top:10px;padding:11px;font-size:15px;}
-.collapse{display:flex;align-items:center;justify-content:center;gap:6px;width:100%;margin-top:12px;padding:12px 2px 0;border-top:1px solid var(--gray-b);font-size:13px;font-weight:700;color:var(--gray);}
+.collapse{display:flex;align-items:center;justify-content:center;gap:6px;width:calc(100% + 28px);margin:14px -14px -14px;padding:11px;background:#e9eef5;border-top:1px solid #d5deea;border-radius:0 0 15px 12px;font-size:13px;font-weight:800;color:var(--dark2);}
+.collapse:active{background:#dbe4ef;}
 /* Bara de jos: „Vezi tot” pe cardul restrâns, „Restrânge” pe cel extins, mereu în același loc */
 .collapse.up svg{transform:rotate(180deg);}
-.cerere.mini .collapse{margin-top:10px;padding-top:10px;}
+.cerere.mini .collapse{margin:12px -14px -12px;}
 .badge{flex:0 0 auto;padding:4px 9px;border-radius:999px;font-size:12px;font-weight:700;white-space:nowrap;}
 .badge.s-nou{background:#fee2e2;color:var(--red-d);}
 .badge.s-preluat{background:#fef3c7;color:#92400e;}
@@ -318,7 +321,7 @@ var CERERI = [];
 var tab = 'add';
 var filter = 'active';
 var menuId = 0;      // intrarea al cărei meniu de status e deschis
-var expIds = {};     // cererile extinse (restul stau restrânse)
+var expIds = {};     // cererea extinsă (una singură; restul stau restrânse)
 var openIds = {};     // intrările desfăcute rămân desfăcute la reîncărcarea listei
 var SUGESTII = ['Ofertă', 'Intervenție', 'Mentenanță', 'Informații', 'Reclamație'];
 var STATUS = {
@@ -718,9 +721,13 @@ function sendDetaliu(card){
 $('list').addEventListener('click', function(e){
     var card = e.target.closest('.cerere'); if (!card) return;
     var id = +card.dataset.id, b = e.target.closest('button'); if (!b) return;
-    if (b.dataset.exp) { if (expIds[id]) delete expIds[id]; else expIds[id] = 1; menuId = 0; renderList();
-        // la restrângere, rândul rămâne în ecran (cardul extins putea fi mult mai înalt)
-        var c = document.querySelector('.cerere[data-id="' + id + '"]'); if (c && !expIds[id]) c.scrollIntoView({block:'nearest'});
+    if (b.dataset.exp) {
+        var eraDeschisa = !!expIds[id];
+        expIds = {}; if (!eraDeschisa) expIds[id] = 1;      // extinderea uneia le restrânge pe celelalte
+        menuId = 0; renderList();
+        // cardul rămâne în ecran: cele de deasupra s-au putut restrânge, iar el s-a mutat
+        var c = document.querySelector('.cerere[data-id="' + id + '"]');
+        if (c) c.scrollIntoView({block: eraDeschisa ? 'nearest' : 'start'});
         return;
     }
     if (b.dataset.atas) { atasId = id; $('fAtas').click(); return; }
