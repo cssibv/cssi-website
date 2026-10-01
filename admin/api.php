@@ -7100,7 +7100,8 @@ p { margin: 0; }
                     if (isset($f['tip']) && $f['tip'] === 'oferta') {
                         $item['de'] = isset($names[$by]) ? $names[$by] : $f['uploaded_by'];
                         $item['la'] = $f['created_at'];
-                        $oferte[intval($f['lead_id'])] = $item;   // una singură pe cerere: cea mai nouă
+                        $item['can_delete'] = isAdmin() || $by === $meName;
+                        $oferte[intval($f['lead_id'])][] = $item;
                     } else {
                         $foto[intval($f['lead_id'])][] = $item;
                     }
@@ -7126,7 +7127,7 @@ p { margin: 0; }
                     'can_delete'   => isAdmin() || $author === $meName,
                     'detalii'      => isset($detalii[$id]) ? $detalii[$id] : [],
                     'foto'         => isset($foto[$id]) ? $foto[$id] : [],
-                    'oferta'       => isset($oferte[$id]) ? $oferte[$id] : null,
+                    'oferte'       => isset($oferte[$id]) ? $oferte[$id] : [],
                 ];
             }
             jsonResponse(['success' => true, 'data' => $out]);
@@ -7225,7 +7226,7 @@ p { margin: 0; }
 
         // Fișier la o cerere (multipart: id + file [+ tip=oferta]).
         // Atașament = poză (micșorată de pagină înainte), PDF, Word, Excel sau CSV, maxim 10.
-        // Ofertă = un singur PDF pe cerere, pus de cel care a preluat-o; unul nou îl înlocuiește pe cel vechi.
+        // Ofertă = PDF pus de cel care a preluat cererea; pot fi mai multe pe aceeași cerere (maxim 10).
         case 'uploadLeadRapidFoto':
             requireLeadRapid();
             ensureLeadRapid($db);
@@ -7243,6 +7244,9 @@ p { margin: 0; }
                 if (!isAdmin() && $holder !== '' && $holder !== $meName) {
                     jsonResponse(['success' => false, 'error' => 'Doar cel care a preluat cererea poate atașa oferta'], 403); break;
                 }
+                $stmt = $db->prepare("SELECT COUNT(*) FROM lead_rapid_foto WHERE lead_id = ? AND tip = 'oferta'");
+                $stmt->execute([$id]);
+                if (intval($stmt->fetchColumn()) >= 10) { jsonResponse(['success' => false, 'error' => 'Maxim 10 oferte pe cerere'], 400); break; }
             } else {
                 $stmt = $db->prepare("SELECT COUNT(*) FROM lead_rapid_foto WHERE lead_id = ? AND tip <> 'oferta'");
                 $stmt->execute([$id]);
@@ -7259,17 +7263,12 @@ p { margin: 0; }
 
             $numeFisier = bin2hex(random_bytes(16)) . '.' . $ext;
             if (!move_uploaded_file($f['tmp_name'], leadRapidFotoDir() . $numeFisier)) { jsonResponse(['success' => false, 'error' => 'Salvare eșuată'], 500); break; }
-            if ($eOferta) {
-                $stmt = $db->prepare("SELECT * FROM lead_rapid_foto WHERE lead_id = ? AND tip = 'oferta'");
-                $stmt->execute([$id]);
-                foreach ($stmt->fetchAll() as $veche) leadRapidStergeFisier($db, $veche);
-            }
             $now = date('Y-m-d H:i:s');
             $db->prepare("INSERT INTO lead_rapid_foto (lead_id, filename, original_name, tip, uploaded_by, created_at) VALUES (?,?,?,?,?,?)")
                ->execute([$id, $numeFisier, mb_substr(basename((string)$f['name']), 0, 255), $eOferta ? 'oferta' : 'atasament', $meName, $now]);
             $fotoId = intval($db->lastInsertId());
             $db->prepare("UPDATE lead_rapid SET updated_at = ? WHERE id = ?")->execute([$now, $id]);
-            if ($eOferta) leadRapidAddDetaliu($db, $id, 'A atașat oferta', 1);
+            if ($eOferta) leadRapidAddDetaliu($db, $id, 'A atașat o ofertă', 1);
             jsonResponse(['success' => true, 'id' => $fotoId]);
             break;
 
@@ -7285,7 +7284,7 @@ p { margin: 0; }
             if ($row) {
                 requireOwnerOrAdmin($row['uploaded_by']);
                 leadRapidStergeFisier($db, $row);
-                if (isset($row['tip']) && $row['tip'] === 'oferta') leadRapidAddDetaliu($db, intval($row['lead_id']), 'A șters oferta', 1);
+                if (isset($row['tip']) && $row['tip'] === 'oferta') leadRapidAddDetaliu($db, intval($row['lead_id']), 'A șters o ofertă', 1);
             }
             jsonResponse(['success' => true]);
             break;
