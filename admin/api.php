@@ -7272,7 +7272,7 @@ p { margin: 0; }
                ->execute([$id, $numeFisier, mb_substr(basename((string)$f['name']), 0, 255), $eOferta ? 'oferta' : 'atasament', $meName, $now]);
             $fotoId = intval($db->lastInsertId());
             $db->prepare("UPDATE lead_rapid SET updated_at = ? WHERE id = ?")->execute([$now, $id]);
-            if ($eOferta) leadRapidAddDetaliu($db, $id, 'A atașat o ofertă', 1);
+            if ($eOferta) leadRapidAddDetaliu($db, $id, 'A atașat oferta: ' . mb_substr(basename((string)$f['name']), 0, 255), 1);
             jsonResponse(['success' => true, 'id' => $fotoId]);
             break;
 
@@ -7288,7 +7288,13 @@ p { margin: 0; }
             if ($row) {
                 requireOwnerOrAdmin($row['uploaded_by']);
                 leadRapidStergeFisier($db, $row);
-                if (isset($row['tip']) && $row['tip'] === 'oferta') leadRapidAddDetaliu($db, intval($row['lead_id']), 'A șters o ofertă', 1);
+                // În istoric rămâne ce s-a șters, cu nume (pozele din telefon nu au un nume util)
+                $ext    = strtolower(pathinfo($row['filename'], PATHINFO_EXTENSION));
+                $numeSt = !empty($row['original_name']) ? $row['original_name'] : ('fisier.' . $ext);
+                if (isset($row['tip']) && $row['tip'] === 'oferta')           $nota = 'A șters oferta: ' . $numeSt;
+                elseif (in_array($ext, ['jpg', 'png', 'webp'], true))         $nota = 'A șters o poză';
+                else                                                          $nota = 'A șters fișierul: ' . $numeSt;
+                leadRapidAddDetaliu($db, intval($row['lead_id']), $nota, 1);
             }
             jsonResponse(['success' => true]);
             break;
