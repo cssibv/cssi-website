@@ -93,11 +93,12 @@ function ensureNotifAscunse($db) {
 // Listă comună de solicitări notate din mers. Status: Nou → Preluat → In progres → Finalizat.
 // Detaliile sunt intrări separate, fiecare cu autor și oră; schimbările de status se
 // notează automat tot acolo (sistem = 1), ca să rămână istoricul la vedere.
-function ensureLeadRapid($db) {
+function ensureCereriRapide($db) {
     static $checked = false;
     if ($checked) return;
     $checked = true;
-    $db->exec("CREATE TABLE IF NOT EXISTS lead_rapid (
+    cereriRapideMigrareNumeVechi($db);
+    $db->exec("CREATE TABLE IF NOT EXISTS cereri_rapide (
         id INT PRIMARY KEY AUTO_INCREMENT,
         nume VARCHAR(150) NOT NULL DEFAULT '',
         telefon VARCHAR(40) NOT NULL DEFAULT '',
@@ -111,35 +112,72 @@ function ensureLeadRapid($db) {
         updated_at DATETIME NOT NULL,
         KEY idx_status (status)
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4");
-    $db->exec("CREATE TABLE IF NOT EXISTS lead_rapid_detalii (
+    $db->exec("CREATE TABLE IF NOT EXISTS cereri_rapide_detalii (
         id INT PRIMARY KEY AUTO_INCREMENT,
-        lead_id INT NOT NULL,
+        cerere_id INT NOT NULL,
         user_id VARCHAR(60) NOT NULL,
         text TEXT NOT NULL,
         sistem TINYINT(1) NOT NULL DEFAULT 0,
         created_at DATETIME NOT NULL,
-        KEY idx_lead (lead_id)
+        KEY idx_cerere (cerere_id)
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4");
-    $db->exec("CREATE TABLE IF NOT EXISTS lead_rapid_foto (
+    $db->exec("CREATE TABLE IF NOT EXISTS cereri_rapide_fisiere (
         id INT PRIMARY KEY AUTO_INCREMENT,
-        lead_id INT NOT NULL,
+        cerere_id INT NOT NULL,
         filename VARCHAR(80) NOT NULL,
         original_name VARCHAR(255) NULL DEFAULT NULL,
         tip VARCHAR(20) NOT NULL DEFAULT 'atasament',
         uploaded_by VARCHAR(60) NOT NULL,
         created_at DATETIME NOT NULL,
-        KEY idx_lead (lead_id)
+        KEY idx_cerere (cerere_id)
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4");
     try {
-        $cols = $db->query("SHOW COLUMNS FROM lead_rapid_foto")->fetchAll(PDO::FETCH_COLUMN);
-        if (!in_array('original_name', $cols)) $db->exec("ALTER TABLE lead_rapid_foto ADD COLUMN original_name VARCHAR(255) NULL DEFAULT NULL");
-        if (!in_array('tip', $cols)) $db->exec("ALTER TABLE lead_rapid_foto ADD COLUMN tip VARCHAR(20) NOT NULL DEFAULT 'atasament'");
+        $cols = $db->query("SHOW COLUMNS FROM cereri_rapide_fisiere")->fetchAll(PDO::FETCH_COLUMN);
+        if (!in_array('original_name', $cols)) $db->exec("ALTER TABLE cereri_rapide_fisiere ADD COLUMN original_name VARCHAR(255) NULL DEFAULT NULL");
+        if (!in_array('tip', $cols)) $db->exec("ALTER TABLE cereri_rapide_fisiere ADD COLUMN tip VARCHAR(20) NOT NULL DEFAULT 'atasament'");
     } catch (Exception $e) {}
+}
+
+// MIGRARE TEMPORARĂ: pagina s-a numit la început „lead rapid”. La prima rulare după redenumire
+// mută datele existente pe numele noi (tabele, coloană, folder cu fișiere, notificări), fără
+// să piardă nimic. După ce a rulat o dată pe server nu mai face nimic și poate fi ștearsă cu totul.
+function cereriRapideMigrareNumeVechi($db) {
+    try {
+        $are = function ($tabel) use ($db) {
+            $stmt = $db->prepare("SELECT COUNT(*) FROM information_schema.tables WHERE table_schema = DATABASE() AND table_name = ?");
+            $stmt->execute([$tabel]);
+            return intval($stmt->fetchColumn()) > 0;
+        };
+        $perechi = [
+            'lead_rapid'         => 'cereri_rapide',
+            'lead_rapid_detalii' => 'cereri_rapide_detalii',
+            'lead_rapid_foto'    => 'cereri_rapide_fisiere',
+        ];
+        foreach ($perechi as $vechi => $nou) {
+            if ($are($vechi) && !$are($nou)) $db->exec("RENAME TABLE `$vechi` TO `$nou`");
+        }
+        foreach (['cereri_rapide_detalii', 'cereri_rapide_fisiere'] as $tabel) {
+            if (!$are($tabel)) continue;
+            $cols = $db->query("SHOW COLUMNS FROM `$tabel`")->fetchAll(PDO::FETCH_COLUMN);
+            if (in_array('lead_id', $cols) && !in_array('cerere_id', $cols)) {
+                $db->exec("ALTER TABLE `$tabel` CHANGE lead_id cerere_id INT NOT NULL");
+                try { $db->exec("ALTER TABLE `$tabel` DROP INDEX idx_lead, ADD INDEX idx_cerere (cerere_id)"); } catch (Exception $e) {}
+            }
+        }
+        try {
+            $db->exec("UPDATE notificari SET tip = 'cerere_rapida', action_url = '/admin/cereri-rapide.html' WHERE tip = 'lead_rapid'");
+        } catch (Exception $e) {}
+    } catch (Exception $e) {
+        error_log('cereriRapideMigrareNumeVechi: ' . $e->getMessage());
+    }
+    $vechi = UPLOAD_DIR . 'lead-rapid';
+    $nou   = UPLOAD_DIR . 'cereri-rapide';
+    if (is_dir($vechi) && !is_dir($nou)) @rename($vechi, $nou);
 }
 
 // Tipul real al unui fișier urcat, stabilit din conținut (extensia contează doar la
 // formatele Office/CSV, unde conținutul nu le deosebește între ele). '' = neacceptat.
-function leadRapidTipFisier($tmp, $nume) {
+function cerereRapidaTipFisier($tmp, $nume) {
     $info = @getimagesize($tmp);
     $img  = [IMAGETYPE_JPEG => 'jpg', IMAGETYPE_PNG => 'png', IMAGETYPE_WEBP => 'webp'];
     if ($info && isset($img[$info[2]])) return $img[$info[2]];
@@ -158,10 +196,10 @@ function leadRapidTipFisier($tmp, $nume) {
 
 // Nume de afișat unic în cadrul unei cereri: al doilea „Oferta.pdf” devine „Oferta (2).pdf”.
 // (Pe disc fișierele au oricum nume aleatoare, deci nu se suprascriu; aici e vorba doar de etichetă.)
-function leadRapidNumeUnic($db, $leadId, $nume) {
+function cerereRapidaNumeUnic($db, $cerereId, $nume) {
     if ($nume === '') return $nume;
-    $stmt = $db->prepare("SELECT original_name FROM lead_rapid_foto WHERE lead_id = ?");
-    $stmt->execute([$leadId]);
+    $stmt = $db->prepare("SELECT original_name FROM cereri_rapide_fisiere WHERE cerere_id = ?");
+    $stmt->execute([$cerereId]);
     $luate = [];
     foreach ($stmt->fetchAll(PDO::FETCH_COLUMN) as $n) $luate[mb_strtolower((string)$n)] = true;
     if (!isset($luate[mb_strtolower($nume)])) return $nume;
@@ -176,15 +214,15 @@ function leadRapidNumeUnic($db, $leadId, $nume) {
 }
 
 // Șterge un fișier atașat (de pe disc și din tabel)
-function leadRapidStergeFisier($db, $row) {
-    @unlink(leadRapidFotoDir() . basename($row['filename']));
-    $db->prepare("DELETE FROM lead_rapid_foto WHERE id = ?")->execute([$row['id']]);
+function cerereRapidaStergeFisier($db, $row) {
+    @unlink(cereriRapideDir() . basename($row['filename']));
+    $db->prepare("DELETE FROM cereri_rapide_fisiere WHERE id = ?")->execute([$row['id']]);
 }
 
 // Fișierele cererilor rapide (atașamente + oferta): nume aleatoare, într-un folder fără acces direct din web
-// (se servesc doar prin api.php?action=leadRapidFoto, după verificarea contului).
-function leadRapidFotoDir() {
-    $dir = UPLOAD_DIR . 'lead-rapid/';
+// (se servesc doar prin api.php?action=cerereRapidaFisier, după verificarea contului).
+function cereriRapideDir() {
+    $dir = UPLOAD_DIR . 'cereri-rapide/';
     if (!is_dir($dir)) @mkdir($dir, 0755, true);
     if (!is_file($dir . '.htaccess')) {
         @file_put_contents($dir . '.htaccess',
@@ -194,23 +232,23 @@ function leadRapidFotoDir() {
 }
 
 // Acces la cererile rapide: conturile admin + mihai, roxana, valentin.
-function leadRapidAllowed() {
+function cereriRapideAllowed() {
     $u = currentUser();
     if (!$u) return false;
     if (($u['role'] ?? '') === 'admin') return true;
     return in_array(strtolower($u['username'] ?? ''), ['mihai', 'roxana', 'valentin'], true);
 }
-function requireLeadRapid() {
+function requireCereriRapide() {
     requireAuth();
-    if (!leadRapidAllowed()) {
-        jsonResponse(['success' => false, 'error' => 'Nu ai acces la cererile rapide.', 'code' => 'LEAD_RAPID_DENIED'], 403);
+    if (!cereriRapideAllowed()) {
+        jsonResponse(['success' => false, 'error' => 'Nu ai acces la cererile rapide.', 'code' => 'CERERI_RAPIDE_DENIED'], 403);
     }
 }
 
-function leadRapidAddDetaliu($db, $leadId, $text, $auto = 0) {
+function cerereRapidaAddDetaliu($db, $cerereId, $text, $auto = 0) {
     $me = currentUser();
-    $db->prepare("INSERT INTO lead_rapid_detalii (lead_id, user_id, text, sistem, created_at) VALUES (?,?,?,?,?)")
-       ->execute([$leadId, strtolower($me['username']), $text, $auto ? 1 : 0, date('Y-m-d H:i:s')]);
+    $db->prepare("INSERT INTO cereri_rapide_detalii (cerere_id, user_id, text, sistem, created_at) VALUES (?,?,?,?,?)")
+       ->execute([$cerereId, strtolower($me['username']), $text, $auto ? 1 : 0, date('Y-m-d H:i:s')]);
 }
 
 // ─── Helper: schemă oferte (idempotent migration) ─────────────
@@ -5717,12 +5755,13 @@ p { margin: 0; }
             // Notificările închise cu X de userul logat nu se mai trimit (doar pentru el)
             ensureNotifAscunse($db);
             // Notificările de cerere rapidă le văd doar cei cu acces la pagină
-            $faraLR = leadRapidAllowed() ? '' : " AND (n.tip IS NULL OR n.tip <> 'lead_rapid')";
+            // ('lead_rapid' = tipul vechi, până rulează migrarea din cereriRapideMigrareNumeVechi; se scoate odată cu ea)
+            $faraCR = cereriRapideAllowed() ? '' : " AND (n.tip IS NULL OR n.tip NOT IN ('cerere_rapida', 'lead_rapid'))";
             $stmt = $db->prepare("SELECT n.*, p.proiect_id AS cod_proiect, p.status AS status_proiect, p.preluat_de
                 FROM notificari n
                 LEFT JOIN proiecte p ON n.proiect_id = p.id
                 LEFT JOIN notificari_ascunse h ON h.notificare_id = n.id AND h.user_id = ?
-                WHERE h.notificare_id IS NULL" . $faraLR . "
+                WHERE h.notificare_id IS NULL" . $faraCR . "
                 ORDER BY n.created_at DESC LIMIT ?");
             $stmt->bindValue(1, strtolower($sessUser['username']), PDO::PARAM_STR);
             $stmt->bindValue(2, $limit, PDO::PARAM_INT);
@@ -7068,16 +7107,16 @@ p { margin: 0; }
             break;
 
         // ══════════════════════════════════════
-        // CERERI RAPIDE — doar conturile din leadRapidAllowed()
+        // CERERI RAPIDE — doar conturile din cereriRapideAllowed()
         // ══════════════════════════════════════
-        case 'getLeadRapid':
-            requireLeadRapid();
-            ensureLeadRapid($db);
+        case 'getCereriRapide':
+            requireCereriRapide();
+            ensureCereriRapide($db);
             $me = currentUser();
             $meName = strtolower($me['username']);
             // Active toate + finalizate din ultimele 30 de zile
             $limita = date('Y-m-d H:i:s', time() - 30 * 86400);
-            $stmt = $db->prepare("SELECT * FROM lead_rapid
+            $stmt = $db->prepare("SELECT * FROM cereri_rapide
                 WHERE status <> 'Finalizat' OR finalizat_la IS NULL OR finalizat_la >= ?
                 ORDER BY created_at DESC, id DESC LIMIT 300");
             $stmt->execute([$limita]);
@@ -7093,11 +7132,11 @@ p { margin: 0; }
                 $ids = [];
                 foreach ($rows as $r) $ids[] = intval($r['id']);
                 $ph = implode(',', array_fill(0, count($ids), '?'));
-                $stmtD = $db->prepare("SELECT id, lead_id, user_id, text, sistem, created_at FROM lead_rapid_detalii WHERE lead_id IN ($ph) ORDER BY created_at ASC, id ASC");
+                $stmtD = $db->prepare("SELECT id, cerere_id, user_id, text, sistem, created_at FROM cereri_rapide_detalii WHERE cerere_id IN ($ph) ORDER BY created_at ASC, id ASC");
                 $stmtD->execute($ids);
                 foreach ($stmtD->fetchAll() as $d) {
                     $uid = strtolower($d['user_id']);
-                    $detalii[intval($d['lead_id'])][] = [
+                    $detalii[intval($d['cerere_id'])][] = [
                         'id'         => intval($d['id']),
                         'user_name'  => isset($names[$uid]) ? $names[$uid] : $d['user_id'],
                         'text'       => $d['text'],
@@ -7109,7 +7148,7 @@ p { margin: 0; }
             $foto = [];
             $oferte = [];
             if ($rows) {
-                $stmtF = $db->prepare("SELECT * FROM lead_rapid_foto WHERE lead_id IN ($ph) ORDER BY id ASC");
+                $stmtF = $db->prepare("SELECT * FROM cereri_rapide_fisiere WHERE cerere_id IN ($ph) ORDER BY id ASC");
                 $stmtF->execute($ids);
                 foreach ($stmtF->fetchAll() as $f) {
                     $ext = strtolower(pathinfo($f['filename'], PATHINFO_EXTENSION));
@@ -7124,9 +7163,9 @@ p { margin: 0; }
                     if (isset($f['tip']) && $f['tip'] === 'oferta') {
                         $item['de'] = isset($names[$by]) ? $names[$by] : $f['uploaded_by'];
                         $item['la'] = $f['created_at'];
-                        $oferte[intval($f['lead_id'])][] = $item;
+                        $oferte[intval($f['cerere_id'])][] = $item;
                     } else {
-                        $foto[intval($f['lead_id'])][] = $item;
+                        $foto[intval($f['cerere_id'])][] = $item;
                     }
                 }
             }
@@ -7156,9 +7195,9 @@ p { margin: 0; }
             jsonResponse(['success' => true, 'data' => $out]);
             break;
 
-        case 'addLeadRapid':
-            requireLeadRapid();
-            ensureLeadRapid($db);
+        case 'addCerereRapida':
+            requireCereriRapide();
+            ensureCereriRapide($db);
             $me   = currentUser();
             $nume = isset($data['nume']) ? trim($data['nume']) : '';
             $tel  = isset($data['telefon']) ? trim($data['telefon']) : '';
@@ -7168,37 +7207,37 @@ p { margin: 0; }
             if (strlen(preg_replace('/\D/', '', $tel)) < 10) { jsonResponse(['success' => false, 'error' => 'Telefonul trebuie să aibă minim 10 cifre'], 400); break; }
             if ($tip === '') { jsonResponse(['success' => false, 'error' => 'Scrie ce solicită'], 400); break; }
             $now = date('Y-m-d H:i:s');
-            $db->prepare("INSERT INTO lead_rapid (nume, telefon, tip, status, created_by, created_at, updated_at) VALUES (?,?,?,?,?,?,?)")
+            $db->prepare("INSERT INTO cereri_rapide (nume, telefon, tip, status, created_by, created_at, updated_at) VALUES (?,?,?,?,?,?,?)")
                ->execute([mb_substr($nume, 0, 150), mb_substr($tel, 0, 40), mb_substr($tip, 0, 120), 'Nou', strtolower($me['username']), $now, $now]);
             $newId = intval($db->lastInsertId());
-            if ($det !== '') leadRapidAddDetaliu($db, $newId, $det);
+            if ($det !== '') cerereRapidaAddDetaliu($db, $newId, $det);
             // Clopoțelul îi anunță pe ceilalți că e ceva de preluat (nu blochează salvarea)
             try {
                 $cine = $me['display_name'] ?: $me['username'];
                 $msg  = '📞 Cerere rapidă nouă: ' . ($nume !== '' ? $nume : $tel) . ($tip !== '' ? ' · ' . $tip : '');
                 $db->prepare("INSERT INTO notificari (proiect_id, mesaj, tip, de_la, action_url) VALUES (?,?,?,?,?)")
-                   ->execute([null, $msg, 'lead_rapid', $cine, '/admin/cereri-rapide.html']);
+                   ->execute([null, $msg, 'cerere_rapida', $cine, '/admin/cereri-rapide.html']);
             } catch (Exception $e) {}
             jsonResponse(['success' => true, 'id' => $newId]);
             break;
 
-        case 'addLeadRapidDetaliu':
-            requireLeadRapid();
-            ensureLeadRapid($db);
+        case 'addCerereRapidaDetaliu':
+            requireCereriRapide();
+            ensureCereriRapide($db);
             $id  = isset($data['id']) ? intval($data['id']) : 0;
             $txt = isset($data['text']) ? trim($data['text']) : '';
             if (!$id || $txt === '') { jsonResponse(['success' => false, 'error' => 'id + text obligatorii'], 400); break; }
-            $stmt = $db->prepare("SELECT id FROM lead_rapid WHERE id = ?");
+            $stmt = $db->prepare("SELECT id FROM cereri_rapide WHERE id = ?");
             $stmt->execute([$id]);
             if (!$stmt->fetch()) { jsonResponse(['success' => false, 'error' => 'Intrarea nu mai există'], 404); break; }
-            leadRapidAddDetaliu($db, $id, $txt);
-            $db->prepare("UPDATE lead_rapid SET updated_at = ? WHERE id = ?")->execute([date('Y-m-d H:i:s'), $id]);
+            cerereRapidaAddDetaliu($db, $id, $txt);
+            $db->prepare("UPDATE cereri_rapide SET updated_at = ? WHERE id = ?")->execute([date('Y-m-d H:i:s'), $id]);
             jsonResponse(['success' => true]);
             break;
 
-        case 'setLeadRapidStatus':
-            requireLeadRapid();
-            ensureLeadRapid($db);
+        case 'setCerereRapidaStatus':
+            requireCereriRapide();
+            ensureCereriRapide($db);
             $me     = currentUser();
             $meName = strtolower($me['username']);
             $id     = isset($data['id']) ? intval($data['id']) : 0;
@@ -7206,7 +7245,7 @@ p { margin: 0; }
             if (!$id || !in_array($nou, ['Nou', 'Preluat', 'In progres', 'Finalizat'], true)) {
                 jsonResponse(['success' => false, 'error' => 'id + status valid obligatorii'], 400); break;
             }
-            $stmt = $db->prepare("SELECT * FROM lead_rapid WHERE id = ?");
+            $stmt = $db->prepare("SELECT * FROM cereri_rapide WHERE id = ?");
             $stmt->execute([$id]);
             $row = $stmt->fetch();
             if (!$row) { jsonResponse(['success' => false, 'error' => 'Intrarea nu mai există'], 404); break; }
@@ -7217,10 +7256,10 @@ p { margin: 0; }
 
             if ($nou === 'Preluat' && $row['status'] === 'Nou') {
                 // Condiția din WHERE rezolvă cazul în care doi oameni apasă „Preia” în același timp
-                $upd = $db->prepare("UPDATE lead_rapid SET status = 'Preluat', preluat_de = ?, preluat_la = ?, updated_at = ? WHERE id = ? AND status = 'Nou'");
+                $upd = $db->prepare("UPDATE cereri_rapide SET status = 'Preluat', preluat_de = ?, preluat_la = ?, updated_at = ? WHERE id = ? AND status = 'Nou'");
                 $upd->execute([$meName, $now, $now, $id]);
                 if ($upd->rowCount() === 0) { jsonResponse(['success' => false, 'error' => 'A fost deja preluat de altcineva'], 409); break; }
-                leadRapidAddDetaliu($db, $id, 'A preluat', 1);
+                cerereRapidaAddDetaliu($db, $id, 'A preluat', 1);
                 jsonResponse(['success' => true]);
                 break;
             }
@@ -7230,19 +7269,19 @@ p { margin: 0; }
                 jsonResponse(['success' => false, 'error' => 'Doar cel care l-a preluat îi poate schimba statusul'], 403); break;
             }
             if ($nou === 'Nou') {
-                $db->prepare("UPDATE lead_rapid SET status = 'Nou', preluat_de = NULL, preluat_la = NULL, finalizat_la = NULL, updated_at = ? WHERE id = ?")
+                $db->prepare("UPDATE cereri_rapide SET status = 'Nou', preluat_de = NULL, preluat_la = NULL, finalizat_la = NULL, updated_at = ? WHERE id = ?")
                    ->execute([$now, $id]);
-                leadRapidAddDetaliu($db, $id, 'A renunțat, e din nou liber', 1);
+                cerereRapidaAddDetaliu($db, $id, 'A renunțat, e din nou liber', 1);
             } else {
                 $preluatDe = $holder !== '' ? $holder : $meName;
                 $preluatLa = $row['preluat_la'] ? $row['preluat_la'] : $now;
-                $db->prepare("UPDATE lead_rapid SET status = ?, preluat_de = ?, preluat_la = ?, finalizat_la = ?, updated_at = ? WHERE id = ?")
+                $db->prepare("UPDATE cereri_rapide SET status = ?, preluat_de = ?, preluat_la = ?, finalizat_la = ?, updated_at = ? WHERE id = ?")
                    ->execute([$nou, $preluatDe, $preluatLa, $nou === 'Finalizat' ? $now : null, $now, $id]);
                 if ($nou === 'Finalizat')                $nota = 'A finalizat';
                 elseif ($row['status'] === 'Finalizat') $nota = 'A redeschis';
                 elseif ($nou === 'Preluat')              $nota = 'A trecut înapoi la preluat';
                 else                                     $nota = 'A trecut în progres';
-                leadRapidAddDetaliu($db, $id, $nota, 1);
+                cerereRapidaAddDetaliu($db, $id, $nota, 1);
             }
             jsonResponse(['success' => true]);
             break;
@@ -7250,28 +7289,28 @@ p { margin: 0; }
         // Fișier la o cerere (multipart: id + file [+ tip=oferta]).
         // Atașament = poză (micșorată de pagină înainte), PDF, Word, Excel sau CSV, maxim 10.
         // Ofertă = PDF pus de cel care a preluat cererea; pot fi mai multe pe aceeași cerere (maxim 10).
-        case 'uploadLeadRapidFoto':
-            requireLeadRapid();
-            ensureLeadRapid($db);
+        case 'uploadCerereRapidaFisier':
+            requireCereriRapide();
+            ensureCereriRapide($db);
             $me      = currentUser();
             $meName  = strtolower($me['username']);
             $id      = isset($_POST['id']) ? intval($_POST['id']) : 0;
             $eOferta = isset($_POST['tip']) && $_POST['tip'] === 'oferta';
             if (!$id || !isset($_FILES['file'])) { jsonResponse(['success' => false, 'error' => 'id + file obligatorii'], 400); break; }
-            $stmt = $db->prepare("SELECT * FROM lead_rapid WHERE id = ?");
+            $stmt = $db->prepare("SELECT * FROM cereri_rapide WHERE id = ?");
             $stmt->execute([$id]);
-            $lead = $stmt->fetch();
-            if (!$lead) { jsonResponse(['success' => false, 'error' => 'Intrarea nu mai există'], 404); break; }
+            $cerere = $stmt->fetch();
+            if (!$cerere) { jsonResponse(['success' => false, 'error' => 'Intrarea nu mai există'], 404); break; }
             if ($eOferta) {
-                $holder = strtolower((string)$lead['preluat_de']);
+                $holder = strtolower((string)$cerere['preluat_de']);
                 if (!isAdmin() && $holder !== '' && $holder !== $meName) {
                     jsonResponse(['success' => false, 'error' => 'Doar cel care a preluat cererea poate atașa oferta'], 403); break;
                 }
-                $stmt = $db->prepare("SELECT COUNT(*) FROM lead_rapid_foto WHERE lead_id = ? AND tip = 'oferta'");
+                $stmt = $db->prepare("SELECT COUNT(*) FROM cereri_rapide_fisiere WHERE cerere_id = ? AND tip = 'oferta'");
                 $stmt->execute([$id]);
                 if (intval($stmt->fetchColumn()) >= 10) { jsonResponse(['success' => false, 'error' => 'Maxim 10 oferte pe cerere'], 400); break; }
             } else {
-                $stmt = $db->prepare("SELECT COUNT(*) FROM lead_rapid_foto WHERE lead_id = ? AND tip <> 'oferta'");
+                $stmt = $db->prepare("SELECT COUNT(*) FROM cereri_rapide_fisiere WHERE cerere_id = ? AND tip <> 'oferta'");
                 $stmt->execute([$id]);
                 if (intval($stmt->fetchColumn()) >= 10) { jsonResponse(['success' => false, 'error' => 'Maxim 10 fișiere pe cerere'], 400); break; }
             }
@@ -7280,60 +7319,60 @@ p { margin: 0; }
             if ($f['error'] === UPLOAD_ERR_INI_SIZE || $f['error'] === UPLOAD_ERR_FORM_SIZE) { jsonResponse(['success' => false, 'error' => 'Fișier prea mare pentru server'], 400); break; }
             if ($f['error'] !== UPLOAD_ERR_OK) { jsonResponse(['success' => false, 'error' => 'Upload eșuat (cod ' . $f['error'] . ')'], 400); break; }
             if ($f['size'] > 25 * 1024 * 1024) { jsonResponse(['success' => false, 'error' => 'Fișier prea mare (max 25 MB)'], 400); break; }
-            $ext = leadRapidTipFisier($f['tmp_name'], $f['name']);
+            $ext = cerereRapidaTipFisier($f['tmp_name'], $f['name']);
             if ($ext === '') { jsonResponse(['success' => false, 'error' => 'Tip neacceptat (merg poze, PDF, Word, Excel, CSV)'], 400); break; }
             if ($eOferta && $ext !== 'pdf') { jsonResponse(['success' => false, 'error' => 'Oferta trebuie să fie PDF'], 400); break; }
 
             $numeFisier = bin2hex(random_bytes(16)) . '.' . $ext;
-            if (!move_uploaded_file($f['tmp_name'], leadRapidFotoDir() . $numeFisier)) { jsonResponse(['success' => false, 'error' => 'Salvare eșuată'], 500); break; }
+            if (!move_uploaded_file($f['tmp_name'], cereriRapideDir() . $numeFisier)) { jsonResponse(['success' => false, 'error' => 'Salvare eșuată'], 500); break; }
             $now = date('Y-m-d H:i:s');
-            $numeUrcat = leadRapidNumeUnic($db, $id, mb_substr(basename((string)$f['name']), 0, 240));
-            $db->prepare("INSERT INTO lead_rapid_foto (lead_id, filename, original_name, tip, uploaded_by, created_at) VALUES (?,?,?,?,?,?)")
+            $numeUrcat = cerereRapidaNumeUnic($db, $id, mb_substr(basename((string)$f['name']), 0, 240));
+            $db->prepare("INSERT INTO cereri_rapide_fisiere (cerere_id, filename, original_name, tip, uploaded_by, created_at) VALUES (?,?,?,?,?,?)")
                ->execute([$id, $numeFisier, $numeUrcat, $eOferta ? 'oferta' : 'atasament', $meName, $now]);
             $fotoId = intval($db->lastInsertId());
-            $db->prepare("UPDATE lead_rapid SET updated_at = ? WHERE id = ?")->execute([$now, $id]);
+            $db->prepare("UPDATE cereri_rapide SET updated_at = ? WHERE id = ?")->execute([$now, $id]);
             // Istoric: ofertele mereu; atașamentele doar când sunt adăugate ulterior (ulterior=1),
             // nu și cele puse odată cu cererea, ca să nu umple istoricul la creare
             if ($eOferta) {
-                leadRapidAddDetaliu($db, $id, 'A atașat oferta: ' . $numeUrcat, 1);
+                cerereRapidaAddDetaliu($db, $id, 'A atașat oferta: ' . $numeUrcat, 1);
             } elseif (!empty($_POST['ulterior'])) {
-                leadRapidAddDetaliu($db, $id, (in_array($ext, ['jpg', 'png', 'webp'], true) ? 'A adăugat poza: ' : 'A adăugat fișierul: ') . $numeUrcat, 1);
+                cerereRapidaAddDetaliu($db, $id, (in_array($ext, ['jpg', 'png', 'webp'], true) ? 'A adăugat poza: ' : 'A adăugat fișierul: ') . $numeUrcat, 1);
             }
             jsonResponse(['success' => true, 'id' => $fotoId]);
             break;
 
         // Șterge oferta sau un atașament: cel care l-a urcat sau admin
-        case 'deleteLeadRapidFoto':
-            requireLeadRapid();
-            ensureLeadRapid($db);
+        case 'deleteCerereRapidaFisier':
+            requireCereriRapide();
+            ensureCereriRapide($db);
             $fid = isset($data['id']) ? intval($data['id']) : 0;
             if (!$fid) { jsonResponse(['success' => false, 'error' => 'id obligatoriu'], 400); break; }
-            $stmt = $db->prepare("SELECT * FROM lead_rapid_foto WHERE id = ?");
+            $stmt = $db->prepare("SELECT * FROM cereri_rapide_fisiere WHERE id = ?");
             $stmt->execute([$fid]);
             $row = $stmt->fetch();
             if ($row) {
                 requireOwnerOrAdmin($row['uploaded_by']);
-                leadRapidStergeFisier($db, $row);
+                cerereRapidaStergeFisier($db, $row);
                 // În istoric rămâne ce s-a șters, cu nume
                 $ext    = strtolower(pathinfo($row['filename'], PATHINFO_EXTENSION));
                 $numeSt = !empty($row['original_name']) ? $row['original_name'] : ('fisier.' . $ext);
                 if (isset($row['tip']) && $row['tip'] === 'oferta')           $nota = 'A șters oferta: ' . $numeSt;
                 elseif (in_array($ext, ['jpg', 'png', 'webp'], true))         $nota = 'A șters poza: ' . $numeSt;
                 else                                                          $nota = 'A șters fișierul: ' . $numeSt;
-                leadRapidAddDetaliu($db, intval($row['lead_id']), $nota, 1);
+                cerereRapidaAddDetaliu($db, intval($row['cerere_id']), $nota, 1);
             }
             jsonResponse(['success' => true]);
             break;
 
         // Servește un atașament doar conturilor cu acces (folderul nu e accesibil direct)
-        case 'leadRapidFoto':
-            requireLeadRapid();
-            ensureLeadRapid($db);
+        case 'cerereRapidaFisier':
+            requireCereriRapide();
+            ensureCereriRapide($db);
             $fid = isset($_GET['f']) ? intval($_GET['f']) : 0;
-            $stmt = $db->prepare("SELECT * FROM lead_rapid_foto WHERE id = ?");
+            $stmt = $db->prepare("SELECT * FROM cereri_rapide_fisiere WHERE id = ?");
             $stmt->execute([$fid]);
             $row  = $stmt->fetch();
-            $path = $row ? leadRapidFotoDir() . basename($row['filename']) : '';
+            $path = $row ? cereriRapideDir() . basename($row['filename']) : '';
             if (!$row || !is_file($path)) { jsonResponse(['success' => false, 'error' => 'Fișierul nu mai există'], 404); break; }
             $tipuri = [
                 'jpg' => 'image/jpeg', 'png' => 'image/png', 'webp' => 'image/webp', 'pdf' => 'application/pdf',
@@ -7361,22 +7400,22 @@ p { margin: 0; }
             readfile($path);
             exit;
 
-        case 'deleteLeadRapid':
-            requireLeadRapid();
-            ensureLeadRapid($db);
+        case 'deleteCerereRapida':
+            requireCereriRapide();
+            ensureCereriRapide($db);
             $id = isset($data['id']) ? intval($data['id']) : 0;
             if (!$id) { jsonResponse(['success' => false, 'error' => 'id obligatoriu'], 400); break; }
-            $stmt = $db->prepare("SELECT created_by FROM lead_rapid WHERE id = ?");
+            $stmt = $db->prepare("SELECT created_by FROM cereri_rapide WHERE id = ?");
             $stmt->execute([$id]);
             $row = $stmt->fetch();
             if ($row) {
                 requireOwnerOrAdmin($row['created_by']);
-                $stmtF = $db->prepare("SELECT filename FROM lead_rapid_foto WHERE lead_id = ?");
+                $stmtF = $db->prepare("SELECT filename FROM cereri_rapide_fisiere WHERE cerere_id = ?");
                 $stmtF->execute([$id]);
-                foreach ($stmtF->fetchAll() as $f) @unlink(leadRapidFotoDir() . basename($f['filename']));
-                $db->prepare("DELETE FROM lead_rapid_foto WHERE lead_id = ?")->execute([$id]);
-                $db->prepare("DELETE FROM lead_rapid_detalii WHERE lead_id = ?")->execute([$id]);
-                $db->prepare("DELETE FROM lead_rapid WHERE id = ?")->execute([$id]);
+                foreach ($stmtF->fetchAll() as $f) @unlink(cereriRapideDir() . basename($f['filename']));
+                $db->prepare("DELETE FROM cereri_rapide_fisiere WHERE cerere_id = ?")->execute([$id]);
+                $db->prepare("DELETE FROM cereri_rapide_detalii WHERE cerere_id = ?")->execute([$id]);
+                $db->prepare("DELETE FROM cereri_rapide WHERE id = ?")->execute([$id]);
             }
             jsonResponse(['success' => true]);
             break;
