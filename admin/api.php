@@ -7307,10 +7307,16 @@ p { margin: 0; }
             ];
             $ext = strtolower(pathinfo($path, PATHINFO_EXTENSION));
             header('Content-Type: ' . (isset($tipuri[$ext]) ? $tipuri[$ext] : 'application/octet-stream'));
-            if (!in_array($ext, ['jpg', 'png', 'webp'], true)) {
-                // PDF-ul se deschide în browser; Word/Excel/CSV se descarcă
+            // Pozele și PDF-urile se deschid în browser, Word/Excel/CSV se descarcă; cu &dl=1 se descarcă orice
+            $eImg = in_array($ext, ['jpg', 'png', 'webp'], true);
+            $dl   = !empty($_GET['dl']);
+            if ($eImg) {
+                $numeAfisat = 'poza-' . $fid . '.' . $ext;
+            } else {
                 $numeAfisat = preg_replace('/[^A-Za-z0-9._ -]/', '_', pathinfo(!empty($row['original_name']) ? $row['original_name'] : 'fisier', PATHINFO_FILENAME)) . '.' . $ext;
-                header('Content-Disposition: ' . ($ext === 'pdf' ? 'inline' : 'attachment') . '; filename="' . $numeAfisat . '"');
+            }
+            if ($dl || !$eImg) {
+                header('Content-Disposition: ' . (!$dl && $ext === 'pdf' ? 'inline' : 'attachment') . '; filename="' . $numeAfisat . '"');
             }
             header('Content-Length: ' . filesize($path));
             header('Cache-Control: private, max-age=86400');
