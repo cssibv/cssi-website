@@ -89,7 +89,7 @@ function ensureNotifAscunse($db) {
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4");
 }
 
-// ─── Helper: cereri rapide (pagina /admin/lead-rapid) ───────────────────
+// ─── Helper: cereri rapide (pagina /admin/cereri-rapide) ───────────────────
 // Listă comună de solicitări notate din mers. Status: Nou → Preluat → In progres → Finalizat.
 // Detaliile sunt intrări separate, fiecare cu autor și oră; schimbările de status se
 // notează automat tot acolo (sistem = 1), ca să rămână istoricul la vedere.
@@ -7177,7 +7177,7 @@ p { margin: 0; }
                 $cine = $me['display_name'] ?: $me['username'];
                 $msg  = '📞 Cerere rapidă nouă: ' . ($nume !== '' ? $nume : $tel) . ($tip !== '' ? ' · ' . $tip : '');
                 $db->prepare("INSERT INTO notificari (proiect_id, mesaj, tip, de_la, action_url) VALUES (?,?,?,?,?)")
-                   ->execute([null, $msg, 'lead_rapid', $cine, '/admin/lead-rapid.html']);
+                   ->execute([null, $msg, 'lead_rapid', $cine, '/admin/cereri-rapide.html']);
             } catch (Exception $e) {}
             jsonResponse(['success' => true, 'id' => $newId]);
             break;
