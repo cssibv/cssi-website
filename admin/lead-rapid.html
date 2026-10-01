@@ -51,8 +51,12 @@ textarea.input{resize:vertical;min-height:84px;line-height:1.4;font-weight:500;f
 .sugestii{margin-top:8px;}
 /* Sugestiile de solicitare: fundal colorat, ca să se vadă că se apasă */
 .sug-hint{font-size:12px;color:var(--gray);margin-top:10px;}
-.chip.sug{background:#eff6ff;border-color:#bfdbfe;color:#1d4ed8;font-size:14px;padding:9px 13px;}
-.chip.sug:active{background:#dbeafe;}
+.chip.sug{background:#2563eb;border-color:#2563eb;color:#fff;font-size:14px;padding:9px 14px;}
+.chip.sug:active{background:#1d4ed8;border-color:#1d4ed8;}
+.req{color:var(--red);}
+.input.bad{border-color:var(--red);}
+.hint-err{display:none;font-size:13px;font-weight:600;color:var(--red-d);margin-top:6px;}
+.hint-err.show{display:block;}
 
 .btn{padding:12px 16px;border-radius:12px;font-size:15px;font-weight:800;}
 .btn.primary{background:var(--red);color:#fff;}
@@ -161,8 +165,9 @@ textarea.input{resize:vertical;min-height:84px;line-height:1.4;font-weight:500;f
         <form id="addView" class="hidden" onsubmit="saveLead(event)" autocomplete="off">
             <div class="card">
                 <div class="field">
-                    <label class="label" for="fTel">Telefon</label>
-                    <input class="input" id="fTel" type="tel" inputmode="tel" placeholder="07xx xxx xxx" autocomplete="off">
+                    <label class="label" for="fTel">Telefon <span class="req">*</span></label>
+                    <input class="input" id="fTel" type="tel" inputmode="tel" placeholder="07xx xxx xxx" autocomplete="off" aria-required="true">
+                    <div class="hint-err" id="telErr">Telefonul trebuie să aibă minim 10 cifre.</div>
                 </div>
                 <div class="field">
                     <label class="label" for="fNume">Nume</label>
@@ -332,17 +337,22 @@ function restoreDraft(){
 }
 ['fTel','fNume','fTip','fDet'].forEach(function(id){ $(id).addEventListener('input', saveDraft); });
 
+// Telefon obligatoriu, minim 10 cifre (număr românesc, cu sau fără prefix de țară)
+function telOk(){ return $('fTel').value.replace(/\D/g, '').length >= 10; }
+function telErr(on){ $('fTel').classList.toggle('bad', on); $('telErr').classList.toggle('show', on); }
+$('fTel').addEventListener('input', function(){ if (telOk()) telErr(false); });
+
 function saveLead(ev){
     ev.preventDefault();
     hideMsg();
     var tel = $('fTel').value.trim(), nume = $('fNume').value.trim();
-    if (!tel && !nume) { showMsg('Scrie măcar telefonul sau numele.', 'err'); $('fTel').focus(); return; }
+    if (!telOk()) { telErr(true); $('fTel').focus(); return; }
     var btn = $('btnSave'); btn.disabled = true; btn.textContent = 'Se salvează...';
     call('addLeadRapid', {telefon:tel, nume:nume, tip:$('fTip').value.trim(), detalii:$('fDet').value.trim()})
     .then(function(res){
         btn.disabled = false; btn.textContent = 'Adaugă';
         if (!res.success) throw new Error(res.error || 'Nesalvat');
-        $('addView').reset();
+        $('addView').reset(); telErr(false);
         try { localStorage.removeItem(KEY_DRAFT); } catch(e){}
         showMsg('Salvat: ' + (nume || tel) + '. E în listă, cu status Nou.', 'ok');
         loadLeads();

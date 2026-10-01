@@ -7067,7 +7067,8 @@ p { margin: 0; }
             $tel  = isset($data['telefon']) ? trim($data['telefon']) : '';
             $tip  = isset($data['tip']) ? trim($data['tip']) : '';
             $det  = isset($data['detalii']) ? trim($data['detalii']) : '';
-            if ($nume === '' && $tel === '') { jsonResponse(['success' => false, 'error' => 'Scrie măcar telefonul sau numele'], 400); break; }
+            // Telefonul e obligatoriu: minim 10 cifre (număr românesc, cu sau fără prefix de țară)
+            if (strlen(preg_replace('/\D/', '', $tel)) < 10) { jsonResponse(['success' => false, 'error' => 'Telefonul trebuie să aibă minim 10 cifre'], 400); break; }
             $now = date('Y-m-d H:i:s');
             $db->prepare("INSERT INTO lead_rapid (nume, telefon, tip, status, created_by, created_at, updated_at) VALUES (?,?,?,?,?,?,?)")
                ->execute([mb_substr($nume, 0, 150), mb_substr($tel, 0, 40), mb_substr($tip, 0, 120), 'Nou', strtolower($me['username']), $now, $now]);
