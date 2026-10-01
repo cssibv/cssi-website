@@ -89,6 +89,59 @@ function ensureNotifAscunse($db) {
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4");
 }
 
+// ─── Helper: lead-uri rapide (pagina /admin/lead-rapid) ───────────────────
+// Listă comună de solicitări notate din mers. Status: Nou → Preluat → In progres → Finalizat.
+// Detaliile sunt intrări separate, fiecare cu autor și oră; schimbările de status se
+// notează automat tot acolo (sistem = 1), ca să rămână istoricul la vedere.
+function ensureLeadRapid($db) {
+    static $checked = false;
+    if ($checked) return;
+    $checked = true;
+    $db->exec("CREATE TABLE IF NOT EXISTS lead_rapid (
+        id INT PRIMARY KEY AUTO_INCREMENT,
+        nume VARCHAR(150) NOT NULL DEFAULT '',
+        telefon VARCHAR(40) NOT NULL DEFAULT '',
+        tip VARCHAR(120) NOT NULL DEFAULT '',
+        status VARCHAR(20) NOT NULL DEFAULT 'Nou',
+        preluat_de VARCHAR(60) NULL DEFAULT NULL,
+        preluat_la DATETIME NULL DEFAULT NULL,
+        finalizat_la DATETIME NULL DEFAULT NULL,
+        created_by VARCHAR(60) NOT NULL,
+        created_at DATETIME NOT NULL,
+        updated_at DATETIME NOT NULL,
+        KEY idx_status (status)
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4");
+    $db->exec("CREATE TABLE IF NOT EXISTS lead_rapid_detalii (
+        id INT PRIMARY KEY AUTO_INCREMENT,
+        lead_id INT NOT NULL,
+        user_id VARCHAR(60) NOT NULL,
+        text TEXT NOT NULL,
+        sistem TINYINT(1) NOT NULL DEFAULT 0,
+        created_at DATETIME NOT NULL,
+        KEY idx_lead (lead_id)
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4");
+}
+
+// Acces la lead-urile rapide: conturile admin + mihai, roxana, valentin.
+function leadRapidAllowed() {
+    $u = currentUser();
+    if (!$u) return false;
+    if (($u['role'] ?? '') === 'admin') return true;
+    return in_array(strtolower($u['username'] ?? ''), ['mihai', 'roxana', 'valentin'], true);
+}
+function requireLeadRapid() {
+    requireAuth();
+    if (!leadRapidAllowed()) {
+        jsonResponse(['success' => false, 'error' => 'Nu ai acces la lead-urile rapide.', 'code' => 'LEAD_RAPID_DENIED'], 403);
+    }
+}
+
+function leadRapidAddDetaliu($db, $leadId, $text, $auto = 0) {
+    $me = currentUser();
+    $db->prepare("INSERT INTO lead_rapid_detalii (lead_id, user_id, text, sistem, created_at) VALUES (?,?,?,?,?)")
+       ->execute([$leadId, strtolower($me['username']), $text, $auto ? 1 : 0, date('Y-m-d H:i:s')]);
+}
+
 // ─── Helper: schemă oferte (idempotent migration) ─────────────
 function ensureOferteColumns($db) {
     static $checked = false;
@@ -5592,11 +5645,13 @@ p { margin: 0; }
             
             // Notificările închise cu X de userul logat nu se mai trimit (doar pentru el)
             ensureNotifAscunse($db);
+            // Notificările de lead rapid le văd doar cei cu acces la pagină
+            $faraLR = leadRapidAllowed() ? '' : " AND (n.tip IS NULL OR n.tip <> 'lead_rapid')";
             $stmt = $db->prepare("SELECT n.*, p.proiect_id AS cod_proiect, p.status AS status_proiect, p.preluat_de
                 FROM notificari n
                 LEFT JOIN proiecte p ON n.proiect_id = p.id
                 LEFT JOIN notificari_ascunse h ON h.notificare_id = n.id AND h.user_id = ?
-                WHERE h.notificare_id IS NULL
+                WHERE h.notificare_id IS NULL" . $faraLR . "
                 ORDER BY n.created_at DESC LIMIT ?");
             $stmt->bindValue(1, strtolower($sessUser['username']), PDO::PARAM_STR);
             $stmt->bindValue(2, $limit, PDO::PARAM_INT);
@@ -6939,6 +6994,168 @@ p { margin: 0; }
                ]);
             if ($pidNum !== null) $db->prepare("UPDATE mentenanta SET proiect_id=? WHERE id=?")->execute([$pidNum, $rowId]);
             jsonResponse(['success'=>true]);
+            break;
+
+        // ══════════════════════════════════════
+        // LEAD-URI RAPIDE — doar conturile din leadRapidAllowed()
+        // ══════════════════════════════════════
+        case 'getLeadRapid':
+            requireLeadRapid();
+            ensureLeadRapid($db);
+            $me = currentUser();
+            $meName = strtolower($me['username']);
+            // Active toate + finalizate din ultimele 30 de zile
+            $limita = date('Y-m-d H:i:s', time() - 30 * 86400);
+            $stmt = $db->prepare("SELECT * FROM lead_rapid
+                WHERE status <> 'Finalizat' OR finalizat_la IS NULL OR finalizat_la >= ?
+                ORDER BY created_at DESC, id DESC LIMIT 300");
+            $stmt->execute([$limita]);
+            $rows = $stmt->fetchAll();
+            $names = [];
+            try {
+                foreach ($db->query("SELECT username, display_name FROM users")->fetchAll() as $u) {
+                    $names[strtolower($u['username'])] = $u['display_name'] ?: $u['username'];
+                }
+            } catch (Exception $e) {}
+            $detalii = [];
+            if ($rows) {
+                $ids = [];
+                foreach ($rows as $r) $ids[] = intval($r['id']);
+                $ph = implode(',', array_fill(0, count($ids), '?'));
+                $stmtD = $db->prepare("SELECT id, lead_id, user_id, text, sistem, created_at FROM lead_rapid_detalii WHERE lead_id IN ($ph) ORDER BY created_at ASC, id ASC");
+                $stmtD->execute($ids);
+                foreach ($stmtD->fetchAll() as $d) {
+                    $uid = strtolower($d['user_id']);
+                    $detalii[intval($d['lead_id'])][] = [
+                        'id'         => intval($d['id']),
+                        'user_name'  => isset($names[$uid]) ? $names[$uid] : $d['user_id'],
+                        'text'       => $d['text'],
+                        'auto'       => intval($d['sistem']) === 1,
+                        'created_at' => $d['created_at'],
+                    ];
+                }
+            }
+            $out = [];
+            foreach ($rows as $r) {
+                $id     = intval($r['id']);
+                $holder = strtolower((string)$r['preluat_de']);
+                $author = strtolower((string)$r['created_by']);
+                $out[] = [
+                    'id'           => $id,
+                    'nume'         => $r['nume'],
+                    'telefon'      => $r['telefon'],
+                    'tip'          => $r['tip'],
+                    'status'       => $r['status'],
+                    'preluat_de'   => $holder,
+                    'preluat_nume' => $holder !== '' ? (isset($names[$holder]) ? $names[$holder] : $r['preluat_de']) : '',
+                    'creat_nume'   => isset($names[$author]) ? $names[$author] : $r['created_by'],
+                    'created_at'   => $r['created_at'],
+                    'al_meu'       => $holder !== '' && $holder === $meName,
+                    'can_act'      => isAdmin() || $holder === '' || $holder === $meName,
+                    'can_delete'   => isAdmin() || $author === $meName,
+                    'detalii'      => isset($detalii[$id]) ? $detalii[$id] : [],
+                ];
+            }
+            jsonResponse(['success' => true, 'data' => $out]);
+            break;
+
+        case 'addLeadRapid':
+            requireLeadRapid();
+            ensureLeadRapid($db);
+            $me   = currentUser();
+            $nume = isset($data['nume']) ? trim($data['nume']) : '';
+            $tel  = isset($data['telefon']) ? trim($data['telefon']) : '';
+            $tip  = isset($data['tip']) ? trim($data['tip']) : '';
+            $det  = isset($data['detalii']) ? trim($data['detalii']) : '';
+            if ($nume === '' && $tel === '') { jsonResponse(['success' => false, 'error' => 'Scrie măcar telefonul sau numele'], 400); break; }
+            $now = date('Y-m-d H:i:s');
+            $db->prepare("INSERT INTO lead_rapid (nume, telefon, tip, status, created_by, created_at, updated_at) VALUES (?,?,?,?,?,?,?)")
+               ->execute([mb_substr($nume, 0, 150), mb_substr($tel, 0, 40), mb_substr($tip, 0, 120), 'Nou', strtolower($me['username']), $now, $now]);
+            $newId = intval($db->lastInsertId());
+            if ($det !== '') leadRapidAddDetaliu($db, $newId, $det);
+            // Clopoțelul îi anunță pe ceilalți că e ceva de preluat (nu blochează salvarea)
+            try {
+                $cine = $me['display_name'] ?: $me['username'];
+                $msg  = '📞 Lead rapid nou: ' . ($nume !== '' ? $nume : $tel) . ($tip !== '' ? ' · ' . $tip : '');
+                $db->prepare("INSERT INTO notificari (proiect_id, mesaj, tip, de_la, action_url) VALUES (?,?,?,?,?)")
+                   ->execute([null, $msg, 'lead_rapid', $cine, '/admin/lead-rapid.html']);
+            } catch (Exception $e) {}
+            jsonResponse(['success' => true, 'id' => $newId]);
+            break;
+
+        case 'addLeadRapidDetaliu':
+            requireLeadRapid();
+            ensureLeadRapid($db);
+            $id  = isset($data['id']) ? intval($data['id']) : 0;
+            $txt = isset($data['text']) ? trim($data['text']) : '';
+            if (!$id || $txt === '') { jsonResponse(['success' => false, 'error' => 'id + text obligatorii'], 400); break; }
+            $stmt = $db->prepare("SELECT id FROM lead_rapid WHERE id = ?");
+            $stmt->execute([$id]);
+            if (!$stmt->fetch()) { jsonResponse(['success' => false, 'error' => 'Intrarea nu mai există'], 404); break; }
+            leadRapidAddDetaliu($db, $id, $txt);
+            $db->prepare("UPDATE lead_rapid SET updated_at = ? WHERE id = ?")->execute([date('Y-m-d H:i:s'), $id]);
+            jsonResponse(['success' => true]);
+            break;
+
+        case 'setLeadRapidStatus':
+            requireLeadRapid();
+            ensureLeadRapid($db);
+            $me     = currentUser();
+            $meName = strtolower($me['username']);
+            $id     = isset($data['id']) ? intval($data['id']) : 0;
+            $nou    = isset($data['status']) ? $data['status'] : '';
+            if (!$id || !in_array($nou, ['Nou', 'Preluat', 'In progres', 'Finalizat'], true)) {
+                jsonResponse(['success' => false, 'error' => 'id + status valid obligatorii'], 400); break;
+            }
+            $stmt = $db->prepare("SELECT * FROM lead_rapid WHERE id = ?");
+            $stmt->execute([$id]);
+            $row = $stmt->fetch();
+            if (!$row) { jsonResponse(['success' => false, 'error' => 'Intrarea nu mai există'], 404); break; }
+            $holder = strtolower((string)$row['preluat_de']);
+            $now    = date('Y-m-d H:i:s');
+
+            if ($nou === 'Preluat') {
+                // Condiția din WHERE rezolvă cazul în care doi oameni apasă „Preia” în același timp
+                $upd = $db->prepare("UPDATE lead_rapid SET status = 'Preluat', preluat_de = ?, preluat_la = ?, updated_at = ? WHERE id = ? AND status = 'Nou'");
+                $upd->execute([$meName, $now, $now, $id]);
+                if ($upd->rowCount() === 0) { jsonResponse(['success' => false, 'error' => 'A fost deja preluat de altcineva'], 409); break; }
+                leadRapidAddDetaliu($db, $id, 'A preluat', 1);
+                jsonResponse(['success' => true]);
+                break;
+            }
+
+            // Restul schimbărilor: doar cel care l-a preluat sau admin (ori oricine, dacă nu e preluat încă)
+            if (!isAdmin() && $holder !== '' && $holder !== $meName) {
+                jsonResponse(['success' => false, 'error' => 'Doar cel care l-a preluat îi poate schimba statusul'], 403); break;
+            }
+            if ($nou === 'Nou') {
+                $db->prepare("UPDATE lead_rapid SET status = 'Nou', preluat_de = NULL, preluat_la = NULL, finalizat_la = NULL, updated_at = ? WHERE id = ?")
+                   ->execute([$now, $id]);
+                leadRapidAddDetaliu($db, $id, 'A renunțat, e din nou liber', 1);
+            } else {
+                $preluatDe = $holder !== '' ? $holder : $meName;
+                $preluatLa = $row['preluat_la'] ? $row['preluat_la'] : $now;
+                $db->prepare("UPDATE lead_rapid SET status = ?, preluat_de = ?, preluat_la = ?, finalizat_la = ?, updated_at = ? WHERE id = ?")
+                   ->execute([$nou, $preluatDe, $preluatLa, $nou === 'Finalizat' ? $now : null, $now, $id]);
+                leadRapidAddDetaliu($db, $id, $nou === 'Finalizat' ? 'A finalizat' : ($row['status'] === 'Finalizat' ? 'A redeschis' : 'A trecut în progres'), 1);
+            }
+            jsonResponse(['success' => true]);
+            break;
+
+        case 'deleteLeadRapid':
+            requireLeadRapid();
+            ensureLeadRapid($db);
+            $id = isset($data['id']) ? intval($data['id']) : 0;
+            if (!$id) { jsonResponse(['success' => false, 'error' => 'id obligatoriu'], 400); break; }
+            $stmt = $db->prepare("SELECT created_by FROM lead_rapid WHERE id = ?");
+            $stmt->execute([$id]);
+            $row = $stmt->fetch();
+            if ($row) {
+                requireOwnerOrAdmin($row['created_by']);
+                $db->prepare("DELETE FROM lead_rapid_detalii WHERE lead_id = ?")->execute([$id]);
+                $db->prepare("DELETE FROM lead_rapid WHERE id = ?")->execute([$id]);
+            }
+            jsonResponse(['success' => true]);
             break;
 
         default:
