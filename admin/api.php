@@ -148,7 +148,11 @@ function leadRapidTipFisier($tmp, $nume) {
     if (strpos(substr($cap, 0, 1024), '%PDF-') !== false) return 'pdf';
     if (strncmp($cap, "PK\x03\x04", 4) === 0 && in_array($ext, ['docx', 'xlsx'], true)) return $ext;
     if (strncmp($cap, "\xD0\xCF\x11\xE0\xA1\xB1\x1A\xE1", 8) === 0 && in_array($ext, ['doc', 'xls'], true)) return $ext;
-    if ($ext === 'csv' && $cap !== '' && strpos($cap, "\0") === false) return 'csv';
+    if ($ext === 'csv' && $cap !== '') {
+        // Exporturile din Google Ads / Excel sunt adesea UTF-16 (încep cu BOM și au octeți zero în text)
+        $utf16 = strncmp($cap, "\xFF\xFE", 2) === 0 || strncmp($cap, "\xFE\xFF", 2) === 0;
+        if ($utf16 || strpos($cap, "\0") === false) return 'csv';
+    }
     return '';
 }
 
