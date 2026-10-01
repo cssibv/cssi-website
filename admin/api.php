@@ -120,6 +120,26 @@ function ensureLeadRapid($db) {
         created_at DATETIME NOT NULL,
         KEY idx_lead (lead_id)
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4");
+    $db->exec("CREATE TABLE IF NOT EXISTS lead_rapid_foto (
+        id INT PRIMARY KEY AUTO_INCREMENT,
+        lead_id INT NOT NULL,
+        filename VARCHAR(80) NOT NULL,
+        uploaded_by VARCHAR(60) NOT NULL,
+        created_at DATETIME NOT NULL,
+        KEY idx_lead (lead_id)
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4");
+}
+
+// Pozele lead-urilor rapide: nume aleatoare, într-un folder fără acces direct din web
+// (se servesc doar prin api.php?action=leadRapidFoto, după verificarea contului).
+function leadRapidFotoDir() {
+    $dir = UPLOAD_DIR . 'lead-rapid/';
+    if (!is_dir($dir)) @mkdir($dir, 0755, true);
+    if (!is_file($dir . '.htaccess')) {
+        @file_put_contents($dir . '.htaccess',
+            "<IfModule mod_authz_core.c>\nRequire all denied\n</IfModule>\n<IfModule !mod_authz_core.c>\nOrder allow,deny\nDeny from all\n</IfModule>\n");
+    }
+    return $dir;
 }
 
 // Acces la lead-urile rapide: conturile admin + mihai, roxana, valentin.
@@ -7035,6 +7055,12 @@ p { margin: 0; }
                     ];
                 }
             }
+            $foto = [];
+            if ($rows) {
+                $stmtF = $db->prepare("SELECT id, lead_id FROM lead_rapid_foto WHERE lead_id IN ($ph) ORDER BY id ASC");
+                $stmtF->execute($ids);
+                foreach ($stmtF->fetchAll() as $f) $foto[intval($f['lead_id'])][] = intval($f['id']);
+            }
             $out = [];
             foreach ($rows as $r) {
                 $id     = intval($r['id']);
@@ -7054,6 +7080,7 @@ p { margin: 0; }
                     'can_act'      => isAdmin() || $holder === '' || $holder === $meName,
                     'can_delete'   => isAdmin() || $author === $meName,
                     'detalii'      => isset($detalii[$id]) ? $detalii[$id] : [],
+                    'foto'         => isset($foto[$id]) ? $foto[$id] : [],
                 ];
             }
             jsonResponse(['success' => true, 'data' => $out]);
@@ -7150,6 +7177,58 @@ p { margin: 0; }
             jsonResponse(['success' => true]);
             break;
 
+        // Poză atașată unei intrări (multipart: id + file). Pagina o micșorează înainte de trimitere.
+        case 'uploadLeadRapidFoto':
+            requireLeadRapid();
+            ensureLeadRapid($db);
+            $me = currentUser();
+            $id = isset($_POST['id']) ? intval($_POST['id']) : 0;
+            if (!$id || !isset($_FILES['file'])) { jsonResponse(['success' => false, 'error' => 'id + file obligatorii'], 400); break; }
+            $stmt = $db->prepare("SELECT id FROM lead_rapid WHERE id = ?");
+            $stmt->execute([$id]);
+            if (!$stmt->fetch()) { jsonResponse(['success' => false, 'error' => 'Intrarea nu mai există'], 404); break; }
+            $stmt = $db->prepare("SELECT COUNT(*) FROM lead_rapid_foto WHERE lead_id = ?");
+            $stmt->execute([$id]);
+            if (intval($stmt->fetchColumn()) >= 6) { jsonResponse(['success' => false, 'error' => 'Maxim 6 poze pe intrare'], 400); break; }
+
+            $f = $_FILES['file'];
+            if ($f['error'] !== UPLOAD_ERR_OK) { jsonResponse(['success' => false, 'error' => 'Upload eșuat (cod ' . $f['error'] . ')'], 400); break; }
+            if ($f['size'] > 8 * 1024 * 1024) { jsonResponse(['success' => false, 'error' => 'Poză prea mare (max 8 MB)'], 400); break; }
+            // Tipul se stabilește din conținut, nu din numele trimis
+            $info = @getimagesize($f['tmp_name']);
+            $exts = [IMAGETYPE_JPEG => 'jpg', IMAGETYPE_PNG => 'png', IMAGETYPE_WEBP => 'webp'];
+            if (!$info || !isset($exts[$info[2]])) { jsonResponse(['success' => false, 'error' => 'Doar imagini JPG, PNG sau WebP'], 400); break; }
+
+            $numeFisier = bin2hex(random_bytes(16)) . '.' . $exts[$info[2]];
+            if (!move_uploaded_file($f['tmp_name'], leadRapidFotoDir() . $numeFisier)) { jsonResponse(['success' => false, 'error' => 'Salvare eșuată'], 500); break; }
+            $now = date('Y-m-d H:i:s');
+            $db->prepare("INSERT INTO lead_rapid_foto (lead_id, filename, uploaded_by, created_at) VALUES (?,?,?,?)")
+               ->execute([$id, $numeFisier, strtolower($me['username']), $now]);
+            $fotoId = intval($db->lastInsertId());
+            $db->prepare("UPDATE lead_rapid SET updated_at = ? WHERE id = ?")->execute([$now, $id]);
+            jsonResponse(['success' => true, 'id' => $fotoId]);
+            break;
+
+        // Servește o poză doar conturilor cu acces (folderul nu e accesibil direct)
+        case 'leadRapidFoto':
+            requireLeadRapid();
+            ensureLeadRapid($db);
+            $fid = isset($_GET['f']) ? intval($_GET['f']) : 0;
+            $stmt = $db->prepare("SELECT filename FROM lead_rapid_foto WHERE id = ?");
+            $stmt->execute([$fid]);
+            $row  = $stmt->fetch();
+            $path = $row ? leadRapidFotoDir() . basename($row['filename']) : '';
+            if (!$row || !is_file($path)) { jsonResponse(['success' => false, 'error' => 'Poza nu mai există'], 404); break; }
+            $tipuri = ['jpg' => 'image/jpeg', 'png' => 'image/png', 'webp' => 'image/webp'];
+            $ext = strtolower(pathinfo($path, PATHINFO_EXTENSION));
+            header('Content-Type: ' . (isset($tipuri[$ext]) ? $tipuri[$ext] : 'application/octet-stream'));
+            header('Content-Length: ' . filesize($path));
+            header('Cache-Control: private, max-age=86400');
+            header_remove('Pragma');
+            header('X-Content-Type-Options: nosniff');
+            readfile($path);
+            exit;
+
         case 'deleteLeadRapid':
             requireLeadRapid();
             ensureLeadRapid($db);
@@ -7160,6 +7239,10 @@ p { margin: 0; }
             $row = $stmt->fetch();
             if ($row) {
                 requireOwnerOrAdmin($row['created_by']);
+                $stmtF = $db->prepare("SELECT filename FROM lead_rapid_foto WHERE lead_id = ?");
+                $stmtF->execute([$id]);
+                foreach ($stmtF->fetchAll() as $f) @unlink(leadRapidFotoDir() . basename($f['filename']));
+                $db->prepare("DELETE FROM lead_rapid_foto WHERE lead_id = ?")->execute([$id]);
                 $db->prepare("DELETE FROM lead_rapid_detalii WHERE lead_id = ?")->execute([$id]);
                 $db->prepare("DELETE FROM lead_rapid WHERE id = ?")->execute([$id]);
             }
