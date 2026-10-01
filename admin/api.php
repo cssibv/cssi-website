@@ -7114,7 +7114,9 @@ p { margin: 0; }
             $holder = strtolower((string)$row['preluat_de']);
             $now    = date('Y-m-d H:i:s');
 
-            if ($nou === 'Preluat') {
+            if ($nou === $row['status']) { jsonResponse(['success' => true]); break; }
+
+            if ($nou === 'Preluat' && $row['status'] === 'Nou') {
                 // Condiția din WHERE rezolvă cazul în care doi oameni apasă „Preia” în același timp
                 $upd = $db->prepare("UPDATE lead_rapid SET status = 'Preluat', preluat_de = ?, preluat_la = ?, updated_at = ? WHERE id = ? AND status = 'Nou'");
                 $upd->execute([$meName, $now, $now, $id]);
@@ -7137,7 +7139,11 @@ p { margin: 0; }
                 $preluatLa = $row['preluat_la'] ? $row['preluat_la'] : $now;
                 $db->prepare("UPDATE lead_rapid SET status = ?, preluat_de = ?, preluat_la = ?, finalizat_la = ?, updated_at = ? WHERE id = ?")
                    ->execute([$nou, $preluatDe, $preluatLa, $nou === 'Finalizat' ? $now : null, $now, $id]);
-                leadRapidAddDetaliu($db, $id, $nou === 'Finalizat' ? 'A finalizat' : ($row['status'] === 'Finalizat' ? 'A redeschis' : 'A trecut în progres'), 1);
+                if ($nou === 'Finalizat')                $nota = 'A finalizat';
+                elseif ($row['status'] === 'Finalizat') $nota = 'A redeschis';
+                elseif ($nou === 'Preluat')              $nota = 'A trecut înapoi la preluat';
+                else                                     $nota = 'A trecut în progres';
+                leadRapidAddDetaliu($db, $id, $nota, 1);
             }
             jsonResponse(['success' => true]);
             break;
