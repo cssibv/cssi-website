@@ -1013,4 +1013,11 @@
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
+  <!-- adaugat automat de agent 2026-10-01 -->
+  <url>
+    <loc>https://cssi.ro/blog/securitate-sali-centre-evenimente-nunti-conferinte-brasov</loc>
+    <lastmod>2026-10-01</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
 </urlset>
