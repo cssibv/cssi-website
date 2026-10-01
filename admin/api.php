@@ -97,7 +97,6 @@ function ensureCereriRapide($db) {
     static $checked = false;
     if ($checked) return;
     $checked = true;
-    cereriRapideMigrareNumeVechi($db);
     $db->exec("CREATE TABLE IF NOT EXISTS cereri_rapide (
         id INT PRIMARY KEY AUTO_INCREMENT,
         nume VARCHAR(150) NOT NULL DEFAULT '',
@@ -136,43 +135,6 @@ function ensureCereriRapide($db) {
         if (!in_array('original_name', $cols)) $db->exec("ALTER TABLE cereri_rapide_fisiere ADD COLUMN original_name VARCHAR(255) NULL DEFAULT NULL");
         if (!in_array('tip', $cols)) $db->exec("ALTER TABLE cereri_rapide_fisiere ADD COLUMN tip VARCHAR(20) NOT NULL DEFAULT 'atasament'");
     } catch (Exception $e) {}
-}
-
-// MIGRARE TEMPORARĂ: pagina s-a numit la început „lead rapid”. La prima rulare după redenumire
-// mută datele existente pe numele noi (tabele, coloană, folder cu fișiere, notificări), fără
-// să piardă nimic. După ce a rulat o dată pe server nu mai face nimic și poate fi ștearsă cu totul.
-function cereriRapideMigrareNumeVechi($db) {
-    try {
-        $are = function ($tabel) use ($db) {
-            $stmt = $db->prepare("SELECT COUNT(*) FROM information_schema.tables WHERE table_schema = DATABASE() AND table_name = ?");
-            $stmt->execute([$tabel]);
-            return intval($stmt->fetchColumn()) > 0;
-        };
-        $perechi = [
-            'lead_rapid'         => 'cereri_rapide',
-            'lead_rapid_detalii' => 'cereri_rapide_detalii',
-            'lead_rapid_foto'    => 'cereri_rapide_fisiere',
-        ];
-        foreach ($perechi as $vechi => $nou) {
-            if ($are($vechi) && !$are($nou)) $db->exec("RENAME TABLE `$vechi` TO `$nou`");
-        }
-        foreach (['cereri_rapide_detalii', 'cereri_rapide_fisiere'] as $tabel) {
-            if (!$are($tabel)) continue;
-            $cols = $db->query("SHOW COLUMNS FROM `$tabel`")->fetchAll(PDO::FETCH_COLUMN);
-            if (in_array('lead_id', $cols) && !in_array('cerere_id', $cols)) {
-                $db->exec("ALTER TABLE `$tabel` CHANGE lead_id cerere_id INT NOT NULL");
-                try { $db->exec("ALTER TABLE `$tabel` DROP INDEX idx_lead, ADD INDEX idx_cerere (cerere_id)"); } catch (Exception $e) {}
-            }
-        }
-        try {
-            $db->exec("UPDATE notificari SET tip = 'cerere_rapida', action_url = '/admin/cereri-rapide.html' WHERE tip = 'lead_rapid'");
-        } catch (Exception $e) {}
-    } catch (Exception $e) {
-        error_log('cereriRapideMigrareNumeVechi: ' . $e->getMessage());
-    }
-    $vechi = UPLOAD_DIR . 'lead-rapid';
-    $nou   = UPLOAD_DIR . 'cereri-rapide';
-    if (is_dir($vechi) && !is_dir($nou)) @rename($vechi, $nou);
 }
 
 // Tipul real al unui fișier urcat, stabilit din conținut (extensia contează doar la
@@ -5755,8 +5717,7 @@ p { margin: 0; }
             // Notificările închise cu X de userul logat nu se mai trimit (doar pentru el)
             ensureNotifAscunse($db);
             // Notificările de cerere rapidă le văd doar cei cu acces la pagină
-            // ('lead_rapid' = tipul vechi, până rulează migrarea din cereriRapideMigrareNumeVechi; se scoate odată cu ea)
-            $faraCR = cereriRapideAllowed() ? '' : " AND (n.tip IS NULL OR n.tip NOT IN ('cerere_rapida', 'lead_rapid'))";
+            $faraCR = cereriRapideAllowed() ? '' : " AND (n.tip IS NULL OR n.tip <> 'cerere_rapida')";
             $stmt = $db->prepare("SELECT n.*, p.proiect_id AS cod_proiect, p.status AS status_proiect, p.preluat_de
                 FROM notificari n
                 LEFT JOIN proiecte p ON n.proiect_id = p.id
