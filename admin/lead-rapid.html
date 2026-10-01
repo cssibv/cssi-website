@@ -154,7 +154,15 @@ textarea.input{resize:vertical;min-height:84px;line-height:1.4;font-weight:500;f
 .lead.s-progres{border-left-color:#3b82f6;}
 .lead.s-finalizat{border-left-color:#22c55e;}
 .lead-top{display:flex;align-items:flex-start;justify-content:space-between;gap:8px;}
-.lead-name{font-size:16px;font-weight:800;overflow-wrap:anywhere;}
+.lead-name{display:block;font-size:16px;font-weight:800;overflow-wrap:anywhere;}
+/* Cererile stau restrânse; numele + solicitarea sunt butonul care le extinde / restrânge */
+.lead-head{flex:1;min-width:0;display:block;text-align:left;color:inherit;}
+.lead.mini{padding:12px 14px;}
+.mini-foot{display:flex;align-items:center;justify-content:space-between;gap:8px;width:100%;margin-top:6px;font-size:12px;color:var(--gray);text-align:left;}
+.mini-foot svg,.collapse svg{width:18px;height:18px;fill:none;stroke:var(--gray);stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round;flex:0 0 auto;}
+.mini-take{margin-top:10px;padding:11px;font-size:15px;}
+.collapse{display:flex;align-items:center;justify-content:center;gap:6px;width:100%;margin-top:12px;padding:12px 2px 0;border-top:1px solid var(--gray-b);font-size:13px;font-weight:700;color:var(--gray);}
+.collapse svg{transform:rotate(180deg);}
 .badge{flex:0 0 auto;padding:4px 9px;border-radius:999px;font-size:12px;font-weight:700;white-space:nowrap;}
 .badge.s-nou{background:#fee2e2;color:var(--red-d);}
 .badge.s-preluat{background:#fef3c7;color:#92400e;}
@@ -209,7 +217,8 @@ textarea.input{resize:vertical;min-height:84px;line-height:1.4;font-weight:500;f
 .tl-item{margin-bottom:10px;}
 .tl-head{font-size:12px;font-weight:700;color:var(--gray);}
 .tl-text{font-size:14px;line-height:1.4;margin-top:2px;white-space:pre-wrap;overflow-wrap:anywhere;}
-.tl-item.sys .tl-text{color:var(--gray);font-style:italic;}
+/* Notele automate (preluări, fișiere adăugate/șterse) pe un singur rând mic, ca istoricul să nu se lungească */
+.tl-item.sys{font-size:12px;line-height:1.35;color:var(--gray);margin-bottom:6px;overflow-wrap:anywhere;}
 .add-det{display:flex;gap:8px;margin-top:12px;}
 .add-det .input{font-size:16px;font-weight:500;padding:11px 12px;}
 .add-det .btn{flex:0 0 auto;}
@@ -308,6 +317,7 @@ var LEADS = [];
 var tab = 'add';
 var filter = 'active';
 var menuId = 0;      // intrarea al cărei meniu de status e deschis
+var expIds = {};     // cererile extinse (restul stau restrânse)
 var openIds = {};     // intrările desfăcute rămân desfăcute la reîncărcarea listei
 var SUGESTII = ['Ofertă', 'Intervenție', 'Mentenanță', 'Informații', 'Reclamație'];
 var STATUS = {
@@ -597,10 +607,10 @@ function renderList(){
         return;
     }
     $('list').innerHTML = rows.map(function(l){
-        var st = STATUS[l.status] || STATUS.Nou, open = !!openIds[l.id];
+        var st = STATUS[l.status] || STATUS.Nou, open = !!openIds[l.id], exp = !!expIds[l.id];
         var texte = l.detalii.filter(function(d){ return !d.auto; });
         var ultim = texte.length ? texte[texte.length - 1] : null;
-        var h = '<div class="card lead ' + st.cls + '" data-id="' + l.id + '">';
+        var h = '<div class="card lead ' + st.cls + (exp ? '' : ' mini') + '" data-id="' + l.id + '">';
         var badge = '<span class="badge ' + st.cls + '">' + esc(statusText(l)) + '</span>';
         if (l.can_act && l.status !== 'Nou') {
             var menuOpen = menuId === l.id;
@@ -616,8 +626,16 @@ function renderList(){
             }
             badge += '</div>';
         }
-        h += '<div class="lead-top"><div class="lead-name">' + esc(l.nume || l.telefon) + '</div>' + badge + '</div>';
-        if (l.tip) h += '<div class="lead-tip">' + esc(l.tip) + '</div>';
+        h += '<div class="lead-top"><button type="button" class="lead-head" data-exp="1" aria-expanded="' + exp + '"><span class="lead-name">' + esc(l.nume || l.telefon) + '</span>' +
+             (l.tip ? '<span class="lead-tip">' + esc(l.tip) + '</span>' : '') + '</button>' + badge + '</div>';
+        if (!exp) {
+            // Rând restrâns: când a fost adăugată, câte fișiere și oferte are, plus „Preia” la cele noi
+            var nf = (l.foto || []).length, no = (l.oferte || []).length;
+            var extra = (nf ? ' · ' + nf + (nf === 1 ? ' fișier' : ' fișiere') : '') + (no ? ' · ' + no + (no === 1 ? ' ofertă' : ' oferte') : '');
+            h += '<button type="button" class="mini-foot" data-exp="1"><span>' + when(l.created_at) + extra + '</span>' + ICO_DOWN + '</button>';
+            if (l.can_act && l.status === 'Nou') h += '<button type="button" class="btn primary take mini-take" data-st="Preluat">Preia</button>';
+            return h + '</div>';
+        }
         h += '<div class="lead-meta">' + (l.nume && l.telefon ? esc(l.telefon) + ' · ' : '') + when(l.created_at) + ' · adăugat de ' + esc(l.creat_nume) + '</div>';
         if (ultim && !open) h += '<div class="lead-last">' + esc(ultim.text) + '</div>';
         // Atașamente: poze + documente, fiecare cu ✕; se pot adăuga și după salvare, până la MAX_FOTO
@@ -663,7 +681,8 @@ function renderList(){
         if (open) {
             h += '<div class="lead-more">';
             h += l.detalii.map(function(d){
-                return '<div class="tl-item' + (d.auto ? ' sys' : '') + '"><div class="tl-head">' + esc(d.user_name) + ' · ' + when(d.created_at) + '</div><div class="tl-text">' + esc(d.text) + '</div></div>';
+                if (d.auto) return '<div class="tl-item sys">' + esc(d.user_name) + ' · ' + when(d.created_at) + ' · ' + esc(d.text) + '</div>';
+                return '<div class="tl-item"><div class="tl-head">' + esc(d.user_name) + ' · ' + when(d.created_at) + '</div><div class="tl-text">' + esc(d.text) + '</div></div>';
             }).join('') || '<div class="lead-meta">Fără detalii încă.</div>';
             h += '<div class="add-det"><input class="input" type="text" placeholder="Adaugă un detaliu" data-det="1"><button type="button" class="btn dark" data-send="1">Adaugă</button></div>';
             var links = '';
@@ -671,6 +690,7 @@ function renderList(){
             if (links) h += '<div class="more-links">' + links + '</div>';
             h += '</div>';
         }
+        h += '<button type="button" class="collapse" data-exp="1"><span>Restrânge</span>' + ICO_DOWN + '</button>';
         return h + '</div>';
     }).join('');
 }
@@ -696,6 +716,11 @@ function sendDetaliu(card){
 $('list').addEventListener('click', function(e){
     var card = e.target.closest('.lead'); if (!card) return;
     var id = +card.dataset.id, b = e.target.closest('button'); if (!b) return;
+    if (b.dataset.exp) { if (expIds[id]) delete expIds[id]; else expIds[id] = 1; menuId = 0; renderList();
+        // la restrângere, rândul rămâne în ecran (cardul extins putea fi mult mai înalt)
+        var c = document.querySelector('.lead[data-id="' + id + '"]'); if (c && !expIds[id]) c.scrollIntoView({block:'nearest'});
+        return;
+    }
     if (b.dataset.atas) { atasId = id; $('fAtas').click(); return; }
     if (b.dataset.delat) {
         var ce = (b.dataset.poza ? 'poza' : 'fișierul') + (b.dataset.nume ? ' „' + b.dataset.nume + '”' : '');
@@ -709,7 +734,7 @@ $('list').addEventListener('click', function(e){
     if (b.dataset.toggle) { if (openIds[id]) delete openIds[id]; else openIds[id] = 1; renderList(); return; }
     if (b.dataset.st) { menuId = 0; if (b.classList.contains('on')) { renderList(); return; } act('setLeadRapidStatus', {id:id, status:b.dataset.st}, b); return; }
     if (b.dataset.send) { sendDetaliu(card); return; }
-    if (b.dataset.del && confirm('Ștergi definitiv această intrare?')) { delete openIds[id]; act('deleteLeadRapid', {id:id}, b); }
+    if (b.dataset.del && confirm('Ștergi definitiv această intrare?')) { delete openIds[id]; delete expIds[id]; act('deleteLeadRapid', {id:id}, b); }
 });
 // Fișiere adăugate ulterior la o cerere deja salvată (clientul mai trimite poze după)
 var atasId = 0;
