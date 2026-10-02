@@ -54,6 +54,12 @@ if (!defined('CRON_SECRET')) {
 define('SMSLINK_KEY', getenv('CSSI_SMSLINK_KEY') ?: ($SECRETS['SMSLINK_KEY'] ?? ''));
 define('SMSLINK_SENDER', getenv('CSSI_SMSLINK_SENDER') ?: ($SECRETS['SMSLINK_SENDER'] ?? 'CSSI'));
 
+// ntfy — notificări push pe telefon pentru cererile rapide.
+// Adresa, tokenul și topicul stau doar în secrets.php; dacă lipsește vreunul, nu se trimite nimic.
+define('NTFY_URL', rtrim((string)(getenv('CSSI_NTFY_URL') ?: ($SECRETS['NTFY_URL'] ?? '')), '/'));
+define('NTFY_TOKEN', getenv('CSSI_NTFY_TOKEN') ?: ($SECRETS['NTFY_TOKEN'] ?? ''));
+define('NTFY_TOPIC', getenv('CSSI_NTFY_TOPIC') ?: ($SECRETS['NTFY_TOPIC'] ?? ''));
+
 // Upload paths
 define('UPLOAD_DIR', __DIR__ . '/uploads/');
 define('UPLOAD_URL', '/admin/uploads/');

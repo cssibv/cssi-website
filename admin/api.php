@@ -213,6 +213,84 @@ function cerereRapidaAddDetaliu($db, $cerereId, $text, $auto = 0) {
        ->execute([$cerereId, strtolower($me['username']), $text, $auto ? 1 : 0, date('Y-m-d H:i:s')]);
 }
 
+// ─── Push pe telefon (ntfy) pentru cererile rapide ───────────────────────
+// Trimiterea nu blochează salvarea: timeout scurt, iar erorile ajung doar în error_log.
+// Întoarce [cod HTTP, eroare curl]; cod 0 = serverul ntfy nu a putut fi contactat.
+function ntfyCall($method, $path, $payload = null) {
+    if (NTFY_URL === '' || NTFY_TOKEN === '' || NTFY_TOPIC === '') return [0, 'NTFY_URL / NTFY_TOKEN / NTFY_TOPIC lipsesc din secrets.php'];
+    if (!function_exists('curl_init')) return [0, 'extensia curl lipsește'];
+    $headers = ['Authorization: Bearer ' . NTFY_TOKEN];
+    $opts = [
+        CURLOPT_CUSTOMREQUEST  => $method,
+        CURLOPT_RETURNTRANSFER => true,
+        CURLOPT_CONNECTTIMEOUT => 2,
+        CURLOPT_TIMEOUT        => 5,
+    ];
+    if ($payload !== null) {
+        $headers[] = 'Content-Type: application/json';
+        $opts[CURLOPT_POSTFIELDS] = json_encode($payload, JSON_UNESCAPED_UNICODE);
+    }
+    $opts[CURLOPT_HTTPHEADER] = $headers;
+    $ch = curl_init(NTFY_URL . $path);
+    curl_setopt_array($ch, $opts);
+    curl_exec($ch);
+    $code = intval(curl_getinfo($ch, CURLINFO_HTTP_CODE));
+    $err  = curl_error($ch);
+    curl_close($ch);
+    if ($code !== 200) error_log('ntfy ' . $method . ' ' . $path . ' -> ' . $code . ' ' . $err);
+    return [$code, $err];
+}
+
+// Momentul reamintirii: la 3 ore de la notare, dar numai între 08:00 și 20:00
+// (ce ar cădea seara sau noaptea se mută la 08:00).
+function cerereRapidaOraReminder($deLa) {
+    $t = $deLa + 3 * 3600;
+    $h = intval(date('G', $t));
+    if ($h >= 20)    $t = strtotime('tomorrow 08:00', $t);
+    elseif ($h < 8)  $t = strtotime('today 08:00', $t);
+    return $t;
+}
+
+// Anunță pe telefon o cerere liberă și programează reamintirea pentru cazul în care n-o preia nimeni.
+// Ambele mesaje au id propriu (cerere-N, cerere-N-reminder), ca să poată fi retrase la preluare.
+function cerereRapidaPush($id, $nume, $tel, $tip, $titlu = 'Cerere rapidă nouă') {
+    $url  = 'https://cssi.ro/admin/cereri-rapide';
+    $cine = $nume !== '' ? $nume . ' · ' . $tel : $tel;
+    $baza = [
+        'topic'    => NTFY_TOPIC,
+        'priority' => 5,
+        'click'    => $url,
+        'actions'  => [
+            ['action' => 'view', 'label' => 'Deschide cererea', 'url' => $url, 'clear' => true],
+            ['action' => 'copy', 'label' => 'Copiază telefonul', 'value' => $tel],
+        ],
+    ];
+    $acum = time();
+    $r = ntfyCall('POST', '/', $baza + [
+        'sequence_id' => 'cerere-' . $id,
+        'title'       => $titlu,
+        'message'     => $cine . "\n" . $tip,
+        'tags'        => ['telephone_receiver'],
+    ]);
+    if ($r[0] !== 200) return $r;   // serverul nu răspunde: nu mai aștepta și a doua oară
+    ntfyCall('POST', '/', $baza + [
+        'sequence_id' => 'cerere-' . $id . '-reminder',
+        'title'       => 'Cerere nepreluată',
+        'message'     => 'Notată la ' . date('H:i', $acum) . ' și încă nepreluată.' . "\n" . $cine . "\n" . $tip,
+        'tags'        => ['rotating_light'],
+        'delay'       => (string)cerereRapidaOraReminder($acum),
+    ]);
+    return $r;
+}
+
+// Cererea a fost preluată sau ștearsă: notificarea dispare de pe telefoane și reamintirea se anulează.
+function cerereRapidaPushStinge($id) {
+    $topic = '/' . rawurlencode(NTFY_TOPIC) . '/cerere-' . $id;
+    $r = ntfyCall('DELETE', $topic);
+    if ($r[0] === 0) return;
+    ntfyCall('DELETE', $topic . '-reminder');
+}
+
 // ─── Helper: schemă oferte (idempotent migration) ─────────────
 function ensureOferteColumns($db) {
     static $checked = false;
@@ -7179,6 +7257,7 @@ p { margin: 0; }
                 $db->prepare("INSERT INTO notificari (proiect_id, mesaj, tip, de_la, action_url) VALUES (?,?,?,?,?)")
                    ->execute([null, $msg, 'cerere_rapida', $cine, '/admin/cereri-rapide.html']);
             } catch (Exception $e) {}
+            cerereRapidaPush($newId, mb_substr($nume, 0, 150), mb_substr($tel, 0, 40), mb_substr($tip, 0, 120));
             jsonResponse(['success' => true, 'id' => $newId]);
             break;
 
@@ -7221,6 +7300,7 @@ p { margin: 0; }
                 $upd->execute([$meName, $now, $now, $id]);
                 if ($upd->rowCount() === 0) { jsonResponse(['success' => false, 'error' => 'A fost deja preluat de altcineva'], 409); break; }
                 cerereRapidaAddDetaliu($db, $id, 'A preluat', 1);
+                cerereRapidaPushStinge($id);
                 jsonResponse(['success' => true]);
                 break;
             }
@@ -7233,6 +7313,7 @@ p { margin: 0; }
                 $db->prepare("UPDATE cereri_rapide SET status = 'Nou', preluat_de = NULL, preluat_la = NULL, finalizat_la = NULL, updated_at = ? WHERE id = ?")
                    ->execute([$now, $id]);
                 cerereRapidaAddDetaliu($db, $id, 'A renunțat, e din nou liber', 1);
+                cerereRapidaPush($id, $row['nume'], $row['telefon'], $row['tip'], 'Cerere din nou liberă');
             } else {
                 $preluatDe = $holder !== '' ? $holder : $meName;
                 $preluatLa = $row['preluat_la'] ? $row['preluat_la'] : $now;
@@ -7243,6 +7324,7 @@ p { margin: 0; }
                 elseif ($nou === 'Preluat')              $nota = 'A trecut înapoi la preluat';
                 else                                     $nota = 'A trecut în progres';
                 cerereRapidaAddDetaliu($db, $id, $nota, 1);
+                if ($row['status'] === 'Nou') cerereRapidaPushStinge($id);
             }
             jsonResponse(['success' => true]);
             break;
@@ -7377,8 +7459,22 @@ p { margin: 0; }
                 $db->prepare("DELETE FROM cereri_rapide_fisiere WHERE cerere_id = ?")->execute([$id]);
                 $db->prepare("DELETE FROM cereri_rapide_detalii WHERE cerere_id = ?")->execute([$id]);
                 $db->prepare("DELETE FROM cereri_rapide WHERE id = ?")->execute([$id]);
+                cerereRapidaPushStinge($id);
             }
             jsonResponse(['success' => true]);
+            break;
+
+        // Verifică legătura portal → ntfy (doar admin): trimite un mesaj de probă și întoarce rezultatul.
+        case 'testCerereRapidaPush':
+            requireAdmin();
+            $r = ntfyCall('POST', '/', [
+                'topic'    => NTFY_TOPIC,
+                'title'    => 'Test din portalul CSSI',
+                'message'  => 'Legătura dintre portal și telefon funcționează.',
+                'priority' => 3,
+                'tags'     => ['white_check_mark'],
+            ]);
+            jsonResponse(['success' => $r[0] === 200, 'http' => $r[0], 'error' => $r[1]]);
             break;
 
         default:
