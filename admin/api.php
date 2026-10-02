@@ -217,7 +217,7 @@ function cerereRapidaAddDetaliu($db, $cerereId, $text, $auto = 0) {
 // Trimiterea nu blochează salvarea: timeout scurt, iar erorile ajung doar în error_log.
 // Întoarce [cod HTTP, eroare curl]; cod 0 = serverul ntfy nu a putut fi contactat.
 function ntfyCall($method, $path, $payload = null) {
-    if (NTFY_URL === '' || NTFY_TOKEN === '' || NTFY_TOPIC === '') return [0, 'NTFY_URL / NTFY_TOKEN / NTFY_TOPIC lipsesc din secrets.php'];
+    if (NTFY_URL === '' || NTFY_TOKEN === '' || NTFY_TOPIC === '') return [0, 'push neconfigurat'];
     if (!function_exists('curl_init')) return [0, 'extensia curl lipsește'];
     $headers = ['Authorization: Bearer ' . NTFY_TOKEN];
     $opts = [
