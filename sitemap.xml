@@ -1020,4 +1020,11 @@
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
+  <!-- adaugat automat de agent 2026-10-02 -->
+  <url>
+    <loc>https://cssi.ro/blog/camere-numarare-persoane-analiza-retail-brasov</loc>
+    <lastmod>2026-10-02</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
 </urlset>

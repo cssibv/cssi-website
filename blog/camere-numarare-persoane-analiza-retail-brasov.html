@@ -1,0 +1,756 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Camere cu numărare de persoane și analiză | CSSI</title>
+<meta name="description" content="Aceleași camere care îți păzesc magazinul îți pot aduce și date de business: câți clienți intră, la ce ore, ce zone sunt aglomerate, cât stau — CSSI Brașov">
+<link rel="canonical" href="https://cssi.ro/blog/camere-numarare-persoane-analiza-retail-brasov">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Camere cu numărare de persoane și analiză pentru retail | CSSI Brașov">
+<meta property="og:description" content="Numărare de persoane, heatmap-uri, rata de conversie, gestionarea cozilor. Cum transformi camerele de supraveghere în date de business, conform GDPR.">
+<meta property="og:url" content="https://cssi.ro/blog/camere-numarare-persoane-analiza-retail-brasov">
+<meta property="og:image" content="https://cssi.ro/images/blog/numarare-persoane-retail-cover.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:type" content="image/jpeg">
+<meta property="og:locale" content="ro_RO">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Camere cu numărare de persoane pentru retail">
+<meta name="twitter:description" content="Trafic pe ore, rata de conversie, heatmap, cozi. Date de business din camerele tale, conform GDPR. CSSI Brașov: 0752 288 400.">
+<meta name="twitter:image" content="https://cssi.ro/images/blog/numarare-persoane-retail-cover.jpg">
+
+<!-- ===== SCHEMA JSON-LD: Article + BreadcrumbList + FAQPage ===== -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Article",
+      "@id": "https://cssi.ro/blog/camere-numarare-persoane-analiza-retail-brasov#article",
+      "headline": "Camere cu numărare de persoane și analiză pentru retail în Brașov",
+      "description": "Aceleași camere care îți păzesc magazinul îți pot aduce și date de business: câți clienți intră, la ce ore, ce zone sunt aglomerate, cât stau la coadă. Cum folosești numărarea de persoane și analiză video pentru decizii comerciale, conform GDPR.",
+      "image": "https://cssi.ro/images/blog/numarare-persoane-retail-cover.jpg",
+      "author": {
+        "@type": "Organization",
+        "name": "CSSI Brașov",
+        "url": "https://cssi.ro"
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": "CSSI Brașov",
+        "logo": {
+          "@type": "ImageObject",
+          "url": "https://cssi.ro/images/logo-cssi.webp"
+        }
+      },
+      "datePublished": "2026-10-02",
+      "dateModified": "2026-10-02",
+      "mainEntityOfPage": "https://cssi.ro/blog/camere-numarare-persoane-analiza-retail-brasov",
+      "inLanguage": "ro"
+    },
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Acasă",
+          "item": "https://cssi.ro/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "Blog",
+          "item": "https://cssi.ro/blog"
+        },
+        {
+          "@type": "ListItem",
+          "position": 3,
+          "name": "Camere cu numărare de persoane și analiză pentru retail"
+        }
+      ]
+    },
+    {"@type": "FAQPage", "mainEntity": [
+      {"@type": "Question", "name": "Ce înseamnă o cameră care numără persoane?", "acceptedAnswer": {"@type": "Answer", "text": "E o cameră cu analiză video care detectează și numără persoanele care trec printr-un punct (de obicei intrarea), fără să le identifice. Îți spune câți clienți au intrat, pe ore și pe zile, ca un contor anonim. Pe baza acestor cifre poți calcula trafic, vârfuri și tendințe. Aceeași cameră poate face și supraveghere clasică; diferă software-ul care interpretează imaginea, nu neapărat echipamentul."}},
+      {"@type": "Question", "name": "Care e diferența față de o cameră de securitate obișnuită?", "acceptedAnswer": {"@type": "Answer", "text": "O cameră de securitate înregistrează ca să ai dovadă și să descurajezi. O cameră de analiză retail extrage date de business din aceeași imagine: câte persoane, în ce zone, cât stau, când se aglomerează casele. Una te ajută când se întâmplă ceva rău; cealaltă te ajută să iei decizii comerciale zilnice. Cel mai des, le combinăm pe același sistem, cu același echipament bine ales."}},
+      {"@type": "Question", "name": "Ce e un heatmap de magazin și la ce ajută?", "acceptedAnswer": {"@type": "Answer", "text": "Un heatmap arată, pe planul magazinului, ce zone atrag clienții și ce zone rămân „reci\". Practic vezi pe unde circulă lumea și unde se oprește. Asta te ajută să amplasezi produsele cheie pe traseele cu trafic, să repoziționezi rafturile slabe și să testezi schimbări de amenajare cu date, nu din intuiție. Pentru un magazin, e diferența dintre a ghici și a ști."}},
+      {"@type": "Question", "name": "Cum mă ajută la gestionarea cozilor?", "acceptedAnswer": {"@type": "Answer", "text": "Sistemul poate detecta când la case se adună prea mulți clienți și poate alerta personalul să deschidă încă o casă. Pe termen lung, datele despre cozi îți arată la ce ore ai nevoie de mai mulți oameni în front. Rezultatul e timp de așteptare mai mic, clienți mai mulțumiți și mai puține coșuri abandonate la coadă. E o îmbunătățire care se vede direct în experiența clientului."}},
+      {"@type": "Question", "name": "Numărarea de persoane respectă GDPR?", "acceptedAnswer": {"@type": "Answer", "text": "Numărarea anonimă (contor de persoane, fără identificare) prelucrează date mult mai ușoare decât recunoașterea, pentru că nu identifică indivizi. Diferența e crucială: o linie care numără treceri nu e același lucru cu recunoașterea fețelor. Configurăm sistemul pe principiul minimizării datelor, cu informare vizibilă și scop clar. Pentru recunoaștere (date biometrice) regulile sunt mult mai stricte; recomandăm și consultarea unui specialist GDPR."}},
+      {"@type": "Question", "name": "Pot folosi camerele pe care le am deja?", "acceptedAnswer": {"@type": "Answer", "text": "Uneori da, dacă sunt bine poziționate și suficient de bune; alteori e nevoie de camere dedicate pentru numărare (montate corect deasupra intrării) sau de un software de analiză adăugat. La evaluare verificăm ce ai și îți spunem cinstit ce se poate face cu sistemul actual și ce ar trebui completat. Ideea e să nu cumperi mai mult decât ai nevoie."}},
+      {"@type": "Question", "name": "Ce tip de magazin merită această investiție?", "acceptedAnswer": {"@type": "Answer", "text": "Cel mai mult câștigă magazinele cu trafic semnificativ și cu decizii de amenajare, personal și program — retail, centre comerciale, HoReCa cu flux mare. Dacă ai un singur ghișeu și câțiva clienți pe zi, datele aduc puțin. Dar dacă traficul, conversia și cozile chiar influențează vânzările tale, măsurarea lor se amortizează prin deciziile mai bune pe care le permite."}},
+      {"@type": "Question", "name": "Cât de precisă este numărarea de persoane?", "acceptedAnswer": {"@type": "Answer", "text": "Depinde de montaj, de lumină și de felul în care intră clienții. O cameră dedicată, montată cenital deasupra intrării, este de regulă mai precisă decât o cameră de pază din colț, mai ales când intră mai multe persoane deodată. De aceea, după instalare, recomandăm o verificare simplă: numărăm manual o oră și comparăm cu cifra din sistem. Așa știi ce marjă de eroare ai și poți interpreta corect traficul și rata de conversie."}},
+      {"@type": "Question", "name": "Cum calculez rata de conversie a magazinului?", "acceptedAnswer": {"@type": "Answer", "text": "Împarți numărul de tranzacții din casa de marcat la numărul de persoane intrate în același interval, de exemplu pe oră sau pe zi. Contorul îți dă traficul, iar casa îți dă bonurile. Ca rezultatul să fie corect, exclude personalul și furnizorii din numărătoare și compară intervale asemănătoare, cum ar fi sâmbătă cu sâmbătă. O singură zi nu spune mult; tendința pe câteva săptămâni este cea care contează pentru decizii."}},
+      {"@type": "Question", "name": "Cât costă un sistem de numărare și analiză pentru un magazin?", "acceptedAnswer": {"@type": "Answer", "text": "Orientativ, de la câteva mii de lei pentru un contor la o singură intrare, folosind camere existente, până la zeci de mii pentru un magazin mare cu heatmap, alerte de coadă și mai multe intrări. Prețul depinde de numărul de camere, de cablare, de software și de eventualul abonament. Oferta fermă vine după evaluarea la fața locului, defalcată pe componente, ca să vezi exact ce plătești și ce poți elimina fără să pierzi ce te interesează."}}
+    ]}
+  ]
+}
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;600;700;800&family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,400;0,8..60,600;1,8..60,400&display=swap" rel="stylesheet" />
+  <script src="/cookie-consent.js" defer></script>
+  <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}</script>
+  <script src="/tracking.js" defer></script>
+  <style>
+    @keyframes subtle-pulse-n { 0%,100%{transform:scale(1)}50%{transform:scale(.92)} }
+    @keyframes badge-pulse-n { 0%,100%{box-shadow:0 0 0 0 rgba(34,197,94,.4)}50%{box-shadow:0 0 0 8px rgba(34,197,94,0)} }
+    .animate-subtle-pulse{animation:subtle-pulse-n 2.5s ease-in-out infinite}
+    .animate-badge-pulse{animation:badge-pulse-n 2s ease-in-out infinite}
+    .dropdown-menu{display:none!important}
+    .dropdown:hover .dropdown-menu{display:block!important}
+    #mobileMenu{display:none}
+    #mobileMenu.open{display:block}
+    #servicesSubmenu{display:none}
+    #servicesSubmenu.open{display:block}
+    .dropdown-scroll::-webkit-scrollbar{width:4px}
+    .dropdown-scroll::-webkit-scrollbar-track{background:#f1f1f1}
+    .dropdown-scroll::-webkit-scrollbar-thumb{background:#cbd5e1;border-radius:4px}
+    @media(min-width:640px){.sm\:block{display:block!important}.sm\:hidden{display:none!important}.sm\:px-6{padding-left:24px;padding-right:24px}}
+    @media(min-width:1024px){.lg\:flex{display:flex!important}.lg\:hidden{display:none!important}}@media(min-width:768px){.md\:flex{display:flex!important}.md\:hidden{display:none!important}}
+    #mainHeader, #mainHeader a, #mainHeader button, #mainHeader span, #mainHeader div { font-family: 'Sora', sans-serif !important; }
+  </style>
+  <style>
+    :root{--brand-dark:#0b1a2e;--brand-navy:#102a4c;--brand-blue:#1a4b8c;--brand-accent:#e63022;--brand-gold:#f5a623;--brand-light:#f0f4f9;--text-main:#1c2b3a;--text-muted:#5a6e82;--text-light:#8fa0b3;--border:#dce6f0;--white:#ffffff;--ff-head:'Sora',sans-serif;--ff-body:'Source Serif 4',Georgia,serif;--radius:10px;--shadow-sm:0 2px 8px rgba(11,26,46,.08);--shadow-md:0 6px 24px rgba(11,26,46,.13);--shadow-lg:0 16px 48px rgba(11,26,46,.18);--max-w:1400px}
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    html{scroll-behavior:smooth}
+    body{font-family:var(--ff-body);font-size:18px;line-height:1.75;color:var(--text-main);background:var(--white);-webkit-font-smoothing:antialiased}
+    img{max-width:100%;height:auto;display:block}
+    a{color:var(--brand-blue);text-decoration:none}
+    a:hover{text-decoration:underline}
+    .breadcrumb{background:var(--brand-dark);border-bottom:none;padding:12px 0;padding-top:104px;font-family:var(--ff-head);font-size:13px;color:rgba(255,255,255,.55)}
+    .breadcrumb .inner{max-width:1280px;margin:0 auto;padding:0 0 12px 24px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+    .breadcrumb a{color:rgba(255,255,255,.7)}
+    .breadcrumb .sep{color:rgba(255,255,255,.3)}
+    .hero{background:var(--brand-dark);background-image:radial-gradient(ellipse 70% 60% at 80% 50%,rgba(26,75,140,.45) 0%,transparent 70%),radial-gradient(ellipse 40% 50% at 10% 80%,rgba(230,48,34,.15) 0%,transparent 60%);color:var(--white);padding:48px 24px 64px;position:relative;overflow:hidden}
+    .hero::before{content:'';position:absolute;inset:0;background-image:url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23ffffff' fill-opacity='0.025'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/svg%3E")}
+        .hero .inner{max-width:var(--max-w);margin:0 auto;position:relative;z-index:1;display:flex;align-items:center;gap:40px}
+    .hero-content{flex:1;min-width:0}
+    .hero-img-wrap{flex:0 0 640px;display:flex;align-items:center;justify-content:center}
+    .hero-img-wrap img{width:640px;height:auto;border-radius:14px;box-shadow:0 8px 32px rgba(0,0,0,.35);border:1px solid rgba(255,255,255,.1);opacity:.92;transition:opacity .3s}
+    .hero-img-wrap img:hover{opacity:1}
+    @media(max-width:900px){.hero .inner{flex-direction:column;gap:24px}.hero-img-wrap{flex:0 0 auto;order:-1}.hero-img-wrap img{width:500px}}
+    @media(max-width:700px){.hero-img-wrap{display:none}}
+    .hero-badge{display:inline-flex;align-items:center;gap:6px;background:rgba(230,48,34,.2);border:1px solid rgba(230,48,34,.4);color:#ff8a80;font-family:var(--ff-head);font-size:12px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;padding:5px 12px;border-radius:100px;margin-bottom:20px}
+    .hero h1{font-family:var(--ff-head);font-size:clamp(26px,4vw,40px);font-weight:800;line-height:1.2;margin-bottom:20px;letter-spacing:-.02em}
+    .hero h1 em{font-style:normal;color:var(--brand-gold)}
+    .hero .lead{font-size:clamp(16px,2vw,19px);line-height:1.65;color:rgba(255,255,255,.82);max-width:620px;margin-bottom:32px}
+    .hero-meta{display:flex;align-items:center;gap:20px;flex-wrap:wrap;font-family:var(--ff-head);font-size:13px;color:rgba(255,255,255,.55)}
+    .hero-meta span{display:flex;align-items:center;gap:5px}
+    .hero-meta .dot{color:rgba(255,255,255,.25)}
+    .topic-pills{display:flex;gap:10px;flex-wrap:wrap;margin-top:28px}
+    .pill{display:flex;align-items:center;gap:8px;padding:8px 16px;border-radius:100px;font-family:var(--ff-head);font-size:13px;font-weight:600;border:1px solid}
+    .pill-red{background:rgba(230,48,34,.15);border-color:rgba(230,48,34,.35);color:#ff8a80}
+    .pill-amber{background:rgba(245,166,35,.12);border-color:rgba(245,166,35,.3);color:#ffd180}
+    .pill-blue{background:rgba(26,75,140,.25);border-color:rgba(26,75,140,.5);color:#82b4ff}
+    .pill-green{background:rgba(39,174,96,.15);border-color:rgba(39,174,96,.35);color:#81c995}
+    .article-wrap{max-width:1440px;margin:0 auto;padding:0 20px;display:grid;grid-template-columns:1fr 280px;gap:32px;align-items:start}
+    .article-body{padding:32px 0}
+    .article-body h2{font-family:var(--ff-head);font-size:clamp(20px,2.5vw,26px);font-weight:700;color:var(--brand-dark);margin:36px 0 14px;padding-top:6px;border-top:3px solid var(--brand-accent);line-height:1.3}
+    .article-body h3{font-family:var(--ff-head);font-size:clamp(17px,2vw,20px);font-weight:600;color:var(--brand-navy);margin:32px 0 12px}
+    .article-body p{margin-bottom:16px;color:var(--text-main)}
+    .article-body ul,.article-body ol{padding-left:24px;margin-bottom:20px}
+    .article-body li{margin-bottom:8px}
+    .article-body strong{color:var(--brand-dark)}
+    .intro-p{font-size:19px;line-height:1.7}
+    .box{border-radius:var(--radius);padding:22px 26px;margin:28px 0;border-left:4px solid}
+    .box-red{background:#fef2f2;border-color:var(--brand-accent)}
+    .box-blue{background:#eff6ff;border-color:var(--brand-blue)}
+    .box-amber{background:#fffbeb;border-color:var(--brand-gold)}
+    .box-green{background:#f0fdf4;border-color:#27ae60}
+    .box h4{font-family:var(--ff-head);font-size:15px;font-weight:700;margin-bottom:8px}
+    .box p{font-size:15px;margin-bottom:8px}
+    .check-list{list-style:none;padding:0}
+    .check-list li{display:flex;gap:10px;padding:6px 0;font-size:16px}
+    .chk{color:#27ae60;font-weight:700;flex-shrink:0}
+    .price-table{width:100%;border-collapse:collapse;margin:24px 0;font-size:15px}
+    .price-table th{background:var(--brand-navy);color:var(--white);font-family:var(--ff-head);font-size:13px;font-weight:600;text-transform:uppercase;letter-spacing:.04em;padding:12px 16px;text-align:left}
+    .price-table td{padding:12px 16px;border-bottom:1px solid var(--border)}
+    .price-table tr:nth-child(even) td{background:var(--brand-light)}
+    .price-table .highlight td{background:#fffbeb;font-weight:600}
+    .cta-banner{background:linear-gradient(135deg,var(--brand-dark),var(--brand-navy));border-radius:var(--radius);padding:28px 32px;color:var(--white);display:flex;align-items:center;justify-content:space-between;gap:20px;flex-wrap:wrap}
+    .cta-banner h3{font-family:var(--ff-head);font-size:18px;font-weight:700;margin-bottom:4px}
+    .cta-banner p{font-size:14px;color:rgba(255,255,255,.7);margin:0}
+    .cta-buttons{display:flex;gap:10px;flex-wrap:wrap}
+    .btn{display:inline-flex;align-items:center;gap:7px;padding:10px 18px;border-radius:8px;font-family:var(--ff-head);font-size:13px;font-weight:600;cursor:pointer;border:none;text-decoration:none!important}
+    .btn-primary{background:var(--brand-accent);color:var(--white)!important;box-shadow:0 4px 14px rgba(230,48,34,.3)}
+    .btn-secondary{background:rgba(255,255,255,.12);color:var(--white)!important;border:1px solid rgba(255,255,255,.25)}
+    .faq-section{margin:48px 0 32px}
+    .faq-item{border:1px solid var(--border);border-radius:var(--radius);margin-bottom:10px;overflow:hidden}
+    .faq-q{display:flex;align-items:center;justify-content:space-between;padding:16px 20px;cursor:pointer;background:var(--white);font-family:var(--ff-head);font-size:15px;font-weight:600;color:var(--brand-dark);border:none;width:100%;text-align:left;gap:12px}
+    .faq-q:hover{background:var(--brand-light)}
+    .faq-a{display:none;padding:0 20px 16px;font-size:15px;color:var(--text-muted);line-height:1.7}
+    .faq-item.open .faq-a{display:block}
+    .faq-item.open .faq-q{background:var(--brand-light);color:var(--brand-blue)}
+    .faq-chevron{transition:transform .2s;flex-shrink:0}
+    .faq-item.open .faq-chevron{transform:rotate(180deg)}
+    .sidebar{position:sticky;top:104px}
+    .sidebar-card{border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;margin-bottom:20px;background:var(--white);box-shadow:var(--shadow-sm)}
+    .sidebar-card-head{background:var(--brand-navy);color:var(--white);font-family:var(--ff-head);font-size:12px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;padding:12px 18px}
+    .sidebar-card-body{padding:16px 18px}
+    .toc-list{list-style:none;padding:0;counter-reset:toc}
+    .toc-list li{counter-increment:toc}
+    .toc-list a{display:flex;align-items:baseline;gap:8px;padding:7px 0;font-family:var(--ff-head);font-size:13px;color:var(--text-muted);border-bottom:1px solid var(--border);text-decoration:none}
+    .toc-list a::before{content:counter(toc,decimal-leading-zero);font-size:11px;font-weight:700;color:var(--text-light)}
+    .toc-list li:last-child a{border-bottom:none}
+    .toc-list a:hover{color:var(--brand-blue)}
+    .contact-info{list-style:none;padding:0}
+    .contact-info li{display:flex;gap:12px;padding:10px 0;border-bottom:1px solid var(--border);align-items:flex-start}
+    .contact-info li:last-child{border-bottom:none}
+    .ci-icon{font-size:20px;flex-shrink:0;margin-top:2px}
+    .contact-info strong{font-family:var(--ff-head);font-size:14px;display:block;color:var(--brand-dark)}
+    .contact-info span{font-size:12px;color:var(--text-light)}
+    .article-footer{background:var(--brand-light);border-top:1px solid var(--border);padding:40px 24px;text-align:center}
+    .article-footer p{font-size:14px;color:var(--text-muted);max-width:500px;margin:0 auto 16px}
+    .tags{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-top:12px}
+    .tag{background:var(--white);border:1px solid var(--border);padding:4px 12px;border-radius:100px;font-family:var(--ff-head);font-size:11px;color:var(--text-muted)}
+    @media(max-width:768px){.article-wrap{grid-template-columns:1fr;gap:32px}.sidebar{position:static;order:2}.cta-banner{flex-direction:column;text-align:center}}
+  
+.discuta-in-grup{background:var(--brand-light);border:1px solid var(--border);border-left:4px solid var(--brand-blue);border-radius:var(--radius);padding:20px 24px;margin:32px 0}
+.discuta-in-grup h3{font-family:var(--ff-head);font-weight:600;font-size:17px;color:var(--brand-navy);margin:0 0 8px}
+.discuta-in-grup p{font-size:15px;color:var(--text-muted);line-height:1.6;margin:0 0 12px}
+.discuta-in-grup a{display:inline-block;font-family:var(--ff-head);font-weight:600;font-size:14px;color:var(--brand-blue);text-decoration:none}
+.discuta-in-grup a:hover{text-decoration:underline}
+
+/* mobfix-v1 */
+.hidden{display:none}
+@media(max-width:900px){.article-wrap{grid-template-columns:minmax(0,1fr)}.sidebar{position:static;top:auto}.article-body table{display:block;overflow-x:auto;max-width:100%}}
+
+/* mobfix-v2 */
+.lg\:hidden .animate-badge-pulse{background:rgba(15,23,42,.9)!important;color:#fff!important;border:1px solid rgba(255,255,255,.25)}
+
+/* buton inapoi-sus */
+#toTop{position:fixed;right:18px;bottom:18px;z-index:45;width:46px;height:46px;border:none;border-radius:50%;background:var(--brand-navy);color:#fff;cursor:pointer;box-shadow:0 6px 18px rgba(11,26,46,.28);opacity:0;visibility:hidden;transform:translateY(8px);transition:opacity .2s,transform .2s,visibility .2s;display:flex;align-items:center;justify-content:center}
+#toTop.show{opacity:1;visibility:visible;transform:none}
+#toTop:hover{background:var(--brand-blue)}
+</style>
+<style id="wa-float">#waFloat{position:fixed;right:18px;bottom:18px;z-index:46;width:52px;height:52px;border-radius:50%;background:#22c55e;color:#fff;display:flex;align-items:center;justify-content:center;box-shadow:0 6px 18px rgba(0,0,0,.25);transition:background .2s}#waFloat:hover{background:#16a34a}#toTop{bottom:82px;right:21px}</style>
+<style>.cta-banner h3{color:#ffffff !important}.cta-banner p{color:rgba(255,255,255,.85) !important}.box-info{background:#eef5ff;border-color:var(--brand-blue)}.box-warn{background:#fff8ec;border-color:var(--brand-gold)}.box-tip{background:#f0faf2;border-color:#27ae60}.box-danger{background:#fef2f2;border-color:#e63022}.box-info .box-title{color:var(--brand-blue)}.box-warn .box-title{color:#b7760a}.box-tip .box-title{color:#1e8c3f}.box-danger .box-title{color:#c0392b}.compare-table{width:100%;border-collapse:collapse;font-size:15px;margin:24px 0;border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow-sm)}.compare-table th{background:var(--brand-navy);color:var(--white);font-family:var(--ff-head);font-weight:600;padding:13px 16px;text-align:left}.compare-table td{padding:12px 16px;border-bottom:1px solid var(--border);vertical-align:top}.compare-table tr:nth-child(even) td{background:var(--brand-light)}.compare-table tr:last-child td{border-bottom:none}.compare-table .yes{color:#27ae60;font-weight:600}.compare-table .no{color:#c0392b}</style></head>
+<body>
+<header id="mainHeader" style="position:fixed;top:0;left:0;right:0;z-index:50;transition:all 0.3s;">
+    <div class="hidden sm:block" style="background:#0f172a;color:#fff;font-size:12px;padding:6px 0;">
+        <div style="max-width:1280px;margin:0 auto;padding:0 24px;display:flex;justify-content:space-between;align-items:center;">
+            <span>⭐ <span style="color:#4ade80;font-weight:600;">Peste 20 ani de experiență</span></span>
+            <div style="display:flex;align-items:center;gap:16px;">
+                <span>⭐ <span style="font-weight:600;">8.700+ proiecte</span></span>
+            </div>
+        </div>
+    </div>
+    <div class="sm:hidden" style="background:#0f172a;color:#fff;font-size:12px;padding:6px 0;">
+        <div style="max-width:1280px;margin:0 auto;padding:0 12px;display:flex;justify-content:space-between;align-items:center;">
+            <span>⭐ <span style="color:#4ade80;font-weight:600;">Peste 20 ani de experiență</span></span>
+            <a href="tel:0752288400" style="display:flex;align-items:center;gap:4px;font-weight:600;color:#4ade80;">📞 Sună acum</a>
+        </div>
+    </div>
+    <div id="navBg" style="transition:all 0.3s;">
+        <div style="max-width:1280px;margin:0 auto;padding:0 12px;display:flex;justify-content:space-between;align-items:center;height:64px;" class="sm:px-6">
+            <a href="../">
+                <img src="https://eu.chat-img.sintra.ai/32c1b29c-0c86-4833-a031-e7c45e21a11e/983d52bb-2eb6-42f1-bed4-f94d769bb634/Logo_CSSI.png" alt="CSSI Logo" id="logoImg" style="height:56px;width:auto;transition:all 0.3s;filter:brightness(0) invert(1) drop-shadow(0 0 1px rgba(255,255,255,0.8));">
+            </a>
+            <nav class="hidden md:flex" style="align-items:center;gap:4px;">
+                <a href="../" id="navLink1" style="padding:6px 12px;font-size:14px;font-weight:500;color:#fff;transition:all 0.2s;border-radius:8px;" onmouseover="this.style.color='#f87171'" onmouseout="this.style.color=navTextColor">🏠 Acasă</a>
+                <div class="dropdown" style="position:relative;">
+                    <button id="navLink2" style="padding:6px 12px;font-size:14px;font-weight:500;color:#fff;transition:all 0.2s;border-radius:8px;background:none;border:none;cursor:pointer;display:flex;align-items:center;font-family:inherit;">
+                        🛠️ Servicii
+                        <svg style="margin-left:4px;width:16px;height:16px;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+                    </button>
+                    <div class="dropdown-menu dropdown-scroll" style="position:absolute;top:100%;left:0;width:280px;background:#fff;box-shadow:0 10px 15px -3px rgba(0,0,0,0.1);border-radius:12px;padding:8px;border:1px solid #f1f5f9;max-height:80vh;overflow-y:auto;z-index:100;">
+                        <a href="../detectie-incendiu-isu" style="display:block;padding:10px 16px;font-size:13px;color:#334155;border-radius:8px;" onmouseover="this.style.background='#fef2f2';this.style.color='#dc2626'" onmouseout="this.style.background='';this.style.color='#334155'">🔥 Detecție Incendiu ISU</a>
+                        <a href="../camere-supraveghere" style="display:block;padding:10px 16px;font-size:13px;color:#334155;border-radius:8px;" onmouseover="this.style.background='#fef2f2';this.style.color='#dc2626'" onmouseout="this.style.background='';this.style.color='#334155'">📹 Camere Supraveghere</a>
+                        <a href="../alarma-antiefractie" style="display:block;padding:10px 16px;font-size:13px;color:#334155;border-radius:8px;" onmouseover="this.style.background='#fef2f2';this.style.color='#dc2626'" onmouseout="this.style.background='';this.style.color='#334155'">🚨 Alarmă Antiefracție</a>
+                        <a href="../control-acces" style="display:block;padding:10px 16px;font-size:13px;color:#334155;border-radius:8px;" onmouseover="this.style.background='#fef2f2';this.style.color='#dc2626'" onmouseout="this.style.background='';this.style.color='#334155'">🚪 Control Acces</a>
+                        <a href="../pontaj-electronic" style="display:block;padding:10px 16px;font-size:13px;color:#334155;border-radius:8px;" onmouseover="this.style.background='#fef2f2';this.style.color='#dc2626'" onmouseout="this.style.background='';this.style.color='#334155'">⏱️ Pontaj Electronic</a>
+                        <a href="../bariere-auto" style="display:block;padding:10px 16px;font-size:13px;color:#334155;border-radius:8px;" onmouseover="this.style.background='#fef2f2';this.style.color='#dc2626'" onmouseout="this.style.background='';this.style.color='#334155'">🚧 Bariere Auto</a>
+                        <a href="../interfoane-videointerfoane" style="display:block;padding:10px 16px;font-size:13px;color:#334155;border-radius:8px;" onmouseover="this.style.background='#fef2f2';this.style.color='#dc2626'" onmouseout="this.style.background='';this.style.color='#334155'">🔔 Interfoane &amp; Videointerfoane</a>
+                        <a href="../sonorizare" style="display:block;padding:10px 16px;font-size:13px;color:#334155;border-radius:8px;" onmouseover="this.style.background='#fef2f2';this.style.color='#dc2626'" onmouseout="this.style.background='';this.style.color='#334155'">🔊 Sonorizare</a>
+                        <a href="../automatizari-porti" style="display:block;padding:10px 16px;font-size:13px;color:#334155;border-radius:8px;" onmouseover="this.style.background='#fef2f2';this.style.color='#dc2626'" onmouseout="this.style.background='';this.style.color='#334155'">🚗 Automatizări Porți</a>
+                        <a href="../usi-garaj" style="display:block;padding:10px 16px;font-size:13px;color:#334155;border-radius:8px;" onmouseover="this.style.background='#fef2f2';this.style.color='#dc2626'" onmouseout="this.style.background='';this.style.color='#334155'">🏠 Uși Garaj</a>
+                        <a href="../aer-conditionat" style="display:block;padding:10px 16px;font-size:13px;color:#334155;border-radius:8px;" onmouseover="this.style.background='#fef2f2';this.style.color='#dc2626'" onmouseout="this.style.background='';this.style.color='#334155'">❄️ Aer Condiționat</a>
+                        <a href="../ventilatie" style="display:block;padding:10px 16px;font-size:13px;color:#334155;border-radius:8px;" onmouseover="this.style.background='#fef2f2';this.style.color='#dc2626'" onmouseout="this.style.background='';this.style.color='#334155'">💨 Ventilație</a>
+                        <a href="../instalatii-electrice" style="display:block;padding:10px 16px;font-size:13px;color:#334155;border-radius:8px;" onmouseover="this.style.background='#fef2f2';this.style.color='#dc2626'" onmouseout="this.style.background='';this.style.color='#334155'">⚡ Instalații Electrice</a>
+                        <a href="../instalatii-termice-sanitare" style="display:block;padding:10px 16px;font-size:13px;color:#334155;border-radius:8px;" onmouseover="this.style.background='#fef2f2';this.style.color='#dc2626'" onmouseout="this.style.background='';this.style.color='#334155'">🔧 Instalații Termice &amp; Sanitare</a>
+                    </div>
+                </div>
+                <a href="../despre-noi" id="navLink3" style="padding:6px 12px;font-size:14px;font-weight:500;color:#fff;transition:all 0.2s;border-radius:8px;" onmouseover="this.style.color='#f87171'" onmouseout="this.style.color=navTextColor">ℹ️ Despre Noi</a>
+                <a href="../portofoliu" id="navLink4" style="padding:6px 12px;font-size:14px;font-weight:500;color:#fff;transition:all 0.2s;border-radius:8px;" onmouseover="this.style.color='#f87171'" onmouseout="this.style.color=navTextColor">📁 Portofoliu</a>
+                <a href="/blog/" style="padding:6px 12px;font-size:14px;font-weight:500;color:#fff;transition:all 0.2s;border-radius:8px;" id="navLinkBlog" onmouseover="this.style.color='#f87171'" onmouseout="this.style.color=navTextColor">📝 Blog</a>
+                <a href="../contact" id="navLink5" style="padding:6px 12px;font-size:14px;font-weight:500;color:#fff;transition:all 0.2s;border-radius:8px;" onmouseover="this.style.color='#f87171'" onmouseout="this.style.color=navTextColor">📍 Contact</a>
+            </nav>
+            <div class="hidden lg:flex" style="align-items:center;gap:12px;">
+                <a href="tel:0752288400" id="phoneLink" style="display:flex;align-items:center;font-size:14px;font-weight:500;color:#fff;transition:all 0.2s;">
+                    <svg style="width:16px;height:16px;margin-right:6px;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/></svg>
+                    0752 288 400
+                </a>
+                <a href="../contact" style="background:linear-gradient(to right,#dc2626,#b91c1c);color:#fff;padding:8px 20px;border-radius:8px;font-size:14px;font-weight:600;box-shadow:0 4px 6px -1px rgba(0,0,0,0.1);transition:all 0.2s;" onmouseover="this.style.background='linear-gradient(to right,#b91c1c,#991b1b)'" onmouseout="this.style.background='linear-gradient(to right,#dc2626,#b91c1c)'">Cere Ofertă</a>
+            </div>
+            <div class="md:hidden" style="display:flex;align-items:center;gap:8px;">
+                <button onclick="toggleMobileMenu()" id="menuBtn" class="animate-subtle-pulse" style="padding:4px;border-radius:6px;border:none;cursor:pointer;background:linear-gradient(to right,#ef4444,#dc2626);color:#fff;">
+                    <svg id="menuIcon" style="width:20px;height:20px;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
+                    <svg id="closeIcon" style="width:20px;height:20px;display:none;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+                </button>
+            </div>
+        </div>
+        <div id="mobileMenu" style="background:#fff;border-radius:16px;box-shadow:0 20px 25px -5px rgba(0,0,0,0.1);margin:8px 12px;padding:8px;max-height:80vh;overflow-y:auto;">
+            <nav style="display:flex;flex-direction:column;gap:4px;">
+                <a href="../" style="padding:10px 16px;font-size:16px;font-weight:500;color:#334155;border-radius:8px;">🏠 Acasă</a>
+                <button onclick="toggleServicesSubmenu()" style="padding:10px 16px;font-size:16px;font-weight:500;color:#334155;border-radius:8px;background:none;border:none;cursor:pointer;display:flex;justify-content:space-between;align-items:center;width:100%;font-family:inherit;text-align:left;">
+                    🛠️ Servicii
+                    <svg id="servicesArrow" style="width:16px;height:16px;transition:transform 0.2s;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+                </button>
+                <div id="servicesSubmenu" style="padding-left:16px;overflow-y:auto;">
+                    <a href="../detectie-incendiu-isu" onclick="closeMobile()" style="display:block;padding:8px 16px;font-size:14px;color:#475569;border-radius:8px;">🔥 Detecție Incendiu ISU</a>
+                    <a href="../camere-supraveghere" onclick="closeMobile()" style="display:block;padding:8px 16px;font-size:14px;color:#475569;border-radius:8px;">📹 Camere Supraveghere</a>
+                    <a href="../alarma-antiefractie" onclick="closeMobile()" style="display:block;padding:8px 16px;font-size:14px;color:#475569;border-radius:8px;">🚨 Alarmă Antiefracție</a>
+                    <a href="../control-acces" onclick="closeMobile()" style="display:block;padding:8px 16px;font-size:14px;color:#475569;border-radius:8px;">🚪 Control Acces</a>
+                    <a href="../pontaj-electronic" onclick="closeMobile()" style="display:block;padding:8px 16px;font-size:14px;color:#475569;border-radius:8px;">⏱️ Pontaj Electronic</a>
+                    <a href="../bariere-auto" onclick="closeMobile()" style="display:block;padding:8px 16px;font-size:14px;color:#475569;border-radius:8px;">🚧 Bariere Auto</a>
+                    <a href="../interfoane-videointerfoane" onclick="closeMobile()" style="display:block;padding:8px 16px;font-size:14px;color:#475569;border-radius:8px;">🔔 Interfoane &amp; Videointerfoane</a>
+                    <a href="../sonorizare" onclick="closeMobile()" style="display:block;padding:8px 16px;font-size:14px;color:#475569;border-radius:8px;">🔊 Sonorizare</a>
+                    <a href="../automatizari-porti" onclick="closeMobile()" style="display:block;padding:8px 16px;font-size:14px;color:#475569;border-radius:8px;">🚗 Automatizări Porți</a>
+                    <a href="../usi-garaj" onclick="closeMobile()" style="display:block;padding:8px 16px;font-size:14px;color:#475569;border-radius:8px;">🏠 Uși Garaj</a>
+                    <a href="../aer-conditionat" onclick="closeMobile()" style="display:block;padding:8px 16px;font-size:14px;color:#475569;border-radius:8px;">❄️ Aer Condiționat</a>
+                    <a href="../ventilatie" onclick="closeMobile()" style="display:block;padding:8px 16px;font-size:14px;color:#475569;border-radius:8px;">💨 Ventilație</a>
+                    <a href="../instalatii-electrice" onclick="closeMobile()" style="display:block;padding:8px 16px;font-size:14px;color:#475569;border-radius:8px;">⚡ Instalații Electrice</a>
+                    <a href="../instalatii-termice-sanitare" onclick="closeMobile()" style="display:block;padding:8px 16px;font-size:14px;color:#475569;border-radius:8px;">🔧 Instalații Termice &amp; Sanitare</a>
+                </div>
+                <a href="../despre-noi" onclick="closeMobile()" style="padding:10px 16px;font-size:16px;font-weight:500;color:#334155;border-radius:8px;">ℹ️ Despre Noi</a>
+                <a href="../portofoliu" onclick="closeMobile()" style="padding:10px 16px;font-size:16px;font-weight:500;color:#334155;border-radius:8px;">📁 Portofoliu</a>
+                <a href="/blog/" onclick="closeMobile()" style="padding:10px 16px;font-size:16px;font-weight:500;color:#334155;border-radius:8px;">📝 Blog</a>
+                <a href="../contact" onclick="closeMobile()" style="padding:10px 16px;font-size:16px;font-weight:500;color:#334155;border-radius:8px;">📍 Contact</a>
+                <div style="padding:12px 8px;">
+                    <a href="../contact" onclick="closeMobile()" style="display:block;text-align:center;background:linear-gradient(to right,#dc2626,#b91c1c);color:#fff;padding:10px 16px;border-radius:12px;font-weight:600;">Cere Ofertă</a>
+                </div>
+            </nav>
+        </div>
+    </div>
+</header>
+
+
+  
+  
+  <nav class="breadcrumb" aria-label="Breadcrumb">
+    <div class="inner">
+      <a href="/">Acasă</a><span class="sep">›</span>
+      <a href="/blog/">Blog</a><span class="sep">›</span>
+      <span style="color:rgba(255,255,255,.9)">Camere cu numărare de persoane și analiză | CSSI</span>
+    </div>
+  </nav>
+
+  <header class="hero">
+    <div class="inner">
+      <div class="hero-content">
+      <div class="hero-badge">📹 Ghid CSSI · 2026</div>
+      <h1>Camere cu numărare de persoane și analiză pentru retail: când supravegherea devine date de business</h1>
+      <p class="lead">Majoritatea magazinelor au deja camere — pentru pază. Puține știu însă că aceleași camere, cu software-ul potrivit, pot răspunde la întrebări care valorează bani: câți clienți intră cu adevărat, la ce ore, ce zone ale magazinului atrag și care rămân „reci", cât stau oamenii la coadă. Asta nu mai e securitate, e <strong>business intelligence</strong>. Diferența față de o cameră de furt e că aici nu te interesează cine, ci câți, când și pe unde — anonim. Iată cum funcționează numărarea de persoane și analiza pentru retail, ce decizii îți permite și cum o faci conform GDPR.</p>
+      <div class="hero-meta">
+        <span>✍ CSSI Brașov</span><span class="dot">·</span>
+        <span>📅 2 Oct 2026</span><span class="dot">·</span>
+        <span>⏱ 26 min lectură</span>
+      </div>
+      <div class="topic-pills">
+        <span class="pill pill-blue">🛡 Securitate firme</span>
+        <span class="pill pill-green">📍 Brașov & împrejurimi</span>
+        <span class="pill pill-amber">✅ Ghid practic</span>
+      </div>
+    </div>
+      <div class="hero-img-wrap"><img src="/images/blog/numarare-persoane-retail-cover.jpg" alt="Camere cu numărare de persoane și analiză | CSSI"></div>
+    </div>
+  </header>
+
+  <div class="article-wrap">
+    <main class="article-body" id="articol">
+<h2 id="raspunsul-scurt">Răspunsul scurt</h2>
+<p>Camerele de analiză retail transformă imaginea în <strong>date de business</strong>, fără să identifice persoane: <strong>numărarea de persoane</strong> (câți clienți intră, pe ore și zile) îți dă traficul și rata de conversie; <strong>heatmap-urile</strong> arată ce zone atrag și ce zone sunt moarte; <strong>gestionarea cozilor</strong> alertează când se aglomerează casele. Cu aceste date iei decizii pe program, personal și amenajare — cu cifre, nu din intuiție. Totul se face <strong>anonim și conform GDPR</strong> (numărare ≠ recunoaștere) și se integrează cu sistemul de securitate existent, pentru că deseori sunt aceleași camere, doar cu software diferit. Cel mai mult câștigă magazinele cu trafic real și cu decizii de luat.</p>
+<p>Trei lucruri merită reținute înainte de orice ofertă. Primul: <strong>nu cumperi neapărat camere noi</strong>. Uneori sistemul de supraveghere pe care îl ai poate fi completat cu un modul de analiză; alteori ai nevoie de o cameră dedicată, montată corect deasupra intrării, pentru că numărarea cere un unghi și o înălțime pe care o cameră de pază, pusă într-un colț, nu le are. Al doilea: <strong>datele nu valorează nimic dacă nu le pui lângă vânzări</strong>. Un contor de intrări fără cifra de afaceri a aceleiași zile e o curiozitate, nu un instrument. Al treilea: <strong>anonim înseamnă anonim</strong> — sistemul numără siluete, nu identifică oameni, iar această alegere de proiectare te ține departe de problemele serioase de conformitate.</p>
+<p>Dacă ai un singur magazin mic, cu câțiva clienți pe oră și un program simplu, probabil că ți-e suficient un contor la ușă și o foaie de calcul. Dacă ai mai multe puncte de lucru, un spațiu în care amenajarea contează sau case care se aglomerează în anumite ore, analiza completă se justifică. Mai jos găsești, pe rând, cum funcționează, ce poți măsura, cât costă orientativ, ce greșeli se fac des și cum arată un proiect de la evaluare la predare.</p>
+
+
+<h2 id="ce-inseamna-camere-care-numara-si-de-ce-">Ce înseamnă „camere care numără" și de ce nu e doar securitate</h2>
+<p>O cameră clasică de magazin e gândită pentru un singur scop: să descurajeze și să-ți dea dovada când se întâmplă ceva rău. E exact rolul pe care îl descriem în ghidul despre securitatea unui magazin. O cameră de analiză retail face altceva cu aceeași imagine: <strong>extrage cifre</strong>. Câte persoane au trecut printr-un punct, în ce interval orar, în ce zone ale magazinului s-au oprit. Nu te interesează identitatea nimănui — te interesează tiparul. Important: nu e neapărat alt echipament, ci alt software. De multe ori o cameră bine aleasă și bine montată poate face și supraveghere, și analiză. Diferența o face partea inteligentă din spate, nu obiectivul în sine — un principiu pe care îl explicăm și la camerele cu detecție inteligentă (AI), doar că acolo accentul cade pe securitate, iar aici pe business.</p>
+
+      <div class="cta-banner" style="margin:32px 0">
+        <div>
+          <h3>Vrei o evaluare pentru firma ta?</h3>
+          <p>Evaluarea la fața locului e gratuită în Brașov și împrejurimi — vii cu nevoia, pleci cu o soluție și un preț defalcat.</p>
+        </div>
+        <div class="cta-buttons">
+          <a href="/camere-supraveghere-brasov" class="btn btn-secondary">📍 Camere supraveghere în Brașov</a>
+          <a href="/contact" class="btn btn-secondary">📩 Cere ofertă</a>
+          <a href="tel:0752288400" class="btn btn-primary">📞 0752 288 400</a>
+          <a target="_blank" rel="noopener" href="https://wa.me/40752288400" class="btn btn-secondary">💬 WhatsApp</a>
+        </div>
+      </div>
+<h2 id="numararea-de-persoane-trafic-conversie-t">Numărarea de persoane: trafic, conversie, tendințe</h2>
+<p>Prima și cea mai utilă funcție e <strong>contorul de trafic</strong>: câți oameni intră, pe ore și pe zile. Cifra în sine e valoroasă, dar adevărata valoare apare când o pui lângă vânzări. Așa obții <strong>rata de conversie</strong>: din 100 de persoane care au intrat, câte au cumpărat? O zi cu mult trafic dar conversie mică spune altceva (poate prețul, poate amenajarea, poate personalul insuficient) decât o zi cu trafic mic. Pe termen lung, vezi <strong>tendințele</strong>: ce zile și ore aduc clienții, cum răspunde traficul la o promoție, la vreme, la sezon. Decizia de a deschide mai devreme, de a pune mai mulți oameni sâmbăta sau de a muta un raft devine una bazată pe cifre, nu pe impresii.</p>
+
+<h2 id="cum-numara-de-fapt-o-camera-variantele-t">Cum numără, de fapt, o cameră: variantele tehnice</h2>
+<p>Nu toate contoarele sunt la fel, iar diferența se simte în precizie și în preț. Principiul comun: sistemul definește o <strong>linie virtuală</strong> la intrare (sau pe un culoar) și numără de fiecare dată când o siluetă o traversează, în sensul „intră" sau „iese". Ce diferă e modul în care „vede" silueta. Iată, pe scurt, variantele pe care le discutăm cel mai des la evaluare:</p>
+
+<table class="compare-table">
+<thead><tr><th>Varianta</th><th>Cum funcționează</th><th>Când se potrivește</th><th>Limite de ținut minte</th></tr></thead>
+<tbody>
+<tr><td><strong>Cameră IP existentă + modul software</strong></td><td>Analiza video rulează în cameră sau în înregistrator și numără siluetele care traversează o linie</td><td>Magazine cu camere recente, bine poziționate, cu intrare simplă</td><td>Unghiul de pază (din colț, de la distanță) dă erori când intră mai mulți oameni deodată</td></tr>
+<tr><td><strong>Cameră dedicată de numărare, montată cenital</strong></td><td>Privește de sus, în jos, deasupra ușii; separă mai bine persoanele care intră în grup</td><td>Magazine cu trafic real, ușă lată sau dublă, unde precizia contează</td><td>Cere înălțime de montaj potrivită și cablu până la ea</td></tr>
+<tr><td><strong>Cameră 3D / stereo</strong></td><td>Folosește două lentile și măsoară adâncimea, deci distinge un adult de un cărucior sau de un coș</td><td>Intrări aglomerate, supermarketuri, galerii comerciale</td><td>Mai scumpă; se justifică doar când volumul de trafic cere precizie mare</td></tr>
+<tr><td><strong>Senzor termic sau infraroșu la ușă</strong></td><td>Detectează trecerea prin fascicul sau prin imagine termică, fără imagine video clară</td><td>Spații unde nu vrei deloc imagine înregistrată la intrare</td><td>Nu poate fi reutilizat pentru pază; e doar contor</td></tr>
+</tbody>
+</table>
+
+<p>Nicio variantă nu e perfectă. Precizia reală depinde de montaj, de lumină și de felul în care intră clienții: un grup de copii, un cărucior sau o persoană care stă în ușă pot induce erori. De aceea, după montaj, <strong>facem o verificare manuală</strong>: numărăm o oră cu ochiul liber și comparăm cu cifra din sistem, ca să știi cu cât te poți baza pe date.</p>
+
+<div class="box box-info"><div class="box-title">ℹ Cum faci diferența între „trafic" și „clienți"</div><p>Contorul numără <strong>treceri</strong>, nu clienți. În cifră intră și curierul, și angajatul care iese după țigări, și cineva care intră să se adăpostească de ploaie. Pentru rate de conversie corecte, spune-i instalatorului să excludă zona personalului (de pildă o a doua linie la ușa de serviciu) și, dacă se poate, să permită un factor de corecție stabilit după o perioadă de observare. Altfel compari vânzări reale cu un trafic umflat.</p></div>
+
+<h2 id="rata-de-conversie-cum-o-calculezi-si-ce-">Rata de conversie: cum o calculezi și ce faci cu ea</h2>
+<p>Rata de conversie înseamnă <strong>numărul de tranzacții împărțit la numărul de persoane intrate</strong>, într-un interval ales. Pentru că casa ta de marcat îți dă deja numărul de bonuri, singura piesă care îți lipsea era traficul — exact ce aduce contorul. Un exemplu ilustrativ, cu cifre inventate doar ca să se vadă mecanismul: dacă într-o sâmbătă intră 200 de persoane și se emit 50 de bonuri, conversia înseamnă un bon la fiecare patru persoane intrate. Dacă o vineri similară are 120 de intrări și tot 50 de bonuri, conversia e mult mai bună, deși vânzările sunt aceleași. Cele două zile cer decizii diferite.</p>
+<p>În sâmbăta aglomerată, întrebarea e: <strong>de ce pleacă oamenii fără să cumpere?</strong> Poate că sunt prea puțini vânzători pe sală, poate că la casă se formează coadă și lumea renunță, poate că stocul nu acoperă cererea. În vinerea liniștită, întrebarea e alta: <strong>cum aduc mai mulți oameni înăuntru?</strong> — vitrină, promoție, program, vizibilitate online. Fără traficul măsurat, ambele zile arată la fel pe hârtie și nu știi ce problemă ai de fapt.</p>
+<p>Câteva reguli practice. Compară mereu <strong>intervale comparabile</strong> (sâmbătă cu sâmbătă, nu sâmbătă cu marți). Urmărește tendința pe câteva săptămâni, nu o singură zi. Și atenție la cauzele externe: o piață sau un eveniment în centrul Brașovului, o ploaie puternică sau o zi de ger în ianuarie schimbă traficul fără ca magazinul tău să fi făcut ceva greșit.</p>
+
+<h2 id="heatmap-uri-ce-zone-atrag-si-ce-zone-sun">Heatmap-uri: ce zone atrag și ce zone sunt moarte</h2>
+<p>Un <strong>heatmap</strong> îți arată, peste planul magazinului, pe unde circulă clienții și unde se opresc — zonele „calde" și cele „reci". E una dintre cele mai revelatoare date, pentru că dezvăluie lucruri pe care nu le observi de la casă: un raft bine aprovizionat dar plasat pe un traseu mort, o zonă din spate pe care nimeni n-o atinge, un capăt de gondolă care chiar funcționează. Cu heatmap-ul, amenajarea magazinului devine o decizie testabilă: muți produsele-cheie pe traseele cu trafic, repoziționezi zonele slabe și verifici cu date dacă schimbarea a funcționat. E exact tipul de informație care, la scara unui centru comercial sau retail park, ajută și administratorul, nu doar chiriașul.</p>
+<p>Cum se construiește un heatmap? Camera (sau câteva camere montate cenital, în interior) urmărește pozițiile siluetelor în timp și le adună pe un plan. Rezultatul e o hartă colorată: cu cât o zonă are mai multe treceri sau mai mult timp petrecut, cu atât e mai „caldă". Două tipuri de hartă răspund la întrebări diferite. Harta de <strong>trecere</strong> arată unde circulă lumea; harta de <strong>staționare</strong> arată unde se oprește. O zonă poate fi traversată des și ignorată complet — de exemplu un culoar spre casă pe care oamenii îl parcurg grăbiți — așa că trecerea fără oprire nu e o dovadă că produsele de acolo se văd.</p>
+<p>Cum folosești harta fără să te pierzi în ea: alegi <strong>o singură schimbare pe rând</strong> (muți un raft, schimbi o expunere), o lași două-trei săptămâni și compari harta și vânzările din acea zonă cu perioada dinainte. Dacă schimbi zece lucruri simultan, nu mai știi ce a funcționat. Pentru un magazin de încălțăminte sau haine din centrul Brașovului, unde clienții intră și circulă lent, harta de staționare e cea mai utilă; pentru un magazin alimentar de cartier, unde lumea vine după trei lucruri și pleacă, contează mai mult harta de trecere și lungimea traseului până la casă.</p>
+<div class="box box-tip"><div class="box-title">💡 Începe cu o zonă, nu cu tot magazinul</div><p>Nu e nevoie să acoperi fiecare metru pătrat. Alege zona în care ai o întrebare concretă: vitrina și primii doi metri de la intrare, un raft promoțional, zona din fund. Un heatmap pe zonă cheie costă mai puțin și îți dă un răspuns mai clar decât o hartă a întregii suprafețe, greu de interpretat.</p></div>
+
+
+<h2 id="gestionarea-cozilor-si-deciziile-zilnice">Gestionarea cozilor și deciziile zilnice</h2>
+<p>O funcție cu efect imediat e <strong>monitorizarea cozilor</strong>: sistemul detectează când la case se adună prea mulți clienți și poate alerta personalul să deschidă încă o casă. Pe termen scurt, asta înseamnă mai puține coșuri abandonate la coadă și clienți mai mulțumiți; pe termen lung, datele îți arată exact la ce ore ai nevoie de mai mulți oameni în front. Aici se vede cel mai clar cum analiza devine acțiune: nu te uiți la un raport la sfârșit de lună, ci reacționezi în timp real. Și tot aici se leagă cele două lumi — securitate și business: <strong>cum folosești datele pentru program, personal și amenajare</strong> e o decizie de management, dar infrastructura care o face posibilă e aceeași cu cea de supraveghere.</p>
+<p>Cum funcționează concret alerta de coadă: sistemul definește o <strong>zonă de așteptare</strong> în fața caselor și numără câte persoane se află în ea sau cât stă fiecare. Când pragul stabilit de tine e depășit (de pildă mai mult de câteva persoane la o casă sau o așteptare peste un timp ales), apare o notificare pe un ecran din spatele casei, pe telefonul responsabilului de tură sau ca semnal către colegii din depozit. Pragul îl alegi tu și îl reglezi după câteva săptămâni, în funcție de ce ți se pare suportabil pentru clienții tăi.</p>
+<p>Datele agregate sunt la fel de valoroase ca alerta. Dacă vezi că în fiecare joi între 17 și 19 se formează coada și în fiecare marți dimineața casele stau goale, poți muta programul angajaților, poți introduce o casă self-checkout sau poți decala aprovizionarea, ca să nu ai oameni la raft exact când e aglomerat la casă. Un lucru de evitat: să transformi cozile într-un instrument de presiune pe casieri. Rolul datelor e să arate unde lipsește personal sau unde procesul e lent, nu să evalueze oameni.</p>
+<div class="box box-warn"><div class="box-title">⚠ Nu folosi datele de coadă pentru a monitoriza angajați</div><p>Scopul declarat al analizei este fluxul de clienți și organizarea magazinului. Dacă începi să folosești aceleași camere pentru a măsura cât lucrează fiecare casier, schimbi scopul prelucrării, iar asta ridică probleme de informare și de proporționalitate față de angajați. Dacă ai nevoie de așa ceva, discută mai întâi cu un specialist în protecția datelor și cu reprezentanții angajaților, nu improviza pe sistemul de analiză.</p></div>
+
+<h2 id="cum-arata-asta-in-brasov-scenarii-tipice">Cum arată asta în Brașov: scenarii tipice de magazin</h2>
+<p>Contextul local schimbă datele, iar un magazin brașovean are tipare pe care un manual generic nu le acoperă. Câteva scenarii tipice, descrise în linii generale, fără cifre concrete:</p>
+<p><strong>Magazin de souvenir sau de haine în centrul vechi.</strong> Traficul depinde puternic de sezon și de turiști: weekendurile de iarnă, vacanțele școlare și evenimentele din Piața Sfatului aduc valuri de oameni care intră să se încălzească sau să se uite. Aici contorul îți arată diferența dintre „intră mulți, cumpără puțini" și „intră puțini, dar cumpără". Dacă ai o rată de conversie scăzută în zilele cu mulți turiști, poate că ai nevoie de personal care vorbește limbi străine sau de prețuri mai vizibile, nu de mai multă publicitate.</p>
+<p><strong>Magazin de bricolaj, materiale sau mobilă la Ghimbav, Codlea sau pe zona industrială.</strong> Spațiul e mare, clienții stau mult și circulă pe culoare lungi. Heatmap-ul îți arată dacă raftul de scule sau de accesorii e pe un traseu bun și dacă vânzătorul din secția de vopsele e mereu înconjurat, în timp ce secția alăturată rămâne neasistată. Aici contează și coada la casă sâmbăta dimineața, când vin meșterii.</p>
+<p><strong>Magazin alimentar sau supermarket de cartier în Săcele, Râșnov sau Bran.</strong> Fluxul are vârfuri scurte și previzibile: după program, vineri seara, înainte de sărbători. Alerta de coadă și programul personalului sunt aici primele două decizii care se amortizează. Iarna, cu ger, ușa se deschide des și se închide greu — iar un contor montat prost, în curentul de aer rece, poate avea probleme de condens pe lentilă, motiv pentru care alegerea carcasei și a locului de montaj contează.</p>
+<p><strong>Magazin de sport, de echipamente de munte sau de ski, în zona Predeal și Poiana Brașov.</strong> Sezonalitatea e extremă: ianuarie și februarie nu seamănă cu mai. Compară mereu sezonul cu același sezon din anul trecut, nu luna cu luna precedentă, altfel tragi concluzii greșite despre ce funcționează.</p>
+<div class="box box-info"><div class="box-title">ℹ Pana de curent și iarna în magazin</div><p>Un contor care stă pe rețea fără alimentare de rezervă se oprește la o pană de curent, exact în orele de după un viscol, când traficul real s-ar putea schimba spectaculos. Dacă datele contează pentru tine, discută încă din ofertă despre un UPS mic pentru camere și înregistrator, ca seria de date să nu aibă goluri de ore întregi. Un gol în date se vede ulterior ca o „zi moartă" care nu a existat.</p></div>
+
+<h2 id="gdpr-numararea-anonima-vs-recunoasterea">GDPR: numărarea anonimă vs. recunoașterea</h2>
+<p>Aici e nevoie de o distincție clară, pentru că se confundă des. <strong>Numărarea anonimă</strong> de persoane — un contor care detectează treceri, fără să identifice pe nimeni — prelucrează date mult mai ușoare decât recunoașterea. O linie virtuală care numără câți oameni au intrat nu e același lucru cu recunoașterea facială, care prelucrează <strong>date biometrice</strong> și intră sub reguli mult mai stricte. Configurăm sistemele de analiză retail pe principiul <strong>minimizării datelor</strong>: măsori ce ai nevoie (câți, când, pe unde), anonim, cu informare vizibilă și scop clar. Regulile complete despre supravegherea într-un spațiu comercial le detaliem în ghidul despre GDPR și camerele de supraveghere. Pentru orice element care ar atinge date personale, recomandăm și consultarea unui specialist GDPR — noi facem partea tehnică corect, dar conformitatea juridică fină e treabă de specialist.</p>
+<p>Pe scurt, la nivel de principiu, linia de demarcație trece pe aici. Dacă sistemul <strong>doar numără siluete</strong> și păstrează cifre agregate (intrări pe oră, zone calde pe hartă), fără să rețină imagini cu fețe în scopul analizei și fără să poată spune cine e cineva, riscul este mult mai mic. Dacă sistemul <strong>recunoaște sau urmărește aceeași persoană</strong> de la o vizită la alta, estimează vârsta și sexul pe baza chipului, sau leagă imaginea de un client din programul de fidelitate, ai trecut în zona prelucrării de date personale, posibil biometrice, unde regulile sunt mult mai stricte și cer o analiză separată, făcută cu un specialist. Verifică cerința exactă cu un specialist înainte de orice funcție de acest tip.</p>
+<p>Ce faci practic, indiferent de varianta aleasă: <strong>informezi clienții</strong> printr-un panou vizibil la intrare, care spune că spațiul este supravegheat video; <strong>stabilești și scrii scopul</strong> (de pildă „organizarea programului și a personalului"); <strong>limitezi accesul</strong> la rapoarte la persoanele care chiar au nevoie de ele; <strong>nu păstrezi mai mult decât e necesar</strong> și <strong>nu reutilizezi datele</strong> în alt scop. Camerele de supraveghere clasice rămân sub regulile lor obișnuite, pe care le explicăm în ghidul <a href="https://cssi.ro/blog/camere-supraveghere-gdpr-ghid-complet">camere de supraveghere și GDPR</a>.</p>
+
+<table class="compare-table">
+<thead><tr><th>Ce face sistemul</th><th>Tip de date</th><th>Nivel de atenție</th><th>Ce recomandăm</th></tr></thead>
+<tbody>
+<tr><td><strong>Numără trecerile pe o linie virtuală</strong></td><td>Cifre agregate, fără identitate</td><td>Scăzut, cu informare și scop clar</td><td>Varianta implicită pentru retail; panou informativ la intrare</td></tr>
+<tr><td><strong>Heatmap de trecere și staționare</strong></td><td>Hartă agregată, fără persoane identificabile în raport</td><td>Scăzut spre mediu, depinde de cum se păstrează imaginea sursă</td><td>Se păstrează doar harta; raportul nu conține imagini cu persoane</td></tr>
+<tr><td><strong>Estimează vârsta sau sexul clienților</strong></td><td>Date derivate din trăsături faciale</td><td>Ridicat; cere analiză separată</td><td>Discuți cu un specialist înainte; nu e nevoie pentru majoritatea magazinelor</td></tr>
+<tr><td><strong>Recunoaște clienții de la o vizită la alta</strong></td><td>Posibil date biometrice</td><td>Foarte ridicat</td><td>Nu o recomandăm pentru analiză de trafic; verifică cu un specialist dacă ai un caz justificat</td></tr>
+</tbody>
+</table>
+
+<div class="box box-danger"><div class="box-title">⛔ Nu cumpăra „funcții în plus" fără să știi ce prelucrează</div><p>Unele pachete de analiză vin cu opțiuni pe care nu le-ai cerut: recunoaștere de fețe, urmărirea clientului între camere, estimarea vârstei. Dacă le activezi „că tot sunt incluse", schimbi natura datelor pe care le prelucrezi și îți asumi obligații pe care nu le-ai evaluat. Cere în ofertă o listă scrisă a funcțiilor activate și dezactivează tot ce nu ai nevoie pentru decizia pe care vrei s-o iei.</p></div>
+
+<h2 id="cum-se-integreaza-cu-sistemul-de-securit">Cum se integrează cu sistemul de securitate existent</h2>
+<p>Marele avantaj practic e că nu construiești o lume separată. Analiza retail se integrează cu infrastructura de securitate pe care probabil o ai deja, ideal pe o platformă unică (VMS): aceleași camere, aceeași rețea, un singur loc din care vezi și securitatea, și datele de business. Asta reduce costul (nu dublezi echipamentele), simplifică operarea (un singur sistem de învățat) și păstrează totul coerent. Practic, transformi o investiție pe care oricum o faci — supravegherea — într-una care îți dă și informații de management, nu doar liniște.</p>
+
+<h2 id="ce-tip-de-magazin-merita-investitia">Ce tip de magazin merită investiția</h2>
+<p>Onest: nu orice afacere are nevoie de asta. Dacă ai un trafic mic și câteva decizii pe lună, datele aduc puțin. Dar dacă ești un magazin cu flux real, un centru comercial, o unitate HoReCa aglomerată — unde traficul, conversia, cozile și amenajarea chiar influențează vânzările — atunci măsurarea lor se amortizează prin deciziile mai bune pe care le permite. Regula e simplă: cu cât mai multe decizii iei pe baza fluxului de clienți, cu atât mai mult contează să-l măsori în loc să-l ghicești.</p>
+<p>Câteva semnale că ești gata pentru asta: ai un program sau un personal pe care îl ajustezi des, te întrebi dacă o promoție a adus clienți noi sau doar a mutat vânzări existente, ai plângeri recurente de coadă, ai un spațiu pe care vrei să-l reamenajezi sau ai deschis un al doilea punct de lucru și vrei să compari cele două locuri. Semnale că e prea devreme: nu ai încă o evidență clară a vânzărilor pe zi și pe oră, nu ai timp să citești un raport lunar sau nu ai nicio decizie concretă care să depindă de cifre. Într-un astfel de caz, mai întâi îți organizezi vânzările, apoi adaugi trafic.</p>
+
+<h2 id="ce-se-intampla-daca-nu-masori-trei-scena">Ce se întâmplă dacă nu măsori: trei scenarii frecvente</h2>
+<p><strong>Ce se întâmplă dacă angajezi pe intuiție.</strong> Ai impresia că sâmbăta e ziua cea mai aglomerată și pui trei vânzători. Datele ar fi arătat că vârful real e vineri după-amiaza, iar sâmbătă dimineața e liniște. Rezultatul: vânzători în pauză sâmbăta și clienți nepăsători vinerea, fără ca tu să-ți dai seama de ce vânzările stagnează.</p>
+<p><strong>Ce se întâmplă dacă pui promoția pe raftul greșit.</strong> Ai pus produsul-vedetă în fund, ca lumea să traverseze tot magazinul. Heatmap-ul ar fi arătat că jumătate dintre clienți nu ajung niciodată acolo, ci se opresc la primele rafturi. Rezultatul: promoție bună, vânzări modeste, concluzia greșită că „produsul nu se vinde".</p>
+<p><strong>Ce se întâmplă dacă nu vezi cozile.</strong> Casierii sunt ocupați, nimeni din sală nu observă că la casă s-au adunat zece oameni, iar câțiva lasă coșul și pleacă. Nu vei afla niciodată câți au renunțat, pentru că nu au cumpărat nimic și nu au lăsat urmă în sistemul de casă. O alertă ar fi chemat un coleg la timp.</p>
+
+<h2 id="costuri-orientative-2026-cat-costa-numar">Costuri orientative 2026: cât costă numărarea și analiza</h2>
+<p>Costul depinde de cât de complex e magazinul și de ce măsori. Cifrele de mai jos sunt <strong>orientative</strong>, pentru 2026, și nu sunt o ofertă; oferta fermă vine după evaluarea la fața locului. Cele mai mari diferențe le fac numărul de intrări, dacă poți reutiliza camerele existente, tipul de software și dacă vrei rapoarte simple sau un panou de comandă complet.</p>
+
+<table class="compare-table">
+<thead><tr><th>Scenariu</th><th>Ce include</th><th>Interval orientativ (RON)</th><th>Observații</th></tr></thead>
+<tbody>
+<tr><td><strong>Magazin mic, o singură intrare, camere existente</strong></td><td>Modul software de numărare, configurare, verificare de precizie</td><td>1.500–4.500</td><td>Merge doar dacă unghiul și înălțimea camerei sunt potrivite</td></tr>
+<tr><td><strong>Magazin mediu, cameră dedicată la intrare</strong></td><td>Cameră cenitală de numărare, cablare, montaj, raport de trafic pe ore</td><td>3.000–8.000</td><td>Fără heatmap și fără alerte de coadă</td></tr>
+<tr><td><strong>Magazin mediu cu heatmap și coadă</strong></td><td>Numărare + 2–4 camere pentru hartă și zona caselor + alerte</td><td>8.000–20.000</td><td>Depinde de suprafață și de câte zone vrei acoperite</td></tr>
+<tr><td><strong>Supermarket sau magazin mare, mai multe intrări</strong></td><td>Camere 3D, platformă centralizată, rapoarte, integrare cu casa</td><td>20.000–50.000+</td><td>Se justifică doar cu trafic mare și decizii frecvente</td></tr>
+<tr><td><strong>Abonament software și suport (dacă e cazul)</strong></td><td>Licență, actualizări, rapoarte în cloud sau pe server local</td><td>variabil, de la zeci la câteva sute pe lună</td><td>Unele soluții nu au abonament; întreabă explicit în ofertă</td></tr>
+</tbody>
+</table>
+
+<p>Ce mută prețul: <strong>reutilizarea camerelor existente</strong>, lungimea cablurilor și accesul la tavan, numărul de intrări, dacă vrei și integrare cu casa de marcat pentru conversie automată, și dacă datele stau local sau în cloud. Merită întrebat și cine plătește pentru actualizările software pe termen lung. Dacă analiza se face pe aceeași infrastructură ca supravegherea, cu un <a href="https://cssi.ro/blog/cate-camere-ce-rezolutie-dimensionare-sistem-cctv-brasov">sistem CCTV dimensionat corect</a>, nu plătești de două ori cablajul și înregistratorul. Pentru stocare, uită-te și la ghidul despre <a href="https://cssi.ro/blog/nvr-vs-dvr-vs-cloud-stocare-camere-2026">NVR, DVR sau cloud</a>.</p>
+<div class="box box-tip"><div class="box-title">💡 Fă calculul invers</div><p>Înainte să decizi, întreabă-te ce decizie vei lua diferit cu datele. Dacă răspunsul e „aș ajusta programul personalului", compară costul sistemului cu ce plătești azi pentru ore de personal prost plasate sau cu vânzările pierdute la coadă. Dacă răspunsul e „nu știu", nu ești pregătit să cumperi. Detalii despre costul total al unui sistem de securitate găsești în <a href="https://cssi.ro/blog/cost-sistem-securitate-complet-2026">cât costă un sistem de securitate complet în 2026</a>.</p></div>
+
+<h2 id="greseli-frecvente-la-numararea-de-persoa">Greșeli frecvente la numărarea de persoane și analiza retail</h2>
+<p>Din ce vedem la evaluări, problemele se repetă. Șapte greșeli, pe care le poți evita dacă le știi din start:</p>
+<ol>
+<li><strong>Montezi camera de pază și aștepți precizie de contor.</strong> O cameră din colț, privind oblic, nu poate separa bine doi oameni care intră împreună. Pentru cifre de încredere, unghiul și înălțimea contează mai mult decât rezoluția.</li>
+<li><strong>Nu excluzi personalul și furnizorii.</strong> Dacă angajații trec prin aceeași ușă, ei intră în cifră. Fără corecție, conversia ți se pare mai mică decât e în realitate.</li>
+<li><strong>Nu verifici precizia după montaj.</strong> Un sistem care numără cu o eroare mare te duce la decizii greșite. Numărătoarea manuală de o oră, comparată cu sistemul, e un test simplu și ieftin.</li>
+<li><strong>Măsori fără o întrebare clară.</strong> Colectezi cifre și nu le deschizi niciodată. Întâi decizia (program, personal, amenajare), apoi măsurătoarea.</li>
+<li><strong>Activezi funcții biometrice „pentru orice caz".</strong> Recunoașterea de fețe sau estimarea vârstei nu e necesară pentru trafic și deschide un set de obligații pe care nu l-ai cerut. Rămâi la numărare anonimă.</li>
+<li><strong>Uiți panoul informativ și scopul scris.</strong> Chiar dacă numeri doar siluete, spațiul rămâne supravegheat video. Informarea clienților și un scop clar, notat undeva, te ajută dacă cineva întreabă.</li>
+<li><strong>Nu legi traficul de vânzări.</strong> Un contor fără bonuri e o statistică. Cifra de afaceri pe oră, de la casă, e ce transformă numărul în conversie.</li>
+</ol>
+<div class="box box-warn"><div class="box-title">⚠ Cifrele diferă de la o zi la alta, nu trage concluzii dintr-o zi</div><p>Vremea, un eveniment în oraș sau o zi de plată pot dubla sau înjumătăți traficul. Folosește săptămâni întregi, compară cu aceleași zile din săptămâni anterioare și așteaptă o perioadă de observare înainte să schimbi programul sau amenajarea.</p></div>
+
+<h2 id="cum-lucreaza-cssi-de-la-evaluare-la-pred">Cum lucrează CSSI: de la evaluare la predare</h2>
+<p>Un proiect de numărare și analiză nu începe cu echipamentul, ci cu întrebarea ta. Iată pașii, în ordine:</p>
+<ol>
+<li><strong>Discuție și evaluare la fața locului</strong> — vedem magazinul, intrările, camerele existente, casele și ce decizii vrei să iei pe baza datelor. Spunem cinstit dacă ai nevoie de analiză sau ți-ajunge un contor simplu.</li>
+<li><strong>Alegerea soluției</strong> — stabilim dacă reutilizăm camerele existente sau montăm camere dedicate, unde se montează și ce funcții se activează (și care rămân dezactivate, din motive de confidențialitate).</li>
+<li><strong>Ofertă defalcată</strong> — pe componente: camere, software, cablare, configurare, eventual abonament. Oferta fermă vine după evaluare; nu dăm prețuri la telefon fără să vedem spațiul.</li>
+<li><strong>Montaj</strong> — planificat în afara orelor de vârf, ca magazinul să funcționeze. Cablăm ordonat și protejăm echipamentele de condens și praf.</li>
+<li><strong>Configurare și verificare de precizie</strong> — definim liniile virtuale, zonele pentru heatmap și coadă, excludem zona personalului, apoi numărăm manual și comparăm cu sistemul, ca să știi cât de mult te poți baza pe cifre.</li>
+<li><strong>Instruire</strong> — îți arătăm cum citești rapoartele și ce întrebări merită puse datelor. Panoul informativ și cerințele de transparență sunt discutate la predare.</li>
+<li><strong>Predare și garanție</strong> — primești documentația sistemului, accesele configurate și garanția echipamentelor. Rămânem disponibili pentru ajustări după primele săptămâni de utilizare.</li>
+</ol>
+<p>Dacă ai deja o instalație de supraveghere, o putem integra, pe cât se poate, cu analiza, într-o platformă comună. Despre pagina de serviciu pentru camere puteți afla mai multe la <a href="https://cssi.ro/camere-supraveghere-brasov">camere de supraveghere în Brașov</a>, iar pentru securitatea clasică a magazinului vezi <a href="https://cssi.ro/blog/securitate-magazin-retail-ghid-complet">ghidul de securitate pentru magazine și retail</a>.</p>
+
+<h2 id="lista-de-verificare-inainte-sa-ceri-ofer">Lista de verificare înainte să ceri oferta</h2>
+<p>Ia lista asta în mână înainte să suni sau să ceri o ofertă. Cu cât ai răspunsuri mai clare, cu atât oferta e mai precisă.</p>
+<ul>
+<li>Știu ce decizie vreau să iau cu datele (program, personal, amenajare, promoții).</li>
+<li>Am numărul de intrări și o schiță simplă a magazinului, cu casele marcate.</li>
+<li>Știu ce camere am deja și cine le-a montat.</li>
+<li>Am o evidență a vânzărilor pe zi, eventual pe oră, din casa de marcat.</li>
+<li>Am stabilit cine citește rapoartele și cât de des.</li>
+<li>Vreau doar numărare anonimă; am cerut să fie dezactivate funcțiile biometrice.</li>
+<li>Am cerut în ofertă o listă scrisă a funcțiilor activate.</li>
+<li>Am întrebat dacă există abonament, licență sau actualizări cu plată.</li>
+<li>Am întrebat unde stau datele (local sau în cloud) și cât timp se păstrează.</li>
+<li>Am cerut o verificare de precizie după montaj, cu numărare manuală.</li>
+<li>Am prevăzut panou informativ la intrare și scopul scris al prelucrării.</li>
+<li>Am discutat despre alimentare de rezervă pentru camere și înregistrator.</li>
+</ul>
+
+<h2 id="mentenanta-si-intretinere-ce-verifici-ca">Mentenanță și întreținere: ce verifici ca datele să rămână corecte</h2>
+<p>Un contor cu lentila murdară sau decalibrat produce cifre false fără să dea vreo eroare. Din acest motiv, mentenanța la un sistem de analiză înseamnă mai ales <strong>verificarea calității datelor</strong>, nu doar a echipamentului. Ce recomandăm, orientativ:</p>
+<p><strong>Curățarea lentilelor</strong> — praful, aburul sau o urmă de deget pot reduce acuratețea; într-un magazin cu ușa deschisă des, iarna, condensul e un risc. <strong>Verificarea unghiului</strong> — o cameră mutată cu câțiva centimetri de curățenie sau de montarea de decorațiuni de sezon schimbă zona numărată. <strong>Re-testarea preciziei</strong> — o numărătoare manuală scurtă, de câteva ori pe an și după orice schimbare de amenajare, de iluminat sau de mobilier la intrare. <strong>Actualizările de software</strong> — aplicate controlat, cu verificare după. <strong>Sincronizarea orei</strong> — dacă ceasul camerei nu e sincronizat cu cel al casei, nu poți corela corect traficul cu bonurile. <strong>Verificarea alimentării</strong> — baterii și UPS, ca să nu ai goluri în serii de date.</p>
+<p>Păstrarea infrastructurii în stare bună ține de același efort ca la restul sistemului; vezi și <a href="https://cssi.ro/blog/mentenanta-sisteme-securitate-de-ce-conteaza">mentenanța sistemelor de securitate</a>. Iar dacă rețeaua camerelor e comună cu a magazinului, are sens să urmezi și recomandările despre <a href="https://cssi.ro/blog/securizare-retea-cctv-ip-parole-vlan-protectie-brasov">securizarea rețelei unui sistem CCTV IP</a>, pentru că datele de business trebuie protejate ca orice alt sistem.</p>
+<div class="box box-info"><div class="box-title">ℹ Cât de des să te uiți la rapoarte</div><p>Un rând pe săptămână e suficient pentru majoritatea magazinelor: traficul pe zile, conversia, orele de vârf. Un rând pe lună pentru tendințe și heatmap. Dacă deschizi rapoartele zilnic și ajustezi la fiecare cifră, reacționezi la zgomot, nu la tipare.</p></div>
+
+<h2 id="de-unde-sa-incepi-pe-scurt">De unde să începi, pe scurt</h2>
+<p><strong>Pasul 1:</strong> o evaluare a magazinului — ce camere ai, ce vrei să măsori, ce decizii vrei să iei pe baza datelor. <strong>Pasul 2:</strong> numărarea de persoane la intrare, pentru trafic și conversie. <strong>Pasul 3:</strong> heatmap-uri pe zonele cheie. <strong>Pasul 4:</strong> monitorizarea cozilor, dacă ai case cu aglomerare. <strong>Pasul 5:</strong> integrarea pe o platformă unică, anonim și conform GDPR. La final ai un magazin pe care îl conduci cu cifre, nu doar cu intuiție — și o singură infrastructură care face și securitate, și business intelligence.</p>
+
+<h2 id="citeste-si">Citește și</h2>
+<ul>
+<li><a href="https://cssi.ro/blog/securitate-magazin-retail-ghid-complet">Securitate pentru magazine și retail — ghid complet</a> — partea de pază, alarmă și antiefracție, pe care analiza o completează.</li>
+<li><a href="https://cssi.ro/blog/camere-supraveghere-gdpr-ghid-complet">Camere supraveghere și GDPR</a> — regulile de bază pentru informare, păstrare și acces la înregistrări.</li>
+<li><a href="https://cssi.ro/blog/sisteme-antifurt-eas-porti-etichete-taguri-magazine-brasov">Sisteme antifurt EAS pentru magazine</a> — cealaltă jumătate a controlului pierderilor în retail.</li>
+<li><a href="https://cssi.ro/blog/cate-camere-ce-rezolutie-dimensionare-sistem-cctv-brasov">De câte camere și ce rezoluție ai nevoie</a> — cum dimensionezi infrastructura pe care se sprijină analiza.</li>
+<li><a href="https://cssi.ro/blog/control-acces-recunoastere-faciala-gdpr-brasov">Control acces cu recunoaștere facială</a> — ca să vezi de ce biometria e altceva decât numărarea anonimă.</li>
+</ul>
+      <h2 id="faq">Întrebări frecvente</h2>
+      <div class="faq-wrap">
+        <div class="faq-item">
+          <button class="faq-q" onclick="toggleFaq(this)">Ce înseamnă o cameră care numără persoane? <svg class="faq-chevron" width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg></button>
+          <div class="faq-a"><p>E o cameră cu analiză video care detectează și numără persoanele care trec printr-un punct (de obicei intrarea), fără să le identifice. Îți spune câți clienți au intrat, pe ore și pe zile, ca un contor anonim. Pe baza acestor cifre poți calcula trafic, vârfuri și tendințe. Aceeași cameră poate face și supraveghere clasică; diferă software-ul care interpretează imaginea, nu neapărat echipamentul.</p></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q" onclick="toggleFaq(this)">Care e diferența față de o cameră de securitate obișnuită? <svg class="faq-chevron" width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg></button>
+          <div class="faq-a"><p>O cameră de securitate înregistrează ca să ai dovadă și să descurajezi. O cameră de analiză retail extrage date de business din aceeași imagine: câte persoane, în ce zone, cât stau, când se aglomerează casele. Una te ajută când se întâmplă ceva rău; cealaltă te ajută să iei decizii comerciale zilnice. Cel mai des, le combinăm pe același sistem, cu același echipament bine ales.</p></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q" onclick="toggleFaq(this)">Ce e un heatmap de magazin și la ce ajută? <svg class="faq-chevron" width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg></button>
+          <div class="faq-a"><p>Un heatmap arată, pe planul magazinului, ce zone atrag clienții și ce zone rămân „reci". Practic vezi pe unde circulă lumea și unde se oprește. Asta te ajută să amplasezi produsele cheie pe traseele cu trafic, să repoziționezi rafturile slabe și să testezi schimbări de amenajare cu date, nu din intuiție. Pentru un magazin, e diferența dintre a ghici și a ști.</p></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q" onclick="toggleFaq(this)">Cum mă ajută la gestionarea cozilor? <svg class="faq-chevron" width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg></button>
+          <div class="faq-a"><p>Sistemul poate detecta când la case se adună prea mulți clienți și poate alerta personalul să deschidă încă o casă. Pe termen lung, datele despre cozi îți arată la ce ore ai nevoie de mai mulți oameni în front. Rezultatul e timp de așteptare mai mic, clienți mai mulțumiți și mai puține coșuri abandonate la coadă. E o îmbunătățire care se vede direct în experiența clientului.</p></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q" onclick="toggleFaq(this)">Numărarea de persoane respectă GDPR? <svg class="faq-chevron" width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg></button>
+          <div class="faq-a"><p>Numărarea anonimă (contor de persoane, fără identificare) prelucrează date mult mai ușoare decât recunoașterea, pentru că nu identifică indivizi. Diferența e crucială: o linie care numără treceri nu e același lucru cu recunoașterea fețelor. Configurăm sistemul pe principiul minimizării datelor, cu informare vizibilă și scop clar. Pentru recunoaștere (date biometrice) regulile sunt mult mai stricte; recomandăm și consultarea unui specialist GDPR.</p></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q" onclick="toggleFaq(this)">Pot folosi camerele pe care le am deja? <svg class="faq-chevron" width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg></button>
+          <div class="faq-a"><p>Uneori da, dacă sunt bine poziționate și suficient de bune; alteori e nevoie de camere dedicate pentru numărare (montate corect deasupra intrării) sau de un software de analiză adăugat. La evaluare verificăm ce ai și îți spunem cinstit ce se poate face cu sistemul actual și ce ar trebui completat. Ideea e să nu cumperi mai mult decât ai nevoie.</p></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q" onclick="toggleFaq(this)">Ce tip de magazin merită această investiție? <svg class="faq-chevron" width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg></button>
+          <div class="faq-a"><p>Cel mai mult câștigă magazinele cu trafic semnificativ și cu decizii de amenajare, personal și program — retail, centre comerciale, HoReCa cu flux mare. Dacă ai un singur ghișeu și câțiva clienți pe zi, datele aduc puțin. Dar dacă traficul, conversia și cozile chiar influențează vânzările tale, măsurarea lor se amortizează prin deciziile mai bune pe care le permite.</p></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q" onclick="toggleFaq(this)">Cât de precisă este numărarea de persoane? <svg class="faq-chevron" width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg></button>
+          <div class="faq-a"><p>Depinde de montaj, de lumină și de felul în care intră clienții. O cameră dedicată, montată cenital deasupra intrării, este de regulă mai precisă decât o cameră de pază din colț, mai ales când intră mai multe persoane deodată. De aceea, după instalare, recomandăm o verificare simplă: numărăm manual o oră și comparăm cu cifra din sistem. Așa știi ce marjă de eroare ai și poți interpreta corect traficul și rata de conversie.</p></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q" onclick="toggleFaq(this)">Cum calculez rata de conversie a magazinului? <svg class="faq-chevron" width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg></button>
+          <div class="faq-a"><p>Împarți numărul de tranzacții din casa de marcat la numărul de persoane intrate în același interval, de exemplu pe oră sau pe zi. Contorul îți dă traficul, iar casa îți dă bonurile. Ca rezultatul să fie corect, exclude personalul și furnizorii din numărătoare și compară intervale asemănătoare, cum ar fi sâmbătă cu sâmbătă. O singură zi nu spune mult; tendința pe câteva săptămâni este cea care contează pentru decizii.</p></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q" onclick="toggleFaq(this)">Cât costă un sistem de numărare și analiză pentru un magazin? <svg class="faq-chevron" width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg></button>
+          <div class="faq-a"><p>Orientativ, de la câteva mii de lei pentru un contor la o singură intrare, folosind camere existente, până la zeci de mii pentru un magazin mare cu heatmap, alerte de coadă și mai multe intrări. Prețul depinde de numărul de camere, de cablare, de software și de eventualul abonament. Oferta fermă vine după evaluarea la fața locului, defalcată pe componente, ca să vezi exact ce plătești și ce poți elimina fără să pierzi ce te interesează.</p></div>
+        </div>
+      </div>
+
+      <aside class="discuta-in-grup">
+        <h3>Ai o întrebare despre asta?</h3>
+        <p>Discutăm subiectul în grupul nostru de pe Facebook, împreună cu electricieni, instalatori și proprietari din Brașov și împrejurimi. Pune întrebarea acolo și primești răspuns de la oameni care lucrează efectiv în domeniu. Suntem deja <!-- MEMBRI-GRUP -->351<!-- /MEMBRI-GRUP --> în grup.</p>
+        <a href="https://www.facebook.com/groups/1970585079825010" rel="noopener" target="_blank">Intră în grupul Instalații Brașov →</a>
+      </aside>
+      <div class="cta-banner">
+        <div>
+          <h3>Pașii următori — cere oferta ta</h3>
+          <p>Fără obligații: vii cu nevoia, pleci cu o soluție și un preț defalcat. CSSI — 20 de ani, 8.700+ proiecte în județul Brașov.</p>
+        </div>
+        <div class="cta-buttons">
+          <a href="/camere-supraveghere-brasov" class="btn btn-secondary">📍 Camere supraveghere în Brașov</a>
+          <a href="/contact" class="btn btn-secondary">📩 Cere ofertă</a>
+          <a href="tel:0752288400" class="btn btn-primary">📞 0752 288 400</a>
+          <a target="_blank" rel="noopener" href="https://wa.me/40752288400" class="btn btn-secondary">💬 WhatsApp</a>
+        </div>
+      </div>
+
+    </main>
+
+    <aside class="sidebar">
+      <div class="sidebar-card">
+        <div class="sidebar-card-head">📑 Cuprins</div>
+        <div class="sidebar-card-body" style="padding:10px 18px">
+          <ol class="toc-list">
+            <li><a href="#raspunsul-scurt">Răspunsul scurt</a></li>
+            <li><a href="#ce-inseamna-camere-care-numara-si-de-ce-">Ce înseamnă „camere care numără" și de ce nu e doar securitate</a></li>
+            <li><a href="#numararea-de-persoane-trafic-conversie-t">Numărarea de persoane: trafic, conversie, tendințe</a></li>
+            <li><a href="#cum-numara-de-fapt-o-camera-variantele-t">Cum numără, de fapt, o cameră: variantele tehnice</a></li>
+            <li><a href="#rata-de-conversie-cum-o-calculezi-si-ce-">Rata de conversie: cum o calculezi și ce faci cu ea</a></li>
+            <li><a href="#heatmap-uri-ce-zone-atrag-si-ce-zone-sun">Heatmap-uri: ce zone atrag și ce zone sunt moarte</a></li>
+            <li><a href="#gestionarea-cozilor-si-deciziile-zilnice">Gestionarea cozilor și deciziile zilnice</a></li>
+            <li><a href="#cum-arata-asta-in-brasov-scenarii-tipice">Cum arată asta în Brașov: scenarii tipice de magazin</a></li>
+            <li><a href="#gdpr-numararea-anonima-vs-recunoasterea">GDPR: numărarea anonimă vs. recunoașterea</a></li>
+            <li><a href="#cum-se-integreaza-cu-sistemul-de-securit">Cum se integrează cu sistemul de securitate existent</a></li>
+            <li><a href="#ce-tip-de-magazin-merita-investitia">Ce tip de magazin merită investiția</a></li>
+            <li><a href="#ce-se-intampla-daca-nu-masori-trei-scena">Ce se întâmplă dacă nu măsori: trei scenarii frecvente</a></li>
+            <li><a href="#costuri-orientative-2026-cat-costa-numar">Costuri orientative 2026: cât costă numărarea și analiza</a></li>
+            <li><a href="#greseli-frecvente-la-numararea-de-persoa">Greșeli frecvente la numărarea de persoane și analiza retail</a></li>
+            <li><a href="#cum-lucreaza-cssi-de-la-evaluare-la-pred">Cum lucrează CSSI: de la evaluare la predare</a></li>
+            <li><a href="#lista-de-verificare-inainte-sa-ceri-ofer">Lista de verificare înainte să ceri oferta</a></li>
+            <li><a href="#mentenanta-si-intretinere-ce-verifici-ca">Mentenanță și întreținere: ce verifici ca datele să rămână corecte</a></li>
+            <li><a href="#de-unde-sa-incepi-pe-scurt">De unde să începi, pe scurt</a></li>
+            <li><a href="#citeste-si">Citește și</a></li>
+            <li><a href="#faq">Întrebări frecvente</a></li>
+          </ol>
+        </div>
+      </div>
+      <div class="sidebar-card">
+        <div class="sidebar-card-head">📞 Contact CSSI Brașov</div>
+        <div class="sidebar-card-body">
+          <ul class="contact-info">
+            <li><div class="ci-icon">📞</div><div><strong>0752 288 400</strong><span>Lun–Vin 08:00–18:00</span></div></li>
+            <li><div class="ci-icon">📧</div><div><strong>office@cssi.ro</strong><span>Răspuns în max 24h</span></div></li>
+            <li><div class="ci-icon">📍</div><div><strong>Brașov</strong><span>și județele înconjurătoare</span></div></li>
+          </ul>
+          <a target="_blank" rel="noopener" href="https://wa.me/40752288400" class="btn btn-primary" style="margin-top:12px">💬 Scrie pe WhatsApp</a>
+        </div>
+      </div>
+    </aside>
+  </div>
+
+<footer class="article-footer">
+    <p>Articol scris de echipa <strong>CSSI Brașov</strong> — firmă autorizată IGPR și ISU, cu peste 20 de ani de experiență în sisteme de securitate și instalații.</p>
+    <div class="tags">
+      <span class="tag">camere supraveghere brasov</span>
+      <span class="tag">instalare camere</span>
+      <span class="tag">preturi camere 2026</span>
+      <span class="tag">Hikvision</span>
+      <span class="tag">Dahua</span>
+      <span class="tag">Uniview</span>
+      <span class="tag">CCTV</span>
+      <span class="tag">Brașov</span>
+    </div>
+    <p style="font-size:12px;color:#aaa;margin-top:8px">© 2026 CSSI — Confort, Securitate, Siguranță, Imobil | <a href="/">cssi.ro</a></p>
+  </footer>
+<script>
+    function toggleFaq(btn) {
+      const item = btn.closest('.faq-item');
+      const isOpen = item.classList.contains('open');
+      document.querySelectorAll('.faq-item.open').forEach(el => el.classList.remove('open'));
+      if (!isOpen) item.classList.add('open');
+    }
+    const headings = document.querySelectorAll('h2[id]');
+    const tocLinks = document.querySelectorAll('.toc-list a');
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          tocLinks.forEach(a => a.style.color = '');
+          const active = document.querySelector(`.toc-list a[href="#${entry.target.id}"]`);
+          if (active) active.style.color = 'var(--brand-blue)';
+        }
+      });
+    }, { rootMargin: '-20% 0px -70% 0px' });
+    headings.forEach(h => observer.observe(h));
+  </script>
+  <script>
+    let navTextColor = '#fff';
+    window.addEventListener('scroll', function() {
+        const navBg = document.getElementById('navBg');
+        const logo = document.getElementById('logoImg');
+        const scrolled = window.scrollY > 50;
+        if (scrolled) {
+            navBg.style.background = '#ffffff';
+            navBg.style.backdropFilter = 'blur(12px)';
+            navBg.style.boxShadow = '0 1px 2px rgba(0,0,0,0.05)';
+            if (logo) logo.style.filter = '';
+            navTextColor = '#334155';
+        } else {
+            navBg.style.background = 'transparent';
+            navBg.style.backdropFilter = '';
+            navBg.style.boxShadow = '';
+            if (logo) logo.style.filter = 'brightness(0) invert(1) drop-shadow(0 0 1px rgba(255,255,255,0.8))';
+            navTextColor = '#fff';
+        }
+        ['navLink1','navLink2','navLink3','navLink4','navLinkBlog','navLink5','phoneLink'].forEach(id=>{
+            const el=document.getElementById(id);
+            if(el) el.style.color=navTextColor;
+        });
+    });
+    function toggleMobileMenu(){
+        const menu=document.getElementById('mobileMenu');
+        const menuIcon=document.getElementById('menuIcon');
+        const closeIcon=document.getElementById('closeIcon');
+        const btn=document.getElementById('menuBtn');
+        if(menu.classList.contains('open')){
+            menu.classList.remove('open');
+            menuIcon.style.display='';
+            closeIcon.style.display='none';
+            btn.style.background='linear-gradient(to right,#ef4444,#dc2626)';
+            btn.classList.add('animate-subtle-pulse');
+        } else {
+            menu.classList.add('open');
+            menuIcon.style.display='none';
+            closeIcon.style.display='';
+            btn.style.background='#6b7280';
+            btn.classList.remove('animate-subtle-pulse');
+        }
+    }
+    function closeMobile(){
+        document.getElementById('mobileMenu').classList.remove('open');
+        document.getElementById('menuIcon').style.display='';
+        document.getElementById('closeIcon').style.display='none';
+    }
+    function toggleServicesSubmenu(){
+        const sub=document.getElementById('servicesSubmenu');
+        const arrow=document.getElementById('servicesArrow');
+        if(sub.classList.contains('open')){
+            sub.classList.remove('open');
+            arrow.style.transform='';
+        } else {
+            sub.classList.add('open');
+            arrow.style.transform='rotate(180deg)';
+        }
+    }
+  </script>
+<script>
+// GA4 tracking: phone_call & whatsapp_click
+document.addEventListener('DOMContentLoaded', function() {
+    document.querySelectorAll('a[href^="tel:"]').forEach(function(link) {
+        link.addEventListener('click', function() {
+            if (typeof gtag === 'function') {
+                gtag('event', 'phone_call', {event_category:'Contact', event_label:this.href.replace('tel:',''), value:100, currency:'RON'});
+            }
+        });
+    });
+    document.querySelectorAll('a[href*="wa.me"]').forEach(function(link) {
+        link.addEventListener('click', function() {
+            if (typeof gtag === 'function') {
+                gtag('event', 'whatsapp_click', {event_category:'Contact', event_label:'WhatsApp Direct', value:100, currency:'RON'});
+            }
+        });
+    });
+});
+</script>
+<a id="waFloat" href="https://wa.me/40752288400" target="_blank" rel="noopener noreferrer" aria-label="Scrie-ne pe WhatsApp"><svg width="28" height="28" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg></a><button id="toTop" aria-label="Înapoi sus" onclick="window.scrollTo({top:0,behavior:&#39;smooth&#39;})"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 15l-6-6-6 6"/></svg></button><script>(function(){var b=document.getElementById("toTop");window.addEventListener("scroll",function(){if(window.scrollY>400)b.classList.add("show");else b.classList.remove("show");});})();</script>
+</body>
+</html>
