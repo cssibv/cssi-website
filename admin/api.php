@@ -258,7 +258,6 @@ function cerereRapidaPush($id, $nume, $tel, $tip, $titlu = 'Cerere rapidă nouă
     $cine = $nume !== '' ? $nume . ' · ' . $tel : $tel;
     $baza = [
         'topic'    => NTFY_TOPIC,
-        'priority' => 5,
         'click'    => $url,
         'actions'  => [
             ['action' => 'view', 'label' => 'Deschide cererea', 'url' => $url, 'clear' => true],
@@ -271,6 +270,7 @@ function cerereRapidaPush($id, $nume, $tel, $tip, $titlu = 'Cerere rapidă nouă
         'title'       => $titlu,
         'message'     => $cine . "\n" . $tip,
         'tags'        => ['telephone_receiver'],
+        'priority'    => 3,   // notificare simplă: intrările sunt notate de mână, nu sunt urgențe
     ]);
     if ($r[0] !== 200) return $r;   // serverul nu răspunde: nu mai aștepta și a doua oară
     ntfyCall('POST', '/', $baza + [
@@ -278,6 +278,7 @@ function cerereRapidaPush($id, $nume, $tel, $tip, $titlu = 'Cerere rapidă nouă
         'title'       => 'Cerere nepreluată',
         'message'     => 'Notată la ' . date('H:i', $acum) . ' și încă nepreluată.' . "\n" . $cine . "\n" . $tip,
         'tags'        => ['rotating_light'],
+        'priority'    => 5,   // doar reamintirea sună ca alarmă
         'delay'       => (string)cerereRapidaOraReminder($acum),
     ]);
     return $r;
