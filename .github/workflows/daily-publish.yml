@@ -6,8 +6,10 @@ on:
     # GitHub's busy cron slots (:00/:30) and rush hour -> less scheduling delay.
     - cron: '43 3 * * *'
     # Retry ~5h later (08:43 UTC = 11:43 RO) in case the first run failed or was skipped
-    # by GitHub. Idempotent (dedupe on canonical) -> does nothing if already published.
+    # by GitHub. Idempotent (the staging script skips if a new article already went out today).
     - cron: '43 8 * * *'
+    # Last retry in the afternoon (14:43 UTC = 17:43 RO), same idempotent behaviour.
+    - cron: '43 14 * * *'
   workflow_dispatch: {}   # allows manual runs from the Actions tab
 
 permissions:
@@ -41,7 +43,10 @@ jobs:
       - name: Dependencies
         run: pip install openpyxl
 
+      # Fails (exit 3) when no new article could be published today -> failure alert below.
+      # Non-fatal problems (missing cover, card/sitemap not updated) come back in outputs.warnings.
       - name: Stage today's articles
+        id: stage
         run: python .publicare/stage_publicare_azi.py
 
       - name: Commit + push (only if there are changes)
@@ -54,11 +59,23 @@ jobs:
             echo "Nothing to publish today, no commit."
             echo "published=false" >> "$GITHUB_OUTPUT"
           else
-            articles=$(git diff --cached --name-only -- blog/ \
+            # only NEW article files count as published (never a rewrite of an existing one)
+            articles=$(git diff --cached --name-only --diff-filter=A -- blog/ \
               | grep -E '^blog/.+\.html$' | grep -v '^blog/index\.html$' \
-              | sed 's#^blog/##; s#\.html$##' | paste -sd ', ' -)
+              | sed 's#^blog/##; s#\.html$##' | paste -sd ' ' -)
+            if [ -z "$articles" ]; then
+              echo "::error::Staged changes contain no new article - refusing to commit."
+              git diff --cached --stat
+              exit 1
+            fi
             git commit -m "Automated blog publish $(date +%Y-%m-%d)"
-            git push
+            # someone may have pushed to main in the meantime -> rebase and retry
+            for attempt in 1 2 3; do
+              if git push; then break; fi
+              if [ "$attempt" = 3 ]; then echo "::error::git push failed 3 times"; exit 1; fi
+              git pull --rebase
+              sleep 5
+            done
             echo "published=true" >> "$GITHUB_OUTPUT"
             echo "articles=$articles" >> "$GITHUB_OUTPUT"
           fi
@@ -70,7 +87,7 @@ jobs:
           TG_CHAT: ${{ secrets.TELEGRAM_CHAT_ID }}
         run: |
           text="✅ cssi.ro: published $(date +%Y-%m-%d): ${{ steps.commit.outputs.articles }}"
-          curl -s -X POST "https://api.telegram.org/bot${TG_TOKEN}/sendMessage" \
+          curl -sf -X POST "https://api.telegram.org/bot${TG_TOKEN}/sendMessage" \
             -d chat_id="${TG_CHAT}" --data-urlencode text="$text" -o /dev/null
 
       - name: Telegram alert (nothing new, manual runs only)
@@ -80,15 +97,55 @@ jobs:
           TG_CHAT: ${{ secrets.TELEGRAM_CHAT_ID }}
         run: |
           text="ℹ️ cssi.ro: manual run $(date +%Y-%m-%d): nothing new to publish, already up to date."
-          curl -s -X POST "https://api.telegram.org/bot${TG_TOKEN}/sendMessage" \
+          curl -sf -X POST "https://api.telegram.org/bot${TG_TOKEN}/sendMessage" \
+            -d chat_id="${TG_CHAT}" --data-urlencode text="$text" -o /dev/null
+
+      - name: Telegram alert (warnings)
+        if: always() && steps.stage.outputs.warnings != ''
+        env:
+          TG_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TG_CHAT: ${{ secrets.TELEGRAM_CHAT_ID }}
+          WARNINGS: ${{ steps.stage.outputs.warnings }}
+        run: |
+          text="⚠️ cssi.ro: published with warnings ($(date +%Y-%m-%d)): ${WARNINGS}"
+          curl -sf -X POST "https://api.telegram.org/bot${TG_TOKEN}/sendMessage" \
+            -d chat_id="${TG_CHAT}" --data-urlencode text="$text" -o /dev/null
+
+      # The commit is only half of it: wait for the deploy and check the article really is on cssi.ro.
+      - name: Verify the article is live
+        id: verify
+        if: success() && steps.commit.outputs.published == 'true'
+        run: |
+          for slug in ${{ steps.commit.outputs.articles }}; do
+            live=false
+            for i in $(seq 1 30); do
+              code=$(curl -s -o /dev/null -w '%{http_code}' "https://cssi.ro/blog/$slug" || true)
+              if [ "$code" = "200" ]; then live=true; break; fi
+              sleep 30
+            done
+            if [ "$live" != true ]; then
+              echo "::error::https://cssi.ro/blog/$slug still returns $code after 15 minutes"
+              exit 1
+            fi
+            echo "live: https://cssi.ro/blog/$slug"
+          done
+
+      - name: Telegram alert (committed but not live)
+        if: failure() && steps.verify.conclusion == 'failure'
+        env:
+          TG_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TG_CHAT: ${{ secrets.TELEGRAM_CHAT_ID }}
+        run: |
+          text="❌ cssi.ro: article committed but NOT reachable on the site after 15 min ($(date +%Y-%m-%d)): ${{ steps.commit.outputs.articles }}. Check the deploy. Log: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+          curl -sf -X POST "https://api.telegram.org/bot${TG_TOKEN}/sendMessage" \
             -d chat_id="${TG_CHAT}" --data-urlencode text="$text" -o /dev/null
 
       - name: Telegram alert (failure)
-        if: failure()
+        if: failure() && steps.verify.conclusion != 'failure'
         env:
           TG_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           TG_CHAT: ${{ secrets.TELEGRAM_CHAT_ID }}
         run: |
           text="❌ cssi.ro: publishing FAILED ($(date +%Y-%m-%d)). Log: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
-          curl -s -X POST "https://api.telegram.org/bot${TG_TOKEN}/sendMessage" \
+          curl -sf -X POST "https://api.telegram.org/bot${TG_TOKEN}/sendMessage" \
             -d chat_id="${TG_CHAT}" --data-urlencode text="$text" -o /dev/null
