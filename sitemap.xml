@@ -1027,4 +1027,11 @@
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
+  <!-- adaugat automat de agent 2026-10-03 -->
+  <url>
+    <loc>https://cssi.ro/blog/control-acces-amprenta-card-cod-facial-cum-alegi-brasov</loc>
+    <lastmod>2026-10-03</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
 </urlset>
