@@ -118,13 +118,13 @@ jobs:
         run: |
           for slug in ${{ steps.commit.outputs.articles }}; do
             live=false
-            for i in $(seq 1 30); do
+            for i in $(seq 1 50); do
               code=$(curl -s -o /dev/null -w '%{http_code}' "https://cssi.ro/blog/$slug" || true)
               if [ "$code" = "200" ]; then live=true; break; fi
               sleep 30
             done
             if [ "$live" != true ]; then
-              echo "::error::https://cssi.ro/blog/$slug still returns $code after 15 minutes"
+              echo "::error::https://cssi.ro/blog/$slug still returns $code after 25 minutes"
               exit 1
             fi
             echo "live: https://cssi.ro/blog/$slug"
@@ -136,7 +136,7 @@ jobs:
           TG_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           TG_CHAT: ${{ secrets.TELEGRAM_CHAT_ID }}
         run: |
-          text="❌ cssi.ro: article committed but NOT reachable on the site after 15 min ($(date +%Y-%m-%d)): ${{ steps.commit.outputs.articles }}. Check the deploy. Log: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+          text="❌ cssi.ro: article committed but NOT reachable on the site after 25 min ($(date +%Y-%m-%d)): ${{ steps.commit.outputs.articles }}. Check the deploy. Log: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
           curl -sf -X POST "https://api.telegram.org/bot${TG_TOKEN}/sendMessage" \
             -d chat_id="${TG_CHAT}" --data-urlencode text="$text" -o /dev/null
 
