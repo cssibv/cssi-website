@@ -1034,4 +1034,11 @@
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
+  <!-- adaugat automat de agent 2026-10-04 -->
+  <url>
+    <loc>https://cssi.ro/blog/instalatie-electrica-service-spalatorie-auto-brasov</loc>
+    <lastmod>2026-10-04</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
 </urlset>
