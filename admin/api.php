@@ -253,7 +253,7 @@ function cerereRapidaOraReminder($deLa) {
 
 // Anunță pe telefon o cerere liberă și programează reamintirea pentru cazul în care n-o preia nimeni.
 // Ambele mesaje au id propriu (cerere-N, cerere-N-reminder), ca să poată fi retrase la preluare.
-function cerereRapidaPush($id, $nume, $tel, $tip, $titlu = 'Cerere rapidă nouă') {
+function cerereRapidaPush($id, $nume, $tel, $tip, $titlu = 'Cerere rapidă nouă', $prioritate = 4) {
     $url  = 'https://cssi.ro/admin/cereri-rapide';
     $cine = $nume !== '' ? $nume . ' · ' . $tel : $tel;
     $baza = [
@@ -270,7 +270,7 @@ function cerereRapidaPush($id, $nume, $tel, $tip, $titlu = 'Cerere rapidă nouă
         'title'       => $titlu,
         'message'     => $cine . "\n" . $tip,
         'tags'        => ['telephone_receiver'],
-        'priority'    => 3,   // notificare simplă: intrările sunt notate de mână, nu sunt urgențe
+        'priority'    => $prioritate,   // 4 la cererea nouă, 3 la „din nou liberă”; alarma (5) e doar reamintirea
     ]);
     if ($r[0] !== 200) return $r;   // serverul nu răspunde: nu mai aștepta și a doua oară
     ntfyCall('POST', '/', $baza + [
@@ -7314,7 +7314,7 @@ p { margin: 0; }
                 $db->prepare("UPDATE cereri_rapide SET status = 'Nou', preluat_de = NULL, preluat_la = NULL, finalizat_la = NULL, updated_at = ? WHERE id = ?")
                    ->execute([$now, $id]);
                 cerereRapidaAddDetaliu($db, $id, 'A renunțat, e din nou liber', 1);
-                cerereRapidaPush($id, $row['nume'], $row['telefon'], $row['tip'], 'Cerere din nou liberă');
+                cerereRapidaPush($id, $row['nume'], $row['telefon'], $row['tip'], 'Cerere din nou liberă', 3);
             } else {
                 $preluatDe = $holder !== '' ? $holder : $meName;
                 $preluatLa = $row['preluat_la'] ? $row['preluat_la'] : $now;
