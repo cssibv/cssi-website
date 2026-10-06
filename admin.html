@@ -382,6 +382,7 @@ a{text-decoration:none;color:inherit;}button{font-family:inherit;cursor:pointer;
 <div class="modal">
     <div class="modal-head"><div class="modal-title">➕ Proiect Nou</div><button class="modal-close" onclick="closeModal()">✕</button></div>
     <div class="modal-body">
+        <div id="punteHint" style="display:none;margin-bottom:14px;padding:10px 12px;border-radius:10px;background:#f0fdf4;border:1px solid #bbf7d0;color:#166534;font-size:12px;font-weight:700"></div>
         <form id="addProjectForm" onsubmit="addProject(event)">
             <div class="form-group"><label class="form-label">Client <span class="req">*</span></label><input type="text" class="form-input" name="client" required placeholder="Numele clientului"></div>
             <div class="form-row">
@@ -491,6 +492,7 @@ a{text-decoration:none;color:inherit;}button{font-family:inherit;cursor:pointer;
 </div>
 </div>
 
+<script src="/admin/cerere-punte.js?v=1"></script>
 <script>
 // ═══════ AUTH — server-side via /admin/api.php ═══════
 // (parolele sunt verificate cu bcrypt în PHP; HTML-ul nu mai conține hash-uri)
@@ -1153,14 +1155,39 @@ function renderModules(){
 
 // ═══════ ADD PROJECT MODAL ═══════
 function openModal(){document.getElementById('addProjectModal').classList.add('active')}
-function closeModal(){document.getElementById('addProjectModal').classList.remove('active')}
+function closeModal(){
+    document.getElementById('addProjectModal').classList.remove('active');
+    if(PUNTE_CERERE){PUNTE_CERERE=null;document.getElementById('addProjectForm').reset();punteHint('');}
+}
+// ═══════ PUNTE: Cereri rapide → Proiect Nou (vezi /admin/cerere-punte.js) ═══════
+var PUNTE_CERERE=null;
+function punteHint(txt){
+    var h=document.getElementById('punteHint');if(!h)return;
+    h.textContent=txt;h.style.display=txt?'':'none';
+}
+function punteOferta(){
+    if(!window.cssiCererePunte)return;
+    cssiCererePunte().then(function(c){
+        if(!c)return;
+        PUNTE_CERERE=c;
+        var f=document.getElementById('addProjectForm');f.reset();
+        // Client existent după telefon → același nume, ca proiectul să se lege de el
+        f.elements.client.value=c.client?(c.client.nume||''):c.nume;
+        f.elements.telefon.value=c.telefon;
+        f.elements.status.value='Ofertă';
+        f.elements.serviciu.value=cssiCerereServiciu(c.tip+' '+c.detalii);
+        f.elements.note.value=[cssiCerereFaraTip(c.tip),c.detalii].filter(Boolean).join('\n');
+        punteHint('Din cererea rapidă: '+(c.nume||c.telefon)+(c.client?' · client existent: '+c.client.nume:' · client nou'));
+        openModal();
+    });
+}
 function addProject(e){
     e.preventDefault();var f=document.getElementById('addProjectForm');var d=new FormData(f);
     var btn=f.querySelector('button[type=submit]');btn.disabled=true;btn.textContent='⏳ Se creează...';
     var clientName=d.get('client');var telefon=d.get('telefon')||'';var email=d.get('email')||'';
     var servUI=d.get('serviciu');var statusUI=d.get('status');
     var servDB=SERV_UI_TO_DB[servUI]||servUI;var statusDB=STAT_UI_TO_DB[statusUI]||statusUI;
-    var locatie=d.get('locatie')||'Brașov';var valoare=parseInt(d.get('valoare'))||0;var note=d.get('note')||'';
+    var locatie=d.get('locatie')||'';var valoare=parseInt(d.get('valoare'))||0;var note=d.get('note')||'';
     // 1. Creează client
     fetch(API_DB+'?action=createClient',{method:'POST',headers:{'Content-Type':'application/json'},
         body:JSON.stringify({action:'createClient',nume:clientName,telefon:telefon,email:email,oras:locatie})
@@ -1173,8 +1200,10 @@ function addProject(e){
         });
     }).then(function(r){return r.json()}).then(function(pRes){
         if(!pRes.success){throw new Error(pRes.error||'Eroare creare proiect');}
+        var pc=PUNTE_CERERE;PUNTE_CERERE=null;punteHint('');
         btn.disabled=false;btn.textContent='Creează Proiect';closeModal();f.reset();
         toast('✅ Proiect '+pRes.proiect_id+' creat cu succes!','success');
+        if(pc) cssiCererePunteGata(pc.id,'A creat proiectul '+pRes.proiect_id+' ('+statusUI+')');
         loadProjectsFromDB();
     }).catch(function(err){
         btn.disabled=false;btn.textContent='Creează Proiect';
@@ -1364,6 +1393,7 @@ function bootDashboard(){
         if(!ROLES[role]){ showLogin(); return; }
         showDashShell();
         bootLoaders();
+        punteOferta();
     }).catch(function(){showLogin();});
 }
 document.addEventListener('DOMContentLoaded',bootDashboard);

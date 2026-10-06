@@ -141,6 +141,13 @@ textarea.input{resize:vertical;min-height:84px;line-height:1.4;font-weight:500;f
 .btn.soft{background:var(--gray-bg);color:var(--dark2);}
 .btn.block{width:100%;padding:16px;font-size:17px;border-radius:14px;}
 .btn:disabled{opacity:0.6;}
+/* Puntea spre CRM, pe cererea preluată */
+.punte{display:flex;gap:8px;margin-top:12px;}
+.punte .btn{flex:1;padding:14px 10px;font-size:15px;color:#fff;}
+.pt-of{background:#166534;}
+.pt-of:active{background:#14532d;}
+.pt-in{background:#c2410c;}
+.pt-in:active{background:#9a3412;}
 
 .msg{display:none;padding:10px 14px;border-radius:12px;font-size:14px;font-weight:600;margin-bottom:10px;}
 .msg.ok{display:block;background:#dcfce7;color:#166534;}
@@ -312,6 +319,7 @@ textarea.input{resize:vertical;min-height:84px;line-height:1.4;font-weight:500;f
 <input class="vh" id="fAtas" type="file" accept="image/*,.pdf,.doc,.docx,.xls,.xlsx,.csv,application/pdf" multiple>
 <div class="lb hidden" id="lb"><button type="button" class="lb-x" aria-label="Închide">✕</button><img id="lbImg" alt=""></div>
 
+<script src="/admin/cerere-punte.js?v=1"></script>
 <script>
 var API = '/admin/api.php';
 var KEY_DRAFT = 'cssi-cereri-rapide-draft';
@@ -323,7 +331,7 @@ var filter = 'active';
 var menuId = 0;      // intrarea al cărei meniu de status e deschis
 var expIds = {};     // cererea extinsă (una singură; restul stau restrânse)
 var openIds = {};     // intrările desfăcute rămân desfăcute la reîncărcarea listei
-var SUGESTII = ['Ofertă', 'Intervenție', 'Mentenanță', 'Informații', 'Reclamație'];
+var SUGESTII = ['Ofertă', 'Intervenție'];
 var STATUS = {
     'Nou':        {cls:'s-nou'},
     'Preluat':    {cls:'s-preluat'},
@@ -396,6 +404,8 @@ function checkAccess(){
         .then(function(res){
             if (!res.success || !res.user) { showLogin(); return; }
             USER = res.user;
+            // Paginile din portal (CRM, dashboard) cer rolul în sessionStorage; fără el puntea spre CRM ar ajunge la login
+            try { sessionStorage.setItem('cssi-role', USER.username); sessionStorage.setItem('cssi-user', USER.display_name || USER.username); } catch(e){}
             $('who').textContent = USER.display_name || USER.username;
             show('loginCard', false);
             return call('getCereriRapide').then(function(lr){
@@ -674,6 +684,14 @@ function renderList(){
             if (potOferta && oferte.length < 10) h += '<button type="button" class="of-add" data-oferta="1">' + ICO_UP + (oferte.length ? 'Adaugă altă ofertă (PDF)' : 'Atașează oferta (PDF)') + '</button>';
             h += '</div>';
         }
+        // Puntea spre CRM: după preluare, cererea devine proiect pe Ofertă sau intervenție în calendar
+        if (l.can_act && (l.status === 'Preluat' || l.status === 'In progres')) {
+            var fel = cssiCerereTip(l.tip);
+            h += '<div class="punte">';
+            if (fel !== 'interventie') h += '<button type="button" class="btn pt-of" data-punte="oferta">Creează ofertă</button>';
+            if (fel !== 'oferta') h += '<button type="button" class="btn pt-in" data-punte="interventie">Creează intervenție</button>';
+            h += '</div>';
+        }
         if (l.can_act && l.status === 'Nou') h += '<button type="button" class="btn primary take" data-st="Preluat">Preia</button>';
         if (l.telefon) {
             h += '<div class="contact">';
@@ -736,6 +754,7 @@ $('list').addEventListener('click', function(e){
         if (confirm('Sigur vrei să ștergi ' + ce + '?')) act('deleteCerereRapidaFisier', {id:+b.dataset.delat}, b);
         return;
     }
+    if (b.dataset.punte) { var cer = CERERI.filter(function(l){ return l.id === id; })[0]; if (cer) cssiCererePunteGo(cer, b.dataset.punte); return; }
     if (b.dataset.oferta) { ofertaId = id; $('fOferta').click(); return; }
     if (b.dataset.delof) { if (confirm('Sigur vrei să ștergi oferta „' + (b.dataset.nume || '') + '”?')) act('deleteCerereRapidaFisier', {id:+b.dataset.delof}, b); return; }
     if (b.dataset.foto) { $('lbImg').src = fotoUrl(b.dataset.foto); show('lb', true); return; }

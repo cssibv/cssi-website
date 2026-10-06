@@ -314,6 +314,7 @@ tr:hover td{background:rgba(59,130,246,0.03);}
 }
 </style>
 <script src="/admin/access-guard.js" defer></script>
+<script src="/admin/cerere-punte.js?v=1"></script>
 <link rel="stylesheet" href="/admin/portal.css?v=2">
 </head>
 <body data-module="crm">
@@ -375,6 +376,7 @@ tr:hover td{background:rgba(59,130,246,0.03);}
 <div class="modal">
     <div class="modal-head"><div class="modal-title">⚡ Intervenție nouă</div><button class="modal-close" onclick="xcCloseAdd()">✕</button></div>
     <div class="modal-body">
+        <div id="xcPunteHint" style="display:none;margin-bottom:14px;padding:10px 12px;border-radius:10px;background:#fff7ed;border:1px solid #fed7aa;color:#9a3412;font-size:12px;font-weight:700"></div>
         <form onsubmit="xcSubmitAdd(event)">
             <div class="form-group">
                 <label class="form-label">Client <span class="req">*</span></label>
@@ -2096,7 +2098,9 @@ function xcOpenAdd(presetYmd){
             var sel = document.getElementById('xcCli');
             var opts = (res.data||[]).slice().sort(function(a,b){return String(a.nume||'').localeCompare(String(b.nume||''),'ro');})
                 .map(function(c){ return '<option value="'+c.id+'">'+esc(c.nume)+(c.telefon?' · '+esc(c.telefon):'')+'</option>'; }).join('');
+            var cur = sel.value;
             sel.innerHTML = '<option value="">Alege client existent</option><option value="__nou">➕ Client nou</option>'+opts;
+            sel.value = cur;
         }).catch(function(){});
     }
     var r = xcRange(), today = new Date();
@@ -2104,7 +2108,41 @@ function xcOpenAdd(presetYmd){
     document.getElementById('xcData').value = (typeof presetYmd === 'string' && presetYmd) ? presetYmd : xcYmd(def);
     document.getElementById('xcAddModal').classList.add('active');
 }
-function xcCloseAdd(){ document.getElementById('xcAddModal').classList.remove('active'); }
+function xcCloseAdd(){
+    document.getElementById('xcAddModal').classList.remove('active');
+    if (XC_PUNTE) { XC_PUNTE = null; xcPunteHint(''); document.querySelector('#xcAddModal form').reset(); xcCliChange(); }
+}
+// ═══════ PUNTE: Cereri rapide → Intervenție nouă (vezi /admin/cerere-punte.js) ═══════
+var XC_PUNTE = null;
+function xcPunteHint(txt){
+    var h = document.getElementById('xcPunteHint'); if (!h) return;
+    h.textContent = txt; h.style.display = txt ? '' : 'none';
+}
+function xcPunteInterventie(){
+    if (!window.cssiCererePunte) return;
+    cssiCererePunte().then(function(c){
+        if (!c) return;
+        setFilter('s-negociere');
+        xcOpenAdd();
+        XC_PUNTE = c;
+        var sel = document.getElementById('xcCli');
+        if (c.client) {
+            // Lista de clienți se poate încărca după noi: opțiunea există deja, iar xcOpenAdd păstrează selecția
+            if (!sel.querySelector('option[value="'+c.client.id+'"]')) sel.appendChild(new Option(c.client.nume + (c.client.telefon ? ' · ' + c.client.telefon : ''), c.client.id));
+            sel.value = String(c.client.id);
+        } else {
+            sel.value = '__nou';
+            document.getElementById('xcCliNume').value = c.nume;
+            document.getElementById('xcCliTel').value = c.telefon;
+        }
+        xcCliChange();
+        document.getElementById('xcTitlu').value = cssiCerereFaraTip(c.tip);
+        document.getElementById('xcNote').value = c.detalii;
+        var serv = SERV_UI_TO_DB[cssiCerereServiciu(c.tip + ' ' + c.detalii)];
+        if (serv) document.getElementById('xcServ').value = serv;
+        xcPunteHint('Din cererea rapidă: ' + (c.nume || c.telefon) + (c.client ? ' · client existent: ' + c.client.nume : ' · client nou'));
+    });
+}
 function xcCliChange(){
     document.getElementById('xcCliNou').style.display = document.getElementById('xcCli').value === '__nou' ? '' : 'none';
 }
@@ -2154,8 +2192,10 @@ function xcCreateInterventie(payload, form, isNou, btn, orig){
         .then(function(res){
             btn.disabled = false; btn.textContent = orig;
             if (!res.success) throw new Error(res.error||'Eroare');
+            var pc = XC_PUNTE; XC_PUNTE = null; xcPunteHint('');
             xcCloseAdd();
             form.reset(); xcCliChange();
+            if (pc) cssiCererePunteGata(pc.id, 'A creat intervenția ' + (res.proiect_id||'') + ', programată pe ' + payload.data.split('-').reverse().join('.'));
             if (isNou) XC.clientiLoaded = false;
             toast('⚡ Intervenție creată: '+(res.proiect_id||''),'success');
             XC.intSet = null; XC.loaded = false;
@@ -2426,6 +2466,7 @@ fetch(API_DB + '?action=me', {credentials:'include'})
 populateServiceSelects();
 render();
 refreshData();
+xcPunteInterventie();
 </script>
 <script>
 if('serviceWorker' in navigator){navigator.serviceWorker.register('../sw.js').then(function(r){console.log('[PWA] SW registered, scope:',r.scope)}).catch(function(e){console.log('[PWA] SW failed:',e)});var __reloaded=false;navigator.serviceWorker.addEventListener('controllerchange',function(){if(__reloaded)return;__reloaded=true;window.location.reload();});}

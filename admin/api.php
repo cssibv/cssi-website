@@ -2218,7 +2218,7 @@ try {
 
             $year = date('Y');
             $proiectId = nextId('proiect_seq', "CSSI-$year-", 4);
-            $istoric = json_encode([['status' => 'Lead', 'data' => date('Y-m-d H:i:s'), 'user' => (isset($data['responsabil']) ? $data['responsabil'] : 'Admin')]]);
+            $istoric = json_encode([['status' => (isset($data['status']) ? $data['status'] : 'Lead'), 'data' => date('Y-m-d H:i:s'), 'user' => (isset($data['responsabil']) ? $data['responsabil'] : 'Admin')]]);
             
             $stmt = $db->prepare("INSERT INTO proiecte (proiect_id, client_id, serviciu, obiectiv, status, valoare_estimata, responsabil, adresa_obiectiv, note, istoric_status) VALUES (?,?,?,?,?,?,?,?,?,?)");
             $stmt->execute([
