@@ -1055,4 +1055,11 @@
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
+  <!-- adaugat automat de agent 2026-10-07 -->
+  <url>
+    <loc>https://cssi.ro/blog/senzori-alarma-tipuri-unde-ii-montezi-brasov</loc>
+    <lastmod>2026-10-07</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
 </urlset>
