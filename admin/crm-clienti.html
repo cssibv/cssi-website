@@ -862,11 +862,13 @@ function renderCards() {
     filtered.forEach(function(l) {
         var st = STATUS_MAP[l.status] || {cls: '', icon: '❓'};
         var tag = SERVICE_TAGS[l.serviciu] || {cls: 'install', s: l.serviciu};
-        var statusOpts = CRM_STATUSES.map(function(s) {
+        // Intervențiile nu au etapă în pipeline: apar doar la „Toate”, cu eticheta lor
+        var isInterv = l.status === 'Interventie';
+        var statusOpts = (isInterv ? '<option selected disabled>⚡ Intervenție</option>' : '') + CRM_STATUSES.map(function(s) {
             return '<option value="' + s.name + '"' + (l.status === s.name ? ' selected' : '') + '>' + s.icon + ' ' + s.name + '</option>';
         }).join('');
 
-        html += '<div class="card ' + st.cls + '" ondblclick="openDetailModal(' + l.id + ')">';
+        html += '<div class="card ' + st.cls + '"' + (isInterv ? ' style="border-left-color:var(--orange)"' : '') + ' ondblclick="openDetailModal(' + l.id + ')">';
         html += '<div class="card-top"><div class="card-name">' + esc(l.nume) + '</div><div style="display:flex;align-items:center;gap:4px"><span class="card-date">' + l.data + '</span>';
         if (canEdit) html += '<button class="btn-edit" title="Editează client & proiect" onclick="event.stopPropagation();openEditModal(' + l.id + ')">✏️</button>';
         html += '</div></div>';
@@ -877,6 +879,7 @@ function renderCards() {
         html += '</div>';
         html += '<div class="card-tags">';
         html += '<span class="card-tag ' + tag.cls + '">' + tag.s + '</span>';
+        if (isInterv) html += '<span class="card-tag" style="background:#fff7ed;color:#9a3412">⚡ Intervenție</span>';
         if (l.sursa) html += '<span class="card-sursa">' + getSursaIcon(l.sursa) + ' ' + l.sursa + '</span>';
         if (l.valoare) html += '<span class="card-valoare">' + formatRON(l.valoare) + '</span>';
         html += '</div>';
@@ -901,6 +904,7 @@ function renderCards() {
         html += '<button class="btn-offer new" onclick="goOfertare('+l.id+')">📄 Ofertă nouă</button>';
         html += '<button class="btn-offer list" onclick="showOferte('+l.id+')">📋 Oferte</button>';
         if(l.clientDbId) html += '<button class="btn-offer list" style="background:#faf5ff;color:var(--purple);border-color:var(--purple)" onclick="openClientFull('+l.clientDbId+')">📊 Istoric complet</button>';
+        if (isInterv) html += '<button class="btn-offer list" style="background:#fff;color:var(--red);border-color:var(--red)" onclick="event.stopPropagation();xcDeleteInterv('+l.id+')">🗑️ Șterge intervenția</button>';
         html += '</div>';
         html += '</div>';
     });
@@ -1531,6 +1535,7 @@ function xcLoad(){
                 note: pg.note || '',
                 prioritate: pg.prioritate || '',
                 echipa: (pg.atribuiri||[]).map(xcTechName),
+                canDel: !isRep && p.proiect_status === 'Interventie',
                 raw: isRep ? null : pg   // valorile originale, retrimise la marcarea „Terminat”
             };
             XC.items.push(it); XC.byId[it.id] = it;
@@ -1547,7 +1552,8 @@ function xcLoad(){
                 key: 'p' + p.proiect_db_id, proiectDbId: p.proiect_db_id, isInt: isInt, isRep: false,
                 client: p.client_nume || '', tel: p.client_telefon || '', adresa: p.adresa_obiectiv || '',
                 serviciu: SERV_DB_TO_UI[p.serviciu] || p.serviciu || '', cod: p.proiect_id || '',
-                obiectiv: p.obiectiv || '', days: days, echipa: Object.keys(ech), state: xcProjState(days)
+                obiectiv: p.obiectiv || '', days: days, echipa: Object.keys(ech), state: xcProjState(days),
+                canDel: p.proiect_status === 'Interventie'
             };
         }
         var ORD = {inceput:0, neinceput:1, neprogramat:2, terminat:3};
@@ -1797,6 +1803,7 @@ function xcOpenProj(key){
     if (p.state === 'terminat' && !p.isRep) h += '<button class="form-submit" style="margin-top:8px;background:#fff;color:var(--gray);border:1px solid var(--gray-b)" onclick="xcCloseEv();xcMarkDone(\''+esc(p.key)+'\',false)">↺ Redeschide (nu e terminat)</button>';
     if (p.proiectDbId) h += '<a class="form-submit" style="display:block;text-align:center;margin-top:8px" href="executie-proiect.html?id='+encodeURIComponent(p.proiectDbId)+'">Deschide lucrarea →</a>';
     else if (p.isRep) h += '<a class="form-submit" style="display:block;text-align:center;margin-top:8px" href="interventii.html">Deschide în Intervenții →</a>';
+    if (p.canDel) h += xcDelBtn(p.proiectDbId);
     if (p.proiectDbId) h += xcNotesHtml(p.proiectDbId);
     document.getElementById('xcEvBody').innerHTML = h;
     document.getElementById('xcEvModal').classList.add('active');
@@ -2044,12 +2051,37 @@ function xcOpenEv(id){
     if (i.raw) h += '<button class="form-submit" style="margin-top:14px;background:var(--teal)" onclick="xcCloseEv();xcEditDay(\''+esc(i.id)+'\')">✏️ Modifică ziua (dată, oră, echipă)</button>';
     if (i.proiectDbId) h += '<a class="form-submit" style="display:block;text-align:center;margin-top:8px" href="executie-proiect.html?id='+encodeURIComponent(i.proiectDbId)+'">Deschide lucrarea →</a>';
     else if (i.isRep) h += '<a class="form-submit" style="display:block;text-align:center;margin-top:14px" href="interventii.html">Deschide în Intervenții →</a>';
+    if (i.canDel) h += xcDelBtn(i.proiectDbId);
     if (i.proiectDbId) h += xcNotesHtml(i.proiectDbId);
     document.getElementById('xcEvBody').innerHTML = h;
     document.getElementById('xcEvModal').classList.add('active');
     if (i.proiectDbId) xcNotesLoad(i.proiectDbId);
 }
 function xcCloseEv(){ document.getElementById('xcEvModal').classList.remove('active'); }
+
+// Ștergerea unei intervenții (din calendar sau de pe cardul din „Toate”): dispare cu tot cu
+// zilele programate, deci și din calendar. Clientul rămâne.
+function xcDelBtn(dbId){
+    return '<button type="button" class="form-submit" style="margin-top:8px;background:#fff;color:var(--red);border:1px solid var(--red)" onclick="xcDeleteInterv('+parseInt(dbId,10)+')">🗑️ Șterge intervenția</button>';
+}
+function xcDeleteInterv(dbId){
+    var l = LEADS.find(function(x){ return x.id == dbId; }) || {};
+    var p = XC.projByKey['p' + dbId] || {};
+    var nume = l.nume || p.client || '', cod = l.proiectId || p.cod || '';
+    if (!confirm('Ștergi definitiv intervenția' + (nume ? ' „' + nume + '”' : '') + (cod ? ' (' + cod + ')' : '') + '?\n\nDispare din „Toate” și din calendarul de execuție, cu zilele programate și notițele ei. Clientul rămâne.')) return;
+    showLoading(true);
+    fetch(API_DB+'?action=deleteInterventie',{method:'POST',credentials:'include',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'deleteInterventie',id:dbId})})
+        .then(function(r){ return r.json(); })
+        .then(function(res){
+            showLoading(false);
+            if (!res.success) throw new Error(res.error || 'Eroare');
+            xcCloseEv();
+            toast('🗑️ Intervenție ștearsă','success');
+            XC.intSet = null; XC.loaded = false;
+            refreshData();
+        })
+        .catch(function(e){ showLoading(false); toast('❌ '+(e.message||e),'error'); });
+}
 
 // Modificarea unei zile deja programate: dată, oră, durată, echipă.
 // Statusul, descrierea și notele zilei rămân cum erau (saveProgramare suprascrie tot rândul).

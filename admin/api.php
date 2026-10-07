@@ -2267,6 +2267,20 @@ try {
             if (!$titlu)              jsonResponse(['success' => false, 'error' => 'Titlu obligatoriu'], 400);
             if (!$clientId && !$clientNume) jsonResponse(['success' => false, 'error' => 'Client obligatoriu (existent sau nume nou)'], 400);
 
+            // Tabelele se asigură ÎNAINTE de tranzacție: CREATE TABLE face commit implicit în MySQL,
+            // iar commit()-ul de la final arunca „There is no active transaction” deși datele erau scrise.
+            $db->exec("CREATE TABLE IF NOT EXISTS executie_programari (
+                id INT PRIMARY KEY AUTO_INCREMENT, proiect_id INT NOT NULL,
+                data_programata DATE NOT NULL, ora_start TIME DEFAULT '08:00:00',
+                durata_ore DECIMAL(4,1) DEFAULT 8, status VARCHAR(20) DEFAULT 'Programat',
+                obiectiv TEXT, note TEXT, created_by VARCHAR(60),
+                created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+                KEY idx_data (data_programata), KEY idx_proiect (proiect_id), KEY idx_status (status)
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4");
+            $db->exec("CREATE TABLE IF NOT EXISTS executie_atribuiri (
+                programare_id INT NOT NULL, user_id VARCHAR(60) NOT NULL,
+                PRIMARY KEY (programare_id, user_id), KEY idx_user (user_id)
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4");
             $db->beginTransaction();
             try {
                 // 1. Creeaza client daca e ad-hoc
@@ -2296,19 +2310,6 @@ try {
                 foreach (['executie','receptie','facturi'] as $sub) { @mkdir($projDir . $sub, 0755, true); }
                 // 3. Creeaza programare in executie_programari (acelasi tabel folosit
                 //    de saveProgramare din planificare/executie pages)
-                // Asigur tabela exista (idempotent — la fel ca saveProgramare)
-                $db->exec("CREATE TABLE IF NOT EXISTS executie_programari (
-                    id INT PRIMARY KEY AUTO_INCREMENT, proiect_id INT NOT NULL,
-                    data_programata DATE NOT NULL, ora_start TIME DEFAULT '08:00:00',
-                    durata_ore DECIMAL(4,1) DEFAULT 8, status VARCHAR(20) DEFAULT 'Programat',
-                    obiectiv TEXT, note TEXT, created_by VARCHAR(60),
-                    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-                    KEY idx_data (data_programata), KEY idx_proiect (proiect_id), KEY idx_status (status)
-                ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4");
-                $db->exec("CREATE TABLE IF NOT EXISTS executie_atribuiri (
-                    programare_id INT NOT NULL, user_id VARCHAR(60) NOT NULL,
-                    PRIMARY KEY (programare_id, user_id), KEY idx_user (user_id)
-                ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4");
                 // Programarea se creează DOAR dacă există o dată. Fără dată =
                 // intervenție „de programat" (apare în listă, nu în calendar).
                 $prgId = null;
@@ -2325,7 +2326,7 @@ try {
                 $db->commit();
                 jsonResponse(['success' => true, 'proiect_id' => $proiectIdCod, 'proiect_db_id' => $proiectIdDb, 'programare_id' => $prgId, 'client_id' => $clientId]);
             } catch (Exception $e) {
-                $db->rollBack();
+                if ($db->inTransaction()) $db->rollBack();
                 jsonResponse(['success' => false, 'error' => $e->getMessage()], 500);
             }
             break;
@@ -2809,6 +2810,14 @@ try {
             if (isTehnician() && !isAdmin()) { jsonResponse(['success' => false, 'error' => 'Nu ai dreptul să ștergi intervenții'], 403); break; }
             $id = isset($data['id']) ? intval($data['id']) : 0;
             if (!$id) { jsonResponse(['success' => false, 'error' => 'ID obligatoriu'], 400); break; }
+            // Doar intervenții: un proiect aflat într-o etapă din pipeline nu se șterge pe aici.
+            $stmtSt = $db->prepare("SELECT status FROM proiecte WHERE id = ?");
+            $stmtSt->execute([$id]);
+            $stRow = $stmtSt->fetch();
+            if (!$stRow) { jsonResponse(['success' => false, 'error' => 'Intervenția nu mai există'], 404); break; }
+            if (in_array($stRow['status'], ['Lead','Oferta','Contract','Proiectare','Executie','Receptie','Facturat','Mentenanta'], true)) {
+                jsonResponse(['success' => false, 'error' => 'Nu e o intervenție, e un proiect din pipeline (' . $stRow['status'] . ')'], 409); break;
+            }
             try {
                 $db->beginTransaction();
                 // Atribuiri (prin programările proiectului)
@@ -2821,6 +2830,7 @@ try {
                 }
                 $db->prepare("DELETE FROM executie_programari WHERE proiect_id = ?")->execute([$id]);
                 try { $db->prepare("DELETE FROM interventii_pv WHERE proiect_id = ?")->execute([$id]); } catch (Exception $e) {}
+                try { $db->prepare("DELETE FROM executie_jurnal WHERE proiect_id = ?")->execute([$id]); } catch (Exception $e) {}
                 try { $db->prepare("DELETE FROM proiectare WHERE proiect_id = ?")->execute([$id]); } catch (Exception $e) {}
                 try { $db->prepare("DELETE FROM jurnal_teren WHERE proiect_id = ?")->execute([$id]); } catch (Exception $e) {}
                 $stmtCod = $db->prepare("SELECT proiect_id FROM proiecte WHERE id = ?");
