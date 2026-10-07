@@ -392,13 +392,21 @@ a{text-decoration:none;color:inherit;}button{font-family:inherit;cursor:pointer;
             <div class="form-group"><label class="form-label">Serviciu <span class="req">*</span></label>
                 <select class="form-select" name="serviciu" required>
                     <option value="">Alege serviciul</option>
-                    <option value="Detecție Incendiu">🔥 Detecție Incendiu</option>
-                    <option value="Alarmă Antiefracție">🚨 Alarmă Antiefracție</option>
                     <option value="Supraveghere Video">📹 Supraveghere Video</option>
+                    <option value="Alarmă Antiefracție">🚨 Alarmă Antiefracție</option>
+                    <option value="Detecție Incendiu">🔥 Detecție Incendiu</option>
+                    <option value="Control Acces">🔐 Control Acces</option>
                     <option value="Videointerfonie">📞 Videointerfonie</option>
-                    <option value="Instalații Electrice">⚡ Instalații Electrice</option>
-                    <option value="Instalații Sanitare">🔧 Instalații Sanitare</option>
                     <option value="Automatizări Porți">🚪 Automatizări Porți</option>
+                    <option value="Uși Garaj">🏚️ Uși Garaj</option>
+                    <option value="Bariere Auto / Parcări">🚧 Bariere Auto / Parcări</option>
+                    <option value="Instalații Electrice">⚡ Instalații Electrice</option>
+                    <option value="Instalații Termice-Sanitare">🔧 Instalații Termice-Sanitare</option>
+                    <option value="Aer Condiționat">❄️ Aer Condiționat</option>
+                    <option value="Ventilație">💨 Ventilație</option>
+                    <option value="Sonorizare">🔊 Sonorizare</option>
+                    <option value="Pontaj Electronic">⏱️ Pontaj Electronic</option>
+                    <option value="Securitate Industrială">🏭 Securitate Industrială</option>
                     <option value="Proiect Complex">📐 Proiect Complex (multiple)</option>
                 </select>
             </div>
@@ -545,7 +553,7 @@ var STATUSES=[
     {id:"facturat",name:"Facturat",icon:"💳",cls:"facturat"},{id:"mentenanta",name:"Mentenanță",icon:"🔄",cls:"mentenanta"},
     {id:"finalizat",name:"Finalizate",icon:"🏁",cls:"finalizat"}
 ];
-var SERVICE_TAGS={"Detecție Incendiu":{cls:"incendiu",s:"Incendiu"},"Alarmă Antiefracție":{cls:"alarm",s:"Alarmă"},"Supraveghere Video":{cls:"camera",s:"Camere"},"Videointerfonie":{cls:"camera",s:"Interfon"},"Instalații Electrice":{cls:"electric",s:"Electric"},"Instalații Sanitare":{cls:"install",s:"Sanitare"},"Automatizări Porți":{cls:"auto",s:"Porți"},"Proiect Complex":{cls:"incendiu",s:"Complex"}};
+var SERVICE_TAGS={"Detecție Incendiu":{cls:"incendiu",s:"Incendiu"},"Alarmă Antiefracție":{cls:"alarm",s:"Alarmă"},"Supraveghere Video":{cls:"camera",s:"Camere"},"Videointerfonie":{cls:"camera",s:"Interfon"},"Instalații Electrice":{cls:"electric",s:"Electric"},"Instalații Sanitare":{cls:"install",s:"Sanitare"},"Instalații Termice-Sanitare":{cls:"install",s:"Sanitare"},"Automatizări Porți":{cls:"auto",s:"Porți"},"Proiect Complex":{cls:"incendiu",s:"Complex"}};
 
 // ═══════ ALL 14 MODULES (Reclamații unificat în Intervenții & Reparații) ═══════
 var MODULES=[
@@ -570,8 +578,8 @@ var MODULES=[
 var API_DB='/admin/api.php';
 
 // Mapping UI (diacritice) → DB (ENUM fără diacritice)
-var SERV_UI_TO_DB={"Detecție Incendiu":"Detectie Incendiu","Alarmă Antiefracție":"Alarma","Supraveghere Video":"Supraveghere Video","Videointerfonie":"Videointerfonie","Instalații Electrice":"Electric","Instalații Sanitare":"Electric","Automatizări Porți":"Automatizari","Proiect Complex":"Complex","Control Acces":"Control Acces","Rețelistică":"Retelistică"};
-var SERV_DB_TO_UI={"Detectie Incendiu":"Detecție Incendiu","Alarma":"Alarmă Antiefracție","Supraveghere Video":"Supraveghere Video","Videointerfonie":"Videointerfonie","Electric":"Instalații Electrice","Automatizari":"Automatizări Porți","Complex":"Proiect Complex","Control Acces":"Control Acces","Retelistică":"Rețelistică"};
+var SERV_UI_TO_DB={"Detecție Incendiu":"Detectie Incendiu","Alarmă Antiefracție":"Alarma","Supraveghere Video":"Supraveghere Video","Videointerfonie":"Videointerfonie","Instalații Electrice":"Electric","Instalații Sanitare":"Sanitare","Instalații Termice-Sanitare":"Sanitare","Automatizări Porți":"Automatizari","Proiect Complex":"Complex","Control Acces":"Control Acces","Rețelistică":"Retelistică","Uși Garaj":"Usi Garaj","Bariere Auto / Parcări":"Bariere Auto","Aer Condiționat":"Aer Conditionat","Ventilație":"Ventilatie","Sonorizare":"Sonorizare","Pontaj Electronic":"Pontaj Electronic","Securitate Industrială":"Securitate Industriala"};
+var SERV_DB_TO_UI={"Detectie Incendiu":"Detecție Incendiu","Alarma":"Alarmă Antiefracție","Supraveghere Video":"Supraveghere Video","Videointerfonie":"Videointerfonie","Electric":"Instalații Electrice","Automatizari":"Automatizări Porți","Complex":"Proiect Complex","Control Acces":"Control Acces","Retelistică":"Rețelistică","Sanitare":"Instalații Termice-Sanitare","Usi Garaj":"Uși Garaj","Bariere Auto":"Bariere Auto / Parcări","Aer Conditionat":"Aer Condiționat","Ventilatie":"Ventilație","Sonorizare":"Sonorizare","Pontaj Electronic":"Pontaj Electronic","Securitate Industriala":"Securitate Industrială"};
 var STAT_UI_TO_DB={"Lead":"Lead","Ofertă":"Oferta","Contract":"Contract","Proiectare":"Proiectare","Execuție":"Executie","Intervenție":"Interventie","Recepție":"Receptie","Facturat":"Facturat","Mentenanță":"Mentenanta","Finalizat":"Finalizat","Anulat":"Anulat"};
 var STAT_DB_TO_UI={"Lead":"Lead","Oferta":"Ofertă","Contract":"Contract","Proiectare":"Proiectare","Executie":"Execuție","Interventie":"Intervenție","Receptie":"Recepție","Facturat":"Facturat","Mentenanta":"Mentenanță","Finalizat":"Finalizat","Anulat":"Anulat"};
 
