@@ -2155,7 +2155,7 @@ try {
                 if ($proiectIds) {
                     $ph = implode(',', array_fill(0, count($proiectIds), '?'));
                     $stmtO = $db->prepare("SELECT proiect_id, status, total_cu_tva FROM oferte WHERE proiect_id IN ($ph)");
-                    $stmtO->execute($proiectIds);
+                    $stmtO->execute(array_values($proiectIds));
                     foreach ($stmtO->fetchAll() as $o) {
                         $pid = $o['proiect_id'];
                         if (!isset($ofData['by_proiect'][$pid])) $ofData['by_proiect'][$pid] = ['acc'=>0,'pip'=>0,'max'=>0];
@@ -2168,7 +2168,7 @@ try {
                 if ($clientIds) {
                     $ph = implode(',', array_fill(0, count($clientIds), '?'));
                     $stmtO = $db->prepare("SELECT client_id, status, total_cu_tva FROM oferte WHERE client_id IN ($ph) AND proiect_id IS NULL");
-                    $stmtO->execute($clientIds);
+                    $stmtO->execute(array_values($clientIds));
                     foreach ($stmtO->fetchAll() as $o) {
                         $cid = $o['client_id'];
                         if (!isset($ofData['by_client'][$cid])) $ofData['by_client'][$cid] = ['acc'=>0,'pip'=>0,'max'=>0];
