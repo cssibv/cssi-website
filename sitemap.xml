@@ -1104,4 +1104,11 @@
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
+  <!-- adaugat automat de agent 2026-10-14 -->
+  <url>
+    <loc>https://cssi.ro/blog/camere-anti-vandal-protectie-sabotaj-brasov</loc>
+    <lastmod>2026-10-14</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
 </urlset>
