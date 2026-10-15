@@ -1111,4 +1111,11 @@
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
+  <!-- adaugat automat de agent 2026-10-15 -->
+  <url>
+    <loc>https://cssi.ro/blog/detectoare-miscare-senzori-exterior-alarme-false-brasov</loc>
+    <lastmod>2026-10-15</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
 </urlset>
