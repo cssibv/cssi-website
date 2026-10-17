@@ -1,0 +1,766 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cablare structurată și rețele de date pentru firme | CSSI</title>
+<meta name="description" content="Cablarea structurată e rețeaua „invizibilă” pe care merg internetul, camerele și controlul accesului. De ce o cablare proastă te costă ani la rând.">
+<link rel="canonical" href="https://cssi.ro/blog/cablare-structurata-retele-date-firma-brasov">
+<!-- Open Graph + Twitter Card -->
+<meta property="og:type" content="article">
+<meta property="og:title" content="Cablare structurată și rețele de date pentru firme: de ce contează cine trage cablurile | CSSI Brașov">
+<meta property="og:description" content="Internet care „cade”, camere care pierd semnal, imposibil de extins — toate pornesc de la o cablare proastă. Cum gândești corect rețeaua firmei și de ce contează o singură echipă pentru curenți tari + slabi.">
+<meta property="og:url" content="https://cssi.ro/blog/cablare-structurata-retele-date-firma-brasov">
+<meta property="og:image" content="https://cssi.ro/images/blog/cablare-structurata-retele-date-cover.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:type" content="image/jpeg">
+<meta property="og:locale" content="ro_RO">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Cablare structurată și rețele de date pentru firme">
+<meta name="twitter:description" content="De ce contează cine trage cablurile firmei tale: internet stabil, camere care nu pierd semnal, rețea care se poate extinde. CSSI Brașov: 0752 288 400.">
+<meta name="twitter:image" content="https://cssi.ro/images/blog/cablare-structurata-retele-date-cover.jpg">
+
+<!-- ===== SCHEMA JSON-LD: Article + BreadcrumbList + FAQPage ===== -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Article",
+      "@id": "https://cssi.ro/blog/cablare-structurata-retele-date-firma-brasov#article",
+      "headline": "Cablare structurată și rețele de date pentru firme: de ce contează cine trage cablurile",
+      "description": "Ghid practic despre cablarea structurată pentru firme din Brașov: ce este, de ce o cablare proastă costă ani la rând, standardele care contează, legătura cu securitatea și avantajul unei singure echipe pentru curenți tari + slabi.",
+      "image": "https://cssi.ro/images/blog/cablare-structurata-retele-date-cover.jpg",
+      "author": {
+        "@type": "Organization",
+        "name": "CSSI Brașov",
+        "url": "https://cssi.ro"
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": "CSSI Brașov",
+        "logo": {
+          "@type": "ImageObject",
+          "url": "https://cssi.ro/images/logo-cssi.webp"
+        }
+      },
+      "datePublished": "2026-10-17",
+      "dateModified": "2026-10-17",
+      "mainEntityOfPage": "https://cssi.ro/blog/cablare-structurata-retele-date-firma-brasov",
+      "inLanguage": "ro"
+    },
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Acasă",
+          "item": "https://cssi.ro/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "Blog",
+          "item": "https://cssi.ro/blog"
+        },
+        {
+          "@type": "ListItem",
+          "position": 3,
+          "name": "Cablare structurată și rețele de date pentru firme"
+        }
+      ]
+    },
+    {"@type": "FAQPage", "mainEntity": [
+      {"@type": "Question", "name": "Ce înseamnă, mai exact, cablare structurată?", "acceptedAnswer": {"@type": "Answer", "text": "Rețeaua „invizibilă” de cabluri și echipamente pe care merg internetul, telefonia, camerele, controlul accesului și pontajul. „Structurată” înseamnă gândită ca sistem ordonat și standardizat — trasee clare, prize de date în locurile potrivite, un rack central, etichetare și documentație — nu cabluri trase la întâmplare. E fundația pe care funcționează stabil tot restul."}},
+      {"@type": "Question", "name": "De ce contează atât de mult cine trage cablurile?", "acceptedAnswer": {"@type": "Answer", "text": "Pentru că o cablare proastă nu se vede la început, dar te costă ani la rând: internet care „cade”, camere care pierd semnal, conexiuni instabile și o rețea pe care nu o mai poți extinde. Reparațiile, întreruperile și refacerea costă mult mai mult decât o lucrare corectă din prima. De aceea materialele, standardele și documentația contează enorm."}},
+      {"@type": "Question", "name": "Ce standarde și elemente contează la o cablare bună?", "acceptedAnswer": {"@type": "Answer", "text": "Categoria și calitatea cablului (potrivită pentru vitezele de azi și de mâine), certificarea lucrării (verificarea fiecărui traseu), un rack ordonat în care se adună echipamentele, și — esențial — etichetarea și documentația. Fără etichetare și fără rezerve pentru viitor, orice modificare devine un coșmar."}},
+      {"@type": "Question", "name": "Cum se leagă cablarea de sistemul de securitate?", "acceptedAnswer": {"@type": "Answer", "text": "Direct. Camerele IP, controlul accesului și pontajul merg pe aceeași rețea ca internetul firmei. Dacă rețeaua e proastă, camerele pierd imagine, controlul accesului îngheață, pontajul dă erori. Securitatea ta e atât de bună pe cât e rețeaua. De aceea are sens ca aceeași echipă să facă și securitatea, și cablarea."}},
+      {"@type": "Question", "name": "Ce e PoE și de ce contează pentru camere?", "acceptedAnswer": {"@type": "Answer", "text": "PoE (Power over Ethernet) înseamnă că același cablu de rețea duce și datele, și curentul către cameră. Nu mai ai nevoie de o priză separată lângă fiecare cameră — un cablu rezolvă tot. E mai curat, mai ieftin și mai flexibil, dar cere echipamente potrivite (switch-uri PoE) și o cablare de calitate. Aici se vede din nou de ce electric și date merg împreună."}},
+      {"@type": "Question", "name": "Când e cel mai bun moment să mă ocup de cablare?", "acceptedAnswer": {"@type": "Answer", "text": "Ideal când construiești un spațiu nou, te muți sau extinzi — atunci planifici câte prize de date, unde, cu ce rezerve. E mult mai ieftin să tragi cablurile în faza de amenajare decât prin pereți finisați. Dar și o firmă instalată își poate reface ordonat cablarea dacă suferă de instabilitate — important e să nu mai „cârpești”."}},
+      {"@type": "Question", "name": "De ce să aleg o singură echipă pentru electric, rețea și securitate?", "acceptedAnswer": {"@type": "Answer", "text": "Pentru că sunt legate: curentul alimentează tot, rețeaua transportă datele, securitatea merge pe amândouă. Cu o singură echipă eviți pasarea vinei între electrician, cel cu rețeaua și cel cu camerele. O echipă care face curenți tari + slabi + securitate gândește totul coerent, răspunde pentru întreg sistemul și îți oferă un singur interlocutor — mai simplu și mai ieftin pe termen lung."}},
+      {"@type": "Question", "name": "Ce categorie de cablu aleg: Cat5e, Cat6 sau Cat6A?", "acceptedAnswer": {"@type": "Answer", "text": "Pentru o lucrare nouă, de regulă Cat6 e alegerea echilibrată pentru un birou sau un magazin obișnuit, iar Cat6A are sens când ai multe camere PoE, trasee lungi sau o clădire în care vrei rezervă mare pentru viitor. Cat5e rămâne potrivit mai ales la extinderi mici într-o rețea existentă. Cablul rămâne în perete mulți ani, deci merită să alegi pentru nevoile de mâine, nu doar pentru cele de azi. Decizia finală se ia după evaluarea clădirii."}},
+      {"@type": "Question", "name": "Cât de lung poate fi un cablu de rețea?", "acceptedAnswer": {"@type": "Answer", "text": "Pe cablu de cupru, limita generală este de 100 de metri pe un traseu complet, de la echipamentul activ până la priza din perete, inclusiv cordoanele de legătură. Dacă ai distanțe mai mari, ai două soluții: un al doilea rack sau un switch intermediar, ori fibra optică, care acoperă distanțe mult mai mari. Nu forța cuprul peste limită, pentru că apar erori și pierderi de imagine la camere."}},
+      {"@type": "Question", "name": "Când ai nevoie de fibră optică și când ajunge cuprul?", "acceptedAnswer": {"@type": "Answer", "text": "Cuprul ajunge în interiorul unei clădiri, pe trasee sub 100 de metri. Fibra optică devine utilă între clădiri, pe distanțe lungi sau acolo unde există interferențe electrice puternice, de exemplu lângă motoare sau tablouri mari. Un alt avantaj este că nu transmite curent între capete. Cere instalatorului să explice cum protejează traseul fibrei și cum îl testează la final."}}
+    ]}
+  ]
+}
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;600;700;800&family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,400;0,8..60,600;1,8..60,400&display=swap" rel="stylesheet" />
+  <script src="/cookie-consent.js" defer></script>
+  <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}</script>
+  <script src="/tracking.js" defer></script>
+  <style>
+    @keyframes subtle-pulse-n { 0%,100%{transform:scale(1)}50%{transform:scale(.92)} }
+    @keyframes badge-pulse-n { 0%,100%{box-shadow:0 0 0 0 rgba(34,197,94,.4)}50%{box-shadow:0 0 0 8px rgba(34,197,94,0)} }
+    .animate-subtle-pulse{animation:subtle-pulse-n 2.5s ease-in-out infinite}
+    .animate-badge-pulse{animation:badge-pulse-n 2s ease-in-out infinite}
+    .dropdown-menu{display:none!important}
+    .dropdown:hover .dropdown-menu{display:block!important}
+    #mobileMenu{display:none}
+    #mobileMenu.open{display:block}
+    #servicesSubmenu{display:none}
+    #servicesSubmenu.open{display:block}
+    .dropdown-scroll::-webkit-scrollbar{width:4px}
+    .dropdown-scroll::-webkit-scrollbar-track{background:#f1f1f1}
+    .dropdown-scroll::-webkit-scrollbar-thumb{background:#cbd5e1;border-radius:4px}
+    @media(min-width:640px){.sm\:block{display:block!important}.sm\:hidden{display:none!important}.sm\:px-6{padding-left:24px;padding-right:24px}}
+    @media(min-width:1024px){.lg\:flex{display:flex!important}.lg\:hidden{display:none!important}}@media(min-width:768px){.md\:flex{display:flex!important}.md\:hidden{display:none!important}}
+    #mainHeader, #mainHeader a, #mainHeader button, #mainHeader span, #mainHeader div { font-family: 'Sora', sans-serif !important; }
+  </style>
+  <style>
+    :root{--brand-dark:#0b1a2e;--brand-navy:#102a4c;--brand-blue:#1a4b8c;--brand-accent:#e63022;--brand-gold:#f5a623;--brand-light:#f0f4f9;--text-main:#1c2b3a;--text-muted:#5a6e82;--text-light:#8fa0b3;--border:#dce6f0;--white:#ffffff;--ff-head:'Sora',sans-serif;--ff-body:'Source Serif 4',Georgia,serif;--radius:10px;--shadow-sm:0 2px 8px rgba(11,26,46,.08);--shadow-md:0 6px 24px rgba(11,26,46,.13);--shadow-lg:0 16px 48px rgba(11,26,46,.18);--max-w:1400px}
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    html{scroll-behavior:smooth}
+    body{font-family:var(--ff-body);font-size:18px;line-height:1.75;color:var(--text-main);background:var(--white);-webkit-font-smoothing:antialiased}
+    img{max-width:100%;height:auto;display:block}
+    a{color:var(--brand-blue);text-decoration:none}
+    a:hover{text-decoration:underline}
+    .breadcrumb{background:var(--brand-dark);border-bottom:none;padding:12px 0;padding-top:104px;font-family:var(--ff-head);font-size:13px;color:rgba(255,255,255,.55)}
+    .breadcrumb .inner{max-width:1280px;margin:0 auto;padding:0 0 12px 24px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+    .breadcrumb a{color:rgba(255,255,255,.7)}
+    .breadcrumb .sep{color:rgba(255,255,255,.3)}
+    .hero{background:var(--brand-dark);background-image:radial-gradient(ellipse 70% 60% at 80% 50%,rgba(26,75,140,.45) 0%,transparent 70%),radial-gradient(ellipse 40% 50% at 10% 80%,rgba(230,48,34,.15) 0%,transparent 60%);color:var(--white);padding:48px 24px 64px;position:relative;overflow:hidden}
+    .hero::before{content:'';position:absolute;inset:0;background-image:url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23ffffff' fill-opacity='0.025'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/svg%3E")}
+        .hero .inner{max-width:var(--max-w);margin:0 auto;position:relative;z-index:1;display:flex;align-items:center;gap:40px}
+    .hero-content{flex:1;min-width:0}
+    .hero-img-wrap{flex:0 0 640px;display:flex;align-items:center;justify-content:center}
+    .hero-img-wrap img{width:640px;height:auto;border-radius:14px;box-shadow:0 8px 32px rgba(0,0,0,.35);border:1px solid rgba(255,255,255,.1);opacity:.92;transition:opacity .3s}
+    .hero-img-wrap img:hover{opacity:1}
+    @media(max-width:900px){.hero .inner{flex-direction:column;gap:24px}.hero-img-wrap{flex:0 0 auto;order:-1}.hero-img-wrap img{width:500px}}
+    @media(max-width:700px){.hero-img-wrap{display:none}}
+    .hero-badge{display:inline-flex;align-items:center;gap:6px;background:rgba(230,48,34,.2);border:1px solid rgba(230,48,34,.4);color:#ff8a80;font-family:var(--ff-head);font-size:12px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;padding:5px 12px;border-radius:100px;margin-bottom:20px}
+    .hero h1{font-family:var(--ff-head);font-size:clamp(26px,4vw,40px);font-weight:800;line-height:1.2;margin-bottom:20px;letter-spacing:-.02em}
+    .hero h1 em{font-style:normal;color:var(--brand-gold)}
+    .hero .lead{font-size:clamp(16px,2vw,19px);line-height:1.65;color:rgba(255,255,255,.82);max-width:620px;margin-bottom:32px}
+    .hero-meta{display:flex;align-items:center;gap:20px;flex-wrap:wrap;font-family:var(--ff-head);font-size:13px;color:rgba(255,255,255,.55)}
+    .hero-meta span{display:flex;align-items:center;gap:5px}
+    .hero-meta .dot{color:rgba(255,255,255,.25)}
+    .topic-pills{display:flex;gap:10px;flex-wrap:wrap;margin-top:28px}
+    .pill{display:flex;align-items:center;gap:8px;padding:8px 16px;border-radius:100px;font-family:var(--ff-head);font-size:13px;font-weight:600;border:1px solid}
+    .pill-red{background:rgba(230,48,34,.15);border-color:rgba(230,48,34,.35);color:#ff8a80}
+    .pill-amber{background:rgba(245,166,35,.12);border-color:rgba(245,166,35,.3);color:#ffd180}
+    .pill-blue{background:rgba(26,75,140,.25);border-color:rgba(26,75,140,.5);color:#82b4ff}
+    .pill-green{background:rgba(39,174,96,.15);border-color:rgba(39,174,96,.35);color:#81c995}
+    .article-wrap{max-width:1440px;margin:0 auto;padding:0 20px;display:grid;grid-template-columns:1fr 280px;gap:32px;align-items:start}
+    .article-body{padding:32px 0}
+    .article-body h2{font-family:var(--ff-head);font-size:clamp(20px,2.5vw,26px);font-weight:700;color:var(--brand-dark);margin:36px 0 14px;padding-top:6px;border-top:3px solid var(--brand-accent);line-height:1.3}
+    .article-body h3{font-family:var(--ff-head);font-size:clamp(17px,2vw,20px);font-weight:600;color:var(--brand-navy);margin:32px 0 12px}
+    .article-body p{margin-bottom:16px;color:var(--text-main)}
+    .article-body ul,.article-body ol{padding-left:24px;margin-bottom:20px}
+    .article-body li{margin-bottom:8px}
+    .article-body strong{color:var(--brand-dark)}
+    .intro-p{font-size:19px;line-height:1.7}
+    .box{border-radius:var(--radius);padding:22px 26px;margin:28px 0;border-left:4px solid}
+    .box-red{background:#fef2f2;border-color:var(--brand-accent)}
+    .box-blue{background:#eff6ff;border-color:var(--brand-blue)}
+    .box-amber{background:#fffbeb;border-color:var(--brand-gold)}
+    .box-green{background:#f0fdf4;border-color:#27ae60}
+    .box h4{font-family:var(--ff-head);font-size:15px;font-weight:700;margin-bottom:8px}
+    .box p{font-size:15px;margin-bottom:8px}
+    .check-list{list-style:none;padding:0}
+    .check-list li{display:flex;gap:10px;padding:6px 0;font-size:16px}
+    .chk{color:#27ae60;font-weight:700;flex-shrink:0}
+    .price-table{width:100%;border-collapse:collapse;margin:24px 0;font-size:15px}
+    .price-table th{background:var(--brand-navy);color:var(--white);font-family:var(--ff-head);font-size:13px;font-weight:600;text-transform:uppercase;letter-spacing:.04em;padding:12px 16px;text-align:left}
+    .price-table td{padding:12px 16px;border-bottom:1px solid var(--border)}
+    .price-table tr:nth-child(even) td{background:var(--brand-light)}
+    .price-table .highlight td{background:#fffbeb;font-weight:600}
+    .cta-banner{background:linear-gradient(135deg,var(--brand-dark),var(--brand-navy));border-radius:var(--radius);padding:28px 32px;color:var(--white);display:flex;align-items:center;justify-content:space-between;gap:20px;flex-wrap:wrap}
+    .cta-banner h3{font-family:var(--ff-head);font-size:18px;font-weight:700;margin-bottom:4px}
+    .cta-banner p{font-size:14px;color:rgba(255,255,255,.7);margin:0}
+    .cta-buttons{display:flex;gap:10px;flex-wrap:wrap}
+    .btn{display:inline-flex;align-items:center;gap:7px;padding:10px 18px;border-radius:8px;font-family:var(--ff-head);font-size:13px;font-weight:600;cursor:pointer;border:none;text-decoration:none!important}
+    .btn-primary{background:var(--brand-accent);color:var(--white)!important;box-shadow:0 4px 14px rgba(230,48,34,.3)}
+    .btn-secondary{background:rgba(255,255,255,.12);color:var(--white)!important;border:1px solid rgba(255,255,255,.25)}
+    .faq-section{margin:48px 0 32px}
+    .faq-item{border:1px solid var(--border);border-radius:var(--radius);margin-bottom:10px;overflow:hidden}
+    .faq-q{display:flex;align-items:center;justify-content:space-between;padding:16px 20px;cursor:pointer;background:var(--white);font-family:var(--ff-head);font-size:15px;font-weight:600;color:var(--brand-dark);border:none;width:100%;text-align:left;gap:12px}
+    .faq-q:hover{background:var(--brand-light)}
+    .faq-a{display:none;padding:0 20px 16px;font-size:15px;color:var(--text-muted);line-height:1.7}
+    .faq-item.open .faq-a{display:block}
+    .faq-item.open .faq-q{background:var(--brand-light);color:var(--brand-blue)}
+    .faq-chevron{transition:transform .2s;flex-shrink:0}
+    .faq-item.open .faq-chevron{transform:rotate(180deg)}
+    .sidebar{position:sticky;top:104px}
+    .sidebar-card{border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;margin-bottom:20px;background:var(--white);box-shadow:var(--shadow-sm)}
+    .sidebar-card-head{background:var(--brand-navy);color:var(--white);font-family:var(--ff-head);font-size:12px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;padding:12px 18px}
+    .sidebar-card-body{padding:16px 18px}
+    .toc-list{list-style:none;padding:0;counter-reset:toc}
+    .toc-list li{counter-increment:toc}
+    .toc-list a{display:flex;align-items:baseline;gap:8px;padding:7px 0;font-family:var(--ff-head);font-size:13px;color:var(--text-muted);border-bottom:1px solid var(--border);text-decoration:none}
+    .toc-list a::before{content:counter(toc,decimal-leading-zero);font-size:11px;font-weight:700;color:var(--text-light)}
+    .toc-list li:last-child a{border-bottom:none}
+    .toc-list a:hover{color:var(--brand-blue)}
+    .contact-info{list-style:none;padding:0}
+    .contact-info li{display:flex;gap:12px;padding:10px 0;border-bottom:1px solid var(--border);align-items:flex-start}
+    .contact-info li:last-child{border-bottom:none}
+    .ci-icon{font-size:20px;flex-shrink:0;margin-top:2px}
+    .contact-info strong{font-family:var(--ff-head);font-size:14px;display:block;color:var(--brand-dark)}
+    .contact-info span{font-size:12px;color:var(--text-light)}
+    .article-footer{background:var(--brand-light);border-top:1px solid var(--border);padding:40px 24px;text-align:center}
+    .article-footer p{font-size:14px;color:var(--text-muted);max-width:500px;margin:0 auto 16px}
+    .tags{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-top:12px}
+    .tag{background:var(--white);border:1px solid var(--border);padding:4px 12px;border-radius:100px;font-family:var(--ff-head);font-size:11px;color:var(--text-muted)}
+    @media(max-width:768px){.article-wrap{grid-template-columns:1fr;gap:32px}.sidebar{position:static;order:2}.cta-banner{flex-direction:column;text-align:center}}
+  
+.discuta-in-grup{background:var(--brand-light);border:1px solid var(--border);border-left:4px solid var(--brand-blue);border-radius:var(--radius);padding:20px 24px;margin:32px 0}
+.discuta-in-grup h3{font-family:var(--ff-head);font-weight:600;font-size:17px;color:var(--brand-navy);margin:0 0 8px}
+.discuta-in-grup p{font-size:15px;color:var(--text-muted);line-height:1.6;margin:0 0 12px}
+.discuta-in-grup a{display:inline-block;font-family:var(--ff-head);font-weight:600;font-size:14px;color:var(--brand-blue);text-decoration:none}
+.discuta-in-grup a:hover{text-decoration:underline}
+
+/* mobfix-v1 */
+.hidden{display:none}
+@media(max-width:900px){.article-wrap{grid-template-columns:minmax(0,1fr)}.sidebar{position:static;top:auto}.article-body table{display:block;overflow-x:auto;max-width:100%}}
+
+/* mobfix-v2 */
+.lg\:hidden .animate-badge-pulse{background:rgba(15,23,42,.9)!important;color:#fff!important;border:1px solid rgba(255,255,255,.25)}
+
+/* buton inapoi-sus */
+#toTop{position:fixed;right:18px;bottom:18px;z-index:45;width:46px;height:46px;border:none;border-radius:50%;background:var(--brand-navy);color:#fff;cursor:pointer;box-shadow:0 6px 18px rgba(11,26,46,.28);opacity:0;visibility:hidden;transform:translateY(8px);transition:opacity .2s,transform .2s,visibility .2s;display:flex;align-items:center;justify-content:center}
+#toTop.show{opacity:1;visibility:visible;transform:none}
+#toTop:hover{background:var(--brand-blue)}
+</style>
+<style id="wa-float">#waFloat{position:fixed;right:18px;bottom:18px;z-index:46;width:52px;height:52px;border-radius:50%;background:#22c55e;color:#fff;display:flex;align-items:center;justify-content:center;box-shadow:0 6px 18px rgba(0,0,0,.25);transition:background .2s}#waFloat:hover{background:#16a34a}#toTop{bottom:82px;right:21px}</style>
+<style>.cta-banner h3{color:#ffffff !important}.cta-banner p{color:rgba(255,255,255,.85) !important}.box-info{background:#eef5ff;border-color:var(--brand-blue)}.box-warn{background:#fff8ec;border-color:var(--brand-gold)}.box-tip{background:#f0faf2;border-color:#27ae60}.box-danger{background:#fef2f2;border-color:#e63022}.box-info .box-title{color:var(--brand-blue)}.box-warn .box-title{color:#b7760a}.box-tip .box-title{color:#1e8c3f}.box-danger .box-title{color:#c0392b}.compare-table{width:100%;border-collapse:collapse;font-size:15px;margin:24px 0;border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow-sm)}.compare-table th{background:var(--brand-navy);color:var(--white);font-family:var(--ff-head);font-weight:600;padding:13px 16px;text-align:left}.compare-table td{padding:12px 16px;border-bottom:1px solid var(--border);vertical-align:top}.compare-table tr:nth-child(even) td{background:var(--brand-light)}.compare-table tr:last-child td{border-bottom:none}.compare-table .yes{color:#27ae60;font-weight:600}.compare-table .no{color:#c0392b}</style></head>
+<body>
+<header id="mainHeader" style="position:fixed;top:0;left:0;right:0;z-index:50;transition:all 0.3s;">
+    <div class="hidden sm:block" style="background:#0f172a;color:#fff;font-size:12px;padding:6px 0;">
+        <div style="max-width:1280px;margin:0 auto;padding:0 24px;display:flex;justify-content:space-between;align-items:center;">
+            <span>⭐ <span style="color:#4ade80;font-weight:600;">Peste 20 ani de experiență</span></span>
+            <div style="display:flex;align-items:center;gap:16px;">
+                <span>⭐ <span style="font-weight:600;">8.700+ proiecte</span></span>
+            </div>
+        </div>
+    </div>
+    <div class="sm:hidden" style="background:#0f172a;color:#fff;font-size:12px;padding:6px 0;">
+        <div style="max-width:1280px;margin:0 auto;padding:0 12px;display:flex;justify-content:space-between;align-items:center;">
+            <span>⭐ <span style="color:#4ade80;font-weight:600;">Peste 20 ani de experiență</span></span>
+            <a href="tel:0752288400" style="display:flex;align-items:center;gap:4px;font-weight:600;color:#4ade80;">📞 Sună acum</a>
+        </div>
+    </div>
+    <div id="navBg" style="transition:all 0.3s;">
+        <div style="max-width:1280px;margin:0 auto;padding:0 12px;display:flex;justify-content:space-between;align-items:center;height:64px;" class="sm:px-6">
+            <a href="../">
+                <img src="https://eu.chat-img.sintra.ai/32c1b29c-0c86-4833-a031-e7c45e21a11e/983d52bb-2eb6-42f1-bed4-f94d769bb634/Logo_CSSI.png" alt="CSSI Logo" id="logoImg" style="height:56px;width:auto;transition:all 0.3s;filter:brightness(0) invert(1) drop-shadow(0 0 1px rgba(255,255,255,0.8));">
+            </a>
+            <nav class="hidden md:flex" style="align-items:center;gap:4px;">
+                <a href="../" id="navLink1" style="padding:6px 12px;font-size:14px;font-weight:500;color:#fff;transition:all 0.2s;border-radius:8px;" onmouseover="this.style.color='#f87171'" onmouseout="this.style.color=navTextColor">🏠 Acasă</a>
+                <div class="dropdown" style="position:relative;">
+                    <button id="navLink2" style="padding:6px 12px;font-size:14px;font-weight:500;color:#fff;transition:all 0.2s;border-radius:8px;background:none;border:none;cursor:pointer;display:flex;align-items:center;font-family:inherit;">
+                        🛠️ Servicii
+                        <svg style="margin-left:4px;width:16px;height:16px;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+                    </button>
+                    <div class="dropdown-menu dropdown-scroll" style="position:absolute;top:100%;left:0;width:280px;background:#fff;box-shadow:0 10px 15px -3px rgba(0,0,0,0.1);border-radius:12px;padding:8px;border:1px solid #f1f5f9;max-height:80vh;overflow-y:auto;z-index:100;">
+                        <a href="../detectie-incendiu-isu" style="display:block;padding:10px 16px;font-size:13px;color:#334155;border-radius:8px;" onmouseover="this.style.background='#fef2f2';this.style.color='#dc2626'" onmouseout="this.style.background='';this.style.color='#334155'">🔥 Detecție Incendiu ISU</a>
+                        <a href="../camere-supraveghere" style="display:block;padding:10px 16px;font-size:13px;color:#334155;border-radius:8px;" onmouseover="this.style.background='#fef2f2';this.style.color='#dc2626'" onmouseout="this.style.background='';this.style.color='#334155'">📹 Camere Supraveghere</a>
+                        <a href="../alarma-antiefractie" style="display:block;padding:10px 16px;font-size:13px;color:#334155;border-radius:8px;" onmouseover="this.style.background='#fef2f2';this.style.color='#dc2626'" onmouseout="this.style.background='';this.style.color='#334155'">🚨 Alarmă Antiefracție</a>
+                        <a href="../control-acces" style="display:block;padding:10px 16px;font-size:13px;color:#334155;border-radius:8px;" onmouseover="this.style.background='#fef2f2';this.style.color='#dc2626'" onmouseout="this.style.background='';this.style.color='#334155'">🚪 Control Acces</a>
+                        <a href="../pontaj-electronic" style="display:block;padding:10px 16px;font-size:13px;color:#334155;border-radius:8px;" onmouseover="this.style.background='#fef2f2';this.style.color='#dc2626'" onmouseout="this.style.background='';this.style.color='#334155'">⏱️ Pontaj Electronic</a>
+                        <a href="../bariere-auto" style="display:block;padding:10px 16px;font-size:13px;color:#334155;border-radius:8px;" onmouseover="this.style.background='#fef2f2';this.style.color='#dc2626'" onmouseout="this.style.background='';this.style.color='#334155'">🚧 Bariere Auto</a>
+                        <a href="../interfoane-videointerfoane" style="display:block;padding:10px 16px;font-size:13px;color:#334155;border-radius:8px;" onmouseover="this.style.background='#fef2f2';this.style.color='#dc2626'" onmouseout="this.style.background='';this.style.color='#334155'">🔔 Interfoane &amp; Videointerfoane</a>
+                        <a href="../sonorizare" style="display:block;padding:10px 16px;font-size:13px;color:#334155;border-radius:8px;" onmouseover="this.style.background='#fef2f2';this.style.color='#dc2626'" onmouseout="this.style.background='';this.style.color='#334155'">🔊 Sonorizare</a>
+                        <a href="../automatizari-porti" style="display:block;padding:10px 16px;font-size:13px;color:#334155;border-radius:8px;" onmouseover="this.style.background='#fef2f2';this.style.color='#dc2626'" onmouseout="this.style.background='';this.style.color='#334155'">🚗 Automatizări Porți</a>
+                        <a href="../usi-garaj" style="display:block;padding:10px 16px;font-size:13px;color:#334155;border-radius:8px;" onmouseover="this.style.background='#fef2f2';this.style.color='#dc2626'" onmouseout="this.style.background='';this.style.color='#334155'">🏠 Uși Garaj</a>
+                        <a href="../aer-conditionat" style="display:block;padding:10px 16px;font-size:13px;color:#334155;border-radius:8px;" onmouseover="this.style.background='#fef2f2';this.style.color='#dc2626'" onmouseout="this.style.background='';this.style.color='#334155'">❄️ Aer Condiționat</a>
+                        <a href="../ventilatie" style="display:block;padding:10px 16px;font-size:13px;color:#334155;border-radius:8px;" onmouseover="this.style.background='#fef2f2';this.style.color='#dc2626'" onmouseout="this.style.background='';this.style.color='#334155'">💨 Ventilație</a>
+                        <a href="../instalatii-electrice" style="display:block;padding:10px 16px;font-size:13px;color:#334155;border-radius:8px;" onmouseover="this.style.background='#fef2f2';this.style.color='#dc2626'" onmouseout="this.style.background='';this.style.color='#334155'">⚡ Instalații Electrice</a>
+                        <a href="../instalatii-termice-sanitare" style="display:block;padding:10px 16px;font-size:13px;color:#334155;border-radius:8px;" onmouseover="this.style.background='#fef2f2';this.style.color='#dc2626'" onmouseout="this.style.background='';this.style.color='#334155'">🔧 Instalații Termice &amp; Sanitare</a>
+                    </div>
+                </div>
+                <a href="../despre-noi" id="navLink3" style="padding:6px 12px;font-size:14px;font-weight:500;color:#fff;transition:all 0.2s;border-radius:8px;" onmouseover="this.style.color='#f87171'" onmouseout="this.style.color=navTextColor">ℹ️ Despre Noi</a>
+                <a href="../portofoliu" id="navLink4" style="padding:6px 12px;font-size:14px;font-weight:500;color:#fff;transition:all 0.2s;border-radius:8px;" onmouseover="this.style.color='#f87171'" onmouseout="this.style.color=navTextColor">📁 Portofoliu</a>
+                <a href="/blog/" style="padding:6px 12px;font-size:14px;font-weight:500;color:#fff;transition:all 0.2s;border-radius:8px;" id="navLinkBlog" onmouseover="this.style.color='#f87171'" onmouseout="this.style.color=navTextColor">📝 Blog</a>
+                <a href="../contact" id="navLink5" style="padding:6px 12px;font-size:14px;font-weight:500;color:#fff;transition:all 0.2s;border-radius:8px;" onmouseover="this.style.color='#f87171'" onmouseout="this.style.color=navTextColor">📍 Contact</a>
+            </nav>
+            <div class="hidden lg:flex" style="align-items:center;gap:12px;">
+                <a href="tel:0752288400" id="phoneLink" style="display:flex;align-items:center;font-size:14px;font-weight:500;color:#fff;transition:all 0.2s;">
+                    <svg style="width:16px;height:16px;margin-right:6px;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/></svg>
+                    0752 288 400
+                </a>
+                <a href="../contact" style="background:linear-gradient(to right,#dc2626,#b91c1c);color:#fff;padding:8px 20px;border-radius:8px;font-size:14px;font-weight:600;box-shadow:0 4px 6px -1px rgba(0,0,0,0.1);transition:all 0.2s;" onmouseover="this.style.background='linear-gradient(to right,#b91c1c,#991b1b)'" onmouseout="this.style.background='linear-gradient(to right,#dc2626,#b91c1c)'">Cere Ofertă</a>
+            </div>
+            <div class="md:hidden" style="display:flex;align-items:center;gap:8px;">
+                <button onclick="toggleMobileMenu()" id="menuBtn" class="animate-subtle-pulse" style="padding:4px;border-radius:6px;border:none;cursor:pointer;background:linear-gradient(to right,#ef4444,#dc2626);color:#fff;">
+                    <svg id="menuIcon" style="width:20px;height:20px;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
+                    <svg id="closeIcon" style="width:20px;height:20px;display:none;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+                </button>
+            </div>
+        </div>
+        <div id="mobileMenu" style="background:#fff;border-radius:16px;box-shadow:0 20px 25px -5px rgba(0,0,0,0.1);margin:8px 12px;padding:8px;max-height:80vh;overflow-y:auto;">
+            <nav style="display:flex;flex-direction:column;gap:4px;">
+                <a href="../" style="padding:10px 16px;font-size:16px;font-weight:500;color:#334155;border-radius:8px;">🏠 Acasă</a>
+                <button onclick="toggleServicesSubmenu()" style="padding:10px 16px;font-size:16px;font-weight:500;color:#334155;border-radius:8px;background:none;border:none;cursor:pointer;display:flex;justify-content:space-between;align-items:center;width:100%;font-family:inherit;text-align:left;">
+                    🛠️ Servicii
+                    <svg id="servicesArrow" style="width:16px;height:16px;transition:transform 0.2s;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+                </button>
+                <div id="servicesSubmenu" style="padding-left:16px;overflow-y:auto;">
+                    <a href="../detectie-incendiu-isu" onclick="closeMobile()" style="display:block;padding:8px 16px;font-size:14px;color:#475569;border-radius:8px;">🔥 Detecție Incendiu ISU</a>
+                    <a href="../camere-supraveghere" onclick="closeMobile()" style="display:block;padding:8px 16px;font-size:14px;color:#475569;border-radius:8px;">📹 Camere Supraveghere</a>
+                    <a href="../alarma-antiefractie" onclick="closeMobile()" style="display:block;padding:8px 16px;font-size:14px;color:#475569;border-radius:8px;">🚨 Alarmă Antiefracție</a>
+                    <a href="../control-acces" onclick="closeMobile()" style="display:block;padding:8px 16px;font-size:14px;color:#475569;border-radius:8px;">🚪 Control Acces</a>
+                    <a href="../pontaj-electronic" onclick="closeMobile()" style="display:block;padding:8px 16px;font-size:14px;color:#475569;border-radius:8px;">⏱️ Pontaj Electronic</a>
+                    <a href="../bariere-auto" onclick="closeMobile()" style="display:block;padding:8px 16px;font-size:14px;color:#475569;border-radius:8px;">🚧 Bariere Auto</a>
+                    <a href="../interfoane-videointerfoane" onclick="closeMobile()" style="display:block;padding:8px 16px;font-size:14px;color:#475569;border-radius:8px;">🔔 Interfoane &amp; Videointerfoane</a>
+                    <a href="../sonorizare" onclick="closeMobile()" style="display:block;padding:8px 16px;font-size:14px;color:#475569;border-radius:8px;">🔊 Sonorizare</a>
+                    <a href="../automatizari-porti" onclick="closeMobile()" style="display:block;padding:8px 16px;font-size:14px;color:#475569;border-radius:8px;">🚗 Automatizări Porți</a>
+                    <a href="../usi-garaj" onclick="closeMobile()" style="display:block;padding:8px 16px;font-size:14px;color:#475569;border-radius:8px;">🏠 Uși Garaj</a>
+                    <a href="../aer-conditionat" onclick="closeMobile()" style="display:block;padding:8px 16px;font-size:14px;color:#475569;border-radius:8px;">❄️ Aer Condiționat</a>
+                    <a href="../ventilatie" onclick="closeMobile()" style="display:block;padding:8px 16px;font-size:14px;color:#475569;border-radius:8px;">💨 Ventilație</a>
+                    <a href="../instalatii-electrice" onclick="closeMobile()" style="display:block;padding:8px 16px;font-size:14px;color:#475569;border-radius:8px;">⚡ Instalații Electrice</a>
+                    <a href="../instalatii-termice-sanitare" onclick="closeMobile()" style="display:block;padding:8px 16px;font-size:14px;color:#475569;border-radius:8px;">🔧 Instalații Termice &amp; Sanitare</a>
+                </div>
+                <a href="../despre-noi" onclick="closeMobile()" style="padding:10px 16px;font-size:16px;font-weight:500;color:#334155;border-radius:8px;">ℹ️ Despre Noi</a>
+                <a href="../portofoliu" onclick="closeMobile()" style="padding:10px 16px;font-size:16px;font-weight:500;color:#334155;border-radius:8px;">📁 Portofoliu</a>
+                <a href="/blog/" onclick="closeMobile()" style="padding:10px 16px;font-size:16px;font-weight:500;color:#334155;border-radius:8px;">📝 Blog</a>
+                <a href="../contact" onclick="closeMobile()" style="padding:10px 16px;font-size:16px;font-weight:500;color:#334155;border-radius:8px;">📍 Contact</a>
+                <div style="padding:12px 8px;">
+                    <a href="../contact" onclick="closeMobile()" style="display:block;text-align:center;background:linear-gradient(to right,#dc2626,#b91c1c);color:#fff;padding:10px 16px;border-radius:12px;font-weight:600;">Cere Ofertă</a>
+                </div>
+            </nav>
+        </div>
+    </div>
+</header>
+
+
+  
+  
+  <nav class="breadcrumb" aria-label="Breadcrumb">
+    <div class="inner">
+      <a href="/">Acasă</a><span class="sep">›</span>
+      <a href="/blog/">Blog</a><span class="sep">›</span>
+      <span style="color:rgba(255,255,255,.9)">Cablare structurată și rețele de date pentru firme | CSSI</span>
+    </div>
+  </nav>
+
+  <header class="hero">
+    <div class="inner">
+      <div class="hero-content">
+      <div class="hero-badge">🛡 Ghid CSSI · 2026</div>
+      <h1>Cablare structurată și rețele de date pentru firme: de ce contează cine trage cablurile</h1>
+      <p class="lead">E partea pe care n-o vede nimeni și de care își amintesc toți exact când nu mai merge: cablarea. Internetul care „cade” la prânz, camera de la depozit care pierde imaginea, controlul accesului care îngheață, imposibilitatea de a mai adăuga încă cinci posturi de lucru fără să sapi prin pereți. Aproape toate aceste necazuri pornesc dintr-un singur loc — o <strong>cablare făcută prost</strong>. Și aproape toate s-ar fi evitat dacă, la început, cablurile ar fi fost trase corect, de cine trebuie. Iată de ce cablarea structurată e una dintre cele mai subestimate investiții ale unei firme — și cum o gândești bine.</p>
+      <div class="hero-meta">
+        <span>✍ CSSI Brașov</span><span class="dot">·</span>
+        <span>📅 17 Oct 2026</span><span class="dot">·</span>
+        <span>⏱ 22 min lectură</span>
+      </div>
+      <div class="topic-pills">
+        <span class="pill pill-blue">🛡 Securitate firme</span>
+        <span class="pill pill-green">📍 Brașov & împrejurimi</span>
+        <span class="pill pill-amber">✅ Ghid practic</span>
+      </div>
+    </div>
+      <div class="hero-img-wrap"><img src="/images/blog/cablare-structurata-retele-date-cover.jpg" alt="Cablare structurată și rețele de date pentru firme | CSSI"></div>
+    </div>
+  </header>
+
+  <div class="article-wrap">
+    <main class="article-body" id="articol">
+<h2 id="raspunsul-scurt">Răspunsul scurt</h2>
+<p>De ce contează cine trage cablurile? Pentru că rețeaua de date e fundația pe care stau internetul, telefonia, camerele, controlul accesului și pontajul. Un cablu ales prost, un traseu pus lângă un cablu de curent sau un conector crimpat „din ochi” nu se văd în prima zi. Se văd peste un an, când camera pierde imaginea exact în noaptea în care ai fi avut nevoie de ea, iar nimeni nu poate spune care dintre cele patruzeci de cabluri din dulap e vinovatul.</p>
+<p>O cablare structurată corectă înseamnă, pe scurt: cablu de categorie potrivită (azi, de regulă, Cat6 sau Cat6A pentru lucrări noi), trasee separate de curenții tari, un rack ordonat cu patch panel, fiecare cablu etichetat la ambele capete, testare și o schemă predată pe hârtie sau în format digital. Pe cupru, un traseu nu depășește 100 de metri între echipamentul activ și priza din perete — limita generală pentru rețelele Ethernet pe cablu de cupru.</p>
+<p>Concluzia practică: tratează cablarea ca pe o investiție de infrastructură, nu ca pe un accesoriu. Costă puțin față de restul sistemului, dar o refacere ulterioară, prin pereți finisați și cu firma în funcțiune, costă de câteva ori mai mult. Mai jos găsești criteriile de alegere, un tabel de variante, costurile orientative și o listă de verificare pe care o poți folosi înainte să ceri o ofertă.</p>
+
+<h2 id="ce-inseamna-cablare-structurata">Ce înseamnă cablare structurată</h2>
+<p>Hai să clarificăm termenul, pentru că sună tehnic, dar ideea e simplă. <strong>Cablarea structurată e rețeaua „invizibilă”</strong> de cabluri și echipamente pe care merge tot ce ține firma în viață digital: <strong>internetul, telefonia, camerele de supraveghere, controlul accesului, pontajul electronic</strong>, uneori și sonorizarea sau alte sisteme. Cuvântul „structurată” e cheia: înseamnă că rețeaua e gândită ca un <strong>sistem ordonat și standardizat</strong> — cu trasee clare, prize de date în locurile potrivite, un dulap central (rack) în care se adună totul, cu etichetare și documentație — și nu o îngrămădeală de cabluri trase la întâmplare, „să meargă acum”.</p>
+<p>Diferența dintre cele două abordări nu se vede în prima zi. Se vede în <strong>anul doi și trei</strong>, când vrei să muți un birou, să adaugi camere, să crești echipa — și descoperi că nu poți, pentru că nimeni nu mai știe ce cablu unde merge. O cablare structurată corectă e <strong>fundația</strong> pe care funcționează stabil tot restul. Construiește prost fundația și totul de deasupra se clatină.</p>
+
+      <div class="cta-banner" style="margin:32px 0">
+        <div>
+          <h3>Vrei o evaluare pentru firma ta?</h3>
+          <p>Evaluarea la fața locului e gratuită în Brașov și împrejurimi — vii cu nevoia, pleci cu o soluție și un preț defalcat.</p>
+        </div>
+        <div class="cta-buttons">
+          <a href="/contact" class="btn btn-secondary">📩 Cere ofertă</a>
+          <a href="tel:0752288400" class="btn btn-primary">📞 0752 288 400</a>
+          <a target="_blank" rel="noopener" href="https://wa.me/40752288400" class="btn btn-secondary">💬 WhatsApp</a>
+        </div>
+      </div>
+<h2 id="de-ce-o-cablare-proasta-te-costa-ani-la-">De ce o cablare proastă te costă ani la rând</h2>
+<p>Aici e miezul. O cablare proastă e ca o fisură în fundație: <strong>nu se vede la început, dar te costă continuu</strong>. Cablu de proastă calitate sau prost montat înseamnă, în viața de zi cu zi: internet care „cade” exact când ai nevoie, camere care pierd semnal intermitent (și descoperi că nu ai înregistrarea fix când îți trebuie), conexiuni instabile la care „mai dai un restart” în fiecare săptămână, și — poate cel mai costisitor — o rețea pe care <strong>nu o mai poți extinde</strong> fără să o iei de la zero.</p>
+<p>Și aici e capcana financiară: oamenii aleg „varianta ieftină” la cablare ca să economisească la început, fără să realizeze că <strong>reparațiile, întreruperile de activitate și refacerea ulterioară costă de câteva ori mai mult</strong> decât ar fi costat o lucrare corectă din prima. O zi de internet picat într-o firmă cu zece angajați costă mai mult decât diferența dintre un cablu bun și unul prost. De aceea întrebarea „cine trage cablurile — cu ce materiale, după ce standarde, cu ce documentație” nu e un moft tehnic, ci o decizie de business.</p>
+
+<h2 id="standardele-care-conteaza">Standardele care contează</h2>
+<p>Nu intrăm în jargon, dar merită să știi ce face diferența între o cablare „bună” și una „și-așa”. Patru lucruri.</p>
+<p><strong>Categoria și calitatea cablului.</strong> Cablul trebuie să fie potrivit pentru vitezele de azi — și, ideal, pentru cele de mâine. Un cablu sub-dimensionat te limitează din prima zi și te obligă să-l schimbi când crești.</p>
+<p><strong>Certificarea lucrării.</strong> O cablare făcută profesionist se <strong>verifică</strong>: fiecare traseu se testează că funcționează la parametrii corecți. Nu „pare că merge” — se măsoară și se confirmă.</p>
+<p><strong>Dulapul (rack-ul) ordonat.</strong> Acolo se adună toate echipamentele — switch-uri, patch panel, router. Un rack ordonat și etichetat e diferența dintre o intervenție de 10 minute și o după-amiază pierdută căutând firul corect.</p>
+<p><strong>Etichetarea și documentația.</strong> Esențial și aproape mereu ignorat de „băieții ieftini”. Dacă fiecare cablu e etichetat și ai o schemă, orice modificare viitoare e simplă. Fără ele, fiecare schimbare devine un coșmar de ghicit. Aceeași logică a ordinii și siguranței se aplică și la partea de curenți tari — am detaliat-o în articolul despre curenți tari și curenți slabi, de la o singură echipă.</p>
+
+<h2 id="cat5e-cat6-sau-cat6a-ce-categorie-alegi">Cat5e, Cat6 sau Cat6A: ce categorie alegi</h2>
+<p>Categoria unui cablu de cupru (Cat5e, Cat6, Cat6A) arată pentru ce viteze și frecvențe e construit. Cu cât categoria e mai mare, cu atât cablul e mai gros, mai rigid și mai scump, dar suportă mai multe. Alegerea se face după ce vrei să rulezi pe el acum și după cât vrei ca rețeaua să reziste fără refacere. Un cablu tras în perete rămâne acolo zece-cincisprezece ani, în timp ce switch-urile se schimbă de două-trei ori în acest interval. De aceea merită să plătești o dată pentru cablul potrivit, nu pentru echipamentul de azi.</p>
+<p>Pe scurt: Cat5e e suficient pentru birouri mici, cu trafic obișnuit, dar azi e o alegere la limită pentru lucrări noi. Cat6 e varianta echilibrată pentru majoritatea firmelor locale. Cat6A are ecranare mai bună și suportă viteze mari pe distanță întreagă, iar pe el merge fără probleme și alimentarea PoE pe trasee lungi sau în fascicule groase. Pentru o rețea cu multe camere și puncte de acces Wi-Fi, diferența de preț dintre Cat6 și Cat6A e mică în raport cu toată lucrarea.</p>
+
+<table class="compare-table">
+<thead><tr><th>Categorie</th><th>Unde se potrivește</th><th>Avantaj principal</th><th>Limită de reținut</th></tr></thead>
+<tbody>
+<tr><td><strong>Cat5e</strong></td><td>Birou mic, rețea existentă, extindere simplă pe trasee scurte</td><td>Cel mai ieftin, cablu subțire și flexibil</td><td>Se simte limitat când crești numărul de camere, de posturi sau de echipamente</td></tr>
+<tr><td><strong>Cat6</strong></td><td>Majoritatea birourilor, magazinelor și atelierelor din zonă</td><td>Raport bun preț/performanță, rezervă pentru câțiva ani</td><td>La trasee foarte lungi și viteze mari, Cat6A e mai sigur</td></tr>
+<tr><td><strong>Cat6A</strong></td><td>Clădiri noi, săli de servere, multe camere PoE și puncte Wi-Fi</td><td>Ecranare și marjă mare pentru viitor</td><td>Cablu gros și rigid, rază de curbură mare, preț mai ridicat</td></tr>
+<tr><td><strong>Fibră optică</strong></td><td>Legături între clădiri, între etaje îndepărtate, trasee peste 100 m</td><td>Distanțe mari, nu e afectată de zgomot electric</td><td>Cere echipamente și capete (conectori) specifice, deci un cost mai mare la capete</td></tr>
+</tbody>
+</table>
+
+<div class="box box-info"><div class="box-title">ℹ Limita de 100 de metri pe cupru</div><p>Pe cablu de cupru (Ethernet), un traseu complet — de la echipamentul activ din rack până la priza din perete, inclusiv cordoanele de legătură — nu trebuie să depășească 100 de metri. Dincolo de această distanță semnalul se degradează și apar erori. Dacă ai o hală, o curte între clădiri sau un etaj îndepărtat, nu forța cuprul: planifică un al doilea rack mic sau treci pe fibră.</p></div>
+
+<h2 id="fibra-optica-cand-merita">Fibra optică: când merită</h2>
+<p>Fibra optică transmite lumină, nu curent electric, deci nu e afectată de zgomotul electric și acoperă distanțe mult mai mari decât cuprul. Pentru o firmă obișnuită, nu o pui la fiecare birou. O folosești acolo unde cuprul nu ajunge sau nu e recomandat: legătura dintre două clădiri (sediu și hală, birou și depozit), dintre un etaj și altul când traseul e lung, sau pe traseuri care trec prin zone cu multe interferențe.</p>
+
+<h2 id="rack-patch-panel-si-ordinea-din-dulap">Rack, patch panel și ordinea din dulap</h2>
+<p>Rack-ul e dulapul metalic în care se adună toate cablurile. Fiecare priză de date din clădire are un cablu care ajunge în rack, într-un <strong>patch panel</strong> — un panou cu porturi, fix, care servește drept „capăt” permanent al fiecărui traseu. De la patch panel, un cordon scurt (patch cord) duce la switch. Avantajul e simplu: cablul din perete nu se mișcă niciodată, iar orice schimbare se face doar la cordoanele din față, nu prin pereți.</p>
+<p>Un rack bine făcut are patch panel sus, switch-urile dedesubt, un management de cabluri (ghidaje orizontale) care ține cordoanele ordonate, o ventilație minimă și un loc rezervat pentru extindere. Lasă mereu câteva porturi libere și câteva unități goale în dulap — vei avea nevoie de ele. Pune dulapul într-un loc cu acces controlat și temperatură rezonabilă, nu într-un colț al depozitului unde se strâng praf și umezeală.</p>
+
+<h2 id="etichetare-si-documentare-ce-preda-un-in">Etichetare și documentare: ce predă un instalator serios</h2>
+<p>Etichetarea e partea cea mai ieftină și cea mai neglijată a lucrării. Fiecare cablu primește aceeași etichetă la ambele capete — la priza din perete și la portul din patch panel — iar fiecare port din panou are un număr corespunzător. Pe schema predată, numărul din dreptul portului îți spune: „priza 14, biroul contabilitate, peretele de nord”. Când peste un an muți un birou sau adaugi o cameră, nu mai deschizi pereți și nu mai testezi cablu cu cablu.</p>
+
+<div class="box box-tip"><div class="box-title">💡 Cere eticheta și la cordoane</div><p>Pe lângă cablurile din perete, etichetează și cordoanele scurte dintre patch panel și switch: pe ele scrie unde merge fiecare. Costă câțiva lei de etichete și te scutește de o după-amiază de căutat un fir când un post de lucru „nu mai are net”.</p></div>
+
+
+<h2 id="cum-se-leaga-cablarea-de-securitate">Cum se leagă cablarea de securitate</h2>
+<p>Acesta e punctul pe care majoritatea firmelor îl ratează. <strong>Sistemul tău de securitate e atât de bun pe cât e rețeaua pe care merge.</strong> Camerele IP moderne, controlul accesului, pontajul electronic — toate funcționează pe <strong>aceeași rețea de date</strong> ca internetul firmei. Dacă rețeaua e prost făcută, camerele pierd imagine, controlul accesului „îngheață” și nu mai deschide ușa, pontajul dă erori la închiderea lunii.</p>
+<p>Cu alte cuvinte, poți cumpăra cele mai bune camere de pe piață, dar dacă stau pe o cablare proastă, vei avea probleme. De aceea are sens profund ca <strong>aceeași echipă care îți instalează securitatea să se ocupe și de cablare</strong> — totul e gândit să funcționeze împreună, ca un sistem coerent, nu ca bucăți care nu comunică. Când îți relochezi sau extinzi biroul, această coordonare contează și mai mult; despre cum se gândesc controlul accesului și pontajul la relocare am scris în articolul despre <a href="https://cssi.ro/blog/control-acces-pontaj-relocare-extindere-birou-brasov">relocarea și extinderea biroului</a>.</p>
+
+<h2 id="planificarea-pe-spatiu-nou-sau-la-mutare">Planificarea pe spațiu nou sau la mutare</h2>
+<p>Cel mai bun moment pentru o cablare bună e <strong>înainte ca pereții să fie finisați</strong>. Când construiești un spațiu nou, te muți sau extinzi, poți planifica totul din timp: <strong>câte prize de date</strong>, unde anume, cu ce <strong>rezerve pentru viitor</strong>. Regula de aur: pune mai multe prize de date decât crezi că-ți trebuie azi. E ridicol de ieftin să adaugi câteva prize în plus în faza de amenajare și ridicol de scump să le adaugi după, spărgând pereți finisați.</p>
+<p>Gândește în perspectivă: peste doi ani vei avea mai mulți angajați, poate o sală de ședințe în plus, mai multe camere, un sistem de pontaj. Toate au nevoie de rețea. O cablare planificată cu rezerve crește odată cu firma; una făcută „la limită” te blochează. Iar dacă ești deja instalat și suferi de instabilitate, soluția nu e să mai „cârpești” un fir, ci să gândești rețeaua ca sistem — ordonat, etichetat, cu rezerve.</p>
+
+<h2 id="alimentarea-poe-unde-se-intalnesc-curent">Alimentarea PoE: unde se întâlnesc curenții tari cu cei slabi</h2>
+<p>Un detaliu tehnic care arată perfect de ce electric și rețea merg împreună: <strong>PoE (Power over Ethernet)</strong>. Înseamnă că <strong>același cablu de rețea duce și datele, și curentul</strong> către o cameră sau un echipament. Practic, nu mai ai nevoie de o priză separată lângă fiecare cameră — un singur cablu rezolvă tot. E mai curat la montaj, mai ieftin și mult mai flexibil când vrei să muți o cameră.</p>
+<p>Dar PoE are nevoie de <strong>echipamente potrivite</strong> (switch-uri cu PoE) și de o <strong>cablare de calitate</strong> care să ducă bine și curentul, și datele. Și aici se vede de ce partea electrică și cea de date trebuie gândite împreună. La fel, întreaga rețea — switch-uri, echipamente, camere — are nevoie de o <strong>sursă de rezervă</strong> ca să nu pice la prima pană de curent; despre backup și UPS am scris în articolul despre menținerea sistemului de securitate la pene de curent.</p>
+
+<h3>PoE pentru camere, telefoane și puncte Wi-Fi: ce verifici</h3>
+<p>PoE nu e doar pentru camere. Același principiu alimentează telefoanele IP de pe birouri, punctele de acces Wi-Fi montate pe tavan și unele cititoare de control acces. Câștigi un singur cablu per echipament și un singur loc din care poți opri sau reporni alimentarea: portul din switch. Pentru o cameră care s-a blocat într-o noapte cu ger, repornirea de la distanță a portului PoE te scutește de un drum la fața locului.</p>
+
+<h2 id="wi-fi-cablul-ramane-baza">Wi-Fi: cablul rămâne baza</h2>
+<p>Wi-Fi-ul nu înlocuiește cablarea, ci se sprijină pe ea. Fiecare punct de acces (acel dispozitiv de pe tavan care emite semnalul) are nevoie de un cablu bun până la switch, de obicei cu PoE. Un Wi-Fi bun începe deci cu o cablare bună: dacă punctele de acces sunt legate prin cablu, vitezele și stabilitatea sunt incomparabil mai bune decât cu „repetoare” legate prin aer unul de altul.</p>
+<p>Separă rețelele: una pentru angajați, una pentru oaspeți, iar echipamentele sensibile (camere, control acces, pontaj) să stea pe o rețea proprie. Detaliile despre cum izolezi camerele de restul rețelei și cum îți protejezi parolele sunt în articolul despre <a href="https://cssi.ro/blog/securizare-retea-cctv-ip-parole-vlan-protectie-brasov">securizarea rețelei unui sistem CCTV IP</a>.</p>
+
+<h2 id="separarea-de-curentii-tari-de-ce-nu-stau">Separarea de curenții tari: de ce nu stau cablurile de date lângă cele de 230 V</h2>
+<p>Un cablu de date trece prin același perete ca un cablu de alimentare de 230 V. Dacă merg paralel pe distanțe mari și foarte aproape unul de altul, cablul de curent poate induce zgomot în cel de date: apar erori, viteza scade, iar problemele par aleatorii. De aceea, în practică, traseele de date și cele de curenți tari se țin la distanță, în canale separate, iar încrucișările se fac pe perpendiculară, nu în paralel.</p>
+<p>Distanțele exacte și cerințele de montaj depind de tipul de cablu, de ecranare și de normele aplicabile; instalatorul serios le respectă și le poate explica. La fel de important: lângă motoare, tablouri electrice, convertizoare de frecvență sau corpuri de iluminat cu balast, interferențele sunt mai puternice. În hale și ateliere, alege cablu ecranat sau fibră pe porțiunile expuse.</p>
+<p>Partea de curenți tari trebuie făcută de electrician autorizat. Dacă ai nevoie de o instalație electrică pentru birouri sau open-space, vezi articolul despre <a href="https://cssi.ro/blog/instalatie-electrica-cladire-birouri-open-space-brasov">instalația electrică pentru clădire de birouri</a>. Ideal, cele două echipe — electric și date — își coordonează traseele înainte să se închidă pereții.</p>
+
+<div class="box box-warn"><div class="box-title">⚠ Cablul de date nu se prinde în aceleași coliere cu cel de curent</div><p>Legarea în același fascicul sau în același tub a unui cablu de date și a unui cablu de alimentare e una dintre cele mai frecvente scurtături. Funcționează „cumva” în prima zi, dar produce erori greu de depistat și, în plus, face intervențiile ulterioare mai riscante. Cere trasee și canale separate și verifică la predare că așa s-a lucrat.</p></div>
+
+<h2 id="testare-si-certificare-dovada-ca-traseul">Testare și certificare: dovada că traseul chiar funcționează</h2>
+<p>Un cablu poate „da lumină” la un tester ieftin și totuși să aibă o pereche slabă sau un conector prost crimpat. Un instalator profesionist testează fiecare traseu cu un aparat de măsură dedicat, care verifică conexiunile, lungimea și atenuarea semnalului față de limitele categoriei alese, și îți predă un raport pentru fiecare priză. Asta înseamnă „certificare” în sens practic: nu o hârtie decorativă, ci măsurători la dosar.</p>
+<p>De ce contează pentru tine: dacă peste doi ani o cameră are probleme, raportul îți spune dacă traseul era în parametri la predare. Dacă da, vina e în altă parte (echipament, configurare). Dacă nu, ai temeiul discuției cu cel care a lucrat. Cere raportul în scris, cu numerotarea prizelor care corespunde cu schema. La predare se testează și echipamentele active: porturile PoE alimentează efectiv camerele, iar rețeaua rămâne stabilă după repornire. Cerințele exacte pentru un obiectiv anume se verifică cu un specialist.</p>
+
+
+<h2 id="greseli-frecvente-pe-care-le-vedem">Greșeli frecvente pe care le vedem</h2>
+<p>După 20 de ani și peste 8.700 de proiecte, lista „clasicelor” e scurtă și se repetă. Toate au un numitor comun: au fost făcute de cineva care s-a uitat la „acum”, nu la „peste trei ani”.</p>
+<ul>
+<li><strong>Cablu de proastă calitate</strong>, ales doar pe preț, care limitează rețeaua din prima zi.</li>
+<li><strong>Lipsa etichetării</strong> — un ghem de cabluri în care nimeni nu mai știe ce e ce, deci orice intervenție durează ore.</li>
+<li><strong>Zero rezerve pentru viitor</strong> — exact câte prize trebuiau azi, niciuna în plus, deci la prima extindere o iei de la capăt.</li>
+<li><strong>Cablu de date în același traseu cu cel de curent.</strong> Zgomotul indus produce erori intermitente, cele mai greu de găsit, pentru că rețeaua „merge” o parte din zi.</li>
+<li><strong>Lipsa testării.</strong> Se crimpează conectorii și lucrarea se consideră terminată; o pereche slabă iese la iveală abia când montezi camera pe acel traseu.</li>
+<li><strong>Trasee peste 100 de metri pe cupru.</strong> Pe hârtie pare că încape, dar rezultatul sunt camere care pierd imaginea. Peste limită se pune un al doilea rack sau fibră.</li>
+<li><strong>„O cârpeală” care nu se mai poate extinde</strong> — un fir aici, un switch acolo, până când rețeaua devine un labirint care cade aleatoriu.</li>
+</ul>
+
+<h2 id="costuri-orientative-2026-pentru-cablare-">Costuri orientative 2026 pentru cablare structurată</h2>
+<p>Prețul variază mult după clădire: pereți din beton sau gips-carton, tavane false accesibile sau nu, distanțe, număr de prize, categorie de cablu, existența canalelor de cabluri. De aceea nu există un tarif unic. Cifrele de mai jos sunt orientative, pentru o firmă mică sau medie din zona Brașov, și nu includ echipamentele active (switch-uri, puncte de acces, camere). Oferta fermă vine după evaluarea la fața locului.</p>
+
+<table class="compare-table">
+<thead><tr><th>Lucrare</th><th>Interval orientativ (RON)</th><th>De ce variază</th></tr></thead>
+<tbody>
+<tr><td>Punct de date nou (cablu Cat6 + priză + capăt în patch panel), per priză</td><td>150–400</td><td>Lungimea traseului, tipul peretelui, existența canalelor de cabluri</td></tr>
+<tr><td>Traseu pentru cameră sau punct Wi-Fi pe tavan, per punct</td><td>200–500</td><td>Înălțimea, accesul la tavan, protecția în exterior</td></tr>
+<tr><td>Rack mural cu patch panel și management de cabluri</td><td>1.500–4.000</td><td>Dimensiunea dulapului, numărul de porturi, ventilația</td></tr>
+<tr><td>Etichetare, testare cu raport și schemă predată</td><td>300–1.500, în funcție de numărul de puncte</td><td>Numărul de puncte și formatul documentației cerute</td></tr>
+<tr><td>Legătură pe fibră între două clădiri (traseu + capete)</td><td>de la 2.500, în funcție de distanță</td><td>Lungime, tub îngropat sau aerian, tipul de fibră și de conectori</td></tr>
+</tbody>
+</table>
+
+<p>Lucrarea devine mult mai scumpă când intervenția se face într-o clădire finisată, prin tavane false sau șlițuri în pereți. Același număr de prize, introdus în faza de amenajare, înainte de tencuieli, costă adesea o fracțiune din cât costă ulterior. Cere ofertă defalcată pe priză, rack, testare și documentare, ca să compari corect și să vezi unde poți eșalona investiția.</p>
+
+<div class="box box-danger"><div class="box-title">⛔ Nu cumpăra cablu „de pe stoc” fără să știi ce e în el</div><p>Cablurile ieftine, vândute drept Cat6 dar făcute din aliaje în loc de cupru pur, se încălzesc, pierd tensiune pe distanță și nu își țin parametrii. Pentru PoE sunt chiar riscante, pentru că se supraîncălzesc în fascicule groase. Cere specificația cablului și confirmarea că e cu conductoare de cupru, nu doar o etichetă pe colac.</p></div>
+
+<h2 id="scenarii-locale-ce-se-intampla-daca">Scenarii locale: ce se întâmplă dacă…</h2>
+<p><strong>Dacă te muți într-un spațiu nou în Brașov sau în Ghimbav.</strong> Cel mai bun moment e înainte de finisaje: planifici prizele pe fiecare birou, cele pentru camere și puncte Wi-Fi, un rack într-un loc potrivit și traseele separate de curenții tari. Cu o lună înainte de mutare, cablarea e gata, testată și etichetată, iar în ziua mutării conectezi doar echipamentele.</p>
+<p><strong>Dacă ai o pensiune la Bran, Predeal ori Râșnov.</strong> Ai clădiri cu pereți groși, multe camere și musafiri care cer Wi-Fi bun în fiecare cameră. Se justifică puncte de acces distribuite, legate prin cablu, și rețele separate pentru oaspeți, camere și recepție. Iarna, cu ger, ai grijă la echipamentele din exterior și din spații neîncălzite.</p>
+<p><strong>Dacă ai sediul într-o clădire și depozitul în alta, în zona industrială.</strong> Distanța dintre clădiri depășește de regulă 100 de metri sau trece prin zone expuse la descărcări atmosferice. Soluția uzuală e fibra optică pe traseul dintre clădiri, cu un mic rack în fiecare capăt.</p>
+
+<h2 id="avantajul-unei-singure-echipe-pentru-ele">Avantajul unei singure echipe pentru electric + rețea + securitate</h2>
+<p>Curentul, rețeaua și securitatea sunt <strong>legate între ele</strong>: curentul alimentează tot, rețeaua transportă datele, securitatea merge pe amândouă. Când le împarți la trei firme diferite, ajungi în scenariul clasic de pasare a vinei: electricianul spune că e de la rețea, cel cu rețeaua spune că e de la camere, cel cu camerele spune că e de la curent — și tu rămâi fără nimeni responsabil.</p>
+<p>O <strong>singură echipă</strong> care face curenți tari + curenți slabi + securitate gândește totul coerent de la început, răspunde pentru întregul sistem și îți oferă un singur interlocutor. Partea electrică e făcută de <strong>electrician autorizat ANRE</strong>, cu garanție și conformitate — nu „de un cunoscut priceput”.</p>
+
+<h2 id="cum-lucreaza-cssi-de-la-evaluare-la-pred">Cum lucrează CSSI: de la evaluare la predare</h2>
+<p>La o lucrare de cablare nu începem cu cablul, ci cu o discuție despre ce vrei să ruleze pe rețea în următorii ani. Pașii, în ordine:</p>
+<ol>
+<li><strong>Evaluare la fața locului</strong> — vedem structura clădirii, tavanele, pereții, locul posibil pentru rack și traseele existente.</li>
+<li><strong>Inventarul nevoilor</strong> — câte posturi de lucru, camere, puncte Wi-Fi, ce telefonie, control acces și pontaj, plus rezerva pentru următorii ani.</li>
+<li><strong>Proiect și plan de prize</strong> — pozițiile prizelor, traseele, categoria de cablu și locul rack-ului, cu trasee separate de curenții tari.</li>
+<li><strong>Ofertă defalcată</strong> — cablare, rack, echipamente active, testare și documentare, fiecare cu costul ei. Prețul fix vine după evaluare.</li>
+<li><strong>Montaj</strong> — coordonat cu electricianul și cu amenajarea, astfel încât cablurile să intre înainte de finisaje.</li>
+<li><strong>Etichetare, testare și certificare</strong> — fiecare traseu e etichetat la ambele capete și măsurat, iar rezultatele intră într-un raport.</li>
+<li><strong>Predare cu schemă și instruire</strong> — primești planul, raportul de teste și lista echipamentelor.</li>
+<li><strong>Garanție și mentenanță</strong> — rămânem disponibili pentru intervenții și verificări periodice. Termenii garanției se stabilesc în ofertă.</li>
+</ol>
+<p>Dacă lucrarea face parte dintr-un proiect mai larg, o integrăm cu <a href="https://cssi.ro/camere-supraveghere-brasov">sistemul de camere de supraveghere</a> și cu <a href="https://cssi.ro/instalatii-electrice-brasov">instalația electrică</a>, ca să ai un singur plan și un singur responsabil.</p>
+
+<h2 id="mentenanta-retelei-de-date-ce-verifici-s">Mentenanța rețelei de date: ce verifici și cât de des</h2>
+<p>O rețea bine făcută cere puțină întreținere, dar nu zero. Verifică regulat, de regulă măcar o dată pe an, iar la rețelele cu multe camere sau program non-stop mai des:</p>
+<ul>
+<li><strong>Starea rack-ului</strong> — praf, ventilație, temperatură, cabluri desprinse sau forțate la cotituri.</li>
+<li><strong>Actualizarea echipamentelor</strong> — software-ul switch-urilor, al punctelor de acces și al înregistratoarelor la zi, iar parolele schimbate din valorile implicite.</li>
+<li><strong>Porturile PoE</strong> — consum, erori, camere care repornesc singure.</li>
+<li><strong>Schema</strong> — orice priză adăugată sau mutată intră imediat în documentație.</li>
+<li><strong>Sursa de rezervă</strong> — bateria UPS-ului se uzează și trebuie testată periodic.</li>
+</ul>
+<p>Detalii despre planificarea verificărilor găsești în articolul despre <a href="https://cssi.ro/blog/mentenanta-sisteme-securitate-de-ce-conteaza">mentenanța sistemelor de securitate</a>.</p>
+
+<div class="box box-tip"><div class="box-title">💡 Păstrează rezerva liberă</div><p>Nu umple toate porturile din patch panel și din switch în prima zi. Un sfert de capacitate liberă înseamnă că poți adăuga o cameră sau un telefon în aceeași zi, fără achiziții în grabă.</p></div>
+
+<h2 id="lista-de-verificare-inainte-sa-ceri-ofer">Lista de verificare înainte să ceri oferta</h2>
+<ul>
+<li>Ai planul clădirii (chiar și schițat) și știi unde vrei birourile, camerele și punctele Wi-Fi?</li>
+<li>Câte posturi de lucru ai azi și câte estimezi peste doi-trei ani?</li>
+<li>Ce rulează pe rețea: telefonie IP, camere, control acces, pontaj, Wi-Fi pentru oaspeți?</li>
+<li>Există tavane false sau canale de cabluri, sau trebuie create?</li>
+<li>Depășește distanța dintre rack și cea mai îndepărtată priză 100 m?</li>
+<li>Ai ales locul rack-ului: curat, uscat, cu acces limitat și priză de curent dedicată?</li>
+<li>Instalatorul a precizat categoria cablului și confirmă că e cupru, nu aliaj?</li>
+<li>Ți s-a promis testarea cu raport și schema predată?</li>
+<li>Sunt traseele de date separate de cele de curenți tari?</li>
+<li>Ai gândit alimentarea de rezervă (UPS) pentru rack?</li>
+<li>Ai cerut oferta defalcată pe priză, rack, echipamente, testare și documentare?</li>
+</ul>
+
+<h2 id="citeste-si">Citește și</h2>
+<ul>
+  <li><a href="https://cssi.ro/blog/securizare-retea-cctv-ip-parole-vlan-protectie-brasov">Cum securizezi rețeaua unui sistem CCTV IP</a> — parole, separare de rețea și protecție pentru camerele tale.</li>
+  <li><a href="https://cssi.ro/blog/cate-camere-ce-rezolutie-dimensionare-sistem-cctv-brasov">De câte camere și ce rezoluție ai nevoie</a> — dimensionarea care îți arată câte trasee de cablu trebuie planificate.</li>
+  <li><a href="https://cssi.ro/blog/nvr-vs-dvr-vs-cloud-stocare-camere-2026">NVR vs DVR vs cloud</a> — unde ajung imaginile după ce trec prin cablu.</li>
+  <li><a href="https://cssi.ro/blog/securitate-centru-date-camera-servere-firma-brasov">Securitatea camerei de servere</a> — cum protejezi locul în care stă rack-ul.</li>
+  <li><a href="https://cssi.ro/blog/instalatie-electrica-cladire-birouri-open-space-brasov">Instalație electrică pentru clădire de birouri</a> — partea de curenți tari, coordonată cu cablarea.</li>
+</ul>
+      <h2 id="faq">Întrebări frecvente</h2>
+      <div class="faq-wrap">
+        <div class="faq-item">
+          <button class="faq-q" onclick="toggleFaq(this)">Ce înseamnă, mai exact, cablare structurată? <svg class="faq-chevron" width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg></button>
+          <div class="faq-a"><p>Rețeaua „invizibilă” de cabluri și echipamente pe care merg internetul, telefonia, camerele, controlul accesului și pontajul. „Structurată” înseamnă gândită ca sistem ordonat și standardizat — trasee clare, prize de date în locurile potrivite, un rack central, etichetare și documentație — nu cabluri trase la întâmplare. E fundația pe care funcționează stabil tot restul.</p></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q" onclick="toggleFaq(this)">De ce contează atât de mult cine trage cablurile? <svg class="faq-chevron" width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg></button>
+          <div class="faq-a"><p>Pentru că o cablare proastă nu se vede la început, dar te costă ani la rând: internet care „cade”, camere care pierd semnal, conexiuni instabile și o rețea pe care nu o mai poți extinde. Reparațiile, întreruperile și refacerea costă mult mai mult decât o lucrare corectă din prima. De aceea materialele, standardele și documentația contează enorm.</p></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q" onclick="toggleFaq(this)">Ce standarde și elemente contează la o cablare bună? <svg class="faq-chevron" width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg></button>
+          <div class="faq-a"><p>Categoria și calitatea cablului (potrivită pentru vitezele de azi și de mâine), certificarea lucrării (verificarea fiecărui traseu), un rack ordonat în care se adună echipamentele, și — esențial — etichetarea și documentația. Fără etichetare și fără rezerve pentru viitor, orice modificare devine un coșmar.</p></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q" onclick="toggleFaq(this)">Cum se leagă cablarea de sistemul de securitate? <svg class="faq-chevron" width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg></button>
+          <div class="faq-a"><p>Direct. Camerele IP, controlul accesului și pontajul merg pe aceeași rețea ca internetul firmei. Dacă rețeaua e proastă, camerele pierd imagine, controlul accesului îngheață, pontajul dă erori. Securitatea ta e atât de bună pe cât e rețeaua. De aceea are sens ca aceeași echipă să facă și securitatea, și cablarea.</p></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q" onclick="toggleFaq(this)">Ce e PoE și de ce contează pentru camere? <svg class="faq-chevron" width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg></button>
+          <div class="faq-a"><p>PoE (Power over Ethernet) înseamnă că același cablu de rețea duce și datele, și curentul către cameră. Nu mai ai nevoie de o priză separată lângă fiecare cameră — un cablu rezolvă tot. E mai curat, mai ieftin și mai flexibil, dar cere echipamente potrivite (switch-uri PoE) și o cablare de calitate. Aici se vede din nou de ce electric și date merg împreună.</p></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q" onclick="toggleFaq(this)">Când e cel mai bun moment să mă ocup de cablare? <svg class="faq-chevron" width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg></button>
+          <div class="faq-a"><p>Ideal când construiești un spațiu nou, te muți sau extinzi — atunci planifici câte prize de date, unde, cu ce rezerve. E mult mai ieftin să tragi cablurile în faza de amenajare decât prin pereți finisați. Dar și o firmă instalată își poate reface ordonat cablarea dacă suferă de instabilitate — important e să nu mai „cârpești”.</p></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q" onclick="toggleFaq(this)">De ce să aleg o singură echipă pentru electric, rețea și securitate? <svg class="faq-chevron" width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg></button>
+          <div class="faq-a"><p>Pentru că sunt legate: curentul alimentează tot, rețeaua transportă datele, securitatea merge pe amândouă. Cu o singură echipă eviți pasarea vinei între electrician, cel cu rețeaua și cel cu camerele. O echipă care face curenți tari + slabi + securitate gândește totul coerent, răspunde pentru întreg sistemul și îți oferă un singur interlocutor — mai simplu și mai ieftin pe termen lung.</p></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q" onclick="toggleFaq(this)">Ce categorie de cablu aleg: Cat5e, Cat6 sau Cat6A? <svg class="faq-chevron" width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg></button>
+          <div class="faq-a"><p>Pentru o lucrare nouă, de regulă Cat6 e alegerea echilibrată pentru un birou sau un magazin obișnuit, iar Cat6A are sens când ai multe camere PoE, trasee lungi sau o clădire în care vrei rezervă mare pentru viitor. Cat5e rămâne potrivit mai ales la extinderi mici într-o rețea existentă. Cablul rămâne în perete mulți ani, deci merită să alegi pentru nevoile de mâine, nu doar pentru cele de azi. Decizia finală se ia după evaluarea clădirii.</p></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q" onclick="toggleFaq(this)">Cât de lung poate fi un cablu de rețea? <svg class="faq-chevron" width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg></button>
+          <div class="faq-a"><p>Pe cablu de cupru, limita generală este de 100 de metri pe un traseu complet, de la echipamentul activ până la priza din perete, inclusiv cordoanele de legătură. Dacă ai distanțe mai mari, ai două soluții: un al doilea rack sau un switch intermediar, ori fibra optică, care acoperă distanțe mult mai mari. Nu forța cuprul peste limită, pentru că apar erori și pierderi de imagine la camere.</p></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q" onclick="toggleFaq(this)">Când ai nevoie de fibră optică și când ajunge cuprul? <svg class="faq-chevron" width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg></button>
+          <div class="faq-a"><p>Cuprul ajunge în interiorul unei clădiri, pe trasee sub 100 de metri. Fibra optică devine utilă între clădiri, pe distanțe lungi sau acolo unde există interferențe electrice puternice, de exemplu lângă motoare sau tablouri mari. Un alt avantaj este că nu transmite curent între capete. Cere instalatorului să explice cum protejează traseul fibrei și cum îl testează la final.</p></div>
+        </div>
+      </div>
+
+      <aside class="discuta-in-grup">
+        <h3>Ai o întrebare despre asta?</h3>
+        <p>Discutăm subiectul în grupul nostru de pe Facebook, împreună cu electricieni, instalatori și proprietari din Brașov și împrejurimi. Pune întrebarea acolo și primești răspuns de la oameni care lucrează efectiv în domeniu. Suntem deja <!-- MEMBRI-GRUP -->351<!-- /MEMBRI-GRUP --> în grup.</p>
+        <a href="https://www.facebook.com/groups/1970585079825010" rel="noopener" target="_blank">Intră în grupul Instalații Brașov →</a>
+      </aside>
+      <div class="cta-banner">
+        <div>
+          <h3>Pașii următori — cere oferta ta</h3>
+          <p>Fără obligații: vii cu nevoia, pleci cu o soluție și un preț defalcat. CSSI — 20 de ani, 8.700+ proiecte în județul Brașov.</p>
+        </div>
+        <div class="cta-buttons">
+          <a href="/contact" class="btn btn-secondary">📩 Cere ofertă</a>
+          <a href="tel:0752288400" class="btn btn-primary">📞 0752 288 400</a>
+          <a target="_blank" rel="noopener" href="https://wa.me/40752288400" class="btn btn-secondary">💬 WhatsApp</a>
+        </div>
+      </div>
+
+    </main>
+
+    <aside class="sidebar">
+      <div class="sidebar-card">
+        <div class="sidebar-card-head">📑 Cuprins</div>
+        <div class="sidebar-card-body" style="padding:10px 18px">
+          <ol class="toc-list">
+            <li><a href="#raspunsul-scurt">Răspunsul scurt</a></li>
+            <li><a href="#ce-inseamna-cablare-structurata">Ce înseamnă cablare structurată</a></li>
+            <li><a href="#de-ce-o-cablare-proasta-te-costa-ani-la-">De ce o cablare proastă te costă ani la rând</a></li>
+            <li><a href="#standardele-care-conteaza">Standardele care contează</a></li>
+            <li><a href="#cat5e-cat6-sau-cat6a-ce-categorie-alegi">Cat5e, Cat6 sau Cat6A: ce categorie alegi</a></li>
+            <li><a href="#fibra-optica-cand-merita">Fibra optică: când merită</a></li>
+            <li><a href="#rack-patch-panel-si-ordinea-din-dulap">Rack, patch panel și ordinea din dulap</a></li>
+            <li><a href="#etichetare-si-documentare-ce-preda-un-in">Etichetare și documentare: ce predă un instalator serios</a></li>
+            <li><a href="#cum-se-leaga-cablarea-de-securitate">Cum se leagă cablarea de securitate</a></li>
+            <li><a href="#planificarea-pe-spatiu-nou-sau-la-mutare">Planificarea pe spațiu nou sau la mutare</a></li>
+            <li><a href="#alimentarea-poe-unde-se-intalnesc-curent">Alimentarea PoE: unde se întâlnesc curenții tari cu cei slabi</a></li>
+            <li><a href="#wi-fi-cablul-ramane-baza">Wi-Fi: cablul rămâne baza</a></li>
+            <li><a href="#separarea-de-curentii-tari-de-ce-nu-stau">Separarea de curenții tari: de ce nu stau cablurile de date lângă cele de 230 V</a></li>
+            <li><a href="#testare-si-certificare-dovada-ca-traseul">Testare și certificare: dovada că traseul chiar funcționează</a></li>
+            <li><a href="#greseli-frecvente-pe-care-le-vedem">Greșeli frecvente pe care le vedem</a></li>
+            <li><a href="#costuri-orientative-2026-pentru-cablare-">Costuri orientative 2026 pentru cablare structurată</a></li>
+            <li><a href="#scenarii-locale-ce-se-intampla-daca">Scenarii locale: ce se întâmplă dacă…</a></li>
+            <li><a href="#avantajul-unei-singure-echipe-pentru-ele">Avantajul unei singure echipe pentru electric + rețea + securitate</a></li>
+            <li><a href="#cum-lucreaza-cssi-de-la-evaluare-la-pred">Cum lucrează CSSI: de la evaluare la predare</a></li>
+            <li><a href="#mentenanta-retelei-de-date-ce-verifici-s">Mentenanța rețelei de date: ce verifici și cât de des</a></li>
+            <li><a href="#lista-de-verificare-inainte-sa-ceri-ofer">Lista de verificare înainte să ceri oferta</a></li>
+            <li><a href="#citeste-si">Citește și</a></li>
+            <li><a href="#faq">Întrebări frecvente</a></li>
+          </ol>
+        </div>
+      </div>
+      <div class="sidebar-card">
+        <div class="sidebar-card-head">📞 Contact CSSI Brașov</div>
+        <div class="sidebar-card-body">
+          <ul class="contact-info">
+            <li><div class="ci-icon">📞</div><div><strong>0752 288 400</strong><span>Lun–Vin 08:00–18:00</span></div></li>
+            <li><div class="ci-icon">📧</div><div><strong>office@cssi.ro</strong><span>Răspuns în max 24h</span></div></li>
+            <li><div class="ci-icon">📍</div><div><strong>Brașov</strong><span>și județele înconjurătoare</span></div></li>
+          </ul>
+          <a target="_blank" rel="noopener" href="https://wa.me/40752288400" class="btn btn-primary" style="margin-top:12px">💬 Scrie pe WhatsApp</a>
+        </div>
+      </div>
+    </aside>
+  </div>
+
+<footer class="article-footer">
+    <p>Articol scris de echipa <strong>CSSI Brașov</strong> — firmă autorizată IGPR și ISU, cu peste 20 de ani de experiență în sisteme de securitate și instalații.</p>
+    <div class="tags">
+      <span class="tag">camere supraveghere brasov</span>
+      <span class="tag">instalare camere</span>
+      <span class="tag">preturi camere 2026</span>
+      <span class="tag">Hikvision</span>
+      <span class="tag">Dahua</span>
+      <span class="tag">Uniview</span>
+      <span class="tag">CCTV</span>
+      <span class="tag">Brașov</span>
+    </div>
+    <p style="font-size:12px;color:#aaa;margin-top:8px">© 2026 CSSI — Confort, Securitate, Siguranță, Imobil | <a href="/">cssi.ro</a></p>
+  </footer>
+<script>
+    function toggleFaq(btn) {
+      const item = btn.closest('.faq-item');
+      const isOpen = item.classList.contains('open');
+      document.querySelectorAll('.faq-item.open').forEach(el => el.classList.remove('open'));
+      if (!isOpen) item.classList.add('open');
+    }
+    const headings = document.querySelectorAll('h2[id]');
+    const tocLinks = document.querySelectorAll('.toc-list a');
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          tocLinks.forEach(a => a.style.color = '');
+          const active = document.querySelector(`.toc-list a[href="#${entry.target.id}"]`);
+          if (active) active.style.color = 'var(--brand-blue)';
+        }
+      });
+    }, { rootMargin: '-20% 0px -70% 0px' });
+    headings.forEach(h => observer.observe(h));
+  </script>
+  <script>
+    let navTextColor = '#fff';
+    window.addEventListener('scroll', function() {
+        const navBg = document.getElementById('navBg');
+        const logo = document.getElementById('logoImg');
+        const scrolled = window.scrollY > 50;
+        if (scrolled) {
+            navBg.style.background = '#ffffff';
+            navBg.style.backdropFilter = 'blur(12px)';
+            navBg.style.boxShadow = '0 1px 2px rgba(0,0,0,0.05)';
+            if (logo) logo.style.filter = '';
+            navTextColor = '#334155';
+        } else {
+            navBg.style.background = 'transparent';
+            navBg.style.backdropFilter = '';
+            navBg.style.boxShadow = '';
+            if (logo) logo.style.filter = 'brightness(0) invert(1) drop-shadow(0 0 1px rgba(255,255,255,0.8))';
+            navTextColor = '#fff';
+        }
+        ['navLink1','navLink2','navLink3','navLink4','navLinkBlog','navLink5','phoneLink'].forEach(id=>{
+            const el=document.getElementById(id);
+            if(el) el.style.color=navTextColor;
+        });
+    });
+    function toggleMobileMenu(){
+        const menu=document.getElementById('mobileMenu');
+        const menuIcon=document.getElementById('menuIcon');
+        const closeIcon=document.getElementById('closeIcon');
+        const btn=document.getElementById('menuBtn');
+        if(menu.classList.contains('open')){
+            menu.classList.remove('open');
+            menuIcon.style.display='';
+            closeIcon.style.display='none';
+            btn.style.background='linear-gradient(to right,#ef4444,#dc2626)';
+            btn.classList.add('animate-subtle-pulse');
+        } else {
+            menu.classList.add('open');
+            menuIcon.style.display='none';
+            closeIcon.style.display='';
+            btn.style.background='#6b7280';
+            btn.classList.remove('animate-subtle-pulse');
+        }
+    }
+    function closeMobile(){
+        document.getElementById('mobileMenu').classList.remove('open');
+        document.getElementById('menuIcon').style.display='';
+        document.getElementById('closeIcon').style.display='none';
+    }
+    function toggleServicesSubmenu(){
+        const sub=document.getElementById('servicesSubmenu');
+        const arrow=document.getElementById('servicesArrow');
+        if(sub.classList.contains('open')){
+            sub.classList.remove('open');
+            arrow.style.transform='';
+        } else {
+            sub.classList.add('open');
+            arrow.style.transform='rotate(180deg)';
+        }
+    }
+  </script>
+<script>
+// GA4 tracking: phone_call & whatsapp_click
+document.addEventListener('DOMContentLoaded', function() {
+    document.querySelectorAll('a[href^="tel:"]').forEach(function(link) {
+        link.addEventListener('click', function() {
+            if (typeof gtag === 'function') {
+                gtag('event', 'phone_call', {event_category:'Contact', event_label:this.href.replace('tel:',''), value:100, currency:'RON'});
+            }
+        });
+    });
+    document.querySelectorAll('a[href*="wa.me"]').forEach(function(link) {
+        link.addEventListener('click', function() {
+            if (typeof gtag === 'function') {
+                gtag('event', 'whatsapp_click', {event_category:'Contact', event_label:'WhatsApp Direct', value:100, currency:'RON'});
+            }
+        });
+    });
+});
+</script>
+<a id="waFloat" href="https://wa.me/40752288400" target="_blank" rel="noopener noreferrer" aria-label="Scrie-ne pe WhatsApp"><svg width="28" height="28" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg></a><button id="toTop" aria-label="Înapoi sus" onclick="window.scrollTo({top:0,behavior:&#39;smooth&#39;})"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 15l-6-6-6 6"/></svg></button><script>(function(){var b=document.getElementById("toTop");window.addEventListener("scroll",function(){if(window.scrollY>400)b.classList.add("show");else b.classList.remove("show");});})();</script>
+</body>
+</html>
