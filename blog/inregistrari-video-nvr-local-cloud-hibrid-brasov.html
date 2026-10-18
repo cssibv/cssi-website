@@ -1,0 +1,720 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Unde se păstrează înregistrările: NVR local, cloud | CSSI</title>
+<meta name="description" content="Unde ajung de fapt înregistrările camerelor tale și ce se întâmplă dacă hoțul fură recorderul? Comparăm cele trei arhitecturi — NVR local, cloud — CSSI.">
+<link rel="canonical" href="https://cssi.ro/blog/inregistrari-video-nvr-local-cloud-hibrid-brasov">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Unde se păstrează înregistrările: NVR local, cloud sau hibrid | CSSI Brașov">
+<meta property="og:description" content="NVR local, cloud sau hibrid: unde se salvează imaginile camerelor, cât te costă, ce riști și ce alegi pentru o firmă din Brașov.">
+<meta property="og:url" content="https://cssi.ro/blog/inregistrari-video-nvr-local-cloud-hibrid-brasov">
+<meta property="og:image" content="https://cssi.ro/images/blog/nvr-local-cloud-hibrid-cover.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:type" content="image/jpeg">
+<meta property="og:locale" content="ro_RO">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Unde se păstrează înregistrările: NVR local, cloud sau hibrid">
+<meta name="twitter:description" content="Local, cloud sau hibrid? Unde ajung imaginile, ce riști dacă fură recorderul și ce alegi. CSSI Brașov: 0752 288 400.">
+<meta name="twitter:image" content="https://cssi.ro/images/blog/nvr-local-cloud-hibrid-cover.jpg">
+
+<!-- ===== SCHEMA JSON-LD: Article + BreadcrumbList + FAQPage ===== -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Article",
+      "@id": "https://cssi.ro/blog/inregistrari-video-nvr-local-cloud-hibrid-brasov#article",
+      "headline": "Unde se păstrează înregistrările: NVR local, cloud sau hibrid",
+      "description": "Cele trei arhitecturi de stocare a înregistrărilor video — NVR/DVR local, cloud și hibrid — cu avantaje, dezavantaje, cost de funcționare și ce alegi pe scop.",
+      "image": "https://cssi.ro/images/blog/nvr-local-cloud-hibrid-cover.jpg",
+      "author": {"@type": "Organization", "name": "CSSI Brașov", "url": "https://cssi.ro"},
+      "publisher": {"@type": "Organization", "name": "CSSI Brașov", "logo": {"@type": "ImageObject", "url": "https://cssi.ro/images/logo-cssi.webp"}},
+      "datePublished": "2026-10-18",
+      "dateModified": "2026-10-18",
+      "mainEntityOfPage": "https://cssi.ro/blog/inregistrari-video-nvr-local-cloud-hibrid-brasov",
+      "inLanguage": "ro"
+    },
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {"@type": "ListItem", "position": 1, "name": "Acasă", "item": "https://cssi.ro/"},
+        {"@type": "ListItem", "position": 2, "name": "Blog", "item": "https://cssi.ro/blog"},
+        {"@type": "ListItem", "position": 3, "name": "Unde se păstrează înregistrările: NVR local, cloud sau hibrid"}
+      ]
+    },
+    {"@type": "FAQPage", "mainEntity": [
+      {"@type": "Question", "name": "Unde ajung de fapt înregistrările camerelor mele?", "acceptedAnswer": {"@type": "Answer", "text": "În majoritatea sistemelor, imaginile se salvează pe un recorder din locație: un NVR pentru camerele IP sau un DVR pentru cele analogice, cu unul sau mai multe hard-disk-uri. Acolo se înregistrează continuu sau pe eveniment, iar tu accesezi imaginile direct sau din aplicație. Dacă nu ai și o copie în afara locației, toate înregistrările depind de acel singur aparat."}},
+      {"@type": "Question", "name": "Dacă hoțul fură recorderul, pierd toate dovezile?", "acceptedAnswer": {"@type": "Answer", "text": "Da, dacă te bazezi doar pe recorderul local și acesta e furat sau distrus. De aceea îl montăm ascuns, într-un spațiu încuiat, și recomandăm o copie a evenimentelor critice în cloud. Cu o soluție hibridă, chiar dacă cineva ia recorderul, momentul efracției a fost deja urcat în afara locației și rămâne disponibil ca probă."}},
+      {"@type": "Question", "name": "Ce înseamnă stocare în cloud pentru camere?", "acceptedAnswer": {"@type": "Answer", "text": "Înseamnă că o copie a înregistrărilor (de regulă evenimentele importante, nu neapărat fluxul continuu) se urcă pe un server din afara locației, la care ai acces de oriunde prin internet. Avantajul e că imaginile supraviețuiesc chiar dacă aparatura din locație e furată sau distrusă. Dezavantajele sunt costul lunar al abonamentului și dependența de o conexiune bună la internet."}},
+      {"@type": "Question", "name": "Ce este o soluție hibridă și de ce o recomandați firmelor?", "acceptedAnswer": {"@type": "Answer", "text": "Hibrid înseamnă înregistrare locală (rapidă, fără abonament, cu istoric complet) plus o copie a evenimentelor critice în cloud (rezistentă la furtul recorderului și accesibilă de oriunde). Pentru o firmă e cel mai bun raport între cost și siguranță: păstrezi controlul și istoricul local, dar nu pierzi probele esențiale dacă aparatura e compromisă. Configurăm ce anume se urcă în cloud, ca să ții costul sub control."}},
+      {"@type": "Question", "name": "De cât spațiu de stocare am nevoie?", "acceptedAnswer": {"@type": "Answer", "text": "Depinde de numărul de camere, de rezoluție, de câte cadre pe secundă înregistrezi și de câte zile vrei să păstrezi imaginile. Mai multe camere de rezoluție mare, înregistrate continuu, pe mai multe zile, înseamnă mai mult spațiu. La dimensionare calculăm exact de cât hard-disk ai nevoie pentru perioada dorită, ca să nu te trezești că sistemul suprascrie înregistrările prea repede."}},
+      {"@type": "Question", "name": "Cât timp trebuie să păstrez înregistrările?", "acceptedAnswer": {"@type": "Answer", "text": "Nu există o cifră universală; depinde de scop și de regulile GDPR de minimizare, adică păstrezi cât e necesar, nu la nesfârșit. Multe firme aleg o perioadă de câteva săptămâni. Tema duratei legale și a stocării conforme o tratăm separat; aici discutăm unde și cum se stochează tehnic. La proiectare corelăm spațiul de stocare cu perioada pe care vrei să o acoperi."}},
+      {"@type": "Question", "name": "Înregistrările din cloud sunt sigure și conforme GDPR?", "acceptedAnswer": {"@type": "Answer", "text": "Pot fi, dacă sunt configurate corect: transfer criptat, acces pe bază de cont și rol, furnizor serios și o politică clară de păstrare. GDPR cere să știi unde sunt datele, cine are acces și cât timp le ții — reguli care se aplică și local, și în cloud. Te ajutăm să alegi o soluție în care stocarea, oriunde ar fi, rămâne sub control și documentată."}},
+      {"@type": "Question", "name": "Ce se întâmplă cu înregistrările dacă pică internetul?", "acceptedAnswer": {"@type": "Answer", "text": "Într-un sistem cu recorder local, nimic grav: recorderul scrie pe disc fără să depindă de internet, deci imaginile rămân complete. Ce se pierde temporar este accesul de la distanță și urcarea copiei în cloud, care se reia după ce revine conexiunea. Într-un sistem doar cloud, în schimb, intervalul fără internet poate rămâne neînregistrat, dacă nu există un card SD în cameră. De aceea recomandăm stratul local ca bază."}},
+      {"@type": "Question", "name": "Poate cardul SD din cameră să țină loc de recorder?", "acceptedAnswer": {"@type": "Answer", "text": "Pentru una-două camere într-o locuință mică, poate acoperi nevoia de bază, dar nu e o soluție completă. Cardul are capacitate redusă, se uzează la scriere continuă și stă chiar în cameră, deci dispare dacă dispare camera. Îl vedem ca pe o rezervă care acoperă golurile de rețea, nu ca pe stocarea principală. Pentru o firmă, recomandăm recorder local plus o copie în afara locației."}},
+      {"@type": "Question", "name": "De cât internet am nevoie pentru copia în cloud?", "acceptedAnswer": {"@type": "Answer", "text": "Contează în primul rând viteza de încărcare (upload), nu cea de descărcare. Dacă urci doar clipuri cu evenimente, o conexiune obișnuită de firmă ajunge de regulă; dacă vrei să urci fluxul continuu al mai multor camere, necesarul crește mult și rețeaua poate încetini restul activității. Măsurăm upload-ul real din locație înainte de proiect și îți spunem ce poți urca realist, fără surprize."}}
+    ]}
+  ]
+}
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;600;700;800&family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,400;0,8..60,600;1,8..60,400&display=swap" rel="stylesheet" />
+  <script src="/cookie-consent.js" defer></script>
+  <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}</script>
+  <script src="/tracking.js" defer></script>
+  <style>
+    @keyframes subtle-pulse-n { 0%,100%{transform:scale(1)}50%{transform:scale(.92)} }
+    @keyframes badge-pulse-n { 0%,100%{box-shadow:0 0 0 0 rgba(34,197,94,.4)}50%{box-shadow:0 0 0 8px rgba(34,197,94,0)} }
+    .animate-subtle-pulse{animation:subtle-pulse-n 2.5s ease-in-out infinite}
+    .animate-badge-pulse{animation:badge-pulse-n 2s ease-in-out infinite}
+    .dropdown-menu{display:none!important}
+    .dropdown:hover .dropdown-menu{display:block!important}
+    #mobileMenu{display:none}
+    #mobileMenu.open{display:block}
+    #servicesSubmenu{display:none}
+    #servicesSubmenu.open{display:block}
+    .dropdown-scroll::-webkit-scrollbar{width:4px}
+    .dropdown-scroll::-webkit-scrollbar-track{background:#f1f1f1}
+    .dropdown-scroll::-webkit-scrollbar-thumb{background:#cbd5e1;border-radius:4px}
+    @media(min-width:640px){.sm\:block{display:block!important}.sm\:hidden{display:none!important}.sm\:px-6{padding-left:24px;padding-right:24px}}
+    @media(min-width:1024px){.lg\:flex{display:flex!important}.lg\:hidden{display:none!important}}@media(min-width:768px){.md\:flex{display:flex!important}.md\:hidden{display:none!important}}
+    #mainHeader, #mainHeader a, #mainHeader button, #mainHeader span, #mainHeader div { font-family: 'Sora', sans-serif !important; }
+  </style>
+  <style>
+    :root{--brand-dark:#0b1a2e;--brand-navy:#102a4c;--brand-blue:#1a4b8c;--brand-accent:#e63022;--brand-gold:#f5a623;--brand-light:#f0f4f9;--text-main:#1c2b3a;--text-muted:#5a6e82;--text-light:#8fa0b3;--border:#dce6f0;--white:#ffffff;--ff-head:'Sora',sans-serif;--ff-body:'Source Serif 4',Georgia,serif;--radius:10px;--shadow-sm:0 2px 8px rgba(11,26,46,.08);--shadow-md:0 6px 24px rgba(11,26,46,.13);--shadow-lg:0 16px 48px rgba(11,26,46,.18);--max-w:1400px}
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    html{scroll-behavior:smooth}
+    body{font-family:var(--ff-body);font-size:18px;line-height:1.75;color:var(--text-main);background:var(--white);-webkit-font-smoothing:antialiased}
+    img{max-width:100%;height:auto;display:block}
+    a{color:var(--brand-blue);text-decoration:none}
+    a:hover{text-decoration:underline}
+    .breadcrumb{background:var(--brand-dark);border-bottom:none;padding:12px 0;padding-top:104px;font-family:var(--ff-head);font-size:13px;color:rgba(255,255,255,.55)}
+    .breadcrumb .inner{max-width:1280px;margin:0 auto;padding:0 0 12px 24px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+    .breadcrumb a{color:rgba(255,255,255,.7)}
+    .breadcrumb .sep{color:rgba(255,255,255,.3)}
+    .hero{background:var(--brand-dark);background-image:radial-gradient(ellipse 70% 60% at 80% 50%,rgba(26,75,140,.45) 0%,transparent 70%),radial-gradient(ellipse 40% 50% at 10% 80%,rgba(230,48,34,.15) 0%,transparent 60%);color:var(--white);padding:48px 24px 64px;position:relative;overflow:hidden}
+    .hero::before{content:'';position:absolute;inset:0;background-image:url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23ffffff' fill-opacity='0.025'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/svg%3E")}
+        .hero .inner{max-width:var(--max-w);margin:0 auto;position:relative;z-index:1;display:flex;align-items:center;gap:40px}
+    .hero-content{flex:1;min-width:0}
+    .hero-img-wrap{flex:0 0 640px;display:flex;align-items:center;justify-content:center}
+    .hero-img-wrap img{width:640px;height:auto;border-radius:14px;box-shadow:0 8px 32px rgba(0,0,0,.35);border:1px solid rgba(255,255,255,.1);opacity:.92;transition:opacity .3s}
+    .hero-img-wrap img:hover{opacity:1}
+    @media(max-width:900px){.hero .inner{flex-direction:column;gap:24px}.hero-img-wrap{flex:0 0 auto;order:-1}.hero-img-wrap img{width:500px}}
+    @media(max-width:700px){.hero-img-wrap{display:none}}
+    .hero-badge{display:inline-flex;align-items:center;gap:6px;background:rgba(230,48,34,.2);border:1px solid rgba(230,48,34,.4);color:#ff8a80;font-family:var(--ff-head);font-size:12px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;padding:5px 12px;border-radius:100px;margin-bottom:20px}
+    .hero h1{font-family:var(--ff-head);font-size:clamp(26px,4vw,40px);font-weight:800;line-height:1.2;margin-bottom:20px;letter-spacing:-.02em}
+    .hero h1 em{font-style:normal;color:var(--brand-gold)}
+    .hero .lead{font-size:clamp(16px,2vw,19px);line-height:1.65;color:rgba(255,255,255,.82);max-width:620px;margin-bottom:32px}
+    .hero-meta{display:flex;align-items:center;gap:20px;flex-wrap:wrap;font-family:var(--ff-head);font-size:13px;color:rgba(255,255,255,.55)}
+    .hero-meta span{display:flex;align-items:center;gap:5px}
+    .hero-meta .dot{color:rgba(255,255,255,.25)}
+    .topic-pills{display:flex;gap:10px;flex-wrap:wrap;margin-top:28px}
+    .pill{display:flex;align-items:center;gap:8px;padding:8px 16px;border-radius:100px;font-family:var(--ff-head);font-size:13px;font-weight:600;border:1px solid}
+    .pill-red{background:rgba(230,48,34,.15);border-color:rgba(230,48,34,.35);color:#ff8a80}
+    .pill-amber{background:rgba(245,166,35,.12);border-color:rgba(245,166,35,.3);color:#ffd180}
+    .pill-blue{background:rgba(26,75,140,.25);border-color:rgba(26,75,140,.5);color:#82b4ff}
+    .pill-green{background:rgba(39,174,96,.15);border-color:rgba(39,174,96,.35);color:#81c995}
+    .article-wrap{max-width:1440px;margin:0 auto;padding:0 20px;display:grid;grid-template-columns:1fr 280px;gap:32px;align-items:start}
+    .article-body{padding:32px 0}
+    .article-body h2{font-family:var(--ff-head);font-size:clamp(20px,2.5vw,26px);font-weight:700;color:var(--brand-dark);margin:36px 0 14px;padding-top:6px;border-top:3px solid var(--brand-accent);line-height:1.3}
+    .article-body h3{font-family:var(--ff-head);font-size:clamp(17px,2vw,20px);font-weight:600;color:var(--brand-navy);margin:32px 0 12px}
+    .article-body p{margin-bottom:16px;color:var(--text-main)}
+    .article-body ul,.article-body ol{padding-left:24px;margin-bottom:20px}
+    .article-body li{margin-bottom:8px}
+    .article-body strong{color:var(--brand-dark)}
+    .intro-p{font-size:19px;line-height:1.7}
+    .box{border-radius:var(--radius);padding:22px 26px;margin:28px 0;border-left:4px solid}
+    .box-red{background:#fef2f2;border-color:var(--brand-accent)}
+    .box-blue{background:#eff6ff;border-color:var(--brand-blue)}
+    .box-amber{background:#fffbeb;border-color:var(--brand-gold)}
+    .box-green{background:#f0fdf4;border-color:#27ae60}
+    .box h4{font-family:var(--ff-head);font-size:15px;font-weight:700;margin-bottom:8px}
+    .box p{font-size:15px;margin-bottom:8px}
+    .check-list{list-style:none;padding:0}
+    .check-list li{display:flex;gap:10px;padding:6px 0;font-size:16px}
+    .chk{color:#27ae60;font-weight:700;flex-shrink:0}
+    .price-table{width:100%;border-collapse:collapse;margin:24px 0;font-size:15px}
+    .price-table th{background:var(--brand-navy);color:var(--white);font-family:var(--ff-head);font-size:13px;font-weight:600;text-transform:uppercase;letter-spacing:.04em;padding:12px 16px;text-align:left}
+    .price-table td{padding:12px 16px;border-bottom:1px solid var(--border)}
+    .price-table tr:nth-child(even) td{background:var(--brand-light)}
+    .price-table .highlight td{background:#fffbeb;font-weight:600}
+    .cta-banner{background:linear-gradient(135deg,var(--brand-dark),var(--brand-navy));border-radius:var(--radius);padding:28px 32px;color:var(--white);display:flex;align-items:center;justify-content:space-between;gap:20px;flex-wrap:wrap}
+    .cta-banner h3{font-family:var(--ff-head);font-size:18px;font-weight:700;margin-bottom:4px}
+    .cta-banner p{font-size:14px;color:rgba(255,255,255,.7);margin:0}
+    .cta-buttons{display:flex;gap:10px;flex-wrap:wrap}
+    .btn{display:inline-flex;align-items:center;gap:7px;padding:10px 18px;border-radius:8px;font-family:var(--ff-head);font-size:13px;font-weight:600;cursor:pointer;border:none;text-decoration:none!important}
+    .btn-primary{background:var(--brand-accent);color:var(--white)!important;box-shadow:0 4px 14px rgba(230,48,34,.3)}
+    .btn-secondary{background:rgba(255,255,255,.12);color:var(--white)!important;border:1px solid rgba(255,255,255,.25)}
+    .faq-section{margin:48px 0 32px}
+    .faq-item{border:1px solid var(--border);border-radius:var(--radius);margin-bottom:10px;overflow:hidden}
+    .faq-q{display:flex;align-items:center;justify-content:space-between;padding:16px 20px;cursor:pointer;background:var(--white);font-family:var(--ff-head);font-size:15px;font-weight:600;color:var(--brand-dark);border:none;width:100%;text-align:left;gap:12px}
+    .faq-q:hover{background:var(--brand-light)}
+    .faq-a{display:none;padding:0 20px 16px;font-size:15px;color:var(--text-muted);line-height:1.7}
+    .faq-item.open .faq-a{display:block}
+    .faq-item.open .faq-q{background:var(--brand-light);color:var(--brand-blue)}
+    .faq-chevron{transition:transform .2s;flex-shrink:0}
+    .faq-item.open .faq-chevron{transform:rotate(180deg)}
+    .sidebar{position:sticky;top:104px}
+    .sidebar-card{border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;margin-bottom:20px;background:var(--white);box-shadow:var(--shadow-sm)}
+    .sidebar-card-head{background:var(--brand-navy);color:var(--white);font-family:var(--ff-head);font-size:12px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;padding:12px 18px}
+    .sidebar-card-body{padding:16px 18px}
+    .toc-list{list-style:none;padding:0;counter-reset:toc}
+    .toc-list li{counter-increment:toc}
+    .toc-list a{display:flex;align-items:baseline;gap:8px;padding:7px 0;font-family:var(--ff-head);font-size:13px;color:var(--text-muted);border-bottom:1px solid var(--border);text-decoration:none}
+    .toc-list a::before{content:counter(toc,decimal-leading-zero);font-size:11px;font-weight:700;color:var(--text-light)}
+    .toc-list li:last-child a{border-bottom:none}
+    .toc-list a:hover{color:var(--brand-blue)}
+    .contact-info{list-style:none;padding:0}
+    .contact-info li{display:flex;gap:12px;padding:10px 0;border-bottom:1px solid var(--border);align-items:flex-start}
+    .contact-info li:last-child{border-bottom:none}
+    .ci-icon{font-size:20px;flex-shrink:0;margin-top:2px}
+    .contact-info strong{font-family:var(--ff-head);font-size:14px;display:block;color:var(--brand-dark)}
+    .contact-info span{font-size:12px;color:var(--text-light)}
+    .article-footer{background:var(--brand-light);border-top:1px solid var(--border);padding:40px 24px;text-align:center}
+    .article-footer p{font-size:14px;color:var(--text-muted);max-width:500px;margin:0 auto 16px}
+    .tags{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-top:12px}
+    .tag{background:var(--white);border:1px solid var(--border);padding:4px 12px;border-radius:100px;font-family:var(--ff-head);font-size:11px;color:var(--text-muted)}
+    @media(max-width:768px){.article-wrap{grid-template-columns:1fr;gap:32px}.sidebar{position:static;order:2}.cta-banner{flex-direction:column;text-align:center}}
+  
+.discuta-in-grup{background:var(--brand-light);border:1px solid var(--border);border-left:4px solid var(--brand-blue);border-radius:var(--radius);padding:20px 24px;margin:32px 0}
+.discuta-in-grup h3{font-family:var(--ff-head);font-weight:600;font-size:17px;color:var(--brand-navy);margin:0 0 8px}
+.discuta-in-grup p{font-size:15px;color:var(--text-muted);line-height:1.6;margin:0 0 12px}
+.discuta-in-grup a{display:inline-block;font-family:var(--ff-head);font-weight:600;font-size:14px;color:var(--brand-blue);text-decoration:none}
+.discuta-in-grup a:hover{text-decoration:underline}
+
+/* mobfix-v1 */
+.hidden{display:none}
+@media(max-width:900px){.article-wrap{grid-template-columns:minmax(0,1fr)}.sidebar{position:static;top:auto}.article-body table{display:block;overflow-x:auto;max-width:100%}}
+
+/* mobfix-v2 */
+.lg\:hidden .animate-badge-pulse{background:rgba(15,23,42,.9)!important;color:#fff!important;border:1px solid rgba(255,255,255,.25)}
+
+/* buton inapoi-sus */
+#toTop{position:fixed;right:18px;bottom:18px;z-index:45;width:46px;height:46px;border:none;border-radius:50%;background:var(--brand-navy);color:#fff;cursor:pointer;box-shadow:0 6px 18px rgba(11,26,46,.28);opacity:0;visibility:hidden;transform:translateY(8px);transition:opacity .2s,transform .2s,visibility .2s;display:flex;align-items:center;justify-content:center}
+#toTop.show{opacity:1;visibility:visible;transform:none}
+#toTop:hover{background:var(--brand-blue)}
+</style>
+<style id="wa-float">#waFloat{position:fixed;right:18px;bottom:18px;z-index:46;width:52px;height:52px;border-radius:50%;background:#22c55e;color:#fff;display:flex;align-items:center;justify-content:center;box-shadow:0 6px 18px rgba(0,0,0,.25);transition:background .2s}#waFloat:hover{background:#16a34a}#toTop{bottom:82px;right:21px}</style>
+<style>.cta-banner h3{color:#ffffff !important}.cta-banner p{color:rgba(255,255,255,.85) !important}.box-info{background:#eef5ff;border-color:var(--brand-blue)}.box-warn{background:#fff8ec;border-color:var(--brand-gold)}.box-tip{background:#f0faf2;border-color:#27ae60}.box-danger{background:#fef2f2;border-color:#e63022}.box-info .box-title{color:var(--brand-blue)}.box-warn .box-title{color:#b7760a}.box-tip .box-title{color:#1e8c3f}.box-danger .box-title{color:#c0392b}.compare-table{width:100%;border-collapse:collapse;font-size:15px;margin:24px 0;border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow-sm)}.compare-table th{background:var(--brand-navy);color:var(--white);font-family:var(--ff-head);font-weight:600;padding:13px 16px;text-align:left}.compare-table td{padding:12px 16px;border-bottom:1px solid var(--border);vertical-align:top}.compare-table tr:nth-child(even) td{background:var(--brand-light)}.compare-table tr:last-child td{border-bottom:none}.compare-table .yes{color:#27ae60;font-weight:600}.compare-table .no{color:#c0392b}</style></head>
+<body>
+<header id="mainHeader" style="position:fixed;top:0;left:0;right:0;z-index:50;transition:all 0.3s;">
+    <div class="hidden sm:block" style="background:#0f172a;color:#fff;font-size:12px;padding:6px 0;">
+        <div style="max-width:1280px;margin:0 auto;padding:0 24px;display:flex;justify-content:space-between;align-items:center;">
+            <span>⭐ <span style="color:#4ade80;font-weight:600;">Peste 20 ani de experiență</span></span>
+            <div style="display:flex;align-items:center;gap:16px;">
+                <span>⭐ <span style="font-weight:600;">8.700+ proiecte</span></span>
+            </div>
+        </div>
+    </div>
+    <div class="sm:hidden" style="background:#0f172a;color:#fff;font-size:12px;padding:6px 0;">
+        <div style="max-width:1280px;margin:0 auto;padding:0 12px;display:flex;justify-content:space-between;align-items:center;">
+            <span>⭐ <span style="color:#4ade80;font-weight:600;">Peste 20 ani de experiență</span></span>
+            <a href="tel:0752288400" style="display:flex;align-items:center;gap:4px;font-weight:600;color:#4ade80;">📞 Sună acum</a>
+        </div>
+    </div>
+    <div id="navBg" style="transition:all 0.3s;">
+        <div style="max-width:1280px;margin:0 auto;padding:0 12px;display:flex;justify-content:space-between;align-items:center;height:64px;" class="sm:px-6">
+            <a href="../">
+                <img src="https://eu.chat-img.sintra.ai/32c1b29c-0c86-4833-a031-e7c45e21a11e/983d52bb-2eb6-42f1-bed4-f94d769bb634/Logo_CSSI.png" alt="CSSI Logo" id="logoImg" style="height:56px;width:auto;transition:all 0.3s;filter:brightness(0) invert(1) drop-shadow(0 0 1px rgba(255,255,255,0.8));">
+            </a>
+            <nav class="hidden md:flex" style="align-items:center;gap:4px;">
+                <a href="../" id="navLink1" style="padding:6px 12px;font-size:14px;font-weight:500;color:#fff;transition:all 0.2s;border-radius:8px;" onmouseover="this.style.color='#f87171'" onmouseout="this.style.color=navTextColor">🏠 Acasă</a>
+                <div class="dropdown" style="position:relative;">
+                    <button id="navLink2" style="padding:6px 12px;font-size:14px;font-weight:500;color:#fff;transition:all 0.2s;border-radius:8px;background:none;border:none;cursor:pointer;display:flex;align-items:center;font-family:inherit;">
+                        🛠️ Servicii
+                        <svg style="margin-left:4px;width:16px;height:16px;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+                    </button>
+                    <div class="dropdown-menu dropdown-scroll" style="position:absolute;top:100%;left:0;width:280px;background:#fff;box-shadow:0 10px 15px -3px rgba(0,0,0,0.1);border-radius:12px;padding:8px;border:1px solid #f1f5f9;max-height:80vh;overflow-y:auto;z-index:100;">
+                        <a href="../detectie-incendiu-isu" style="display:block;padding:10px 16px;font-size:13px;color:#334155;border-radius:8px;" onmouseover="this.style.background='#fef2f2';this.style.color='#dc2626'" onmouseout="this.style.background='';this.style.color='#334155'">🔥 Detecție Incendiu ISU</a>
+                        <a href="../camere-supraveghere" style="display:block;padding:10px 16px;font-size:13px;color:#334155;border-radius:8px;" onmouseover="this.style.background='#fef2f2';this.style.color='#dc2626'" onmouseout="this.style.background='';this.style.color='#334155'">📹 Camere Supraveghere</a>
+                        <a href="../alarma-antiefractie" style="display:block;padding:10px 16px;font-size:13px;color:#334155;border-radius:8px;" onmouseover="this.style.background='#fef2f2';this.style.color='#dc2626'" onmouseout="this.style.background='';this.style.color='#334155'">🚨 Alarmă Antiefracție</a>
+                        <a href="../control-acces" style="display:block;padding:10px 16px;font-size:13px;color:#334155;border-radius:8px;" onmouseover="this.style.background='#fef2f2';this.style.color='#dc2626'" onmouseout="this.style.background='';this.style.color='#334155'">🚪 Control Acces</a>
+                        <a href="../pontaj-electronic" style="display:block;padding:10px 16px;font-size:13px;color:#334155;border-radius:8px;" onmouseover="this.style.background='#fef2f2';this.style.color='#dc2626'" onmouseout="this.style.background='';this.style.color='#334155'">⏱️ Pontaj Electronic</a>
+                        <a href="../bariere-auto" style="display:block;padding:10px 16px;font-size:13px;color:#334155;border-radius:8px;" onmouseover="this.style.background='#fef2f2';this.style.color='#dc2626'" onmouseout="this.style.background='';this.style.color='#334155'">🚧 Bariere Auto</a>
+                        <a href="../interfoane-videointerfoane" style="display:block;padding:10px 16px;font-size:13px;color:#334155;border-radius:8px;" onmouseover="this.style.background='#fef2f2';this.style.color='#dc2626'" onmouseout="this.style.background='';this.style.color='#334155'">🔔 Interfoane &amp; Videointerfoane</a>
+                        <a href="../sonorizare" style="display:block;padding:10px 16px;font-size:13px;color:#334155;border-radius:8px;" onmouseover="this.style.background='#fef2f2';this.style.color='#dc2626'" onmouseout="this.style.background='';this.style.color='#334155'">🔊 Sonorizare</a>
+                        <a href="../automatizari-porti" style="display:block;padding:10px 16px;font-size:13px;color:#334155;border-radius:8px;" onmouseover="this.style.background='#fef2f2';this.style.color='#dc2626'" onmouseout="this.style.background='';this.style.color='#334155'">🚗 Automatizări Porți</a>
+                        <a href="../usi-garaj" style="display:block;padding:10px 16px;font-size:13px;color:#334155;border-radius:8px;" onmouseover="this.style.background='#fef2f2';this.style.color='#dc2626'" onmouseout="this.style.background='';this.style.color='#334155'">🏠 Uși Garaj</a>
+                        <a href="../aer-conditionat" style="display:block;padding:10px 16px;font-size:13px;color:#334155;border-radius:8px;" onmouseover="this.style.background='#fef2f2';this.style.color='#dc2626'" onmouseout="this.style.background='';this.style.color='#334155'">❄️ Aer Condiționat</a>
+                        <a href="../ventilatie" style="display:block;padding:10px 16px;font-size:13px;color:#334155;border-radius:8px;" onmouseover="this.style.background='#fef2f2';this.style.color='#dc2626'" onmouseout="this.style.background='';this.style.color='#334155'">💨 Ventilație</a>
+                        <a href="../instalatii-electrice" style="display:block;padding:10px 16px;font-size:13px;color:#334155;border-radius:8px;" onmouseover="this.style.background='#fef2f2';this.style.color='#dc2626'" onmouseout="this.style.background='';this.style.color='#334155'">⚡ Instalații Electrice</a>
+                        <a href="../instalatii-termice-sanitare" style="display:block;padding:10px 16px;font-size:13px;color:#334155;border-radius:8px;" onmouseover="this.style.background='#fef2f2';this.style.color='#dc2626'" onmouseout="this.style.background='';this.style.color='#334155'">🔧 Instalații Termice &amp; Sanitare</a>
+                    </div>
+                </div>
+                <a href="../despre-noi" id="navLink3" style="padding:6px 12px;font-size:14px;font-weight:500;color:#fff;transition:all 0.2s;border-radius:8px;" onmouseover="this.style.color='#f87171'" onmouseout="this.style.color=navTextColor">ℹ️ Despre Noi</a>
+                <a href="../portofoliu" id="navLink4" style="padding:6px 12px;font-size:14px;font-weight:500;color:#fff;transition:all 0.2s;border-radius:8px;" onmouseover="this.style.color='#f87171'" onmouseout="this.style.color=navTextColor">📁 Portofoliu</a>
+                <a href="/blog/" style="padding:6px 12px;font-size:14px;font-weight:500;color:#fff;transition:all 0.2s;border-radius:8px;" id="navLinkBlog" onmouseover="this.style.color='#f87171'" onmouseout="this.style.color=navTextColor">📝 Blog</a>
+                <a href="../contact" id="navLink5" style="padding:6px 12px;font-size:14px;font-weight:500;color:#fff;transition:all 0.2s;border-radius:8px;" onmouseover="this.style.color='#f87171'" onmouseout="this.style.color=navTextColor">📍 Contact</a>
+            </nav>
+            <div class="hidden lg:flex" style="align-items:center;gap:12px;">
+                <a href="tel:0752288400" id="phoneLink" style="display:flex;align-items:center;font-size:14px;font-weight:500;color:#fff;transition:all 0.2s;">
+                    <svg style="width:16px;height:16px;margin-right:6px;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/></svg>
+                    0752 288 400
+                </a>
+                <a href="../contact" style="background:linear-gradient(to right,#dc2626,#b91c1c);color:#fff;padding:8px 20px;border-radius:8px;font-size:14px;font-weight:600;box-shadow:0 4px 6px -1px rgba(0,0,0,0.1);transition:all 0.2s;" onmouseover="this.style.background='linear-gradient(to right,#b91c1c,#991b1b)'" onmouseout="this.style.background='linear-gradient(to right,#dc2626,#b91c1c)'">Cere Ofertă</a>
+            </div>
+            <div class="md:hidden" style="display:flex;align-items:center;gap:8px;">
+                <button onclick="toggleMobileMenu()" id="menuBtn" class="animate-subtle-pulse" style="padding:4px;border-radius:6px;border:none;cursor:pointer;background:linear-gradient(to right,#ef4444,#dc2626);color:#fff;">
+                    <svg id="menuIcon" style="width:20px;height:20px;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
+                    <svg id="closeIcon" style="width:20px;height:20px;display:none;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+                </button>
+            </div>
+        </div>
+        <div id="mobileMenu" style="background:#fff;border-radius:16px;box-shadow:0 20px 25px -5px rgba(0,0,0,0.1);margin:8px 12px;padding:8px;max-height:80vh;overflow-y:auto;">
+            <nav style="display:flex;flex-direction:column;gap:4px;">
+                <a href="../" style="padding:10px 16px;font-size:16px;font-weight:500;color:#334155;border-radius:8px;">🏠 Acasă</a>
+                <button onclick="toggleServicesSubmenu()" style="padding:10px 16px;font-size:16px;font-weight:500;color:#334155;border-radius:8px;background:none;border:none;cursor:pointer;display:flex;justify-content:space-between;align-items:center;width:100%;font-family:inherit;text-align:left;">
+                    🛠️ Servicii
+                    <svg id="servicesArrow" style="width:16px;height:16px;transition:transform 0.2s;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+                </button>
+                <div id="servicesSubmenu" style="padding-left:16px;overflow-y:auto;">
+                    <a href="../detectie-incendiu-isu" onclick="closeMobile()" style="display:block;padding:8px 16px;font-size:14px;color:#475569;border-radius:8px;">🔥 Detecție Incendiu ISU</a>
+                    <a href="../camere-supraveghere" onclick="closeMobile()" style="display:block;padding:8px 16px;font-size:14px;color:#475569;border-radius:8px;">📹 Camere Supraveghere</a>
+                    <a href="../alarma-antiefractie" onclick="closeMobile()" style="display:block;padding:8px 16px;font-size:14px;color:#475569;border-radius:8px;">🚨 Alarmă Antiefracție</a>
+                    <a href="../control-acces" onclick="closeMobile()" style="display:block;padding:8px 16px;font-size:14px;color:#475569;border-radius:8px;">🚪 Control Acces</a>
+                    <a href="../pontaj-electronic" onclick="closeMobile()" style="display:block;padding:8px 16px;font-size:14px;color:#475569;border-radius:8px;">⏱️ Pontaj Electronic</a>
+                    <a href="../bariere-auto" onclick="closeMobile()" style="display:block;padding:8px 16px;font-size:14px;color:#475569;border-radius:8px;">🚧 Bariere Auto</a>
+                    <a href="../interfoane-videointerfoane" onclick="closeMobile()" style="display:block;padding:8px 16px;font-size:14px;color:#475569;border-radius:8px;">🔔 Interfoane &amp; Videointerfoane</a>
+                    <a href="../sonorizare" onclick="closeMobile()" style="display:block;padding:8px 16px;font-size:14px;color:#475569;border-radius:8px;">🔊 Sonorizare</a>
+                    <a href="../automatizari-porti" onclick="closeMobile()" style="display:block;padding:8px 16px;font-size:14px;color:#475569;border-radius:8px;">🚗 Automatizări Porți</a>
+                    <a href="../usi-garaj" onclick="closeMobile()" style="display:block;padding:8px 16px;font-size:14px;color:#475569;border-radius:8px;">🏠 Uși Garaj</a>
+                    <a href="../aer-conditionat" onclick="closeMobile()" style="display:block;padding:8px 16px;font-size:14px;color:#475569;border-radius:8px;">❄️ Aer Condiționat</a>
+                    <a href="../ventilatie" onclick="closeMobile()" style="display:block;padding:8px 16px;font-size:14px;color:#475569;border-radius:8px;">💨 Ventilație</a>
+                    <a href="../instalatii-electrice" onclick="closeMobile()" style="display:block;padding:8px 16px;font-size:14px;color:#475569;border-radius:8px;">⚡ Instalații Electrice</a>
+                    <a href="../instalatii-termice-sanitare" onclick="closeMobile()" style="display:block;padding:8px 16px;font-size:14px;color:#475569;border-radius:8px;">🔧 Instalații Termice &amp; Sanitare</a>
+                </div>
+                <a href="../despre-noi" onclick="closeMobile()" style="padding:10px 16px;font-size:16px;font-weight:500;color:#334155;border-radius:8px;">ℹ️ Despre Noi</a>
+                <a href="../portofoliu" onclick="closeMobile()" style="padding:10px 16px;font-size:16px;font-weight:500;color:#334155;border-radius:8px;">📁 Portofoliu</a>
+                <a href="/blog/" onclick="closeMobile()" style="padding:10px 16px;font-size:16px;font-weight:500;color:#334155;border-radius:8px;">📝 Blog</a>
+                <a href="../contact" onclick="closeMobile()" style="padding:10px 16px;font-size:16px;font-weight:500;color:#334155;border-radius:8px;">📍 Contact</a>
+                <div style="padding:12px 8px;">
+                    <a href="../contact" onclick="closeMobile()" style="display:block;text-align:center;background:linear-gradient(to right,#dc2626,#b91c1c);color:#fff;padding:10px 16px;border-radius:12px;font-weight:600;">Cere Ofertă</a>
+                </div>
+            </nav>
+        </div>
+    </div>
+</header>
+
+
+  
+  
+  <nav class="breadcrumb" aria-label="Breadcrumb">
+    <div class="inner">
+      <a href="/">Acasă</a><span class="sep">›</span>
+      <a href="/blog/">Blog</a><span class="sep">›</span>
+      <span style="color:rgba(255,255,255,.9)">Unde se păstrează înregistrările: NVR local, cloud | CSSI</span>
+    </div>
+  </nav>
+
+  <header class="hero">
+    <div class="inner">
+      <div class="hero-content">
+      <div class="hero-badge">📹 Ghid CSSI · 2026</div>
+      <h1>Unde se păstrează înregistrările: NVR local, cloud sau hibrid</h1>
+      <p class="lead">Mulți oameni montează camere fără să se întrebe vreodată unde ajung, de fapt, imaginile. Întrebarea devine bruscă și dureroasă într-un singur scenariu: hoțul intră, fură recorderul împreună cu restul, și odată cu el dispar și dovezile. Unde se salvează înregistrările — pe un recorder din locație, în cloud sau în ambele — e o decizie tehnică ce face diferența între „am avut camere" și „am avut probe". Iată cele trei arhitecturi și cum alegi.</p>
+      <div class="hero-meta">
+        <span>✍ CSSI Brașov</span><span class="dot">·</span>
+        <span>📅 18 Oct 2026</span><span class="dot">·</span>
+        <span>⏱ 22 min lectură</span>
+      </div>
+      <div class="topic-pills">
+        <span class="pill pill-blue">🛡 Securitate firme</span>
+        <span class="pill pill-green">📍 Brașov & împrejurimi</span>
+        <span class="pill pill-amber">✅ Ghid practic</span>
+      </div>
+    </div>
+      <div class="hero-img-wrap"><img src="/images/blog/nvr-local-cloud-hibrid-cover.jpg" alt="Unde se păstrează înregistrările: NVR local, cloud | CSSI"></div>
+    </div>
+  </header>
+
+  <div class="article-wrap">
+    <main class="article-body" id="articol">
+<h2 id="raspunsul-scurt">Răspunsul scurt</h2>
+<p>Sunt trei variante. <strong>NVR/DVR local</strong>: imaginile stau pe un recorder în locație — control total, fără abonament, dar vulnerabil dacă recorderul e furat sau distrus. <strong>Cloud</strong>: o copie a imaginilor urcă în afara locației — accesibilă de oriunde și rezistentă la furt, dar cu cost lunar și dependentă de internet. <strong>Hibrid</strong>: local + copie în cloud a evenimentelor critice — recomandarea noastră pentru firme, pentru că păstrezi istoricul complet local și nu pierzi probele esențiale dacă aparatura e compromisă.</p>
+<p>Alegerea nu se face după ce sună mai modern, ci după trei întrebări simple. Ce pierzi dacă dispar imaginile de azi, de pildă un furt de care afli abia luni dimineață? Cât de stabil e internetul din locația ta — fibră într-un birou din Brașov sau o conexiune slabă la o cabană de lângă Bran? Și cât ești dispus să plătești lunar pentru liniștea de a avea o copie în altă parte? Răspunsurile te duc aproape întotdeauna către aceeași soluție: istoric complet pe recorderul local, plus în afara locației doar ce contează.</p>
+<p>Mai e un strat de protecție ieftin, pe care mulți îl uită: <strong>cardul SD din cameră</strong>. Nu înlocuiește recorderul, dar acoperă golul când rețeaua sau recorderul cedează. Despre el, despre lățimea de bandă, despre zilele de păstrare și despre ce alegi pe tip de obiectiv vorbim mai jos, pe rând, cu scenarii concrete.</p>
+
+
+<h2 id="unde-ajung-de-fapt-inregistrarile">Unde ajung de fapt înregistrările</h2>
+<p>În cele mai multe sisteme, imaginile se scriu pe un <strong>recorder din locație</strong>: un <strong>NVR</strong> pentru camerele IP sau un <strong>DVR</strong> pentru cele analogice, echipat cu unul sau mai multe hard-disk-uri. Recorderul înregistrează continuu sau pe eveniment, iar tu vezi imaginile fie direct, fie de la distanță din aplicație. Cât spațiu îți trebuie depinde de numărul de camere, de rezoluție și de câte zile vrei să păstrezi — exact calculul pe care îl facem la <a href="https://cssi.ro/blog/cate-camere-ce-rezolutie-dimensionare-sistem-cctv-brasov">dimensionarea sistemului CCTV</a>. Important de reținut: dacă nu ai și o copie în altă parte, totul depinde de acest singur aparat.</p>
+<p>Ca să înțelegi unde pot apărea probleme, merită să vezi lanțul complet. Camera captează imaginea și o comprimă. Cablul de rețea o duce la un switch, iar de acolo la recorder. Recorderul o scrie pe disc și, dacă e configurat așa, o trimite mai departe în cloud. Fiecare verigă poate ceda: camera, cablul, switch-ul, sursa de alimentare, discul sau conexiunea la internet. Un sistem bine proiectat nu presupune că nimic nu se strică; presupune că <strong>ceva se va strica la un moment dat</strong> și se asigură că dovezile supraviețuiesc.</p>
+
+      <div class="cta-banner" style="margin:32px 0">
+        <div>
+          <h3>Vrei o evaluare pentru firma ta?</h3>
+          <p>Evaluarea la fața locului e gratuită în Brașov și împrejurimi — vii cu nevoia, pleci cu o soluție și un preț defalcat.</p>
+        </div>
+        <div class="cta-buttons">
+          <a href="/camere-supraveghere-brasov" class="btn btn-secondary">📍 Camere supraveghere în Brașov</a>
+          <a href="/contact" class="btn btn-secondary">📩 Cere ofertă</a>
+          <a href="tel:0752288400" class="btn btn-primary">📞 0752 288 400</a>
+          <a target="_blank" rel="noopener" href="https://wa.me/40752288400" class="btn btn-secondary">💬 WhatsApp</a>
+        </div>
+      </div>
+<h2 id="riscul-evident-daca-fura-recorderul-pier">Riscul evident: dacă fură recorderul, pierzi probele</h2>
+<p>Aici e capcana clasică a sistemelor „doar local". Un intrus care știe ce face nu pleacă fără recorder — și odată cu el dispar și imaginile care l-ar fi incriminat. Prima măsură e fizică: montăm recorderul <strong>ascuns, într-un spațiu încuiat</strong>, nu la vedere lângă intrare. A doua e arhitecturală: o <strong>copie a evenimentelor critice în afara locației</strong>. Pe aceeași logică ține și protecția împotriva sabotajului camerelor, pe care am detaliat-o în articolul despre <a href="https://cssi.ro/blog/camere-anti-vandal-protectie-sabotaj-brasov">camerele anti-vandal</a>. Fără o copie externă, întreaga investiție în supraveghere poate fi anulată în 30 de secunde.</p>
+<p>Furtul nu e singurul scenariu. Pune-ți câteva întrebări de tip „ce se întâmplă dacă…":</p>
+<ul>
+  <li><strong>Ce se întâmplă dacă se produce un incendiu</strong> în încăperea tehnică? Recorderul și discurile se pot pierde împreună cu tot ce voiai să demonstrezi, inclusiv momentul în care a început focul.</li>
+  <li><strong>Ce se întâmplă dacă un hard-disk cedează?</strong> Discurile au o durată de viață limitată, mai ales cele care scriu non-stop. Un disc defect poate însemna zile sau săptămâni de imagini irecuperabile, iar tu afli abia când ai nevoie de ele.</li>
+  <li><strong>Ce se întâmplă dacă un angajat nemulțumit</strong> șterge sau formatează înregistrările? Fără conturi separate pe roluri și fără o copie în altă parte, nu mai ai ce să arăți.</li>
+</ul>
+<div class="box box-danger"><div class="box-title">⛔ Recorderul la vedere e prima țintă</div><p>Un recorder montat sub tejghea, într-un birou deschis sau lângă ușa de intrare poate fi luat în câteva secunde, cu tot cu discuri. Dacă acum îl ai într-un loc ușor de atins, mută-l într-un dulap încuiat sau într-o încăpere cu acces restrâns, cu cablurile protejate. Este cea mai ieftină îmbunătățire din tot articolul, iar impactul ei e imediat.</p></div>
+
+<h2 id="nvr-dvr-local-control-total-dar-vulnerab">NVR/DVR local: control total, dar vulnerabil fizic</h2>
+<p>Stocarea locală are avantaje reale: <strong>control total</strong> asupra datelor, <strong>fără abonament lunar</strong>, acces rapid la istoricul complet și independență față de calitatea internetului. E soluția potrivită când vrei costuri de funcționare zero și ai unde monta recorderul în siguranță. Dezavantajul e exact cel discutat: e <strong>vulnerabil fizic</strong> — la furt, incendiu, inundație sau distrugere. De aceea stocarea locală e o bază excelentă, dar rareori suficientă singură pentru o firmă care vrea să fie sigură că nu rămâne fără probe.</p>
+<p>Atenția cade pe discuri. Un hard-disk obișnuit de PC nu e gândit să scrie zi și noapte; pentru supraveghere se folosesc discuri dedicate acestui regim. La un sistem cu multe camere sau cu păstrare lungă, merită discuția despre mai multe discuri și despre o configurație care tolerează defectarea unuia dintre ele, ca să nu pierzi tot istoricul pentru că a cedat o singură piesă.</p>
+
+
+<h2 id="cloud-copie-in-afara-locatiei-acces-de-o">Cloud: copie în afara locației, acces de oriunde</h2>
+<p>Stocarea în <strong>cloud</strong> urcă o copie a imaginilor (de obicei evenimentele importante, nu neapărat fluxul continuu) pe un server din afara locației. Avantajele: imaginile <strong>supraviețuiesc</strong> chiar dacă aparatura e furată sau distrusă, și ai <strong>acces de oriunde</strong>, util mai ales dacă administrezi mai multe puncte de lucru. Dezavantajele: un <strong>cost lunar</strong> și dependența de o conexiune bună la internet. Pentru locații izolate, fără rețea fixă, cloud-ul merge mână în mână cu camerele 4G — temă tratată în articolul despre <a href="https://cssi.ro/blog/securizare-retea-cctv-ip-parole-vlan-protectie-brasov">securizarea rețelei CCTV</a>, unde explicăm și cum protejezi accesul la imagini.</p>
+<p>Există două feluri de a folosi cloud-ul, și merită să nu le amesteci. Primul este <strong>cloud ca unic loc de stocare</strong>: camerele trimit direct în cloud, fără recorder local. E simplu de instalat și potrivit pentru una-două camere într-o locuință sau un birou mic, dar fiecare cameră consumă conexiune permanent, iar fără internet nu rămâne nimic. Al doilea este <strong>cloud ca arhivă de siguranță</strong>: recorderul local rămâne creierul sistemului, iar în cloud ajung doar clipurile care contează. Al doilea model e cel pe care îl folosim în soluțiile hibride.</p>
+<div class="box box-warn"><div class="box-title">⚠ Abonamentul nu e „o dată și gata"</div><p>Cloud-ul înseamnă o plată recurentă. Dacă un sistem de zece camere urcă tot fluxul continuu, costul lunar crește repede și se adună an de an. Mai riscant: dacă renunți la abonament, accesul la imaginile arhivate poate dispărea după un termen. Cere în scris cât timp rămân datele disponibile după încheierea contractului și cum le descarci.</p></div>
+
+<h2 id="hibrid-recomandarea-pentru-firme">Hibrid: recomandarea pentru firme</h2>
+<p>Soluția <strong>hibridă</strong> ia ce e mai bun din ambele lumi: <strong>înregistrare locală</strong> (rapidă, fără abonament, cu istoric complet) plus o <strong>copie a evenimentelor critice în cloud</strong> (rezistentă la furtul recorderului, accesibilă de oriunde). Pentru majoritatea firmelor e cel mai bun echilibru între cost și siguranță: păstrezi controlul și istoricul la tine, dar nu pierzi probele esențiale dacă se întâmplă ceva cu aparatura. Cheia e să <strong>configurezi exact ce se urcă în cloud</strong> — nu tot fluxul, ci evenimentele care contează — ca să ții costul sub control. Pentru ca totul să funcționeze și când cineva taie curentul sau pică rețeaua electrică, sistemul se completează cu un UPS, adică o sursă de rezervă cu baterie.</p>
+<p>Ce înseamnă „evenimente care contează" în practică? De regulă: detecție de mișcare în intervalul în care locația e goală (noaptea, weekendul, concediul), declanșarea alarmei, intrarea în zone interzise, deschiderea ușii spre depozit sau seif în afara programului, pierderea conexiunii la o cameră. Pentru un magazin, mai poate însemna imaginile de la casa de marcat și de la ieșire. Pentru o casă, imaginile de la intrare și de pe perimetru, după ce alarma se armează. Regula de bază: urci puțin, dar exact ce ai nevoie ca probă.</p>
+
+<h2 id="ce-se-intampla-cand-pica-internetul-sau-">Ce se întâmplă când pică internetul sau curentul</h2>
+<p>Orice discuție despre cloud trebuie să răspundă la o întrebare incomodă: <strong>ce faci când pică internetul</strong>? În zona Brașovului asta se întâmplă mai des decât ne-am dori — o furtună în Bran sau Moieciu, o ninsoare grea la Predeal, lucrări pe stradă în Săcele, un cablu tăiat în zona industrială din Ghimbav. Un sistem bazat doar pe cloud rămâne orb exact atunci. Un sistem cu recorder local continuă să înregistreze neîntrerupt, pentru că scrierea pe disc nu depinde de internet.</p>
+<p>Scenariul cel mai neplăcut este cel în care <strong>cineva întrerupe intenționat conexiunea</strong> înainte de a acționa. De aceea nu ne bazăm niciodată pe o singură cale: recorderul local păstrează dovezile, iar pentru alertă folosim, acolo unde contează, o a doua cale de comunicație — un modul 4G de rezervă, ca în cazul <a href="https://cssi.ro/blog/comunicator-alarma-cai-transmisie-dispecerat-gsm-ip-dualpath-brasov">comunicatoarelor de alarmă cu două căi de transmisie</a>. Pentru camere, 4G-ul nu urcă de regulă fluxul întreg, ci doar mici clipuri și notificări.</p>
+<p>La fel de important e <strong>curentul</strong>. Iarna, la ger și zăpadă, pot apărea pene de curent, iar fără alimentare nici camerele, nici switch-ul, nici recorderul, nici routerul nu mai funcționează. Un UPS ține echipamentele pornite câteva minute sau zeci de minute, în funcție de dimensionare, și permite recorderului să se oprească corect, fără să-și strice discurile. Fără el, o oprire bruscă poate corupe înregistrările tocmai din perioada pe care o căutai.</p>
+<div class="box box-tip"><div class="box-title">💡 Testează scenariul „fără internet"</div><p>La recepție, cere să deconectezi routerul pentru zece minute și să verifici două lucruri: recorderul continuă să înregistreze, iar după reconectare aplicația te lasă să vezi din nou imaginile. Dacă ceva din asta nu merge, mai bine afli acum, când nu e nicio urgență.</p></div>
+
+<h2 id="latimea-de-banda-de-ce-conteaza-upload-u">Lățimea de bandă: de ce contează upload-ul, nu descărcarea</h2>
+<p>Când ai o copie în cloud, imaginile <strong>urcă</strong> pe internet. Iar majoritatea abonamentelor de internet au viteza de încărcare (upload) mai mică decât cea de descărcare. Mulți oameni se uită la cifra mare din contract și presupun că ajunge; de fapt contează cifra mică, cea de upload, și faptul că aceeași conexiune e folosită și de restul firmei, de apeluri video, de casa de marcat conectată la internet.</p>
+<p>Un exemplu ilustrativ, doar ca să vezi ordinul de mărime: o cameră care transmite la câțiva megabiți pe secundă (valoarea reală depinde de rezoluție, de compresie și de cât se mișcă în cadru) ocupă o parte vizibilă din upload. Dacă ai opt camere care urcă simultan fluxul continuu, ajungi repede la limită, iar rețeaua întregii firme încetinește. Dacă urci doar clipurile cu evenimente, consumul e mic și apare doar punctual.</p>
+<p>Câteva reguli practice pentru a nu-ți bloca internetul:</p>
+<ul>
+  <li><strong>Urcă evenimente, nu flux continuu</strong>, cu excepția unei singure camere critice, dacă upload-ul permite.</li>
+  <li><strong>Folosește fluxul secundar</strong> (o variantă la rezoluție mai mică a aceleiași camere) pentru vizionarea de la distanță, ca să nu încarci rețeaua cu imaginea completă.</li>
+  <li><strong>Programează urcările voluminoase în afara orelor de vârf</strong>, de exemplu noaptea, când firma nu folosește internetul.</li>
+  <li><strong>Separă traficul camerelor</strong> de rețeaua de lucru, pentru ca o problemă de la o parte să nu o afecteze pe cealaltă. Ideea e dezvoltată în ghidul despre <a href="https://cssi.ro/blog/cablare-structurata-retele-date-firma-brasov">cablarea structurată și rețelele de date</a>.</li>
+</ul>
+
+<h2 id="cardul-sd-din-camera-plasa-de-siguranta-">Cardul SD din cameră: plasa de siguranță ieftină</h2>
+<p>Multe camere IP au un slot pentru <strong>card microSD</strong>. Folosit corect, e o rezervă ieftină și utilă: camera salvează imaginile și local, în ea. Dacă recorderul se strică, dacă cablul spre el e tăiat sau dacă rețeaua pică, camera poate continua să scrie pe card, iar după ce legătura revine, imaginile din acel interval pot fi, în funcție de model, preluate de recorder. Nu toate camerele fac asta automat, deci verificăm fiecare model în parte.</p>
+<p>Cardul are și limite pe care e bine să le știi. Capacitatea lui e mică față de un hard-disk, deci acoperă puține zile sau doar evenimente. Un card obișnuit se uzează repede la scriere continuă; pentru supraveghere se aleg carduri cu rezistență ridicată la scriere. Iarna, la temperaturi foarte scăzute, în exterior, comportarea lor depinde de model. Și, mai ales, cardul stă <strong>în aceeași cameră</strong>: dacă cineva ia sau distruge camera, pierde și cardul. Deci SD-ul acoperă golurile de rețea, nu furtul.</p>
+<div class="box box-info"><div class="box-title">ℹ Rolul corect al cardului SD</div><p>Gândește-l ca pe o a treia plasă de siguranță, nu ca pe stocarea principală. Arhitectura sănătoasă are trei straturi: card în cameră pentru goluri de rețea, recorder local pentru istoricul complet, cloud pentru copia din afara locației. Fiecare acoperă un risc pe care celelalte nu îl acoperă.</p></div>
+
+<h2 id="cat-spatiu-iti-trebuie-si-cat-pastrezi">Cât spațiu îți trebuie și cât păstrezi</h2>
+<p>Două variabile decid dimensionarea: <strong>cât spațiu</strong> (dat de numărul de camere, rezoluție, cadre/secundă și zile de păstrare) și <strong>cât timp păstrezi</strong> imaginile. La durată intervine și principiul GDPR de minimizare: păstrezi cât e necesar pentru scop, nu la nesfârșit. Aici facem legătura cu accesul la imagini din aplicație, care trebuie și el securizat, ca să vezi de la distanță fără să compromiți datele. La proiectare corelăm spațiul de stocare cu perioada pe care vrei să o acoperi, ca sistemul să nu suprascrie înregistrările înainte să apuci să le folosești.</p>
+<p>Ca să vezi cum se adună, un calcul ilustrativ: o cameră care înregistrează continuu la aproximativ 4 megabiți pe secundă produce în jur de 40 de gigaocteți pe zi. Opt camere de acest fel, păstrate 30 de zile, ajung la aproximativ 10 terabyți de spațiu. Cifrele reale diferă cu codecul folosit (compresiile moderne reduc consumul), cu scena filmată și cu modul de înregistrare. Cu înregistrare pe eveniment, necesarul poate scădea cu mult. De aceea nu ghicim, ci calculăm pentru fiecare proiect.</p>
+<p>Cât păstrezi depinde de <strong>cât de repede afli că s-a întâmplat ceva</strong>. Un magazin deschis zilnic observă o lipsă în câteva zile. O pensiune la Predeal sau Râșnov, goală între sejururi, poate afla de o problemă abia la următoarea inspecție. Un depozit închis în weekend și în concedii are nevoie de un interval care acoperă și aceste goluri. Nu există o cifră universală; o perioadă potrivită se alege pe baza scopului declarat al supravegherii, a riscului și a GDPR. Dacă păstrezi prea puțin, riști să pierzi proba; dacă păstrezi prea mult fără motiv, îți creezi o problemă de conformitate.</p>
+<div class="box box-tip"><div class="box-title">💡 Alege durata după „cât timp până aflu"</div><p>Întreabă-te în cât timp ai observa realist un incident: ziua următoare, după un weekend, după un sezon de închidere? Setează păstrarea să acopere acel interval plus o marjă, nu o cifră luată la întâmplare. Cât timp ai voie să ții imaginile, mai ales pentru spații cu public sau angajați, se verifică pe baza reglementărilor în vigoare, împreună cu un specialist.</p></div>
+
+<h2 id="securitatea-datelor-si-gdpr-pe-unde-stoc">Securitatea datelor și GDPR pe unde stochezi</h2>
+<p>Indiferent de arhitectură, contează cine are acces la imagini și unde sunt ele. GDPR cere să <strong>știi unde se află datele</strong>, <strong>cine le accesează</strong> și <strong>cât timp le ții</strong> — reguli valabile și local, și în cloud. În practică: transfer criptat către cloud, acces pe bază de cont și rol, furnizor serios și o politică de păstrare documentată. Configurat corect, sistemul rămâne conform oriunde ar sta înregistrările — și asta e parte din proiectare, nu un detaliu lăsat la voia întâmplării.</p>
+<p>La nivel de principiu, stocarea locală și cea în cloud ridică întrebări diferite. Local, întrebarea este cine are acces fizic la recorder și la ce cont: parole proprii, conturi separate pentru fiecare persoană, fără parole implicite lăsate din fabrică. În cloud, apar și întrebările despre furnizor: unde sunt serverele, ce acord ai cu el privind prelucrarea datelor, cum ceri ștergerea. Nu intrăm aici în detalii juridice, pentru că depind de situația fiecărei firme și se lămuresc cu un specialist; ghidul <a href="https://cssi.ro/blog/camere-supraveghere-gdpr-ghid-complet">camere de supraveghere și GDPR</a> acoperă obligațiile generale, iar durata și conformitatea stocării merită verificate separat.</p>
+<div class="box box-warn"><div class="box-title">⚠ Accesul la imagini e și el o răspundere</div><p>Imaginile conțin date despre persoane. Un cont partajat de mai mulți oameni, o parolă scrisă pe recorder sau un acces de la distanță lăsat deschis fără protecție devin probleme, indiferent unde sunt stocate fișierele. Fiecare persoană autorizată ar trebui să aibă contul ei, cu drepturile strict necesare, iar exporturile de imagini să fie făcute doar pentru motive legitime.</p></div>
+
+<h2 id="ce-alegi-pe-tip-de-obiectiv">Ce alegi, pe tip de obiectiv</h2>
+<p>Aceeași arhitectură nu se potrivește peste tot. Iată cum gândim alegerea în funcție de locație, ca punct de plecare pentru discuția la fața locului:</p>
+<table class="compare-table">
+<thead><tr><th>Tip de obiectiv</th><th>Arhitectura recomandată de regulă</th><th>De ce</th><th>La ce fii atent</th></tr></thead>
+<tbody>
+<tr><td><strong>Casă sau vilă (Brașov, Bran, Predeal)</strong></td><td>Recorder local ascuns, plus copie în cloud pentru intrări; card SD în camerele exterioare</td><td>Casa e adesea goală în vacanță, iar o pană de curent iarna e posibilă</td><td>Alimentare de rezervă pentru recorder și router; upload suficient pentru clipuri</td></tr>
+<tr><td><strong>Magazin sau retail</strong></td><td>Hibrid, cu casa de marcat și ieșirea prioritizate pentru cloud</td><td>Incidentele apar în program, iar dovada contează la reclamații și inventar</td><td>Păstrare suficientă pentru inventare; vezi <a href="https://cssi.ro/blog/securitate-magazin-retail-ghid-complet">securitatea magazinului</a></td></tr>
+<tr><td><strong>Birou</strong></td><td>Local, cu copie externă a intrării și a zonei de arhivă</td><td>Risc mai mic de furt de numerar, dar date sensibile în spațiu</td><td>Acces pe roluri; GDPR pentru angajați</td></tr>
+<tr><td><strong>Hală sau depozit (Ghimbav, zona industrială)</strong></td><td>Hibrid, cu recorder într-o încăpere securizată și păstrare mai lungă</td><td>Perimetru mare, multe camere, weekenduri lungi în care nu e nimeni</td><td>Dimensionarea discurilor; vezi și <a href="https://cssi.ro/blog/securitate-depozit-logistica-ghid-complet">securitatea depozitelor</a></td></tr>
+<tr><td><strong>Pensiune sau cabană izolată</strong></td><td>Local plus cloud prin 4G, cu card SD ca rezervă</td><td>Internetul fix lipsește sau e instabil, iar locația stă goală între sejururi</td><td>Acoperire mobilă reală pe amplasament; consum de date controlat</td></tr>
+<tr><td><strong>Bloc sau asociație</strong></td><td>Recorder local în spațiu tehnic încuiat, acces limitat la imagini</td><td>Mulți utilizatori, risc de acces nepotrivit la date</td><td>Reguli clare de acces; detalii în <a href="https://cssi.ro/blog/supraveghere-video-bloc-asociatie-proprietari">ghidul pentru blocuri</a></td></tr>
+</tbody>
+</table>
+<p>Folosește tabelul ca pe o hartă, nu ca pe o rețetă. O pensiune din Râșnov cu fibră bună poate funcționa foarte bine hibrid fără 4G, iar un magazin dintr-un spațiu comercial cu rețea gestionată de altcineva poate avea restricții pe care le aflăm doar la fața locului.</p>
+
+<h2 id="costuri-orientative-2026-pentru-stocare">Costuri orientative 2026 pentru stocare</h2>
+<p>Costul stocării depinde de câte camere ai, de cât păstrezi și de arhitectura aleasă. Intervalele de mai jos sunt <strong>orientative</strong>, în RON, pentru componentele legate strict de stocare, nu pentru întregul sistem de camere. Pentru costul sistemului complet vezi <a href="https://cssi.ro/blog/instalare-camere-supraveghere-brasov-cost-firma-2026">costurile de instalare a camerelor în Brașov</a>.</p>
+<table class="compare-table">
+<thead><tr><th>Componentă</th><th>Interval orientativ (RON)</th><th>Observații</th></tr></thead>
+<tbody>
+<tr><td>NVR cu hard-disk pentru 4–8 camere</td><td>900–3.000</td><td>Depinde de numărul de canale și de capacitatea discului inclus</td></tr>
+<tr><td>Disc suplimentar sau de capacitate mare, pentru supraveghere</td><td>400–1.500</td><td>Crește la capacități mari și la configurații cu mai multe discuri</td></tr>
+<tr><td>Card microSD cu rezistență ridicată (per cameră)</td><td>80–250</td><td>Pentru camerele care îl suportă; rolul e de rezervă</td></tr>
+<tr><td>UPS pentru recorder, switch și router</td><td>400–1.800</td><td>În funcție de puterea consumată și de autonomia dorită</td></tr>
+<tr><td>Configurare copie în cloud și reguli de evenimente</td><td>300–1.200</td><td>O singură dată, la punerea în funcțiune</td></tr>
+<tr><td>Abonament cloud sau modul 4G de rezervă</td><td>variabil, lunar</td><td>Depinde de furnizor, număr de camere și zile păstrate; cerem oferte comparabile</td></tr>
+</tbody>
+</table>
+<p>Pentru un sistem mic, un NVR local bine ales, cu disc corect dimensionat și UPS, se încadrează orientativ în câteva mii de lei, fără costuri lunare. Adăugarea unei copii în cloud ridică puțin investiția inițială, dar mai ales introduce o <strong>cheltuială lunară</strong> pe care trebuie să o iei în calcul pe mai mulți ani. De aceea configurăm ce se urcă, ca să nu plătești pentru ore de imagine fără valoare. Prețul exact rezultă din evaluarea la fața locului; <strong>oferta fermă vine după evaluare</strong>, defalcată pe componente.</p>
+
+<h2 id="greseli-frecvente-la-stocarea-inregistra">Greșeli frecvente la stocarea înregistrărilor</h2>
+<ol>
+  <li><strong>Recorderul la vedere, lângă intrare.</strong> E prima țintă pentru cineva care vrea să șteargă urmele. Soluția: dulap încuiat, loc greu accesibil, cabluri protejate.</li>
+  <li><strong>Nicio copie în afara locației.</strong> Toată investiția depinde de un singur aparat. Chiar și o copie modestă a evenimentelor critice schimbă situația.</li>
+  <li><strong>Hard-disk de PC în loc de disc pentru supraveghere.</strong> Discurile obișnuite nu sunt gândite pentru scriere continuă, iar defectarea lor se vede abia când cauți o înregistrare.</li>
+  <li><strong>Spațiu calculat „pe ochi".</strong> Sistemul suprascrie imaginile mai repede decât crezi, iar când ai nevoie de ele, ele nu mai există. Calculul se face din camere, rezoluție, cadre și zile dorite.</li>
+  <li><strong>Cloud pentru tot fluxul continuu, fără să verifici upload-ul.</strong> Internetul firmei încetinește, camerele pierd cadre, iar abonamentul crește. Urcă evenimente, nu tot.</li>
+  <li><strong>Fără UPS pentru recorder și router.</strong> O pană de curent la ger sau o furtună oprește brusc totul și poate corupe exact înregistrările de care ai nevoie.</li>
+  <li><strong>Parole implicite și conturi comune.</strong> Cine știe parola poate vedea sau șterge imaginile. Fiecare persoană își merită contul, iar parolele din fabrică se schimbă la instalare.</li>
+</ol>
+<div class="box box-danger"><div class="box-title">⛔ Nu verifica înregistrările abia după incident</div><p>Cea mai gravă greșeală este să nu verifici niciodată dacă sistemul chiar a salvat ceva. Mulți descoperă abia după un incident că discul era plin, că înregistrarea era oprită sau că o cameră nu mai scria de luni de zile. O verificare lunară, de două minute, evită o dezamăgire mare.</p></div>
+
+<h2 id="cum-lucreaza-cssi-de-la-evaluare-la-pred">Cum lucrează CSSI: de la evaluare la predare</h2>
+<ol>
+  <li><strong>Stabilim scopul real</strong> al supravegherii: descurajare, probe, acces de la distanță, mai multe puncte de lucru. Din scop decurge aproape tot restul.</li>
+  <li><strong>Evaluăm locația</strong> la fața locului: unde poate sta recorderul în siguranță, cum arată internetul disponibil (upload, stabilitate, acoperire mobilă), unde sunt riscurile de curent.</li>
+  <li><strong>Alegem arhitectura</strong> potrivită — local, cloud sau hibrid — și îți explicăm pe înțelesul tău de ce, cu avantajele și limitele ei.</li>
+  <li><strong>Dimensionăm stocarea</strong> pe baza camerelor, rezoluției și perioadei de păstrare dorite, apoi propunem discurile, cardurile și UPS-ul necesare.</li>
+  <li><strong>Montăm și securizăm</strong> recorderul într-un loc ferit, configurăm conturile pe roluri și schimbăm parolele implicite.</li>
+  <li><strong>Configurăm copia în afara locației</strong> doar pentru evenimentele critice și setăm perioada de păstrare conform scopului declarat.</li>
+  <li><strong>Testăm la recepție</strong> scenariile importante: cădere de internet, oprire de curent, export de imagini, acces din aplicație. Abia apoi predăm sistemul, cu instrucțiuni clare și garanție conform contractului.</li>
+</ol>
+<p>Vrei să pornești de la sistemul pe care îl ai deja? Verificăm unde se salvează acum imaginile și ce ai de îmbunătățit, fără să te forțăm să schimbi tot. Detalii despre camerele pe care le montăm găsești pe pagina <a href="https://cssi.ro/camere-supraveghere-brasov">camere de supraveghere în Brașov</a>.</p>
+
+<h2 id="mentenanta-cum-verifici-ca-dovezile-chia">Mentenanță: cum verifici că dovezile chiar se salvează</h2>
+<p>Un sistem de stocare nu e „montat și uitat". Discurile se uzează, cardurile se degradează, parolele se schimbă, iar abonamentele expiră. Fără verificări, poți avea un sistem care arată bine, dar care nu a mai scris nimic de săptămâni. Recomandăm un ritm simplu: o <strong>verificare rapidă lunară</strong>, făcută chiar de tine, și o <strong>verificare tehnică periodică</strong> făcută de specialist.</p>
+<p>La verificarea tehnică, specialistul controlează starea discurilor, curăță ventilația recorderului (praful și căldura scurtează viața discurilor), testează UPS-ul și bateria lui, verifică cardurile SD, actualizează software-ul recorderului și al camerelor și controlează conturile de acces. Într-un sistem cu mulți utilizatori, e momentul să ștergi conturile angajaților care au plecat. Mai multe despre ritmul și conținutul acestor vizite găsești în ghidul despre <a href="https://cssi.ro/blog/mentenanta-sisteme-securitate-de-ce-cat-de-des-brasov">mentenanța sistemelor de securitate</a>, iar serviciul nostru dedicat e descris pe pagina de <a href="https://cssi.ro/mentenanta-camere-supraveghere-brasov">mentenanță camere de supraveghere</a>.</p>
+<div class="box box-tip"><div class="box-title">💡 Un test pe care îl poți face azi</div><p>Alege o zi de acum două săptămâni, o oră oarecare, și redă înregistrarea de la o cameră importantă. Dacă o găsești, ai un sistem care scrie. Dacă nu, ai aflat problema gratis, nu după un incident.</p></div>
+
+<h2 id="lista-de-verificare-inainte-sa-ceri-ofer">Lista de verificare înainte să ceri oferta</h2>
+<p>Parcurge punctele de mai jos și notează răspunsurile. Cu ele pe masă, discuția cu instalatorul devine mult mai precisă:</p>
+<ul>
+  <li>Știu exact <strong>unde se află recorderul</strong> și cine poate ajunge fizic la el?</li>
+  <li>Recorderul este într-un spațiu <strong>încuiat</strong>, nu la vedere lângă intrare?</li>
+  <li>Există o <strong>copie în afara locației</strong> pentru cel puțin evenimentele critice?</li>
+  <li>Am calculat <strong>câte zile</strong> păstrează sistemul și ce interval vreau să acopere (weekend, concediu, sezon închis)?</li>
+  <li>Discurile sunt <strong>dedicate supravegherii</strong> și dimensionate pentru camerele și rezoluția mea?</li>
+  <li>Cunosc <strong>viteza de upload</strong> din locație și am verificat dacă ajunge pentru ce vreau să urc?</li>
+  <li>Am o <strong>variantă de rezervă</strong> dacă pică internetul (card SD, 4G sau ambele)?</li>
+  <li>Am <strong>UPS</strong> pentru recorder, switch și router?</li>
+  <li>Fiecare persoană are <strong>contul ei</strong>, iar parolele din fabrică au fost schimbate?</li>
+  <li>Știu ce se întâmplă cu <strong>imaginile din cloud</strong> dacă opresc abonamentul și cum le export?</li>
+  <li>Am stabilit cine <strong>verifică lunar</strong> că sistemul scrie și cine face mentenanța tehnică?</li>
+</ul>
+<p>Dacă la mai mult de trei puncte răspunsul e „nu știu", merită o evaluare înainte de orice achiziție. Iar dacă înregistrările tale au fost deja necesare într-un incident, ghidul despre <a href="https://cssi.ro/blog/dupa-o-spargere-inregistrari-camere-proba-brasov">ce faci după o spargere</a> te ajută să le folosești corect.</p>
+
+<h2 id="citeste-si">Citește și</h2>
+<ul>
+  <li><a href="https://cssi.ro/blog/nvr-vs-dvr-vs-cloud-stocare-camere-2026">NVR vs DVR vs Cloud: unde stochezi înregistrările camerelor</a> — comparația largă dintre tipurile de stocare.</li>
+  <li><a href="https://cssi.ro/blog/cate-camere-ce-rezolutie-dimensionare-sistem-cctv-brasov">De câte camere și ce rezoluție ai nevoie</a> — baza calculului de spațiu pentru stocare.</li>
+  <li><a href="https://cssi.ro/blog/camere-supraveghere-gdpr-ghid-complet">Camere de supraveghere și GDPR</a> — obligațiile generale când filmezi și păstrezi imagini.</li>
+  <li><a href="https://cssi.ro/blog/securizare-retea-cctv-ip-parole-vlan-protectie-brasov">Securizarea rețelei unui sistem CCTV IP</a> — parole, rețele separate și protecția accesului la imagini.</li>
+  <li><a href="https://cssi.ro/blog/dupa-o-spargere-inregistrari-camere-proba-brasov">Ce faci după o spargere: cum folosești corect înregistrările</a> — de la salvarea imaginilor la predarea lor ca probă.</li>
+</ul>
+      <h2 id="faq">Întrebări frecvente</h2>
+      <div class="faq-wrap">
+        <div class="faq-item">
+          <button class="faq-q" onclick="toggleFaq(this)">Unde ajung de fapt înregistrările camerelor mele? <svg class="faq-chevron" width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg></button>
+          <div class="faq-a"><p>În majoritatea sistemelor, imaginile se salvează pe un recorder din locație: un NVR pentru camerele IP sau un DVR pentru cele analogice, cu unul sau mai multe hard-disk-uri. Acolo se înregistrează continuu sau pe eveniment, iar tu accesezi imaginile direct sau din aplicație. Dacă nu ai și o copie în afara locației, toate înregistrările depind de acel singur aparat.</p></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q" onclick="toggleFaq(this)">Dacă hoțul fură recorderul, pierd toate dovezile? <svg class="faq-chevron" width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg></button>
+          <div class="faq-a"><p>Da, dacă te bazezi doar pe recorderul local și acesta e furat sau distrus. De aceea îl montăm ascuns, într-un spațiu încuiat, și recomandăm o copie a evenimentelor critice în cloud. Cu o soluție hibridă, chiar dacă cineva ia recorderul, momentul efracției a fost deja urcat în afara locației și rămâne disponibil ca probă.</p></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q" onclick="toggleFaq(this)">Ce înseamnă stocare în cloud pentru camere? <svg class="faq-chevron" width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg></button>
+          <div class="faq-a"><p>Înseamnă că o copie a înregistrărilor (de regulă evenimentele importante, nu neapărat fluxul continuu) se urcă pe un server din afara locației, la care ai acces de oriunde prin internet. Avantajul e că imaginile supraviețuiesc chiar dacă aparatura din locație e furată sau distrusă. Dezavantajele sunt costul lunar al abonamentului și dependența de o conexiune bună la internet.</p></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q" onclick="toggleFaq(this)">Ce este o soluție hibridă și de ce o recomandați firmelor? <svg class="faq-chevron" width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg></button>
+          <div class="faq-a"><p>Hibrid înseamnă înregistrare locală (rapidă, fără abonament, cu istoric complet) plus o copie a evenimentelor critice în cloud (rezistentă la furtul recorderului și accesibilă de oriunde). Pentru o firmă e cel mai bun raport între cost și siguranță: păstrezi controlul și istoricul local, dar nu pierzi probele esențiale dacă aparatura e compromisă. Configurăm ce anume se urcă în cloud, ca să ții costul sub control.</p></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q" onclick="toggleFaq(this)">De cât spațiu de stocare am nevoie? <svg class="faq-chevron" width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg></button>
+          <div class="faq-a"><p>Depinde de numărul de camere, de rezoluție, de câte cadre pe secundă înregistrezi și de câte zile vrei să păstrezi imaginile. Mai multe camere de rezoluție mare, înregistrate continuu, pe mai multe zile, înseamnă mai mult spațiu. La dimensionare calculăm exact de cât hard-disk ai nevoie pentru perioada dorită, ca să nu te trezești că sistemul suprascrie înregistrările prea repede.</p></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q" onclick="toggleFaq(this)">Cât timp trebuie să păstrez înregistrările? <svg class="faq-chevron" width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg></button>
+          <div class="faq-a"><p>Nu există o cifră universală; depinde de scop și de regulile GDPR de minimizare, adică păstrezi cât e necesar, nu la nesfârșit. Multe firme aleg o perioadă de câteva săptămâni. Tema duratei legale și a stocării conforme o tratăm separat; aici discutăm unde și cum se stochează tehnic. La proiectare corelăm spațiul de stocare cu perioada pe care vrei să o acoperi.</p></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q" onclick="toggleFaq(this)">Înregistrările din cloud sunt sigure și conforme GDPR? <svg class="faq-chevron" width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg></button>
+          <div class="faq-a"><p>Pot fi, dacă sunt configurate corect: transfer criptat, acces pe bază de cont și rol, furnizor serios și o politică clară de păstrare. GDPR cere să știi unde sunt datele, cine are acces și cât timp le ții — reguli care se aplică și local, și în cloud. Te ajutăm să alegi o soluție în care stocarea, oriunde ar fi, rămâne sub control și documentată.</p></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q" onclick="toggleFaq(this)">Ce se întâmplă cu înregistrările dacă pică internetul? <svg class="faq-chevron" width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg></button>
+          <div class="faq-a"><p>Într-un sistem cu recorder local, nimic grav: recorderul scrie pe disc fără să depindă de internet, deci imaginile rămân complete. Ce se pierde temporar este accesul de la distanță și urcarea copiei în cloud, care se reia după ce revine conexiunea. Într-un sistem doar cloud, în schimb, intervalul fără internet poate rămâne neînregistrat, dacă nu există un card SD în cameră. De aceea recomandăm stratul local ca bază.</p></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q" onclick="toggleFaq(this)">Poate cardul SD din cameră să țină loc de recorder? <svg class="faq-chevron" width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg></button>
+          <div class="faq-a"><p>Pentru una-două camere într-o locuință mică, poate acoperi nevoia de bază, dar nu e o soluție completă. Cardul are capacitate redusă, se uzează la scriere continuă și stă chiar în cameră, deci dispare dacă dispare camera. Îl vedem ca pe o rezervă care acoperă golurile de rețea, nu ca pe stocarea principală. Pentru o firmă, recomandăm recorder local plus o copie în afara locației.</p></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q" onclick="toggleFaq(this)">De cât internet am nevoie pentru copia în cloud? <svg class="faq-chevron" width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg></button>
+          <div class="faq-a"><p>Contează în primul rând viteza de încărcare (upload), nu cea de descărcare. Dacă urci doar clipuri cu evenimente, o conexiune obișnuită de firmă ajunge de regulă; dacă vrei să urci fluxul continuu al mai multor camere, necesarul crește mult și rețeaua poate încetini restul activității. Măsurăm upload-ul real din locație înainte de proiect și îți spunem ce poți urca realist, fără surprize.</p></div>
+        </div>
+      </div>
+
+      <aside class="discuta-in-grup">
+        <h3>Ai o întrebare despre asta?</h3>
+        <p>Discutăm subiectul în grupul nostru de pe Facebook, împreună cu electricieni, instalatori și proprietari din Brașov și împrejurimi. Pune întrebarea acolo și primești răspuns de la oameni care lucrează efectiv în domeniu. Suntem deja <!-- MEMBRI-GRUP -->351<!-- /MEMBRI-GRUP --> în grup.</p>
+        <a href="https://www.facebook.com/groups/1970585079825010" rel="noopener" target="_blank">Intră în grupul Instalații Brașov →</a>
+      </aside>
+      <div class="cta-banner">
+        <div>
+          <h3>Pașii următori — cere oferta ta</h3>
+          <p>Fără obligații: vii cu nevoia, pleci cu o soluție și un preț defalcat. CSSI — 20 de ani, 8.700+ proiecte în județul Brașov.</p>
+        </div>
+        <div class="cta-buttons">
+          <a href="/camere-supraveghere-brasov" class="btn btn-secondary">📍 Camere supraveghere în Brașov</a>
+          <a href="/contact" class="btn btn-secondary">📩 Cere ofertă</a>
+          <a href="tel:0752288400" class="btn btn-primary">📞 0752 288 400</a>
+          <a target="_blank" rel="noopener" href="https://wa.me/40752288400" class="btn btn-secondary">💬 WhatsApp</a>
+        </div>
+      </div>
+
+    </main>
+
+    <aside class="sidebar">
+      <div class="sidebar-card">
+        <div class="sidebar-card-head">📑 Cuprins</div>
+        <div class="sidebar-card-body" style="padding:10px 18px">
+          <ol class="toc-list">
+            <li><a href="#raspunsul-scurt">Răspunsul scurt</a></li>
+            <li><a href="#unde-ajung-de-fapt-inregistrarile">Unde ajung de fapt înregistrările</a></li>
+            <li><a href="#riscul-evident-daca-fura-recorderul-pier">Riscul evident: dacă fură recorderul, pierzi probele</a></li>
+            <li><a href="#nvr-dvr-local-control-total-dar-vulnerab">NVR/DVR local: control total, dar vulnerabil fizic</a></li>
+            <li><a href="#cloud-copie-in-afara-locatiei-acces-de-o">Cloud: copie în afara locației, acces de oriunde</a></li>
+            <li><a href="#hibrid-recomandarea-pentru-firme">Hibrid: recomandarea pentru firme</a></li>
+            <li><a href="#ce-se-intampla-cand-pica-internetul-sau-">Ce se întâmplă când pică internetul sau curentul</a></li>
+            <li><a href="#latimea-de-banda-de-ce-conteaza-upload-u">Lățimea de bandă: de ce contează upload-ul, nu descărcarea</a></li>
+            <li><a href="#cardul-sd-din-camera-plasa-de-siguranta-">Cardul SD din cameră: plasa de siguranță ieftină</a></li>
+            <li><a href="#cat-spatiu-iti-trebuie-si-cat-pastrezi">Cât spațiu îți trebuie și cât păstrezi</a></li>
+            <li><a href="#securitatea-datelor-si-gdpr-pe-unde-stoc">Securitatea datelor și GDPR pe unde stochezi</a></li>
+            <li><a href="#ce-alegi-pe-tip-de-obiectiv">Ce alegi, pe tip de obiectiv</a></li>
+            <li><a href="#costuri-orientative-2026-pentru-stocare">Costuri orientative 2026 pentru stocare</a></li>
+            <li><a href="#greseli-frecvente-la-stocarea-inregistra">Greșeli frecvente la stocarea înregistrărilor</a></li>
+            <li><a href="#cum-lucreaza-cssi-de-la-evaluare-la-pred">Cum lucrează CSSI: de la evaluare la predare</a></li>
+            <li><a href="#mentenanta-cum-verifici-ca-dovezile-chia">Mentenanță: cum verifici că dovezile chiar se salvează</a></li>
+            <li><a href="#lista-de-verificare-inainte-sa-ceri-ofer">Lista de verificare înainte să ceri oferta</a></li>
+            <li><a href="#citeste-si">Citește și</a></li>
+            <li><a href="#faq">Întrebări frecvente</a></li>
+          </ol>
+        </div>
+      </div>
+      <div class="sidebar-card">
+        <div class="sidebar-card-head">📞 Contact CSSI Brașov</div>
+        <div class="sidebar-card-body">
+          <ul class="contact-info">
+            <li><div class="ci-icon">📞</div><div><strong>0752 288 400</strong><span>Lun–Vin 08:00–18:00</span></div></li>
+            <li><div class="ci-icon">📧</div><div><strong>office@cssi.ro</strong><span>Răspuns în max 24h</span></div></li>
+            <li><div class="ci-icon">📍</div><div><strong>Brașov</strong><span>și județele înconjurătoare</span></div></li>
+          </ul>
+          <a target="_blank" rel="noopener" href="https://wa.me/40752288400" class="btn btn-primary" style="margin-top:12px">💬 Scrie pe WhatsApp</a>
+        </div>
+      </div>
+    </aside>
+  </div>
+
+<footer class="article-footer">
+    <p>Articol scris de echipa <strong>CSSI Brașov</strong> — firmă autorizată IGPR și ISU, cu peste 20 de ani de experiență în sisteme de securitate și instalații.</p>
+    <div class="tags">
+      <span class="tag">camere supraveghere brasov</span>
+      <span class="tag">instalare camere</span>
+      <span class="tag">preturi camere 2026</span>
+      <span class="tag">Hikvision</span>
+      <span class="tag">Dahua</span>
+      <span class="tag">Uniview</span>
+      <span class="tag">CCTV</span>
+      <span class="tag">Brașov</span>
+    </div>
+    <p style="font-size:12px;color:#aaa;margin-top:8px">© 2026 CSSI — Confort, Securitate, Siguranță, Imobil | <a href="/">cssi.ro</a></p>
+  </footer>
+<script>
+    function toggleFaq(btn) {
+      const item = btn.closest('.faq-item');
+      const isOpen = item.classList.contains('open');
+      document.querySelectorAll('.faq-item.open').forEach(el => el.classList.remove('open'));
+      if (!isOpen) item.classList.add('open');
+    }
+    const headings = document.querySelectorAll('h2[id]');
+    const tocLinks = document.querySelectorAll('.toc-list a');
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          tocLinks.forEach(a => a.style.color = '');
+          const active = document.querySelector(`.toc-list a[href="#${entry.target.id}"]`);
+          if (active) active.style.color = 'var(--brand-blue)';
+        }
+      });
+    }, { rootMargin: '-20% 0px -70% 0px' });
+    headings.forEach(h => observer.observe(h));
+  </script>
+  <script>
+    let navTextColor = '#fff';
+    window.addEventListener('scroll', function() {
+        const navBg = document.getElementById('navBg');
+        const logo = document.getElementById('logoImg');
+        const scrolled = window.scrollY > 50;
+        if (scrolled) {
+            navBg.style.background = '#ffffff';
+            navBg.style.backdropFilter = 'blur(12px)';
+            navBg.style.boxShadow = '0 1px 2px rgba(0,0,0,0.05)';
+            if (logo) logo.style.filter = '';
+            navTextColor = '#334155';
+        } else {
+            navBg.style.background = 'transparent';
+            navBg.style.backdropFilter = '';
+            navBg.style.boxShadow = '';
+            if (logo) logo.style.filter = 'brightness(0) invert(1) drop-shadow(0 0 1px rgba(255,255,255,0.8))';
+            navTextColor = '#fff';
+        }
+        ['navLink1','navLink2','navLink3','navLink4','navLinkBlog','navLink5','phoneLink'].forEach(id=>{
+            const el=document.getElementById(id);
+            if(el) el.style.color=navTextColor;
+        });
+    });
+    function toggleMobileMenu(){
+        const menu=document.getElementById('mobileMenu');
+        const menuIcon=document.getElementById('menuIcon');
+        const closeIcon=document.getElementById('closeIcon');
+        const btn=document.getElementById('menuBtn');
+        if(menu.classList.contains('open')){
+            menu.classList.remove('open');
+            menuIcon.style.display='';
+            closeIcon.style.display='none';
+            btn.style.background='linear-gradient(to right,#ef4444,#dc2626)';
+            btn.classList.add('animate-subtle-pulse');
+        } else {
+            menu.classList.add('open');
+            menuIcon.style.display='none';
+            closeIcon.style.display='';
+            btn.style.background='#6b7280';
+            btn.classList.remove('animate-subtle-pulse');
+        }
+    }
+    function closeMobile(){
+        document.getElementById('mobileMenu').classList.remove('open');
+        document.getElementById('menuIcon').style.display='';
+        document.getElementById('closeIcon').style.display='none';
+    }
+    function toggleServicesSubmenu(){
+        const sub=document.getElementById('servicesSubmenu');
+        const arrow=document.getElementById('servicesArrow');
+        if(sub.classList.contains('open')){
+            sub.classList.remove('open');
+            arrow.style.transform='';
+        } else {
+            sub.classList.add('open');
+            arrow.style.transform='rotate(180deg)';
+        }
+    }
+  </script>
+<script>
+// GA4 tracking: phone_call & whatsapp_click
+document.addEventListener('DOMContentLoaded', function() {
+    document.querySelectorAll('a[href^="tel:"]').forEach(function(link) {
+        link.addEventListener('click', function() {
+            if (typeof gtag === 'function') {
+                gtag('event', 'phone_call', {event_category:'Contact', event_label:this.href.replace('tel:',''), value:100, currency:'RON'});
+            }
+        });
+    });
+    document.querySelectorAll('a[href*="wa.me"]').forEach(function(link) {
+        link.addEventListener('click', function() {
+            if (typeof gtag === 'function') {
+                gtag('event', 'whatsapp_click', {event_category:'Contact', event_label:'WhatsApp Direct', value:100, currency:'RON'});
+            }
+        });
+    });
+});
+</script>
+<a id="waFloat" href="https://wa.me/40752288400" target="_blank" rel="noopener noreferrer" aria-label="Scrie-ne pe WhatsApp"><svg width="28" height="28" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg></a><button id="toTop" aria-label="Înapoi sus" onclick="window.scrollTo({top:0,behavior:&#39;smooth&#39;})"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 15l-6-6-6 6"/></svg></button><script>(function(){var b=document.getElementById("toTop");window.addEventListener("scroll",function(){if(window.scrollY>400)b.classList.add("show");else b.classList.remove("show");});})();</script>
+</body>
+</html>
