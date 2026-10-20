@@ -1146,4 +1146,11 @@
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
+  <!-- adaugat automat de agent 2026-10-20 -->
+  <url>
+    <loc>https://cssi.ro/blog/bransament-electric-trifazat-firma-racordare-anre-brasov</loc>
+    <lastmod>2026-10-20</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
 </urlset>
