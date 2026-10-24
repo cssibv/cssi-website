@@ -1174,4 +1174,11 @@
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
+  <!-- adaugat automat de agent 2026-10-24 -->
+  <url>
+    <loc>https://cssi.ro/blog/securitate-muzee-galerii-expozitii-brasov</loc>
+    <lastmod>2026-10-24</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
 </urlset>
