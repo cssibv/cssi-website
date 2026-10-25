@@ -1181,4 +1181,11 @@
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
+  <!-- adaugat automat de agent 2026-10-25 -->
+  <url>
+    <loc>https://cssi.ro/blog/supraveghere-hala-depozit-ferma-brasov</loc>
+    <lastmod>2026-10-25</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
 </urlset>
