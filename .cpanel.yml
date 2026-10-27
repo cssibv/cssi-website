@@ -10,6 +10,3 @@ deployment:
     - /bin/cp .htaccess $DEPLOYPATH/
     - echo "=== AFTER cp — deploy state ==="
     - ls -la $DEPLOYPATH/admin/api.php 2>&1 || echo "!!! api.php LIPSEȘTE DUPĂ CP !!!"
-    - cd $DEPLOYPATH && php generate-localized.php
-    - echo "=== AFTER generate-localized.php ==="
-    - ls -la $DEPLOYPATH/admin/api.php 2>&1 || echo "!!! api.php A DISPĂRUT după generate-localized !!!"

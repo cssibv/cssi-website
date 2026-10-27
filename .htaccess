@@ -36,6 +36,17 @@ RewriteRule ^blog_index(\.html)?$ /blog/ [R=301,L]
 RewriteRule ^blog/automatizari-porti-ghid-complet-2026/?$ /blog/automatizare-poarta-ghid-complet-preturi [R=301,L]
 
 # --------------------------------------------------
+# 2b-quater. PAGINI DUPLICATE -brasov → PAGINA DE SERVICIU
+# --------------------------------------------------
+RewriteRule ^automatizari-porti-brasov(\.html)?/?$ /automatizari-porti [R=301,L]
+RewriteRule ^pontaj-electronic-brasov(\.html)?/?$ /pontaj-electronic [R=301,L]
+RewriteRule ^camere-supraveghere-brasov(\.html)?/?$ /camere-supraveghere [R=301,L]
+RewriteRule ^instalatii-electrice-brasov(\.html)?/?$ /instalatii-electrice [R=301,L]
+RewriteRule ^alarma-antiefractie-brasov(\.html)?/?$ /alarma-antiefractie [R=301,L]
+RewriteRule ^detectie-incendiu-brasov(\.html)?/?$ /detectie-incendiu-isu [R=301,L]
+RewriteRule ^control-acces-brasov(\.html)?/?$ /control-acces [R=301,L]
+RewriteRule ^montaj-aer-conditionat-brasov(\.html)?/?$ /aer-conditionat [R=301,L]
+# --------------------------------------------------
 # 2b-ter. BLOCHEAZĂ URL-uri MALFORMATE (tel: ca path) — return 410 Gone
 # Google a indexat /tel:0752288400 ca 404. Îi spunem să-l uite.
 # --------------------------------------------------

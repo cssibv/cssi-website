@@ -26,12 +26,6 @@
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://cssi.ro/alarma-antiefractie-brasov</loc>
-    <lastmod>2026-05-26</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <url>
     <loc>https://cssi.ro/camere-supraveghere-ploiesti</loc>
     <lastmod>2026-05-26</lastmod>
     <changefreq>monthly</changefreq>
@@ -332,35 +326,11 @@
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://cssi.ro/camere-supraveghere-brasov</loc>
-    <lastmod>2026-05-26</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://cssi.ro/control-acces-brasov</loc>
-    <lastmod>2026-05-26</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
     <loc>https://cssi.ro/aer-conditionat-brasov</loc>
     <lastmod>2026-05-26</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
-  <url>
-    <loc>https://cssi.ro/automatizari-porti-brasov</loc>
-    <lastmod>2026-05-26</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-    <url>
-        <loc>https://cssi.ro/pontaj-electronic-brasov</loc>
-        <lastmod>2026-05-26</lastmod>
-        <changefreq>monthly</changefreq>
-        <priority>0.8</priority>
-    </url>
   <url>
     <loc>https://cssi.ro/camere-supraveghere-sibiu</loc>
     <lastmod>2026-05-26</lastmod>
@@ -401,7 +371,6 @@
   <url><loc>https://cssi.ro/aer-conditionat-codlea</loc><lastmod>2026-05-26</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
   <url><loc>https://cssi.ro/aer-conditionat-rasnov</loc><lastmod>2026-05-26</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
   <url><loc>https://cssi.ro/aer-conditionat-sanpetru</loc><lastmod>2026-05-26</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
-  <url><loc>https://cssi.ro/instalatii-electrice-brasov</loc><lastmod>2026-05-26</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
   <url><loc>https://cssi.ro/instalatii-electrice-ghimbav</loc><lastmod>2026-05-26</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
   <url><loc>https://cssi.ro/instalatii-electrice-codlea</loc><lastmod>2026-05-26</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
   <url><loc>https://cssi.ro/instalatii-electrice-bran</loc><lastmod>2026-05-26</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
