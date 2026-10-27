@@ -47,6 +47,8 @@ RewriteRule ^detectie-incendiu-brasov(\.html)?/?$ /detectie-incendiu-isu [R=301,
 RewriteRule ^control-acces-brasov(\.html)?/?$ /control-acces [R=301,L]
 RewriteRule ^montaj-aer-conditionat-brasov(\.html)?/?$ /aer-conditionat [R=301,L]
 RewriteRule ^bariere-auto-brasov(\.html)?/?$ /bariere-auto [R=301,L]
+RewriteRule ^usi-garaj-brasov(\.html)?/?$ /usi-garaj [R=301,L]
+RewriteRule ^aer-conditionat-brasov(\.html)?/?$ /aer-conditionat [R=301,L]
 # --------------------------------------------------
 # 2b-ter. BLOCHEAZĂ URL-uri MALFORMATE (tel: ca path) — return 410 Gone
 # Google a indexat /tel:0752288400 ca 404. Îi spunem să-l uite.

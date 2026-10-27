@@ -332,12 +332,6 @@
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://cssi.ro/aer-conditionat-brasov</loc>
-    <lastmod>2026-05-26</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
     <loc>https://cssi.ro/camere-supraveghere-sibiu</loc>
     <lastmod>2026-05-26</lastmod>
     <changefreq>monthly</changefreq>
@@ -372,7 +366,6 @@
   <url><loc>https://cssi.ro/automatizari-porti-codlea</loc><lastmod>2026-05-26</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
   <url><loc>https://cssi.ro/automatizari-porti-bran</loc><lastmod>2026-05-26</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
   <url><loc>https://cssi.ro/automatizari-porti-harman</loc><lastmod>2026-05-26</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
-  <url><loc>https://cssi.ro/usi-garaj-brasov</loc><lastmod>2026-05-26</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
   <url><loc>https://cssi.ro/aer-conditionat-ghimbav</loc><lastmod>2026-05-26</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
   <url><loc>https://cssi.ro/aer-conditionat-codlea</loc><lastmod>2026-05-26</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
   <url><loc>https://cssi.ro/aer-conditionat-rasnov</loc><lastmod>2026-05-26</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
