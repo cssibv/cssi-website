@@ -28,7 +28,7 @@ Apoi `admin/docs/` (ghiduri și CSV-uri).
 ### 2. Verificare rapidă post-upload (15 min)
 - [ ] https://cssi.ro → homepage se încarcă corect?
 - [ ] https://cssi.ro/servicii → pagina servicii afișează 15 servicii?
-- [ ] https://cssi.ro/camere-supraveghere-brasov → pagina e completă?
+- [ ] https://cssi.ro/camere-supraveghere → pagina e completă?
 - [ ] https://cssi.ro/contact → formularul funcționează?
 - [ ] View source pe orice pagină → `tawk-chat.js` apare înainte de `</body>`?
 - [ ] https://cssi.ro/robots.txt → arată `/admin/` în Disallow?

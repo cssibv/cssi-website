@@ -147,7 +147,7 @@ Acestea au primit fix-uri de conformitate, conversie și SEO:
 1. Deschide https://cssi.ro → verifică homepage
 2. Deschide https://cssi.ro/servicii → verifică pagina servicii
 3. Deschide https://cssi.ro/contact → verifică formularul (trimite test) + trust badges sub formular
-4. Deschide https://cssi.ro/camere-supraveghere-brasov → verifică pagina refăcută
+4. Deschide https://cssi.ro/camere-supraveghere → verifică pagina refăcută
 5. Deschide https://cssi.ro/zone-deservite → verifică hub-ul local
 6. Deschide view-source pe orice pagină → caută `tawk-chat.js` înainte de `</body>`
 7. Verifică GA4 Realtime → trimite formular test → apare eveniment generate_lead?
