@@ -1169,4 +1169,11 @@
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
+  <!-- adaugat automat de agent 2026-10-28 -->
+  <url>
+    <loc>https://cssi.ro/blog/camere-descurajare-activa-sirena-lumina-voce-brasov</loc>
+    <lastmod>2026-10-28</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
 </urlset>
