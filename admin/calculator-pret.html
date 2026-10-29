@@ -1315,7 +1315,22 @@ function _fillMissingImages(lines){
       })
       .catch(function(){});
   });
-  return Promise.all(jobs);
+  // Nu aștept la nesfârșit după shop: după 15 s deschid anexa cu ce s-a găsit.
+  return Promise.race([Promise.all(jobs), new Promise(function(r){setTimeout(r,15000);})]);
+}
+// Fereastra se deschide imediat, la click: deschisă după căutarea pozelor (câteva
+// secunde la ofertele mari) ar fi blocată de browser ca pop-up.
+function _openAnexaWindow(enriched,info){
+  var w=window.open('','_blank');
+  if(!w){toast('⚠️ Browserul a blocat fereastra. Permite pop-up-urile pentru cssi.ro','error');return;}
+  w.document.write('<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Anexă materiale</title></head><body style="font-family:Arial,sans-serif;color:#64748b;display:flex;align-items:center;justify-content:center;height:90vh;margin:0">⏳ Se caută pozele produselor...</body></html>');
+  w.document.close();
+  _fillMissingImages(enriched).then(function(){
+    if(w.closed)return;
+    w.document.open();
+    w.document.write(buildAnexaPageHtml(enriched,info));
+    w.document.close();
+  });
 }
 function openAnexaCurrent(){
   if(!offerLines.length){toast('⚠️ Adaugă produse mai întâi','error');return;}
@@ -1327,24 +1342,14 @@ function openAnexaCurrent(){
     obiectiv: document.getElementById('oObiectiv').value.trim()||'',
     docLabel: window._docMode==='situatie'?'Situația':'Oferta'
   };
-  toast('⏳ Se caută pozele produselor...','info');
-  _fillMissingImages(enriched).then(function(){
-    var w=window.open('','_blank');
-    w.document.write(buildAnexaPageHtml(enriched,info));
-    w.document.close();
-  });
+  _openAnexaWindow(enriched,info);
 }
 function openAnexaSaved(oid){
   var o=offers.find(function(x){return String(x.id)===String(oid);});if(!o)return;
   var enriched=JSON.parse(JSON.stringify(o.lines||[]));
   if(!enriched.length){toast('⚠️ Oferta nu are produse','error');return;}
   var info={nr:o.nr||'-',data:o.data||'',client:o.client||'-',obiectiv:o.obiectiv||''};
-  toast('⏳ Se caută pozele produselor...','info');
-  _fillMissingImages(enriched).then(function(){
-    var w=window.open('','_blank');
-    w.document.write(buildAnexaPageHtml(enriched,info));
-    w.document.close();
-  });
+  _openAnexaWindow(enriched,info);
 }
 function buildAnexaPageHtml(lines,info){
   var dp=(info.data||'').split('-');
