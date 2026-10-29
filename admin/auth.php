@@ -154,6 +154,7 @@ function actionModules() {
         'getOfertaDraft'        => ['calculator'],
         'listOferteDrafturi'    => ['calculator'],
         'deleteOfertaDraft'     => ['calculator'],
+        'uploadOfertaAnexa'     => ['calculator'],
         '_debugOferteSchema'    => ['calculator'],
 
         // ── Situații de plată (documentul final, după execuție) ──

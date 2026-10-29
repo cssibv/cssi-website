@@ -32,6 +32,7 @@
 <div id="tab-offer" class="tab-panel active"><div id="docModeBanner" style="display:none;background:linear-gradient(135deg,#0f766e,#0d9488);color:#fff;border-radius:14px;padding:12px 16px;margin-bottom:14px;font-size:13px;line-height:1.5;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap"><div id="docModeBannerText"></div><button class="btn btn-sm btn-outline" style="background:rgba(255,255,255,0.15);color:#fff;border-color:rgba(255,255,255,0.4);white-space:nowrap" onclick="exitSituatieMode()">✕ Ieși din modul situație</button></div><div class="card"><div class="card-title" id="docHeadTitle">🏢 Date ofertă &amp; beneficiar</div><div class="form-row-3"><div class="form-group"><label class="form-label" id="lblNr">Nr. ofertă</label><input type="text" class="form-input" id="oNr" placeholder="Auto"></div><div class="form-group"><label class="form-label">Data</label><input type="date" class="form-input" id="oData"></div><div class="form-group" id="grpValab"><label class="form-label">Valabilitate</label><select class="form-select" id="oValab"><option>4 zile</option><option>7 zile</option><option>15 zile</option><option>30 zile</option></select></div></div><div class="form-row"><div class="form-group"><label class="form-label">Beneficiar * <button type="button" style="float:right;padding:3px 10px;border-radius:8px;border:1px solid var(--blue);background:#eff6ff;color:var(--blue);font-size:11px;font-weight:700;cursor:pointer" onclick="openClientPicker()">🔍 Client existent</button></label><input type="text" class="form-input" id="oClient" placeholder="Denumire client / firmă"></div><div class="form-group"><label class="form-label">CUI / CNP</label><input type="text" class="form-input" id="oCui" placeholder="RO12345678"></div></div><div class="form-row"><div class="form-group"><label class="form-label">Adresa obiectiv</label><input type="text" class="form-input" id="oAdresa" placeholder="Str..., Nr..., Brașov"></div><div class="form-group"><label class="form-label">Persoană contact</label><input type="text" class="form-input" id="oContact" placeholder="Nume + telefon"></div></div><div class="form-group"><label class="form-label">Obiectiv / descriere lucrare</label><input type="text" class="form-input" id="oObiectiv" placeholder="Ex: Sistem supraveghere video depozit"></div><div class="form-group"><label class="form-label">📝 Mențiuni / Note pentru beneficiar</label><textarea class="form-input" id="oMentiuni" rows="3" placeholder="Ex: Casa este deja cablată. Dacă intervin modificări sau este necesar cablu suplimentar, acesta se va calcula separat. Etc." style="resize:vertical;min-height:70px;font-family:inherit;line-height:1.5"></textarea></div><div class="form-group" id="grpCond" style="margin-bottom:0"><div onclick="toggleCond()" style="display:flex;align-items:center;justify-content:space-between;gap:8px;cursor:pointer;padding:10px 14px;border:2px solid var(--gray-b);border-radius:var(--radius-sm);background:#f8fafc;user-select:none;-webkit-user-select:none"><span style="font-size:12px;font-weight:700;color:var(--dark)"><span id="condTitle">📋 Condiții comerciale</span> <span id="condCount" style="color:var(--gray);font-weight:600"></span></span><span id="condChevron" style="color:var(--gray);font-size:11px">▼</span></div><div id="condBody" style="display:none;border:2px solid var(--gray-b);border-top:none;border-radius:0 0 var(--radius-sm) var(--radius-sm);padding:12px 14px;background:#fff"><div style="font-size:11px;color:var(--gray);margin-bottom:10px;line-height:1.6">Rândurile de mai jos apar în PDF sub tabelul de prețuri. Le poți modifica, șterge sau adăuga altele noi, se salvează odată cu documentul. <code style="background:var(--gray-bg);padding:1px 5px;border-radius:4px;font-size:10px">{valabilitate}</code> se înlocuiește automat cu valabilitatea aleasă mai sus.</div><div id="condList"></div><div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:10px"><button type="button" class="btn btn-sm btn-blue" onclick="addCondRow()">➕ Adaugă rând</button><button type="button" class="btn btn-sm btn-outline" onclick="resetCond()">↺ Revino la standard</button></div></div></div></div>
 <div class="card"><div class="card-title" style="justify-content:space-between;flex-wrap:wrap"><span>📦 Echipamente</span><div style="display:flex;gap:6px;flex-wrap:wrap"><button class="btn btn-sm btn-outline" onclick="addManualLine()">✏️ Manual</button><button class="btn btn-sm btn-green" onclick="openCodeModal()" style="background:var(--orange)">🔍 Cod produs</button><button class="btn btn-sm btn-outline" onclick="openPriceUpdate()" title="Verifică pe shop-security.ro prețurile curente ale pozițiilor din ofertă">🔄 Actualizare prețuri</button></div></div><div style="font-size:10px;color:var(--gray);margin-bottom:8px;display:flex;gap:12px"><span>🟡 Galben=preț achiz.</span><span>🔵 Albastru=adaos%</span><span>⬛ Negru=automat</span></div><div class="offer-line header"><div></div><div>#</div><div>Denumire</div><div>UM</div><div>Cant.</div><div>Preț achiz.</div><div>Adaos%</div><div>Valoare</div><div></div></div><div id="offerLines"></div><div id="offerEmpty" class="empty" style="padding:20px">Adaugă produse manual sau prin căutare după cod</div></div>
 <div class="card"><div class="card-title" style="justify-content:space-between"><span>🔧 Manoperă & Servicii</span><button class="btn btn-sm btn-outline" onclick="addLaborLine()">+ Linie</button></div><div class="offer-line header"><div></div><div>#</div><div>Denumire</div><div>UM</div><div>Cant.</div><div style="grid-column:span 2">Preț unitar</div><div>Valoare</div><div></div></div><div id="laborLines"></div></div>
+<div class="card" id="anexeCard"><div class="card-title" style="justify-content:space-between"><span>📎 Anexe <span style="font-weight:500;font-size:11px;color:var(--gray)">pe pagină nouă, după ofertă</span></span><button class="btn btn-sm btn-outline" onclick="addAnexa()">+ Adaugă anexă</button></div><div id="anexeList"></div></div>
 <div class="total-box" id="totalBox"><div class="total-row"><span>Subtotal echipamente</span><span class="tv" id="tEchip">0 LEI</span></div><div class="total-row"><span>Subtotal manoperă</span><span class="tv" id="tManop">0 LEI</span></div><div class="total-row"><span>Total fără TVA</span><span class="tv" id="tNet">0 LEI</span></div><div class="total-row"><span>TVA 21%</span><span class="tv" id="tTva">0 LEI</span></div><div class="total-row big"><span>TOTAL CU TVA</span><span id="tTotal">0 LEI</span></div><div id="editBanner" style="display:none;background:rgba(249,115,22,0.15);border:1px solid rgba(249,115,22,0.3);border-radius:12px;padding:10px 16px;margin-bottom:12px;text-align:center;font-size:12px;color:#f97316;font-weight:700"></div><div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:16px;justify-content:center" id="offerActionBtns"><button class="btn btn-green" id="btnSaveMain" onclick="saveOffer()">💾 Salvează oferta</button><button class="btn btn-blue" id="btnSaveNew" onclick="saveAsNew()" style="display:none">📄 Salvează ca ofertă nouă</button><button class="btn btn-red" onclick="exportPDF()">📄 Export PDF</button><button class="btn btn-blue" onclick="openAnexaCurrent()">📎 Anexă materiale</button><button class="btn btn-outline" onclick="openMaterialList()" title="Coduri și cantități pentru comandă, document intern">🧾 Listă materiale (intern)</button></div></div></div>
 <div id="tab-saved" class="tab-panel"><div class="search-bar"><input type="text" id="savedSearch" placeholder="Caută ofertă..." oninput="renderSaved()"></div><div id="savedList"></div></div>
 <div id="tab-situatii" class="tab-panel"><div style="background:#eff6ff;border:1px solid #bfdbfe;border-radius:12px;padding:10px 14px;margin-bottom:12px;font-size:12px;color:#1e40af;line-height:1.5">📑 <strong>Situațiile de plată</strong> se creează dintr-o ofertă salvată, deschide oferta din tabul <strong>💾 Salvate</strong> și apasă <strong>📑 Situație</strong>. Aici le regăsești pe cele existente, pentru editare și export.</div><div class="search-bar"><input type="text" id="situatiiSearch" placeholder="Caută situație (client, nr., obiectiv)..." oninput="renderSituatii()"></div><div id="situatiiList"></div></div>
@@ -52,6 +53,19 @@
 #rtBubble button{background:transparent;border:none;color:#fff;width:28px;height:28px;border-radius:5px;cursor:pointer;font-size:13px;line-height:1;display:flex;align-items:center;justify-content:center;padding:0;}
 #rtBubble button:hover{background:#334155;}
 #rtBubble .sep{width:1px;height:18px;background:#475569;margin:0 2px;}
+.anexa-row{display:grid;grid-template-columns:24px 1fr auto;gap:10px;align-items:start;padding:10px 0;border-bottom:1px solid var(--gray-bg);}
+.anexa-row .nr{font-weight:800;color:var(--gray);font-size:13px;padding-top:7px;text-align:center;}
+.anexa-row input{width:100%;padding:8px 10px;border:1px solid var(--gray-b);border-radius:8px;font-size:13px;font-family:inherit;outline:none;}
+.anexa-row input:focus{border-color:var(--blue);}
+.anexa-img{margin-top:8px;width:220px;max-width:100%;height:140px;border:2px dashed var(--gray-xl);border-radius:10px;display:flex;align-items:center;justify-content:center;cursor:pointer;background:#f8fafc;color:var(--gray);font-size:12px;font-weight:600;overflow:hidden;text-align:center;}
+.anexa-img:hover,.anexa-img.drag{border-color:var(--blue);color:var(--blue);}
+.anexa-img.has{border-style:solid;border-color:var(--gray-b);background:#fff;}
+.anexa-img img{width:100%;height:100%;object-fit:contain;}
+.anexa-acts{display:flex;flex-direction:column;gap:4px;}
+.anexa-acts button{width:30px;height:30px;border:1px solid var(--gray-b);background:#fff;border-radius:7px;cursor:pointer;font-size:13px;line-height:1;}
+.anexa-acts button:hover{background:var(--gray-bg);}
+.anexa-acts button:disabled{opacity:.35;cursor:default;}
+.anexe-empty{font-size:12px;color:var(--gray-l);padding:4px 0;}
 #rtBubble .sw{font-weight:800;}.offer-line input:focus{border-color:var(--blue);}.offer-line input.price-in{background:#fef9c3;text-align:right;}.offer-line input.adaos-in{background:#eff6ff;text-align:center;}.offer-line .calc-val{font-weight:700;text-align:right;color:var(--dark);}.offer-line .del-btn{width:28px;height:28px;border-radius:6px;border:none;background:transparent;color:var(--gray-l);font-size:14px;cursor:pointer;display:flex;align-items:center;justify-content:center;}.offer-line .del-btn:hover{background:#fef2f2;color:var(--red);}.total-box{background:linear-gradient(135deg,var(--dark),var(--dark2));border-radius:var(--radius);padding:24px;color:#fff;margin-top:16px;}.total-row{display:flex;justify-content:space-between;padding:6px 0;font-size:13px;color:rgba(255,255,255,0.7);}.total-row.big{font-size:18px;font-weight:900;color:#fff;padding:12px 0;margin-top:8px;border-top:2px solid rgba(255,255,255,0.15);}.total-row .tv{font-weight:700;color:#fff;}.offer-card{background:#fff;border:1px solid var(--gray-b);border-radius:var(--radius);padding:16px;margin-bottom:10px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;transition:all 0.2s;}.offer-card:hover{box-shadow:var(--shadow-md);}.offer-info{flex:1;min-width:200px;}.offer-nr{font-size:11px;font-weight:700;color:var(--blue);}.offer-client{font-size:15px;font-weight:800;color:var(--dark);}.offer-meta{font-size:11px;color:var(--gray);margin-top:2px;}.offer-total{text-align:right;}.offer-total-val{font-size:20px;font-weight:900;color:var(--green);}.offer-total-sub{font-size:10px;color:var(--gray);}.search-bar{position:relative;margin-bottom:12px;}.search-bar input{width:100%;padding:12px 16px 12px 40px;border:2px solid var(--gray-b);border-radius:99px;font-size:13px;font-family:inherit;outline:none;background:#fff;}.search-bar input:focus{border-color:var(--blue);}.search-bar::before{content:'🔍';position:absolute;left:14px;top:50%;transform:translateY(-50%);font-size:14px;}.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);backdrop-filter:blur(4px);z-index:200;align-items:center;justify-content:center;padding:16px;}.modal-overlay.active{display:flex;}.modal{background:#fff;border-radius:20px;width:100%;max-width:540px;max-height:90vh;overflow-y:auto;box-shadow:0 25px 60px rgba(0,0,0,0.3);}.modal-head{padding:18px 22px;border-bottom:1px solid var(--gray-b);display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;background:#fff;border-radius:20px 20px 0 0;z-index:1;}.modal-title{font-size:16px;font-weight:800;}.modal-close{width:30px;height:30px;border-radius:8px;border:none;background:var(--gray-bg);color:var(--gray);font-size:16px;display:flex;align-items:center;justify-content:center;cursor:pointer;}.modal-close:hover{background:#fef2f2;color:var(--red);}.modal-body{padding:22px;}.toast-container{position:fixed;top:20px;right:20px;z-index:300;display:flex;flex-direction:column;gap:8px;}.toast{padding:12px 18px;border-radius:12px;color:#fff;font-size:12px;font-weight:600;box-shadow:0 8px 24px rgba(0,0,0,0.15);animation:slideIn 0.3s ease;max-width:360px;}.toast.success{background:var(--green);}.toast.error{background:var(--red);}.toast.info{background:var(--blue);}@keyframes slideIn{from{transform:translateX(100%);opacity:0}to{transform:translateX(0);opacity:1}}.bottom-nav{position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1px solid var(--gray-b);box-shadow:0 -4px 20px rgba(0,0,0,0.06);padding:6px 12px;z-index:100;display:flex;gap:4px;}@media(min-width:768px){.bottom-nav{display:none;}}.bn-item{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:8px 4px;border-radius:10px;font-size:10px;font-weight:600;color:var(--gray);transition:all 0.2s;gap:2px;}.bn-item.active{color:var(--red);background:#fef2f2;}.bn-item .bn-icon{font-size:20px;}.footer{text-align:center;color:var(--gray-xl);font-size:11px;padding:24px 0 100px;}.loading-bar{position:fixed;top:0;left:0;right:0;height:3px;z-index:400;display:none;}.loading-bar.active{display:block;}.loading-bar::after{content:'';display:block;width:30%;height:100%;background:var(--red);border-radius:2px;animation:loadSlide 1.2s infinite ease-in-out;}@keyframes loadSlide{0%{margin-left:-30%}100%{margin-left:100%}}.empty{text-align:center;padding:40px 20px;color:var(--gray-l);font-size:13px;}
 </style>
 <script>
@@ -78,9 +92,64 @@ function mapLinesFromDB(rows){
 return (rows||[]).map(function(l){return{id:l.id,name:l.denumire||l.name||'',code:l.cod||l.code||'',um:l.um||'buc.',cant:parseFloat(l.cantitate||l.cant)||0,pAchiz:parseFloat(l.pret_achizitie||l.pAchiz)||0,adaos:parseFloat(l.adaos_procent||l.adaos)||0,link:l.link_extern||l.link||''};});}
 function mapLaborFromDB(rows){
 return (rows||[]).map(function(l){return{id:l.id,name:l.denumire||l.name||'',um:l.um||'ore',cant:parseFloat(l.cantitate||l.cant)||0,price:parseFloat(l.pret_achizitie||l.pret_unitar||l.price)||0};});}
+// ═══ ANEXE: câte o intrare (denumire + imagine) per apăsare pe „Adaugă anexă";
+// în PDF apar pe pagină nouă după ofertă, câte una pe rând. Imaginea se urcă pe server
+// imediat ce e aleasă, oferta ține doar adresa ei.
+var anexe=[];
+function mapAnexeFromDB(v){
+if(typeof v==='string'){try{v=JSON.parse(v);}catch(e){v=[];}}
+return (Array.isArray(v)?v:[]).map(function(a){return{id:genId(),titlu:a.titlu||'',img:a.img||''};});}
+function anexeForSave(){return anexe.filter(function(a){return (a.titlu||'').trim()||a.img;}).map(function(a){return{titlu:(a.titlu||'').trim(),img:a.img||''};});}
+function renderAnexe(){
+var box=document.getElementById('anexeList');if(!box)return;
+if(!anexe.length){box.innerHTML='<div class="anexe-empty">Nicio anexă. Apasă „+ Adaugă anexă" pentru o denumire și o imagine.</div>';return;}
+box.innerHTML=anexe.map(function(a,i){
+var img=a.uploading?'⏳ Se încarcă...':(a.img?'<img src="'+esc(a.img).replace(/"/g,'&quot;')+'" alt="">':'＋ Adaugă imagine');
+return '<div class="anexa-row"><div class="nr">'+(i+1)+'</div><div>'
++'<input type="text" maxlength="300" placeholder="Denumire (ex: Cameră dome hol)" value="'+esc(a.titlu).replace(/"/g,'&quot;')+'" oninput="setAnexaTitlu(\''+a.id+'\',this.value)">'
++'<div class="anexa-img'+(a.img?' has':'')+'" title="'+(a.img?'Click pentru a schimba imaginea':'Alege o imagine sau trage-o aici')+'" onclick="pickAnexaImg(\''+a.id+'\')" ondragover="event.preventDefault();this.classList.add(\'drag\')" ondragleave="this.classList.remove(\'drag\')" ondrop="dropAnexaImg(event,\''+a.id+'\')">'+img+'</div>'
++'</div><div class="anexa-acts">'
++'<button type="button" title="Mută mai sus" onclick="moveAnexa(\''+a.id+'\',-1)"'+(i===0?' disabled':'')+'>↑</button>'
++'<button type="button" title="Mută mai jos" onclick="moveAnexa(\''+a.id+'\',1)"'+(i===anexe.length-1?' disabled':'')+'>↓</button>'
++'<button type="button" title="Șterge anexa" onclick="removeAnexa(\''+a.id+'\')" style="color:var(--red)">✕</button>'
++'</div></div>';}).join('');}
+function findAnexa(id){return anexe.find(function(a){return a.id===id;});}
+function addAnexa(){var a={id:genId(),titlu:'',img:''};anexe.push(a);renderAnexe();
+var inputs=document.querySelectorAll('#anexeList input');if(inputs.length)inputs[inputs.length-1].focus();}
+function setAnexaTitlu(id,v){var a=findAnexa(id);if(a)a.titlu=v;}
+function removeAnexa(id){var a=findAnexa(id);if(!a)return;
+if(((a.titlu||'').trim()||a.img)&&!confirm('Ștergi anexa'+(a.titlu?' „'+a.titlu+'"':'')+'?'))return;
+anexe=anexe.filter(function(x){return x.id!==id;});renderAnexe();recalcOffer();}
+function moveAnexa(id,dir){var i=anexe.findIndex(function(a){return a.id===id;});var j=i+dir;if(i<0||j<0||j>=anexe.length)return;
+var t=anexe[i];anexe[i]=anexe[j];anexe[j]=t;renderAnexe();recalcOffer();}
+function pickAnexaImg(id){var a=findAnexa(id);if(!a||a.uploading)return;
+var inp=document.createElement('input');inp.type='file';inp.accept='image/*';
+inp.onchange=function(){if(inp.files&&inp.files[0])uploadAnexaImg(id,inp.files[0]);};inp.click();}
+function dropAnexaImg(e,id){e.preventDefault();e.currentTarget.classList.remove('drag');
+var f=e.dataTransfer&&e.dataTransfer.files&&e.dataTransfer.files[0];if(f)uploadAnexaImg(id,f);}
+// Micșorez poza în browser (max 1600px, JPEG pe fundal alb): PDF-ul rămâne ușor
+// și pozele de pe telefon (5-10 MB) se urcă repede.
+function shrinkImage(file){return new Promise(function(resolve,reject){
+var url=URL.createObjectURL(file);var im=new Image();
+im.onload=function(){URL.revokeObjectURL(url);var max=1600;var s=Math.min(1,max/Math.max(im.naturalWidth,im.naturalHeight));
+var c=document.createElement('canvas');c.width=Math.round(im.naturalWidth*s);c.height=Math.round(im.naturalHeight*s);
+var ctx=c.getContext('2d');ctx.fillStyle='#fff';ctx.fillRect(0,0,c.width,c.height);ctx.drawImage(im,0,0,c.width,c.height);
+c.toBlob(function(b){b?resolve(b):reject(new Error('conversie'));},'image/jpeg',0.85);};
+im.onerror=function(){URL.revokeObjectURL(url);reject(new Error('format'));};
+im.src=url;});}
+function uploadAnexaImg(id,file){var a=findAnexa(id);if(!a)return;
+a.uploading=true;renderAnexe();
+shrinkImage(file).then(function(blob){
+var fd=new FormData();fd.append('file',blob,'anexa.jpg');
+return fetch(API_LOCAL+'?action=uploadOfertaAnexa',{method:'POST',body:fd}).then(function(r){return r.json();});
+}).then(function(res){
+if(!res||!res.success)throw new Error(res&&res.error||'upload');
+a.img=res.url;a.uploading=false;renderAnexe();recalcOffer();
+}).catch(function(e){a.uploading=false;renderAnexe();
+toast(e&&e.message==='format'?'⚠️ Imaginea nu poate fi citită. Încearcă JPG sau PNG.':'⚠️ Imaginea nu s-a urcat: '+(e&&e.message||''),'error');});}
 function loadOffersFromDB(){document.getElementById('savedCount').textContent='⏳';
 fetch(API_LOCAL+'?action=getOferte&_t='+Date.now()).then(function(r){return r.json()}).then(function(res){
-if(res.success&&res.data){offers=res.data.map(function(o){o.totalBrut=parseFloat(o.total_cu_tva||o.totalBrut)||0;o.totalNet=parseFloat(o.total_fara_tva||o.totalNet)||0;o.subtotalEchip=parseFloat(o.subtotal_echip||o.subtotalEchip)||0;o.subtotalManop=parseFloat(o.subtotal_manop||o.subtotalManop)||0;o.tva=parseFloat(o.tva)||0;o.nr=o.oferta_id||o.nr||"";o.client=o.client_nume||o.client||"";o.cui=o.client_cui||o.cui||"";o.adresa=o.client_adresa||o.adresa||"";o.contact=o.client_contact||o.contact||"";o.obiectiv=o.obiectiv||"";o.data=o.data_oferta||o.data||"";o.valab=o.valabilitate||o.valab||"4 zile";o.conditii=o.conditii||"";o.createdAt=o.created_at||"";o.client_db_id=o.client_db_id||"";o.proiect_db_id=o.proiect_db_id||"";o.lines=mapLinesFromDB(o.lines);o.labor=mapLaborFromDB(o.labor);return o});offersLoaded=true;saveOffers();renderSaved();toast('✅ '+offers.length+' oferte din baza de date','success');}
+if(res.success&&res.data){offers=res.data.map(function(o){o.totalBrut=parseFloat(o.total_cu_tva||o.totalBrut)||0;o.totalNet=parseFloat(o.total_fara_tva||o.totalNet)||0;o.subtotalEchip=parseFloat(o.subtotal_echip||o.subtotalEchip)||0;o.subtotalManop=parseFloat(o.subtotal_manop||o.subtotalManop)||0;o.tva=parseFloat(o.tva)||0;o.nr=o.oferta_id||o.nr||"";o.client=o.client_nume||o.client||"";o.cui=o.client_cui||o.cui||"";o.adresa=o.client_adresa||o.adresa||"";o.contact=o.client_contact||o.contact||"";o.obiectiv=o.obiectiv||"";o.data=o.data_oferta||o.data||"";o.valab=o.valabilitate||o.valab||"4 zile";o.conditii=o.conditii||"";o.createdAt=o.created_at||"";o.client_db_id=o.client_db_id||"";o.proiect_db_id=o.proiect_db_id||"";o.lines=mapLinesFromDB(o.lines);o.labor=mapLaborFromDB(o.labor);o.anexe=mapAnexeFromDB(o.anexe);return o});offersLoaded=true;saveOffers();renderSaved();toast('✅ '+offers.length+' oferte din baza de date','success');}
 }).catch(function(e){console.log('DB load failed:',e);toast('⚠️ Eroare conexiune baza de date','error');});}
 function loadClienti(){fetch(API_LOCAL+'?action=getClienti&_t='+Date.now()).then(function(r){return r.json()}).then(function(res){if(res.success)clienti=res.data;}).catch(function(){});}
 function openClientPicker(){loadClienti();document.getElementById('clientPickerModal').classList.add('active');document.getElementById('clientPickerSearch').value='';setTimeout(function(){renderClientPicker();document.getElementById('clientPickerSearch').focus();},200);}
@@ -284,6 +353,7 @@ if(type==='equip'){renderOfferLines();recalcOffer();}else{renderLaborLines();rec
 }
 function recalcOffer(){var eT=0;offerLines.forEach(function(l){eT+=(l.cant||0)*(l.pAchiz*(1+(l.adaos||0)/100));});var mT=0;laborLines.forEach(function(l){mT+=(parseFloat(l.cant)||0)*(parseFloat(l.price)||0);});var net=eT+mT;var tva=net*0.21;document.getElementById('tEchip').textContent=fmt(eT)+' LEI';document.getElementById('tManop').textContent=fmt(mT)+' LEI';document.getElementById('tNet').textContent=fmt(net)+' LEI';document.getElementById('tTva').textContent=fmt(tva)+' LEI (21%)';document.getElementById('tTotal').textContent=fmtI(net+tva)+' LEI';}
 function buildOfferPayload(){
+if(anexe.some(function(a){return a.uploading;})){toast('⏳ Așteaptă să se încarce imaginile din anexe','error');return null;}
 var client=document.getElementById('oClient').value.trim();
 if(!client){toast('⚠️ Completează beneficiarul','error');return null;}
 if(!offerLines.length&&!laborLines.filter(function(l){return parseFloat(l.cant)>0;}).length){toast('⚠️ Adaugă produse sau servicii','error');return null;}
@@ -299,6 +369,7 @@ cui:document.getElementById('oCui').value.trim(),adresa:document.getElementById(
 contact:document.getElementById('oContact').value.trim(),obiectiv:obiectiv,
 mentiuni:(document.getElementById('oMentiuni')?document.getElementById('oMentiuni').value:'')||'',
 conditii:condSerialize(),
+anexe:anexeForSave(),
 lines:JSON.parse(JSON.stringify(offerLines)),
 labor:JSON.parse(JSON.stringify(laborLines.filter(function(l){return parseFloat(l.cant)>0;}))),
 subtotalEchip:eT,subtotalManop:mT,totalNet:net,tva:Math.round(net*21)/100,totalBrut:Math.round(net*121)/100};}
@@ -359,9 +430,9 @@ btnMain.textContent='💾 Salvează oferta';
 btnNew.style.display='none';
 oNr.style.color='#94a3b8';oNr.readOnly=true;
 }}
-function resetOffer(){window._editingOfertaDbId='';window._prefillClientDbId='';window._prefillProiectDbId='';window._docMode='oferta';window._editingSituatieDbId='';window._sursaOfertaDbId='';window._sursaOfertaNr='';applyDocMode();fetchNextOfertaNr();offerLines=[];laborLines=[{id:genId()+'l0',name:'Montaj și instalare echipamente',um:'ore',cant:'',price:220},{id:genId()+'l1',name:'Configurare și programare',um:'ore',cant:'',price:500},{id:genId()+'l2',name:'Cablare și protecție trasee',um:'ml.',cant:'',price:4},{id:genId()+'l3',name:'Punere în funcțiune (PIF)',um:'ans.',cant:'',price:450},{id:genId()+'l4',name:'Transport și deplasare',um:'km',cant:'',price:4}];['oNr','oClient','oCui','oAdresa','oContact','oObiectiv','oMentiuni'].forEach(function(id){var el=document.getElementById(id);if(el)el.value='';});document.getElementById('oData').value=todayStr();condCustom=false;condLines=defaultCond(false);renderCond();renderOfferLines();renderLaborLines();recalcOffer();toast('🔄 Resetat','info');}function newOffer(){resetOffer();setTab('offer');}
+function resetOffer(){window._editingOfertaDbId='';window._prefillClientDbId='';window._prefillProiectDbId='';window._docMode='oferta';window._editingSituatieDbId='';window._sursaOfertaDbId='';window._sursaOfertaNr='';applyDocMode();fetchNextOfertaNr();offerLines=[];laborLines=[{id:genId()+'l0',name:'Montaj și instalare echipamente',um:'ore',cant:'',price:220},{id:genId()+'l1',name:'Configurare și programare',um:'ore',cant:'',price:500},{id:genId()+'l2',name:'Cablare și protecție trasee',um:'ml.',cant:'',price:4},{id:genId()+'l3',name:'Punere în funcțiune (PIF)',um:'ans.',cant:'',price:450},{id:genId()+'l4',name:'Transport și deplasare',um:'km',cant:'',price:4}];['oNr','oClient','oCui','oAdresa','oContact','oObiectiv','oMentiuni'].forEach(function(id){var el=document.getElementById(id);if(el)el.value='';});document.getElementById('oData').value=todayStr();condCustom=false;condLines=defaultCond(false);renderCond();anexe=[];renderAnexe();renderOfferLines();renderLaborLines();recalcOffer();toast('🔄 Resetat','info');}function newOffer(){resetOffer();setTab('offer');}
 function renderSaved(){var q=(document.getElementById('savedSearch').value||'').toLowerCase();var filtered=offers.filter(function(o){if(q&&!o.client.toLowerCase().includes(q)&&!o.nr.toLowerCase().includes(q)&&!(o.obiectiv||'').toLowerCase().includes(q))return false;return true;});if(!filtered.length){document.getElementById('savedList').innerHTML='<div class="empty">Nicio ofertă salvată.</div>';return;}var html='';filtered.forEach(function(o){html+='<div class="offer-card"><div class="offer-info"><div class="offer-nr">'+(o.titlu?esc(o.titlu):(esc(o.nr)+' · '+o.data))+'</div><div class="offer-client">'+esc(o.client)+'</div><div class="offer-meta">'+(o.obiectiv?esc(o.obiectiv)+' · ':'')+o.lines.length+' produse'+(o.labor.length?', '+o.labor.length+' servicii':'')+'</div><div style="display:flex;gap:4px;margin-top:6px;flex-wrap:wrap"><button class="btn btn-sm btn-blue" onclick="loadOffer(\''+o.id+'\')">📝 Editează</button><button class="btn btn-sm btn-green" style="background:var(--teal,#0d9488)" onclick="startSituatieFromOffer(\''+o.id+'\')" title="Creează situația de plată: pornește din ofertă și o ajustezi cu ce s-a montat efectiv">📑 Situație</button><button class="btn btn-sm btn-red" onclick="exportPDFSaved(\''+o.id+'\')">📄 PDF</button><button class="btn btn-sm btn-blue" onclick="openAnexaSaved(\''+o.id+'\')">📎 Anexă</button><button class="btn btn-sm btn-outline" onclick="openMaterialListSaved(\''+o.id+'\')" title="Coduri și cantități pentru comandă, document intern">🧾 Materiale</button><button class="btn btn-sm btn-outline" style="color:var(--red);border-color:var(--red)" onclick="deleteOffer(\''+o.id+'\')">🗑️</button></div></div><div class="offer-total"><div class="offer-total-val">'+fmtI(o.totalBrut)+'</div><div class="offer-total-sub">RON cu TVA</div></div></div>';});document.getElementById('savedList').innerHTML=html;}
-function deleteOffer(oid){if(!confirm('Ștergi definitiv oferta?'))return;deleteOfertaFromDB(oid);}function loadOffer(oid){var o=offers.find(function(x){return String(x.id)===String(oid);});if(!o)return;window._editingOfertaDbId=o.id;window._prefillClientDbId=o.client_db_id||o.clientDbId||'';window._prefillProiectDbId=o.proiect_db_id||o.proiectDbId||'';document.getElementById('oNr').value=o.nr;document.getElementById('oData').value=o.data;if(o.valab)document.getElementById('oValab').value=o.valab;document.getElementById('oClient').value=o.client;document.getElementById('oCui').value=o.cui||'';document.getElementById('oAdresa').value=o.adresa||'';document.getElementById('oContact').value=o.contact||'';document.getElementById('oObiectiv').value=o.obiectiv||'';if(document.getElementById('oMentiuni'))document.getElementById('oMentiuni').value=o.mentiuni||'';offerLines=JSON.parse(JSON.stringify(o.lines));laborLines=o.labor.length?JSON.parse(JSON.stringify(o.labor)):laborLines;setTab('offer');renderOfferLines();renderLaborLines();recalcOffer();updateEditUI();window._docMode='oferta';applyDocMode();setCondFromStored(o.conditii);fillClientFromDB(o.client_db_id||o.clientDbId);toast('✏️ Editezi oferta #'+o.nr,'info');}
+function deleteOffer(oid){if(!confirm('Ștergi definitiv oferta?'))return;deleteOfertaFromDB(oid);}function loadOffer(oid){var o=offers.find(function(x){return String(x.id)===String(oid);});if(!o)return;window._editingOfertaDbId=o.id;window._prefillClientDbId=o.client_db_id||o.clientDbId||'';window._prefillProiectDbId=o.proiect_db_id||o.proiectDbId||'';document.getElementById('oNr').value=o.nr;document.getElementById('oData').value=o.data;if(o.valab)document.getElementById('oValab').value=o.valab;document.getElementById('oClient').value=o.client;document.getElementById('oCui').value=o.cui||'';document.getElementById('oAdresa').value=o.adresa||'';document.getElementById('oContact').value=o.contact||'';document.getElementById('oObiectiv').value=o.obiectiv||'';if(document.getElementById('oMentiuni'))document.getElementById('oMentiuni').value=o.mentiuni||'';offerLines=JSON.parse(JSON.stringify(o.lines));laborLines=o.labor.length?JSON.parse(JSON.stringify(o.labor)):laborLines;anexe=mapAnexeFromDB(o.anexe);renderAnexe();setTab('offer');renderOfferLines();renderLaborLines();recalcOffer();updateEditUI();window._docMode='oferta';applyDocMode();setCondFromStored(o.conditii);fillClientFromDB(o.client_db_id||o.clientDbId);toast('✏️ Editezi oferta #'+o.nr,'info');}
 
 // ══════════════════════════════════════════════════════════════
 // SITUAȚII DE PLATĂ
@@ -485,6 +556,7 @@ if(g('tabOfferLabel'))g('tabOfferLabel').textContent=isSit?'📑 Situație de pl
 if(g('docHeadTitle'))g('docHeadTitle').textContent=isSit?'📑 Date situație de plată & beneficiar':'🏢 Date ofertă & beneficiar';
 if(g('lblNr'))g('lblNr').textContent=isSit?'Nr. situație':'Nr. ofertă';
 if(g('grpValab'))g('grpValab').style.display=isSit?'none':'';
+if(g('anexeCard'))g('anexeCard').style.display=isSit?'none':'';
 if(g('condTitle'))g('condTitle').textContent=isSit?'📋 Condiții situație':'📋 Condiții comerciale';
 // Cât timp n-a umblat nimeni la ele, condițiile urmează tipul documentului.
 if(!condCustom)condLines=defaultCond(isSit);
@@ -607,6 +679,7 @@ document.getElementById('oObiectiv').value=o.obiectiv||'';
 if(document.getElementById('oMentiuni'))document.getElementById('oMentiuni').value=o.mentiuni||'';
 offerLines=JSON.parse(JSON.stringify(o.lines||[]));
 laborLines=(o.labor&&o.labor.length)?JSON.parse(JSON.stringify(o.labor)):[];
+anexe=[];renderAnexe();
 condCustom=false;
 setTab('offer');renderOfferLines();renderLaborLines();recalcOffer();applyDocMode();
 window.scrollTo({top:0,behavior:'smooth'});
@@ -636,6 +709,7 @@ document.getElementById('oObiectiv').value=s.obiectiv||'';
 if(document.getElementById('oMentiuni'))document.getElementById('oMentiuni').value=s.mentiuni||'';
 offerLines=JSON.parse(JSON.stringify(s.lines||[]));
 laborLines=JSON.parse(JSON.stringify(s.labor||[]));
+anexe=[];renderAnexe();
 setTab('offer');renderOfferLines();renderLaborLines();recalcOffer();applyDocMode();setCondFromStored(s.conditii);
 window.scrollTo({top:0,behavior:'smooth'});
 toast('✏️ Editezi situația '+s.nr,'info');}
@@ -1091,11 +1165,15 @@ h+='.cond{margin-top:10px;font-size:7pt;color:#64748b;page-break-inside:avoid;br
 h+='.sig{display:flex;justify-content:space-between;margin-top:14px;font-size:8pt;page-break-inside:avoid;break-inside:avoid}.sig .s{min-width:200px;page-break-inside:avoid;break-inside:avoid}.sig .s strong{display:block;margin-bottom:6px}';
 h+='.foot{text-align:center;font-size:6.5pt;color:#94a3b8;margin-top:10px;border-top:1px solid #e2e8f0;padding-top:4px;page-break-inside:avoid;break-inside:avoid}';
 h+='tr{page-break-inside:avoid;break-inside:avoid}thead{display:table-header-group}tfoot{display:table-footer-group}h1{page-break-after:avoid;break-after:avoid}tr.sep-row{page-break-after:avoid;break-after:avoid}tr.sep-row + tr{page-break-before:avoid;break-before:avoid}';
+h+='.anx-wrap{break-before:page;page-break-before:always}.anx-head{display:flex;justify-content:space-between;align-items:baseline;gap:10px;margin:2mm 0 4mm;padding-bottom:2mm;border-bottom:2px solid #dc2626}.anx-head h2{font-size:12pt;color:#dc2626;font-weight:900}.anx-head .sub{font-size:7.5pt;color:#64748b;text-align:right}';
+h+='.anx{break-inside:avoid;page-break-inside:avoid;margin-bottom:6mm}.anx:last-child{margin-bottom:0}.anx-t{font-size:10pt;font-weight:700;margin-bottom:2mm}.anx-t .n{color:#dc2626;margin-right:4px}.anx img{display:block;max-width:100%;max-height:100mm;margin:0 auto;object-fit:contain;border:1px solid #e2e8f0;border-radius:4px}';
 h+='@media print{body{margin:0}.sig,.sig .s,.cond,.foot,.tot-row.big,tr{page-break-inside:avoid;break-inside:avoid}}</style></head><body>';
-h+='<table class="pdf-page"><thead><tr><td>';
-h+='<div class="hdr"><div style="flex:1"><img src="'+IMG_LOGO+'" alt="Break Sistems" style="height:55px;max-width:320px"></div><div><img src="'+IMG_CSSI+'" alt="CSSI" style="height:50px"></div></div>';
-h+='<div class="bar">BREAK SISTEMS SRL | CUI: 23576950 | J08/843/2008 | Str. Busuiocului Nr. 6 , Bra\u0219ov | Tel: 0752 288 400 | office@breaksistems.ro</div>';
-h+='</td></tr></thead><tfoot><tr><td><div class="foot">Break Sistems SRL \u2022 brand CSSI \u2022 Str. Bisericii Romane 42, Bra\u0219ov \u2022 www.cssi.ro \u2022 www.breaksistems.ro \u2022 0752 288 400</div></td></tr></tfoot><tbody><tr><td>';
+// Antetul \u0219i subsolul se repet\u0103 pe fiecare pagin\u0103 (thead/tfoot); anexele le refolosesc.
+var pageHead='<thead><tr><td>'
++'<div class="hdr"><div style="flex:1"><img src="'+IMG_LOGO+'" alt="Break Sistems" style="height:55px;max-width:320px"></div><div><img src="'+IMG_CSSI+'" alt="CSSI" style="height:50px"></div></div>'
++'<div class="bar">BREAK SISTEMS SRL | CUI: 23576950 | J08/843/2008 | Str. Busuiocului Nr. 6 , Bra\u0219ov | Tel: 0752 288 400 | office@breaksistems.ro</div>'
++'</td></tr></thead><tfoot><tr><td><div class="foot">Break Sistems SRL \u2022 brand CSSI \u2022 Str. Bisericii Romane 42, Bra\u0219ov \u2022 www.cssi.ro \u2022 www.breaksistems.ro \u2022 0752 288 400</div></td></tr></tfoot>';
+h+='<table class="pdf-page">'+pageHead+'<tbody><tr><td>';
 h+='<div class="info"><div class="col"><div class="sec-title">'+(isSit?'DATE SITUAȚIE':'DATE OFERTĂ')+'</div><div><span class="lab">'+(isSit?'Nr. situație:':'Nr. ofertă:')+'</span> <span class="val">'+esc(nr)+'</span></div><div><span class="lab">Data emitere:</span> <span class="val">'+dataFmt+'</span></div><div><span class="lab">'+(isSit?'Conform ofertei:':'Valabilitate:')+'</span> <span class="val">'+esc(isSit?(srcNr?('nr. '+srcNr):'-'):valab)+'</span></div><div><span class="lab">Obiectiv:</span> <span class="val">'+esc(data.obiectiv||'')+'</span></div></div><h1>'+(isSit?'SITUAȚIE DE PLATĂ':'OFERTĂ DE PREȚ')+'</h1><div class="col" style="text-align:right"><div class="sec-title">DATE BENEFICIAR</div><div><span class="lab">Beneficiar:</span> <span class="val">'+esc(data.client)+'</span></div><div><span class="lab">CUI / CNP:</span> <span class="val">'+esc(data.cui||'')+'</span></div><div><span class="lab">Adresa:</span> <span class="val">'+esc(data.adresa||'')+'</span></div><div><span class="lab">Pers. contact:</span> <span class="val">'+esc(data.contact||'')+'</span></div></div></div>';
 h+='<table><thead><tr><th style="width:30px">Nr.</th><th>Denumire produs / serviciu</th><th style="width:35px">UM</th><th style="width:35px">Cant.</th><th style="width:70px">Pre\u021b unitar<br>(f\u0103r\u0103 TVA)</th><th style="width:75px">Valoare<br>(f\u0103r\u0103 TVA)</th></tr></thead><tbody>';
 h+=eqRows;
@@ -1123,6 +1201,15 @@ var ment=(data.mentiuni||'').trim();
 if(ment){h+='<div class="cond" style="margin-top:8px;background:#fef3c7;border-left:3px solid #f59e0b;padding:6px 10px"><h4 style="color:#b45309">MEN\u021aIUNI</h4><div style="font-size:7.5pt;color:#0f172a;white-space:pre-wrap;line-height:1.4">'+esc(ment)+'</div></div>';}
 h+='<div class="sig"><div class="s" style="position:relative"><strong>FURNIZOR: Break Sistems SRL</strong><img src="'+IMG_STAMP+'" style="position:absolute;top:10px;left:120px;height:85px;opacity:0.9" alt="Stampila"><div style="margin-top:60px">Semn\u0103tura / \u0218tampila: ___________________</div></div><div class="s" style="text-align:right"><strong>'+(isSit?'BENEFICIAR \u2014 de acord cu lucr\u0103rile executate:':'BENEFICIAR:')+'</strong><div style="margin-top:60px">Semn\u0103tura / \u0218tampila: ___________________</div></div></div>';
 h+='</td></tr></tbody></table>';
+var anxList=isSit?[]:(data.anexe||[]).filter(function(a){return (a.titlu||'').trim()||a.img;});
+if(anxList.length){
+h+='<div class="anx-wrap"><table class="pdf-page pdf-anexe">'+pageHead+'<tbody><tr><td>';
+h+='<div class="anx-head"><h2>ANEXE</h2><div class="sub">la oferta nr. '+esc(nr)+' din '+dataFmt+(data.client?'<br>Beneficiar: '+esc(data.client):'')+'</div></div>';
+anxList.forEach(function(a,i){
+h+='<div class="anx"><div class="anx-t"><span class="n">'+(i+1)+'.</span>'+esc((a.titlu||'').trim())+'</div>';
+if(a.img)h+='<img src="'+esc(a.img).replace(/"/g,'&quot;')+'" alt="">';
+h+='</div>';});
+h+='</td></tr></tbody></table></div>';}
 // \u2500\u2500 (Anexa a fost mutat\u0103 \u00eentr-o pagin\u0103 separat\u0103 \u2014 vezi openAnexaCurrent / openAnexaSaved) \u2500\u2500
 if(false && data.includeAnexa && lines.length){
   var anxItems=lines.filter(function(l){return l.name;});
@@ -1182,7 +1269,7 @@ if(false && data.includeAnexa && lines.length){
     h+='</div>';
   }
 }
-h+='<script>function _waitImgsThenPrint(){var imgs=document.images;if(!imgs||!imgs.length){setTimeout(function(){window.print();},200);return;}var pending=imgs.length;var done=function(){if(--pending<=0){setTimeout(function(){window.print();},250);}};for(var i=0;i<imgs.length;i++){if(imgs[i].complete&&imgs[i].naturalHeight!==0){done();}else{imgs[i].addEventListener("load",done,{once:true});imgs[i].addEventListener("error",done,{once:true});}}setTimeout(function(){if(pending>0){pending=0;window.print();}},10000);}window.onload=function(){try{var DPMM=3.7795;/* px per mm @96dpi */var ROW_THRESHOLD=20;var itemsTbl=document.querySelector(".pdf-page > tbody > tr > td > table");var itemRows=itemsTbl?itemsTbl.querySelectorAll("tbody > tr"):[];var rowCount=itemRows.length;/* Masor la latimea REALA de print A4 (210mm - margini 10+10 = 190mm), altfel scrollHeight e subestimat la fereastra lata si zoom-ul nu se aplica corect */document.body.style.width="190mm";document.body.style.marginLeft="auto";document.body.style.marginRight="auto";var pageH=Math.floor(279*DPMM);/* inaltime utila: 297mm - margini sus 8 + jos 10 */void document.body.offsetHeight;/* forteaza reflow */var actual=document.body.scrollHeight;if(rowCount>ROW_THRESHOLD){var splitAt=Math.floor(rowCount/2+7);splitAt=Math.max(2,Math.min(rowCount-1,splitAt));if(itemRows[splitAt]){itemRows[splitAt].style.pageBreakBefore="always";itemRows[splitAt].style.breakBefore="page";}document.body.setAttribute("data-pdf-split","row="+splitAt+"/"+rowCount);}else if(actual>pageH){var s=Math.max(0.5,(pageH-10)/actual);document.body.style.zoom=s;document.body.setAttribute("data-pdf-scale",s.toFixed(3));}}catch(e){}_waitImgsThenPrint();}</'+'script></body></html>';
+h+='<script>function _waitImgsThenPrint(){var imgs=document.images;if(!imgs||!imgs.length){setTimeout(function(){window.print();},200);return;}var pending=imgs.length;var done=function(){if(--pending<=0){setTimeout(function(){window.print();},250);}};for(var i=0;i<imgs.length;i++){if(imgs[i].complete&&imgs[i].naturalHeight!==0){done();}else{imgs[i].addEventListener("load",done,{once:true});imgs[i].addEventListener("error",done,{once:true});}}setTimeout(function(){if(pending>0){pending=0;window.print();}},10000);}window.onload=function(){try{var DPMM=3.7795;/* px per mm @96dpi */var ROW_THRESHOLD=20;var itemsTbl=document.querySelector(".pdf-page > tbody > tr > td > table");var itemRows=itemsTbl?itemsTbl.querySelectorAll("tbody > tr"):[];var rowCount=itemRows.length;/* Masor la latimea REALA de print A4 (210mm - margini 10+10 = 190mm), altfel scrollHeight e subestimat la fereastra lata si zoom-ul nu se aplica corect */document.body.style.width="190mm";document.body.style.marginLeft="auto";document.body.style.marginRight="auto";var pageH=Math.floor(279*DPMM);/* inaltime utila: 297mm - margini sus 8 + jos 10 */void document.body.offsetHeight;/* forteaza reflow */var mainPage=document.querySelector(".pdf-anexe")?document.querySelector(".pdf-page"):null;/* cu anexe: masor si micsorez doar oferta, paginile de anexe raman la marime normala */if(mainPage){mainPage.style.width="190mm";}var actual=mainPage?mainPage.offsetHeight:document.body.scrollHeight;if(rowCount>ROW_THRESHOLD){var splitAt=Math.floor(rowCount/2+7);splitAt=Math.max(2,Math.min(rowCount-1,splitAt));if(itemRows[splitAt]){itemRows[splitAt].style.pageBreakBefore="always";itemRows[splitAt].style.breakBefore="page";}document.body.setAttribute("data-pdf-split","row="+splitAt+"/"+rowCount);}else if(actual>pageH){var s=Math.max(0.5,(pageH-10)/actual);(mainPage||document.body).style.zoom=s;document.body.setAttribute("data-pdf-scale",s.toFixed(3));}}catch(e){}_waitImgsThenPrint();}</'+'script></body></html>';
 return h;}
 // Pre-fetch URL imagine si o convertesc in data URI base64 (asa apare GARANTAT in PDF,
 // fara probleme de timing/referer/cross-origin la window.print).
@@ -1491,6 +1578,7 @@ offerLines.forEach(function(l){data.subtotalEchip+=(l.cant||0)*(l.pAchiz*(1+(l.a
 data.labor.forEach(function(l){data.subtotalManop+=(parseFloat(l.cant)||0)*(parseFloat(l.price)||0);});
 data.totalNet=data.subtotalEchip+data.subtotalManop;
 if(window._docMode==='situatie'){data.docType='situatie';data.sursaNr=window._sursaOfertaNr||'';}
+else data.anexe=anexeForSave();
 var w=window.open('','_blank');w.document.write(buildPDFHtml(data));w.document.close();}
 function exportPDFSaved(oid){
 var o=offers.find(function(x){return String(x.id)===String(oid);});if(!o)return;
@@ -1516,7 +1604,7 @@ function addFromCode(){var name=document.getElementById('codeResName').value.tri
 if(window._replaceLineId){var rid=String(window._replaceLineId);var idx=offerLines.findIndex(function(l){return String(l.id)===rid;});if(idx>=0){var oldCant=offerLines[idx].cant||1;offerLines[idx].name=name;offerLines[idx].code=code;offerLines[idx].pAchiz=price;offerLines[idx].cant=oldCant;offerLines[idx].link=link;}window._replaceLineId=null;renderOfferLines();recalcOffer();closeCodeModal();setTab('offer');toast('🔄 Înlocuit cu '+name,'success');return;}
 offerLines.push({id:genId(),name:name,code:code,um:'buc.',cant:1,pAchiz:price,adaos:DEFAULT_ADAOS,link:link});renderOfferLines();recalcOffer();closeCodeModal();setTab('offer');toast('✅ '+name+' adăugat în ofertă','success');}
 
-document.getElementById('oData').value=todayStr();document.getElementById('oNr').value='';document.getElementById('savedCount').textContent='⏳';renderOfferLines();renderLaborLines();renderCond();recalcOffer();
+document.getElementById('oData').value=todayStr();document.getElementById('oNr').value='';document.getElementById('savedCount').textContent='⏳';renderOfferLines();renderLaborLines();renderCond();renderAnexe();recalcOffer();
 function fetchNextOfertaNr(){document.getElementById('oNr').value='⏳ Auto...';document.getElementById('oNr').style.color='#94a3b8';fetch(API_LOCAL+'?action=nextOfertaId&_t='+Date.now()).then(function(r){return r.json()}).then(function(res){if(res.success&&!window._editingOfertaDbId){document.getElementById('oNr').value=String(res.next)+' (auto)';document.getElementById('oNr').style.color='#94a3b8';}}).catch(function(){document.getElementById('oNr').value='Auto';});}
 fetchNextOfertaNr();
 // ═══ PRE-COMPLETARE DIN URL PARAMS (din CRM) ═══
@@ -1562,7 +1650,8 @@ fetchNextOfertaNr();
                 totalNet:parseFloat(o.total_fara_tva)||0,tva:parseFloat(o.tva)||0,
                 totalBrut:parseFloat(o.total_cu_tva)||0,
                 lines:mapLinesFromDB(o.lines),
-                labor:mapLaborFromDB(o.labor)
+                labor:mapLaborFromDB(o.labor),
+                anexe:mapAnexeFromDB(o.anexe)
             };
             // Hidratez datele clientului din tabela clienti (snapshot-ul pe ofertă poate fi învechit/incomplet)
             // — apelat doar pentru pdf/view (la edit, formularul completează singur via fillClientFromDB)
@@ -1625,6 +1714,7 @@ fetchNextOfertaNr();
                 setCondFromStored(mapped.conditii);
                 offerLines=JSON.parse(JSON.stringify(mapped.lines));
                 laborLines=mapped.labor.length?JSON.parse(JSON.stringify(mapped.labor)):laborLines;
+                anexe=mapped.anexe;renderAnexe();
                 setTab('offer');
                 renderOfferLines();renderLaborLines();recalcOffer();
                 updateEditUI();
@@ -1735,6 +1825,7 @@ function snap(){
         obiectiv:document.getElementById('oObiectiv').value||'',
         mentiuni:(document.getElementById('oMentiuni')?document.getElementById('oMentiuni').value:'')||'',
         conditii:condSerialize(),
+        anexe:anexeForSave(),
         offerLines:offerLines||[],
         laborLines:laborLines||[],
         clientDbId:window._prefillClientDbId||'',
@@ -1748,6 +1839,7 @@ function meaningful(d){
     if((d.obiectiv||'').trim())return true;
     if((d.mentiuni||'').trim())return true;
     if((d.conditii||'').trim())return true;
+    if((d.anexe||[]).length)return true;
     if((d.offerLines||[]).some(function(l){return (l.name&&String(l.name).trim())||parseFloat(l.cant)>0;}))return true;
     if((d.laborLines||[]).some(function(l){return parseFloat(l.cant)>0;}))return true;
     return false;
@@ -1918,6 +2010,7 @@ function applyDraft(p,draftId){
         setCondFromStored(p.conditii);
         if(Array.isArray(p.offerLines))offerLines=p.offerLines;
         if(Array.isArray(p.laborLines)&&p.laborLines.length)laborLines=p.laborLines;
+        anexe=mapAnexeFromDB(p.anexe);renderAnexe();
         if(p.clientDbId)window._prefillClientDbId=p.clientDbId;
         if(p.proiectDbId)window._prefillProiectDbId=p.proiectDbId;
         window._draftId=draftId||0;

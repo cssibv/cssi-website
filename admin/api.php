@@ -328,6 +328,10 @@ function ensureOferteColumns($db) {
         if (!in_array('trimisa_la', $cols)) {
             $db->exec("ALTER TABLE oferte ADD COLUMN trimisa_la DATETIME NULL DEFAULT NULL");
         }
+        // Anexele ofertei (denumire + imagine), ca JSON array; în PDF apar pe pagină nouă după ofertă.
+        if (!in_array('anexe', $cols)) {
+            $db->exec("ALTER TABLE oferte ADD COLUMN anexe TEXT NULL DEFAULT NULL");
+        }
     } catch (Exception $e) {
         // Loghez ca să pot debug (apare în error_log)
         error_log('ensureOferteColumns FAILED: ' . $e->getMessage());
@@ -342,6 +346,26 @@ function ensureOferteColumns($db) {
             $db->exec("ALTER TABLE notificari ADD COLUMN telefon VARCHAR(30) NULL DEFAULT NULL");
         }
     } catch (Exception $e) { /* silent — tabela poate lipsi in dev */ }
+}
+
+define('OFERTE_ANEXE_DIR', UPLOAD_DIR . 'oferte-anexe/');
+define('OFERTE_ANEXE_URL', UPLOAD_URL . 'oferte-anexe/');
+
+// Păstrează din anexele trimise doar denumirea și o imagine urcată prin uploadOfertaAnexa.
+function sanitizeOfertaAnexe($raw) {
+    if (is_string($raw)) $raw = json_decode($raw, true);
+    if (!is_array($raw)) return [];
+    $out = [];
+    foreach ($raw as $a) {
+        if (!is_array($a)) continue;
+        $titlu = trim(mb_substr((string)($a['titlu'] ?? ''), 0, 300));
+        $img = (string)($a['img'] ?? '');
+        if (!preg_match('#^' . preg_quote(OFERTE_ANEXE_URL, '#') . '\d{4}-\d{2}/[a-f0-9]{24}\.(jpg|png|webp|gif)$#', $img)) $img = '';
+        if ($titlu === '' && $img === '') continue;
+        $out[] = ['titlu' => $titlu, 'img' => $img];
+        if (count($out) >= 50) break;
+    }
+    return $out;
 }
 // ─── Helper: tabela produse_furnizori (idempotent) ────────────
 // CSSI nu ține stoc: fiecare ofertă acceptată se comandă de la distribuitori
@@ -2921,7 +2945,7 @@ try {
             $sortBy = (isset($_GET['sort']) ? $_GET['sort'] : 'data_desc'); // data_desc/asc, valoare_desc/asc, client_asc, status
             $light = !empty($_GET['light']);  // true = nu adaugă linii (mult mai rapid pentru listing)
 
-            $sql = "SELECT vc.*, o2.client_id AS client_db_id, o2.proiect_id AS proiect_db_id, o2.motiv_respingere, o2.data_decizie, o2.decis_de, o2.archived_at, o2.expires_at, o2.mentiuni, o2.conditii, o2.trimisa_de, o2.trimisa_la FROM v_oferte_complete vc JOIN oferte o2 ON vc.id = o2.id WHERE 1=1";
+            $sql = "SELECT vc.*, o2.client_id AS client_db_id, o2.proiect_id AS proiect_db_id, o2.motiv_respingere, o2.data_decizie, o2.decis_de, o2.archived_at, o2.expires_at, o2.mentiuni, o2.conditii, o2.anexe, o2.trimisa_de, o2.trimisa_la FROM v_oferte_complete vc JOIN oferte o2 ON vc.id = o2.id WHERE 1=1";
             $params = [];
             if ($clientId) { $sql .= " AND o2.client_id = ?"; $params[] = $clientId; }
             if ($proiectId) { $sql .= " AND o2.proiect_id = ?"; $params[] = $proiectId; }
@@ -2977,7 +3001,7 @@ try {
                 // numerice direct din tabela oferte ca să le poată folosi frontend-ul
                 // la save (păstrare legătură ofertă→client/proiect la edit)
                 ensureOferteColumns($db);
-                $stmtFK = $db->prepare("SELECT client_id, proiect_id, mentiuni, conditii FROM oferte WHERE id = ?");
+                $stmtFK = $db->prepare("SELECT client_id, proiect_id, mentiuni, conditii, anexe FROM oferte WHERE id = ?");
                 $stmtFK->execute([$o['id']]);
                 $fk = $stmtFK->fetch();
                 if ($fk) {
@@ -2985,6 +3009,7 @@ try {
                     $o['proiect_id'] = $fk['proiect_id'] !== null ? intval($fk['proiect_id']) : null;
                     if (!isset($o['mentiuni']) || $o['mentiuni'] === null) $o['mentiuni'] = $fk['mentiuni'] ?? '';
                     $o['conditii'] = $fk['conditii'] ?? '';
+                    $o['anexe'] = $fk['anexe'] ?? '';
                 }
                 $stmtL = $db->prepare("SELECT * FROM oferta_linii WHERE oferta_id = ? ORDER BY tip, ordine");
                 $stmtL->execute([$o['id']]);
@@ -2999,6 +3024,7 @@ try {
             // Asigură că denumirea liniilor încape (TEXT, nu VARCHAR scurt) — rulează ÎNAINTE
             // de tranzacție fiindcă ALTER face commit implicit. Idempotent (static-guarded).
             ensureOfertaLiniiColumns($db);
+            ensureOferteColumns($db);
             // Detectează update: prin oferta_db_id SAU prin nr existent
             $isUpdate = !empty($data['oferta_db_id']);
             if (!$isUpdate && !empty($data['nr'])) {
@@ -3148,7 +3174,14 @@ try {
                     if ($hasLink) $row[] = null;
                     $stmtLine->execute($row);
                 }
-                
+
+                // Doar dacă cererea trimite anexele: un apel fără ele nu le șterge pe cele existente.
+                if (array_key_exists('anexe', $data)) {
+                    $anexe = sanitizeOfertaAnexe($data['anexe']);
+                    $db->prepare("UPDATE oferte SET anexe = ? WHERE id = ?")
+                       ->execute([$anexe ? json_encode($anexe, JSON_UNESCAPED_UNICODE) : null, $ofertaDbId]);
+                }
+
                 $db->commit();
 
                 // Dacă oferta provine dintr-un draft autosave, șterge draftul
@@ -3237,6 +3270,26 @@ try {
             if (!$id) jsonResponse(['success' => false, 'error' => 'id obligatoriu'], 400);
             $db->prepare("DELETE FROM oferte_drafturi WHERE id = ?")->execute([$id]);
             jsonResponse(['success' => true]);
+            break;
+
+        case 'uploadOfertaAnexa':
+            // Multipart: $_FILES['file']. Calculatorul micșorează poza înainte (JPEG ~1600px);
+            // aici verific doar că e chiar o imagine și o salvez cu nume aleator.
+            if (!isset($_FILES['file']) || $_FILES['file']['error'] !== UPLOAD_ERR_OK) {
+                jsonResponse(['success' => false, 'error' => 'Upload eșuat'], 400); break;
+            }
+            $f = $_FILES['file'];
+            if ($f['size'] > 15 * 1024 * 1024) { jsonResponse(['success' => false, 'error' => 'Imagine prea mare (max 15 MB)'], 400); break; }
+            $info = @getimagesize($f['tmp_name']);
+            $extMap = [IMAGETYPE_JPEG => 'jpg', IMAGETYPE_PNG => 'png', IMAGETYPE_WEBP => 'webp', IMAGETYPE_GIF => 'gif'];
+            if (!$info || !isset($extMap[$info[2]])) { jsonResponse(['success' => false, 'error' => 'Format de imagine nesuportat'], 400); break; }
+            $sub = date('Y-m') . '/';
+            if (!is_dir(OFERTE_ANEXE_DIR . $sub)) @mkdir(OFERTE_ANEXE_DIR . $sub, 0755, true);
+            $newName = bin2hex(random_bytes(12)) . '.' . $extMap[$info[2]];
+            if (!move_uploaded_file($f['tmp_name'], OFERTE_ANEXE_DIR . $sub . $newName)) {
+                jsonResponse(['success' => false, 'error' => 'Salvare eșuată'], 500); break;
+            }
+            jsonResponse(['success' => true, 'url' => OFERTE_ANEXE_URL . $sub . $newName]);
             break;
 
         case 'deleteOferta':
