@@ -7358,6 +7358,7 @@ p { margin: 0; }
                ->execute([$nume, $tel, $tip, 'Nou', $autor, $now, $now]);
             $newId = intval($db->lastInsertId());
             $rand = ['Din formularul de pe site' . ($formular !== '' ? ': ' . $formular : '') . ($pagina !== '' ? ' (' . $pagina . ')' : '')];
+            if ($serviciu !== '') $rand[] = 'Serviciu: ' . $serviciu;
             if ($email !== '')   $rand[] = 'Email: ' . $email;
             if ($lucrare !== '') $rand[] = 'Tip lucrare: ' . $lucrare;
             if ($mesaj !== '')   $rand[] = 'Detalii: ' . $mesaj;
