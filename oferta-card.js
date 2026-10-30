@@ -63,7 +63,8 @@
     // pe un singur rând; butoanele „Cere Ofertă”/telefon din hero dispar, cardul le are deja.
     var css = document.createElement('style');
     css.textContent = '@media (max-width:768px){.hero-grid.hero-has-form{grid-template-columns:1fr !important;gap:20px !important;}' +
-        '.hero-has-form .hero-ctas{display:none !important;}.hero-has-form .hero-desc{margin-bottom:0 !important;}}';
+        '.hero-has-form .hero-ctas{display:none !important;}.hero-has-form .hero-desc{margin-bottom:0 !important;font-size:15px !important;}' +
+        '.hero-has-form .hero-h1{font-size:26px !important;line-height:1.15 !important;}}';
     document.head.appendChild(css);
 
     var paginaPrincipala = /^\/(index\.html)?$/.test(location.pathname);
