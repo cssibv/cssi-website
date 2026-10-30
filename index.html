@@ -263,11 +263,6 @@
                     <div style="text-align:center;margin-bottom:24px;">
                         <h2 style="font-size:24px;font-weight:800;color:#0f172a;">Ofertă Gratuită în 24h</h2>
                         <p style="color:#475569;margin-top:8px;">Măsurare la fața locului + consultanță fără obligații</p>
-                        <div id="formSteps" style="display:flex;align-items:center;justify-content:center;gap:8px;margin-top:16px;">
-                            <div id="dot1" style="width:12px;height:12px;border-radius:50%;background:#dc2626;"></div>
-                            <div id="bar" style="width:32px;height:4px;background:#e2e8f0;"></div>
-                            <div id="dot2" style="width:12px;height:12px;border-radius:50%;background:#e2e8f0;"></div>
-                        </div>
                     </div>
 
                     <div id="formSuccess" style="display:none;text-align:center;padding:48px 0;">
@@ -298,28 +293,11 @@
                                 <option value="instalatii">Instalații (Electric/Termice/AC)</option>
                                 <option value="altele">Altele</option>
                             </select>
-                            <button type="submit" style="width:100%;background:linear-gradient(to right,#dc2626,#b91c1c);color:#fff;padding:16px;border-radius:12px;font-weight:700;font-size:18px;border:none;cursor:pointer;box-shadow:0 10px 15px -3px rgba(220,38,38,0.3);transition:all 0.2s;" onmouseover="this.style.background='linear-gradient(to right,#b91c1c,#991b1b)';this.style.transform='translateY(-1px)'" onmouseout="this.style.background='linear-gradient(to right,#dc2626,#b91c1c)';this.style.transform=''">Continuă →</button>
-                            <button type="button" onclick="handleQuickSubmit()" style="width:100%;background:none;border:none;color:#64748b;font-size:14px;cursor:pointer;font-family:inherit;padding:8px;text-decoration:underline;">Sau trimite rapid fără detalii</button>
+                            <button type="submit" style="width:100%;background:linear-gradient(to right,#dc2626,#b91c1c);color:#fff;padding:16px;border-radius:12px;font-weight:700;font-size:18px;border:none;cursor:pointer;box-shadow:0 10px 15px -3px rgba(220,38,38,0.3);transition:all 0.2s;" onmouseover="this.style.background='linear-gradient(to right,#b91c1c,#991b1b)';this.style.transform='translateY(-1px)'" onmouseout="this.style.background='linear-gradient(to right,#dc2626,#b91c1c)';this.style.transform=''">Trimite formular</button>
                             <div style="display:flex;flex-wrap:wrap;justify-content:center;gap:12px;margin-top:4px;">
                                 <span style="color:#64748b;font-size:13px;">✓ Răspuns în 1-12h</span>
                                 <span style="color:#64748b;font-size:13px;">✓ Fără obligații</span>
                                 <span style="color:#64748b;font-size:13px;">✓ Măsurare gratuită</span>
-                            </div>
-                        </div>
-
-                        <!-- Step 2 -->
-                        <div id="heroStep2" class="step-2" style="flex-direction:column;gap:16px;">
-                            <div id="step2Summary" style="background:#f8fafc;border-radius:12px;padding:16px;margin-bottom:8px;"></div>
-                            <select id="heroTip" style="width:100%;padding:16px 20px;border:1px solid #e2e8f0;border-radius:12px;font-size:16px;font-family:inherit;outline:none;background:#fff;color:#475569;">
-                                <option value="">Tip serviciu (opțional)</option>
-                                <option value="proiectare">Proiectare</option>
-                                <option value="instalare">Instalare</option>
-                                <option value="mentenanta">Mentenanță</option>
-                            </select>
-                            <textarea id="heroDetalii" placeholder="Detalii proiect (opțional)" rows="3" style="width:100%;padding:16px 20px;border:1px solid #e2e8f0;border-radius:12px;font-size:16px;font-family:inherit;outline:none;resize:none;"></textarea>
-                            <div style="display:flex;gap:12px;">
-                                <button type="button" onclick="goToStep1()" style="padding:16px 24px;border:1px solid #e2e8f0;color:#475569;border-radius:12px;font-weight:600;background:#fff;cursor:pointer;font-family:inherit;">← Înapoi</button>
-                                <button type="submit" style="flex:1;background:linear-gradient(to right,#dc2626,#b91c1c);color:#fff;padding:16px;border-radius:12px;font-weight:700;font-size:18px;border:none;cursor:pointer;">Cere ofertă în 24h</button>
                             </div>
                         </div>
                     </form>
@@ -831,35 +809,10 @@
     }
 
     // ===== HERO FORM =====
-    let heroStep = 1;
-    
     function handleHeroSubmit(e) {
         e.preventDefault();
-        if (heroStep === 1) {
-            heroStep = 2;
-            document.getElementById('heroStep1').style.display = 'none';
-            const s2 = document.getElementById('heroStep2');
-            s2.style.display = 'flex';
-            s2.classList.add('active');
-            document.getElementById('bar').style.background = '#dc2626';
-            document.getElementById('dot2').style.background = '#dc2626';
-            document.getElementById('step2Summary').innerHTML = 
-                '<p style="font-size:14px;color:#475569;"><span style="font-weight:600;">' + 
-                document.getElementById('heroName').value + '</span> • ' + 
-                document.getElementById('heroPhone').value + '</p><p style="font-size:14px;color:#dc2626;font-weight:500;">' + 
-                document.getElementById('heroService').value + '</p>';
-        } else {
-            showHeroSuccess();
-        }
-        return false;
-    }
-
-    function handleQuickSubmit() {
-        const name = document.getElementById('heroName').value;
-        const phone = document.getElementById('heroPhone').value;
-        const service = document.getElementById('heroService').value;
-        if (!name || !phone || !service) return;
         showHeroSuccess();
+        return false;
     }
 
     function showHeroSuccess() {
@@ -893,16 +846,7 @@
         window.open('https://wa.me/40752288400?text=' + encodeURIComponent(msg), '_blank');
 
         document.getElementById('heroForm').style.display = 'none';
-        document.getElementById('formSteps').style.display = 'none';
         document.getElementById('formSuccess').style.display = 'block';
-    }
-
-    function goToStep1() {
-        heroStep = 1;
-        document.getElementById('heroStep1').style.display = 'flex';
-        document.getElementById('heroStep2').style.display = 'none';
-        document.getElementById('bar').style.background = '#e2e8f0';
-        document.getElementById('dot2').style.background = '#e2e8f0';
     }
 
     // ===== CONTACT FORM =====
