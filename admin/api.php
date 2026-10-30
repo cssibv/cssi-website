@@ -7336,11 +7336,11 @@ p { margin: 0; }
             break;
 
         // Formularele de pe cssi.ro (pagina principală + Contact): cererea intră la Cereri rapide,
-        // pe lângă mesajul de WhatsApp deschis de pagină. Endpoint public, deci: maxim 3 trimiteri
-        // pe minut de pe un IP, iar același telefon trimis din nou în 10 minute nu mai creează a doua cerere.
+        // pe lângă mesajul de WhatsApp deschis de pagină. Nu se pierde nimic: telefonul incomplet se
+        // salvează cu o atenționare, iar același telefon trimis din nou în 10 minute se adaugă ca notă
+        // la cererea existentă (fără a doua notificare pe telefon).
         case 'siteLead':
             if (($_SERVER['REQUEST_METHOD'] ?? 'GET') !== 'POST') { jsonResponse(['success' => false, 'error' => 'Doar POST'], 405); break; }
-            checkContractRateLimit($db, 'siteLead', 3);
             ensureCereriRapide($db);
             $camp = function ($k, $max) use ($data) {
                 $v = isset($data[$k]) && is_scalar($data[$k]) ? (string)$data[$k] : '';
@@ -7355,22 +7355,33 @@ p { margin: 0; }
             $sursa    = $camp('sursa', 120);
             $pagina   = $camp('pagina', 120);
             $mesaj    = isset($data['detalii']) && is_scalar($data['detalii']) ? mb_substr(trim((string)$data['detalii']), 0, 2000) : '';
-            if (strlen(preg_replace('/\D/', '', $tel)) < 10) { jsonResponse(['success' => false, 'error' => 'Telefon invalid'], 400); break; }
+            if ($nume === '' && $tel === '') { jsonResponse(['success' => false, 'error' => 'Formular gol'], 400); break; }
             $autor = 'Formular site';
-            $stmt = $db->prepare("SELECT id FROM cereri_rapide WHERE telefon = ? AND created_by = ? AND created_at > ? LIMIT 1");
-            $stmt->execute([$tel, $autor, date('Y-m-d H:i:s', time() - 600)]);
-            if ($dup = $stmt->fetchColumn()) { jsonResponse(['success' => true, 'id' => intval($dup)]); break; }
-            $tip = mb_substr('Ofertă ' . ($serviciu !== '' ? $serviciu : 'de pe site'), 0, 120);
             $now = date('Y-m-d H:i:s');
-            $db->prepare("INSERT INTO cereri_rapide (nume, telefon, tip, status, created_by, created_at, updated_at) VALUES (?,?,?,?,?,?,?)")
-               ->execute([$nume, $tel, $tip, 'Nou', $autor, $now, $now]);
-            $newId = intval($db->lastInsertId());
             $rand = ['Din formularul de pe site' . ($formular !== '' ? ': ' . $formular : '') . ($pagina !== '' ? ' (' . $pagina . ')' : '')];
+            if (strlen(preg_replace('/\D/', '', $tel)) < 10) $rand[] = 'Atenție: telefonul pare incomplet sau greșit';
             if ($serviciu !== '') $rand[] = 'Serviciu: ' . $serviciu;
             if ($email !== '')   $rand[] = 'Email: ' . $email;
             if ($lucrare !== '') $rand[] = 'Tip lucrare: ' . $lucrare;
             if ($mesaj !== '')   $rand[] = 'Detalii: ' . $mesaj;
             if ($sursa !== '')   $rand[] = 'Sursa vizitei: ' . $sursa;
+            $dup = false;
+            if ($tel !== '') {
+                $stmt = $db->prepare("SELECT id FROM cereri_rapide WHERE telefon = ? AND created_by = ? AND created_at > ? LIMIT 1");
+                $stmt->execute([$tel, $autor, date('Y-m-d H:i:s', time() - 600)]);
+                $dup = $stmt->fetchColumn();
+            }
+            if ($dup) {
+                $db->prepare("INSERT INTO cereri_rapide_detalii (cerere_id, user_id, text, sistem, created_at) VALUES (?,?,?,?,?)")
+                   ->execute([$dup, $autor, "Trimis din nou\n" . implode("\n", $rand), 0, $now]);
+                $db->prepare("UPDATE cereri_rapide SET updated_at = ? WHERE id = ?")->execute([$now, $dup]);
+                jsonResponse(['success' => true, 'id' => intval($dup)]);
+                break;
+            }
+            $tip = mb_substr('Ofertă ' . ($serviciu !== '' ? $serviciu : 'de pe site'), 0, 120);
+            $db->prepare("INSERT INTO cereri_rapide (nume, telefon, tip, status, created_by, created_at, updated_at) VALUES (?,?,?,?,?,?,?)")
+               ->execute([$nume, $tel, $tip, 'Nou', $autor, $now, $now]);
+            $newId = intval($db->lastInsertId());
             $db->prepare("INSERT INTO cereri_rapide_detalii (cerere_id, user_id, text, sistem, created_at) VALUES (?,?,?,?,?)")
                ->execute([$newId, $autor, implode("\n", $rand), 0, $now]);
             try {
