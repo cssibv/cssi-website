@@ -158,6 +158,30 @@ document.addEventListener('DOMContentLoaded', function() {
    @param {string} formId   id-ul formularului pentru Enhanced Conversions
                             (implicit 'contactForm')
    ════════════════════════════════════════════════════════════════════ */
+/* 30.10.2026 — transaction_id pentru conversia Google Ads: același telefon trimis de mai
+   multe ori în aceeași zi dă același cod, deci Ads îl numără o singură dată. Google nu
+   acceptă date personale în transaction_id, așa că telefonul intră doar ca hash (cyrb53).
+   Fără telefon de cel puțin 8 cifre nu se trimite cod (conversia se numără normal). */
+function cssiLeadTid(form) {
+    var el = form ? form.querySelector('input[name="phone"]') : null;
+    var c = el ? el.value.replace(/\D/g, '') : '';
+    if (c.indexOf('0040') === 0) c = '0' + c.slice(4);
+    else if (c.indexOf('40') === 0 && c.length === 11) c = '0' + c.slice(2);
+    if (c.length < 8) return '';
+    var d = new Date();
+    var zi = d.getFullYear() + ('0' + (d.getMonth() + 1)).slice(-2) + ('0' + d.getDate()).slice(-2);
+    var s = 'cssi-lead-' + c, h1 = 0xdeadbeef, h2 = 0x41c6ce57;
+    for (var i = 0; i < s.length; i++) {
+        var k = s.charCodeAt(i);
+        h1 = Math.imul(h1 ^ k, 2654435761);
+        h2 = Math.imul(h2 ^ k, 1597334677);
+    }
+    h1 = Math.imul(h1 ^ (h1 >>> 16), 2246822507) ^ Math.imul(h2 ^ (h2 >>> 13), 3266489909);
+    h2 = Math.imul(h2 ^ (h2 >>> 16), 2246822507) ^ Math.imul(h1 ^ (h1 >>> 13), 3266489909);
+    var hash = (4294967296 * (2097151 & h2) + (h1 >>> 0)).toString(36);
+    return 'L' + hash + '-' + zi;
+}
+
 window.cssiTrackLead = function(service, formId) {
 
     var LEAD_VALUE = 300;                    /* valoare unica pe tot site-ul */
@@ -223,11 +247,14 @@ window.cssiTrackLead = function(service, formId) {
         });
 
         /* Google Ads Conversion — "Solicitati o oferta" */
-        gtag('event', 'conversion', {
+        var conv = {
             'send_to': 'AW-17987940313/WVuaCJnH1YEcENnfqIFD',
             'currency': 'RON',
             'value': LEAD_VALUE
-        });
+        };
+        var tid = cssiLeadTid(form);
+        if (tid) conv.transaction_id = tid;
+        gtag('event', 'conversion', conv);
     }
 
     if (typeof fbq === 'function') {
