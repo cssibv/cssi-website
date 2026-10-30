@@ -1,0 +1,754 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Integrarea sistemelor de securitate pe o platformă | CSSI</title>
+<meta name="description" content="Camere de la o firmă, alarmă de la alta, acces separat — trei aplicații, trei parole, nimeni nu vede tabloul complet. De ce o platformă unică (VMS).">
+<link rel="canonical" href="https://cssi.ro/blog/integrare-sisteme-securitate-platforma-unica-vms-brasov">
+<!-- Open Graph + Twitter Card -->
+<meta property="og:type" content="article">
+<meta property="og:title" content="Integrarea sistemelor de securitate pe o platformă unică (VMS) | CSSI Brașov">
+<meta property="og:description" content="Camere, alarmă, control acces și pontaj într-un singur loc: scenarii reale, alertare în timp real, jurnalizare și scalabilitate. Când merită integrarea și când nu.">
+<meta property="og:url" content="https://cssi.ro/blog/integrare-sisteme-securitate-platforma-unica-vms-brasov">
+<meta property="og:image" content="https://cssi.ro/images/blog/integrare-vms-cover.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:type" content="image/jpeg">
+<meta property="og:locale" content="ro_RO">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Integrarea sistemelor de securitate pe o platformă unică (VMS)">
+<meta name="twitter:description" content="Un singur creier peste camere, alarmă și acces — reacție mai rapidă, costuri mai mici de operare. Ghid CSSI Brașov: 0752 288 400.">
+<meta name="twitter:image" content="https://cssi.ro/images/blog/integrare-vms-cover.jpg">
+
+<!-- ===== SCHEMA JSON-LD: Article + BreadcrumbList + FAQPage ===== -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Article",
+      "@id": "https://cssi.ro/blog/integrare-sisteme-securitate-platforma-unica-vms-brasov#article",
+      "headline": "Integrarea sistemelor de securitate pe o platforma unica (VMS): de ce conteaza",
+      "description": "Ghid practic despre integrarea sistemelor de securitate pe o platforma unica pentru firme din Brasov: problema sistemelor lipite, ce face un VMS, scenarii reale, alertare in timp real, jurnalizare, scalabilitate, interoperabilitate si cand merita integrarea.",
+      "image": "https://cssi.ro/images/blog/integrare-vms-cover.jpg",
+      "author": {
+        "@type": "Organization",
+        "name": "CSSI Brasov",
+        "url": "https://cssi.ro"
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": "CSSI Brasov",
+        "logo": {
+          "@type": "ImageObject",
+          "url": "https://cssi.ro/images/logo-cssi.webp"
+        }
+      },
+      "datePublished": "2026-10-30",
+      "dateModified": "2026-10-30",
+      "mainEntityOfPage": "https://cssi.ro/blog/integrare-sisteme-securitate-platforma-unica-vms-brasov",
+      "inLanguage": "ro"
+    },
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Acasa",
+          "item": "https://cssi.ro/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "Blog",
+          "item": "https://cssi.ro/blog"
+        },
+        {
+          "@type": "ListItem",
+          "position": 3,
+          "name": "Integrarea sistemelor de securitate pe o platforma unica (VMS)"
+        }
+      ]
+    },
+    {"@type": "FAQPage", "mainEntity": [
+      {"@type": "Question", "name": "Ce înseamnă o platformă unică de securitate (VMS)?", "acceptedAnswer": {"@type": "Answer", "text": "Un singur software, un singur „creier”, care adună într-un loc camerele, alarma, controlul accesului și pontajul. În loc de trei-patru aplicații separate, ai o singură interfață din care vezi tot și controlezi tot, cu aceleași conturi și drepturi. Termenul VMS vine de la software-ul de management video, dar o platformă modernă integrează și celelalte sisteme. În variantele complexe se vorbește despre PSIM, unde platforma urmărește evenimentele și aplică reguli și proceduri scrise de tine."}},
+      {"@type": "Question", "name": "Care e problema sistemelor „lipite” din mai multe firme?", "acceptedAnswer": {"@type": "Answer", "text": "Trei aplicații, trei parole și nimeni care să vadă tabloul complet. La un incident pierzi timp comutând între sisteme care nu comunică. Mai grav, niciun sistem nu „știe” ce face celălalt — o alarmă nu deschide camera potrivită, un acces refuzat nu declanșează o verificare. Rezultatul: reacție lentă, operare costisitoare și un istoric împărțit în bucăți, greu de pus cap la cap după un eveniment. Problema nu e echipamentul, ci lipsa legăturii dintre ele."}},
+      {"@type": "Question", "name": "Ce scenarii reale rezolvă o platformă integrată?", "acceptedAnswer": {"@type": "Answer", "text": "O alarmă deschide automat camera din zona respectivă; un acces refuzat repetat la o ușă sensibilă declanșează o verificare video; o detecție în afara programului trimite o alertă cu imaginea pe telefon. În loc să reacționezi târziu și pe bucăți, sistemul leagă evenimentele între ele și îți arată ce contează, în timp real. Pornește cu câteva scenarii utile, nu cu zeci, ca operatorii să nu ignore notificările."}},
+      {"@type": "Question", "name": "Cum ajută la firmele cu mai multe sedii?", "acceptedAnswer": {"@type": "Answer", "text": "Vezi toate sediile dintr-un singur loc, de pe telefon sau calculator, fără să intri separat în fiecare sistem local. Primești alerte din orice sediu, verifici live, gestionezi accesul centralizat, cu drepturi diferite pe locație. Pentru o firmă cu puncte de lucru în mai multe orașe, înseamnă control real fără să fii fizic peste tot. Înregistrările pot rămâne locale, iar spre centru circulă doar ce e necesar, ca să nu depinzi de internet pentru dovezi."}},
+      {"@type": "Question", "name": "De ce contează jurnalizarea și rapoartele?", "acceptedAnswer": {"@type": "Answer", "text": "Pentru că o platformă integrată reține cine, ce și când — acces, alarme, vizualizări. La un incident ai rapid istoricul complet, corelat. Jurnalele sunt utile la anchete, dispute, conformitate și în relația cu asiguratorul. Ele arată și ce fac utilizatorii în sistem, de pildă cine a exportat o înregistrare. Un sistem fragmentat dă bucăți greu de pus cap la cap; unul integrat dă povestea completă, iar regulile de păstrare se stabilesc clar, cu un specialist."}},
+      {"@type": "Question", "name": "Ce înseamnă scalabilitate și interoperabilitate?", "acceptedAnswer": {"@type": "Answer", "text": "Scalabilitate înseamnă că poți adăuga sedii, camere și echipamente pe măsură ce firma crește, fără să schimbi tot; întreabă ce limite au licența și serverul. Interoperabilitate înseamnă că echipamentele alese sunt compatibile între ele și cu platforma — esențial, pentru că echipamente alese la întâmplare nu se vor integra niciodată bine. Contează și versiunile de software, nu doar producătorul. De aceea alegerea compatibilă, de la început, e strategică."}},
+      {"@type": "Question", "name": "Când merită integrarea și când nu?", "acceptedAnswer": {"@type": "Answer", "text": "Merită cel mai mult pentru firme medii și mari, cu mai multe sisteme, sedii sau personal numeros. Pentru o firmă foarte mică, cu câteva camere și o alarmă simplă, o platformă complexă poate fi exagerată. Cheia e să gândești integrarea din start: alegi echipamente compatibile, ca la creștere să poți integra fără să arunci tot. Dacă pierzi zilnic timp între aplicații sau ai mai multe locații, o evaluare merită făcută chiar acum."}},
+      {"@type": "Question", "name": "Ce este ONVIF și garantează el că totul se integrează?", "acceptedAnswer": {"@type": "Answer", "text": "ONVIF este un standard deschis folosit de mulți producători de camere și recorderi IP, ca echipamente diferite să funcționeze în același software. Nu garantează însă tot: există profile diferite, iar funcțiile avansate ale unui producător pot rămâne accesibile doar în aplicația lui. Înainte de achiziție, cere o listă scrisă a funcțiilor care se integrează și, pentru echipamentele importante, un test pe un exemplar. Sigla singură nu e o dovadă suficientă."}},
+      {"@type": "Question", "name": "Pot integra echipamentele pe care le am deja, fără să le schimb?", "acceptedAnswer": {"@type": "Answer", "text": "În mare parte da, dar nu totul și nu la același nivel. Camerele IP mai noi se leagă de obicei simplu, cele analogice vechi doar prin recorder, iar alarmele vechi adesea ca semnal simplu, prin contacte. Controlul accesului depinde de controler. Ideea e să păstrezi ce funcționează, să completezi ce lipsește și să înlocuiești numai ce blochează integrarea. La evaluare vedem concret, echipament cu echipament, ce se poate și ce nu, fără promisiuni vagi."}},
+      {"@type": "Question", "name": "Se poate integra și sistemul de detecție incendiu?", "acceptedAnswer": {"@type": "Answer", "text": "Da, dar cu prudență. Centrala de incendiu are rol de protecție a vieții și trebuie să funcționeze autonom, indiferent de platformă. De regulă, platforma doar preia semnalele ei (alarmă, defect, zona afectată) ca să le arate pe același plan cu camerele, fără a o comanda sau a o înlocui. Legătura se face astfel încât funcțiile de siguranță să rămână neatinse, iar cerințele exacte se verifică cu un specialist, în funcție de analiza de risc."}}
+    ]}
+  ]
+}
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;600;700;800&family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,400;0,8..60,600;1,8..60,400&display=swap" rel="stylesheet" />
+  <script src="/cookie-consent.js" defer></script>
+  <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}</script>
+  <script src="/tracking.js" defer></script>
+  <style>
+    @keyframes subtle-pulse-n { 0%,100%{transform:scale(1)}50%{transform:scale(.92)} }
+    @keyframes badge-pulse-n { 0%,100%{box-shadow:0 0 0 0 rgba(34,197,94,.4)}50%{box-shadow:0 0 0 8px rgba(34,197,94,0)} }
+    .animate-subtle-pulse{animation:subtle-pulse-n 2.5s ease-in-out infinite}
+    .animate-badge-pulse{animation:badge-pulse-n 2s ease-in-out infinite}
+    .dropdown-menu{display:none!important}
+    .dropdown:hover .dropdown-menu{display:block!important}
+    #mobileMenu{display:none}
+    #mobileMenu.open{display:block}
+    #servicesSubmenu{display:none}
+    #servicesSubmenu.open{display:block}
+    .dropdown-scroll::-webkit-scrollbar{width:4px}
+    .dropdown-scroll::-webkit-scrollbar-track{background:#f1f1f1}
+    .dropdown-scroll::-webkit-scrollbar-thumb{background:#cbd5e1;border-radius:4px}
+    @media(min-width:640px){.sm\:block{display:block!important}.sm\:hidden{display:none!important}.sm\:px-6{padding-left:24px;padding-right:24px}}
+    @media(min-width:1024px){.lg\:flex{display:flex!important}.lg\:hidden{display:none!important}}@media(min-width:768px){.md\:flex{display:flex!important}.md\:hidden{display:none!important}}
+    #mainHeader, #mainHeader a, #mainHeader button, #mainHeader span, #mainHeader div { font-family: 'Sora', sans-serif !important; }
+  </style>
+  <style>
+    :root{--brand-dark:#0b1a2e;--brand-navy:#102a4c;--brand-blue:#1a4b8c;--brand-accent:#e63022;--brand-gold:#f5a623;--brand-light:#f0f4f9;--text-main:#1c2b3a;--text-muted:#5a6e82;--text-light:#8fa0b3;--border:#dce6f0;--white:#ffffff;--ff-head:'Sora',sans-serif;--ff-body:'Source Serif 4',Georgia,serif;--radius:10px;--shadow-sm:0 2px 8px rgba(11,26,46,.08);--shadow-md:0 6px 24px rgba(11,26,46,.13);--shadow-lg:0 16px 48px rgba(11,26,46,.18);--max-w:1400px}
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    html{scroll-behavior:smooth}
+    body{font-family:var(--ff-body);font-size:18px;line-height:1.75;color:var(--text-main);background:var(--white);-webkit-font-smoothing:antialiased}
+    img{max-width:100%;height:auto;display:block}
+    a{color:var(--brand-blue);text-decoration:none}
+    a:hover{text-decoration:underline}
+    .breadcrumb{background:var(--brand-dark);border-bottom:none;padding:12px 0;padding-top:104px;font-family:var(--ff-head);font-size:13px;color:rgba(255,255,255,.55)}
+    .breadcrumb .inner{max-width:1280px;margin:0 auto;padding:0 0 12px 24px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+    .breadcrumb a{color:rgba(255,255,255,.7)}
+    .breadcrumb .sep{color:rgba(255,255,255,.3)}
+    .hero{background:var(--brand-dark);background-image:radial-gradient(ellipse 70% 60% at 80% 50%,rgba(26,75,140,.45) 0%,transparent 70%),radial-gradient(ellipse 40% 50% at 10% 80%,rgba(230,48,34,.15) 0%,transparent 60%);color:var(--white);padding:48px 24px 64px;position:relative;overflow:hidden}
+    .hero::before{content:'';position:absolute;inset:0;background-image:url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23ffffff' fill-opacity='0.025'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/svg%3E")}
+        .hero .inner{max-width:var(--max-w);margin:0 auto;position:relative;z-index:1;display:flex;align-items:center;gap:40px}
+    .hero-content{flex:1;min-width:0}
+    .hero-img-wrap{flex:0 0 640px;display:flex;align-items:center;justify-content:center}
+    .hero-img-wrap img{width:640px;height:auto;border-radius:14px;box-shadow:0 8px 32px rgba(0,0,0,.35);border:1px solid rgba(255,255,255,.1);opacity:.92;transition:opacity .3s}
+    .hero-img-wrap img:hover{opacity:1}
+    @media(max-width:900px){.hero .inner{flex-direction:column;gap:24px}.hero-img-wrap{flex:0 0 auto;order:-1}.hero-img-wrap img{width:500px}}
+    @media(max-width:700px){.hero-img-wrap{display:none}}
+    .hero-badge{display:inline-flex;align-items:center;gap:6px;background:rgba(230,48,34,.2);border:1px solid rgba(230,48,34,.4);color:#ff8a80;font-family:var(--ff-head);font-size:12px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;padding:5px 12px;border-radius:100px;margin-bottom:20px}
+    .hero h1{font-family:var(--ff-head);font-size:clamp(26px,4vw,40px);font-weight:800;line-height:1.2;margin-bottom:20px;letter-spacing:-.02em}
+    .hero h1 em{font-style:normal;color:var(--brand-gold)}
+    .hero .lead{font-size:clamp(16px,2vw,19px);line-height:1.65;color:rgba(255,255,255,.82);max-width:620px;margin-bottom:32px}
+    .hero-meta{display:flex;align-items:center;gap:20px;flex-wrap:wrap;font-family:var(--ff-head);font-size:13px;color:rgba(255,255,255,.55)}
+    .hero-meta span{display:flex;align-items:center;gap:5px}
+    .hero-meta .dot{color:rgba(255,255,255,.25)}
+    .topic-pills{display:flex;gap:10px;flex-wrap:wrap;margin-top:28px}
+    .pill{display:flex;align-items:center;gap:8px;padding:8px 16px;border-radius:100px;font-family:var(--ff-head);font-size:13px;font-weight:600;border:1px solid}
+    .pill-red{background:rgba(230,48,34,.15);border-color:rgba(230,48,34,.35);color:#ff8a80}
+    .pill-amber{background:rgba(245,166,35,.12);border-color:rgba(245,166,35,.3);color:#ffd180}
+    .pill-blue{background:rgba(26,75,140,.25);border-color:rgba(26,75,140,.5);color:#82b4ff}
+    .pill-green{background:rgba(39,174,96,.15);border-color:rgba(39,174,96,.35);color:#81c995}
+    .article-wrap{max-width:1440px;margin:0 auto;padding:0 20px;display:grid;grid-template-columns:1fr 280px;gap:32px;align-items:start}
+    .article-body{padding:32px 0}
+    .article-body h2{font-family:var(--ff-head);font-size:clamp(20px,2.5vw,26px);font-weight:700;color:var(--brand-dark);margin:36px 0 14px;padding-top:6px;border-top:3px solid var(--brand-accent);line-height:1.3}
+    .article-body h3{font-family:var(--ff-head);font-size:clamp(17px,2vw,20px);font-weight:600;color:var(--brand-navy);margin:32px 0 12px}
+    .article-body p{margin-bottom:16px;color:var(--text-main)}
+    .article-body ul,.article-body ol{padding-left:24px;margin-bottom:20px}
+    .article-body li{margin-bottom:8px}
+    .article-body strong{color:var(--brand-dark)}
+    .intro-p{font-size:19px;line-height:1.7}
+    .box{border-radius:var(--radius);padding:22px 26px;margin:28px 0;border-left:4px solid}
+    .box-red{background:#fef2f2;border-color:var(--brand-accent)}
+    .box-blue{background:#eff6ff;border-color:var(--brand-blue)}
+    .box-amber{background:#fffbeb;border-color:var(--brand-gold)}
+    .box-green{background:#f0fdf4;border-color:#27ae60}
+    .box h4{font-family:var(--ff-head);font-size:15px;font-weight:700;margin-bottom:8px}
+    .box p{font-size:15px;margin-bottom:8px}
+    .check-list{list-style:none;padding:0}
+    .check-list li{display:flex;gap:10px;padding:6px 0;font-size:16px}
+    .chk{color:#27ae60;font-weight:700;flex-shrink:0}
+    .price-table{width:100%;border-collapse:collapse;margin:24px 0;font-size:15px}
+    .price-table th{background:var(--brand-navy);color:var(--white);font-family:var(--ff-head);font-size:13px;font-weight:600;text-transform:uppercase;letter-spacing:.04em;padding:12px 16px;text-align:left}
+    .price-table td{padding:12px 16px;border-bottom:1px solid var(--border)}
+    .price-table tr:nth-child(even) td{background:var(--brand-light)}
+    .price-table .highlight td{background:#fffbeb;font-weight:600}
+    .cta-banner{background:linear-gradient(135deg,var(--brand-dark),var(--brand-navy));border-radius:var(--radius);padding:28px 32px;color:var(--white);display:flex;align-items:center;justify-content:space-between;gap:20px;flex-wrap:wrap}
+    .cta-banner h3{font-family:var(--ff-head);font-size:18px;font-weight:700;margin-bottom:4px}
+    .cta-banner p{font-size:14px;color:rgba(255,255,255,.7);margin:0}
+    .cta-buttons{display:flex;gap:10px;flex-wrap:wrap}
+    .btn{display:inline-flex;align-items:center;gap:7px;padding:10px 18px;border-radius:8px;font-family:var(--ff-head);font-size:13px;font-weight:600;cursor:pointer;border:none;text-decoration:none!important}
+    .btn-primary{background:var(--brand-accent);color:var(--white)!important;box-shadow:0 4px 14px rgba(230,48,34,.3)}
+    .btn-secondary{background:rgba(255,255,255,.12);color:var(--white)!important;border:1px solid rgba(255,255,255,.25)}
+    .faq-section{margin:48px 0 32px}
+    .faq-item{border:1px solid var(--border);border-radius:var(--radius);margin-bottom:10px;overflow:hidden}
+    .faq-q{display:flex;align-items:center;justify-content:space-between;padding:16px 20px;cursor:pointer;background:var(--white);font-family:var(--ff-head);font-size:15px;font-weight:600;color:var(--brand-dark);border:none;width:100%;text-align:left;gap:12px}
+    .faq-q:hover{background:var(--brand-light)}
+    .faq-a{display:none;padding:0 20px 16px;font-size:15px;color:var(--text-muted);line-height:1.7}
+    .faq-item.open .faq-a{display:block}
+    .faq-item.open .faq-q{background:var(--brand-light);color:var(--brand-blue)}
+    .faq-chevron{transition:transform .2s;flex-shrink:0}
+    .faq-item.open .faq-chevron{transform:rotate(180deg)}
+    .sidebar{position:sticky;top:104px}
+    .sidebar-card{border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;margin-bottom:20px;background:var(--white);box-shadow:var(--shadow-sm)}
+    .sidebar-card-head{background:var(--brand-navy);color:var(--white);font-family:var(--ff-head);font-size:12px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;padding:12px 18px}
+    .sidebar-card-body{padding:16px 18px}
+    .toc-list{list-style:none;padding:0;counter-reset:toc}
+    .toc-list li{counter-increment:toc}
+    .toc-list a{display:flex;align-items:baseline;gap:8px;padding:7px 0;font-family:var(--ff-head);font-size:13px;color:var(--text-muted);border-bottom:1px solid var(--border);text-decoration:none}
+    .toc-list a::before{content:counter(toc,decimal-leading-zero);font-size:11px;font-weight:700;color:var(--text-light)}
+    .toc-list li:last-child a{border-bottom:none}
+    .toc-list a:hover{color:var(--brand-blue)}
+    .contact-info{list-style:none;padding:0}
+    .contact-info li{display:flex;gap:12px;padding:10px 0;border-bottom:1px solid var(--border);align-items:flex-start}
+    .contact-info li:last-child{border-bottom:none}
+    .ci-icon{font-size:20px;flex-shrink:0;margin-top:2px}
+    .contact-info strong{font-family:var(--ff-head);font-size:14px;display:block;color:var(--brand-dark)}
+    .contact-info span{font-size:12px;color:var(--text-light)}
+    .article-footer{background:var(--brand-light);border-top:1px solid var(--border);padding:40px 24px;text-align:center}
+    .article-footer p{font-size:14px;color:var(--text-muted);max-width:500px;margin:0 auto 16px}
+    .tags{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-top:12px}
+    .tag{background:var(--white);border:1px solid var(--border);padding:4px 12px;border-radius:100px;font-family:var(--ff-head);font-size:11px;color:var(--text-muted)}
+    @media(max-width:768px){.article-wrap{grid-template-columns:1fr;gap:32px}.sidebar{position:static;order:2}.cta-banner{flex-direction:column;text-align:center}}
+  
+.discuta-in-grup{background:var(--brand-light);border:1px solid var(--border);border-left:4px solid var(--brand-blue);border-radius:var(--radius);padding:20px 24px;margin:32px 0}
+.discuta-in-grup h3{font-family:var(--ff-head);font-weight:600;font-size:17px;color:var(--brand-navy);margin:0 0 8px}
+.discuta-in-grup p{font-size:15px;color:var(--text-muted);line-height:1.6;margin:0 0 12px}
+.discuta-in-grup a{display:inline-block;font-family:var(--ff-head);font-weight:600;font-size:14px;color:var(--brand-blue);text-decoration:none}
+.discuta-in-grup a:hover{text-decoration:underline}
+
+/* mobfix-v1 */
+.hidden{display:none}
+@media(max-width:900px){.article-wrap{grid-template-columns:minmax(0,1fr)}.sidebar{position:static;top:auto}.article-body table{display:block;overflow-x:auto;max-width:100%}}
+
+/* mobfix-v2 */
+.lg\:hidden .animate-badge-pulse{background:rgba(15,23,42,.9)!important;color:#fff!important;border:1px solid rgba(255,255,255,.25)}
+
+/* buton inapoi-sus */
+#toTop{position:fixed;right:18px;bottom:18px;z-index:45;width:46px;height:46px;border:none;border-radius:50%;background:var(--brand-navy);color:#fff;cursor:pointer;box-shadow:0 6px 18px rgba(11,26,46,.28);opacity:0;visibility:hidden;transform:translateY(8px);transition:opacity .2s,transform .2s,visibility .2s;display:flex;align-items:center;justify-content:center}
+#toTop.show{opacity:1;visibility:visible;transform:none}
+#toTop:hover{background:var(--brand-blue)}
+</style>
+<style id="wa-float">#waFloat{position:fixed;right:18px;bottom:18px;z-index:46;width:52px;height:52px;border-radius:50%;background:#22c55e;color:#fff;display:flex;align-items:center;justify-content:center;box-shadow:0 6px 18px rgba(0,0,0,.25);transition:background .2s}#waFloat:hover{background:#16a34a}#toTop{bottom:82px;right:21px}</style>
+<style>.cta-banner h3{color:#ffffff !important}.cta-banner p{color:rgba(255,255,255,.85) !important}.box-info{background:#eef5ff;border-color:var(--brand-blue)}.box-warn{background:#fff8ec;border-color:var(--brand-gold)}.box-tip{background:#f0faf2;border-color:#27ae60}.box-danger{background:#fef2f2;border-color:#e63022}.box-info .box-title{color:var(--brand-blue)}.box-warn .box-title{color:#b7760a}.box-tip .box-title{color:#1e8c3f}.box-danger .box-title{color:#c0392b}.compare-table{width:100%;border-collapse:collapse;font-size:15px;margin:24px 0;border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow-sm)}.compare-table th{background:var(--brand-navy);color:var(--white);font-family:var(--ff-head);font-weight:600;padding:13px 16px;text-align:left}.compare-table td{padding:12px 16px;border-bottom:1px solid var(--border);vertical-align:top}.compare-table tr:nth-child(even) td{background:var(--brand-light)}.compare-table tr:last-child td{border-bottom:none}.compare-table .yes{color:#27ae60;font-weight:600}.compare-table .no{color:#c0392b}</style></head>
+<body>
+<header id="mainHeader" style="position:fixed;top:0;left:0;right:0;z-index:50;transition:all 0.3s;">
+    <div class="hidden sm:block" style="background:#0f172a;color:#fff;font-size:12px;padding:6px 0;">
+        <div style="max-width:1280px;margin:0 auto;padding:0 24px;display:flex;justify-content:space-between;align-items:center;">
+            <span>⭐ <span style="color:#4ade80;font-weight:600;">Peste 20 ani de experiență</span></span>
+            <div style="display:flex;align-items:center;gap:16px;">
+                <span>⭐ <span style="font-weight:600;">8.700+ proiecte</span></span>
+            </div>
+        </div>
+    </div>
+    <div class="sm:hidden" style="background:#0f172a;color:#fff;font-size:12px;padding:6px 0;">
+        <div style="max-width:1280px;margin:0 auto;padding:0 12px;display:flex;justify-content:space-between;align-items:center;">
+            <span>⭐ <span style="color:#4ade80;font-weight:600;">Peste 20 ani de experiență</span></span>
+            <a href="tel:0752288400" style="display:flex;align-items:center;gap:4px;font-weight:600;color:#4ade80;">📞 Sună acum</a>
+        </div>
+    </div>
+    <div id="navBg" style="transition:all 0.3s;">
+        <div style="max-width:1280px;margin:0 auto;padding:0 12px;display:flex;justify-content:space-between;align-items:center;height:64px;" class="sm:px-6">
+            <a href="../">
+                <img src="/images/cssi-logo-header.webp" alt="CSSI Logo" id="logoImg" style="height:56px;width:auto;transition:all 0.3s;filter:brightness(0) invert(1) drop-shadow(0 0 1px rgba(255,255,255,0.8));">
+            </a>
+            <nav class="hidden md:flex" style="align-items:center;gap:4px;">
+                <a href="../" id="navLink1" style="padding:6px 12px;font-size:14px;font-weight:500;color:#fff;transition:all 0.2s;border-radius:8px;" onmouseover="this.style.color='#f87171'" onmouseout="this.style.color=navTextColor">🏠 Acasă</a>
+                <div class="dropdown" style="position:relative;">
+                    <button id="navLink2" style="padding:6px 12px;font-size:14px;font-weight:500;color:#fff;transition:all 0.2s;border-radius:8px;background:none;border:none;cursor:pointer;display:flex;align-items:center;font-family:inherit;">
+                        🛠️ Servicii
+                        <svg style="margin-left:4px;width:16px;height:16px;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+                    </button>
+                    <div class="dropdown-menu dropdown-scroll" style="position:absolute;top:100%;left:0;width:280px;background:#fff;box-shadow:0 10px 15px -3px rgba(0,0,0,0.1);border-radius:12px;padding:8px;border:1px solid #f1f5f9;max-height:80vh;overflow-y:auto;z-index:100;">
+                        <a href="../detectie-incendiu-isu" style="display:block;padding:10px 16px;font-size:13px;color:#334155;border-radius:8px;" onmouseover="this.style.background='#fef2f2';this.style.color='#dc2626'" onmouseout="this.style.background='';this.style.color='#334155'">🔥 Detecție Incendiu ISU</a>
+                        <a href="../camere-supraveghere" style="display:block;padding:10px 16px;font-size:13px;color:#334155;border-radius:8px;" onmouseover="this.style.background='#fef2f2';this.style.color='#dc2626'" onmouseout="this.style.background='';this.style.color='#334155'">📹 Camere Supraveghere</a>
+                        <a href="../alarma-antiefractie" style="display:block;padding:10px 16px;font-size:13px;color:#334155;border-radius:8px;" onmouseover="this.style.background='#fef2f2';this.style.color='#dc2626'" onmouseout="this.style.background='';this.style.color='#334155'">🚨 Alarmă Antiefracție</a>
+                        <a href="../control-acces" style="display:block;padding:10px 16px;font-size:13px;color:#334155;border-radius:8px;" onmouseover="this.style.background='#fef2f2';this.style.color='#dc2626'" onmouseout="this.style.background='';this.style.color='#334155'">🚪 Control Acces</a>
+                        <a href="../pontaj-electronic" style="display:block;padding:10px 16px;font-size:13px;color:#334155;border-radius:8px;" onmouseover="this.style.background='#fef2f2';this.style.color='#dc2626'" onmouseout="this.style.background='';this.style.color='#334155'">⏱️ Pontaj Electronic</a>
+                        <a href="../bariere-auto" style="display:block;padding:10px 16px;font-size:13px;color:#334155;border-radius:8px;" onmouseover="this.style.background='#fef2f2';this.style.color='#dc2626'" onmouseout="this.style.background='';this.style.color='#334155'">🚧 Bariere Auto</a>
+                        <a href="../interfoane-videointerfoane" style="display:block;padding:10px 16px;font-size:13px;color:#334155;border-radius:8px;" onmouseover="this.style.background='#fef2f2';this.style.color='#dc2626'" onmouseout="this.style.background='';this.style.color='#334155'">🔔 Interfoane &amp; Videointerfoane</a>
+                        <a href="../sonorizare" style="display:block;padding:10px 16px;font-size:13px;color:#334155;border-radius:8px;" onmouseover="this.style.background='#fef2f2';this.style.color='#dc2626'" onmouseout="this.style.background='';this.style.color='#334155'">🔊 Sonorizare</a>
+                        <a href="../automatizari-porti" style="display:block;padding:10px 16px;font-size:13px;color:#334155;border-radius:8px;" onmouseover="this.style.background='#fef2f2';this.style.color='#dc2626'" onmouseout="this.style.background='';this.style.color='#334155'">🚗 Automatizări Porți</a>
+                        <a href="../usi-garaj" style="display:block;padding:10px 16px;font-size:13px;color:#334155;border-radius:8px;" onmouseover="this.style.background='#fef2f2';this.style.color='#dc2626'" onmouseout="this.style.background='';this.style.color='#334155'">🏠 Uși Garaj</a>
+                        <a href="../aer-conditionat" style="display:block;padding:10px 16px;font-size:13px;color:#334155;border-radius:8px;" onmouseover="this.style.background='#fef2f2';this.style.color='#dc2626'" onmouseout="this.style.background='';this.style.color='#334155'">❄️ Aer Condiționat</a>
+                        <a href="../ventilatie" style="display:block;padding:10px 16px;font-size:13px;color:#334155;border-radius:8px;" onmouseover="this.style.background='#fef2f2';this.style.color='#dc2626'" onmouseout="this.style.background='';this.style.color='#334155'">💨 Ventilație</a>
+                        <a href="../instalatii-electrice" style="display:block;padding:10px 16px;font-size:13px;color:#334155;border-radius:8px;" onmouseover="this.style.background='#fef2f2';this.style.color='#dc2626'" onmouseout="this.style.background='';this.style.color='#334155'">⚡ Instalații Electrice</a>
+                        <a href="../instalatii-termice-sanitare" style="display:block;padding:10px 16px;font-size:13px;color:#334155;border-radius:8px;" onmouseover="this.style.background='#fef2f2';this.style.color='#dc2626'" onmouseout="this.style.background='';this.style.color='#334155'">🔧 Instalații Termice &amp; Sanitare</a>
+                    </div>
+                </div>
+                <a href="../despre-noi" id="navLink3" style="padding:6px 12px;font-size:14px;font-weight:500;color:#fff;transition:all 0.2s;border-radius:8px;" onmouseover="this.style.color='#f87171'" onmouseout="this.style.color=navTextColor">ℹ️ Despre Noi</a>
+                <a href="../portofoliu" id="navLink4" style="padding:6px 12px;font-size:14px;font-weight:500;color:#fff;transition:all 0.2s;border-radius:8px;" onmouseover="this.style.color='#f87171'" onmouseout="this.style.color=navTextColor">📁 Portofoliu</a>
+                <a href="/blog/" style="padding:6px 12px;font-size:14px;font-weight:500;color:#fff;transition:all 0.2s;border-radius:8px;" id="navLinkBlog" onmouseover="this.style.color='#f87171'" onmouseout="this.style.color=navTextColor">📝 Blog</a>
+                <a href="../contact" id="navLink5" style="padding:6px 12px;font-size:14px;font-weight:500;color:#fff;transition:all 0.2s;border-radius:8px;" onmouseover="this.style.color='#f87171'" onmouseout="this.style.color=navTextColor">📍 Contact</a>
+            </nav>
+            <div class="hidden lg:flex" style="align-items:center;gap:12px;">
+                <a href="tel:0752288400" id="phoneLink" style="display:flex;align-items:center;font-size:14px;font-weight:500;color:#fff;transition:all 0.2s;">
+                    <svg style="width:16px;height:16px;margin-right:6px;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/></svg>
+                    0752 288 400
+                </a>
+                <a href="../contact" style="background:linear-gradient(to right,#dc2626,#b91c1c);color:#fff;padding:8px 20px;border-radius:8px;font-size:14px;font-weight:600;box-shadow:0 4px 6px -1px rgba(0,0,0,0.1);transition:all 0.2s;" onmouseover="this.style.background='linear-gradient(to right,#b91c1c,#991b1b)'" onmouseout="this.style.background='linear-gradient(to right,#dc2626,#b91c1c)'">Cere Ofertă</a>
+            </div>
+            <div class="md:hidden" style="display:flex;align-items:center;gap:8px;">
+                <button onclick="toggleMobileMenu()" id="menuBtn" class="animate-subtle-pulse" style="padding:4px;border-radius:6px;border:none;cursor:pointer;background:linear-gradient(to right,#ef4444,#dc2626);color:#fff;">
+                    <svg id="menuIcon" style="width:20px;height:20px;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
+                    <svg id="closeIcon" style="width:20px;height:20px;display:none;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+                </button>
+            </div>
+        </div>
+        <div id="mobileMenu" style="background:#fff;border-radius:16px;box-shadow:0 20px 25px -5px rgba(0,0,0,0.1);margin:8px 12px;padding:8px;max-height:80vh;overflow-y:auto;">
+            <nav style="display:flex;flex-direction:column;gap:4px;">
+                <a href="../" style="padding:10px 16px;font-size:16px;font-weight:500;color:#334155;border-radius:8px;">🏠 Acasă</a>
+                <button onclick="toggleServicesSubmenu()" style="padding:10px 16px;font-size:16px;font-weight:500;color:#334155;border-radius:8px;background:none;border:none;cursor:pointer;display:flex;justify-content:space-between;align-items:center;width:100%;font-family:inherit;text-align:left;">
+                    🛠️ Servicii
+                    <svg id="servicesArrow" style="width:16px;height:16px;transition:transform 0.2s;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+                </button>
+                <div id="servicesSubmenu" style="padding-left:16px;overflow-y:auto;">
+                    <a href="../detectie-incendiu-isu" onclick="closeMobile()" style="display:block;padding:8px 16px;font-size:14px;color:#475569;border-radius:8px;">🔥 Detecție Incendiu ISU</a>
+                    <a href="../camere-supraveghere" onclick="closeMobile()" style="display:block;padding:8px 16px;font-size:14px;color:#475569;border-radius:8px;">📹 Camere Supraveghere</a>
+                    <a href="../alarma-antiefractie" onclick="closeMobile()" style="display:block;padding:8px 16px;font-size:14px;color:#475569;border-radius:8px;">🚨 Alarmă Antiefracție</a>
+                    <a href="../control-acces" onclick="closeMobile()" style="display:block;padding:8px 16px;font-size:14px;color:#475569;border-radius:8px;">🚪 Control Acces</a>
+                    <a href="../pontaj-electronic" onclick="closeMobile()" style="display:block;padding:8px 16px;font-size:14px;color:#475569;border-radius:8px;">⏱️ Pontaj Electronic</a>
+                    <a href="../bariere-auto" onclick="closeMobile()" style="display:block;padding:8px 16px;font-size:14px;color:#475569;border-radius:8px;">🚧 Bariere Auto</a>
+                    <a href="../interfoane-videointerfoane" onclick="closeMobile()" style="display:block;padding:8px 16px;font-size:14px;color:#475569;border-radius:8px;">🔔 Interfoane &amp; Videointerfoane</a>
+                    <a href="../sonorizare" onclick="closeMobile()" style="display:block;padding:8px 16px;font-size:14px;color:#475569;border-radius:8px;">🔊 Sonorizare</a>
+                    <a href="../automatizari-porti" onclick="closeMobile()" style="display:block;padding:8px 16px;font-size:14px;color:#475569;border-radius:8px;">🚗 Automatizări Porți</a>
+                    <a href="../usi-garaj" onclick="closeMobile()" style="display:block;padding:8px 16px;font-size:14px;color:#475569;border-radius:8px;">🏠 Uși Garaj</a>
+                    <a href="../aer-conditionat" onclick="closeMobile()" style="display:block;padding:8px 16px;font-size:14px;color:#475569;border-radius:8px;">❄️ Aer Condiționat</a>
+                    <a href="../ventilatie" onclick="closeMobile()" style="display:block;padding:8px 16px;font-size:14px;color:#475569;border-radius:8px;">💨 Ventilație</a>
+                    <a href="../instalatii-electrice" onclick="closeMobile()" style="display:block;padding:8px 16px;font-size:14px;color:#475569;border-radius:8px;">⚡ Instalații Electrice</a>
+                    <a href="../instalatii-termice-sanitare" onclick="closeMobile()" style="display:block;padding:8px 16px;font-size:14px;color:#475569;border-radius:8px;">🔧 Instalații Termice &amp; Sanitare</a>
+                </div>
+                <a href="../despre-noi" onclick="closeMobile()" style="padding:10px 16px;font-size:16px;font-weight:500;color:#334155;border-radius:8px;">ℹ️ Despre Noi</a>
+                <a href="../portofoliu" onclick="closeMobile()" style="padding:10px 16px;font-size:16px;font-weight:500;color:#334155;border-radius:8px;">📁 Portofoliu</a>
+                <a href="/blog/" onclick="closeMobile()" style="padding:10px 16px;font-size:16px;font-weight:500;color:#334155;border-radius:8px;">📝 Blog</a>
+                <a href="../contact" onclick="closeMobile()" style="padding:10px 16px;font-size:16px;font-weight:500;color:#334155;border-radius:8px;">📍 Contact</a>
+                <div style="padding:12px 8px;">
+                    <a href="../contact" onclick="closeMobile()" style="display:block;text-align:center;background:linear-gradient(to right,#dc2626,#b91c1c);color:#fff;padding:10px 16px;border-radius:12px;font-weight:600;">Cere Ofertă</a>
+                </div>
+            </nav>
+        </div>
+    </div>
+</header>
+
+
+  
+  
+  <nav class="breadcrumb" aria-label="Breadcrumb">
+    <div class="inner">
+      <a href="/">Acasă</a><span class="sep">›</span>
+      <a href="/blog/">Blog</a><span class="sep">›</span>
+      <span style="color:rgba(255,255,255,.9)">Integrarea sistemelor de securitate pe o platformă | CSSI</span>
+    </div>
+  </nav>
+
+  <header class="hero">
+    <div class="inner">
+      <div class="hero-content">
+      <div class="hero-badge">🛡 Ghid CSSI · 2026</div>
+      <h1>Integrarea sistemelor de securitate pe o platformă unică (VMS): de ce contează</h1>
+      <p class="lead">Multe firme ajung, în timp, la aceeași situație fără să-și dea seama: camerele sunt de la o firmă, alarma de la alta, controlul accesului de la a treia. Trei aplicații, trei parole, trei facturi de mentenanță — și, cel mai important, <strong>niciun loc din care vezi tabloul complet</strong>. Când se întâmplă un incident, pierzi minute prețioase comutând între sisteme care nu vorbesc între ele. Soluția nu e mai multă tehnologie, ci <strong>un singur „creier”</strong> care leagă tot: camere, alarmă, acces și pontaj într-o platformă unică. Iată de ce contează — și când chiar merită.</p>
+      <div class="hero-meta">
+        <span>✍ CSSI Brașov</span><span class="dot">·</span>
+        <span>📅 30 Oct 2026</span><span class="dot">·</span>
+        <span>⏱ 22 min lectură</span>
+      </div>
+      <div class="topic-pills">
+        <span class="pill pill-blue">🛡 Securitate firme</span>
+        <span class="pill pill-green">📍 Brașov & împrejurimi</span>
+        <span class="pill pill-amber">✅ Ghid practic</span>
+      </div>
+    </div>
+      <div class="hero-img-wrap"><img src="/images/blog/integrare-vms-cover.jpg" alt="Integrarea sistemelor de securitate pe o platformă | CSSI"></div>
+    </div>
+  </header>
+
+  <div class="article-wrap">
+    <main class="article-body" id="articol">
+<h2 id="raspunsul-scurt">Răspunsul scurt</h2>
+<p>Da, camerele, alarma, controlul accesului, pontajul și, într-o anumită măsură, semnalizarea de incendiu și interfonia pot fi aduse într-o <strong>singură interfață</strong>. Se face cu o platformă software (numită VMS sau, în variantele mai complexe, PSIM) care primește evenimente de la toate sistemele și le arată împreună, pe același ecran, cu aceeași logică de utilizatori și drepturi. Câștigul nu e „mai multă tehnologie”, ci <strong>reacție mai rapidă, mai puține alarme false pierdute în zgomot și un istoric complet</strong> când ai nevoie de el.</p>
+<p>Dar integrarea nu înseamnă să arunci tot și să o iei de la zero. Cât se poate integra depinde de <strong>ce echipamente ai deja</strong> și de cât de „deschise” sunt: echipamentele care respectă standarde recunoscute (cel mai cunoscut e ONVIF, pentru camere IP) se leagă relativ ușor, cele dintr-un ecosistem închis se leagă doar parțial sau deloc. Fără să dăm nume de mărci, regula practică e simplă: <strong>întâi afli ce ai, apoi decizi ce păstrezi, ce completezi și ce înlocuiești</strong>.</p>
+<p>Integrarea merită când ai <strong>mai multe sisteme, mai multe locații sau mai mulți oameni care folosesc zilnic securitatea</strong>; o firmă cu patru camere și o alarmă simplă are nevoie doar de echipamente alese să nu o blocheze mai târziu.</p>
+
+<h2 id="problema-sistemelor-lipite">Problema sistemelor „lipite”</h2>
+<p>Hai să descriem situația în care se află, fără să vrea, foarte multe firme. Ai instalat camerele acum câțiva ani, de la un furnizor. Apoi ai adăugat o alarmă, de la altul. Mai târziu ai pus control acces și pontaj, de la al treilea. Fiecare sistem funcționează — separat. Dar împreună? <strong>Nu există un „împreună”.</strong></p>
+<p>Concret, asta înseamnă: <strong>trei aplicații diferite</strong>, fiecare cu logica și parola ei; un manager sau un agent de pază care trebuie să sară de la una la alta; și, cel mai grav, <strong>niciun sistem nu „știe” ce face celălalt</strong>. Alarma sună, dar nu deschide camera potrivită. Cineva e refuzat de cinci ori la o ușă sensibilă, dar nimic nu declanșează o verificare. Vezi o mișcare pe cameră, dar nu poți corela rapid cu evenimentul de alarmă. Rezultatul: o reacție mai lentă exact când contează, o operare mai obositoare și mai scumpă, și sentimentul permanent că ai echipamente, dar nu ai control.</p>
+<p>Într-o hală din zona industrială, într-o noapte cu ger, alarma pornește la poarta de marfă, dar camerele sunt pe un monitor din altă încăpere. Până se confirmă vizual ce s-a întâmplat, trec minute prețioase. Problema nu sunt echipamentele, ci faptul că <strong>nimeni nu le-a gândit ca pe un tot</strong>.</p>
+
+      <div class="cta-banner" style="margin:32px 0">
+        <div>
+          <h3>Vrei o evaluare pentru firma ta?</h3>
+          <p>Evaluarea la fața locului e gratuită în Brașov și împrejurimi — vii cu nevoia, pleci cu o soluție și un preț defalcat.</p>
+        </div>
+        <div class="cta-buttons">
+          <a href="/contact" class="btn btn-secondary">📩 Cere ofertă</a>
+          <a href="tel:0752288400" class="btn btn-primary">📞 0752 288 400</a>
+          <a target="_blank" rel="noopener" href="https://wa.me/40752288400" class="btn btn-secondary">💬 WhatsApp</a>
+        </div>
+      </div>
+<h2 id="ce-face-o-platforma-unica-vms-psim">Ce face o platformă unică (VMS / PSIM)</h2>
+<p>O <strong>platformă unică de securitate</strong> rezolvă fix această fragmentare. În loc de trei-patru aplicații separate, ai un <strong>singur software</strong> care adună într-un loc <strong>camerele, alarma, controlul accesului și pontajul</strong> — o singură interfață din care vezi tot și controlezi tot.</p>
+<p>Termenul tehnic e <strong>VMS</strong> (software de management al supravegherii video), iar pentru integrări mai complexe se vorbește despre <strong>PSIM</strong>; dincolo de denumiri, ideea e simplă: un singur „creier” peste toate sistemele. Acest creier se sprijină pe o rețea bine făcută — toate aceste sisteme rulează pe aceeași infrastructură de date, motiv pentru care cablarea structurată e fundația întregii integrări, așa cum am explicat în articolul despre <a href="https://cssi.ro/blog/cablare-structurata-retele-date-firma-brasov">cablarea structurată și rețelele de date</a>. Iar inteligența camerelor moderne — detecția de evenimente, recunoașterea de tipare — alimentează platforma cu informația relevantă, subiect tratat în articolul despre camerele cu detecție inteligentă (AI).</p>
+<p>În practică, un <strong>VMS</strong> pornește de la video și i se adaugă alarma sau accesul ca module, iar un <strong>PSIM</strong> pornește de la evenimente și aplică reguli scrise de tine (cine e anunțat, ce cameră se deschide). Pentru majoritatea firmelor locale ajunge un VMS bine extins.</p>
+
+<div class="box box-info"><div class="box-title">ℹ Trei niveluri de integrare</div><p>La primul doar <strong>vezi</strong> mai multe sisteme pe același ecran. La al doilea, sistemele <strong>își trimit evenimente</strong> (alarma cere camera). La al treilea, platforma <strong>comandă</strong> sistemele (armează, deschide o ușă). Cu cât urci, cu atât cresc utilitatea, dar și cerințele de testare și responsabilitatea. Începe de obicei cu nivelurile unu și doi.</p></div>
+
+<h2 id="ce-se-poate-integra-camere-alarma-acces-">Ce se poate integra: camere, alarmă, acces, incendiu, interfonie</h2>
+<p>Nu toate sistemele se integrează la fel de adânc. Iată, pe rând, ce poți aștepta de la fiecare.</p>
+<p><strong>Camerele</strong> sunt coloana vertebrală. Platforma afișează imaginea live, redă înregistrările, marchează momentele în care s-a întâmplat ceva și leagă fiecare cameră de o zonă din plan.</p>
+<p><strong>Alarma antiefracție</strong> trimite către platformă armarea, dezarmarea, alarmele pe zone și avariile (de exemplu pierderea comunicației). Valoarea apare când alarma aduce automat pe ecran camerele din zonă. Vezi și <a href="https://cssi.ro/blog/partitii-zone-armare-automata-alarma-firma-brasov">partiții, zone și armare automată</a>.</p>
+<p><strong>Controlul accesului și pontajul</strong> aduc în platformă cine a intrat, pe unde și la ce oră, plus evenimentele de tip „ușă ținută deschisă” sau „acces refuzat”. Prin legătura cu camerele, fiecare trecere poate fi însoțită de imagine. Vezi și <a href="https://cssi.ro/blog/control-acces-firma-ghid-alegere-2026">ghidul de control acces pentru firme</a>.</p>
+<p><strong>Detecția de incendiu</strong> merită tratată cu atenție. Centrala de incendiu are rol de protecție a vieții și trebuie să funcționeze autonom, indiferent dacă platforma ta de securitate merge sau nu. De aceea, în mod obișnuit, platforma doar <strong>preia semnalele</strong> centralei (alarmă, defect, zona afectată) ca să le arate pe același plan cu camerele; nu înlocuiește centrala și nu o poate bloca. Orice legătură se face astfel încât funcțiile de siguranță să rămână neatinse, iar cerințele exacte se verifică cu un specialist, în funcție de analiza de risc a clădirii.</p>
+<p><strong>Interfonia și videointerfonia</strong> se pot lega de platformă mai ales la porți, recepții și intrări de depozit: un apel la poartă deschide camera, operatorul vede cine sună și poate comanda deschiderea, dacă regulile permit.</p>
+
+<h2 id="scenarii-reale-cum-lucreaza-sistemele-im">Scenarii reale: cum lucrează sistemele împreună</h2>
+<p>Teoria sună bine, dar valoarea integrării se vede în <strong>scenarii concrete</strong>. Iată câteva pe care le întâlnim des.</p>
+<p><strong>O alarmă deschide automat camera potrivită.</strong> Senzorul de la depozit se declanșează → platforma deschide instantaneu camera din acea zonă pe ecranul operatorului. Nu mai cauți manual care cameră acoperă zona — o vezi imediat și decizi în secunde dacă e o amenințare reală sau o alarmă falsă.</p>
+<p><strong>Un acces refuzat declanșează o verificare.</strong> Cineva încearcă de mai multe ori să intre pe o ușă sensibilă, fără drept → platforma marchează evenimentul și aduce imaginea camerei pentru verificare. Un tipar pe care un sistem fragmentat l-ar rata complet.</p>
+<p><strong>O detecție în afara programului te alertează pe telefon.</strong> Mișcare în hală la ora 2 noaptea → primești o notificare cu imaginea atașată, oriunde te-ai afla. În loc să reacționezi târziu și pe bucăți, sistemul <strong>leagă evenimentele între ele</strong> și îți arată exact ce contează, în timp real.</p>
+<p><strong>Un semnal de incendiu arată imediat locul.</strong> Centrala semnalează o zonă → platforma afișează pe plan zona respectivă și camerele din jur, iar cel care răspunde vede dacă e fum real, dacă sunt oameni în zonă și pe unde se poate ajunge. Evacuarea rămâne după procedurile clădirii.</p>
+<p><strong>Un apel la poartă ajunge la omul potrivit.</strong> La o pensiune din Bran sau Predeal, un oaspete sună târziu la poartă, iar apelul ajunge pe telefonul administratorului, cu imaginea de la intrare. Deschiderea porții se jurnalizează.</p>
+
+<div class="box box-warn"><div class="box-title">⚠ Mai multe reguli nu înseamnă automat mai bine</div><p>Zeci de scenarii din prima zi produc un operator inundat de notificări, care ajunge să le ignore pe toate. Pornește cu <strong>3–5 scenarii care contează</strong>, testează-le câteva săptămâni, apoi adaugă altele.</p></div>
+
+
+<h2 id="standarde-deschise-onvif-versus-ecosiste">Standarde deschise (ONVIF) versus ecosistem închis</h2>
+<p>Aici se decide, de fapt, cât de liber vei fi peste cinci ani. Există două moduri mari prin care echipamentele se leagă între ele.</p>
+<p>Primul este prin <strong>standarde deschise</strong>. Cel mai cunoscut este <strong>ONVIF</strong>, o specificație folosită de mulți producători de camere și recorderi IP, ca echipamente diferite să poată fi descoperite, configurate și vizualizate în același software. Există profile diferite pentru video și pentru controlul accesului, deci „compatibil ONVIF” nu spune tot: uită-te la <strong>ce funcții sunt acoperite</strong>. Funcțiile avansate ale unui producător pot rămâne accesibile doar în aplicația lui.</p>
+<p>Al doilea mod este <strong>ecosistemul închis</strong>: un producător face camere, recorder, alarmă și aplicație care merg excelent între ele, dar mai puțin bine cu restul lumii. Avantajul e simplitatea, dezavantajul apare la extindere: ești legat de același furnizor.</p>
+<p>Între cele două există <strong>integrările prin interfețe ale producătorului</strong> (SDK sau API): un producător pune la dispoziția platformei un mod de a comunica cu echipamentele lui. Depinde de versiuni: o actualizare poate cere reverificarea. Mai există varianta simplă, prin <strong>contacte și relee</strong>, robustă, dar fără detalii.</p>
+
+<table class="compare-table">
+<thead><tr><th>Tip de legătură</th><th>Avantaj principal</th><th>Limită de știut</th><th>Când o alegi</th></tr></thead>
+<tbody>
+<tr><td><strong>Standard deschis (ex. ONVIF)</strong></td><td>Echipamente de la producători diferiți în aceeași interfață; schimbi ușor o piesă</td><td>Funcțiile avansate ale producătorului pot lipsi; profilele nu acoperă totul</td><td>Când vrei libertate la extindere și ai deja echipamente variate</td></tr>
+<tr><td><strong>Interfață a producătorului (SDK/API)</strong></td><td>Acces la funcții mai bogate decât în standard</td><td>Depinde de versiuni; o actualizare poate cere reverificare</td><td>Când funcția avansată contează și integrarea e testată înainte</td></tr>
+<tr><td><strong>Ecosistem închis, un singur producător</strong></td><td>Simplu, totul din cutie, o singură aplicație</td><td>Dependență de un furnizor; extinderea cu alte sisteme e limitată</td><td>Pentru instalații mici, fără planuri mari de extindere</td></tr>
+<tr><td><strong>Contacte și relee (semnal simplu)</strong></td><td>Foarte robust, merge cu echipamente vechi</td><td>Transmite doar „a fost declanșat ceva”, fără detalii despre eveniment</td><td>Pentru a lega un sistem vechi de platformă, ca soluție de punte</td></tr>
+</tbody>
+</table>
+
+<p>Pentru o firmă care se extinde, standardele deschise sunt de obicei alegerea prudentă; pentru o locuință sau un birou mic, un ecosistem unitar poate fi mai simplu, dacă alegi conștient limitele.</p>
+
+<div class="box box-danger"><div class="box-title">⛔ Nu cumpăra pe baza unei promisiuni verbale de „se integrează”</div><p>Fraza „merge cu orice” e cea mai scumpă din domeniu. Cere întotdeauna, înainte de comandă, o <strong>listă scrisă a funcțiilor care se integrează</strong> (ce eveniment, în ce direcție, cu ce întârziere) și, la echipamentele importante, un test pe un exemplar înainte de a le cumpăra în număr mare. Fără asta riști să plătești echipamente care se văd pe ecran, dar nu transmit evenimentele pentru care le-ai luat.</p></div>
+
+<h2 id="alertare-in-timp-real-si-acces-de-pe-tel">Alertare în timp real și acces de pe telefon, pentru mai multe sedii</h2>
+<p>Una dintre cele mai mari diferențe practice o simt firmele cu <strong>mai multe sedii</strong> sau puncte de lucru. Fără integrare, ca să verifici ce se întâmplă la depozitul din alt oraș trebuie să intri separat în sistemul local de acolo — dacă mai știi parola și dacă mai funcționează. Cu o platformă unică, vezi <strong>toate sediile dintr-un singur loc</strong>, de pe telefon sau calculator.</p>
+<p>Primești alerte din orice sediu, verifici live, gestionezi accesul centralizat — adaugi un angajat nou cu drepturi în toate punctele relevante dintr-o singură operațiune. Pentru o firmă cu sediu central și mai multe depozite, sau cu puncte de lucru în mai multe orașe, asta înseamnă <strong>control real fără să fii fizic peste tot</strong>. Accesul sigur de pe telefon e o componentă esențială aici, iar cum se face corect, fără a deschide breșe de securitate, am explicat în articolul despre monitorizarea camerelor și a alarmei din aplicația de telefon.</p>
+<p>Câteva lucruri practice de planificat la mai multe locații. Fiecare sediu are nevoie de o <strong>conexiune la internet stabilă</strong>, iar cele mai îndepărtate (un punct de lucru din Săcele sau Codlea, un chioșc, o cabană) pot avea conexiuni mai slabe; atunci platforma trebuie să trimită către centru doar evenimentele și imaginile necesare, nu fluxuri video continue. Înregistrarea rămâne, de regulă, <strong>locală</strong>, ca să nu depinzi de internet pentru dovezi; vezi <a href="https://cssi.ro/blog/inregistrari-video-nvr-local-cloud-hibrid-brasov">înregistrările video: NVR local, cloud sau hibrid</a>. Un alt aspect sunt <strong>drepturile pe locație</strong>: directorul vede tot, șeful de depozit doar depozitul lui, paznicul nu poate schimba reguli.</p>
+
+<h2 id="jurnalizare-si-rapoarte-cine-ce-cand">Jurnalizare și rapoarte: cine, ce, când</h2>
+<p>O platformă integrată nu doar arată ce se întâmplă acum — <strong>reține istoricul</strong>, corelat. Accese la uși, evenimente de alarmă, vizualizări de camere, pontaje: toate sunt jurnalizate într-un singur loc. La un incident, ai în câteva minute <strong>povestea completă</strong>: cine a intrat, la ce oră a sunat alarma, ce arăta camera în acel moment.</p>
+<p>Asta e diferența dintre „cred că a fost cineva pe la ora aceea” și „la 02:14 cardul lui X a deschis ușa, la 02:16 s-a declanșat senzorul, iar camera arată asta”. Jurnalele sunt utile la <strong>anchete, dispute, conformitate</strong> și în relația cu asiguratorul. Un sistem fragmentat îți dă bucăți de informație greu de pus cap la cap; unul integrat îți dă firul logic complet. Aceeași jurnalizare susține și obligațiile de protecție a datelor, ale căror repere oficiale le găsești la <a href="https://www.dataprotection.ro" rel="noopener" target="_blank">Autoritatea Națională de Supraveghere a Prelucrării Datelor (ANSPDCP)</a>.</p>
+<p>Platforma notează și <strong>ce fac oamenii în ea</strong>: cine a vizionat sau exportat o înregistrare. Pentru că prelucrezi imagini și date despre persoane, durata de păstrare și accesul se stabilesc prin reguli clare, verificate cu un specialist; vezi <a href="https://cssi.ro/blog/camere-supraveghere-gdpr-ghid-complet">ghidul despre camere de supraveghere și GDPR</a>.</p>
+
+
+<h2 id="scalabilitate-adaugi-sedii-si-echipament">Scalabilitate: adaugi sedii și echipamente fără să schimbi tot</h2>
+<p>O firmă sănătoasă crește, iar securitatea trebuie să crească odată cu ea — fără să o iei de la zero. Aici intervine <strong>scalabilitatea</strong>: o platformă bine aleasă îți permite să <strong>adaugi sedii, camere și echipamente</strong> pe măsură ce ai nevoie, integrându-le în același sistem, sub aceeași interfață.</p>
+<p>Contrastul cu situația „lipită” e izbitor: când fiecare adăugare înseamnă încă un sistem separat, încă o aplicație, încă o parolă, complexitatea crește exponențial și ajungi exact în haosul de la care am pornit. Cu o platformă scalabilă, creșterea e <strong>liniară și ordonată</strong>. Tocmai de aceea integrarea se gândește cel mai bine la momentele de schimbare — relocare, extindere, deschiderea unui nou punct de lucru — când oricum reconfigurezi, așa cum am detaliat în articolul despre <a href="https://cssi.ro/blog/control-acces-pontaj-relocare-extindere-birou-brasov">controlul accesului și pontajul la relocarea sau extinderea biroului</a>.</p>
+<p>Întreabă din start <strong>câte camere și uși suportă licența și serverul</strong> și dacă un sediu nou înseamnă doar o licență în plus sau o refacere a arhitecturii.</p>
+
+<h2 id="interoperabilitate-de-ce-conteaza-aleger">Interoperabilitate: de ce contează alegerea echipamentelor compatibile</h2>
+<p>Iată detaliul tehnic care decide dacă integrarea va funcționa vreodată: <strong>interoperabilitatea</strong>. O platformă unică poate integra doar echipamente care sunt <strong>compatibile între ele și cu platforma</strong>. Echipamente alese la întâmplare, de la producători care „nu vorbesc” aceeași limbă, nu se vor integra niciodată bine — oricât ai investi după.</p>
+<p>De aceea alegerea echipamentelor compatibile, <strong>încă de la început</strong>, e o decizie strategică, nu doar tehnică. E exact motivul pentru care are sens ca aceeași echipă care înțelege întregul sistem să te ghideze în alegeri — ca peste doi ani să poți integra, nu să descoperi că ai cumpărat piese care nu se potrivesc. Și e încă un argument pentru o mentenanță și o relație continuă cu un furnizor care cunoaște tot sistemul, subiect tratat în articolul despre <a href="https://cssi.ro/blog/mentenanta-sisteme-securitate-de-ce-cat-de-des-brasov">de ce și cât de des faci mentenanță</a>.</p>
+<p>Contează și <strong>versiunile de software</strong> (o actualizare poate strica o integrare), formatul video și rețeaua; de aceea integrarea se testează întâi pe un prim punct.</p>
+
+<h2 id="ce-se-poate-integra-realist-la-un-sistem">Ce se poate integra realist la un sistem existent</h2>
+<p>Cea mai frecventă întrebare pe care o primim este: „am deja camere, alarmă și acces, pot să le leg fără să le schimb?”. Răspunsul cinstit este: <strong>în mare parte da, dar nu totul și nu la fel de adânc</strong>. Depinde de vârsta și de cât de deschise sunt echipamentele.</p>
+<table class="compare-table">
+<thead><tr><th>Ce ai deja</th><th>Ce se poate integra realist</th><th>Ce rămâne limitat</th><th>Pasul rezonabil</th></tr></thead>
+<tbody>
+<tr><td><strong>Camere IP recente, recorder cu standard deschis</strong></td><td>Imagine live, înregistrări, evenimente de bază în platformă</td><td>Analizele avansate pot rămâne doar în aplicația producătorului</td><td>Verifici lista de funcții și integrezi direct</td></tr>
+<tr><td><strong>Camere analogice, recorder vechi</strong></td><td>Imagine prin recorder, uneori fără evenimente detaliate</td><td>Calitatea imaginii și funcțiile rămân cele ale echipamentului</td><td>Integrezi ce merge acum, planifici trecerea treptată la IP</td></tr>
+<tr><td><strong>Alarmă mai veche, fără interfață modernă</strong></td><td>Semnal simplu prin contact sau prin modulul de comunicație</td><td>Fără detalii pe zonă sau stare; comenzile pot lipsi</td><td>Legi alarma de platformă ca eveniment, cu cameră asociată</td></tr>
+<tr><td><strong>Control acces cu controlere proprii</strong></td><td>Evenimente de acces și, uneori, comenzi, în funcție de controler</td><td>Gestionarea cardurilor poate rămâne în aplicația originală</td><td>Cere de la furnizor lista de integrări și testează pe o ușă</td></tr>
+<tr><td><strong>Centrală de incendiu existentă</strong></td><td>Preluarea semnalelor de alarmă și defect pentru afișare</td><td>Funcțiile de siguranță rămân autonome, fără comandă din platformă</td><td>Legătură de tip „doar citire”, verificată cu un specialist</td></tr>
+</tbody>
+</table>
+
+<p>Ideea care ne ghidează este să <strong>păstrăm ce funcționează și are viitor</strong>, să completăm ce lipsește și să înlocuim numai ce blochează integrarea. Așa nu arunci investiții bune, iar bugetul se concentrează pe puncte unde se simte diferența.</p>
+
+<div class="box box-tip"><div class="box-title">💡 Începe cu un punct-pilot, nu cu tot obiectivul</div><p>Dacă ai mai multe sedii sau o hală mare, alege <strong>un singur punct</strong> (o intrare, un depozit) și integrează acolo camerele, alarma și accesul. Rulează câteva săptămâni, vezi ce scenarii chiar te ajută și ce zgomot produc, apoi extinde. Un pilot bine făcut îți arată adevăratele limite ale echipamentelor tale înainte să investești la scară mare.</p></div>
+
+<h2 id="cand-merita-integrarea-si-cand-nu">Când merită integrarea și când nu</h2>
+<p>Să fim corecți: integrarea pe o platformă unică <strong>nu e pentru oricine, oricum</strong>. Ea aduce cel mai mult pentru <strong>firmele medii și mari</strong>, cu mai multe sisteme, mai multe sedii sau personal numeros — acolo unde fragmentarea costă timp și bani în fiecare zi. Pentru o firmă foarte mică, cu câteva camere și o alarmă simplă, o platformă complexă ar fi exagerată.</p>
+<p>Dar — și aici e cheia — chiar dacă începi modest, merită să <strong>gândești integrarea din start</strong>: alegi echipamente compatibile, astfel încât, atunci când firma crește, să poți integra fără să arunci tot ce ai cumpărat. Cu alte cuvinte, nu trebuie să integrezi totul azi, dar trebuie să nu-ți închizi singur ușa pentru mâine. O evaluare onestă a nevoilor tale reale — câte sedii, câți utilizatori, ce riscuri — îți spune exact unde te afli pe acest drum.</p>
+<p>Semne că merită: ai peste două sisteme de la furnizori diferiți, cineva pierde zilnic timp între aplicații, ai mai multe locații sau ai avut un incident greu de reconstituit. Vezi și pagina despre <a href="https://cssi.ro/sistem-integrat-securitate-brasov">sistemul integrat de securitate</a>.</p>
+
+<h2 id="cat-costa-integrarea-costuri-orientative">Cât costă integrarea: costuri orientative 2026</h2>
+<p>Costul depinde de trei lucruri: <strong>ce echipamente ai deja</strong>, câte puncte integrezi și cât de adânc (doar vizualizare, evenimente sau comenzi). De aceea nu există un preț unic. Ca reper pentru 2026, pentru o firmă mică-medie cu un singur sediu și un sistem existent:</p>
+
+<table class="compare-table">
+<thead><tr><th>Scenariu</th><th>Ce include</th><th>Interval orientativ (RON)</th><th>Observații</th></tr></thead>
+<tbody>
+<tr><td><strong>Vizualizare unificată (camere + alarmă ca eveniment)</strong></td><td>Platformă, licențe pentru camere, legătură de bază cu alarma</td><td>3.000–10.000</td><td>Pentru sisteme existente deschise; depinde de numărul de camere</td></tr>
+<tr><td><strong>Integrare cu control acces și pontaj</strong></td><td>Legarea controlerelor, scenarii acces plus cameră, jurnal comun</td><td>5.000–18.000</td><td>Mai mult dacă controlerele nu au integrare directă</td></tr>
+<tr><td><strong>Platformă pentru 2–3 sedii</strong></td><td>Servere sau stații locale, acces centralizat, roluri pe locație</td><td>15.000–50.000+</td><td>Crește cu numărul de sedii, camere și cu cerințele de conexiune</td></tr>
+<tr><td><strong>Înlocuirea unei componente care blochează integrarea</strong></td><td>De exemplu recorder sau controler incompatibil</td><td>În funcție de echipament</td><td>Se stabilește la evaluare, după lista de integrări</td></tr>
+<tr><td><strong>Mentenanță și actualizări (anual)</strong></td><td>Verificări, actualizări, teste ale scenariilor</td><td>Contract anual, în funcție de dimensiune</td><td>Se discută la ofertă, vezi secțiunea despre mentenanță</td></tr>
+</tbody>
+</table>
+
+<p>Cifrele sunt <strong>orientative</strong> și nu înlocuiesc o ofertă. <strong>Oferta fermă vine după evaluarea la fața locului</strong>, defalcată pe componente, ca să vezi pentru ce plătești. Prețul crește cu numărul de sedii, vechimea echipamentelor și piesele incompatibile; scade cu echipamente deschise, rețea bine făcută și plan etapizat. Pentru o imagine a costului unui sistem complet de la zero, ai și <a href="https://cssi.ro/blog/cost-sistem-securitate-complet-2026">ghidul despre cât costă un sistem de securitate complet</a>.</p>
+
+<h2 id="greseli-frecvente-la-integrarea-sistemel">Greșeli frecvente la integrarea sistemelor de securitate</h2>
+<p><strong>1. Cumperi echipamente fără să verifici integrarea.</strong> Ceri lista scrisă a funcțiilor integrate înainte de comandă.</p>
+<p><strong>2. Vrei totul din prima zi.</strong> Zecile de scenarii produc zgomot pe care operatorii îl ignoră.</p>
+<p><strong>3. Ignori rețeaua.</strong> Integrarea mută mult trafic și date între sisteme; o rețea improvizată devine punctul slab al întregului. Rețeaua se proiectează înainte, nu după; vezi și articolul despre <a href="https://cssi.ro/blog/securizare-retea-cctv-ip-parole-vlan-protectie-brasov">securizarea rețelei unui sistem CCTV IP</a>.</p>
+<p><strong>4. Pui totul pe aceeași parolă sau pe același cont.</strong> Un cont slab sau partajat pune în pericol tot; fiecare om are contul lui.</p>
+<p><strong>5. Legi centrala de incendiu fără specialist.</strong> Funcțiile de siguranță a vieții nu se improvizează. Legătura se face astfel încât centrala să funcționeze la fel chiar dacă platforma cade.</p>
+<p><strong>6. Nu testezi ce se întâmplă când ceva cade.</strong> Internet picat, server repornit, lipsă de curent: sistemul trebuie să se comporte previzibil.</p>
+<p><strong>7. Uiți de oameni.</strong> Fără proceduri simple (cine verifică, pe cine sună), platforma rămâne o interfață frumoasă.</p>
+
+<h2 id="cum-lucreaza-cssi-la-o-integrare">Cum lucrează CSSI la o integrare</h2>
+<p>Nu pornim de la o platformă anume, ci de la ce ai și ce vrei să obții. Pașii, în ordine:</p>
+<ol>
+<li><strong>Evaluare la fața locului</strong> — inventariem ce sisteme ai (camere, alarmă, acces, pontaj, incendiu, interfonie), vârsta lor, cum sunt conectate și cum le folosești azi.</li>
+<li><strong>Discuție despre scopuri</strong> — stabilim ce vrei să rezolvi: reacție mai rapidă, control pe mai multe sedii, jurnal comun, mai puține alarme false.</li>
+<li><strong>Verificarea compatibilității</strong> — pentru fiecare echipament vedem ce se integrează, la ce nivel și ce limite există, fără promisiuni vagi.</li>
+<li><strong>Plan etapizat și ofertă defalcată</strong> — ce păstrezi, ce completezi, ce înlocuiești, cu costuri pe componente și pe etape.</li>
+<li><strong>Punct-pilot</strong> — montăm și testăm integrarea pe un singur punct, cu scenarii reale, înainte de extindere.</li>
+<li><strong>Extindere, instruire și predare</strong> — adăugăm celelalte puncte, configurăm rolurile, instruim oamenii și predăm documentația (conturi, scheme, scenarii setate).</li>
+<li><strong>Garanție și mentenanță</strong> — rămânem partenerul tău pentru actualizări, verificări și ajustări, cu garanția lucrărilor executate.</li>
+</ol>
+<p>De la o pensiune din Bran la o hală din Ghimbav, aceeași echipă acoperă securitatea, curenții slabi și instalația electrică. Vezi și <a href="https://cssi.ro/camere-supraveghere">camere de supraveghere în Brașov</a> și la <a href="https://cssi.ro/control-acces">controlul accesului în Brașov</a>.</p>
+
+<h2 id="mentenanta-unui-sistem-integrat">Mentenanța unui sistem integrat</h2>
+<p>Piesele depind una de alta, deci mentenanța contează mai mult decât la sistemele separate. O actualizare de firmware poate afecta integrarea, iar o schimbare în rețea poate întrerupe legătura cu alarma.</p>
+<p>Ce verifici periodic: <strong>starea fiecărei legături</strong> (platforma primește evenimente de la alarmă, de la acces, de la camere), <strong>funcționarea scenariilor</strong> (declanșezi un test și vezi dacă se deschide camera corectă), <strong>actualizările</strong> (cu verificare după fiecare), <strong>copiile configurației</strong>, <strong>conturile și drepturile</strong> și <strong>alimentarea de rezervă</strong>, mai ales în zonele de munte unde pene de curent iarna apar mai des. O verificare pe an e minimul. Despre cum te ajută un contract de mentenanță, vezi articolul despre <a href="https://cssi.ro/blog/mentenanta-sisteme-securitate-de-ce-cat-de-des-brasov">mentenanța sistemelor de securitate</a> și pagina despre <a href="https://cssi.ro/mentenanta-camere-supraveghere-brasov">mentenanța camerelor de supraveghere</a>.</p>
+
+<div class="box box-info"><div class="box-title">ℹ Documentația e parte din sistem</div><p>Ceri la predare <strong>schema sistemului</strong>, lista scenariilor setate, conturile administrative (predate în siguranță) și datele celui care răspunde de integrare. Fără documentație, sistemul depinde de memoria unui singur om.</p></div>
+
+<h2 id="lista-de-verificare-inainte-sa-ceri-o-of">Listă de verificare înainte să ceri o ofertă</h2>
+<ul>
+<li>Ai făcut o listă cu toate sistemele existente (camere, alarmă, acces, pontaj, incendiu, interfonie) și cu furnizorul fiecăruia?</li>
+<li>Știi ce modele și ce versiuni de software ai, sau poți obține datele de la cine le-a montat?</li>
+<li>Ai stabilit ce vrei să obții: reacție mai rapidă, control pe mai multe sedii, jurnal comun, mai puține alarme false?</li>
+<li>Ai ales 3–5 scenarii concrete care ți-ar folosi (alarmă plus cameră, acces refuzat plus cameră, mișcare în afara programului)?</li>
+<li>Ai verificat ce se întâmplă în caz de pană de curent sau de internet, inclusiv alimentarea de rezervă?</li>
+<li>Ai cerut o listă scrisă a funcțiilor care se integrează, nu doar o promisiune verbală?</li>
+</ul>
+
+<h2 id="citeste-si">Citește și</h2>
+<ul>
+  <li><a href="https://cssi.ro/blog/sistem-integrat-securitate-brasov">Sistem integrat de securitate în Brașov</a> — cum se leagă efracția, incendiul și inundația într-un tot unitar.</li>
+  <li><a href="https://cssi.ro/blog/cablare-structurata-retele-date-firma-brasov">Cablare structurată și rețele de date pentru firme</a> — fundația fără de care nicio integrare nu funcționează stabil.</li>
+  <li><a href="https://cssi.ro/blog/securizare-retea-cctv-ip-parole-vlan-protectie-brasov">Securizarea rețelei unui sistem CCTV IP</a> — parole, rețele separate și protecție când totul stă pe aceeași infrastructură.</li>
+  <li><a href="https://cssi.ro/blog/inregistrari-video-nvr-local-cloud-hibrid-brasov">Înregistrări video: NVR local, cloud sau hibrid</a> — unde păstrezi imaginile când ai mai multe locații.</li>
+  <li><a href="https://cssi.ro/blog/mentenanta-sisteme-securitate-de-ce-cat-de-des-brasov">Mentenanța sistemelor de securitate</a> — de ce și cât de des se verifică un sistem cu mai multe piese.</li>
+</ul>
+      <h2 id="faq">Întrebări frecvente</h2>
+      <div class="faq-wrap">
+        <div class="faq-item">
+          <button class="faq-q" onclick="toggleFaq(this)">Ce înseamnă o platformă unică de securitate (VMS)? <svg class="faq-chevron" width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg></button>
+          <div class="faq-a"><p>Un singur software, un singur „creier”, care adună într-un loc camerele, alarma, controlul accesului și pontajul. În loc de trei-patru aplicații separate, ai o singură interfață din care vezi tot și controlezi tot, cu aceleași conturi și drepturi. Termenul VMS vine de la software-ul de management video, dar o platformă modernă integrează și celelalte sisteme. În variantele complexe se vorbește despre PSIM, unde platforma urmărește evenimentele și aplică reguli și proceduri scrise de tine.</p></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q" onclick="toggleFaq(this)">Care e problema sistemelor „lipite” din mai multe firme? <svg class="faq-chevron" width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg></button>
+          <div class="faq-a"><p>Trei aplicații, trei parole și nimeni care să vadă tabloul complet. La un incident pierzi timp comutând între sisteme care nu comunică. Mai grav, niciun sistem nu „știe” ce face celălalt — o alarmă nu deschide camera potrivită, un acces refuzat nu declanșează o verificare. Rezultatul: reacție lentă, operare costisitoare și un istoric împărțit în bucăți, greu de pus cap la cap după un eveniment. Problema nu e echipamentul, ci lipsa legăturii dintre ele.</p></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q" onclick="toggleFaq(this)">Ce scenarii reale rezolvă o platformă integrată? <svg class="faq-chevron" width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg></button>
+          <div class="faq-a"><p>O alarmă deschide automat camera din zona respectivă; un acces refuzat repetat la o ușă sensibilă declanșează o verificare video; o detecție în afara programului trimite o alertă cu imaginea pe telefon. În loc să reacționezi târziu și pe bucăți, sistemul leagă evenimentele între ele și îți arată ce contează, în timp real. Pornește cu câteva scenarii utile, nu cu zeci, ca operatorii să nu ignore notificările.</p></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q" onclick="toggleFaq(this)">Cum ajută la firmele cu mai multe sedii? <svg class="faq-chevron" width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg></button>
+          <div class="faq-a"><p>Vezi toate sediile dintr-un singur loc, de pe telefon sau calculator, fără să intri separat în fiecare sistem local. Primești alerte din orice sediu, verifici live, gestionezi accesul centralizat, cu drepturi diferite pe locație. Pentru o firmă cu puncte de lucru în mai multe orașe, înseamnă control real fără să fii fizic peste tot. Înregistrările pot rămâne locale, iar spre centru circulă doar ce e necesar, ca să nu depinzi de internet pentru dovezi.</p></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q" onclick="toggleFaq(this)">De ce contează jurnalizarea și rapoartele? <svg class="faq-chevron" width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg></button>
+          <div class="faq-a"><p>Pentru că o platformă integrată reține cine, ce și când — acces, alarme, vizualizări. La un incident ai rapid istoricul complet, corelat. Jurnalele sunt utile la anchete, dispute, conformitate și în relația cu asiguratorul. Ele arată și ce fac utilizatorii în sistem, de pildă cine a exportat o înregistrare. Un sistem fragmentat dă bucăți greu de pus cap la cap; unul integrat dă povestea completă, iar regulile de păstrare se stabilesc clar, cu un specialist.</p></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q" onclick="toggleFaq(this)">Ce înseamnă scalabilitate și interoperabilitate? <svg class="faq-chevron" width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg></button>
+          <div class="faq-a"><p>Scalabilitate înseamnă că poți adăuga sedii, camere și echipamente pe măsură ce firma crește, fără să schimbi tot; întreabă ce limite au licența și serverul. Interoperabilitate înseamnă că echipamentele alese sunt compatibile între ele și cu platforma — esențial, pentru că echipamente alese la întâmplare nu se vor integra niciodată bine. Contează și versiunile de software, nu doar producătorul. De aceea alegerea compatibilă, de la început, e strategică.</p></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q" onclick="toggleFaq(this)">Când merită integrarea și când nu? <svg class="faq-chevron" width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg></button>
+          <div class="faq-a"><p>Merită cel mai mult pentru firme medii și mari, cu mai multe sisteme, sedii sau personal numeros. Pentru o firmă foarte mică, cu câteva camere și o alarmă simplă, o platformă complexă poate fi exagerată. Cheia e să gândești integrarea din start: alegi echipamente compatibile, ca la creștere să poți integra fără să arunci tot. Dacă pierzi zilnic timp între aplicații sau ai mai multe locații, o evaluare merită făcută chiar acum.</p></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q" onclick="toggleFaq(this)">Ce este ONVIF și garantează el că totul se integrează? <svg class="faq-chevron" width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg></button>
+          <div class="faq-a"><p>ONVIF este un standard deschis folosit de mulți producători de camere și recorderi IP, ca echipamente diferite să funcționeze în același software. Nu garantează însă tot: există profile diferite, iar funcțiile avansate ale unui producător pot rămâne accesibile doar în aplicația lui. Înainte de achiziție, cere o listă scrisă a funcțiilor care se integrează și, pentru echipamentele importante, un test pe un exemplar. Sigla singură nu e o dovadă suficientă.</p></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q" onclick="toggleFaq(this)">Pot integra echipamentele pe care le am deja, fără să le schimb? <svg class="faq-chevron" width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg></button>
+          <div class="faq-a"><p>În mare parte da, dar nu totul și nu la același nivel. Camerele IP mai noi se leagă de obicei simplu, cele analogice vechi doar prin recorder, iar alarmele vechi adesea ca semnal simplu, prin contacte. Controlul accesului depinde de controler. Ideea e să păstrezi ce funcționează, să completezi ce lipsește și să înlocuiești numai ce blochează integrarea. La evaluare vedem concret, echipament cu echipament, ce se poate și ce nu, fără promisiuni vagi.</p></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q" onclick="toggleFaq(this)">Se poate integra și sistemul de detecție incendiu? <svg class="faq-chevron" width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg></button>
+          <div class="faq-a"><p>Da, dar cu prudență. Centrala de incendiu are rol de protecție a vieții și trebuie să funcționeze autonom, indiferent de platformă. De regulă, platforma doar preia semnalele ei (alarmă, defect, zona afectată) ca să le arate pe același plan cu camerele, fără a o comanda sau a o înlocui. Legătura se face astfel încât funcțiile de siguranță să rămână neatinse, iar cerințele exacte se verifică cu un specialist, în funcție de analiza de risc.</p></div>
+        </div>
+      </div>
+
+      <aside class="discuta-in-grup">
+        <h3>Ai o întrebare despre asta?</h3>
+        <p>Discutăm subiectul în grupul nostru de pe Facebook, împreună cu electricieni, instalatori și proprietari din Brașov și împrejurimi. Pune întrebarea acolo și primești răspuns de la oameni care lucrează efectiv în domeniu. Suntem deja <!-- MEMBRI-GRUP -->351<!-- /MEMBRI-GRUP --> în grup.</p>
+        <a href="https://www.facebook.com/groups/1970585079825010" rel="noopener" target="_blank">Intră în grupul Instalații Brașov →</a>
+      </aside>
+      <div class="cta-banner">
+        <div>
+          <h3>Pașii următori — cere oferta ta</h3>
+          <p>Fără obligații: vii cu nevoia, pleci cu o soluție și un preț defalcat. CSSI — 20 de ani, 8.700+ proiecte în județul Brașov.</p>
+        </div>
+        <div class="cta-buttons">
+          <a href="/contact" class="btn btn-secondary">📩 Cere ofertă</a>
+          <a href="tel:0752288400" class="btn btn-primary">📞 0752 288 400</a>
+          <a target="_blank" rel="noopener" href="https://wa.me/40752288400" class="btn btn-secondary">💬 WhatsApp</a>
+        </div>
+      </div>
+
+    </main>
+
+    <aside class="sidebar">
+      <div class="sidebar-card">
+        <div class="sidebar-card-head">📑 Cuprins</div>
+        <div class="sidebar-card-body" style="padding:10px 18px">
+          <ol class="toc-list">
+            <li><a href="#raspunsul-scurt">Răspunsul scurt</a></li>
+            <li><a href="#problema-sistemelor-lipite">Problema sistemelor „lipite”</a></li>
+            <li><a href="#ce-face-o-platforma-unica-vms-psim">Ce face o platformă unică (VMS / PSIM)</a></li>
+            <li><a href="#ce-se-poate-integra-camere-alarma-acces-">Ce se poate integra: camere, alarmă, acces, incendiu, interfonie</a></li>
+            <li><a href="#scenarii-reale-cum-lucreaza-sistemele-im">Scenarii reale: cum lucrează sistemele împreună</a></li>
+            <li><a href="#standarde-deschise-onvif-versus-ecosiste">Standarde deschise (ONVIF) versus ecosistem închis</a></li>
+            <li><a href="#alertare-in-timp-real-si-acces-de-pe-tel">Alertare în timp real și acces de pe telefon, pentru mai multe sedii</a></li>
+            <li><a href="#jurnalizare-si-rapoarte-cine-ce-cand">Jurnalizare și rapoarte: cine, ce, când</a></li>
+            <li><a href="#scalabilitate-adaugi-sedii-si-echipament">Scalabilitate: adaugi sedii și echipamente fără să schimbi tot</a></li>
+            <li><a href="#interoperabilitate-de-ce-conteaza-aleger">Interoperabilitate: de ce contează alegerea echipamentelor compatibile</a></li>
+            <li><a href="#ce-se-poate-integra-realist-la-un-sistem">Ce se poate integra realist la un sistem existent</a></li>
+            <li><a href="#cand-merita-integrarea-si-cand-nu">Când merită integrarea și când nu</a></li>
+            <li><a href="#cat-costa-integrarea-costuri-orientative">Cât costă integrarea: costuri orientative 2026</a></li>
+            <li><a href="#greseli-frecvente-la-integrarea-sistemel">Greșeli frecvente la integrarea sistemelor de securitate</a></li>
+            <li><a href="#cum-lucreaza-cssi-la-o-integrare">Cum lucrează CSSI la o integrare</a></li>
+            <li><a href="#mentenanta-unui-sistem-integrat">Mentenanța unui sistem integrat</a></li>
+            <li><a href="#lista-de-verificare-inainte-sa-ceri-o-of">Listă de verificare înainte să ceri o ofertă</a></li>
+            <li><a href="#citeste-si">Citește și</a></li>
+            <li><a href="#faq">Întrebări frecvente</a></li>
+          </ol>
+        </div>
+      </div>
+      <div class="sidebar-card">
+        <div class="sidebar-card-head">📞 Contact CSSI Brașov</div>
+        <div class="sidebar-card-body">
+          <ul class="contact-info">
+            <li><div class="ci-icon">📞</div><div><strong>0752 288 400</strong><span>Lun–Vin 08:00–18:00</span></div></li>
+            <li><div class="ci-icon">📧</div><div><strong>office@cssi.ro</strong><span>Răspuns în max 24h</span></div></li>
+            <li><div class="ci-icon">📍</div><div><strong>Brașov</strong><span>și județele înconjurătoare</span></div></li>
+          </ul>
+          <a target="_blank" rel="noopener" href="https://wa.me/40752288400" class="btn btn-primary" style="margin-top:12px">💬 Scrie pe WhatsApp</a>
+        </div>
+      </div>
+    </aside>
+  </div>
+
+<footer class="article-footer">
+    <p>Articol scris de echipa <strong>CSSI Brașov</strong> — firmă autorizată IGPR și ISU, cu peste 20 de ani de experiență în sisteme de securitate și instalații.</p>
+    <div class="tags">
+      <span class="tag">camere supraveghere brasov</span>
+      <span class="tag">instalare camere</span>
+      <span class="tag">preturi camere 2026</span>
+      <span class="tag">Hikvision</span>
+      <span class="tag">Dahua</span>
+      <span class="tag">Uniview</span>
+      <span class="tag">CCTV</span>
+      <span class="tag">Brașov</span>
+    </div>
+    <p style="font-size:12px;color:#aaa;margin-top:8px">© 2026 CSSI — Confort, Securitate, Siguranță, Imobil | <a href="/">cssi.ro</a></p>
+  </footer>
+<script>
+    function toggleFaq(btn) {
+      const item = btn.closest('.faq-item');
+      const isOpen = item.classList.contains('open');
+      document.querySelectorAll('.faq-item.open').forEach(el => el.classList.remove('open'));
+      if (!isOpen) item.classList.add('open');
+    }
+    const headings = document.querySelectorAll('h2[id]');
+    const tocLinks = document.querySelectorAll('.toc-list a');
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          tocLinks.forEach(a => a.style.color = '');
+          const active = document.querySelector(`.toc-list a[href="#${entry.target.id}"]`);
+          if (active) active.style.color = 'var(--brand-blue)';
+        }
+      });
+    }, { rootMargin: '-20% 0px -70% 0px' });
+    headings.forEach(h => observer.observe(h));
+  </script>
+  <script>
+    let navTextColor = '#fff';
+    window.addEventListener('scroll', function() {
+        const navBg = document.getElementById('navBg');
+        const logo = document.getElementById('logoImg');
+        const scrolled = window.scrollY > 50;
+        if (scrolled) {
+            navBg.style.background = '#ffffff';
+            navBg.style.backdropFilter = 'blur(12px)';
+            navBg.style.boxShadow = '0 1px 2px rgba(0,0,0,0.05)';
+            if (logo) logo.style.filter = '';
+            navTextColor = '#334155';
+        } else {
+            navBg.style.background = 'transparent';
+            navBg.style.backdropFilter = '';
+            navBg.style.boxShadow = '';
+            if (logo) logo.style.filter = 'brightness(0) invert(1) drop-shadow(0 0 1px rgba(255,255,255,0.8))';
+            navTextColor = '#fff';
+        }
+        ['navLink1','navLink2','navLink3','navLink4','navLinkBlog','navLink5','phoneLink'].forEach(id=>{
+            const el=document.getElementById(id);
+            if(el) el.style.color=navTextColor;
+        });
+    });
+    function toggleMobileMenu(){
+        const menu=document.getElementById('mobileMenu');
+        const menuIcon=document.getElementById('menuIcon');
+        const closeIcon=document.getElementById('closeIcon');
+        const btn=document.getElementById('menuBtn');
+        if(menu.classList.contains('open')){
+            menu.classList.remove('open');
+            menuIcon.style.display='';
+            closeIcon.style.display='none';
+            btn.style.background='linear-gradient(to right,#ef4444,#dc2626)';
+            btn.classList.add('animate-subtle-pulse');
+        } else {
+            menu.classList.add('open');
+            menuIcon.style.display='none';
+            closeIcon.style.display='';
+            btn.style.background='#6b7280';
+            btn.classList.remove('animate-subtle-pulse');
+        }
+    }
+    function closeMobile(){
+        document.getElementById('mobileMenu').classList.remove('open');
+        document.getElementById('menuIcon').style.display='';
+        document.getElementById('closeIcon').style.display='none';
+    }
+    function toggleServicesSubmenu(){
+        const sub=document.getElementById('servicesSubmenu');
+        const arrow=document.getElementById('servicesArrow');
+        if(sub.classList.contains('open')){
+            sub.classList.remove('open');
+            arrow.style.transform='';
+        } else {
+            sub.classList.add('open');
+            arrow.style.transform='rotate(180deg)';
+        }
+    }
+  </script>
+<script>
+// GA4 tracking: phone_call & whatsapp_click
+document.addEventListener('DOMContentLoaded', function() {
+    document.querySelectorAll('a[href^="tel:"]').forEach(function(link) {
+        link.addEventListener('click', function() {
+            if (typeof gtag === 'function') {
+                gtag('event', 'phone_call', {event_category:'Contact', event_label:this.href.replace('tel:',''), value:100, currency:'RON'});
+            }
+        });
+    });
+    document.querySelectorAll('a[href*="wa.me"]').forEach(function(link) {
+        link.addEventListener('click', function() {
+            if (typeof gtag === 'function') {
+                gtag('event', 'whatsapp_click', {event_category:'Contact', event_label:'WhatsApp Direct', value:100, currency:'RON'});
+            }
+        });
+    });
+});
+</script>
+<a id="waFloat" href="https://wa.me/40752288400" target="_blank" rel="noopener noreferrer" aria-label="Scrie-ne pe WhatsApp"><svg width="28" height="28" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg></a><button id="toTop" aria-label="Înapoi sus" onclick="window.scrollTo({top:0,behavior:&#39;smooth&#39;})"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 15l-6-6-6 6"/></svg></button><script>(function(){var b=document.getElementById("toTop");window.addEventListener("scroll",function(){if(window.scrollY>400)b.classList.add("show");else b.classList.remove("show");});})();</script>
+</body>
+</html>
