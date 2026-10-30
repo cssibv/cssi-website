@@ -66,7 +66,8 @@ function ensureUsersTable($db) {
 function publicActions() {
     // getContractByToken + submitContractDate trebuie publice — clientul primeste
     // link-ul cu token pe WhatsApp, fara cont in platforma
-    return ['login', 'logout', 'me', 'ping', 'getContractByToken', 'submitContractDate'];
+    // siteLead = formularele de pe cssi.ro, trimise de vizitatori fara cont
+    return ['login', 'logout', 'me', 'ping', 'getContractByToken', 'submitContractDate', 'siteLead'];
 }
 
 // Returnează user-ul curent sau null
