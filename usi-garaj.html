@@ -25,7 +25,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
     <script src="/cookie-consent.js" defer></script>
     <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}</script>
-    <script src="/tracking.js" defer></script>
+    <script src="/tracking.js?v=20261030" defer></script>
+    <script src="/site-lead.js?v=2" defer></script>
     <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"LocalBusiness","@id":"https://cssi.ro/#localbusiness","name":"CSSI - Confort, Securitate, Siguranță, Imobil","alternateName":"CSSI","url":"https://cssi.ro","telephone":"+40752288400","email":"office@cssi.ro","logo":"https://cssi.ro/images/cssi-logo.png","image":"https://cssi.ro/images/og-cssi.png","priceRange":"$$","address":{"@type":"PostalAddress","streetAddress":"Strada Busuiocului 6","addressLocality":"Brașov","addressRegion":"Brașov","postalCode":"500376","addressCountry":"RO"},"geo":{"@type":"GeoCoordinates","latitude":45.65432,"longitude":25.630596},"hasMap":"https://www.google.com/maps?cid=8135867734886760142","openingHoursSpecification":{"@type":"OpeningHoursSpecification","dayOfWeek":["Monday","Tuesday","Wednesday","Thursday","Friday"],"opens":"08:00","closes":"16:30"},"sameAs":["https://www.facebook.com/profile.php?id=61582239908148","https://www.instagram.com/cssi.ro/","https://www.youtube.com/@CSSI_ro","https://www.tiktok.com/@cssi.ro","https://www.linkedin.com/company/cssi-romania"]},{"@type":"Service","name":"Uși Garaj Automate","description":"Uși de garaj automate: secționale, rulou, batante. Motoare și automatizări profesionale. Montaj Brașov.","provider":{"@id":"https://cssi.ro/#localbusiness"},"areaServed":{"@type":"City","name":"Brașov"},"url":"https://cssi.ro/usi-garaj","serviceType":["Uși garaj secționale","Uși garaj rulou","Uși garaj basculante","Automatizare uși garaj"]},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Acasă","item":"https://cssi.ro/"},{"@type":"ListItem","position":2,"name":"Servicii","item":"https://cssi.ro/servicii"},{"@type":"ListItem","position":3,"name":"Uși Garaj","item":"https://cssi.ro/usi-garaj"}]}]}</script>
     <style>
         *{margin:0;padding:0;box-sizing:border-box;}body{font-family:'Inter',sans-serif;color:#111827;background:#fff;overflow-x:hidden;}html{scroll-behavior:smooth;}a{text-decoration:none;color:inherit;}
@@ -109,7 +110,7 @@
             </nav>
             <div class="hidden lg:flex" style="align-items:center;gap:12px;">
                 <a href="tel:0752288400" style="display:flex;align-items:center;font-size:14px;font-weight:500;color:#334155;"><svg style="width:16px;height:16px;margin-right:6px;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/></svg>0752 288 400</a>
-                <a href="contact" style="background:linear-gradient(to right,#dc2626,#b91c1c);color:#fff;padding:8px 20px;border-radius:8px;font-size:14px;font-weight:600;box-shadow:0 4px 6px -1px rgba(0,0,0,0.1);">Cere Ofertă</a>
+                <a href="#oferta" style="background:linear-gradient(to right,#dc2626,#b91c1c);color:#fff;padding:8px 20px;border-radius:8px;font-size:14px;font-weight:600;box-shadow:0 4px 6px -1px rgba(0,0,0,0.1);">Cere Ofertă</a>
             </div>
             <div class="lg:hidden" style="display:flex;align-items:center;gap:8px;">
                 <button onclick="toggleMobileMenu()" id="menuBtn" aria-label="Deschide meniu" class="animate-subtle-pulse" style="padding:4px;border-radius:6px;border:none;cursor:pointer;background:linear-gradient(to right,#ef4444,#dc2626);color:#fff;">
@@ -142,7 +143,7 @@
                 <a href="portofoliu" style="padding:10px 16px;font-size:16px;font-weight:500;color:#334155;border-radius:8px;">📁 Portofoliu</a>
                 <a href="/blog/" style="padding:10px 16px;font-size:16px;font-weight:500;color:#334155;border-radius:8px;">📝 Blog</a>
                 <a href="contact" style="padding:10px 16px;font-size:16px;font-weight:500;color:#334155;border-radius:8px;">📍 Contact</a>
-                <div style="padding:12px 8px;"><a href="contact" style="display:block;text-align:center;background:linear-gradient(to right,#dc2626,#b91c1c);color:#fff;padding:10px 16px;border-radius:12px;font-weight:600;">Cere Ofertă</a></div>
+                <div style="padding:12px 8px;"><a href="#oferta" style="display:block;text-align:center;background:linear-gradient(to right,#dc2626,#b91c1c);color:#fff;padding:10px 16px;border-radius:12px;font-weight:600;">Cere Ofertă</a></div>
             </nav>
         </div>
     </div>
@@ -151,7 +152,7 @@
 <!-- ========== HERO ========== -->
 <section style="position:relative;padding-top:112px;background:linear-gradient(180deg,#f8fafc 0%,#fff 100%);">
     <div style="max-width:1280px;margin:0 auto;padding:56px 20px;">
-        <div class="hero-grid" style="display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:center;">
+        <div class="hero-grid hero-has-form" style="display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:center;">
             <!-- LEFT: Content on white -->
             <div class="hero-content">
                 <div style="display:flex;align-items:center;gap:14px;margin-bottom:20px;">
@@ -177,15 +178,12 @@
                         </div>
                 </div>
                 <div class="hero-ctas" style="display:flex;align-items:center;gap:24px;flex-wrap:wrap;">
-                    <a href="contact" style="display:inline-flex;align-items:center;gap:10px;padding:14px 26px;background:#1e40af;color:#fff;font-weight:700;border-radius:6px;font-size:12px;letter-spacing:1.5px;text-transform:uppercase;transition:all 0.3s ease;box-shadow:0 8px 24px rgba(30,64,175,0.25);" onmouseover="this.style.background='#1e3a8a';this.style.transform='translateY(-2px)';this.style.boxShadow='0 12px 32px rgba(30,64,175,0.35)'" onmouseout="this.style.background='#1e40af';this.style.transform='';this.style.boxShadow='0 8px 24px rgba(30,64,175,0.25)'">Cere Ofertă <span style="font-size:16px;font-weight:300;">→</span></a>
+                    <a href="#oferta" style="display:inline-flex;align-items:center;gap:10px;padding:14px 26px;background:#1e40af;color:#fff;font-weight:700;border-radius:6px;font-size:12px;letter-spacing:1.5px;text-transform:uppercase;transition:all 0.3s ease;box-shadow:0 8px 24px rgba(30,64,175,0.25);" onmouseover="this.style.background='#1e3a8a';this.style.transform='translateY(-2px)';this.style.boxShadow='0 12px 32px rgba(30,64,175,0.35)'" onmouseout="this.style.background='#1e40af';this.style.transform='';this.style.boxShadow='0 8px 24px rgba(30,64,175,0.25)'">Cere Ofertă <span style="font-size:16px;font-weight:300;">→</span></a>
                     <a href="tel:0752288400" style="display:inline-flex;align-items:center;gap:8px;color:#0f172a;font-weight:600;font-size:13px;letter-spacing:0.5px;border-bottom:1px solid #cbd5e1;padding:0 0 5px;transition:all 0.3s;" onmouseover="this.style.borderColor='#1e40af';this.style.color='#1e40af'" onmouseout="this.style.borderColor='#cbd5e1';this.style.color='#0f172a'"><span style="font-size:14px;">📞</span> 0752 288 400</a>
                 </div>
             </div>
-            <!-- RIGHT: Image (visible on all screens) -->
-            <div class="hero-image" style="position:relative;">
-                <img src="/images/hero/hero-usi-garaj.jpg" alt="Uși Garaj Sectionale Brașov" style="width:100%;height:auto;max-height:480px;object-fit:cover;border-radius:18px;box-shadow:0 20px 50px rgba(15,23,42,0.18),0 6px 18px rgba(15,23,42,0.08);display:block;" loading="eager">
-                <div class="hero-badge-circle" style="position:absolute;top:-12px;right:-12px;width:72px;height:72px;background:#1e40af;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;font-size:10px;font-weight:700;text-align:center;line-height:1.2;letter-spacing:0.3px;box-shadow:0 8px 20px rgba(30,64,175,0.35);">20+ ANI<br>EXPERIENȚĂ</div>
-            </div>
+            <!-- RIGHT: cardul Ofertă Gratuită în 24h (comun, din /oferta-card.js) -->
+            <div class="hero-form"><div id="oferta" data-serviciu="usi-garaj"></div><script src="/oferta-card.js?v=1"></script></div>
         </div>
     </div>
     <style>
@@ -541,7 +539,7 @@
         <h2 style="font-size:24px;font-weight:700;color:#fff;margin-bottom:8px;">Vrei ușă de garaj nouă sau service?</h2>
         <p style="color:rgba(209,250,229,0.8);margin-bottom:24px;">Măsurare gratuită + ofertă cu preț fix. Montaj în 1-2 zile.</p>
         <div style="display:flex;flex-wrap:wrap;justify-content:center;gap:12px;">
-            <a href="contact" style="display:inline-block;padding:16px 32px;background:#fff;color:#047857;font-weight:600;border-radius:12px;font-size:16px;transition:all 0.2s;box-shadow:0 4px 6px -1px rgba(0,0,0,0.1);" onmouseover="this.style.background='#f1f5f9'" onmouseout="this.style.background='#fff'">Cere Ofertă Gratuită</a>
+            <a href="#oferta" style="display:inline-block;padding:16px 32px;background:#fff;color:#047857;font-weight:600;border-radius:12px;font-size:16px;transition:all 0.2s;box-shadow:0 4px 6px -1px rgba(0,0,0,0.1);" onmouseover="this.style.background='#f1f5f9'" onmouseout="this.style.background='#fff'">Cere Ofertă Gratuită</a>
             <a href="tel:0752288400" style="display:inline-block;padding:16px 32px;background:transparent;color:#fff;font-weight:600;border-radius:12px;font-size:16px;border:2px solid rgba(255,255,255,0.3);transition:all 0.2s;" onmouseover="this.style.borderColor='#fff'" onmouseout="this.style.borderColor='rgba(255,255,255,0.3)'">📞 0752 288 400</a>
         </div>
     </div>
@@ -572,7 +570,7 @@
     </div>
 </footer>
 
-<a href="https://wa.me/40752288400" target="_blank" rel="noopener noreferrer" class="animate-subtle-pulse" style="position:fixed;bottom:12px;right:24px;z-index:50;width:56px;height:56px;background:#22c55e;border-radius:50%;box-shadow:0 10px 15px -3px rgba(0,0,0,0.1);display:flex;align-items:center;justify-content:center;" aria-label="WhatsApp"><svg style="width:28px;height:28px;color:#fff;" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg></a>
+<a href="https://wa.me/40752288400" id="waFloat" target="_blank" rel="noopener noreferrer" class="animate-subtle-pulse" style="position:fixed;bottom:12px;right:24px;z-index:50;width:56px;height:56px;background:#22c55e;border-radius:50%;box-shadow:0 10px 15px -3px rgba(0,0,0,0.1);display:flex;align-items:center;justify-content:center;" aria-label="WhatsApp"><svg style="width:28px;height:28px;color:#fff;" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg></a>
 
 
 

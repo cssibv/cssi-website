@@ -54,7 +54,7 @@
         {
           name: 'evaluare_gratuita',
           apply: function() {
-            var cta = document.querySelector('.hero-ctas a[href="contact"]');
+            var cta = document.querySelector('.hero-ctas a[href="#oferta"]');
             if (cta) {
               cta.innerHTML = 'Evaluare Gratuită <span style="font-size:16px;font-weight:300;">→</span>';
               cta.style.background = '#16a34a';
@@ -67,7 +67,7 @@
         {
           name: 'obtine_pret',
           apply: function() {
-            var cta = document.querySelector('.hero-ctas a[href="contact"]');
+            var cta = document.querySelector('.hero-ctas a[href="#oferta"]');
             if (cta) {
               cta.innerHTML = 'Obține Preț Instant <span style="font-size:16px;font-weight:300;">→</span>';
               cta.href = '/calculator-pret';
@@ -123,7 +123,7 @@
         {
           name: 'configurare',
           apply: function() {
-            var cta = document.querySelector('.hero-ctas a[href="contact"]');
+            var cta = document.querySelector('.hero-ctas a[href="#oferta"]');
             if (cta) {
               cta.innerHTML = 'Configurează Sistem <span style="font-size:16px;font-weight:300;">→</span>';
               cta.href = '/calculator-pret';
@@ -137,7 +137,7 @@
         {
           name: 'consultanta',
           apply: function() {
-            var cta = document.querySelector('.hero-ctas a[href="contact"]');
+            var cta = document.querySelector('.hero-ctas a[href="#oferta"]');
             if (cta) {
               cta.innerHTML = 'Consultanță Gratuită <span style="font-size:16px;font-weight:300;">→</span>';
               cta.style.background = '#16a34a';
@@ -192,7 +192,7 @@
         {
           name: 'protejeaza',
           apply: function() {
-            var cta = document.querySelector('.hero-ctas a[href="contact"]');
+            var cta = document.querySelector('.hero-ctas a[href="#oferta"]');
             if (cta) {
               cta.innerHTML = 'Protejează-ți Firma <span style="font-size:16px;font-weight:300;">→</span>';
               cta.style.background = '#dc2626';
@@ -205,7 +205,7 @@
         {
           name: 'evaluare',
           apply: function() {
-            var cta = document.querySelector('.hero-ctas a[href="contact"]');
+            var cta = document.querySelector('.hero-ctas a[href="#oferta"]');
             if (cta) {
               cta.innerHTML = 'Evaluare Risc Gratuită <span style="font-size:16px;font-weight:300;">→</span>';
               cta.style.background = '#16a34a';
