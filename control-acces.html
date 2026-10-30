@@ -63,6 +63,7 @@
         .faq-item.open .faq-toggle{background:linear-gradient(135deg,#dc2626,#f97316);color:#fff;transform:rotate(45deg);}
         .faq-a{max-height:0;overflow:hidden;transition:max-height 0.4s ease;}
         .faq-a-inner{padding:0 0 16px;color:#4b5563;font-size:14px;line-height:1.7;}
+        @media(max-width:768px){.brand-grid-resp{grid-template-columns:1fr !important;}}
     </style>
 </head>
 <body>
@@ -327,7 +328,7 @@
     <div style="max-width:896px;margin:0 auto;">
         <h2 style="font-size:24px;font-weight:700;color:#111827;margin-bottom:8px;">🏷️ Branduri și Tehnologii de Control Acces</h2>
         <p style="color:#6b7280;margin-bottom:24px;">CSSI utilizează echipamente de la cei mai mari producători mondiali, selectate pentru fiabilitate, funcționalitate și raport calitate-preț.</p>
-        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px;">
+        <div class="brand-grid-resp" style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px;">
             <div style="border:2px solid #1e40af;border-radius:12px;padding:20px;background:#f8fafc;text-align:center;">
                 <div style="font-size:28px;margin-bottom:8px;">🔵</div>
                 <h3 style="font-size:16px;font-weight:700;color:#1e40af;margin-bottom:8px;">Hikvision</h3>
