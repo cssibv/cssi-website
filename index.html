@@ -29,7 +29,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
     <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}</script>
     <script src="/tracking.js" defer></script>
-    <script src="/site-lead.js" defer></script>
+    <script src="/site-lead.js?v=2" defer></script>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { font-family: 'Inter', sans-serif; color: #111827; background: #fff; overflow-x: hidden; }
@@ -836,6 +836,7 @@
     // ===== HERO FORM =====
     function handleHeroSubmit(e) {
         e.preventDefault();
+        if (window.cssiCheckPhone && !window.cssiCheckPhone(document.getElementById('heroPhone'))) return false;
         showHeroSuccess();
         return false;
     }
@@ -877,6 +878,7 @@
     // ===== CONTACT FORM =====
     function handleContactSubmit(e) {
         e.preventDefault();
+        if (window.cssiCheckPhone && !window.cssiCheckPhone(document.getElementById('cPhone'))) return false;
         var name = document.getElementById('cName').value;
         var phone = document.getElementById('cPhone').value;
         var email = document.getElementById('cEmail').value;
