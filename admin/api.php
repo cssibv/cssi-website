@@ -135,6 +135,16 @@ function ensureCereriRapide($db) {
         if (!in_array('original_name', $cols)) $db->exec("ALTER TABLE cereri_rapide_fisiere ADD COLUMN original_name VARCHAR(255) NULL DEFAULT NULL");
         if (!in_array('tip', $cols)) $db->exec("ALTER TABLE cereri_rapide_fisiere ADD COLUMN tip VARCHAR(20) NOT NULL DEFAULT 'atasament'");
     } catch (Exception $e) {}
+    // Clopoțelul: tabela notificari era latin1 (diacriticele și emoji ieșeau „?”) și tip era ENUM
+    // fără 'cerere_rapida' / 'finalizare' (se salvau goale, deci filtrul pe cereri rapide nu mergea).
+    try {
+        $col = $db->query("SHOW FULL COLUMNS FROM notificari LIKE 'tip'")->fetch();
+        if ($col && stripos($col['Type'], 'enum') === 0) {
+            $db->exec("ALTER TABLE notificari CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci");
+            $db->exec("ALTER TABLE notificari MODIFY tip VARCHAR(30) NULL DEFAULT 'status_change'");
+            $db->exec("UPDATE notificari SET tip = 'cerere_rapida' WHERE tip = '' AND mesaj LIKE '? Cerere rapid%'");
+        }
+    } catch (Exception $e) { error_log('notificari migration FAILED: ' . $e->getMessage()); }
 }
 
 // Tipul real al unui fișier urcat, stabilit din conținut (extensia contează doar la
