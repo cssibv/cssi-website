@@ -276,7 +276,6 @@
                     <form id="heroForm" onsubmit="return handleHeroSubmit(event)">
                         <!-- Step 1 -->
                         <div id="heroStep1" style="display:flex;flex-direction:column;gap:16px;">
-                            <input type="text" id="heroHp" name="hp_web" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px;width:1px;height:1px;opacity:0;">
                             <input type="text" id="heroName" name="name" required placeholder="Nume complet *" style="width:100%;padding:16px 20px;border:1px solid #e2e8f0;border-radius:12px;font-size:16px;font-family:inherit;outline:none;" onfocus="this.style.borderColor='#dc2626';this.style.boxShadow='0 0 0 2px rgba(220,38,38,0.2)'" onblur="this.style.borderColor='#e2e8f0';this.style.boxShadow=''">
                             <input type="tel" id="heroPhone" name="phone" required placeholder="Telefon *" style="width:100%;padding:16px 20px;border:1px solid #e2e8f0;border-radius:12px;font-size:16px;font-family:inherit;outline:none;" onfocus="this.style.borderColor='#dc2626';this.style.boxShadow='0 0 0 2px rgba(220,38,38,0.2)'" onblur="this.style.borderColor='#e2e8f0';this.style.boxShadow=''">
                             <select id="heroService" required style="width:100%;padding:16px 20px;border:1px solid #e2e8f0;border-radius:12px;font-size:16px;font-family:inherit;outline:none;background:#fff;color:#475569;" onfocus="this.style.borderColor='#dc2626'" onblur="this.style.borderColor='#e2e8f0'">
@@ -592,7 +591,6 @@
                     <p style="color:#475569;font-size:18px;">Cererea a fost trimisă. Vă vom contacta în curând.</p>
                 </div>
                 <form id="contactForm" onsubmit="return handleContactSubmit(event)" style="display:flex;flex-direction:column;gap:20px;">
-                    <input type="text" id="cHp" name="hp_web" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px;width:1px;height:1px;opacity:0;">
                     <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;">
                         <input type="text" id="cName" name="name" required placeholder="Nume *" style="width:100%;padding:16px 20px;border:1px solid #e2e8f0;border-radius:12px;font-size:16px;font-family:inherit;outline:none;" onfocus="this.style.borderColor='#dc2626';this.style.boxShadow='0 0 0 2px rgba(220,38,38,0.2)'" onblur="this.style.borderColor='#e2e8f0';this.style.boxShadow=''">
                         <input type="tel" id="cPhone" name="phone" required placeholder="Telefon *" style="width:100%;padding:16px 20px;border:1px solid #e2e8f0;border-radius:12px;font-size:16px;font-family:inherit;outline:none;" onfocus="this.style.borderColor='#dc2626';this.style.boxShadow='0 0 0 2px rgba(220,38,38,0.2)'" onblur="this.style.borderColor='#e2e8f0';this.style.boxShadow=''">
@@ -867,7 +865,7 @@
         if (typeof window.cssiSaveLead === 'function') {
             window.cssiSaveLead({ formular: 'Pagina principală, Ofertă în 24h', nume: name, telefon: phone,
                 serviciu: serviceEl.value ? service : '', tipLucrare: tip && tip.value ? tipText : '',
-                detalii: detalii, website: document.getElementById('heroHp').value });
+                detalii: detalii });
         }
 
         window.open('https://wa.me/40752288400?text=' + encodeURIComponent(msg), '_blank');
@@ -901,8 +899,7 @@
         }
         if (typeof window.cssiSaveLead === 'function') {
             window.cssiSaveLead({ formular: 'Pagina principală, formularul de jos', nume: name, telefon: phone, email: email,
-                serviciu: serviceEl && serviceEl.value ? service : '', detalii: message,
-                website: document.getElementById('cHp').value });
+                serviciu: serviceEl && serviceEl.value ? service : '', detalii: message });
         }
 
         window.open('https://wa.me/40752288400?text=' + encodeURIComponent(msg), '_blank');

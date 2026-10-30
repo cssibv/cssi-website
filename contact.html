@@ -160,7 +160,6 @@
                 <p style="color:#475569;">Te vom contacta în curând.</p>
             </div>
             <form id="contactForm" onsubmit="submitForm(event)" style="display:flex;flex-direction:column;gap:16px;">
-                <input type="text" id="cHp" name="hp_web" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px;width:1px;height:1px;opacity:0;">
                 <div style="display:grid;gap:16px;" class="sm:grid-cols-2">
                     <input type="text" name="name" required placeholder="Nume *" class="form-input">
                     <input type="tel" name="phone" required placeholder="Telefon *" class="form-input">
@@ -387,8 +386,7 @@ async function submitForm(e) {
     }
     if (typeof window.cssiSaveLead === 'function') {
         window.cssiSaveLead({ formular: 'Pagina Contact', nume: name, telefon: phone, email: email,
-            serviciu: serviceEl.value ? service.replace(/^[^A-Za-zĂÂÎȘȚăâîșț]+/, '') : '', detalii: message,
-            website: f.hp_web.value });
+            serviciu: serviceEl.value ? service.replace(/^[^A-Za-zĂÂÎȘȚăâîșț]+/, '') : '', detalii: message });
     }
 
     window.open('https://wa.me/40752288400?text=' + encodeURIComponent(msg), '_blank');

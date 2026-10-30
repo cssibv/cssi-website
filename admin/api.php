@@ -7336,12 +7336,10 @@ p { margin: 0; }
             break;
 
         // Formularele de pe cssi.ro (pagina principală + Contact): cererea intră la Cereri rapide,
-        // pe lângă mesajul de WhatsApp deschis de pagină. Endpoint public, deci: câmpul capcană
-        // „website” trebuie să rămână gol, maxim 3 trimiteri pe minut de pe un IP, iar același
-        // telefon trimis din nou în 10 minute nu mai creează a doua cerere.
+        // pe lângă mesajul de WhatsApp deschis de pagină. Endpoint public, deci: maxim 3 trimiteri
+        // pe minut de pe un IP, iar același telefon trimis din nou în 10 minute nu mai creează a doua cerere.
         case 'siteLead':
             if (($_SERVER['REQUEST_METHOD'] ?? 'GET') !== 'POST') { jsonResponse(['success' => false, 'error' => 'Doar POST'], 405); break; }
-            if (!empty($data['website'])) { jsonResponse(['success' => true]); break; }
             checkContractRateLimit($db, 'siteLead', 3);
             ensureCereriRapide($db);
             $camp = function ($k, $max) use ($data) {
