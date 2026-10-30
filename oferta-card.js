@@ -64,7 +64,16 @@
     var css = document.createElement('style');
     css.textContent = '@media (max-width:768px){.hero-grid.hero-has-form{grid-template-columns:1fr !important;gap:20px !important;}' +
         '.hero-has-form .hero-ctas{display:none !important;}.hero-has-form .hero-desc{margin-bottom:0 !important;font-size:15px !important;}' +
-        '.hero-has-form .hero-h1{font-size:26px !important;line-height:1.15 !important;}}';
+        '.hero-has-form .hero-h1{font-size:26px !important;line-height:1.15 !important;}}' +
+        // Paginile cu hero centrat (despre-noi, portofoliu, servicii): .oferta-split pune titlul (.os-intro) în stânga
+        // și cardul (.os-card) în dreapta; .os-rest (opțional) continuă sub titlu. Sub 1024px: titlu, card, restul.
+        '.oferta-split{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,460px);grid-template-areas:"intro card" "rest card";column-gap:48px;row-gap:32px;align-items:start;}' +
+        '.oferta-split.os-simple{grid-template-areas:"intro card";align-items:center;}' +
+        '.oferta-split>.os-intro{grid-area:intro;text-align:left !important;}.oferta-split>.os-card{grid-area:card;}.oferta-split>.os-rest{grid-area:rest;}' +
+        '.oferta-split>.os-intro p{margin-left:0 !important;margin-right:0 !important;}' +
+        '.oferta-split>.os-intro .breadcrumb,.oferta-split>.os-intro .btn-row{justify-content:flex-start !important;}' +
+        '@media (max-width:1023px){.oferta-split,.oferta-split.os-simple{grid-template-columns:minmax(0,1fr);grid-template-areas:"intro" "card" "rest";row-gap:24px;}' +
+        '.oferta-split>.os-card{width:100%;max-width:560px;justify-self:center;}.oferta-split .os-hide-mobile{display:none !important;}}';
     document.head.appendChild(css);
 
     var paginaPrincipala = /^\/(index\.html)?$/.test(location.pathname);
@@ -93,7 +102,7 @@
         }
         // Cereri rapide; cssiSaveLead adaugă singur pagina (location.pathname), care apare în notă.
         if (typeof window.cssiSaveLead === 'function') {
-            window.cssiSaveLead({ formular: (paginaPrincipala ? 'Pagina principală' : 'Pagina de serviciu') + ', Ofertă în 24h',
+            window.cssiSaveLead({ formular: (paginaPrincipala ? 'Pagina principală, ' : ales ? 'Pagina de serviciu, ' : '') + 'Ofertă în 24h',
                 nume: name, telefon: phone, serviciu: serviceEl.value ? service : '', tipLucrare: '', detalii: '' });
         }
 
@@ -123,8 +132,10 @@
         // Butoanele „Cere Ofertă” din meniul de mobil duc la #oferta: închid meniul, altfel ar acoperi cardul.
         document.addEventListener('click', function (e) {
             var a = e.target.closest ? e.target.closest('a[href="#oferta"]') : null;
-            var meniu = document.getElementById('mobileMenu');
-            if (a && meniu && meniu.classList.contains('open') && typeof window.toggleMobileMenu === 'function') window.toggleMobileMenu();
+            if (!a) return;
+            var meniu = document.getElementById('mobileMenu'), nm = document.getElementById('nm');
+            if (meniu && meniu.classList.contains('open') && typeof window.toggleMobileMenu === 'function') window.toggleMobileMenu();
+            if (nm) nm.classList.remove('open');   // meniul de mobil de pe /portofoliu
         });
     });
 })();
