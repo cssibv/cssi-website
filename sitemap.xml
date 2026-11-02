@@ -1211,4 +1211,11 @@
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
+  <!-- adaugat automat de agent 2026-11-03 -->
+  <url>
+    <loc>https://cssi.ro/blog/camere-4k-vs-full-hd-cand-merita-rezolutia-brasov</loc>
+    <lastmod>2026-11-03</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
 </urlset>
