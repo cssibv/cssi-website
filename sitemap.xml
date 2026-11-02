@@ -1204,4 +1204,11 @@
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
+  <!-- adaugat automat de agent 2026-11-02 -->
+  <url>
+    <loc>https://cssi.ro/blog/protectie-supratensiuni-paratrasnet-spd-firma-brasov</loc>
+    <lastmod>2026-11-02</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
 </urlset>
