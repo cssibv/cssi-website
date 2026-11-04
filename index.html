@@ -92,6 +92,44 @@
         }
     </style>
     <script src="cookie-consent.js" defer></script>
+<!-- ========== RESPONSIVE CSS ========== -->
+<style>
+    @keyframes pulse-green {
+        0%, 100% { opacity: 1; box-shadow: 0 0 0 0 rgba(34,197,94,0.6); }
+        50% { opacity: 0.8; box-shadow: 0 0 0 6px rgba(34,197,94,0); }
+    }
+    @media (min-width: 1024px) {
+        .lg-grid-2 { grid-template-columns: 1fr 1fr !important; }
+        .lg-grid-3 { grid-template-columns: repeat(3, 1fr) !important; }
+        .lg-grid-4 { grid-template-columns: repeat(4, 1fr) !important; }
+        .lg\:block { display: block !important; }
+        .lg\:flex { display: flex !important; }
+        .lg\:hidden { display: none !important; }
+    }
+    @media (max-width: 1023px) {
+        .hidden { display: none !important; }
+        .lg\:block { display: none !important; }
+        .lg\:flex { display: none !important; }
+        .lg\:hidden { display: block !important; }
+    }
+    @media (min-width: 768px) {
+        .md-grid-3 { grid-template-columns: repeat(3, 1fr) !important; }
+    }
+    @media (min-width: 640px) {
+        .sm\:block { display: block !important; }
+        .sm\:hidden { display: none !important; }
+        .sm\:pt-32 { padding-top: 128px !important; }
+        .sm\:px-6 { padding-left: 24px !important; padding-right: 24px !important; }
+    }
+    @media (max-width: 639px) {
+        .hidden.sm\:block { display: none !important; }
+        .sm\:hidden { display: block !important; }
+        .hero-content { padding-top: 110px !important; }
+        .hero-title { font-size: 1.75rem !important; margin-bottom: 8px !important; }
+        .hero-subtitle { font-size: 1.25rem !important; margin-bottom: 16px !important; }
+        .hero-stats { gap: 8px !important; margin-bottom: 24px !important; }
+    }
+</style>
 </head>
 <body>
 
@@ -656,44 +694,6 @@
     </div>
 </div>
 
-<!-- ========== RESPONSIVE CSS ========== -->
-<style>
-    @keyframes pulse-green {
-        0%, 100% { opacity: 1; box-shadow: 0 0 0 0 rgba(34,197,94,0.6); }
-        50% { opacity: 0.8; box-shadow: 0 0 0 6px rgba(34,197,94,0); }
-    }
-    @media (min-width: 1024px) {
-        .lg-grid-2 { grid-template-columns: 1fr 1fr !important; }
-        .lg-grid-3 { grid-template-columns: repeat(3, 1fr) !important; }
-        .lg-grid-4 { grid-template-columns: repeat(4, 1fr) !important; }
-        .lg\:block { display: block !important; }
-        .lg\:flex { display: flex !important; }
-        .lg\:hidden { display: none !important; }
-    }
-    @media (max-width: 1023px) {
-        .hidden { display: none !important; }
-        .lg\:block { display: none !important; }
-        .lg\:flex { display: none !important; }
-        .lg\:hidden { display: block !important; }
-    }
-    @media (min-width: 768px) {
-        .md-grid-3 { grid-template-columns: repeat(3, 1fr) !important; }
-    }
-    @media (min-width: 640px) {
-        .sm\:block { display: block !important; }
-        .sm\:hidden { display: none !important; }
-        .sm\:pt-32 { padding-top: 128px !important; }
-        .sm\:px-6 { padding-left: 24px !important; padding-right: 24px !important; }
-    }
-    @media (max-width: 639px) {
-        .hidden.sm\:block { display: none !important; }
-        .sm\:hidden { display: block !important; }
-        .hero-content { padding-top: 110px !important; }
-        .hero-title { font-size: 1.75rem !important; margin-bottom: 8px !important; }
-        .hero-subtitle { font-size: 1.25rem !important; margin-bottom: 16px !important; }
-        .hero-stats { gap: 8px !important; margin-bottom: 24px !important; }
-    }
-</style>
 
 <!-- ========== JAVASCRIPT ========== -->
 <script>
