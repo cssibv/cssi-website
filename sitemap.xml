@@ -1218,4 +1218,11 @@
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
+  <!-- adaugat automat de agent 2026-11-04 -->
+  <url>
+    <loc>https://cssi.ro/blog/verifica-instalatia-electrica-inainte-cumperi-inchiriezi-spatiu-brasov</loc>
+    <lastmod>2026-11-04</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
 </urlset>
