@@ -1239,4 +1239,11 @@
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
+  <!-- adaugat automat de agent 2026-11-07 -->
+  <url>
+    <loc>https://cssi.ro/blog/tablouri-electrice-secundare-distributie-zone-firma-brasov</loc>
+    <lastmod>2026-11-07</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
 </urlset>
