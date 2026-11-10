@@ -46,7 +46,7 @@
         }
       },
       "datePublished": "2026-11-02",
-      "dateModified": "2026-11-02",
+      "dateModified": "2026-11-10",
       "mainEntityOfPage": "https://cssi.ro/blog/protectie-supratensiuni-paratrasnet-spd-firma-brasov",
       "inLanguage": "ro"
     },
@@ -129,6 +129,38 @@
           "acceptedAnswer": {
             "@type": "Answer",
             "text": "Pentru că protecția la supratensiuni atinge partea electrică, echipamentele de securitate și IT-ul. O singură echipă gândește protecția coerent: și alimentarea, și traseele de semnal, și echipamentele finale, și răspunde pentru tot sistemul. Eviți situația în care electricianul a pus SPD pe priză, dar camera a ars pentru că nimeni nu a protejat cablul de date."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Cât durează un SPD și când trebuie înlocuit?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Nu există o durată fixă, pentru că descărcătorul se consumă la fiecare supratensiune preluată. Într-o zonă cu furtuni dese poate ajunge la înlocuire mai repede decât într-o zonă liniștită. Regula practică: verifici indicatorul după fiecare furtună puternică, iar electricianul controlează aparatele o dată pe an. Când indicatorul arată că aparatul a lucrat, cartușul se schimbă."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Un UPS mă protejează de supratensiuni?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Doar parțial. UPS-ul menține alimentarea la pană și, la modelele online, stabilizează tensiunea, dar nu înlocuiește un SPD dimensionat corect în tablou. Pentru echipamentele critice se folosesc împreună: SPD în amonte, UPS în aval."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Cât costă protecția la supratensiuni pentru o firmă mică?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Orientativ, SPD-ul adăugat într-un tablou existent costă 350–800 RON, iar măsurătorile de împământare 300–800 RON. Pentru mai multe tablouri, linii de date exterioare sau paratrăsnet, costul se stabilește după evaluare la fața locului. Oferta fermă o primești defalcată, după ce vedem instalația."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Pot monta singur un SPD în tablou?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Nu e recomandat și, pentru o firmă, nici permis fără autorizare: lucrările la instalația electrică se execută de electrician autorizat ANRE. Dimensionarea, siguranța din amonte, conexiunile scurte și legătura la împământare decid dacă protecția funcționează, iar o montare greșită îți dă doar o falsă siguranță."
           }
         }
       ]
@@ -395,7 +427,7 @@
       <div class="hero-meta">
         <span>✍ CSSI Brașov</span><span class="dot">·</span>
         <span>📅 2 Nov 2026</span><span class="dot">·</span>
-        <span>⏱ 11 min lectură</span>
+        <span>⏱ 21 min lectură</span>
       </div>
       <div class="topic-pills">
         <span class="pill pill-blue">🛡 Securitate firme</span>
@@ -409,15 +441,12 @@
 
   <div class="article-wrap">
     <main class="article-body" id="articol">
+<h2 id="raspunsul-scurt">Răspunsul scurt</h2>
+<p>Protecția completă la supratensiuni a unei firme are <strong>patru straturi</strong>: o <strong>împământare verificată</strong> (fără ea nimic nu funcționează), <strong>paratrăsnetul</strong> acolo unde evaluarea de risc îl cere (protejează clădirea de lovitura directă), <strong>SPD-uri în cascadă pe trei niveluri</strong> (tip 1 în tabloul general, tip 2 în tablourile secundare, tip 3 lângă echipamentele sensibile) și <strong>protecție pe liniile de semnal</strong> (rețea, CCTV, alarmă, antene). Pentru o firmă mică, SPD-ul adăugat într-un tablou existent costă orientativ <strong>350–800 RON</strong>, iar măsurătorile de împământare <strong>300–800 RON</strong>; un sistem complet cu paratrăsnet se stabilește după evaluare, în funcție de clădire. O electronică arsă costă de regulă mai mult decât toată protecția. Lucrarea se face doar de <strong>electrician autorizat ANRE</strong>, iar descărcătoarele se verifică periodic, fiindcă se consumă.</p>
+
 <h2 id="de-ce-o-supratensiune-e-un-risc-real-si-">De ce o supratensiune e un risc real — și ce poate distruge într-o secundă</h2>
 <p>Să fim concreți despre ce înseamnă o supratensiune. Este un <strong>vârf brusc de tensiune</strong> pe instalația electrică, mult peste valoarea normală, care durează o fracțiune de secundă — dar e suficient cât să ardă electronica sensibilă. Sursele sunt trei: <strong>fulgerul</strong> (lovitură directă sau, mai des, descărcare în apropiere care induce un vârf pe rețea), <strong>comutațiile în rețeaua electrică</strong> (porniri/opriri de consumatori mari) și <strong>defectele</strong> din instalație.</p>
-<p>Ce poate distruge? Practic, tot ce e scump și are electronică: <strong>servere și calculatoare</strong>, <strong>camere și centrale de alarmă</strong>, <strong>automatizări</strong> de porți și bariere, <strong>utilaje</strong> cu comandă electronică. Și aici e capcana: oamenii cred că o pană de curent e mai gravă, dar de o pană îți revii apăsând un buton. De o supratensiune nu — echipamentul e mort. Iar dacă acel echipament era un server cu datele firmei, paguba reală depășește cu mult prețul plăcii arse. Despre cum menții activitatea la întreruperile de curent am scris separat, în articolul despre <span data-link-later="sistem-securitate-pana-curent-backup-ups-baterii-brasov" data-a="&lt;a href=&quot;https://cssi.ro/blog/sistem-securitate-pana-curent-backup-ups-baterii-brasov&quot;&gt;">menținerea sistemului la pene de curent, cu backup și UPS</span> — dar atenție: un UPS te apără de pană, nu neapărat de o supratensiune mare. Sunt două protecții diferite.</p>
-
-<h2 id="paratrasnet-vs-spd-de-ce-ai-nevoie-de-am">Paratrăsnet vs. SPD: de ce ai nevoie de ambele</h2>
-<p>Aici e confuzia cea mai frecventă. Mulți cred că „dacă am paratrăsnet, sunt protejat”. Nu e așa. Paratrăsnetul și SPD-urile sunt <strong>două protecții diferite și complementare</strong>.</p>
-<p><strong>Paratrăsnetul e protecția exterioară.</strong> Captează descărcarea unui fulger care lovește direct clădirea și o conduce în siguranță în pământ, protejând <strong>structura</strong> — pereții, acoperișul, oamenii din interior. Dar paratrăsnetul <strong>nu protejează priza</strong>: el se ocupă de lovitura directă în clădire.</p>
-<p><strong>SPD-urile (descărcătoarele de supratensiune) sunt protecția interioară.</strong> Ele limitează vârfurile de tensiune care pătrund pe cabluri — fie de la un fulger din apropiere, fie din rețea — și protejează <strong>echipamentele electrice și electronice</strong>. Cu alte cuvinte: paratrăsnetul protejează clădirea de lovitura directă; SPD-ul protejează ce e în priză. De aceea, pentru o protecție completă, de cele mai multe ori <strong>ai nevoie de ambele</strong> — fiecare acoperă ce celălalt nu poate.</p>
-
+<p>Ce poate distruge? Practic, tot ce e scump și are electronică: <strong>servere și calculatoare</strong>, <strong>camere și centrale de alarmă</strong>, <strong>automatizări</strong> de porți și bariere, <strong>utilaje</strong> cu comandă electronică. Și aici e capcana: oamenii cred că o pană de curent e mai gravă, dar de o pană îți revii apăsând un buton. De o supratensiune nu — echipamentul e mort. Iar dacă acel echipament era un server cu datele firmei, paguba reală depășește cu mult prețul plăcii arse. Despre cum menții activitatea la întreruperile de curent am scris separat, în articolul despre <a href="https://cssi.ro/blog/alimentare-poe-camere-ip-switch-ups-distante-brasov">alimentarea camerelor IP cu PoE, switch și UPS</a> — dar atenție: un UPS te apără de pană, nu neapărat de o supratensiune mare. Sunt două protecții diferite.</p>
 
       <div class="cta-banner" style="margin:32px 0">
         <div>
@@ -430,6 +459,31 @@
           <a target="_blank" rel="noopener" href="https://wa.me/40752288400" class="btn btn-secondary">💬 WhatsApp</a>
         </div>
       </div>
+<h2 id="paratrasnet-vs-spd-de-ce-ai-nevoie-de-am">Paratrăsnet vs. SPD: de ce ai nevoie de ambele</h2>
+<p>Aici e confuzia cea mai frecventă. Mulți cred că „dacă am paratrăsnet, sunt protejat”. Nu e așa. Paratrăsnetul și SPD-urile sunt <strong>două protecții diferite și complementare</strong>.</p>
+<p><strong>Paratrăsnetul e protecția exterioară.</strong> Captează descărcarea unui fulger care lovește direct clădirea și o conduce în siguranță în pământ, protejând <strong>structura</strong> — pereții, acoperișul, oamenii din interior. Dar paratrăsnetul <strong>nu protejează priza</strong>: el se ocupă de lovitura directă în clădire.</p>
+<p><strong>SPD-urile (descărcătoarele de supratensiune) sunt protecția interioară.</strong> Ele limitează vârfurile de tensiune care pătrund pe cabluri — fie de la un fulger din apropiere, fie din rețea — și protejează <strong>echipamentele electrice și electronice</strong>. Cu alte cuvinte: paratrăsnetul protejează clădirea de lovitura directă; SPD-ul protejează ce e în priză. De aceea, pentru o protecție completă, de cele mai multe ori <strong>ai nevoie de ambele</strong> — fiecare acoperă ce celălalt nu poate.</p>
+
+<table class="compare-table">
+<thead><tr><th>Criteriu</th><th>Paratrăsnet (protecție exterioară)</th><th>SPD (protecție interioară)</th></tr></thead>
+<tbody>
+<tr><td>Ce protejează</td><td>Structura clădirii și oamenii dinăuntru</td><td>Echipamentele electrice și electronice</td></tr>
+<tr><td>Pe ce se montează</td><td>Acoperiș, fațadă, coborâri spre pământ</td><td>Tablouri electrice, rack-uri, linii de semnal</td></tr>
+<tr><td>Contra cărui eveniment</td><td>Lovitura directă în clădire</td><td>Vârfuri induse de fulger, comutații în rețea</td></tr>
+<tr><td>Ce se întâmplă fără el</td><td class="no">Incendiu sau deteriorarea structurii la o lovitură directă</td><td class="no">Electronică arsă chiar și când clădirea nu a fost lovită</td></tr>
+<tr><td>Dependență de împământare</td><td class="yes">Totală: coborârile ajung în priza de pământ</td><td class="yes">Totală: descărcătorul evacuează în bara de egalizare</td></tr>
+<tr><td>Cine îl montează</td><td>Electrician autorizat ANRE, după evaluarea de risc</td><td>Electrician autorizat ANRE, după dimensionare</td></tr>
+</tbody>
+</table>
+
+
+<h2 id="cand-e-nevoie-de-paratrasnet-si-cum-se-d">Când e nevoie de paratrăsnet și cum se decide</h2>
+<p>Paratrăsnetul nu se montează „la toate clădirile” și nici „la niciuna”. Necesitatea lui rezultă dintr-o <strong>evaluare a riscului la trăsnet</strong>, făcută conform normativelor în vigoare, care ia în calcul mai mulți factori: cât de expusă e clădirea (înălțime, izolare față de alte construcții, poziție pe deal sau în vale), ce se află în ea (oameni, marfă inflamabilă, echipamente critice), cât de frecvente sunt descărcările în zonă și ce consecințe ar avea o lovitură. Pentru o clădire joasă, înconjurată de altele mai înalte, rezultatul poate fi diferit față de un hotel sau o hală izolată pe un platou.</p>
+<p>Un sistem exterior de protecție are trei componente: <strong>captatorii</strong> (tije sau conductori pe acoperiș, care „primesc” descărcarea), <strong>coborârile</strong> (conductoare care duc curentul spre pământ, pe traseul cel mai scurt și cât mai drept) și <strong>priza de pământ</strong> (electrozi care disipă energia în sol). Un detaliu pe care îl uită mulți: coborârile paratrăsnetului nu se improvizează lângă cabluri de date sau de alimentare, fiindcă un curent de fulger care coboară pe lângă un cablu induce în el tensiuni mari. Distanțele de separare și, acolo unde nu se pot respecta, legăturile de egalizare fac parte din proiect.</p>
+<p>Dacă firma are <strong>panouri fotovoltaice pe acoperiș</strong>, protecția se complică: panourile și invertorul au nevoie de SPD pe partea de curent continuu și pe cea de curent alternativ, iar structura trebuie legată corect la sistemul de egalizare. Detaliile pentru partea electrică le găsești în articolul despre <a href="https://cssi.ro/blog/instalatie-electrica-racordare-fotovoltaic-prosumator-firma-brasov">racordarea unui sistem fotovoltaic la firmă</a>, iar pentru situația în care parcul e izolat, în <a href="https://cssi.ro/blog/securitate-parc-fotovoltaic-ferma-solara-brasov">securitatea parcurilor fotovoltaice</a>.</p>
+
+<div class="box box-warn"><div class="box-title">⚠️ Paratrăsnetul fără SPD poate înrăutăți lucrurile</div><p>Un paratrăsnet care „adună” fulgerele spre clădire, dar nu e dublat de protecție interioară, duce curenți mari în apropierea cablurilor din perete. Rezultatul: clădirea rămâne întreagă, dar echipamentele ard prin inducție. Dacă ai sau montezi paratrăsnet, SPD-urile și egalizarea de potențial nu sunt opționale, ci parte din același sistem. Invers, SPD-urile fără paratrăsnet sunt o soluție bună pentru clădirile unde evaluarea de risc nu cere protecție exterioară.</p></div>
+
 <h2 id="cele-trei-tipuri-de-spd-si-unde-se-monte">Cele trei tipuri de SPD și unde se montează</h2>
 <p>Protecția interioară nu se face cu un singur dispozitiv, ci cu un sistem montat <strong>în cascadă</strong>, pe trei niveluri. Fiecare „taie” o parte din supratensiune, astfel încât la echipamentul tău să ajungă o tensiune sigură.</p>
 <p><strong>SPD tip 1 — în tabloul general.</strong> Preia vârfurile mari, de exemplu de la descărcarea unui fulger din apropiere. E prima linie, cea care înghite cea mai mare parte din energie.</p>
@@ -437,22 +491,112 @@
 <p><strong>SPD tip 3 — lângă echipamentele sensibile.</strong> Protecție fină, montată aproape de electronica scumpă (servere, echipamente IT critice), care „șlefuiește” ultima parte a supratensiunii.</p>
 <p>Cele trei lucrează împreună, ca niște site din ce în ce mai fine. <strong>Dimensionarea și poziționarea</strong> lor se fac de un electrician autorizat, în funcție de instalația concretă — nu se montează „după ureche”. Aceeași logică de dimensionare corectă pe care o aplicăm la orice circuit de putere, detaliată în articolul despre <a href="https://cssi.ro/blog/instalatie-electrica-cladire-birouri-open-space-brasov">instalația electrică pentru clădiri de birouri și open space</a>.</p>
 
+<table class="compare-table">
+<thead><tr><th>Tip SPD</th><th>Unde se montează</th><th>Rol</th><th>Când e esențial</th></tr></thead>
+<tbody>
+<tr><td>Tip 1</td><td>Tabloul general / la intrarea în clădire</td><td>Preia curenți mari de descărcare</td><td class="yes">Clădiri cu paratrăsnet, branșament aerian, zone expuse</td></tr>
+<tr><td>Tip 2</td><td>Tablouri secundare, de distribuție</td><td>Limitează vârfurile rămase, protecția de bază</td><td class="yes">Aproape orice firmă cu electronică</td></tr>
+<tr><td>Tip 3</td><td>Lângă echipament: rack, priză protejată, pupitru</td><td>Protecție fină la ultimul metru</td><td class="yes">Servere, echipamente IT și de comandă sensibile</td></tr>
+<tr><td>Combinat 1+2</td><td>Tabloul general al clădirilor mici</td><td>Un singur aparat, două funcții</td><td>Util când spațiul din tablou e limitat</td></tr>
+<tr><td>SPD pentru date / CCTV / coaxial</td><td>La capătul cablului de semnal, la intrarea în clădire și la echipament</td><td>Protejează porturile de rețea, camerele, alarma</td><td class="yes">Camere exterioare, cabluri lungi între clădiri</td></tr>
+</tbody>
+</table>
+
+<h3>Cum alegi un SPD: parametrii care contează</h3>
+<p>Când compari două descărcătoare, prețul nu e criteriul principal. Se uită la câțiva parametri, pe care electricianul îi alege pe baza instalației:</p>
+<ul>
+  <li><strong>Curentul de descărcare</strong> (cât curent poate prelua aparatul fără să cedeze): pentru tipul 1 se exprimă ca Iimp, pentru tipul 2 ca In/Imax. Cu cât expunerea e mai mare, cu atât valoarea trebuie să fie mai mare.</li>
+  <li><strong>Nivelul de protecție Up</strong> (tensiunea maximă lăsată să treacă): cu cât e mai mic, cu atât echipamentul e mai bine apărat. Trebuie să fie sub tensiunea de impuls pe care o suportă echipamentul protejat.</li>
+  <li><strong>Tensiunea maximă de lucru Uc</strong>: să se potrivească rețelei (monofazat sau trifazat, tipul de schemă de legare la pământ).</li>
+  <li><strong>Protecția din amonte</strong>: SPD-ul are nevoie de o siguranță dedicată, indicată de producător, ca să nu rămână în scurtcircuit la finalul vieții.</li>
+  <li><strong>Indicatorul de stare</strong> și, la instalațiile critice, <strong>contactul de semnalizare la distanță</strong>, ca să afli că a lucrat fără să deschizi tabloul.</li>
+  <li><strong>Lungimea conductoarelor de legătură</strong>: cu cât sunt mai scurte, cu atât protecția e mai bună. Un SPD scump, legat cu fire lungi, protejează mai slab decât unul ieftin legat corect.</li>
+</ul>
 <h2 id="ce-protejezi-in-special-it-camere-automa">Ce protejezi în special: IT, camere, automatizări, utilaje</h2>
 <p>Nu toate echipamentele au aceeași valoare sau aceeași sensibilitate. Prioritățile, în ordine, sunt clare. <strong>IT-ul și serverele</strong> — cele mai scumpe și mai sensibile, și cele a căror pierdere afectează cel mai mult activitatea (de aceea protecția camerei de servere e un capitol în sine, tratat în articolul despre <a href="https://cssi.ro/blog/securitate-centru-date-camera-servere-firma-brasov">securitatea camerei de servere</a>). Apoi <strong>camerele și centralele de alarmă</strong>, fără de care rămâi și nesupravegheat, și fără protecție. <strong>Automatizările</strong> de porți și bariere, cu electronică expusă. Și <strong>utilajele</strong> cu comandă electronică, scumpe de înlocuit.</p>
 <p>Un detaliu crucial pe care mulți îl ratează: și <strong>traseele de semnal</strong> (date, CCTV) au nevoie de protecție, nu doar alimentarea. O supratensiune poate intra și pe cablul de rețea sau pe cel de cameră, nu doar pe priză — și atunci degeaba ai protejat alimentarea, dacă echipamentul arde pe partea de date. De aceea protecția se gândește <strong>atât pe curenți tari, cât și pe curenți slabi</strong>, exact infrastructura pe care am descris-o în articolul despre <a href="https://cssi.ro/blog/cablare-structurata-retele-date-firma-brasov">cablarea structurată și rețelele de date</a>.</p>
 
+<h3>Protecția pe curenți slabi: rețea, camere, alarmă</h3>
+<p>Cablurile care ies din clădire sunt cele mai expuse. O cameră montată pe stâlp sau pe colțul unei hale, cu cablu de rețea tras zeci de metri, funcționează ca o antenă: la o descărcare apropiată, vârful de tensiune indus ajunge direct în portul switch-ului sau al NVR-ului. Soluția este un <strong>SPD pentru linii de date</strong> montat la fiecare capăt al cablului exterior, în apropierea camerei și în apropierea echipamentului de colectare, plus legarea corectă la împământare. La camerele alimentate prin PoE, protecția trebuie să fie compatibilă cu alimentarea prin cablul de date, altfel aparatul fie nu lasă să treacă energia, fie nu protejează.</p>
+<p>La alarmă, punctele sensibile sunt sirenele exterioare, liniile către detectoare aflate la distanță și comunicatorul (linia telefonică sau antena GSM). La automatizările de porți, atenția se duce spre motor, centrala de comandă, fotocelule și antenă. Fiecare are un traseu pe care se poate infiltra vârful, iar protecția se alege pe fiecare traseu în parte, nu „la grămadă”.</p>
+
 
 <h2 id="legatura-cu-impamantarea-corecta-fara-ea">Legătura cu împământarea corectă — fără ea, protecția nu funcționează</h2>
 <p>Iată secretul pe care „băieții ieftini” îl ignoră, dar de care depinde totul: <strong>fără o împământare corectă, întreaga protecție la supratensiuni nu funcționează</strong>. De ce? Pentru că atât paratrăsnetul, cât și SPD-urile funcționează prin „evacuarea” energiei în exces <strong>în pământ</strong>. Dacă nu există o cale corectă, verificată, spre pământ, descărcătoarele nu au unde să trimită supratensiunea — și echipamentele ard oricum, oricât de scumpe ar fi protecțiile montate.</p>
-<p>Cu alte cuvinte, <strong>împământarea e fundația</strong> întregului sistem de protecție. O instalare serioasă nu începe cu montatul SPD-urilor, ci cu <strong>verificarea împământării</strong>. Aceasta e o componentă esențială a oricărei verificări complete a instalației electrice, mai ales după sezonul rece, despre care am scris în articolul despre <span data-link-later="verificare-instalatie-electrica-dupa-iarna-primavara-brasov" data-a="&lt;a href=&quot;https://cssi.ro/blog/verificare-instalatie-electrica-dupa-iarna-primavara-brasov&quot;&gt;">verificarea instalației electrice după iarnă, primăvara</span>. Primăvara, înaintea sezonului de furtuni, e momentul ideal pentru această verificare.</p>
+<p>Cu alte cuvinte, <strong>împământarea e fundația</strong> întregului sistem de protecție. O instalare serioasă nu începe cu montatul SPD-urilor, ci cu <strong>verificarea împământării</strong>. Aceasta e o componentă esențială a oricărei verificări complete a instalației electrice, mai ales după sezonul rece, despre care am scris în articolul despre <a href="https://cssi.ro/blog/mentenanta-verificari-periodice-instalatie-electrica-firma-brasov">mentenanța și verificările periodice ale instalației electrice la firmă</a>. Primăvara, înaintea sezonului de furtuni, e momentul ideal pentru această verificare.</p>
+
+<h3>Egalizarea de potențial: toate masele pe același nivel</h3>
+<p>Pe lângă priza de pământ, contează <strong>legătura echipotențială</strong>: conductele metalice, structura clădirii, rack-urile, tablourile și ecranele cablurilor se leagă la o bară comună, ca între ele să nu apară diferențe de potențial la o descărcare. Fără egalizare, un curent de fulger poate găsi o cale „printre” echipamente, trecând prin plăcile electronice, tocmai pentru că între două puncte legate separat la pământ apare o diferență de tensiune foarte mare. Legăturile se fac scurt, cu secțiune adecvată și conexiuni accesibile la verificare.</p>
+<p>Cum se măsoară rezistența prizei și ce înseamnă cifrele am explicat în articolul despre <a href="https://cssi.ro/blog/priza-de-pamant-masurare-rezistenta-dispersie-brasov">priza de pământ și măsurarea rezistenței de dispersie</a>.</p>
+
+<div class="box box-info"><div class="box-title">ℹ️ Specific Brașov: furtuni de vară, deal și munte, clădiri vechi</div><p>În județul Brașov, furtunile de vară vin des dinspre munte și sunt scurte, dar intense, iar zonele de la poalele munților, de pe dealuri sau din localitățile de munte sunt mai expuse. Clădirile izolate (hale la marginea localităților, pensiuni, ferme) au o probabilitate mai mare de lovitură directă decât cele din centru, înconjurate de construcții înalte. În zonele industriale se adaugă comutațiile din rețea de la consumatorii mari. Iar în clădirile vechi din centrul istoric, instalațiile modificate în timp și împământările neverificate sunt, adesea, cea mai slabă verigă. Solul înghețat iarna crește rezistența prizei de pământ, de aceea verificarea se programează de preferință primăvara, înaintea furtunilor.</p></div>
 
 <h2 id="de-ce-e-obligatoriu-electrician-autoriza">De ce e obligatoriu electrician autorizat ANRE și ce verificări cere</h2>
 <p>Acesta nu e un detaliu de marketing, ci o <strong>cerință legală</strong>: lucrările la instalația electrică, inclusiv montajul SPD-urilor și al paratrăsnetului, trebuie executate de un <strong>electrician autorizat ANRE</strong>. Autorizarea nu e o ștampilă goală — ea garantează că lucrarea respectă normele, că dimensionarea e corectă și că rămâne <strong>documentația</strong> necesară.</p>
 <p>În plus, o protecție la supratensiuni <strong>prost montată e și periculoasă, și inutilă</strong>: îți dă falsa senzație de siguranță fără să protejeze nimic. Un electrician autorizat îți oferă o lucrare conformă, sigură, cu garanție și cu <strong>verificările periodice</strong> cerute — pentru că descărcătoarele se „consumă” în timp și trebuie verificate. Autorizarea ANRE e diferențiatorul care separă o lucrare reală de o improvizație; detaliile despre ce înseamnă această autorizare le poți verifica direct la <a href="https://www.anre.ro" rel="noopener" target="_blank">Autoritatea Națională de Reglementare în domeniul Energiei (ANRE)</a>. Iar legătura cu riscul de incendiu — pentru că o supratensiune sau un trăsnet pot porni un incendiu — e reglementată de normele de securitate la incendiu, ale căror repere oficiale le găsești la <a href="https://www.igsu.ro" rel="noopener" target="_blank">IGSU</a>.</p>
 
+<div class="box box-danger"><div class="box-title">🔥 Un SPD ars lăsat în tablou e un pericol, nu o protecție</div><p>Descărcătoarele se sacrifică: la o supratensiune mare, cartușul poate ceda și rămâne cu indicatorul pe roșu. Un SPD „consumat” nu mai protejează, iar dacă nu e prevăzut cu siguranța corectă, poate încălzi conexiunile din tablou. Nu lăsa un indicator roșu „pe mai târziu” și nu înlocui singur cartușul, fără să știi tipul și curentul nominal. Verificarea și schimbarea se fac de electrician autorizat, după orice furtună puternică și la verificările periodice.</p></div>
+
+<h2 id="verificari-periodice-spd-urile-se-consum">Verificări periodice: SPD-urile se consumă</h2>
+<p>Un SPD nu e un aparat de montat și de uitat. Fiecare descărcare îi consumă o parte din capacitate, iar după mai multe evenimente (sau unul mare) cartușul trebuie schimbat. În practică, verificarea cuprinde:</p>
+<ul>
+  <li><strong>După orice furtună puternică</strong> — te uiți la indicatorul fiecărui SPD (de regulă verde = în stare bună, roșu = de înlocuit). La instalațiile critice, indicatorul se poate transmite la distanță.</li>
+  <li><strong>O dată pe an, de preferință primăvara</strong> — verificare vizuală, strângerea conexiunilor, controlul siguranțelor dedicate și al legăturilor la bara de egalizare.</li>
+  <li><strong>La câțiva ani</strong> — măsurători ale rezistenței prizei de pământ, ale continuității legăturilor și, la sistemele cu paratrăsnet, verificarea captatorilor și a coborârilor (coroziune, conexiuni slăbite, deteriorări mecanice).</li>
+  <li><strong>După orice modificare majoră</strong> — extinderi, noi echipamente, adăugarea unui sistem fotovoltaic sau a unei stații de încărcare: protecția se reevaluează.</li>
+</ul>
+<p>Dacă ai o instalație cu multe tablouri, o <a href="https://cssi.ro/blog/termografie-electrica-mentenanta-predictiva-tablouri-brasov">termografie electrică</a> poate arăta conexiuni care se încălzesc, inclusiv la aparatele de protecție.</p>
+
+<h2 id="greseli-frecvente-la-protectia-impotriva">Greșeli frecvente la protecția împotriva supratensiunilor</h2>
+<ol>
+  <li><strong>Crezi că paratrăsnetul protejează și echipamentele.</strong> Protejează structura; echipamentele rămân expuse fără SPD.</li>
+  <li><strong>Montezi un singur SPD „pentru toată clădirea”.</strong> Fără cascadă și fără protecție lângă echipamentul sensibil, supratensiunea reziduală ajunge tot la electronică.</li>
+  <li><strong>Pui SPD fără să verifici împământarea.</strong> Descărcătorul nu are unde să evacueze energia și lucrează aproape degeaba.</li>
+  <li><strong>Folosești conductoare de legătură lungi și răsucite.</strong> Fiecare metru de cablu în plus crește tensiunea care ajunge la echipament.</li>
+  <li><strong>Uiți liniile de date, camerele și antenele.</strong> Supratensiunea intră și pe cablul de rețea sau de cameră.</li>
+  <li><strong>Lipsește siguranța din amonte a SPD-ului.</strong> La sfârșitul vieții aparatul poate rămâne în scurtcircuit.</li>
+  <li><strong>Nu verifici indicatorul după furtuni.</strong> Poți merge luni de zile cu un SPD deja consumat, convins că ești protejat.</li>
+  <li><strong>Iei „priză cu protecție” de la hipermarket drept soluție de firmă.</strong> E un tip 3 slab și nu înlocuiește nicio treaptă din tablou.</li>
+  <li><strong>Lași montajul pe seama unui „cunoscut priceput”.</strong> Fără autorizare ANRE nu ai nici conformitate, nici documentație, nici garanție.</li>
+</ol>
+
+<div class="box box-tip"><div class="box-title">✅ Checklist: protecția firmei tale e completă dacă…</div><p><strong>1.</strong> împământarea a fost măsurată, iar buletinul e la zi; <strong>2.</strong> există SPD în tabloul general; <strong>3.</strong> tablourile secundare cu electronică au SPD tip 2; <strong>4.</strong> echipamentele critice (server, rack) au protecție fină și UPS; <strong>5.</strong> liniile de date și camerele exterioare au protecție pe cablu; <strong>6.</strong> antenele, sirenele și automatizările exterioare sunt protejate; <strong>7.</strong> fiecare SPD are siguranța din amonte indicată de producător; <strong>8.</strong> toate masele sunt legate la o bară de egalizare; <strong>9.</strong> evaluarea de risc a stabilit dacă ai nevoie de paratrăsnet; <strong>10.</strong> verifici indicatoarele după furtuni și ai o verificare anuală programată; <strong>11.</strong> lucrarea a fost făcută și documentată de electrician autorizat ANRE. Dacă lipsesc mai mult de două puncte, merită o evaluare înainte de sezonul de furtuni.</p></div>
+
+<h2 id="cat-costa-protectia-la-supratensiuni-ori">Cât costă protecția la supratensiuni, orientativ, în 2026</h2>
+<p>Costurile depind de mărimea clădirii, de numărul de tablouri și de starea împământării. Intervalele de mai jos sunt <strong>orientative</strong>; oferta fermă se dă după evaluare la fața locului.</p>
+<table class="compare-table">
+<thead><tr><th>Lucrare</th><th>Cost orientativ</th><th>Ce include, de regulă</th></tr></thead>
+<tbody>
+<tr><td>Adăugare SPD într-un tablou existent</td><td>350–800 RON</td><td>Aparat SPD, siguranța din amonte, montaj, verificarea împământării</td></tr>
+<tr><td>Măsurători PRAM (împământare, izolație)</td><td>300–800 RON</td><td>Măsurători, buletin, recomandări</td></tr>
+<tr><td>Circuit dedicat pentru rack / echipament critic</td><td>250–500 RON</td><td>Traseu, cablu, protecție în tablou, priză sau racord</td></tr>
+<tr><td>SPD tip 2 în tablourile secundare ale unei firme mici</td><td>700–2.000 RON</td><td>Aparate, siguranțe, montaj, etichetare, pentru 2–4 tablouri</td></tr>
+<tr><td>Protecție pe linii de date / CCTV (per cameră exterioară)</td><td>150–350 RON</td><td>SPD de date la ambele capete, legare la împământare</td></tr>
+<tr><td>Refacere sau completare priză de pământ</td><td>Stabilit după măsurători</td><td>Depinde de sol, lungime, accesul la teren</td></tr>
+<tr><td>Sistem exterior de protecție la trăsnet (paratrăsnet)</td><td>Stabilit după evaluarea de risc</td><td>Captatori, coborâri, priză, documentație; depinde de clădire</td></tr>
+</tbody>
+</table>
+<p>Pentru context: o singură placă de bază de server, o centrală de alarmă sau un NVR ars se înlocuiește adesea cu sume apropiate de întregul pachet de protecție, la care se adaugă timpul pierdut și, uneori, datele. Despre cum se compun costurile unei instalații complete am scris în ghidul <a href="https://cssi.ro/blog/instalatii-electrice-brasov-costuri-anre-2026">instalații electrice în Brașov: costuri și autorizare ANRE</a>.</p>
+
+<h2 id="cum-arata-implementarea-cssi">Cum arată implementarea CSSI</h2>
+<p>Protecția la supratensiuni nu se montează „din catalog”. La CSSI, procesul are patru pași clari:</p>
+<p><strong>Pasul 1 — Evaluarea.</strong> Venim la fața locului, notăm ce echipamente ai și cât valorează, cum intră alimentarea în clădire (subteran sau aerian), starea tablourilor, traseele de date și cablurile exterioare, și verificăm împământarea cu aparatul de măsură. Evaluarea e gratuită în Brașov și împrejurimi.</p>
+<p><strong>Pasul 2 — Proiectul și oferta defalcată.</strong> Stabilim nivelurile de SPD, locurile de montaj, protecțiile pentru liniile de semnal și, dacă e cazul, necesitatea evaluării de risc pentru paratrăsnet. Primești o ofertă defalcată pe materiale și manoperă, ca să vezi ce plătești.</p>
+<p><strong>Pasul 3 — Montajul.</strong> Electricianul autorizat ANRE montează aparatele, cu siguranțe dedicate și conexiuni scurte, face egalizarea de potențial, remediază împământarea acolo unde e nevoie și testează instalația, cu minimizarea opririlor în firmă (lucrăm, unde se poate, pe etape sau în afara programului).</p>
+<p><strong>Pasul 4 — Predarea și mentenanța.</strong> Primești documentația lucrării, schema și buletinele de măsurare, iar noi stabilim împreună un program de verificări: după furtuni, anual și periodic pe împământare. Dacă lucrăm și la securitate (camere, alarmă, poartă automată), corelăm totul. Detalii despre verificările tehnice în <a href="https://cssi.ro/blog/mentenanta-sisteme-securitate-de-ce-cat-de-des-brasov">mentenanța sistemelor de securitate</a>.</p>
+
 <h2 id="avantajul-unei-singure-echipe-electric-c">Avantajul unei singure echipe: electric + curenți slabi + securitate</h2>
 <p>Ultima idee, dar una care leagă tot articolul. Protecția la supratensiuni atinge simultan <strong>partea electrică</strong> (tablouri, alimentare), <strong>echipamentele de securitate</strong> (camere, alarme, automatizări) și <strong>IT-ul</strong>. Dacă împarți aceste lucruri la firme diferite, ajungi în scenariul clasic: electricianul a pus SPD pe priză, dar camera a ars pentru că nimeni nu a protejat cablul de date — și fiecare dă vina pe celălalt.</p>
-<p>O <strong>singură echipă</strong> care face curenți tari, curenți slabi și securitate gândește protecția <strong>coerent</strong>: protejează și alimentarea, și traseele de semnal, și echipamentele finale, și răspunde pentru întregul sistem. E mai sigur, mai ieftin pe termen lung și cu un singur responsabil. Aceasta e exact abordarea integrată pe care o recomandăm pentru orice instalație electrică de firmă, detaliată în articolul despre <span data-link-later="instalatie-electrica-firma-spatiu-comercial-brasov-2026" data-a="&lt;a href=&quot;https://cssi.ro/blog/instalatie-electrica-firma-spatiu-comercial-brasov-2026&quot;&gt;">instalația electrică pentru firmă și spațiu comercial</span>. La CSSI, partea electrică e realizată de electrician autorizat ANRE, cu garanție și conformitate — nu „de un cunoscut priceput”.</p>
+<p>O <strong>singură echipă</strong> care face curenți tari, curenți slabi și securitate gândește protecția <strong>coerent</strong>: protejează și alimentarea, și traseele de semnal, și echipamentele finale, și răspunde pentru întregul sistem. E mai sigur, mai ieftin pe termen lung și cu un singur responsabil. Aceasta e exact abordarea integrată pe care o recomandăm pentru orice instalație electrică de firmă, de la tablourile principale (vezi și <a href="https://cssi.ro/blog/tablou-electric-casa-cate-circuite-protectii-brasov">logica unui tablou bine gândit</a>) până la ultima cameră de pe fațadă. La CSSI, partea electrică e realizată de electrician autorizat ANRE, cu garanție și conformitate — nu „de un cunoscut priceput”. Dacă ți se declanșează siguranțele după fiecare furtună, citește și <a href="https://cssi.ro/blog/siguranta-sare-cauze-solutii-instalatie-electrica">de ce sare siguranța și când devine pericol real</a>.</p>
+
+<h2 id="citeste-si">Citește și</h2>
+<ul>
+  <li><a href="https://cssi.ro/blog/priza-de-pamant-masurare-rezistenta-dispersie-brasov">Priza de pământ și măsurarea rezistenței de dispersie</a> — fundația oricărei protecții.</li>
+  <li><a href="https://cssi.ro/blog/securitate-centru-date-camera-servere-firma-brasov">Securitatea camerei de servere</a> — cum protejezi inima IT a firmei.</li>
+  <li><a href="https://cssi.ro/blog/tablouri-electrice-secundare-distributie-zone-firma-brasov">Tablouri electrice secundare și distribuția pe zone</a>.</li>
+  <li><a href="https://cssi.ro/blog/mentenanta-verificari-periodice-instalatie-electrica-firma-brasov">Mentenanța și verificările periodice ale instalației electrice</a>.</li>
+  <li><a href="https://cssi.ro/blog/alimentare-poe-camere-ip-switch-ups-distante-brasov">Alimentarea camerelor IP: PoE, switch și UPS</a>.</li>
+</ul>
       <h2 id="faq">Întrebări frecvente</h2>
       <div class="faq-wrap">
         <div class="faq-item">
@@ -483,6 +627,22 @@
           <button class="faq-q" onclick="toggleFaq(this)">De ce e un avantaj o singură echipă pentru electric și securitate? <svg class="faq-chevron" width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg></button>
           <div class="faq-a"><p>Pentru că protecția la supratensiuni atinge partea electrică, echipamentele de securitate și IT-ul. O singură echipă gândește protecția coerent: și alimentarea, și traseele de semnal, și echipamentele finale, și răspunde pentru tot sistemul. Eviți situația în care electricianul a pus SPD pe priză, dar camera a ars pentru că nimeni nu a protejat cablul de date.</p></div>
         </div>
+        <div class="faq-item">
+          <button class="faq-q" onclick="toggleFaq(this)">Cât durează un SPD și când trebuie înlocuit? <svg class="faq-chevron" width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg></button>
+          <div class="faq-a"><p>Nu există o durată fixă, pentru că descărcătorul se consumă la fiecare supratensiune preluată. Într-o zonă cu furtuni dese poate ajunge la înlocuire mai repede decât într-o zonă liniștită. Regula practică: verifici indicatorul după fiecare furtună puternică, iar electricianul controlează aparatele o dată pe an. Când indicatorul arată că aparatul a lucrat, cartușul se schimbă.</p></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q" onclick="toggleFaq(this)">Un UPS mă protejează de supratensiuni? <svg class="faq-chevron" width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg></button>
+          <div class="faq-a"><p>Doar parțial. UPS-ul menține alimentarea la pană și, la modelele online, stabilizează tensiunea, dar nu înlocuiește un SPD dimensionat corect în tablou. Pentru echipamentele critice se folosesc împreună: SPD în amonte, UPS în aval.</p></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q" onclick="toggleFaq(this)">Cât costă protecția la supratensiuni pentru o firmă mică? <svg class="faq-chevron" width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg></button>
+          <div class="faq-a"><p>Orientativ, SPD-ul adăugat într-un tablou existent costă 350–800 RON, iar măsurătorile de împământare 300–800 RON. Pentru mai multe tablouri, linii de date exterioare sau paratrăsnet, costul se stabilește după evaluare la fața locului. Oferta fermă o primești defalcată, după ce vedem instalația.</p></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q" onclick="toggleFaq(this)">Pot monta singur un SPD în tablou? <svg class="faq-chevron" width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg></button>
+          <div class="faq-a"><p>Nu e recomandat și, pentru o firmă, nici permis fără autorizare: lucrările la instalația electrică se execută de electrician autorizat ANRE. Dimensionarea, siguranța din amonte, conexiunile scurte și legătura la împământare decid dacă protecția funcționează, iar o montare greșită îți dă doar o falsă siguranță.</p></div>
+        </div>
       </div>
 
       <aside class="discuta-in-grup">
@@ -509,13 +669,20 @@
         <div class="sidebar-card-head">📑 Cuprins</div>
         <div class="sidebar-card-body" style="padding:10px 18px">
           <ol class="toc-list">
+            <li><a href="#raspunsul-scurt">Răspunsul scurt</a></li>
             <li><a href="#de-ce-o-supratensiune-e-un-risc-real-si-">De ce o supratensiune e un risc real — și ce poate distruge într-o secundă</a></li>
             <li><a href="#paratrasnet-vs-spd-de-ce-ai-nevoie-de-am">Paratrăsnet vs. SPD: de ce ai nevoie de ambele</a></li>
+            <li><a href="#cand-e-nevoie-de-paratrasnet-si-cum-se-d">Când e nevoie de paratrăsnet și cum se decide</a></li>
             <li><a href="#cele-trei-tipuri-de-spd-si-unde-se-monte">Cele trei tipuri de SPD și unde se montează</a></li>
             <li><a href="#ce-protejezi-in-special-it-camere-automa">Ce protejezi în special: IT, camere, automatizări, utilaje</a></li>
             <li><a href="#legatura-cu-impamantarea-corecta-fara-ea">Legătura cu împământarea corectă — fără ea, protecția nu funcționează</a></li>
             <li><a href="#de-ce-e-obligatoriu-electrician-autoriza">De ce e obligatoriu electrician autorizat ANRE și ce verificări cere</a></li>
+            <li><a href="#verificari-periodice-spd-urile-se-consum">Verificări periodice: SPD-urile se consumă</a></li>
+            <li><a href="#greseli-frecvente-la-protectia-impotriva">Greșeli frecvente la protecția împotriva supratensiunilor</a></li>
+            <li><a href="#cat-costa-protectia-la-supratensiuni-ori">Cât costă protecția la supratensiuni, orientativ, în 2026</a></li>
+            <li><a href="#cum-arata-implementarea-cssi">Cum arată implementarea CSSI</a></li>
             <li><a href="#avantajul-unei-singure-echipe-electric-c">Avantajul unei singure echipe: electric + curenți slabi + securitate</a></li>
+            <li><a href="#citeste-si">Citește și</a></li>
             <li><a href="#faq">Întrebări frecvente</a></li>
           </ol>
         </div>

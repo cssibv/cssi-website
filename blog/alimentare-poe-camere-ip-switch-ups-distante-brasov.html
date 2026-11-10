@@ -45,7 +45,7 @@
         }
       },
       "datePublished": "2026-11-06",
-      "dateModified": "2026-11-06",
+      "dateModified": "2026-11-10",
       "mainEntityOfPage": "https://cssi.ro/blog/alimentare-poe-camere-ip-switch-ups-distante-brasov",
       "inLanguage": "ro"
     },
@@ -128,6 +128,22 @@
           "acceptedAnswer": {
             "@type": "Answer",
             "text": "Pentru că un sistem stabil depinde de detalii care nu se văd: calitatea cablului, mufele făcute corect, respectarea distanțelor, un switch dimensionat cu rezervă și un UPS pentru continuitate. Un kit ieftin montat la repezeală merge câteva luni, apoi încep căderile aleatorii, greu de diagnosticat. Un sistem profesionist e gândit ca infrastructură: stabil, documentat și ușor de extins. Pe termen lung, asta înseamnă mai puține bătăi de cap și mai puțini bani aruncați."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Cât durează bateria unui UPS la un sistem de camere?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Depinde de sarcină și de capacitatea bateriei. Un UPS obișnuit, cu un sistem de 8 camere, un NVR și un switch, ține de regulă între 10 și 30 de minute, suficient pentru penele scurte și pentru o oprire corectă. Pentru autonomie de ore se adaugă baterii externe sau se trece la un UPS mai mare, iar peste un anumit prag se discută un generator. Bateria în sine are o viață de aproximativ 3–5 ani, deci se testează periodic și se schimbă la timp."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Ce se întâmplă dacă depășesc bugetul de putere al switch-ului?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Switch-ul poate refuza alimentarea portului care depășește limita, poate opri camera cu prioritate mai mică sau poate reporni periodic. Efectul tipic: camere care dispar noaptea, când pornesc iluminatoarele IR, sau iarna, când pornește încălzirea. Remediul nu e un „restart\" repetat, ci un switch cu buget mai mare sau o redistribuire a camerelor pe mai multe switch-uri. Se verifică din proiectare, cu consumul maxim din fișa tehnică."
           }
         }
       ]
@@ -394,7 +410,7 @@
       <div class="hero-meta">
         <span>✍ CSSI Brașov</span><span class="dot">·</span>
         <span>📅 6 Nov 2026</span><span class="dot">·</span>
-        <span>⏱ 8 min lectură</span>
+        <span>⏱ 21 min lectură</span>
       </div>
       <div class="topic-pills">
         <span class="pill pill-blue">🛡 Securitate firme</span>
@@ -409,11 +425,16 @@
   <div class="article-wrap">
     <main class="article-body" id="articol">
 <h2 id="raspunsul-scurt">Răspunsul scurt</h2>
-<p>Camerele IP moderne se alimentează prin <strong>PoE</strong> — un singur cablu de rețea duce și curentul, și datele. Acel cablu intră într-un <strong>switch PoE</strong>, care trebuie dimensionat cu <strong>buget de putere cu rezervă</strong>. Pentru continuitate la pene de curent e nevoie de un <strong>UPS</strong>. Distanța practică a unui cablu de rețea e de circa <strong>100 de metri</strong>; peste atât se folosesc switch-uri intermediare, extendere sau fibră optică. Un sistem gândit cu <strong>rezervă</strong> se extinde ușor; unul pus „la limită" te costă la prima adăugare.</p>
+<p>Camerele IP moderne se alimentează prin <strong>PoE</strong> — un singur cablu de rețea duce și curentul, și datele. Acel cablu intră într-un <strong>switch PoE</strong> (sau într-un NVR cu porturi PoE), care trebuie dimensionat cu un <strong>buget de putere cu rezervă de 20–30%</strong> peste consumul real al camerelor: o cameră fixă consumă de obicei 5–12 W, una PTZ sau cu încălzire 25–60 W. Pentru continuitate la pene de curent e nevoie de un <strong>UPS</strong> dimensionat în wați și minute, nu „cel mai mic din magazin". Distanța practică a unui cablu de rețea e de <strong>maximum 100 de metri</strong> (din care aproximativ 90 m cablu fix); peste atât se folosesc switch-uri intermediare, extendere sau fibră optică. Un sistem gândit cu <strong>rezervă</strong> se extinde ușor; unul pus „la limită" te costă la prima adăugare. Pentru 4 camere și un NVR, partea de infrastructură bine făcută adaugă, orientativ, câteva sute de lei la un sistem care costă 3.500–5.500 RON montat.</p>
 
 
 <h2 id="poe-un-singur-cablu-pentru-curent-si-dat">PoE: un singur cablu pentru curent și date</h2>
 <p><strong>PoE</strong> (Power over Ethernet) înseamnă că un singur cablu de rețea (UTP) duce <em>și</em> curentul, <em>și</em> datele până la cameră. Nu mai tragi un cablu separat de alimentare pentru fiecare cameră, deci montajul e mai curat, mai rapid și mai ieftin în materiale. Camera se alimentează direct din switch-ul PoE. E standardul sistemelor IP moderne și simplifică enorm cablarea — face parte din aceeași logică de infrastructură pe care am descris-o în articolul despre <a href="https://cssi.ro/blog/cablare-structurata-retele-date-firma-brasov">cablare structurată pentru rețele de date</a>.</p>
+<p>Avantajele reale, dincolo de „un cablu în loc de două":</p>
+<ul>
+  <li><strong>Nu ai nevoie de priză lângă cameră.</strong> Camera din colțul fațadei, de pe stâlpul din curte sau de sub streașina halei se montează fără să tragi un cablu de 230 V și fără să faci o priză exterioară, cu tot ce înseamnă protecția ei.</li>
+  <li><strong>Alimentarea e centralizată.</strong> Toate camerele sunt alimentate dintr-un singur loc, deci un singur UPS acoperă tot sistemul. Fără PoE ai atâtea adaptoare și surse câte camere ai, fiecare cu propriul punct de cădere.</li>
+</ul>
 
       <div class="cta-banner" style="margin:32px 0">
         <div>
@@ -427,21 +448,154 @@
           <a target="_blank" rel="noopener" href="https://wa.me/40752288400" class="btn btn-secondary">💬 WhatsApp</a>
         </div>
       </div>
+<h2 id="standardele-poe-af-at-bt-si-ce-inseamna-">Standardele PoE: af, at, bt și ce înseamnă pentru camera ta</h2>
+<p>Nu toate PoE-urile sunt la fel. Standardul <strong>IEEE 802.3</strong> are trei trepte importante, iar compatibilitatea dintre cameră și switch se verifică pe fișa tehnică, nu „din ochi". Camerele de supraveghere stau, în marea majoritate a cazurilor, în primele două trepte.</p>
+<table class="compare-table">
+<thead><tr><th>Standard</th><th>Denumire uzuală</th><th>Putere maximă la port</th><th>Putere utilă la cameră (aprox.)</th><th>Pentru ce tip de cameră</th></tr></thead>
+<tbody>
+<tr><td>802.3af</td><td>PoE</td><td>15,4 W</td><td>12,95 W</td><td>Camere fixe bullet/dome obișnuite, fără încălzire</td></tr>
+<tr><td>802.3at</td><td>PoE+</td><td>30 W</td><td>25,5 W</td><td>Camere cu iluminator IR puternic, varifocale, mici PTZ</td></tr>
+<tr><td>802.3bt tip 3</td><td>PoE++ / 4PPoE</td><td>60 W</td><td>51 W</td><td>PTZ cu încălzire, camere multi-senzor, camere cu radar</td></tr>
+<tr><td>802.3bt tip 4</td><td>PoE++ / 4PPoE</td><td>90–100 W</td><td>71 W</td><td>Rar la camere; mai degrabă puncte de acces, afișaje, echipamente speciale</td></tr>
+<tr><td>„PoE pasiv" 12/24 V</td><td>Nestandardizat</td><td>Variază</td><td>Variază</td><td class="no">Risc de defectare dacă îl pui pe un port standard; evită-l în sisteme noi</td></tr>
+</tbody>
+</table>
+<p>Un detaliu care produce multe confuzii: o cameră care anunță „PoE 802.3af" merge pe un port 802.3at sau bt (porturile superioare sunt compatibile cu cele inferioare, iar switch-ul livrează doar cât cere camera). Invers nu funcționează: o cameră care cere 25 W nu va porni pe un port limitat la 15 W. Mai rău, uneori pornește, dar se oprește noaptea când se aprind iluminatoarele infraroșu. Despre cum arată noaptea camera în sine am scris în ghidul despre <a href="https://cssi.ro/blog/camera-noapte-ir-vs-color-night-vision-starlight-brasov">IR vs color night vision</a>; aici ne interesează doar că iluminatorul IR e cel mai mare „consumator ascuns" dintr-o cameră obișnuită.</p>
+
+<h2 id="cat-consuma-de-fapt-o-camera">Cât consumă, de fapt, o cameră</h2>
+<p>Nu există o cifră unică, iar înainte de a alege switch-ul trebuie să știi consumul real al fiecărei camere, din fișa tehnică, la <em>consum maxim</em>, nu la cel tipic. Repere orientative, pentru ordine de mărime:</p>
+<ul>
+  <li><strong>Cameră bullet sau dome fixă, 4 MP, cu IR:</strong> aproximativ 5–10 W.</li>
+  <li><strong>Cameră 8 MP (4K) sau varifocală cu zoom motorizat:</strong> 10–15 W, iar cu IR la putere maximă mai mult. Dacă te întrebi dacă rezoluția mare merită, am discutat-o în articolul despre <a href="https://cssi.ro/blog/camere-4k-vs-full-hd-cand-merita-rezolutia-brasov">camere 4K vs Full HD</a> — iar o rezoluție mai mare înseamnă și un consum mai mare, plus mai mult trafic pe rețea.</li>
+  <li><strong>Cameră PTZ (rotativă cu zoom):</strong> 20–30 W în mers, 30–60 W cu încălzire pentru exterior.</li>
+  <li><strong>Cameră cu încălzire și parasolar pentru iarnă:</strong> consumul crește cu 5–15 W când rezistența se pornește la temperaturi negative.</li>
+  <li><strong>Cameră fisheye sau multi-senzor:</strong> 12–25 W, în funcție de numărul de senzori.</li>
+</ul>
 <h2 id="switch-ul-poe-si-bugetul-de-putere">Switch-ul PoE și bugetul de putere</h2>
 <p>Switch-ul PoE e dispozitivul care leagă camerele între ele și le <strong>alimentează prin cablul de rețea</strong>. Fiecare switch are un <strong>buget de putere total</strong> — câți wați poate livra pe toate porturile la un loc. Dacă aduni consumul camerelor și depășești bugetul, unele camere nu mai pornesc sau <em>cad la vârf de consum</em> — de exemplu noaptea, când pornesc iluminatoarele infraroșu și consumul crește. De aceea switch-ul se dimensionează <strong>cu rezervă</strong> față de consumul real, nu la limită. E o greșeală clasică la sistemele ieftine: switch subdimensionat, camere care „clipesc" noaptea fără motiv aparent.</p>
+<p>Un lucru pe care ambalajul nu îl subliniază: cifra mare de pe cutie e <strong>puterea pe port</strong>, nu bugetul. Un switch cu 8 porturi de 30 W nu poate livra 8 × 30 W = 240 W dacă bugetul lui total e de 120 W. Citește mereu linia „PoE budget" sau „total PoE power" din fișa tehnică.</p>
+<p>Calculul se face în patru pași simpli:</p>
+<ol>
+  <li>Notezi consumul <strong>maxim</strong> al fiecărei camere (din fișa tehnică).</li>
+  <li>Le aduni și adaugi pierderile pe cablu, aproximativ 10%, la traseele lungi.</li>
+  <li>Adaugi <strong>rezerva de 20–30%</strong> pentru camere viitoare și pentru încălzire iarna.</li>
+  <li>Alegi un switch al cărui buget total depășește rezultatul, nu unul care îl atinge fix.</li>
+</ol>
+<table class="compare-table">
+<thead><tr><th>Exemplu orientativ</th><th>Camere</th><th>Consum maxim însumat</th><th>Cu pierderi și rezervă 25%</th><th>Buget switch recomandat</th></tr></thead>
+<tbody>
+<tr><td>Casă mică, 4 camere</td><td>4 × 8 W</td><td>32 W</td><td>aprox. 45 W</td><td>60–65 W (switch sau NVR cu 4–8 porturi PoE)</td></tr>
+<tr><td>Casă mare sau pensiune, 8 camere</td><td>8 × 10 W</td><td>80 W</td><td>aprox. 110 W</td><td>120–150 W</td></tr>
+<tr><td>Firmă, 8 camere + 1 PTZ</td><td>8 × 10 W + 30 W</td><td>110 W</td><td>aprox. 150 W</td><td>200–250 W</td></tr>
+<tr><td>Hală sau curte, 16 camere</td><td>16 × 10 W</td><td>160 W</td><td>aprox. 220 W</td><td>250–300 W, de obicei 2 switch-uri</td></tr>
+</tbody>
+</table>
+<p>Calculele sunt orientative, la consum maxim din fișele tehnice, iar o evaluare la fața locului le înlocuiește cu cifre reale.</p>
+
+<div class="box box-warn"><div class="box-title">⚠️ „Merge pe masă" nu înseamnă „merge noaptea, iarna, la capătul cablului"</div><p>La montaj, pe banc, cu camera lângă switch, aproape orice combinație pornește. Problemele apar după: când se aprinde IR-ul, când îngheață și pornește rezistența, când traseul are 85 m și o mufă strânsă prost. Testează pe sistemul <strong>în condiții de vârf</strong>: toate camerele pornite, noaptea, cu IR-ul aprins, și lasă-l o zi întreagă înainte de predare. Un sistem care a trecut doar testul „se vede imaginea" nu e testat.</p></div>
 
 <h2 id="ups-continuitate-la-pene-de-curent">UPS: continuitate la pene de curent</h2>
-<p>La o pană de curent, fără UPS, camerele și recorderul se opresc — exact momentul în care un sistem de securitate ar trebui să funcționeze. Un <strong>UPS</strong> (sursă neîntreruptibilă) ține sistemul pornit pe baterie minute bune, acoperind penele scurte și dând timp pentru pornirea unui generator, dacă există. Pentru un sistem serios, UPS-ul nu e opțional — e diferența dintre supraveghere continuă și una cu goluri exact când contează. Despre alimentarea de rezervă a sistemelor de securitate am scris pe larg în articolul despre <span data-link-later="sistem-securitate-pana-curent-backup-ups-baterii-brasov" data-a="&lt;a href=&quot;https://cssi.ro/blog/sistem-securitate-pana-curent-backup-ups-baterii-brasov&quot;&gt;">sistem de securitate la pană de curent</span>.</p>
+<p>La o pană de curent, fără UPS, camerele și recorderul se opresc — exact momentul în care un sistem de securitate ar trebui să funcționeze. Un <strong>UPS</strong> (sursă neîntreruptibilă) ține sistemul pornit pe baterie minute bune, acoperind penele scurte și dând timp pentru pornirea unui generator, dacă există. Pentru un sistem serios, UPS-ul nu e opțional — e diferența dintre supraveghere continuă și una cu goluri exact când contează. Principiul se aplică la orice echipament critic din clădire; pentru un exemplu extins, vezi articolul despre <a href="https://cssi.ro/blog/securitate-centru-date-camera-servere-firma-brasov">securitatea camerei de servere</a>, unde alimentarea de rezervă e partea centrală.</p>
+<p>Cum dimensionezi un UPS pentru un sistem de camere, fără formule complicate:</p>
+<ul>
+  <li><strong>Calculezi sarcina în wați</strong>: consumul NVR-ului, al switch-ului (inclusiv PoE-ul livrat camerelor) și al routerului sau al altor echipamente conectate. La 8 camere de 10 W, NVR de 30 W și router de 10 W, sarcina e în jur de 120–150 W.</li>
+  <li><strong>Te uiți la puterea activă (W)</strong>, nu doar la VA. Un UPS de 1.000 VA livrează, de regulă, 500–700 W, deci nu e „1.000 de wați" cum pare.</li>
+  <li><strong>Decizi câte minute vrei</strong>: 10–15 minute acoperă penele scurte și o oprire corectă; 1–2 ore cer baterii suplimentare sau un UPS mult mai mare, iar peste asta se discută un generator.</li>
+  <li><strong>Lași rezervă de 25–30%</strong> și aici, ca la switch.</li>
+</ul>
+<p>O capcană frecventă: UPS-ul alimentează NVR-ul, dar nu și switch-ul PoE. Pana de curent oprește camerele, deși recorderul stă pornit, adică ai un sistem „viu" care nu mai are ce înregistra. Toate elementele care compun lanțul de imagine — camere, switch, NVR, router de ieșire spre internet dacă vrei acces de la distanță — trebuie pe același UPS. La fel de important, camerele din exterior (poartă, perimetru) trebuie să fie în același lanț, altfel UPS-ul acoperă doar „interiorul" și lasă exteriorul orb la o pană de curent.</p>
 
+<div class="box box-danger"><div class="box-title">🔥 UPS-ul se uzează: bateria se schimbă, altfel nu te mai salvează</div><p>Bateriile unui UPS obișnuit durează, în medie, 3–5 ani, iar mai puțin la temperaturi ridicate sau în spații fără aerisire. Un UPS cu baterie moartă nu te anunță de la sine că nu mai ține: te lasă fără curent exact când ai nevoie de el, deși „are lumina aprinsă". Verificarea periodică a bateriei, cu test sub sarcină, e parte din mentenanța oricărui sistem care trebuie să meargă la pană, nu un moft.</p></div>
+
+
+<h2 id="cablul-ce-tragi-cum-il-tragi-si-de-ce-co">Cablul: ce tragi, cum îl tragi și de ce contează</h2>
+<p>Cablul e partea cea mai neglijată și cea care provoacă cele mai multe căderi „fără explicație". Câteva reguli practice:</p>
+<ul>
+  <li><strong>Cupru integral, nu aluminiu cuprat (CCA).</strong> Cablurile ieftine cu miez din aluminiu acoperit cu cupru au rezistență mai mare, se încălzesc mai tare cu PoE și nu ajung la 100 m la aceeași putere. Par identice la vedere și costă mai puțin; diferența se vede după un an, în cameră care pornește greu sau pierde pachete. Cablul trebuie să fie marcat clar „Cu" (cupru) pe izolație.</li>
+  <li><strong>Categoria potrivită:</strong> pentru camere, Cat5e e suficient la distanțe obișnuite, iar Cat6 oferă o rezervă bună (conductor mai gros, pierderi mai mici), mai ales la traseele lungi sau la camerele de 60 W.</li>
+  <li><strong>Cablu de exterior pentru exterior.</strong> Tronsoanele care ies din clădire se fac cu cablu rezistent UV, cu manta din polietilenă, eventual cu gel anti-umezeală. Un cablu de interior pus afară se degradează la soare și la îngheț/dezgheț, iar apa pătrunde în el și corodează.</li>
+  <li><strong>Mufe corecte, testate.</strong> O mufă făcută prost, cu un fir ieșit din ordine sau strâns prost, produce întreruperi sporadice, care nu pot fi diagnosticate la prima vedere. Fiecare traseu se testează cu un tester de cablu, nu doar „se vede imaginea".</li>
+</ul>
+<p>Pentru mai multe despre cum se gândește cablarea unei clădiri, vezi și ghidul de <a href="https://cssi.ro/blog/cablare-structurata-retele-date-firma-brasov">cablare structurată</a>; aici ne interesează doar partea care afectează direct camerele.</p>
 
 <h2 id="limita-de-100-de-metri-si-ce-faci-cand-o">Limita de 100 de metri și ce faci când o depășești</h2>
-<p>Regula practică pentru cablul de rețea cu PoE e de aproximativ <strong>100 de metri</strong> între switch și cameră. Peste atât, semnalul și alimentarea slăbesc, iar camera începe să „cadă" periodic. Soluția nu e să forțezi, ci să planifici: <strong>switch-uri intermediare</strong> mai aproape de camere, <strong>extendere PoE</strong> pentru a prelungi distanța, sau <strong>fibră optică</strong> pentru distanțe mari, cu convertoare la capete. Pentru locațiile unde cablarea nu e posibilă, există camere cu alimentare proprie — am detaliat opțiunea în articolul despre <span data-link-later="camere-supraveghere-solare-4g-fara-curent-internet-brasov" data-a="&lt;a href=&quot;https://cssi.ro/blog/camere-supraveghere-solare-4g-fara-curent-internet-brasov&quot;&gt;">camere solare 4G fără curent și internet</span>. Important e ca distanțele să fie gândite din proiectare.</p>
+<p>Regula practică pentru cablul de rețea cu PoE e de aproximativ <strong>100 de metri</strong> între switch și cameră. Peste atât, semnalul și alimentarea slăbesc, iar camera începe să „cadă" periodic. Soluția nu e să forțezi, ci să planifici: <strong>switch-uri intermediare</strong> mai aproape de camere, <strong>extendere PoE</strong> pentru a prelungi distanța, sau <strong>fibră optică</strong> pentru distanțe mari, cu convertoare la capete. Pentru locațiile unde cablarea nu e posibilă, există camere cu alimentare proprie sau cu transmisie fără fir, potrivite mai ales pentru hale, depozite sau terenuri mari, cum discutăm în articolul despre <a href="https://cssi.ro/blog/supraveghere-hala-depozit-ferma-brasov">supravegherea halelor, depozitelor și fermelor din județ</a>. Important e ca distanțele să fie gândite din proiectare.</p>
+<p>De unde vine cifra de 100 m: standardul pentru cablul de rețea prevede un traseu fix (permanent link) de maximum <strong>90 m</strong> plus <strong>10 m</strong> de cordoane la capete, în total 100 m. Dacă ai deja 95 m de cablu în perete, plus cordoane, ai depășit limita, chiar dacă „pe hârtie" par 100. La PoE efectul se vede mai repede decât la date simple, pentru că tensiunea scade pe rezistența cablului, iar o cameră de 25 W de la capătul unei rute lungi primește mai puțin decât la început.</p>
+<table class="compare-table">
+<thead><tr><th>Soluție</th><th>Distanță utilă (orientativ)</th><th>Când o alegi</th><th>De ce să ai grijă</th></tr></thead>
+<tbody>
+<tr><td>Cablu UTP direct</td><td>până la 90–100 m</td><td class="yes">Majoritatea camerelor dintr-o casă sau o firmă</td><td>Cupru integral, nu CCA; traseu fix de maximum 90 m</td></tr>
+<tr><td>Switch PoE intermediar</td><td>încă 100 m după el</td><td class="yes">Mai multe camere într-o zonă depărtată (curte, anexă, parcare)</td><td>Are nevoie de alimentare 230 V la locul lui; carcasă etanșă în exterior</td></tr>
+<tr><td>Extender PoE</td><td>de regulă +100 m (uneori mai mult, la viteză redusă)</td><td>Una sau două camere, fără loc pentru un switch</td><td>Nu înlănțui mai mult de 1–2 extendere; verifică puterea disponibilă la capăt</td></tr>
+<tr><td>Fibră optică + convertoare</td><td>sute de metri, chiar kilometri</td><td class="yes">Hale mari, parcări, curți industriale, clădiri separate</td><td>Camera tot are nevoie de alimentare la capăt (injector PoE local sau sursă)</td></tr>
+<tr><td>Legătură fără fir punct-la-punct</td><td>zeci până la sute de metri, cu vizibilitate directă</td><td>Când nu poți trage cablu (drum, curte despărțită)</td><td>Depinde de vizibilitate, interferențe și vreme; nu e înlocuitor „ieftin" pentru cablu</td></tr>
+<tr><td>Cameră cu alimentare proprie (solar + 4G)</td><td>nelimitată, locul contează mai mult</td><td>Terenuri fără curent și fără internet</td><td>Autonomie iarna, zile cu puțin soare; nu înlocuiește sistemul cablat la intrare</td></tr>
+</tbody>
+</table>
+<h2 id="camerele-din-exterior-umezeala-ger-si-tr">Camerele din exterior: umezeală, ger și trăsnet</h2>
+<p>Un cablu de rețea scos afară devine un fir care poate prinde supratensiuni induse de un trăsnet căzut chiar la sute de metri. Switch-ul sau NVR-ul la capătul lui plătește. Reguli care se aplică în special la camerele de exterior:</p>
+<ul>
+  <li><strong>Protecție la supratensiuni pe linia de date</strong> — protectoare PoE montate lângă switch și, la traseele lungi sau expuse, și lângă cameră, cu legare la pământ. Principiile sunt aceleași ca la instalația electrică; am explicat tipurile de protecție în articolul despre <a href="https://cssi.ro/blog/protectie-supratensiuni-paratrasnet-spd-firma-brasov">protecția la supratensiuni și paratrăsnet</a>.</li>
+  <li><strong>Împământare corectă.</strong> Un protector de supratensiune fără o priză de pământ bună nu face nimic util; valoarea prizei de pământ se verifică prin măsurare, iar detaliile sunt în ghidul despre <a href="https://cssi.ro/blog/priza-de-pamant-masurare-rezistenta-dispersie-brasov">priza de pământ și măsurarea rezistenței</a>.</li>
+  <li><strong>Etanșare la mufă.</strong> Conexiunea de la cameră se protejează cu manșon sau cutie etanșă; apa care intră în mufă corodează contactele în câteva luni și produce căderi intermitente, mai ales iarna.</li>
+</ul>
+
+<div class="box box-tip"><div class="box-title">✅ Checklist: infrastructura de alimentare e gândită corect dacă…</div><p><strong>1.</strong> ai consumul maxim real al fiecărei camere trecut într-un tabel; <strong>2.</strong> bugetul total al switch-ului depășește cu 20–30% consumul însumat; <strong>3.</strong> fiecare traseu are sub 90 m de cablu fix și e făcut din cupru integral; <strong>4.</strong> traseele sunt testate și etichetate la ambele capete; <strong>5.</strong> camerele din exterior au protecție la supratensiuni și mufe etanșate; <strong>6.</strong> UPS-ul alimentează camerele, switch-ul și NVR-ul, nu doar recorderul; <strong>7.</strong> știi cât ține UPS-ul în minute, la sarcina reală; <strong>8.</strong> există porturi libere și buget liber pentru cel puțin 1–2 camere în plus; <strong>9.</strong> ai schema trasee și parolele de administrare predate în scris; <strong>10.</strong> sistemul a mers o zi întreagă, inclusiv noaptea, înainte de predare.</p></div>
 
 <h2 id="stabilitate-si-securitatea-retelei">Stabilitate și securitatea rețelei</h2>
 <p>Un sistem IP nu e doar alimentare — e și o <strong>rețea</strong> care trebuie să fie stabilă și protejată. O infrastructură bună înseamnă cablu de calitate, mufe făcute corect, switch dimensionat și o rețea configurată să nu fie un punct vulnerabil. Partea de securizare a rețelei (parole, separare, protecție) e la fel de importantă ca alimentarea — am tratat-o separat în ghidul despre <a href="https://cssi.ro/blog/securizare-retea-cctv-ip-parole-vlan-protectie-brasov">securizarea rețelei CCTV IP</a>. Cele două merg mână în mână: o cameră bine alimentată, dar prost securizată, rămâne o vulnerabilitate.</p>
 
-<h2 id="de-unde-sa-incepi">De unde să începi</h2>
-<p><strong>Pasul 1:</strong> stabilim numărul de camere, consumul lor și distanțele față de un punct central. <strong>Pasul 2:</strong> dimensionăm switch-ul PoE cu buget de putere cu rezervă. <strong>Pasul 3:</strong> adăugăm UPS pentru continuitate și planificăm soluții pentru camerele depărtate (extendere, fibră). <strong>Pasul 4:</strong> tragem cablare de calitate, lăsăm rezervă pentru extinderi și documentăm sistemul. Rezultatul: un sistem stabil, ușor de extins și fără căderi aleatorii.</p>
+<h2 id="greseli-frecvente-la-alimentarea-camerel">Greșeli frecvente la alimentarea camerelor IP</h2>
+<ol>
+  <li><strong>Switch cumpărat după numărul de porturi, nu după bugetul de putere.</strong> Porturile se văd, bugetul nu — și lipsa lui apare noaptea.</li>
+  <li><strong>Cablu cu aluminiu cuprat (CCA)</strong> pentru că „arată la fel" și costă mai puțin. La PoE și la distanțe mari, diferența se vede în instabilitate.</li>
+  <li><strong>Traseu mai lung de 100 m</strong> „ca să nu mai tragem un switch". Camera funcționează la test, apoi cade periodic.</li>
+  <li><strong>UPS care alimentează doar NVR-ul</strong>, nu și switch-ul sau routerul. La pană, imaginea se pierde exact când sistemul ar trebui să înregistreze.</li>
+  <li><strong>UPS cu baterie veche</strong>, niciodată testat. Lumina e aprinsă, dar bateria nu mai ține nici un minut.</li>
+  <li><strong>Mufe făcute de mână, netestate.</strong> Un fir strâns prost produce căderi sporadice, imposibil de prins la o verificare rapidă.</li>
+  <li><strong>Cablu de interior pus în exterior.</strong> Se degradează la soare și la ger, iar apa ajunge în mufă.</li>
+  <li><strong>Fără protecție la supratensiuni pe traseul de exterior</strong>, iar la prima furtună se arde portul sau chiar switch-ul.</li>
+  <li><strong>Camera PTZ sau cu încălzire pusă pe un port de 15 W.</strong> Pornește vara, nu iarna.</li>
+  <li><strong>Sistem fără rezervă de buget și de porturi.</strong> Prima cameră în plus înseamnă switch nou și cablări refăcute.</li>
+  <li><strong>Documentație lipsă:</strong> nicio schemă, nicio etichetă, nicio parolă predată. La prima defecțiune se pornește de la zero.</li>
+</ol>
+
+<h2 id="costuri-orientative-2026">Costuri orientative 2026</h2>
+<p>Prețurile depind de numărul de camere, de distanțe, de tipul de cablu și de ce echipamente există deja în clădire. Intervalele de mai jos sunt <strong>orientative</strong>, în RON, iar oferta fermă se dă după evaluarea la fața locului.</p>
+<table class="compare-table">
+<thead><tr><th>Lucrare</th><th>Interval orientativ (RON)</th><th>Ce include de obicei</th></tr></thead>
+<tbody>
+<tr><td>4 camere IP + NVR, montat</td><td>3.500–5.500</td><td>Camere, NVR cu PoE, cablare uzuală, configurare</td></tr>
+<tr><td>8 camere IP + NVR, montat</td><td>6.000–9.000</td><td>Camere, NVR sau switch PoE, cablare, configurare</td></tr>
+<tr><td>Switch PoE administrabil, 8 porturi (echipament)</td><td>400–1.200</td><td>În funcție de bugetul de putere și de funcțiile de administrare</td></tr>
+<tr><td>UPS pentru NVR, switch și router (echipament)</td><td>400–1.500</td><td>În funcție de putere și de minutele de autonomie dorite</td></tr>
+<tr><td>Protecție la supratensiuni PoE, per traseu</td><td>100–350</td><td>Protectoare PoE, legare la pământ la locul de montaj</td></tr>
+<tr><td>Legătură pe fibră optică + convertoare, per legătură</td><td>800–2.500</td><td>Convertoare, cordoane, tragere și sudură/conectare, după distanță</td></tr>
+</tbody>
+</table>
+<p>Pentru o privire de ansamblu asupra costurilor unui sistem complet, inclusiv alarme și control acces, vezi ghidul <a href="https://cssi.ro/blog/camere-supraveghere-brasov-ghid-complet-2026">camere de supraveghere în Brașov</a>. Infrastructura de alimentare e, de regulă, o parte mică din buget și una dintre cele mai importante: economia de câteva sute de lei la switch, UPS sau cablu se transformă ușor în deplasări repetate, camere care pică și imagini lipsă.</p>
+
+<h2 id="cum-arata-implementarea-cssi">Cum arată implementarea CSSI</h2>
+<p>Un sistem IP nu începe cu camera, ci cu o evaluare. Pașii pe care îi urmăm, în ordine:</p>
+<ol>
+  <li><strong>Evaluare gratuită la fața locului</strong> în Brașov și împrejurimi: numărul de camere, locurile lor, distanțele față de punctul central, condițiile de exterior și ce echipamente există deja. Cum se așază camerele și la ce înălțime e un subiect separat, pe care îl detaliem în ghidul despre <a href="https://cssi.ro/blog/unde-cum-montezi-corect-camerele-inaltime-unghi-greseli-brasov">unde și cum montezi corect camerele</a>.</li>
+  <li><strong>Proiect și ofertă defalcată</strong>: lista de camere cu consumul lor maxim, switch-ul cu bugetul de putere calculat, UPS-ul dimensionat în wați și minute, traseele cu lungimi, soluțiile pentru camerele depărtate. Prețul e pe linii, nu o sumă globală, ca să știi pentru ce plătești. Numărul de camere și rezoluția se discută pe baza nevoii reale, nu a „pachetului", ca în ghidul despre <a href="https://cssi.ro/blog/cate-camere-ce-rezolutie-dimensionare-sistem-cctv-brasov">câte camere și ce rezoluție ai nevoie</a>.</li>
+  <li><strong>Montaj</strong>: traseele se trag cu cablu de cupru, în tub sau canal, se testează fiecare, se etichetează la ambele capete, iar echipamentele se instalează într-un rack ventilat. Dacă e nevoie de circuit electric dedicat pentru UPS și rack, îl facem cu electrician autorizat ANRE, în aceeași lucrare.</li>
+  <li><strong>Testare în condiții de vârf</strong>: toate camerele pornite, noaptea, cu IR-ul aprins; simulăm o pană de curent ca să vedem cât ține UPS-ul, nu doar să credem fișa tehnică.</li>
+  <li><strong>Predare și documentație</strong>: schema traseelor, lista echipamentelor cu seriile, parolele de administrare, instrucțiuni simple pentru ce faci la o pană sau la o cameră care pică, și datele pentru mentenanță.</li>
+  <li><strong>Mentenanță</strong>: verificări periodice (bateria UPS, curățarea lentilelor, starea mufelor și a protecțiilor, actualizarea firmware-ului), despre care am scris în articolul despre <a href="https://cssi.ro/blog/mentenanta-sisteme-securitate-de-ce-cat-de-des-brasov">mentenanța sistemelor de securitate</a>.</li>
+</ol>
+
+<div class="box box-info"><div class="box-title">ℹ️ Specific Brașov: ger, furtuni de munte și clădiri diferite</div><p>În Brașov și în zonele din jur întâlnim câteva situații care contează la alimentarea camerelor. <strong>Iarna lungă și gerul</strong> (mai ales spre Predeal, Bran, Fundata sau Săcele) cer camere cu încălzire și, deci, un buget PoE mai mare decât cifra de vară. <strong>Furtunile de vară din zona montană</strong> fac din protecția la supratensiuni pe traseele de exterior o investiție, nu un moft, iar pensiunile sau cabanele cu rețea electrică mai slabă beneficiază de un UPS online. <strong>Clădirile vechi din zonele istorice</strong> au, uneori, pereți groși sau canale greu de folosit, deci traseele de cablu se planifică cu atenție, iar <strong>halele și curțile industriale</strong> din zonele de producție cer adesea distanțe peste 100 m, deci fibră sau switch-uri intermediare. Iar la pensiuni și cabane, unde curentul poate lipsi la capătul unei parcele, merită discutată din timp o soluție de alimentare dedicată pentru camerele depărtate.</p></div>
+
+<h2 id="citeste-si">Citește și</h2>
+<ul>
+  <li><a href="https://cssi.ro/blog/securizare-retea-cctv-ip-parole-vlan-protectie-brasov">Cum securizezi rețeaua unui sistem CCTV IP: parole, VLAN și protecție</a></li>
+  <li><a href="https://cssi.ro/blog/cablare-structurata-retele-date-firma-brasov">Cablare structurată și rețele de date pentru firme</a></li>
+  <li><a href="https://cssi.ro/blog/protectie-supratensiuni-paratrasnet-spd-firma-brasov">Protecție la supratensiuni și paratrăsnet (SPD) pentru firme</a></li>
+  <li><a href="https://cssi.ro/blog/inregistrari-video-nvr-local-cloud-hibrid-brasov">Unde se păstrează înregistrările: NVR local, cloud sau hibrid</a></li>
+  <li><a href="https://cssi.ro/blog/mentenanta-sisteme-securitate-de-ce-cat-de-des-brasov">Mentenanța sistemelor de securitate: de ce, cât de des și ce verifică un tehnician</a></li>
+</ul>
       <h2 id="faq">Întrebări frecvente</h2>
       <div class="faq-wrap">
         <div class="faq-item">
@@ -466,11 +620,19 @@
         </div>
         <div class="faq-item">
           <button class="faq-q" onclick="toggleFaq(this)">Pot adăuga camere mai târziu pe același sistem? <svg class="faq-chevron" width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg></button>
-          <div class="faq-a"><p>Da, dacă infrastructura a fost gândită cu rezervă. Asta înseamnă un switch cu porturi și buget de putere disponibile, cablare trasă cu o rezervă și un recorder care mai are canale libere. Dacă sistemul a fost pus „la limită" ca să iasă mai ieftin, orice adăugare înseamnă echipamente noi. De aceea, la proiectare, lăsăm loc de creștere — exact ca la un tablou electric bine gândit, cu rezervă pentru viitor.</p></div>
+          <div class="faq-a"><p>Da, dacă infrastructura a fost gândită cu rezervă. Asta înseamnă un switch cu porturi și buget de putere disponibile, cablare trasă cu o rezervă și un recorder care mai are canale libere. Dacă sistemul a fost pus „la limită" ca să iasă mai ieftin, orice adăugare înseamnă echipamente noi. De aceea, la proiectare, lăsăm loc de creștere — exact ca la un <a href="https://cssi.ro/blog/tablou-electric-casa-cate-circuite-protectii-brasov">tablou electric bine gândit</a>, cu rezervă pentru viitor.</p></div>
         </div>
         <div class="faq-item">
           <button class="faq-q" onclick="toggleFaq(this)">De ce să nu fac eu cablarea cu un kit ieftin? <svg class="faq-chevron" width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg></button>
           <div class="faq-a"><p>Pentru că un sistem stabil depinde de detalii care nu se văd: calitatea cablului, mufele făcute corect, respectarea distanțelor, un switch dimensionat cu rezervă și un UPS pentru continuitate. Un kit ieftin montat la repezeală merge câteva luni, apoi încep căderile aleatorii, greu de diagnosticat. Un sistem profesionist e gândit ca infrastructură: stabil, documentat și ușor de extins. Pe termen lung, asta înseamnă mai puține bătăi de cap și mai puțini bani aruncați.</p></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q" onclick="toggleFaq(this)">Cât durează bateria unui UPS la un sistem de camere? <svg class="faq-chevron" width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg></button>
+          <div class="faq-a"><p>Depinde de sarcină și de capacitatea bateriei. Un UPS obișnuit, cu un sistem de 8 camere, un NVR și un switch, ține de regulă între 10 și 30 de minute, suficient pentru penele scurte și pentru o oprire corectă. Pentru autonomie de ore se adaugă baterii externe sau se trece la un UPS mai mare, iar peste un anumit prag se discută un generator. Bateria în sine are o viață de aproximativ 3–5 ani, deci se testează periodic și se schimbă la timp.</p></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q" onclick="toggleFaq(this)">Ce se întâmplă dacă depășesc bugetul de putere al switch-ului? <svg class="faq-chevron" width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg></button>
+          <div class="faq-a"><p>Switch-ul poate refuza alimentarea portului care depășește limita, poate opri camera cu prioritate mai mică sau poate reporni periodic. Efectul tipic: camere care dispar noaptea, când pornesc iluminatoarele IR, sau iarna, când pornește încălzirea. Remediul nu e un „restart" repetat, ci un switch cu buget mai mare sau o redistribuire a camerelor pe mai multe switch-uri. Se verifică din proiectare, cu consumul maxim din fișa tehnică.</p></div>
         </div>
       </div>
 
@@ -501,11 +663,18 @@
           <ol class="toc-list">
             <li><a href="#raspunsul-scurt">Răspunsul scurt</a></li>
             <li><a href="#poe-un-singur-cablu-pentru-curent-si-dat">PoE: un singur cablu pentru curent și date</a></li>
+            <li><a href="#standardele-poe-af-at-bt-si-ce-inseamna-">Standardele PoE: af, at, bt și ce înseamnă pentru camera ta</a></li>
+            <li><a href="#cat-consuma-de-fapt-o-camera">Cât consumă, de fapt, o cameră</a></li>
             <li><a href="#switch-ul-poe-si-bugetul-de-putere">Switch-ul PoE și bugetul de putere</a></li>
             <li><a href="#ups-continuitate-la-pene-de-curent">UPS: continuitate la pene de curent</a></li>
+            <li><a href="#cablul-ce-tragi-cum-il-tragi-si-de-ce-co">Cablul: ce tragi, cum îl tragi și de ce contează</a></li>
             <li><a href="#limita-de-100-de-metri-si-ce-faci-cand-o">Limita de 100 de metri și ce faci când o depășești</a></li>
+            <li><a href="#camerele-din-exterior-umezeala-ger-si-tr">Camerele din exterior: umezeală, ger și trăsnet</a></li>
             <li><a href="#stabilitate-si-securitatea-retelei">Stabilitate și securitatea rețelei</a></li>
-            <li><a href="#de-unde-sa-incepi">De unde să începi</a></li>
+            <li><a href="#greseli-frecvente-la-alimentarea-camerel">Greșeli frecvente la alimentarea camerelor IP</a></li>
+            <li><a href="#costuri-orientative-2026">Costuri orientative 2026</a></li>
+            <li><a href="#cum-arata-implementarea-cssi">Cum arată implementarea CSSI</a></li>
+            <li><a href="#citeste-si">Citește și</a></li>
             <li><a href="#faq">Întrebări frecvente</a></li>
           </ol>
         </div>

@@ -45,7 +45,7 @@
         }
       },
       "datePublished": "2026-11-07",
-      "dateModified": "2026-11-07",
+      "dateModified": "2026-11-10",
       "mainEntityOfPage": "https://cssi.ro/blog/tablouri-electrice-secundare-distributie-zone-firma-brasov",
       "inLanguage": "ro"
     },
@@ -128,6 +128,22 @@
           "acceptedAnswer": {
             "@type": "Answer",
             "text": "Un electrician autorizat ANRE, pentru că distribuția pe zone, dimensionarea protecțiilor și selectivitatea cer cunoștințe și răspundere tehnică. Autorizarea ANRE înseamnă dreptul legal de a executa lucrarea și garanția că cel care semnează răspunde pentru ea. La CSSI facem și partea de curenți tari, și pe cea de curenți slabi, așa că putem proiecta distribuția ținând cont din start și de nevoile sistemelor de securitate ale firmei."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Se poate face distribuția pe zone fără să oprim activitatea firmei?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "În mare parte, da. Lucrările se planifică pe zone și pe etape: se montează tabloul secundar nou, se trage cablul de alimentare, iar mutarea circuitelor de pe tabloul vechi pe cel nou se face într-o oprire scurtă și anunțată, de obicei în afara programului. Zonele critice (server, securitate) se mută ultimele sau cu soluții provizorii. Exact durata opririlor se stabilește după evaluare."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Ce se întâmplă cu sistemele de securitate la o pană de curent?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Depinde cum au fost gândite. Centralele de alarmă și de incendiu au acumulatori proprii, iar camerele și NVR-ul pot fi puse pe UPS. Controlul de acces trebuie configurat în proiect pentru situația de lipsă a curentului (uși deschise sau închise, după zonă și după cerințe de evacuare). Cu circuite dedicate și UPS pentru echipamentele critice, securitatea continuă să funcționeze cât timp durează autonomia stabilită."
           }
         }
       ]
@@ -390,11 +406,11 @@
       <div class="hero-content">
       <div class="hero-badge">⚡ Ghid CSSI · 2026</div>
       <h1>Tablouri electrice secundare și distribuția pe zone într-o firmă</h1>
-      <p class="lead">La început, o firmă are un singur tablou electric și e suficient. Apoi crește: se adaugă un etaj, o hală, o secție de producție, un depozit, mai multe birouri. La un moment dat, acel tablou general unic nu mai e doar insuficient — devine <strong>incorect</strong>. Trasee lungi de cablu, o problemă într-un colț care lasă fără curent toată clădirea, un tablou greu de înțeles când trebuie să intervii rapid. Soluția prin care firmele serioase își organizează energia se numește <strong>distribuție pe zone</strong>, cu <strong>tablouri secundare</strong>. E diferența dintre o instalație care „merge cumva" și una pe care te poți baza.</p>
+      <p class="lead">La început, o firmă are un singur tablou electric și e suficient. Apoi crește: se adaugă un etaj, o hală, o secție de producție, un depozit, mai multe birouri. La un moment dat, acel tablou general unic nu mai e doar insuficient — devine <strong>incorect</strong>. Trasee lungi de cablu, o problemă într-un colț care lasă fără curent toată clădirea, un tablou greu de înțeles când trebuie să intervii rapid. Soluția prin care firmele serioase își organizează energia se numește <strong>distribuție pe zone</strong>, cu <strong>tablouri secundare</strong>. E diferența dintre o instalație care „merge cumva" și una pe care te poți baza. Ghidul de față e despre firme, nu despre locuințe: aici contează selectivitatea, continuitatea activității și faptul că aceeași clădire are birouri, producție, server și securitate cu nevoi foarte diferite.</p>
       <div class="hero-meta">
         <span>✍ CSSI Brașov</span><span class="dot">·</span>
         <span>📅 7 Nov 2026</span><span class="dot">·</span>
-        <span>⏱ 9 min lectură</span>
+        <span>⏱ 21 min lectură</span>
       </div>
       <div class="topic-pills">
         <span class="pill pill-blue">🛡 Securitate firme</span>
@@ -409,11 +425,19 @@
   <div class="article-wrap">
     <main class="article-body" id="articol">
 <h2 id="raspunsul-scurt">Răspunsul scurt</h2>
-<p>Pe măsură ce o firmă crește pe etaje, hale sau zone, un singur tablou general nu mai e suficient — se trece la o <strong>distribuție pe zone</strong>: un <strong>tablou general</strong> care alimentează mai multe <strong>tablouri secundare</strong>, câte unul pe fiecare zonă. Cheia este <strong>selectivitatea</strong>: la o problemă, să sară doar siguranța zonei afectate, nu a întregii firme. La fel de importante sunt <strong>ordinea, etichetarea și schema</strong> tabloului — pentru intervenții rapide și sigure — și <strong>circuitele dedicate</strong> pentru sistemele de securitate. Toate se proiectează și se execută de un <strong>electrician autorizat ANRE</strong>.</p>
+<p>Pe măsură ce o firmă crește pe etaje, hale sau zone, un singur tablou general nu mai e suficient — se trece la o <strong>distribuție pe zone</strong>: un <strong>tablou general de distribuție (TGD)</strong> care alimentează, pe cabluri proprii, mai multe <strong>tablouri secundare</strong>, câte unul pe fiecare zonă (birouri, hală, depozit, cameră server, spații tehnice). O firmă de 500–2.000 m² ajunge de regulă la <strong>3–8 tablouri secundare</strong>, fiecare cu <strong>rezervă de 20–30%</strong> de module și cu protecții <strong>selective</strong> față de tabloul general. Cheia este <strong>selectivitatea</strong>: la o problemă, să sară doar protecția zonei afectate, nu a întregii firme. La fel de importante sunt <strong>ordinea, etichetarea și schema monofilară</strong>, <strong>circuitele dedicate pentru securitate și rețea</strong> (camere, control acces, alarmă, server) și un <strong>plan de mentenanță</strong> cu măsurători și termografie. Toate se proiectează și se execută de un <strong>electrician autorizat ANRE</strong>.</p>
 
 
-<h2 id="cand-un-singur-tablou-nu-mai-ajunge">Când un singur tablou nu mai ajunge</h2>
-<p>Semnele apar treptat. Traseele de cablu devin tot mai lungi, pentru că totul pleacă dintr-un singur punct. O problemă într-o zonă — un scurtcircuit într-un birou, un echipament defect în hală — afectează mai mult decât ar trebui. Tabloul se aglomerează cu circuite și devine greu de citit. Iar când firma adaugă consumatori noi (echipamente, climatizare, încărcare), capacitatea și organizarea încep să scârțâie. Dacă te-ai lovit deja de nevoia de mai multă putere, am tratat separat acest aspect în articolele despre <a href="https://cssi.ro/blog/sporire-putere-electrica-instalata-firma-brasov">sporirea de putere instalată</a> și despre <a href="https://cssi.ro/blog/bransament-electric-trifazat-firma-racordare-anre-brasov">branșamentul trifazat și racordarea</a>. Distribuția pe zone e pasul care urmează firesc: nu mai aduci totul la un punct, ci duci alimentarea aproape de fiecare zonă.</p>
+<h2 id="ce-difera-fata-de-tabloul-de-casa">Ce diferă față de tabloul de casă</h2>
+<p>La o locuință, tabloul are un singur rol: să împartă corect curentul între camere și aparate și să protejeze oamenii. Am explicat logica în ghidul despre <a href="https://cssi.ro/blog/tablou-electric-casa-cate-circuite-protectii-brasov">tabloul electric al casei</a>: circuite dedicate, diferențiale, SPD, rezervă. La o firmă, aceleași principii se aplică, dar la altă scară și cu alte mize.</p>
+<ul>
+  <li><strong>Mai multe niveluri.</strong> Acasă ai un tablou. Într-o firmă ai tablou general, tablouri secundare și, în hale mari, uneori și tablouri terțiare pentru utilaje sau linii de producție. Fiecare nivel trebuie coordonat cu cel de deasupra.</li>
+  <li><strong>Curenți mari de scurtcircuit.</strong> Cu cât branșamentul e mai puternic, cu atât, la un defect, curentul care circulă în primele milisecunde e mai mare. Aparatajul trebuie să reziste la el (capacitate de rupere), nu doar să „meargă" la curentul normal.</li>
+  <li><strong>Continuitatea activității.</strong> O oprire într-o casă înseamnă o oră fără lumină. Într-o firmă înseamnă producție oprită, marfă care se strică în depozitul frigorific, server căzut, uși de acces blocate sau, dimpotrivă, deblocate fără control.</li>
+  <li><strong>Mai mulți utilizatori.</strong> În firmă lucrează oameni care nu știu instalația: angajați, subcontractori, chiriași. Tabloul trebuie să fie clar, închis și accesibil doar celor care au nevoie.</li>
+  <li><strong>Mai multe tipuri de consumatori.</strong> Birouri cu electronice sensibile, hale cu motoare, climatizare, iluminat mare, încărcare auto, plus sisteme de securitate care nu au voie să cadă.</li>
+</ul>
+<p>Pe scurt: tabloul de casă e o problemă de dimensionare. Distribuția dintr-o firmă e o problemă de <strong>arhitectură</strong> — cum se organizează energia ca să rămână sigură, ușor de întreținut și extensibilă.</p>
 
       <div class="cta-banner" style="margin:32px 0">
         <div>
@@ -427,24 +451,148 @@
           <a target="_blank" rel="noopener" href="https://wa.me/40752288400" class="btn btn-secondary">💬 WhatsApp</a>
         </div>
       </div>
+<h2 id="cand-un-singur-tablou-nu-mai-ajunge">Când un singur tablou nu mai ajunge</h2>
+<p>Semnele apar treptat. Traseele de cablu devin tot mai lungi, pentru că totul pleacă dintr-un singur punct. O problemă într-o zonă — un scurtcircuit într-un birou, un echipament defect în hală — afectează mai mult decât ar trebui. Tabloul se aglomerează cu circuite și devine greu de citit. Iar când firma adaugă consumatori noi (echipamente, climatizare, încărcare), capacitatea și organizarea încep să scârțâie. Dacă te-ai lovit deja de nevoia de mai multă putere, am tratat separat acest aspect în articolele despre <a href="https://cssi.ro/blog/sporire-putere-electrica-instalata-firma-brasov">sporirea de putere instalată</a> și despre <a href="https://cssi.ro/blog/bransament-electric-trifazat-firma-racordare-anre-brasov">branșamentul trifazat și racordarea</a>. Distribuția pe zone e pasul care urmează firesc: nu mai aduci totul la un punct, ci duci alimentarea aproape de fiecare zonă.</p>
 <h2 id="tablou-general-si-tablouri-secundare">Tablou general și tablouri secundare</h2>
-<p>Structura e simplă și logică. <strong>Tabloul general</strong> este punctul principal de unde intră și se distribuie energia în firmă. Din el pleacă alimentarea către <strong>tablourile secundare</strong> — tablouri mai mici, amplasate pe fiecare zonă (etaj, hală, secție, depozit) — care deservesc consumatorii din zona lor. Avantajele sunt concrete: fiecare zonă are propriul punct de protecție și de control, traseele de cablu sunt mai scurte și mai ordonate, iar intervențiile devin mult mai simple. Când trebuie să oprești curentul într-o zonă pentru o lucrare, o faci local, fără să afectezi restul firmei. E o decizie diferită de aceea dintre <span data-link-later="tablou-trifazat-vs-monofazat-cand-ai-nevoie-brasov" data-a="&lt;a href=&quot;https://cssi.ro/blog/tablou-trifazat-vs-monofazat-cand-ai-nevoie-brasov&quot;&gt;">tablou trifazat și monofazat</span> — acolo alegi tipul de alimentare; aici organizezi cum se distribuie în spațiu.</p>
+<p>Structura e simplă și logică. <strong>Tabloul general</strong> este punctul principal de unde intră și se distribuie energia în firmă. Din el pleacă alimentarea către <strong>tablourile secundare</strong> — tablouri mai mici, amplasate pe fiecare zonă (etaj, hală, secție, depozit) — care deservesc consumatorii din zona lor. Avantajele sunt concrete: fiecare zonă are propriul punct de protecție și de control, traseele de cablu sunt mai scurte și mai ordonate, iar intervențiile devin mult mai simple. Când trebuie să oprești curentul într-o zonă pentru o lucrare, o faci local, fără să afectezi restul firmei. E o decizie diferită de aceea dintre monofazat și trifazat — acolo alegi tipul de alimentare, așa cum e explicat în ghidul despre <a href="https://cssi.ro/blog/instalatie-electrica-utilaje-motoare-trifazate-firma-brasov">instalația pentru utilaje și motoare trifazate</a>; aici organizezi cum se distribuie energia în spațiu.</p>
+<h3>Cum arată lanțul de alimentare</h3>
+<p>Într-o firmă tipică, drumul curentului arată așa: branșament și contor → <strong>tablou general (TGD)</strong> cu întrerupător general, SPD și protecțiile pe plecări → cablu dedicat pe fiecare zonă → <strong>tablou secundar</strong> cu general propriu de zonă și protecțiile circuitelor → consumatori. Fiecare plecare din TGD către un tablou secundar are protecția ei, dimensionată după cablu și după puterea zonei. Fiecare tablou secundar are, la rândul lui, un întrerupător general de zonă care permite oprirea locală.</p>
+<h3>Ce zone merită tablou propriu</h3>
+<table class="compare-table">
+<thead><tr><th>Zonă</th><th>De ce merită tablou propriu</th><th>Particularități tipice</th></tr></thead>
+<tbody>
+<tr><td>Etaj de birouri</td><td>Prize și iluminat multe, lucrări frecvente de reorganizare</td><td>Circuite separate iluminat/prize, zone pentru imprimante și echipamente de rețea</td></tr>
+<tr><td>Hală de producție</td><td>Motoare și utilaje, curenți de pornire mari</td><td>Aparataj trifazat, grad de protecție ridicat, oprire de urgență pe zonă</td></tr>
+<tr><td>Depozit / logistică</td><td>Iluminat pe suprafețe mari, încărcătoare, porți</td><td>Circuite separate pentru încărcare stivuitoare și porți automate</td></tr>
+<tr><td>Cameră server / rețea</td><td>Consumator critic, nu are voie să cadă</td><td>Circuit dedicat, UPS, protecții fine la supratensiuni</td></tr>
+<tr><td>Spații tehnice (climatizare, centrală)</td><td>Consum mare și constant</td><td>Circuite proprii, adesea trifazate</td></tr>
+<tr><td>Exterior și parcare</td><td>Umiditate, îngheț, trăsnet</td><td>Protecții suplimentare, aparataj cu grad de protecție adecvat</td></tr>
+<tr><td>Securitate (camere, acces, alarmă)</td><td>Trebuie să funcționeze când altceva cade</td><td>Circuit dedicat, uneori cu rezervă prin UPS</td></tr>
+</tbody>
+</table>
+<p>Nu toate zonele cer tablou separat. Un birou de 60 m² nu are nevoie de tablou secundar propriu, în timp ce o hală de 600 m² cu utilaje, aproape sigur da. Decizia se ia pe baza puterii zonei, a distanței față de TGD și a nevoii de a opri zona independent.</p>
 
 <h2 id="selectivitatea-sa-sara-doar-zona-afectat">Selectivitatea: să sară doar zona afectată</h2>
 <p>Dacă reții un singur lucru din acest articol, acesta să fie. <strong>Selectivitatea</strong> înseamnă că, la o problemă într-o zonă, sare <em>doar</em> siguranța acelei zone, nu siguranța generală a firmei. Fără selectivitate, un scurtcircuit într-un birou poate lăsa fără curent toată clădirea — inclusiv producția, serverele și sistemele de securitate. Cu o distribuție bine gândită și protecții corelate corect între tabloul general și cele secundare, problema rămâne izolată acolo unde a apărut, iar restul firmei lucrează normal. Pentru o afacere, asta înseamnă diferența dintre un incident minor într-o încăpere și o oprire generală care costă timp, bani și nervi.</p>
+<h3>Cum se obține în practică</h3>
+<p>Selectivitatea nu apare de la sine și nu se obține doar „punând siguranțe mai mari sus". Se calculează, la proiectare, pe lanțul complet de protecții, de la consumator până la tabloul general:</p>
+<ul>
+  <li><strong>Trepte de valori.</strong> Fiecare nivel are o protecție mai mare decât cel de după el, cu un raport suficient între ele, ca defectul să fie tăiat de cea mai apropiată protecție.</li>
+  <li><strong>Curbe și declanșatoare potrivite.</strong> Se aleg tipul de curbă (B, C, D) și reglajele declanșării, după consumatori: curenții de pornire ai motoarelor nu trebuie să facă să sară protecția de deasupra.</li>
+  <li><strong>Protecții reglabile la nivelul superior.</strong> La plecările spre tablourile secundare, mai ales la puteri mari, se folosesc adesea întrerupătoare cu declanșatoare reglabile, ca să poți ajusta pragul și timpul de reacție.</li>
+  <li><strong>Diferențiale pe niveluri.</strong> Protecția la curent diferențial se face în trepte: diferențial de 30 mA aproape de consumator, cu unul selectiv (tip S, cu întârziere) în amonte, ca o scurgere în hală să nu oprească tot etajul de birouri.</li>
+  <li><strong>Verificarea la curenții de scurtcircuit reali.</strong> Aparatajul trebuie să reziste la curentul maxim de scurtcircuit din punctul unde e montat — o valoare care crește cu puterea branșamentului și scade cu lungimea cablurilor.</li>
+</ul>
+<div class="box box-warn"><div class="box-title">⚠️ „A sărit generalul" nu e o defecțiune, e un semn de proiectare</div><p>Dacă la un defect banal dintr-un birou sare siguranța generală a firmei, nu ai de-a face cu ghinion, ci cu o distribuție fără selectivitate. Repornirea generalului rezolvă simptomul, nu cauza. Data viitoare, aceeași problemă va opri din nou toată firma. Soluția e corelarea protecțiilor între niveluri, iar uneori și mutarea unor circuite pe un tablou secundar propriu.</p></div>
 
 
+<h2 id="cum-se-dimensioneaza-distributia-pe-zone">Cum se dimensionează distribuția pe zone</h2>
+<p>Un tablou secundar nu se alege „cât să încapă". Se pornește de la nevoile zonei și se ajunge, în câțiva pași, la o structură care rezistă în timp.</p>
+<ol>
+  <li><strong>Inventarul consumatorilor pe zonă.</strong> Notezi ce există și ce urmează: iluminat, prize, climatizare, utilaje, echipamente IT, securitate. Pentru fiecare, puterea și dacă e monofazat sau trifazat.</li>
+  <li><strong>Factorul de simultaneitate.</strong> Nu toți consumatorii merg în același timp la putere maximă. Electricianul aplică un coeficient realist, ca să nu supradimensioneze inutil (și să nu plătești cablu și aparataj degeaba), dar nici să nu subdimensioneze.</li>
+  <li><strong>Distribuția pe faze.</strong> La un branșament trifazat, consumatorii monofazați se împart cât mai echilibrat pe cele trei faze. O fază încărcată mult mai tare decât celelalte înseamnă încălzire, scăderi de tensiune și declanșări fără motiv.</li>
+  <li><strong>Secțiunea cablului de alimentare a zonei.</strong> Se calculează după curent, după lungime (scăderea de tensiune) și după modul de pozare (jgheab, tub, pământ). La distanțe mari, secțiunea se mărește față de ce ar cere curentul singur.</li>
+  <li><strong>Protecțiile.</strong> Se aleg valorile, curbele și diferențialele, urmărind selectivitatea față de tabloul general.</li>
+  <li><strong>Rezerva.</strong> Se lasă 20–30% loc liber în tablou și o rezervă de putere pe plecarea din TGD, pentru extinderile viitoare.</li>
+  <li><strong>Gradul de protecție al carcasei.</strong> Un tablou de birou poate fi o cutie obișnuită; unul din hală cu praf sau umiditate cere o carcasă cu grad de protecție adecvat, iar în exterior, una rezistentă la ploaie și îngheț.</li>
+</ol>
 <h2 id="ordine-etichetare-si-schema-tabloului">Ordine, etichetare și schema tabloului</h2>
 <p>Un tablou nu se judecă doar după ce echipamente are, ci și după cât de ușor e de înțeles. Într-o urgență sau la o intervenție rapidă, trebuie să știi <strong>imediat</strong> ce siguranță deservește ce circuit. Un tablou ordonat, cu o <strong>schemă clară</strong> și fiecare circuit <strong>etichetat</strong>, scurtează timpul de intervenție și reduce riscul de greșeli. Un tablou haotic, cu fire neidentificate, transformă orice problemă mică într-una mare — pentru că pierzi minute prețioase doar ca să înțelegi ce se întâmplă. Ordinea și etichetarea nu sunt „cosmetică": sunt parte din siguranța și din buna funcționare a firmei, și sunt printre primele lucruri pe care le punem la punct.</p>
+<p>Într-o firmă, documentația tabloului are câteva piese care fac diferența la o intervenție sau la o extindere:</p>
+<ul>
+  <li><strong>Schema monofilară</strong> a fiecărui tablou, în ușa lui, actualizată după orice modificare. Pentru ansamblu, o schemă generală care arată cum pleacă fiecare tablou secundar din TGD.</li>
+  <li><strong>Etichete lizibile și durabile</strong> pe fiecare protecție, cu numele circuitului și, unde e cazul, zona alimentată. Nu „circuit 7", ci „Prize birouri etaj 1, aripa nord".</li>
+  <li><strong>Marcarea cablurilor</strong> la capete, ca să știi ce cablu merge unde, fără să tragi de el.</li>
+  <li><strong>Marcarea tablourilor între ele</strong>: pe tabloul secundar, de unde e alimentat; pe TGD, ce plecări ajung la ce tablou.</li>
+  <li><strong>Un registru al modificărilor</strong> — o foaie în tablou sau un fișier, în care se notează orice schimbare (ce, când, de cine). Pare birocrație, dar ține instalația inteligibilă pe zece ani.</li>
+  <li><strong>Codul de culori al conductoarelor</strong> respectat peste tot, ca să nu depinzi de memoria cuiva.</li>
+</ul>
 
-<h2 id="circuite-dedicate-pentru-securitate">Circuite dedicate pentru securitate</h2>
-<p>Aici se vede avantajul de a gândi instalația și securitatea împreună. Sistemele de securitate — <strong>camere, control acces, alarmă</strong> — au nevoie de alimentare sigură și, ideal, de <strong>circuite dedicate</strong>, ca să nu fie afectate de problemele altor consumatori și să rămână funcționale exact când contează. Când proiectăm distribuția pe zone, prevedem aceste circuite din start, în loc să le „cârpim" mai târziu. Acesta e, de fapt, marele beneficiu al unei singure echipe pentru <strong>curenții tari</strong> (instalația electrică) și <strong>curenții slabi</strong> (securitatea): totul se corelează corect, fără lucrări duble și fără surprize. Am descris această abordare integrată în articolul despre <span data-link-later="instalatie-electrica-firma-spatiu-comercial-brasov-2026" data-a="&lt;a href=&quot;https://cssi.ro/blog/instalatie-electrica-firma-spatiu-comercial-brasov-2026&quot;&gt;">instalația electrică pentru firmă și spațiu comercial</span>.</p>
+<div class="box box-tip"><div class="box-title">✅ Checklist: distribuția firmei e gândită corect dacă…</div><p><strong>1.</strong> fiecare zonă mare (etaj, hală, depozit) are tablou secundar propriu; <strong>2.</strong> la un defect într-o zonă sare doar protecția zonei, nu a generalului; <strong>3.</strong> fiecare tablou are cel puțin 20% loc liber; <strong>4.</strong> există schemă monofilară actualizată în ușa fiecărui tablou; <strong>5.</strong> toate circuitele sunt etichetate clar; <strong>6.</strong> consumatorii monofazați sunt echilibrați pe cele trei faze; <strong>7.</strong> camerele, controlul de acces, alarma și serverul au circuite dedicate; <strong>8.</strong> există SPD în tabloul general și, unde e cazul, și în cele secundare; <strong>9.</strong> tablourile sunt accesibile, curate și închise; <strong>10.</strong> instalația are măsurători periodice și un plan de mentenanță; <strong>11.</strong> lucrarea a fost făcută și documentată de un electrician autorizat ANRE. Dacă lipsesc mai mult de trei puncte, merită o evaluare.</p></div>
+
+<h2 id="circuite-dedicate-pentru-securitate-si-r">Circuite dedicate pentru securitate și rețea</h2>
+<p>Aici se vede avantajul de a gândi instalația și securitatea împreună. Sistemele de securitate — <strong>camere, control acces, alarmă</strong> — au nevoie de alimentare sigură și, ideal, de <strong>circuite dedicate</strong>, ca să nu fie afectate de problemele altor consumatori și să rămână funcționale exact când contează. Când proiectăm distribuția pe zone, prevedem aceste circuite din start, în loc să le „cârpim" mai târziu. Acesta e, de fapt, marele beneficiu al unei singure echipe pentru <strong>curenții tari</strong> (instalația electrică) și <strong>curenții slabi</strong> (securitatea): totul se corelează corect, fără lucrări duble și fără surprize.</p>
+<p>Concret, într-o firmă cu securitate și rețea de date, urmărim:</p>
+<ul>
+  <li><strong>NVR și camere.</strong> Înregistratorul și switch-urile PoE pe circuit propriu, cu UPS. Detaliile de alimentare, distanțe și autonomie sunt în articolul despre <a href="https://cssi.ro/blog/alimentare-poe-camere-ip-switch-ups-distante-brasov">alimentarea camerelor IP: PoE, switch, UPS</a>.</li>
+  <li><strong>Control acces.</strong> Sursa de alimentare a controlerelor și a yală-electromagnet pe circuit stabil. La o cădere de curent, ușile trebuie să se comporte exact cum a fost stabilit în proiect (deschise sau închise), nu aleatoriu.</li>
+  <li><strong>Alarmă și detecție incendiu.</strong> Centralele au acumulatori proprii, dar alimentarea de bază trebuie să vină dintr-un circuit care nu se oprește la un defect din altă parte. Pentru partea de detecție, vezi ghidul despre <a href="https://cssi.ro/blog/sistem-detectie-semnalizare-incendiu-idsai-firma-brasov">sistemele de detecție și semnalizare incendiu</a>.</li>
+  <li><strong>Camera server și rack-urile.</strong> Circuit dedicat, UPS dimensionat după consum, iar cablarea de date trasă separat de cea de curent, ca în ghidul despre <a href="https://cssi.ro/blog/cablare-structurata-retele-date-firma-brasov">cablarea structurată pentru firme</a>.</li>
+  <li><strong>Iluminatul de siguranță</strong> are propria logică și propriile cerințe; despre el am scris în articolul despre <a href="https://cssi.ro/blog/iluminat-siguranta-evacuare-firme-isu-brasov">iluminatul de siguranță și evacuare</a>.</li>
+</ul>
+<p>Regula practică: tot ce trebuie să meargă și când altceva cade stă pe circuite separate, în tablou sau chiar într-un tablou propriu de securitate, cu protecții proprii. Dacă iluminatul, prizele din birou și camerele sunt pe aceeași siguranță, o priză defectă poate lăsa firma și fără supraveghere.</p>
+
+<div class="box box-danger"><div class="box-title">🔥 Nu alimenta sistemul de alarmă și camerele de la o priză din birou</div><p>E o soluție de moment care devine permanentă. Priza respectivă e pe același circuit cu aparate de uz general (fierbătoare, încălzitoare, imprimante). Când un aparat defect face să sară protecția circuitului, firma rămâne și fără alarmă, și fără camere, exact în ora în care ar conta mai mult. Alimentarea sistemelor de securitate se face din circuit dedicat, în tablou, cu protecție proprie, iar unde e nevoie și cu UPS.</p></div>
+
+<h2 id="calitatea-energiei-faze-supratensiuni-si">Calitatea energiei: faze, supratensiuni și împământare</h2>
+<p>O distribuție bine structurată nu înseamnă doar tablouri la locul lor. Mai sunt trei lucruri care decid dacă instalația se comportă bine zi de zi.</p>
+<p><strong>Echilibrarea fazelor:</strong> la un branșament trifazat, consumatorii monofazați se repartizează deliberat pe faze și repartiția se notează pe schemă; o fază încărcată mult mai tare produce încălzire și declanșări fără motiv. <strong>Supratensiuni:</strong> protecția se face în trepte, la tabloul general și în tablourile secundare, iar detaliile sunt în ghidul despre <a href="https://cssi.ro/blog/protectie-supratensiuni-paratrasnet-spd-firma-brasov">protecția la supratensiuni și paratrăsnet</a>. <strong>Împământarea:</strong> toate tablourile se leagă la priza de pământ, a cărei valoare se verifică prin măsurători, ca în articolul despre <a href="https://cssi.ro/blog/priza-de-pamant-masurare-rezistenta-dispersie-brasov">rezistența de dispersie</a>.</p>
 
 <h2 id="mentenanta-tablourilor">Mentenanța tablourilor</h2>
 <p>O instalație bine făcută nu e „pune și uită". În timp, conexiunile se pot slăbi, iar o conexiune slăbită se încălzește și devine un risc real de incendiu. De aceea recomandăm <strong>verificarea periodică</strong>, inclusiv prin <strong>termografie</strong> — o metodă care depistează punctele fierbinți din tablou înainte să devină o problemă, despre care am scris în articolul despre <a href="https://cssi.ro/blog/termografie-electrica-mentenanta-predictiva-tablouri-brasov">termografia electrică și mentenanța predictivă a tablourilor</a>. Strângerea conexiunilor, verificarea protecțiilor și controlul stării generale țin instalația sigură și previn întreruperile neașteptate. Pentru o firmă, mentenanța tabloului e o investiție mică față de costul unei opriri de producție.</p>
+<table class="compare-table">
+<thead><tr><th>Verificare</th><th>Cât de des (orientativ)</th><th>Ce urmărește</th></tr></thead>
+<tbody>
+<tr><td>Inspecție vizuală a tablourilor</td><td>La fiecare câteva luni, de către persoana desemnată în firmă</td><td>Praf, umezeală, uși deschise, semne de încălzire, protecții declanșate</td></tr>
+<tr><td>Testarea butonului „T" la diferențiale</td><td>Lunar sau trimestrial</td><td>Dacă diferențialul declanșează la test</td></tr>
+<tr><td>Termografie</td><td>Anual sau la câțiva ani, după importanța instalației</td><td>Puncte fierbinți, conexiuni slăbite, circuite supraîncărcate</td></tr>
+<tr><td>Strângerea conexiunilor</td><td>La intervale stabilite în planul de mentenanță</td><td>Bornele și barele slăbite de dilatări</td></tr>
+<tr><td>Măsurători PRAM (împământare, izolație)</td><td>Periodic, după normativele în vigoare și după tipul instalației</td><td>Valoarea prizei de pământ, starea izolației cablurilor</td></tr>
+<tr><td>Verificarea SPD-urilor</td><td>După furtuni puternice și periodic</td><td>Indicatorul de stare, înlocuirea cartușelor uzate</td></tr>
+<tr><td>Actualizarea schemei și a etichetelor</td><td>După fiecare modificare</td><td>Ca documentația să corespundă realității</td></tr>
+</tbody>
+</table>
+<p>Pentru un plan complet de verificări la nivelul întregii instalații, nu doar al tablourilor, vezi ghidul despre <a href="https://cssi.ro/blog/mentenanta-verificari-periodice-instalatie-electrica-firma-brasov">mentenanța și verificările periodice ale instalației electrice la firmă</a>. Dacă o protecție declanșează repetat, înainte de a o „mări", verifică cauza — pașii sunt în articolul despre <a href="https://cssi.ro/blog/siguranta-sare-cauze-solutii-instalatie-electrica">de ce sare siguranța</a>.</p>
 
-<h2 id="de-unde-sa-incepi">De unde să începi</h2>
-<p><strong>Pasul 1:</strong> evaluăm cum e organizată acum instalația și pe ce zone se împarte firma. <strong>Pasul 2:</strong> proiectăm distribuția — tablou general plus tablouri secundare pe zone — cu protecții corelate pentru selectivitate. <strong>Pasul 3:</strong> prevedem circuitele dedicate pentru securitate și punem ordine: schemă, etichetare, organizare. <strong>Pasul 4:</strong> executăm cu electrician autorizat ANRE și stabilim un plan de mentenanță, inclusiv termografie periodică.</p>
+<div class="box box-info"><div class="box-title">ℹ️ Specific Brașov: clădiri vechi, hale mari și iernile din zonă</div><p>În Brașov și în împrejurimi întâlnim des trei situații. Prima: <strong>clădiri vechi, adaptate pentru birouri sau spații comerciale</strong>, cu o instalație modificată în etape, unde un singur tablou alimentează tot. A doua: <strong>hale și depozite din zonele industriale</strong>, extinse treptat, cu trasee lungi și consumatori noi. A treia: <strong>spații cu program sezonier</strong>, de exemplu din turism, unde consumul se schimbă mult între sezoane. Iernile reci și furtunile de vară din zona de munte adaugă o cerință în plus: tablourile din spații neîncălzite (depozite, anexe, exterior) au nevoie de carcase potrivite, iar protecția la supratensiuni și o împământare bună sunt prioritare. Verificarea la fața locului arată ce se potrivește fiecărei clădiri.</p></div>
+
+<h2 id="greseli-frecvente-la-distributia-electri">Greșeli frecvente la distribuția electrică din firme</h2>
+<p>Din lucrările și evaluările făcute în județul Brașov, acestea sunt greșelile pe care le întâlnim cel mai des:</p>
+<ol>
+  <li><strong>Un singur tablou pentru toată clădirea</strong>, deși firma are mai multe zone și s-a extins de câteva ori.</li>
+  <li><strong>Lipsa selectivității</strong> — la un defect minor sare generalul și se oprește toată firma.</li>
+  <li><strong>Extinderi „agățate" pe circuite existente</strong>, fără calcul, până când cablul sau protecția ajung la limită.</li>
+  <li><strong>Tablouri umplute complet</strong>, fără rezervă de module pentru extinderi.</li>
+  <li><strong>Faze dezechilibrate</strong> — majoritatea consumatorilor monofazați pe aceeași fază.</li>
+  <li><strong>Securitatea și rețeaua pe aceleași circuite cu consumatorii obișnuiți</strong>, fără UPS pentru echipamentele critice.</li>
+  <li><strong>Protecții supradimensionate față de cablu</strong>, făcute „ca să nu mai sară".</li>
+  <li><strong>Lipsa schemei și a etichetelor</strong> — nimeni nu mai știe ce alimentează fiecare siguranță.</li>
+  <li><strong>Tablouri blocate sau neprotejate</strong> — în spatele marfei sau, dimpotrivă, deschise și accesibile oricui.</li>
+  <li><strong>Mentenanță inexistentă</strong> — tabloul nu e deschis niciodată până nu apare o problemă.</li>
+  <li><strong>Lucrări făcute de persoane diferite, fără coordonare</strong> — fiecare modificare respectă „logica" celui care a făcut-o.</li>
+</ol>
+
+<h2 id="cat-costa-distributia-pe-zone-in-2026-or">Cât costă distribuția pe zone în 2026 (orientativ)</h2>
+<p>Costul depinde de puterea instalată, de numărul de zone, de distanțele dintre tablouri, de calitatea aparatajului și de cât din instalația existentă se păstrează. Intervalele de mai jos sunt <strong>orientative pentru Brașov și împrejurimi</strong>, cu manoperă și aparataj de calitate; oferta fermă vine după evaluarea la fața locului și, la proiecte mai mari, după un calcul de dimensionare.</p>
+<table class="compare-table">
+<thead><tr><th>Lucrare</th><th>Cost orientativ</th><th>Ce include, de regulă</th></tr></thead>
+<tbody>
+<tr><td>Tablou secundar pentru un etaj de birouri</td><td>1.800–4.000 RON</td><td>Cutie, general de zonă, protecții, etichetare, legarea circuitelor existente; cablul de alimentare se calculează separat</td></tr>
+<tr><td>Tablou secundar pentru hală (trifazat)</td><td>3.500–8.000 RON</td><td>Carcasă cu grad de protecție adecvat, aparataj trifazat, protecții pentru plecările către utilaje</td></tr>
+<tr><td>Refacerea tabloului general (reorganizare + selectivitate)</td><td>5.000–12.000 RON</td><td>Aparataj nou sau reorganizat, SPD, plecări pe zone, schemă și etichetare</td></tr>
+<tr><td>Cablu de alimentare spre un tablou secundar</td><td>Depinde de lungime și secțiune</td><td>Cablu, pozare în jgheab sau tub, capete, verificare</td></tr>
+<tr><td>Circuit dedicat nou (securitate, rețea)</td><td>250–500 RON</td><td>Traseu, cablu, protecție în tablou, priză sau racord</td></tr>
+<tr><td>Adăugare SPD într-un tablou existent</td><td>350–800 RON</td><td>Aparat SPD, montaj, verificarea împământării</td></tr>
+<tr><td>Măsurători PRAM (împământare, izolație)</td><td>300–800 RON</td><td>Măsurători, buletin, recomandări</td></tr>
+<tr><td>Termografie a tablourilor</td><td>La ofertă, după numărul de tablouri</td><td>Inspecție termică, raport cu punctele critice</td></tr>
+</tbody>
+</table>
+<h2 id="cum-arata-implementarea-cssi">Cum arată implementarea CSSI</h2>
+<p>Un tablou nu se montează „din catalog". La CSSI, procesul are patru pași clari:</p>
+<p><strong>Pasul 1 — Evaluarea.</strong> Venim la fața locului, vedem cum e organizată acum instalația, pe ce zone se împarte firma, ce consumatori există și ce urmează, câte tablouri sunt și în ce stare. Verificăm puterea aprobată și, unde e cazul, valorile de la branșament. Evaluarea e gratuită în Brașov și împrejurimi.</p>
+<p><strong>Pasul 2 — Proiectul și oferta defalcată.</strong> Proiectăm distribuția: tablou general plus tablouri secundare pe zone, cu protecții corelate pentru selectivitate, echilibrare pe faze și rezervă. Primești schema propusă și o ofertă defalcată pe tablouri, cabluri și manoperă, ca să decizi pe etape dacă e nevoie.</p>
+<p><strong>Pasul 3 — Montajul.</strong> Electricianul autorizat ANRE montează tablourile, trage cablurile, leagă circuitele, separă nulul de împământare și verifică strângerea conexiunilor. Lucrările se programează pe zone, în afara programului unde se poate, ca activitatea firmei să nu se oprească. Prevedem din start circuitele dedicate pentru securitate și, dacă se lucrează și la curenți slabi, corelăm totul într-o singură echipă.</p>
+<p><strong>Pasul 4 — Predarea, documentația și mentenanța.</strong> Tablourile sunt etichetate, schemele monofilare sunt în uși, iar tu primești documentația lucrării și, la cerere, buletinul de măsurători. Stabilim un plan de mentenanță: verificări, termografie periodică și actualizarea schemei la fiecare modificare.</p>
+
+<h2 id="citeste-si">Citește și</h2>
+<ul>
+  <li><a href="https://cssi.ro/blog/tablou-electric-casa-cate-circuite-protectii-brasov">Tabloul electric al casei: câte circuite, cum se dimensionează și ce protecții</a> — aceleași principii, la scară de locuință.</li>
+  <li><a href="https://cssi.ro/blog/instalatie-electrica-cladire-birouri-open-space-brasov">Instalație electrică pentru clădire de birouri și open space</a>.</li>
+  <li><a href="https://cssi.ro/blog/sporire-putere-electrica-instalata-firma-brasov">Sporirea puterii electrice instalate pentru o firmă</a>.</li>
+  <li><a href="https://cssi.ro/blog/mentenanta-verificari-periodice-instalatie-electrica-firma-brasov">Mentenanța și verificările periodice ale instalației electrice la firmă</a>.</li>
+  <li><a href="https://cssi.ro/blog/termografie-electrica-mentenanta-predictiva-tablouri-brasov">Termografia electrică și mentenanța predictivă a tablourilor</a>.</li>
+</ul>
       <h2 id="faq">Întrebări frecvente</h2>
       <div class="faq-wrap">
         <div class="faq-item">
@@ -475,6 +623,14 @@
           <button class="faq-q" onclick="toggleFaq(this)">Cine ar trebui să proiecteze și să execute distribuția pe zone? <svg class="faq-chevron" width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg></button>
           <div class="faq-a"><p>Un electrician autorizat ANRE, pentru că distribuția pe zone, dimensionarea protecțiilor și selectivitatea cer cunoștințe și răspundere tehnică. Autorizarea ANRE înseamnă dreptul legal de a executa lucrarea și garanția că cel care semnează răspunde pentru ea. La CSSI facem și partea de curenți tari, și pe cea de curenți slabi, așa că putem proiecta distribuția ținând cont din start și de nevoile sistemelor de securitate ale firmei.</p></div>
         </div>
+        <div class="faq-item">
+          <button class="faq-q" onclick="toggleFaq(this)">Se poate face distribuția pe zone fără să oprim activitatea firmei? <svg class="faq-chevron" width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg></button>
+          <div class="faq-a"><p>În mare parte, da. Lucrările se planifică pe zone și pe etape: se montează tabloul secundar nou, se trage cablul de alimentare, iar mutarea circuitelor de pe tabloul vechi pe cel nou se face într-o oprire scurtă și anunțată, de obicei în afara programului. Zonele critice (server, securitate) se mută ultimele sau cu soluții provizorii. Exact durata opririlor se stabilește după evaluare.</p></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q" onclick="toggleFaq(this)">Ce se întâmplă cu sistemele de securitate la o pană de curent? <svg class="faq-chevron" width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg></button>
+          <div class="faq-a"><p>Depinde cum au fost gândite. Centralele de alarmă și de incendiu au acumulatori proprii, iar camerele și NVR-ul pot fi puse pe UPS. Controlul de acces trebuie configurat în proiect pentru situația de lipsă a curentului (uși deschise sau închise, după zonă și după cerințe de evacuare). Cu circuite dedicate și UPS pentru echipamentele critice, securitatea continuă să funcționeze cât timp durează autonomia stabilită.</p></div>
+        </div>
       </div>
 
       <aside class="discuta-in-grup">
@@ -503,13 +659,19 @@
         <div class="sidebar-card-body" style="padding:10px 18px">
           <ol class="toc-list">
             <li><a href="#raspunsul-scurt">Răspunsul scurt</a></li>
+            <li><a href="#ce-difera-fata-de-tabloul-de-casa">Ce diferă față de tabloul de casă</a></li>
             <li><a href="#cand-un-singur-tablou-nu-mai-ajunge">Când un singur tablou nu mai ajunge</a></li>
             <li><a href="#tablou-general-si-tablouri-secundare">Tablou general și tablouri secundare</a></li>
             <li><a href="#selectivitatea-sa-sara-doar-zona-afectat">Selectivitatea: să sară doar zona afectată</a></li>
+            <li><a href="#cum-se-dimensioneaza-distributia-pe-zone">Cum se dimensionează distribuția pe zone</a></li>
             <li><a href="#ordine-etichetare-si-schema-tabloului">Ordine, etichetare și schema tabloului</a></li>
-            <li><a href="#circuite-dedicate-pentru-securitate">Circuite dedicate pentru securitate</a></li>
+            <li><a href="#circuite-dedicate-pentru-securitate-si-r">Circuite dedicate pentru securitate și rețea</a></li>
+            <li><a href="#calitatea-energiei-faze-supratensiuni-si">Calitatea energiei: faze, supratensiuni și împământare</a></li>
             <li><a href="#mentenanta-tablourilor">Mentenanța tablourilor</a></li>
-            <li><a href="#de-unde-sa-incepi">De unde să începi</a></li>
+            <li><a href="#greseli-frecvente-la-distributia-electri">Greșeli frecvente la distribuția electrică din firme</a></li>
+            <li><a href="#cat-costa-distributia-pe-zone-in-2026-or">Cât costă distribuția pe zone în 2026 (orientativ)</a></li>
+            <li><a href="#cum-arata-implementarea-cssi">Cum arată implementarea CSSI</a></li>
+            <li><a href="#citeste-si">Citește și</a></li>
             <li><a href="#faq">Întrebări frecvente</a></li>
           </ol>
         </div>
