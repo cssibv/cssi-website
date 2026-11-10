@@ -79,7 +79,7 @@
           "name": "Câte circuite ar trebui să aibă tabloul unei case?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "Nu există un număr fix — depinde de mărimea casei și de consumatori. Principiul e ca fiecare consumator mare (cuptor, plită, mașină de spălat, centrală, boiler) să stea pe circuit propriu, iar prizele și iluminatul să fie împărțite pe mai multe circuite, pe zone. O casă obișnuită ajunge ușor la zece-cincisprezece circuite sau mai multe. Important nu e numărul în sine, ci ca împărțirea să fie logică și dimensionată corect, plus o rezervă pentru viitor."
+            "text": "Nu există un număr fix — depinde de mărimea casei și de consumatori. Principiul e ca fiecare consumator mare (cuptor, plită, mașină de spălat, boiler, aer condiționat) să stea pe circuit propriu, iar prizele și iluminatul să fie împărțite pe mai multe circuite, pe zone. O casă de 100–150 m² ajunge de regulă la 14–22 de circuite, iar un apartament de 2–3 camere la 8–12. Important nu e numărul în sine, ci ca împărțirea să fie logică și dimensionată corect, plus o rezervă de 20–30% pentru viitor."
           }
         },
         {
@@ -87,7 +87,7 @@
           "name": "De ce trebuie cuptorul, plita și centrala pe circuite separate?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "Pentru că sunt consumatori mari, care trag mult curent. Dacă îi pui pe același circuit cu altceva, fie sare siguranța des, fie supraîncarci instalația, ceea ce înseamnă risc de supraîncălzire. Un circuit dedicat pentru fiecare consumator mare înseamnă că poate funcționa la capacitate fără să afecteze restul casei, e protejat corect și, dacă apare o problemă pe el, se izolează singur fără să lase toată casa fără curent."
+            "text": "Cuptorul și plita sunt consumatori mari, care trag mult curent. Dacă îi pui pe același circuit cu altceva, fie sare siguranța des, fie supraîncarci instalația, ceea ce înseamnă risc de supraîncălzire. Centrala nu consumă mult, dar o vrei pe circuit propriu ca o defecțiune în altă parte a casei să nu te lase fără căldură iarna. Un circuit dedicat înseamnă că fiecare aparat e protejat corect și, dacă apare o problemă pe el, se izolează singur."
           }
         },
         {
@@ -103,7 +103,23 @@
           "name": "Ce protecții sunt esențiale într-un tablou modern?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "Trei tipuri. Siguranțele automate (disjunctoarele) protejează fiecare circuit la suprasarcină și scurtcircuit. Diferențialul (RCD) protejează oamenii de electrocutare, declanșând foarte rapid la o scurgere de curent — obligatoriu pe circuitele de priză și în zonele umede. Protecția la supratensiuni (SPD) îți apără aparatele la trăsnet sau la variații din rețea. Un tablou bine gândit le are pe toate, dimensionate corect pentru casa ta."
+            "text": "Trei tipuri. Siguranțele automate (disjunctoarele) protejează fiecare circuit la suprasarcină și scurtcircuit. Diferențialul (RCD) de 30 mA protejează oamenii de electrocutare, declanșând foarte rapid la o scurgere de curent — obligatoriu pe circuitele de priză, în baie și la exterior. Protecția la supratensiuni (SPD) îți apără aparatele la trăsnet sau la variații din rețea. Un tablou bine gândit le are pe toate, dimensionate corect pentru casa ta."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "E suficient un singur diferențial pentru toată casa?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Tehnic există o protecție, dar în practică nu e o soluție bună. Scurgerile mici ale tuturor aparatelor se adună și diferențialul sare aparent fără motiv, iar când sare rămâi fără curent în toată casa, inclusiv frigider și centrală. Recomandăm împărțirea circuitelor pe 2–4 grupe, fiecare cu diferențialul ei, sau RCBO pe circuitele critice."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Ce tip de diferențial îmi trebuie: AC, A sau B?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Pentru o locuință nouă, tipul A e standardul rezonabil, pentru că detectează și scurgerile produse de electronicele moderne. Tipul AC e depășit pentru casele cu multe aparate inverter. Pentru stația de încărcare a mașinii electrice e nevoie de tip B sau de tip A cu detecție de curent continuu de 6 mA (integrată în multe stații). Electricianul alege tipul pe fiecare circuit, după aparatele alimentate."
           }
         },
         {
@@ -111,7 +127,15 @@
           "name": "Ce înseamnă rezerva în tablou și de ce contează?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "Rezerva înseamnă locuri libere în tablou și o dimensionare care permite adăugarea de circuite noi în viitor. Contează pentru că nevoile cresc: o stație de încărcare pentru mașina electrică, panouri fotovoltaice, un consumator nou, o extindere. Dacă tabloul e plin la refuz din start, orice adăugare înseamnă să-l refaci. Cu o rezervă gândită de la început, viitoarele lucrări se fac simplu și ieftin."
+            "text": "Rezerva înseamnă locuri libere în tablou (ideal 20–30% din module) și o dimensionare a alimentării care permite adăugarea de circuite noi. Contează pentru că nevoile cresc: o stație de încărcare pentru mașina electrică, panouri fotovoltaice, o pompă de căldură, o extindere. Dacă tabloul e plin la refuz din start, orice adăugare înseamnă să-l refaci. Cu o rezervă gândită de la început, viitoarele lucrări se fac simplu și ieftin."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Am nevoie de protecție la supratensiuni (SPD) la o casă?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "În cele mai multe cazuri, da. O casă modernă are centrală, router, televizoare, electrocasnice cu plăci electronice și uneori invertor fotovoltaic — toate sensibile la vârfuri de tensiune. Un SPD montat în tablou costă câteva sute de lei, mult mai puțin decât o singură placă de centrală arsă. În zonele de munte din jurul Brașovului, cu furtuni frecvente, îl considerăm obligatoriu."
           }
         },
         {
@@ -119,7 +143,7 @@
           "name": "Când am nevoie de un tablou nou și nu doar de reparații?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "Ai nevoie de un tablou nou când cel existent e vechi și fără protecții moderne (fără diferențial), când siguranțele sar des pentru că instalația e subdimensionată față de consumatori, când adaugi consumatori mari (centrală, stație EV, fotovoltaic) sau când renovezi casa. Dacă tabloul are siguranțe vechi cu fir și niciun RCD, e clar un caz de modernizare. Un electrician autorizat ANRE evaluează și îți spune dacă se repară sau se înlocuiește."
+            "text": "Ai nevoie de un tablou nou când cel existent e vechi și fără protecții moderne (fără diferențial), când siguranțele sar des pentru că instalația e subdimensionată față de consumatori, când adaugi consumatori mari (pompă de căldură, stație EV, fotovoltaic) sau când renovezi casa. Dacă tabloul are siguranțe vechi cu fir și niciun RCD, e clar un caz de modernizare. Un electrician autorizat ANRE evaluează și îți spune dacă se repară sau se înlocuiește."
           }
         },
         {
@@ -394,7 +418,7 @@
       <div class="hero-meta">
         <span>✍ CSSI Brașov</span><span class="dot">·</span>
         <span>📅 10 Nov 2026</span><span class="dot">·</span>
-        <span>⏱ 8 min lectură</span>
+        <span>⏱ 23 min lectură</span>
       </div>
       <div class="topic-pills">
         <span class="pill pill-blue">🛡 Securitate firme</span>
@@ -402,18 +426,19 @@
         <span class="pill pill-amber">✅ Ghid practic</span>
       </div>
     </div>
-      <div class="hero-img-wrap"><div style="width:280px;height:280px;background:linear-gradient(135deg,#2c1a6b,#5c35c8);border-radius:14px;display:flex;align-items:center;justify-content:center;box-shadow:0 8px 32px rgba(0,0,0,.35);border:1px solid rgba(255,255,255,.1);"><span style="font-size:80px;">⚡</span></div></div>
+      <div class="hero-img-wrap"><img src="/images/blog/tablou-electric-casa-cover.jpg" alt="Tabloul electric al casei: câte circuite, cum | CSSI"></div>
     </div>
   </header>
 
   <div class="article-wrap">
     <main class="article-body" id="articol">
 <h2 id="raspunsul-scurt">Răspunsul scurt</h2>
-<p>Un tablou de casă bine gândit pune fiecare <strong>consumator mare pe circuit propriu</strong> (cuptor, plită, mașină de spălat, centrală), împarte <strong>prizele și iluminatul pe mai multe circuite</strong> pe zone, are cele trei protecții esențiale — <strong>siguranțe automate, diferențial (RCD) și protecție la supratensiuni (SPD)</strong> — și lasă o <strong>rezervă</strong> pentru viitor (mașină electrică, fotovoltaic, consumatori noi). Numărul de circuite contează mai puțin decât logica împărțirii și dimensionarea corectă, făcută de un electrician autorizat ANRE.</p>
+<p>Un tablou de casă bine gândit pune fiecare <strong>consumator mare pe circuit propriu</strong> (cuptor, plită, mașină de spălat, boiler, aer condiționat), împarte <strong>prizele și iluminatul pe mai multe circuite</strong>, pe zone, are cele trei protecții esențiale — <strong>siguranțe automate, diferențial (RCD) și protecție la supratensiuni (SPD)</strong> — și lasă o <strong>rezervă de 20–30%</strong> pentru viitor (mașină electrică, fotovoltaic, pompă de căldură). O casă obișnuită de 100–150 m² ajunge la <strong>14–22 de circuite</strong>, grupate pe 2–4 diferențiale. Numărul exact contează mai puțin decât logica împărțirii și dimensionarea corectă, făcută de un electrician autorizat ANRE.</p>
 
 
 <h2 id="de-ce-un-tablou-bine-gandit-inseamna-o-c">De ce un tablou bine gândit înseamnă o casă sigură</h2>
-<p>Un tablou nu e doar „locul cu siguranțe". E punctul în care se decide cum e <strong>împărțită, protejată și controlată</strong> energia din toată casa. Un tablou prost gândit — totul pe câteva circuite, fără diferențial, fără rezervă — produce siguranțe care sar des, riscuri de supraîncălzire și costuri mari la fiecare modificare. Un tablou bine gândit lucrează în tăcere ani de zile: izolează problemele acolo unde apar, protejează oamenii și aparatele și se lasă extins ușor. De aceea merită tratat încă din proiectare, exact ca la o <span data-link-later="instalatie-electrica-casa-noua-brasov-2026" data-a="&lt;a href=&quot;https://cssi.ro/blog/instalatie-electrica-casa-noua-brasov-2026&quot;&gt;">instalație electrică de casă nouă</span>, nu cârpit după ce apar problemele.</p>
+<p>Un tablou nu e doar „locul cu siguranțe". E punctul în care se decide cum e <strong>împărțită, protejată și controlată</strong> energia din toată casa. Un tablou prost gândit — totul pe câteva circuite, fără diferențial, fără rezervă — produce siguranțe care sar des, riscuri de supraîncălzire și costuri mari la fiecare modificare. Un tablou bine gândit lucrează în tăcere ani de zile: izolează problemele acolo unde apar, protejează oamenii și aparatele și se lasă extins ușor. De aceea merită tratat încă din proiectare, odată cu restul instalației, nu cârpit după ce apar problemele. Despre cum se împart costurile unei instalații complete am scris în ghidul <a href="https://cssi.ro/blog/instalatii-electrice-brasov-costuri-anre-2026">instalații electrice în Brașov: costuri și autorizare ANRE</a>.</p>
+<p>Mai e un motiv, mai puțin vizibil: tabloul e singurul loc din casă unde <strong>poți vedea dintr-o privire</strong> cum e făcută toată instalația. Un tablou ordonat, etichetat, cu protecții moderne îți spune că instalația din spatele pereților a fost gândită. Un tablou cu fire înnădite, siguranțe de valori diferite puse „cum s-a nimerit" și nicio etichetă îți spune exact opusul — și e primul lucru la care se uită un electrician atunci când evaluează o casă, inclusiv la o <a href="https://cssi.ro/blog/verifica-instalatia-electrica-inainte-cumperi-inchiriezi-spatiu-brasov">verificare înainte de cumpărare</a>.</p>
 
       <div class="cta-banner" style="margin:32px 0">
         <div>
@@ -427,33 +452,208 @@
           <a target="_blank" rel="noopener" href="https://wa.me/40752288400" class="btn btn-secondary">💬 WhatsApp</a>
         </div>
       </div>
+<h2 id="cum-arata-un-tablou-de-casa-din-interior">Cum arată un tablou de casă, din interior</h2>
+<p>Înainte de a discuta câte circuite îți trebuie, merită să știi ce găsești, în ordine, într-un tablou modern de locuință. De sus în jos (sau de la stânga la dreapta, pe șine DIN):</p>
+<ul>
+  <li><strong>Întrerupătorul general (separatorul)</strong> — oprește toată casa dintr-o singură mișcare. E primul lucru pe care îl cauți la o urgență și trebuie să fie clar marcat.</li>
+  <li><strong>Protecția la supratensiuni (SPD)</strong> — montată imediat după general, ca să prindă vârfurile de tensiune înainte să ajungă la circuite.</li>
+  <li><strong>Diferențialele (RCD)</strong> — de obicei 2–4 bucăți, fiecare protejând un <em>grup</em> de circuite (de exemplu: prize parter, prize etaj, baie și exterior).</li>
+  <li><strong>Siguranțele automate (disjunctoarele)</strong> — câte una pe fiecare circuit, cu valoarea potrivită cablului pe care îl protejează.</li>
+  <li><strong>Barele de nul (N) și de împământare (PE)</strong> — separate, ordonate, cu fiecare conductor la locul lui. Împământarea pleacă spre priza de pământ a casei, a cărei valoare se verifică prin măsurători (despre asta, în articolul despre <a href="https://cssi.ro/blog/priza-de-pamant-masurare-rezistenta-dispersie-brasov">măsurarea rezistenței de dispersie a prizei de pământ</a>).</li>
+  <li><strong>Etichetele și schema</strong> — fiecare siguranță are o etichetă clară („Cuptor", „Prize living", „Iluminat etaj"), iar în ușa tabloului stă schema monofilară actualizată.</li>
+</ul>
+<p>Dacă la tine tabloul are doar câteva siguranțe și nimic altceva, nu ești singur: multe case și apartamente din Brașov, mai ales cele construite înainte de 2000, au tablouri fără diferențial și fără SPD. Nu e o urgență de azi pe mâine în orice situație, dar e un semn clar că protecția oamenilor și a aparatelor lipsește.</p>
+
 <h2 id="circuite-dedicate-de-ce-consumatorii-mar">Circuite dedicate: de ce consumatorii mari stau separat</h2>
-<p>Cuptorul, plita, mașina de spălat, centrala, boilerul — sunt <strong>consumatori mari</strong>, care trag mult curent. Dacă îi pui pe același circuit cu altceva, fie sare siguranța des, fie supraîncarci instalația, ceea ce înseamnă risc de supraîncălzire. Un <strong>circuit dedicat</strong> pentru fiecare consumator mare înseamnă că acesta poate funcționa la capacitate fără să afecteze restul casei, e protejat corect și, dacă apare o problemă pe el, se izolează singur — fără să lase toată casa fără curent. E primul principiu de la care pleacă orice dimensionare serioasă.</p>
+<p>Cuptorul, plita, mașina de spălat, boilerul, aerul condiționat — sunt <strong>consumatori mari</strong>, care trag mult curent, uneori ore în șir. Dacă îi pui pe același circuit cu altceva, fie sare siguranța des, fie supraîncarci instalația, ceea ce înseamnă risc de supraîncălzire. Un <strong>circuit dedicat</strong> pentru fiecare consumator mare înseamnă că acesta poate funcționa la capacitate fără să afecteze restul casei, e protejat corect și, dacă apare o problemă pe el, se izolează singur — fără să lase toată casa fără curent. E primul principiu de la care pleacă orice dimensionare serioasă.</p>
+<p>Lista tipică de circuite dedicate într-o casă:</p>
+<ul>
+  <li><strong>Plita electrică / cu inducție</strong> — cel mai mare consumator din bucătărie; în funcție de model, pe un circuit de 32 A monofazat sau pe două-trei faze.</li>
+  <li><strong>Cuptorul</strong> — circuit separat de plită, chiar dacă sunt montate una sub alta.</li>
+  <li><strong>Mașina de spălat rufe</strong> și <strong>mașina de uscat</strong> — ideal câte un circuit fiecare.</li>
+  <li><strong>Mașina de spălat vase</strong>.</li>
+  <li><strong>Boilerul electric</strong> — consum mare și constant.</li>
+  <li><strong>Aerul condiționat</strong> — mai ales dacă ai mai multe unități; detalii în articolul despre <a href="https://cssi.ro/blog/circuit-electric-aer-conditionat-dimensionare-brasov">dimensionarea circuitului pentru aer condiționat</a>.</li>
+  <li><strong>Centrala termică</strong> — chiar dacă e pe gaz, merită circuit propriu, ca o problemă în altă parte a casei să nu te lase fără căldură iarna.</li>
+  <li><strong>Frigiderul / congelatorul</strong> — nu pentru că ar consuma mult, ci ca să nu se oprească atunci când declanșează altceva și pleci de acasă.</li>
+  <li><strong>Pompa de căldură, încălzirea electrică în pardoseală, stația de încărcare pentru mașina electrică</strong> — dacă există sau sunt planificate, au întotdeauna circuit dedicat (și adesea protecții speciale).</li>
+</ul>
 
 <h2 id="impartirea-pe-prize-si-iluminat-de-ce-nu">Împărțirea pe prize și iluminat: de ce nu pui totul pe o siguranță</h2>
-<p>Dacă pui toate prizele pe o singură siguranță, la orice problemă sau supraîncărcare rămâi <strong>fără curent în toată casa</strong> și e greu de găsit cauza. Împărțind prizele și iluminatul pe <strong>mai multe circuite, pe camere sau zone</strong>, o problemă într-un loc nu oprește restul. În plus, <strong>iluminatul ținut separat de prize</strong> îți lasă lumina aprinsă chiar dacă sare o priză — un detaliu de siguranță important, mai ales pe scări și holuri. Tot aici intră și decizia despre <strong>tipul de alimentare</strong>: dacă ai consumatori mulți și mari, poate fi nevoie de trifazat, un subiect explicat în articolul despre <span data-link-later="tablou-trifazat-vs-monofazat-cand-ai-nevoie-brasov" data-a="&lt;a href=&quot;https://cssi.ro/blog/tablou-trifazat-vs-monofazat-cand-ai-nevoie-brasov&quot;&gt;">tablou trifazat vs. monofazat</span>.</p>
+<p>Dacă pui toate prizele pe o singură siguranță, la orice problemă sau supraîncărcare rămâi <strong>fără curent în toată casa</strong> și e greu de găsit cauza. Împărțind prizele și iluminatul pe <strong>mai multe circuite, pe camere sau zone</strong>, o problemă într-un loc nu oprește restul. În plus, <strong>iluminatul ținut separat de prize</strong> îți lasă lumina aprinsă chiar dacă sare o priză — un detaliu de siguranță important, mai ales pe scări și holuri, noaptea.</p>
+<p>Câteva reguli practice pe care le aplicăm la împărțire:</p>
+<ul>
+  <li><strong>Prizele de pe blatul bucătăriei</strong> pe circuit separat de prizele din restul casei — acolo merg fierbătorul, prăjitorul, robotul, adică aparate de 2.000 W pornite în același timp.</li>
+  <li><strong>Iluminatul pe niveluri</strong> — cel puțin un circuit de iluminat pe parter și unul pe etaj, ca să nu rămână toată casa în întuneric dintr-o singură defecțiune.</li>
+  <li><strong>Prizele pe zone, nu „toată casa în serie"</strong> — în practică, în jur de 6–8 puncte de priză pe un circuit, grupate logic (living, dormitoare, birou).</li>
+  <li><strong>Baia și exteriorul separat</strong> — zone umede, cu diferențial de 30 mA obligatoriu și, ideal, cu circuit propriu.</li>
+  <li><strong>Biroul și echipamentele de rețea</strong> (router, NVR, centrală de alarmă) pe un circuit stabil, eventual cu UPS — dacă ai camere de supraveghere sau alarmă, nu vrei să le oprească o siguranță sărită din bucătărie.</li>
+</ul>
+<p>Tot aici intră și decizia despre <strong>tipul de alimentare</strong>: dacă ai consumatori mulți și mari (plită cu inducție, pompă de căldură, stație EV), un branșament monofazat poate deveni strâmt, iar trifazatul sau o putere aprobată mai mare devin necesare. Procedura e aceeași ca la firme, doar la altă scară — am explicat-o în articolul despre <a href="https://cssi.ro/blog/sporire-putere-electrica-instalata-firma-brasov">sporirea puterii instalate</a>.</p>
 
+
+<h2 id="cate-circuite-pentru-o-casa-tipica-un-ex">Câte circuite pentru o casă tipică: un exemplu concret</h2>
+<p>Ca să nu rămânem la principii, iată cum arată împărțirea pentru o <strong>casă P+1 de aproximativ 130 m²</strong> din zona Brașovului, cu bucătărie electrică, două băi, centrală pe gaz, aer condiționat în două camere și pregătire pentru stație de încărcare. Valorile sunt orientative — dimensionarea finală depinde de lungimea traseelor, modul de pozare a cablurilor și puterea reală a aparatelor.</p>
+<table class="compare-table">
+<thead><tr><th>Circuit</th><th>Siguranță (orientativ)</th><th>Cablu (orientativ)</th><th>Diferențial 30 mA</th></tr></thead>
+<tbody>
+<tr><td>Iluminat parter</td><td>10 A</td><td>1,5 mm²</td><td class="yes">Da, în grup</td></tr>
+<tr><td>Iluminat etaj + exterior fațadă</td><td>10 A</td><td>1,5 mm²</td><td class="yes">Da, în grup</td></tr>
+<tr><td>Prize living + hol</td><td>16 A</td><td>2,5 mm²</td><td class="yes">Da</td></tr>
+<tr><td>Prize dormitoare etaj</td><td>16 A</td><td>2,5 mm²</td><td class="yes">Da</td></tr>
+<tr><td>Prize birou + rețea/NVR</td><td>16 A</td><td>2,5 mm²</td><td class="yes">Da</td></tr>
+<tr><td>Prize blat bucătărie</td><td>16 A</td><td>2,5 mm²</td><td class="yes">Da</td></tr>
+<tr><td>Plită inducție</td><td>32 A (sau 2×16 A)</td><td>6 mm² (sau 2,5 mm² pe fază)</td><td class="yes">Da</td></tr>
+<tr><td>Cuptor</td><td>16 A</td><td>2,5 mm²</td><td class="yes">Da</td></tr>
+<tr><td>Mașină de spălat vase</td><td>16 A</td><td>2,5 mm²</td><td class="yes">Da</td></tr>
+<tr><td>Frigider</td><td>16 A</td><td>2,5 mm²</td><td class="yes">Da, pe grup separat</td></tr>
+<tr><td>Mașină de spălat rufe</td><td>16 A</td><td>2,5 mm²</td><td class="yes">Da</td></tr>
+<tr><td>Baie parter + baie etaj</td><td>16 A</td><td>2,5 mm²</td><td class="yes">Da, obligatoriu</td></tr>
+<tr><td>Boiler electric (rezervă/vară)</td><td>16 A</td><td>2,5 mm²</td><td class="yes">Da</td></tr>
+<tr><td>Centrală termică</td><td>10 A</td><td>1,5 mm²</td><td class="yes">Da</td></tr>
+<tr><td>Aer condiționat (2 unități)</td><td>16 A fiecare</td><td>2,5 mm²</td><td class="yes">Da</td></tr>
+<tr><td>Prize exterior + grădină + poartă</td><td>16 A</td><td>2,5 mm²</td><td class="yes">Da, obligatoriu</td></tr>
+<tr><td>Pregătire stație EV</td><td>32 A</td><td>6 mm²</td><td class="yes">Da, tip special (vezi mai jos)</td></tr>
+</tbody>
+</table>
+<p>Rezultatul: <strong>18 circuite</strong>, fără să fi exagerat cu nimic. Cu o rezervă de 25%, tabloul are nevoie de aproximativ <strong>36–48 de module</strong> (locuri pe șina DIN), în două sau trei rânduri. Un apartament de 2–3 camere ajunge, de regulă, la 8–12 circuite și un tablou de 18–24 de module. Dacă ai și o anexă, un garaj sau un atelier separat de casă, acolo se pune adesea un tablou secundar, alimentat din tabloul principal — logica e aceeași ca în articolul despre <a href="https://cssi.ro/blog/instalatie-electrica-garaj-atelier-anexa-brasov">instalația electrică pentru garaj, atelier sau anexă</a>.</p>
 
 <h2 id="protectiile-esentiale-sigurante-diferent">Protecțiile esențiale: siguranțe, diferențial (RCD) și supratensiuni (SPD)</h2>
-<p>Un tablou modern are <strong>trei niveluri de protecție</strong>, fiecare cu rolul lui. <strong>Siguranțele automate (disjunctoarele)</strong> protejează fiecare circuit la suprasarcină și scurtcircuit. <strong>Diferențialul (RCD)</strong> protejează <em>oamenii</em> de electrocutare, declanșând extrem de rapid la o scurgere de curent — obligatoriu pe circuitele de priză și în zonele umede; despre cum funcționează și de ce sare am scris pe larg în articolul despre <span data-link-later="protectie-diferentiala-rcd-de-ce-sare-brasov" data-a="&lt;a href=&quot;https://cssi.ro/blog/protectie-diferentiala-rcd-de-ce-sare-brasov&quot;&gt;">protecția diferențială RCD</span>. <strong>Protecția la supratensiuni (SPD)</strong> îți apără aparatele la trăsnet sau la variațiile din rețea — esențială mai ales în zonele cu furtuni frecvente, un subiect tratat în ghidul despre <span data-link-later="protectie-supratensiuni-trasnet-impamantare-brasov" data-a="&lt;a href=&quot;https://cssi.ro/blog/protectie-supratensiuni-trasnet-impamantare-brasov&quot;&gt;">protecția la supratensiuni, trăsnet și împământare</span>. Un tablou bine gândit le are pe toate, dimensionate pentru casa ta.</p>
+<p>Un tablou modern are <strong>trei niveluri de protecție</strong>, fiecare cu rolul lui. Le confundă mulți, pentru că toate „sar", dar protejează lucruri complet diferite.</p>
+<p><strong>Siguranțele automate (disjunctoarele)</strong> protejează <em>cablul</em> fiecărui circuit la suprasarcină și scurtcircuit. Regula de bază: valoarea siguranței se alege după secțiunea cablului, nu după cât de des sare. Un cablu de 1,5 mm² protejat cu o siguranță de 25 A „ca să nu mai sară" e un cablu care se poate încălzi până la topirea izolației fără ca siguranța să reacționeze.</p>
+<p><strong>Diferențialul (RCD)</strong> protejează <em>oamenii</em> de electrocutare: compară curentul care pleacă pe fază cu cel care se întoarce pe nul și, dacă o parte „se pierde" (prin corpul cuiva sau printr-o izolație defectă), declanșează în câteva zecimi de secundă. Pentru circuitele de priză, baie și exterior se folosesc diferențiale de <strong>30 mA</strong>. Despre motivele pentru care un diferențial sare și cum le găsești am scris în articolul despre <a href="https://cssi.ro/blog/siguranta-sare-cauze-solutii-instalatie-electrica">de ce sare siguranța: cauze și soluții</a>.</p>
+<p><strong>Protecția la supratensiuni (SPD)</strong> îți apără <em>aparatele</em> la trăsnet sau la variațiile bruște din rețea. Într-o casă plină de electronice — centrală, televizoare, router, invertor, electrocasnice cu plăci electronice — un singur trăsnet căzut în apropiere poate face pagube de mii de lei. Zona Brașovului, mai ales spre Poiana, Bran, Râșnov sau Săcele, are furtuni de vară frecvente; acolo SPD-ul nu e un moft. Detalii tehnice despre tipurile de SPD și legătura cu paratrăsnetul găsești în articolul despre <a href="https://cssi.ro/blog/protectie-supratensiuni-paratrasnet-spd-firma-brasov">protecția la supratensiuni și paratrăsnet</a>.</p>
+<table class="compare-table">
+<thead><tr><th>Protecție</th><th>Ce protejează</th><th>La ce reacționează</th><th>Fără ea</th></tr></thead>
+<tbody>
+<tr><td>Siguranță automată (disjunctor)</td><td>Cablul circuitului</td><td>Suprasarcină, scurtcircuit</td><td class="no">Cablu supraîncălzit, risc de incendiu</td></tr>
+<tr><td>Diferențial RCD 30 mA</td><td>Oamenii</td><td>Curent de scurgere spre pământ</td><td class="no">Risc de electrocutare la un aparat defect</td></tr>
+<tr><td>SPD (supratensiuni)</td><td>Aparatele electronice</td><td>Vârfuri de tensiune (trăsnet, comutări în rețea)</td><td class="no">Electronice arse, centrală sau invertor defect</td></tr>
+<tr><td>RCBO (siguranță + diferențial)</td><td>Cablul și oamenii, pe un singur circuit</td><td>Suprasarcină + scurgere</td><td>Opțional: util pe circuite critice (frigider, rețea)</td></tr>
+<tr><td>Releu de tensiune min./max.</td><td>Toată instalația</td><td>Tensiune prea mică sau prea mare, nul întrerupt</td><td>Opțional: recomandat în zonele cu rețea instabilă</td></tr>
+</tbody>
+</table>
+
+<div class="box box-warn"><div class="box-title">⚠️ Un singur diferențial pentru toată casa? Nu e o idee bună</div><p>Varianta „ieftină" — un singur RCD de 30 mA pe toată casa — pare suficientă pe hârtie, dar în practică produce două probleme. Prima: scurgerile mici, normale, ale tuturor aparatelor se adună și diferențialul sare aparent fără motiv. A doua: când sare, rămâi <strong>fără curent în toată casa</strong>, inclusiv frigider, centrală și iluminat. Soluția corectă e împărțirea circuitelor pe <strong>2–4 grupe</strong>, fiecare cu diferențialul ei, sau folosirea de RCBO pe circuitele critice.</p></div>
+
+<h2 id="ce-tip-de-diferential-ac-a-f-sau-b">Ce tip de diferențial: AC, A, F sau B</h2>
+<p>Un detaliu pe care puțini îl întreabă, dar care contează din ce în ce mai mult: <strong>nu toate diferențialele „văd" același tip de defect</strong>. Electrocasnicele moderne (mașini de spălat cu motor inverter, plite cu inducție, aer condiționat inverter) pot produce curenți de scurgere pe care un diferențial vechi, de tip AC, nu-i detectează corect.</p>
+<ul>
+  <li><strong>Tip AC</strong> — cel mai simplu, detectează doar scurgeri în curent alternativ pur. Încă se vinde, dar pentru o casă nouă nu-l recomandăm.</li>
+  <li><strong>Tip A</strong> — standardul rezonabil pentru locuințe azi; detectează și scurgerile pulsatorii produse de electronice.</li>
+  <li><strong>Tip F</strong> — pentru circuite cu motoare inverter (mașini de spălat, pompe de căldură), mai stabil la declanșări false.</li>
+  <li><strong>Tip B</strong> (sau tip A + modul de detecție 6 mA curent continuu) — necesar la <strong>stația de încărcare pentru mașina electrică</strong> și, în anumite configurații, la invertoarele fotovoltaice. Multe stații EV moderne au detecția integrată; electricianul verifică fișa tehnică și alege protecția potrivită.</li>
+</ul>
+<p>Diferența de preț între un diferențial AC și unul de tip A e mică; între A și B e mare. De aceea tipul se alege pe circuit, nu „același peste tot".</p>
+
+<h2 id="selectivitatea-ca-sa-sara-doar-ce-trebui">Selectivitatea: ca să sară doar ce trebuie</h2>
+<p>Un tablou bine făcut e <strong>selectiv</strong>: la un defect pe un circuit, declanșează doar siguranța acelui circuit, nu și generalul, nu și diferențialul de grup, nu și siguranța din firida de branșament. Pare un detaliu, dar face diferența dintre „a sărit priza din baie" și „a căzut curentul în toată casa și trebuie să ies cu lanterna la firidă". Selectivitatea se obține alegând corect valorile și curbele siguranțelor (B, C) și, la tablourile cu mai multe niveluri, folosind un diferențial general selectiv (tip S, de 100–300 mA) în amonte de cele de 30 mA. E genul de calcul pe care îl face electricianul la proiectare, nu la montaj.</p>
 
 <h2 id="rezerva-din-tablou-de-ce-lasi-loc-pentru">Rezerva din tablou: de ce lași loc pentru viitor</h2>
-<p>Nevoile de energie ale unei case <strong>cresc în timp</strong>: o stație de încărcare pentru mașina electrică, panouri fotovoltaice, un consumator nou, o extindere. Dacă tabloul e plin la refuz din start, orice adăugare înseamnă să-l refaci — costisitor și deranjant. De aceea un tablou corect lasă <strong>locuri libere și o dimensionare cu rezervă</strong>, astfel încât lucrările viitoare să se facă simplu și ieftin. E o decizie mică la montaj, care economisește mult mai târziu.</p>
+<p>Nevoile de energie ale unei case <strong>cresc în timp</strong>: o stație de încărcare pentru mașina electrică, panouri fotovoltaice, o pompă de căldură, un consumator nou, o extindere. Dacă tabloul e plin la refuz din start, orice adăugare înseamnă să-l refaci — costisitor și deranjant. De aceea un tablou corect lasă <strong>locuri libere (20–30% din module) și o dimensionare cu rezervă</strong> a alimentării, astfel încât lucrările viitoare să se facă simplu și ieftin.</p>
+<p>Concret, la o casă nouă recomandăm să te gândești de pe acum la:</p>
+<ul>
+  <li><strong>Stație de încărcare EV</strong> — chiar dacă nu ai mașină electrică azi, un tub gol sau un cablu de 6 mm² tras până în garaj costă puțin la construcție și mult după. Principiile de dimensionare sunt explicate și în articolul despre <a href="https://cssi.ro/blog/instalatie-electrica-statie-incarcare-ev-comerciala-firma-brasov">instalația electrică pentru stații de încărcare</a>.</li>
+  <li><strong>Fotovoltaic</strong> — invertorul se leagă în tablou și are nevoie de protecții proprii; vezi ghidul despre <a href="https://cssi.ro/blog/fotovoltaic-instalatie-electrica-rol-electrician-anre-brasov">fotovoltaic și rolul electricianului ANRE</a>.</li>
+  <li><strong>Pompă de căldură sau încălzire electrică</strong> — consumatori mari, de obicei pe circuit separat și adesea trifazați; detalii în articolul despre <a href="https://cssi.ro/blog/instalatie-electrica-pompe-caldura-incalzire-electrica-firma-brasov">instalația electrică pentru pompe de căldură</a>.</li>
+  <li><strong>Automatizări și securitate</strong> — poartă automată, camere, alarmă, smart home; fiecare are nevoie de alimentare stabilă și, ideal, de circuit propriu.</li>
+</ul>
+<p>E o decizie mică la montaj, care economisește mult mai târziu: diferența dintre un tablou de 24 și unul de 36 de module e de câteva sute de lei, pe când înlocuirea unui tablou plin înseamnă zile de muncă și pereți desfăcuți.</p>
+
+<h2 id="unde-se-monteaza-tabloul-si-cum-se-etich">Unde se montează tabloul și cum se etichetează</h2>
+<p>Locul tabloului contează la fel de mult ca interiorul lui. Recomandările pe care le urmăm:</p>
+<ul>
+  <li><strong>Accesibil</strong> — pe hol, în casa scării sau într-o cameră tehnică, nu în spatele unui dulap fix sau într-un pod la care urci cu scara.</li>
+  <li><strong>Uscat și ferit</strong> — nu în baie, nu deasupra chiuvetei, nu în locuri cu condens sau îngheț (garaj neîncălzit, pivniță umedă), unde aparatajul se degradează.</li>
+  <li><strong>La înălțime comodă</strong> — ca să poți ridica o siguranță fără să te urci pe ceva, dar departe de mâna copiilor (cu ușă care se închide).</li>
+  <li><strong>Central</strong> — cât mai aproape de mijlocul consumului, ca traseele să fie scurte; la casele mari, cu tablouri secundare pe etaj sau în anexă.</li>
+</ul>
+<p>La final, tabloul se <strong>etichetează</strong> circuit cu circuit, în cuvinte clare, iar schema monofilară se lasă în ușa tabloului și în documentația casei. Pare birocrație, dar peste cinci ani, când vrei să muți o priză sau să adaugi un aparat, eticheta „Prize dormitor nord + hol etaj" te scutește de o după-amiază de încercări.</p>
+
+<h2 id="semne-ca-tabloul-tau-nu-mai-face-fata">Semne că tabloul tău nu mai face față</h2>
+<p>Multe tablouri nu cedează brusc, ci dau semne, uneori ani la rând. Merită să chemi un electrician dacă observi:</p>
+<ul>
+  <li>siguranțe care sar des, mai ales când pornești două aparate mari în același timp;</li>
+  <li>siguranțe sau cabluri <strong>calde la atingere</strong>, miros de plastic ars, urme de înnegrire;</li>
+  <li>zumzet sau pocnituri din tablou;</li>
+  <li>siguranțe vechi cu fir (porțelan) sau combinații de aparataj de epoci diferite;</li>
+  <li>lipsa oricărui diferențial;</li>
+  <li>lumini care pâlpâie sau scad în intensitate când pornește un aparat mare;</li>
+  <li>prelungitoare permanente, „ca să ajungă" — semn că circuitele nu acoperă nevoile reale.</li>
+</ul>
+
+<div class="box box-danger"><div class="box-title">🔥 Nu pune o siguranță mai mare „ca să nu mai sară"</div><p>E cea mai periculoasă „reparație" pe care o vedem: siguranța de 16 A sare des, așa că cineva pune una de 20 sau 25 A. Siguranța nu mai sare, dar <strong>cablul a rămas același</strong> și acum se poate supraîncălzi fără nicio protecție. Asta e una dintre cauzele clasice ale incendiilor de natură electrică. Dacă o siguranță sare des, problema e circuitul supraîncărcat sau un defect — se rezolvă prin împărțire sau reparație, niciodată prin „mai mare". Pe aceeași idee, un <a href="https://cssi.ro/blog/detector-fum-monoxid-carbon-electric-siguranta-casa-brasov">detector de fum</a> lângă tablou și în camerele cu multe aparate e o investiție mică și utilă.</p></div>
+
+<h2 id="greseli-frecvente-la-tablourile-de-casa">Greșeli frecvente la tablourile de casă</h2>
+<p>Din lucrările și evaluările făcute în județul Brașov, acestea sunt greșelile pe care le întâlnim cel mai des:</p>
+<ol>
+  <li><strong>Prea puține circuite</strong> — toată casa pe 4–5 siguranțe, „că a mers și până acum".</li>
+  <li><strong>Un singur diferențial pentru tot</strong> — declanșări false și casă complet în întuneric la orice defect.</li>
+  <li><strong>Siguranțe supradimensionate față de cablu</strong> — protecție doar pe hârtie.</li>
+  <li><strong>Fără SPD</strong>, mai ales în case cu centrală, invertor, electronice scumpe sau în zone expuse la trăsnete.</li>
+  <li><strong>Tablou plin din prima zi</strong> — fără niciun loc liber pentru extinderi.</li>
+  <li><strong>Nul și împământare amestecate</strong> pe aceeași bară sau conductori de împământare lipsă la prize.</li>
+  <li><strong>Lipsa etichetelor și a schemei</strong> — nimeni nu mai știe ce siguranță ce oprește.</li>
+  <li><strong>Aparataj ieftin, fără marcaj</strong> — economia de câteva zeci de lei pe aparat se plătește la primul defect.</li>
+  <li><strong>Modificări făcute „pe rând"</strong>, de oameni diferiți, fără o logică de ansamblu.</li>
+</ol>
+
+<h2 id="cat-costa-un-tablou-electric-de-casa-in-">Cât costă un tablou electric de casă în 2026 (orientativ)</h2>
+<p>Prețurile depind de numărul de circuite, de tipul alimentării (monofazat sau trifazat), de calitatea aparatajului și de câtă muncă presupune legarea circuitelor existente. Intervalele de mai jos sunt <strong>orientative pentru Brașov și împrejurimi</strong>, cu manoperă și aparataj de calitate; oferta fermă vine după evaluarea la fața locului.</p>
+<table class="compare-table">
+<thead><tr><th>Lucrare</th><th>Cost orientativ</th><th>Ce include, de regulă</th></tr></thead>
+<tbody>
+<tr><td>Tablou nou apartament (8–12 circuite)</td><td>800–1.800 RON</td><td>Cutie, general, RCD-uri, siguranțe, legare circuite existente, etichetare</td></tr>
+<tr><td>Tablou nou casă, monofazat (14–20 circuite)</td><td>1.800–3.500 RON</td><td>Cutie 36–48 module, 2–4 RCD-uri, SPD, siguranțe, etichetare, schemă</td></tr>
+<tr><td>Tablou nou casă, trifazat</td><td>2.800–5.500 RON</td><td>Ca mai sus, plus aparataj trifazat și echilibrarea fazelor</td></tr>
+<tr><td>Circuit dedicat nou (cablu + siguranță)</td><td>250–500 RON</td><td>Traseu, cablu, protecție în tablou, priză sau racord</td></tr>
+<tr><td>Adăugare SPD într-un tablou existent</td><td>350–800 RON</td><td>Aparat SPD, montaj, verificarea împământării</td></tr>
+<tr><td>Adăugare diferențial pe un grup existent</td><td>200–450 RON</td><td>Aparat RCD (tip A), reorganizarea circuitelor pe grup</td></tr>
+<tr><td>Măsurători PRAM (împământare, izolație)</td><td>300–800 RON</td><td>Măsurători, buletin, recomandări</td></tr>
+</tbody>
+</table>
+<p>Pentru context: o refacere completă de instalație într-un apartament de 2 camere pornește de la circa 5.000–8.000 RON, iar etapa „tablou + protecții" e de obicei prima și cea mai rentabilă investiție — detalii în articolul despre <a href="https://cssi.ro/blog/cat-costa-refacerea-instalatiei-electrice-apartament-brasov">cât costă refacerea instalației electrice într-un apartament</a>.</p>
+
+<div class="box box-info"><div class="box-title">ℹ️ Specific Brașov: case vechi, blocuri cu aluminiu și furtuni de munte</div><p>În Brașov întâlnim des trei situații: <strong>case vechi</strong> (Șchei, centrul istoric, Bartolomeu) cu instalații modificate de-a lungul deceniilor, <strong>blocuri din anii '70–'80</strong> cu conductori de aluminiu și tablouri fără diferențial, și <strong>case noi în zone de munte</strong> (Poiana, Bran, Moieciu, Săcele) expuse la trăsnete. În primul caz, tabloul nou e ocazia de a pune ordine; în al doilea, legarea aluminiului la aparataj modern cere atenție (conexiuni potrivite, verificate); în al treilea, SPD-ul și o împământare bună sunt prioritare.</p></div>
+
+<h2 id="cum-arata-implementarea-cssi">Cum arată implementarea CSSI</h2>
+<p>Un tablou nu se montează „din catalog". La CSSI, procesul are patru pași clari:</p>
+<p><strong>Pasul 1 — Evaluarea.</strong> Venim la fața locului, notăm consumatorii existenți și pe cei planificați (inclusiv EV, fotovoltaic, pompă de căldură), verificăm alimentarea și puterea aprobată, starea cablurilor și a împământării. Evaluarea e gratuită în Brașov și împrejurimi.</p>
+<p><strong>Pasul 2 — Proiectarea împărțirii.</strong> Stabilim circuitele (dedicate pentru consumatorii mari, prize și iluminat pe zone), gruparea pe diferențiale, tipul fiecărui RCD și rezerva. Primești lista circuitelor și o ofertă defalcată.</p>
+<p><strong>Pasul 3 — Montajul.</strong> Electricianul autorizat ANRE montează tabloul, leagă circuitele, separă nulul de împământare, verifică strângerea conexiunilor și testează fiecare diferențial cu butonul de test și cu aparatul de măsură.</p>
+<p><strong>Pasul 4 — Predarea.</strong> Tabloul e etichetat, schema monofilară e în ușă, iar tu primești documentația lucrării și, la cerere, buletinul PRAM. Dacă se lucrează și la securitate (camere, alarmă, poartă automată), corelăm totul — o singură echipă pentru curenți tari și slabi, inclusiv pentru proiecte de <a href="https://cssi.ro/blog/smart-home-brasov-securitate-automatizari-electric">smart home și automatizări</a>.</p>
+
+<h2 id="mentenanta-si-verificari-tabloul-nu-e-mo">Mentenanță și verificări: tabloul nu e „montează și uită"</h2>
+<p>Un tablou bun ține zeci de ani, dar are nevoie de puțină atenție:</p>
+<ul>
+  <li><strong>Lunar sau o dată la câteva luni</strong> — apeși butonul de test „T" al fiecărui diferențial. Dacă nu declanșează, aparatul trebuie înlocuit.</li>
+  <li><strong>După orice furtună puternică</strong> — verifici indicatorul SPD-ului (multe au o fereastră verde/roșie); dacă a lucrat, cartușul se schimbă.</li>
+  <li><strong>O dată la câțiva ani</strong> — strângerea conexiunilor (se pot slăbi în timp, din cauza dilatărilor) și măsurători de izolație și împământare. La tablourile mari, o <a href="https://cssi.ro/blog/termografie-electrica-mentenanta-predictiva-tablouri-brasov">termografie electrică</a> arată punctele calde înainte să devină o problemă.</li>
+  <li><strong>La orice consumator nou mare</strong> — verifici că există loc și putere, nu îl „agăți" pe un circuit existent.</li>
+</ul>
+
+<div class="box box-tip"><div class="box-title">✅ Checklist: tabloul tău e gândit corect dacă…</div><p><strong>1.</strong> fiecare consumator mare are circuit propriu; <strong>2.</strong> iluminatul e separat de prize, pe cel puțin două circuite; <strong>3.</strong> prizele sunt împărțite pe zone; <strong>4.</strong> există 2–4 diferențiale de 30 mA, de tip A sau mai bun; <strong>5.</strong> există SPD; <strong>6.</strong> siguranțele corespund secțiunii cablurilor; <strong>7.</strong> nulul și împământarea sunt pe bare separate; <strong>8.</strong> ai cel puțin 20% module libere; <strong>9.</strong> fiecare circuit e etichetat și ai schema; <strong>10.</strong> lucrarea a fost făcută și documentată de un electrician autorizat ANRE. Dacă lipsesc mai mult de două-trei puncte, merită o evaluare.</p></div>
 
 <h2 id="cand-e-nevoie-de-un-tablou-nou-si-rolul-">Când e nevoie de un tablou nou și rolul electricianului ANRE</h2>
-<p>Ai nevoie de un tablou nou când cel existent e <strong>vechi și fără protecții moderne</strong> (fără diferențial, cu siguranțe vechi cu fir), când siguranțele sar des pentru că instalația e subdimensionată, când <strong>adaugi consumatori mari</strong> (centrală, stație EV, fotovoltaic) sau când renovezi. Detaliile despre <em>când și cum</em> se face efectiv înlocuirea le-am tratat în articolul despre <span data-link-later="schimbare-modernizare-tablou-electric-brasov-2026" data-a="&lt;a href=&quot;https://cssi.ro/blog/schimbare-modernizare-tablou-electric-brasov-2026&quot;&gt;">schimbarea și modernizarea tabloului electric</span>. Indiferent de caz, tabloul e inima instalației — o greșeală aici înseamnă risc de incendiu sau de electrocutare pentru toată casa. De aceea se face cu <strong>electrician autorizat ANRE</strong>, care dimensionează corect, respectă normele și îți dă o instalație sigură și documentată.</p>
+<p>Ai nevoie de un tablou nou când cel existent e <strong>vechi și fără protecții moderne</strong> (fără diferențial, cu siguranțe vechi cu fir), când siguranțele sar des pentru că instalația e subdimensionată, când <strong>adaugi consumatori mari</strong> (pompă de căldură, stație EV, fotovoltaic) sau când renovezi. Uneori nu e nevoie de tot tabloul: adăugarea unui SPD, împărțirea pe mai multe diferențiale sau un circuit dedicat nou rezolvă problema. Indiferent de caz, tabloul e inima instalației — o greșeală aici înseamnă risc de incendiu sau de electrocutare pentru toată casa. De aceea se face cu <strong>electrician autorizat ANRE</strong>, care dimensionează corect, respectă normele și îți dă o instalație sigură și documentată. Pentru clădirile cu mai multe zone sau spații comerciale, logica se extinde la <a href="https://cssi.ro/blog/tablouri-electrice-secundare-distributie-zone-firma-brasov">tablouri secundare de distribuție pe zone</a>.</p>
 
-<h2 id="de-unde-sa-incepi">De unde să începi</h2>
-<p><strong>Pasul 1:</strong> evaluăm consumatorii, suprafața și nevoile reale (acum și în viitor). <strong>Pasul 2:</strong> proiectăm împărțirea pe circuite, cu dedicate pentru consumatorii mari și rezervă pentru extinderi. <strong>Pasul 3:</strong> alegem protecțiile (disjunctoare, RCD, SPD) și tipul de alimentare. <strong>Pasul 4:</strong> montăm, etichetăm și documentăm tabloul, cu electrician autorizat ANRE. Dacă se lucrează și la securitate (camere, alarmă, poartă), corelăm totul — o singură echipă pentru curenți tari și slabi.</p>
+<h2 id="citeste-si">Citește și</h2>
+<ul>
+  <li><a href="https://cssi.ro/blog/siguranta-sare-cauze-solutii-instalatie-electrica">De ce sare siguranța: cauze și soluții</a> — ce faci când tabloul declanșează des.</li>
+  <li><a href="https://cssi.ro/blog/cat-costa-refacerea-instalatiei-electrice-apartament-brasov">Cât costă refacerea instalației electrice într-un apartament</a>.</li>
+  <li><a href="https://cssi.ro/blog/protectie-supratensiuni-paratrasnet-spd-firma-brasov">Protecția la supratensiuni și paratrăsnet</a> — cum alegi SPD-ul.</li>
+  <li><a href="https://cssi.ro/blog/priza-de-pamant-masurare-rezistenta-dispersie-brasov">Priza de pământ: măsurarea rezistenței de dispersie</a>.</li>
+  <li><a href="https://cssi.ro/blog/instalatii-electrice-brasov-costuri-anre-2026">Instalații electrice în Brașov: costuri și autorizare ANRE</a>.</li>
+</ul>
       <h2 id="faq">Întrebări frecvente</h2>
       <div class="faq-wrap">
         <div class="faq-item">
           <button class="faq-q" onclick="toggleFaq(this)">Câte circuite ar trebui să aibă tabloul unei case? <svg class="faq-chevron" width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg></button>
-          <div class="faq-a"><p>Nu există un număr fix — depinde de mărimea casei și de consumatori. Principiul e ca fiecare consumator mare (cuptor, plită, mașină de spălat, centrală, boiler) să stea pe circuit propriu, iar prizele și iluminatul să fie împărțite pe mai multe circuite, pe zone. O casă obișnuită ajunge ușor la zece-cincisprezece circuite sau mai multe. Important nu e numărul în sine, ci ca împărțirea să fie logică și dimensionată corect, plus o rezervă pentru viitor.</p></div>
+          <div class="faq-a"><p>Nu există un număr fix — depinde de mărimea casei și de consumatori. Principiul e ca fiecare consumator mare (cuptor, plită, mașină de spălat, boiler, aer condiționat) să stea pe circuit propriu, iar prizele și iluminatul să fie împărțite pe mai multe circuite, pe zone. O casă de 100–150 m² ajunge de regulă la 14–22 de circuite, iar un apartament de 2–3 camere la 8–12. Important nu e numărul în sine, ci ca împărțirea să fie logică și dimensionată corect, plus o rezervă de 20–30% pentru viitor.</p></div>
         </div>
         <div class="faq-item">
           <button class="faq-q" onclick="toggleFaq(this)">De ce trebuie cuptorul, plita și centrala pe circuite separate? <svg class="faq-chevron" width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg></button>
-          <div class="faq-a"><p>Pentru că sunt consumatori mari, care trag mult curent. Dacă îi pui pe același circuit cu altceva, fie sare siguranța des, fie supraîncarci instalația, ceea ce înseamnă risc de supraîncălzire. Un circuit dedicat pentru fiecare consumator mare înseamnă că poate funcționa la capacitate fără să afecteze restul casei, e protejat corect și, dacă apare o problemă pe el, se izolează singur fără să lase toată casa fără curent.</p></div>
+          <div class="faq-a"><p>Cuptorul și plita sunt consumatori mari, care trag mult curent. Dacă îi pui pe același circuit cu altceva, fie sare siguranța des, fie supraîncarci instalația, ceea ce înseamnă risc de supraîncălzire. Centrala nu consumă mult, dar o vrei pe circuit propriu ca o defecțiune în altă parte a casei să nu te lase fără căldură iarna. Un circuit dedicat înseamnă că fiecare aparat e protejat corect și, dacă apare o problemă pe el, se izolează singur.</p></div>
         </div>
         <div class="faq-item">
           <button class="faq-q" onclick="toggleFaq(this)">De ce nu pun toate prizele pe o singură siguranță? <svg class="faq-chevron" width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg></button>
@@ -461,15 +661,27 @@
         </div>
         <div class="faq-item">
           <button class="faq-q" onclick="toggleFaq(this)">Ce protecții sunt esențiale într-un tablou modern? <svg class="faq-chevron" width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg></button>
-          <div class="faq-a"><p>Trei tipuri. Siguranțele automate (disjunctoarele) protejează fiecare circuit la suprasarcină și scurtcircuit. Diferențialul (RCD) protejează oamenii de electrocutare, declanșând foarte rapid la o scurgere de curent — obligatoriu pe circuitele de priză și în zonele umede. Protecția la supratensiuni (SPD) îți apără aparatele la trăsnet sau la variații din rețea. Un tablou bine gândit le are pe toate, dimensionate corect pentru casa ta.</p></div>
+          <div class="faq-a"><p>Trei tipuri. Siguranțele automate (disjunctoarele) protejează fiecare circuit la suprasarcină și scurtcircuit. Diferențialul (RCD) de 30 mA protejează oamenii de electrocutare, declanșând foarte rapid la o scurgere de curent — obligatoriu pe circuitele de priză, în baie și la exterior. Protecția la supratensiuni (SPD) îți apără aparatele la trăsnet sau la variații din rețea. Un tablou bine gândit le are pe toate, dimensionate corect pentru casa ta.</p></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q" onclick="toggleFaq(this)">E suficient un singur diferențial pentru toată casa? <svg class="faq-chevron" width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg></button>
+          <div class="faq-a"><p>Tehnic există o protecție, dar în practică nu e o soluție bună. Scurgerile mici ale tuturor aparatelor se adună și diferențialul sare aparent fără motiv, iar când sare rămâi fără curent în toată casa, inclusiv frigider și centrală. Recomandăm împărțirea circuitelor pe 2–4 grupe, fiecare cu diferențialul ei, sau RCBO pe circuitele critice.</p></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q" onclick="toggleFaq(this)">Ce tip de diferențial îmi trebuie: AC, A sau B? <svg class="faq-chevron" width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg></button>
+          <div class="faq-a"><p>Pentru o locuință nouă, tipul A e standardul rezonabil, pentru că detectează și scurgerile produse de electronicele moderne. Tipul AC e depășit pentru casele cu multe aparate inverter. Pentru stația de încărcare a mașinii electrice e nevoie de tip B sau de tip A cu detecție de curent continuu de 6 mA (integrată în multe stații). Electricianul alege tipul pe fiecare circuit, după aparatele alimentate.</p></div>
         </div>
         <div class="faq-item">
           <button class="faq-q" onclick="toggleFaq(this)">Ce înseamnă rezerva în tablou și de ce contează? <svg class="faq-chevron" width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg></button>
-          <div class="faq-a"><p>Rezerva înseamnă locuri libere în tablou și o dimensionare care permite adăugarea de circuite noi în viitor. Contează pentru că nevoile cresc: o stație de încărcare pentru mașina electrică, panouri fotovoltaice, un consumator nou, o extindere. Dacă tabloul e plin la refuz din start, orice adăugare înseamnă să-l refaci. Cu o rezervă gândită de la început, viitoarele lucrări se fac simplu și ieftin.</p></div>
+          <div class="faq-a"><p>Rezerva înseamnă locuri libere în tablou (ideal 20–30% din module) și o dimensionare a alimentării care permite adăugarea de circuite noi. Contează pentru că nevoile cresc: o stație de încărcare pentru mașina electrică, panouri fotovoltaice, o pompă de căldură, o extindere. Dacă tabloul e plin la refuz din start, orice adăugare înseamnă să-l refaci. Cu o rezervă gândită de la început, viitoarele lucrări se fac simplu și ieftin.</p></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q" onclick="toggleFaq(this)">Am nevoie de protecție la supratensiuni (SPD) la o casă? <svg class="faq-chevron" width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg></button>
+          <div class="faq-a"><p>În cele mai multe cazuri, da. O casă modernă are centrală, router, televizoare, electrocasnice cu plăci electronice și uneori invertor fotovoltaic — toate sensibile la vârfuri de tensiune. Un SPD montat în tablou costă câteva sute de lei, mult mai puțin decât o singură placă de centrală arsă. În zonele de munte din jurul Brașovului, cu furtuni frecvente, îl considerăm obligatoriu.</p></div>
         </div>
         <div class="faq-item">
           <button class="faq-q" onclick="toggleFaq(this)">Când am nevoie de un tablou nou și nu doar de reparații? <svg class="faq-chevron" width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg></button>
-          <div class="faq-a"><p>Ai nevoie de un tablou nou când cel existent e vechi și fără protecții moderne (fără diferențial), când siguranțele sar des pentru că instalația e subdimensionată față de consumatori, când adaugi consumatori mari (centrală, stație EV, fotovoltaic) sau când renovezi casa. Dacă tabloul are siguranțe vechi cu fir și niciun RCD, e clar un caz de modernizare. Un electrician autorizat ANRE evaluează și îți spune dacă se repară sau se înlocuiește.</p></div>
+          <div class="faq-a"><p>Ai nevoie de un tablou nou când cel existent e vechi și fără protecții moderne (fără diferențial), când siguranțele sar des pentru că instalația e subdimensionată față de consumatori, când adaugi consumatori mari (pompă de căldură, stație EV, fotovoltaic) sau când renovezi casa. Dacă tabloul are siguranțe vechi cu fir și niciun RCD, e clar un caz de modernizare. Un electrician autorizat ANRE evaluează și îți spune dacă se repară sau se înlocuiește.</p></div>
         </div>
         <div class="faq-item">
           <button class="faq-q" onclick="toggleFaq(this)">De ce să fac tabloul cu electrician autorizat ANRE? <svg class="faq-chevron" width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg></button>
@@ -504,12 +716,22 @@
           <ol class="toc-list">
             <li><a href="#raspunsul-scurt">Răspunsul scurt</a></li>
             <li><a href="#de-ce-un-tablou-bine-gandit-inseamna-o-c">De ce un tablou bine gândit înseamnă o casă sigură</a></li>
+            <li><a href="#cum-arata-un-tablou-de-casa-din-interior">Cum arată un tablou de casă, din interior</a></li>
             <li><a href="#circuite-dedicate-de-ce-consumatorii-mar">Circuite dedicate: de ce consumatorii mari stau separat</a></li>
             <li><a href="#impartirea-pe-prize-si-iluminat-de-ce-nu">Împărțirea pe prize și iluminat: de ce nu pui totul pe o siguranță</a></li>
+            <li><a href="#cate-circuite-pentru-o-casa-tipica-un-ex">Câte circuite pentru o casă tipică: un exemplu concret</a></li>
             <li><a href="#protectiile-esentiale-sigurante-diferent">Protecțiile esențiale: siguranțe, diferențial (RCD) și supratensiuni (SPD)</a></li>
+            <li><a href="#ce-tip-de-diferential-ac-a-f-sau-b">Ce tip de diferențial: AC, A, F sau B</a></li>
+            <li><a href="#selectivitatea-ca-sa-sara-doar-ce-trebui">Selectivitatea: ca să sară doar ce trebuie</a></li>
             <li><a href="#rezerva-din-tablou-de-ce-lasi-loc-pentru">Rezerva din tablou: de ce lași loc pentru viitor</a></li>
+            <li><a href="#unde-se-monteaza-tabloul-si-cum-se-etich">Unde se montează tabloul și cum se etichetează</a></li>
+            <li><a href="#semne-ca-tabloul-tau-nu-mai-face-fata">Semne că tabloul tău nu mai face față</a></li>
+            <li><a href="#greseli-frecvente-la-tablourile-de-casa">Greșeli frecvente la tablourile de casă</a></li>
+            <li><a href="#cat-costa-un-tablou-electric-de-casa-in-">Cât costă un tablou electric de casă în 2026 (orientativ)</a></li>
+            <li><a href="#cum-arata-implementarea-cssi">Cum arată implementarea CSSI</a></li>
+            <li><a href="#mentenanta-si-verificari-tabloul-nu-e-mo">Mentenanță și verificări: tabloul nu e „montează și uită"</a></li>
             <li><a href="#cand-e-nevoie-de-un-tablou-nou-si-rolul-">Când e nevoie de un tablou nou și rolul electricianului ANRE</a></li>
-            <li><a href="#de-unde-sa-incepi">De unde să începi</a></li>
+            <li><a href="#citeste-si">Citește și</a></li>
             <li><a href="#faq">Întrebări frecvente</a></li>
           </ol>
         </div>
