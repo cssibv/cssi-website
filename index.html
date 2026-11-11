@@ -34,7 +34,7 @@
         @font-face { font-family: 'Inter Fallback'; src: local('Arial'), local('Liberation Sans'); size-adjust: 107.12%; ascent-override: 90.49%; descent-override: 22.56%; line-gap-override: 0%; }
         body { font-family: 'Inter', 'Inter Fallback', sans-serif; color: #111827; background: #fff; overflow-x: hidden; }
         html { scroll-behavior: smooth; }
-        #oferta { scroll-margin-top: 140px; }
+        #oferta { scroll-margin-top: 160px; }
         a { text-decoration: none; color: inherit; }
 
         /* Animations */
@@ -106,6 +106,8 @@
     }
     @media (min-width: 1024px) {
         .lg-grid-2 { grid-template-columns: 1fr 1fr !important; }
+        .badges-mob { display: none !important; }
+        .badges-desk { display: flex !important; }
         .lg-grid-3 { grid-template-columns: repeat(3, 1fr) !important; }
         .lg-grid-4 { grid-template-columns: repeat(4, 1fr) !important; }
         .lg\:block { display: block !important; }
@@ -124,17 +126,17 @@
     @media (min-width: 640px) {
         .sm\:block { display: block !important; }
         .sm\:hidden { display: none !important; }
-        .sm\:pt-32 { padding-top: 148px !important; }
+        .sm\:pt-32 { padding-top: 164px !important; }
         .sm\:px-6 { padding-left: 24px !important; padding-right: 24px !important; }
-        .nav-row { height: 88px !important; }
-        #logoImg { height: 80px !important; }
+        .nav-row { height: 104px !important; }
+        #logoImg { height: 96px !important; }
     }
     @media (max-width: 639px) {
         .hidden.sm\:block { display: none !important; }
         .sm\:hidden { display: block !important; }
-        .hero-content { padding-top: 140px !important; }
-        .nav-row { height: 72px !important; }
-        #logoImg { height: 64px !important; }
+        .hero-content { padding-top: 150px !important; }
+        .nav-row { height: 80px !important; }
+        #logoImg { height: 72px !important; }
         .hero-title { font-size: 1.75rem !important; margin-bottom: 8px !important; }
         .hero-subtitle { font-size: 1.25rem !important; margin-bottom: 16px !important; }
         .hero-stats { gap: 8px !important; margin-bottom: 24px !important; }
@@ -275,7 +277,7 @@
             <!-- Left Content -->
             <div style="color:#fff;">
                 <!-- Trust badge -->
-                <div style="display:flex;flex-direction:column;align-items:flex-start;gap:8px;margin-bottom:20px;">
+                <div class="badges-mob" style="display:flex;flex-direction:column;align-items:flex-end;gap:8px;margin-bottom:20px;">
                     <div style="display:inline-flex;align-items:center;gap:8px;background:rgba(59,130,246,0.15);border:1px solid rgba(59,130,246,0.35);border-radius:999px;padding:6px 16px;">
                         <span style="width:8px;height:8px;background:#3b82f6;border-radius:50%;display:inline-block;animation:pulse-blue 2s infinite;"></span>
                         <span style="font-size:13px;color:#bfdbfe;font-weight:500;">🛡️ Autorizat IGPR · securitate</span>
@@ -315,6 +317,16 @@
 
             <!-- Hero Form -->
             <div>
+                <div class="badges-desk" style="display:none;flex-direction:column;align-items:flex-end;gap:8px;margin-bottom:16px;">
+                    <div style="display:inline-flex;align-items:center;gap:8px;background:rgba(59,130,246,0.15);border:1px solid rgba(59,130,246,0.35);border-radius:999px;padding:6px 16px;">
+                        <span style="width:8px;height:8px;background:#3b82f6;border-radius:50%;display:inline-block;animation:pulse-blue 2s infinite;"></span>
+                        <span style="font-size:13px;color:#bfdbfe;font-weight:500;">🛡️ Autorizat IGPR · securitate</span>
+                    </div>
+                    <div style="display:inline-flex;align-items:center;gap:8px;background:rgba(220,38,38,0.15);border:1px solid rgba(220,38,38,0.35);border-radius:999px;padding:6px 16px;">
+                        <span style="width:8px;height:8px;background:#ef4444;border-radius:50%;display:inline-block;animation:pulse-red 2s infinite;"></span>
+                        <span style="font-size:13px;color:#fca5a5;font-weight:500;">🔥 Autorizat IGSU · incendiu</span>
+                    </div>
+                </div>
                 <div id="oferta"></div><script src="/oferta-card.js?v=3"></script>
             </div>
         </div>
