@@ -118,11 +118,13 @@
         .sm\:hidden { display: none !important; }
         .sm\:pt-32 { padding-top: 128px !important; }
         .sm\:px-6 { padding-left: 24px !important; padding-right: 24px !important; }
+        .nav-row { height: 76px !important; }
+        #logoImg { height: 68px !important; }
     }
     @media (max-width: 639px) {
         .hidden.sm\:block { display: none !important; }
         .sm\:hidden { display: block !important; }
-        .hero-content { padding-top: 110px !important; }
+        .hero-content { padding-top: 132px !important; }
         .hero-title { font-size: 1.75rem !important; margin-bottom: 8px !important; }
         .hero-subtitle { font-size: 1.25rem !important; margin-bottom: 16px !important; }
         .hero-stats { gap: 8px !important; margin-bottom: 24px !important; }
@@ -156,11 +158,11 @@
 
     <!-- Main Nav -->
     <div id="navBg" style="transition:all 0.3s;">
-        <div style="max-width:1280px;margin:0 auto;padding:0 12px;display:flex;justify-content:space-between;align-items:center;height:64px;" class="sm:px-6">
+        <div style="max-width:1280px;margin:0 auto;padding:0 12px;display:flex;justify-content:space-between;align-items:center;height:64px;" class="sm:px-6 nav-row">
 
             <!-- Logo -->
             <a href="/">
-                <img src="/images/cssi-logo-header.webp" alt="CSSI Logo" id="logoImg" style="height:56px;width:auto;transition:all 0.3s;filter:brightness(0) invert(1) drop-shadow(0 0 1px rgba(255,255,255,0.8));">
+                <img src="/images/cssi-logo-2026-alb.webp" alt="CSSI Logo" id="logoImg" width="211" height="240" style="height:60px;width:auto;display:block;">
             </a>
 
             <!-- Desktop Nav -->
@@ -697,6 +699,7 @@
 <script>
     // ===== NAV SCROLL BEHAVIOR =====
     let navTextColor = '#fff';
+    new Image().src = '/images/cssi-logo-2026.webp';
     
     window.addEventListener('scroll', function() {
         const header = document.getElementById('mainHeader');
@@ -708,13 +711,13 @@
             navBg.style.background = '#ffffff';
             navBg.style.backdropFilter = 'blur(12px)';
             navBg.style.boxShadow = '0 1px 2px rgba(0,0,0,0.05)';
-            logo.style.filter = '';
+            if (logo.dataset.v !== 'dark') { logo.src = '/images/cssi-logo-2026.webp'; logo.dataset.v = 'dark'; }
             navTextColor = '#334155';
         } else {
             navBg.style.background = 'transparent';
             navBg.style.backdropFilter = '';
             navBg.style.boxShadow = '';
-            logo.style.filter = 'brightness(0) invert(1) drop-shadow(0 0 1px rgba(255,255,255,0.8))';
+            if (logo.dataset.v === 'dark') { logo.src = '/images/cssi-logo-2026-alb.webp'; logo.dataset.v = ''; }
             navTextColor = '#fff';
         }
         
