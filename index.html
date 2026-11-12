@@ -114,6 +114,7 @@
     .auth-top { display: inline-flex; align-items: center; gap: 7px; font-size: 15px; font-weight: 700; color: #f8fafc; letter-spacing: 0.02em; }
     .auth-dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; flex: none; }
     .auth-sub { font-size: 12px; color: #cbd5e1; }
+    @media (max-width: 639px) { .auth-w2 { display: block; } }
     .badges-desk { display: none; margin-bottom: 16px; }
     @media (max-width: 380px) { .auth-grid { gap: 6px; } }
     @media (min-width: 1024px) {
@@ -290,9 +291,9 @@
             <div style="color:#fff;">
                 <!-- Trust badge -->
                 <div class="auth-grid badges-mob">
-                    <div class="auth-chip" style="background:rgba(59,130,246,0.12);border:1px solid rgba(59,130,246,0.35);"><span class="auth-pre">Autorizat</span><span class="auth-top"><span class="auth-dot" style="background:#3b82f6;animation:pulse-blue 2s infinite;"></span>IGPR</span><span class="auth-sub">securitate</span></div>
-                    <div class="auth-chip" style="background:rgba(239,68,68,0.12);border:1px solid rgba(239,68,68,0.35);"><span class="auth-pre">Autorizat</span><span class="auth-top"><span class="auth-dot" style="background:#ef4444;animation:pulse-red 2s infinite;"></span>IGSU</span><span class="auth-sub">incendiu</span></div>
-                    <div class="auth-chip" style="background:rgba(234,179,8,0.12);border:1px solid rgba(234,179,8,0.35);"><span class="auth-pre">Autorizat</span><span class="auth-top"><span class="auth-dot" style="background:#eab308;animation:pulse-amber 2s infinite;"></span>ANRE</span><span class="auth-sub">electric</span></div>
+                    <div class="auth-chip" style="background:rgba(59,130,246,0.12);border:1px solid rgba(59,130,246,0.35);"><span class="auth-pre">Autorizat</span><span class="auth-top"><span class="auth-dot" style="background:#3b82f6;animation:pulse-blue 2s infinite;"></span>IGPR</span><span class="auth-sub">sisteme <span class="auth-w2">securitate</span></span></div>
+                    <div class="auth-chip" style="background:rgba(239,68,68,0.12);border:1px solid rgba(239,68,68,0.35);"><span class="auth-pre">Autorizat</span><span class="auth-top"><span class="auth-dot" style="background:#ef4444;animation:pulse-red 2s infinite;"></span>IGSU</span><span class="auth-sub">detecție <span class="auth-w2">incendiu</span></span></div>
+                    <div class="auth-chip" style="background:rgba(234,179,8,0.12);border:1px solid rgba(234,179,8,0.35);"><span class="auth-pre">Autorizat</span><span class="auth-top"><span class="auth-dot" style="background:#eab308;animation:pulse-amber 2s infinite;"></span>ANRE</span><span class="auth-sub">instalații <span class="auth-w2">electrice</span></span></div>
                 </div>
 
                 <h1 class="hero-title" style="font-size:clamp(2rem,5vw,3.5rem);font-weight:800;line-height:1.1;margin-bottom:16px;">
@@ -325,9 +326,9 @@
             <!-- Hero Form -->
             <div>
                 <div class="auth-grid badges-desk">
-                    <div class="auth-chip" style="background:rgba(59,130,246,0.12);border:1px solid rgba(59,130,246,0.35);"><span class="auth-pre">Autorizat</span><span class="auth-top"><span class="auth-dot" style="background:#3b82f6;animation:pulse-blue 2s infinite;"></span>IGPR</span><span class="auth-sub">securitate</span></div>
-                    <div class="auth-chip" style="background:rgba(239,68,68,0.12);border:1px solid rgba(239,68,68,0.35);"><span class="auth-pre">Autorizat</span><span class="auth-top"><span class="auth-dot" style="background:#ef4444;animation:pulse-red 2s infinite;"></span>IGSU</span><span class="auth-sub">incendiu</span></div>
-                    <div class="auth-chip" style="background:rgba(234,179,8,0.12);border:1px solid rgba(234,179,8,0.35);"><span class="auth-pre">Autorizat</span><span class="auth-top"><span class="auth-dot" style="background:#eab308;animation:pulse-amber 2s infinite;"></span>ANRE</span><span class="auth-sub">electric</span></div>
+                    <div class="auth-chip" style="background:rgba(59,130,246,0.12);border:1px solid rgba(59,130,246,0.35);"><span class="auth-pre">Autorizat</span><span class="auth-top"><span class="auth-dot" style="background:#3b82f6;animation:pulse-blue 2s infinite;"></span>IGPR</span><span class="auth-sub">sisteme <span class="auth-w2">securitate</span></span></div>
+                    <div class="auth-chip" style="background:rgba(239,68,68,0.12);border:1px solid rgba(239,68,68,0.35);"><span class="auth-pre">Autorizat</span><span class="auth-top"><span class="auth-dot" style="background:#ef4444;animation:pulse-red 2s infinite;"></span>IGSU</span><span class="auth-sub">detecție <span class="auth-w2">incendiu</span></span></div>
+                    <div class="auth-chip" style="background:rgba(234,179,8,0.12);border:1px solid rgba(234,179,8,0.35);"><span class="auth-pre">Autorizat</span><span class="auth-top"><span class="auth-dot" style="background:#eab308;animation:pulse-amber 2s infinite;"></span>ANRE</span><span class="auth-sub">instalații <span class="auth-w2">electrice</span></span></div>
                 </div>
                 <div id="oferta"></div><script src="/oferta-card.js?v=3"></script>
             </div>
