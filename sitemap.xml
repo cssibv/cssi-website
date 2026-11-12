@@ -1274,4 +1274,11 @@
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
+  <!-- adaugat automat de agent 2026-11-12 -->
+  <url>
+    <loc>https://cssi.ro/blog/camere-inteligenta-artificiala-deep-learning-alerte-brasov</loc>
+    <lastmod>2026-11-12</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
 </urlset>

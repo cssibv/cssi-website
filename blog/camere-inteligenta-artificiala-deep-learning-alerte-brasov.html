@@ -1,0 +1,853 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Camere cu inteligență artificială: deep learning | CSSI</title>
+<meta name="description" content="Ce fac camerele cu inteligență artificială: clasifică om vs. vehicul, detectează trecerea peste o linie și staționarea suspectă și reduc drastic — CSSI.">
+<link rel="canonical" href="https://cssi.ro/blog/camere-inteligenta-artificiala-deep-learning-alerte-brasov">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Camere cu inteligență artificială: deep learning și alerte inteligente | CSSI Brașov">
+<meta property="og:description" content="Clasificare om/vehicul, line crossing, loitering și mai puține alarme false. Cum aleg firmele din Brașov camerele AI potrivite.">
+<meta property="og:url" content="https://cssi.ro/blog/camere-inteligenta-artificiala-deep-learning-alerte-brasov">
+<meta property="og:image" content="https://cssi.ro/images/blog/camere-ai-deep-learning-cover.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:type" content="image/jpeg">
+<meta property="og:locale" content="ro_RO">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Camere cu inteligență artificială: deep learning și alerte inteligente">
+<meta name="twitter:description" content="Detecție care înțelege ce vede, nu doar mișcare. Mai puține alarme false. CSSI Brașov: 0752 288 400.">
+<meta name="twitter:image" content="https://cssi.ro/images/blog/camere-ai-deep-learning-cover.jpg">
+
+<!-- ===== SCHEMA JSON-LD: Article + BreadcrumbList + FAQPage ===== -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Article",
+      "@id": "https://cssi.ro/blog/camere-inteligenta-artificiala-deep-learning-alerte-brasov#article",
+      "headline": "Camere cu inteligență artificială: deep learning și alerte inteligente",
+      "description": "Cum funcționează camerele cu inteligență artificială: clasificare om vs. vehicul, detectarea trecerii peste o linie și a staționării suspecte, reducerea alarmelor false și cum ajung alertele la tine.",
+      "image": "https://cssi.ro/images/blog/camere-ai-deep-learning-cover.jpg",
+      "author": {
+        "@type": "Organization",
+        "name": "CSSI Brașov",
+        "url": "https://cssi.ro"
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": "CSSI Brașov",
+        "logo": {
+          "@type": "ImageObject",
+          "url": "https://cssi.ro/images/logo-cssi.webp"
+        }
+      },
+      "datePublished": "2026-11-12",
+      "dateModified": "2026-11-12",
+      "mainEntityOfPage": "https://cssi.ro/blog/camere-inteligenta-artificiala-deep-learning-alerte-brasov",
+      "inLanguage": "ro"
+    },
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Acasă",
+          "item": "https://cssi.ro/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "Blog",
+          "item": "https://cssi.ro/blog"
+        },
+        {
+          "@type": "ListItem",
+          "position": 3,
+          "name": "Camere cu inteligență artificială: deep learning și alerte inteligente"
+        }
+      ]
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "Ce înseamnă, de fapt, o cameră cu inteligență artificială?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Este o cameră care nu se mulțumește să vadă că se mișcă ceva, ci încearcă să înțeleagă ce vede: dacă e un om, un vehicul sau doar o creangă mișcată de vânt. Folosește un model de deep learning antrenat pe milioane de imagini, care rulează în cameră sau în înregistrator. Rezultatul practic e că primești alerte relevante și eviți sutele de notificări false ale detecției clasice."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Cu ce e mai bună decât detecția clasică de mișcare?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Detecția clasică se declanșează la orice schimbare de pixeli: umbre, ploaie, insecte, faruri, animale. Camera AI face diferența între un om și restul, așa că alarma sună când chiar contează. Asta înseamnă mai puține alarme false, mai puțină oboseală de notificări și o reacție mai rapidă la evenimentele reale."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Ce tipuri de alerte inteligente pot configura?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Cele mai folosite sunt: clasificarea om/vehicul, trecerea peste o linie virtuală (line crossing), intrarea într-o zonă interzisă, staționarea prea lungă într-un loc (loitering) și detectarea unui obiect lăsat sau luat. Fiecare se poate lega de o acțiune: notificare pe telefon, pornirea unei sirene sau a unei lumini, sau anunțarea dispeceratului."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Chiar reduc camerele AI alarmele false?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Da, și e principalul motiv pentru care firmele trec la ele. Prin filtrarea a tot ce nu e om sau vehicul, numărul de alerte inutile scade puternic. Nu dispar complet — condițiile grele și o reglare proastă pot genera erori — dar diferența față de detecția clasică este mare. La CSSI reglăm pragurile și zonele exact pentru scena ta, ca să ai alerte de încredere."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Camera AI recunoaște fețe sau numere de înmatriculare?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Sunt funcții diferite. Clasificarea om/vehicul și alertele de comportament nu identifică persoane anume. Recunoașterea numărului de înmatriculare (ANPR) este o funcție separată, folosită la parcări și acces auto. Recunoașterea facială este și mai sensibilă legal și o recomandăm doar în cazuri justificate și conforme GDPR. Îți explicăm ce e permis pentru situația ta."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Am nevoie de internet sau de un abonament ca să funcționeze AI-ul?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "În cele mai multe cazuri, nu. Analiza AI rulează local, în cameră sau în înregistrator, așa că detecția merge și fără internet. Ai nevoie de conexiune doar pentru a primi alertele pe telefon și a vedea imaginile de la distanță. Nu impunem abonamente pentru funcțiile de bază — îți spunem clar ce merge local și ce cere conectare."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Camerele AI respectă GDPR?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Da, dacă sunt configurate corect. Supravegherea trebuie semnalizată, limitată la zonele justificate și cu o durată rezonabilă de păstrare a imaginilor. Funcțiile care prelucrează date biometrice, precum recunoașterea facială, au cerințe suplimentare și nu se folosesc la întâmplare. Proiectăm sistemul respectând Legea 333/2003 și regulile GDPR și îți spunem exact ce este permis."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Pot transforma camerele pe care le am deja în camere cu AI?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Depinde de modelul lor. Camerele mai vechi, fără analiză video, nu pot clasifica obiecte singure, dar uneori înregistratorul poate face analiza pentru ele, dacă are procesare AI și suficiente canale. Alteori e mai simplu să înlocuiești doar camerele de la punctele critice (poartă, perimetru, intrări) și să le păstrezi pe celelalte. Verificăm la evaluare ce model ai, ce suportă înregistratorul și îți spunem ce merită păstrat și ce nu."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Funcționează camera AI bine noaptea, la ceață sau la ninsoare?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Funcționează, dar precizia scade pe măsură ce imaginea devine mai slabă. Pe timp de noapte contează senzorul și iluminarea, iar la ceață deasă sau ninsoare abundentă modelul poate rata detecții sau clasifica greșit. De aceea testăm sistemul în condiții diferite și, unde situația cere, completăm cu iluminare suplimentară sau cu tehnologii precum camerele termice. Nu promitem detecție perfectă în orice condiții; promitem un sistem testat pe scena ta."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Cât durează reglarea și când văd efectul?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Montajul și configurarea de bază se fac, de obicei, într-o zi sau două, în funcție de numărul de camere. Reglarea fină durează mai mult: urmărim sistemul 1–2 săptămâni, vedem ce alerte apar și corectăm zonele, pragurile și programele. Efectul se simte încă din primele zile, dar sistemul ajunge la nivelul lui bun după această perioadă de ajustare."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Ce se întâmplă dacă pică internetul sau curentul?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Dacă analiza rulează local, camerele și înregistratorul continuă să detecteze și să înregistreze fără internet; ce nu merge e trimiterea alertelor pe telefon și accesul de la distanță, până revine conexiunea. La pana de curent, sistemul se oprește dacă nu are alimentare de rezervă, de aceea la punctele critice recomandăm un UPS dimensionat pentru înregistrator și switch. Alertele locale, precum sirena și lumina, rămân utile și fără internet, dacă sunt legate direct la eveniment."
+          }
+        }
+      ]
+    }
+  ]
+}
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;600;700;800&family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,400;0,8..60,600;1,8..60,400&display=swap" rel="stylesheet" />
+  <script src="/cookie-consent.js" defer></script>
+  <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}</script>
+  <script src="/tracking.js" defer></script>
+  <style>
+    @keyframes subtle-pulse-n { 0%,100%{transform:scale(1)}50%{transform:scale(.92)} }
+    @keyframes badge-pulse-n { 0%,100%{box-shadow:0 0 0 0 rgba(34,197,94,.4)}50%{box-shadow:0 0 0 8px rgba(34,197,94,0)} }
+    .animate-subtle-pulse{animation:subtle-pulse-n 2.5s ease-in-out infinite}
+    .animate-badge-pulse{animation:badge-pulse-n 2s ease-in-out infinite}
+    .dropdown-menu{display:none!important}
+    .dropdown:hover .dropdown-menu{display:block!important}
+    #mobileMenu{display:none}
+    #mobileMenu.open{display:block}
+    #servicesSubmenu{display:none}
+    #servicesSubmenu.open{display:block}
+    .dropdown-scroll::-webkit-scrollbar{width:4px}
+    .dropdown-scroll::-webkit-scrollbar-track{background:#f1f1f1}
+    .dropdown-scroll::-webkit-scrollbar-thumb{background:#cbd5e1;border-radius:4px}
+    @media(min-width:640px){.sm\:block{display:block!important}.sm\:hidden{display:none!important}.sm\:px-6{padding-left:24px;padding-right:24px}}
+    @media(min-width:1024px){.lg\:flex{display:flex!important}.lg\:hidden{display:none!important}}@media(min-width:768px){.md\:flex{display:flex!important}.md\:hidden{display:none!important}}
+    #mainHeader, #mainHeader a, #mainHeader button, #mainHeader span, #mainHeader div { font-family: 'Sora', sans-serif !important; }
+  </style>
+  <style>
+    :root{--brand-dark:#0b1a2e;--brand-navy:#102a4c;--brand-blue:#1a4b8c;--brand-accent:#e63022;--brand-gold:#f5a623;--brand-light:#f0f4f9;--text-main:#1c2b3a;--text-muted:#5a6e82;--text-light:#8fa0b3;--border:#dce6f0;--white:#ffffff;--ff-head:'Sora',sans-serif;--ff-body:'Source Serif 4',Georgia,serif;--radius:10px;--shadow-sm:0 2px 8px rgba(11,26,46,.08);--shadow-md:0 6px 24px rgba(11,26,46,.13);--shadow-lg:0 16px 48px rgba(11,26,46,.18);--max-w:1400px}
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    html{scroll-behavior:smooth}
+    body{font-family:var(--ff-body);font-size:18px;line-height:1.75;color:var(--text-main);background:var(--white);-webkit-font-smoothing:antialiased}
+    img{max-width:100%;height:auto;display:block}
+    a{color:var(--brand-blue);text-decoration:none}
+    a:hover{text-decoration:underline}
+    .breadcrumb{background:var(--brand-dark);border-bottom:none;padding:12px 0;padding-top:104px;font-family:var(--ff-head);font-size:13px;color:rgba(255,255,255,.55)}
+    .breadcrumb .inner{max-width:1280px;margin:0 auto;padding:0 0 12px 24px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+    .breadcrumb a{color:rgba(255,255,255,.7)}
+    .breadcrumb .sep{color:rgba(255,255,255,.3)}
+    .hero{background:var(--brand-dark);background-image:radial-gradient(ellipse 70% 60% at 80% 50%,rgba(26,75,140,.45) 0%,transparent 70%),radial-gradient(ellipse 40% 50% at 10% 80%,rgba(230,48,34,.15) 0%,transparent 60%);color:var(--white);padding:48px 24px 64px;position:relative;overflow:hidden}
+    .hero::before{content:'';position:absolute;inset:0;background-image:url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23ffffff' fill-opacity='0.025'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/svg%3E")}
+        .hero .inner{max-width:var(--max-w);margin:0 auto;position:relative;z-index:1;display:flex;align-items:center;gap:40px}
+    .hero-content{flex:1;min-width:0}
+    .hero-img-wrap{flex:0 0 640px;display:flex;align-items:center;justify-content:center}
+    .hero-img-wrap img{width:640px;height:auto;border-radius:14px;box-shadow:0 8px 32px rgba(0,0,0,.35);border:1px solid rgba(255,255,255,.1);opacity:.92;transition:opacity .3s}
+    .hero-img-wrap img:hover{opacity:1}
+    @media(max-width:900px){.hero .inner{flex-direction:column;gap:24px}.hero-img-wrap{flex:0 0 auto;order:-1}.hero-img-wrap img{width:500px}}
+    @media(max-width:700px){.hero-img-wrap{display:none}}
+    .hero-badge{display:inline-flex;align-items:center;gap:6px;background:rgba(230,48,34,.2);border:1px solid rgba(230,48,34,.4);color:#ff8a80;font-family:var(--ff-head);font-size:12px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;padding:5px 12px;border-radius:100px;margin-bottom:20px}
+    .hero h1{font-family:var(--ff-head);font-size:clamp(26px,4vw,40px);font-weight:800;line-height:1.2;margin-bottom:20px;letter-spacing:-.02em}
+    .hero h1 em{font-style:normal;color:var(--brand-gold)}
+    .hero .lead{font-size:clamp(16px,2vw,19px);line-height:1.65;color:rgba(255,255,255,.82);max-width:620px;margin-bottom:32px}
+    .hero-meta{display:flex;align-items:center;gap:20px;flex-wrap:wrap;font-family:var(--ff-head);font-size:13px;color:rgba(255,255,255,.55)}
+    .hero-meta span{display:flex;align-items:center;gap:5px}
+    .hero-meta .dot{color:rgba(255,255,255,.25)}
+    .topic-pills{display:flex;gap:10px;flex-wrap:wrap;margin-top:28px}
+    .pill{display:flex;align-items:center;gap:8px;padding:8px 16px;border-radius:100px;font-family:var(--ff-head);font-size:13px;font-weight:600;border:1px solid}
+    .pill-red{background:rgba(230,48,34,.15);border-color:rgba(230,48,34,.35);color:#ff8a80}
+    .pill-amber{background:rgba(245,166,35,.12);border-color:rgba(245,166,35,.3);color:#ffd180}
+    .pill-blue{background:rgba(26,75,140,.25);border-color:rgba(26,75,140,.5);color:#82b4ff}
+    .pill-green{background:rgba(39,174,96,.15);border-color:rgba(39,174,96,.35);color:#81c995}
+    .article-wrap{max-width:1440px;margin:0 auto;padding:0 20px;display:grid;grid-template-columns:1fr 280px;gap:32px;align-items:start}
+    .article-body{padding:32px 0}
+    .article-body h2{font-family:var(--ff-head);font-size:clamp(20px,2.5vw,26px);font-weight:700;color:var(--brand-dark);margin:36px 0 14px;padding-top:6px;border-top:3px solid var(--brand-accent);line-height:1.3}
+    .article-body h3{font-family:var(--ff-head);font-size:clamp(17px,2vw,20px);font-weight:600;color:var(--brand-navy);margin:32px 0 12px}
+    .article-body p{margin-bottom:16px;color:var(--text-main)}
+    .article-body ul,.article-body ol{padding-left:24px;margin-bottom:20px}
+    .article-body li{margin-bottom:8px}
+    .article-body strong{color:var(--brand-dark)}
+    .intro-p{font-size:19px;line-height:1.7}
+    .box{border-radius:var(--radius);padding:22px 26px;margin:28px 0;border-left:4px solid}
+    .box-red{background:#fef2f2;border-color:var(--brand-accent)}
+    .box-blue{background:#eff6ff;border-color:var(--brand-blue)}
+    .box-amber{background:#fffbeb;border-color:var(--brand-gold)}
+    .box-green{background:#f0fdf4;border-color:#27ae60}
+    .box h4{font-family:var(--ff-head);font-size:15px;font-weight:700;margin-bottom:8px}
+    .box p{font-size:15px;margin-bottom:8px}
+    .check-list{list-style:none;padding:0}
+    .check-list li{display:flex;gap:10px;padding:6px 0;font-size:16px}
+    .chk{color:#27ae60;font-weight:700;flex-shrink:0}
+    .price-table{width:100%;border-collapse:collapse;margin:24px 0;font-size:15px}
+    .price-table th{background:var(--brand-navy);color:var(--white);font-family:var(--ff-head);font-size:13px;font-weight:600;text-transform:uppercase;letter-spacing:.04em;padding:12px 16px;text-align:left}
+    .price-table td{padding:12px 16px;border-bottom:1px solid var(--border)}
+    .price-table tr:nth-child(even) td{background:var(--brand-light)}
+    .price-table .highlight td{background:#fffbeb;font-weight:600}
+    .cta-banner{background:linear-gradient(135deg,var(--brand-dark),var(--brand-navy));border-radius:var(--radius);padding:28px 32px;color:var(--white);display:flex;align-items:center;justify-content:space-between;gap:20px;flex-wrap:wrap}
+    .cta-banner h3{font-family:var(--ff-head);font-size:18px;font-weight:700;margin-bottom:4px}
+    .cta-banner p{font-size:14px;color:rgba(255,255,255,.7);margin:0}
+    .cta-buttons{display:flex;gap:10px;flex-wrap:wrap}
+    .btn{display:inline-flex;align-items:center;gap:7px;padding:10px 18px;border-radius:8px;font-family:var(--ff-head);font-size:13px;font-weight:600;cursor:pointer;border:none;text-decoration:none!important}
+    .btn-primary{background:var(--brand-accent);color:var(--white)!important;box-shadow:0 4px 14px rgba(230,48,34,.3)}
+    .btn-secondary{background:rgba(255,255,255,.12);color:var(--white)!important;border:1px solid rgba(255,255,255,.25)}
+    .faq-section{margin:48px 0 32px}
+    .faq-item{border:1px solid var(--border);border-radius:var(--radius);margin-bottom:10px;overflow:hidden}
+    .faq-q{display:flex;align-items:center;justify-content:space-between;padding:16px 20px;cursor:pointer;background:var(--white);font-family:var(--ff-head);font-size:15px;font-weight:600;color:var(--brand-dark);border:none;width:100%;text-align:left;gap:12px}
+    .faq-q:hover{background:var(--brand-light)}
+    .faq-a{display:none;padding:0 20px 16px;font-size:15px;color:var(--text-muted);line-height:1.7}
+    .faq-item.open .faq-a{display:block}
+    .faq-item.open .faq-q{background:var(--brand-light);color:var(--brand-blue)}
+    .faq-chevron{transition:transform .2s;flex-shrink:0}
+    .faq-item.open .faq-chevron{transform:rotate(180deg)}
+    .sidebar{position:sticky;top:104px}
+    .sidebar-card{border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;margin-bottom:20px;background:var(--white);box-shadow:var(--shadow-sm)}
+    .sidebar-card-head{background:var(--brand-navy);color:var(--white);font-family:var(--ff-head);font-size:12px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;padding:12px 18px}
+    .sidebar-card-body{padding:16px 18px}
+    .toc-list{list-style:none;padding:0;counter-reset:toc}
+    .toc-list li{counter-increment:toc}
+    .toc-list a{display:flex;align-items:baseline;gap:8px;padding:7px 0;font-family:var(--ff-head);font-size:13px;color:var(--text-muted);border-bottom:1px solid var(--border);text-decoration:none}
+    .toc-list a::before{content:counter(toc,decimal-leading-zero);font-size:11px;font-weight:700;color:var(--text-light)}
+    .toc-list li:last-child a{border-bottom:none}
+    .toc-list a:hover{color:var(--brand-blue)}
+    .contact-info{list-style:none;padding:0}
+    .contact-info li{display:flex;gap:12px;padding:10px 0;border-bottom:1px solid var(--border);align-items:flex-start}
+    .contact-info li:last-child{border-bottom:none}
+    .ci-icon{font-size:20px;flex-shrink:0;margin-top:2px}
+    .contact-info strong{font-family:var(--ff-head);font-size:14px;display:block;color:var(--brand-dark)}
+    .contact-info span{font-size:12px;color:var(--text-light)}
+    .article-footer{background:var(--brand-light);border-top:1px solid var(--border);padding:40px 24px;text-align:center}
+    .article-footer p{font-size:14px;color:var(--text-muted);max-width:500px;margin:0 auto 16px}
+    .tags{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-top:12px}
+    .tag{background:var(--white);border:1px solid var(--border);padding:4px 12px;border-radius:100px;font-family:var(--ff-head);font-size:11px;color:var(--text-muted)}
+    @media(max-width:768px){.article-wrap{grid-template-columns:1fr;gap:32px}.sidebar{position:static;order:2}.cta-banner{flex-direction:column;text-align:center}}
+  
+.discuta-in-grup{background:var(--brand-light);border:1px solid var(--border);border-left:4px solid var(--brand-blue);border-radius:var(--radius);padding:20px 24px;margin:32px 0}
+.discuta-in-grup h3{font-family:var(--ff-head);font-weight:600;font-size:17px;color:var(--brand-navy);margin:0 0 8px}
+.discuta-in-grup p{font-size:15px;color:var(--text-muted);line-height:1.6;margin:0 0 12px}
+.discuta-in-grup a{display:inline-block;font-family:var(--ff-head);font-weight:600;font-size:14px;color:var(--brand-blue);text-decoration:none}
+.discuta-in-grup a:hover{text-decoration:underline}
+
+/* mobfix-v1 */
+.hidden{display:none}
+@media(max-width:900px){.article-wrap{grid-template-columns:minmax(0,1fr)}.sidebar{position:static;top:auto}.article-body table{display:block;overflow-x:auto;max-width:100%}}
+
+/* mobfix-v2 */
+.lg\:hidden .animate-badge-pulse{background:rgba(15,23,42,.9)!important;color:#fff!important;border:1px solid rgba(255,255,255,.25)}
+
+/* buton inapoi-sus */
+#toTop{position:fixed;right:18px;bottom:18px;z-index:45;width:46px;height:46px;border:none;border-radius:50%;background:var(--brand-navy);color:#fff;cursor:pointer;box-shadow:0 6px 18px rgba(11,26,46,.28);opacity:0;visibility:hidden;transform:translateY(8px);transition:opacity .2s,transform .2s,visibility .2s;display:flex;align-items:center;justify-content:center}
+#toTop.show{opacity:1;visibility:visible;transform:none}
+#toTop:hover{background:var(--brand-blue)}
+</style>
+<style id="wa-float">#waFloat{position:fixed;right:18px;bottom:18px;z-index:46;width:52px;height:52px;border-radius:50%;background:#22c55e;color:#fff;display:flex;align-items:center;justify-content:center;box-shadow:0 6px 18px rgba(0,0,0,.25);transition:background .2s}#waFloat:hover{background:#16a34a}#toTop{bottom:82px;right:21px}</style>
+<style>.cta-banner h3{color:#ffffff !important}.cta-banner p{color:rgba(255,255,255,.85) !important}.box-info{background:#eef5ff;border-color:var(--brand-blue)}.box-warn{background:#fff8ec;border-color:var(--brand-gold)}.box-tip{background:#f0faf2;border-color:#27ae60}.box-danger{background:#fef2f2;border-color:#e63022}.box-info .box-title{color:var(--brand-blue)}.box-warn .box-title{color:#b7760a}.box-tip .box-title{color:#1e8c3f}.box-danger .box-title{color:#c0392b}.compare-table{width:100%;border-collapse:collapse;font-size:15px;margin:24px 0;border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow-sm)}.compare-table th{background:var(--brand-navy);color:var(--white);font-family:var(--ff-head);font-weight:600;padding:13px 16px;text-align:left}.compare-table td{padding:12px 16px;border-bottom:1px solid var(--border);vertical-align:top}.compare-table tr:nth-child(even) td{background:var(--brand-light)}.compare-table tr:last-child td{border-bottom:none}.compare-table .yes{color:#27ae60;font-weight:600}.compare-table .no{color:#c0392b}</style></head>
+<body>
+<header id="mainHeader" style="position:fixed;top:0;left:0;right:0;z-index:50;transition:all 0.3s;">
+    <div class="hidden sm:block" style="background:#0f172a;color:#fff;font-size:12px;padding:6px 0;">
+        <div style="max-width:1280px;margin:0 auto;padding:0 24px;display:flex;justify-content:space-between;align-items:center;">
+            <span>⭐ <span style="color:#4ade80;font-weight:600;">Peste 20 ani de experiență</span></span>
+            <div style="display:flex;align-items:center;gap:16px;">
+                <span>⭐ <span style="font-weight:600;">8.700+ proiecte</span></span>
+            </div>
+        </div>
+    </div>
+    <div class="sm:hidden" style="background:#0f172a;color:#fff;font-size:12px;padding:6px 0;">
+        <div style="max-width:1280px;margin:0 auto;padding:0 12px;display:flex;justify-content:space-between;align-items:center;">
+            <span>⭐ <span style="color:#4ade80;font-weight:600;">Peste 20 ani de experiență</span></span>
+            <a href="tel:0752288400" style="display:flex;align-items:center;gap:4px;font-weight:600;color:#4ade80;">📞 Sună acum</a>
+        </div>
+    </div>
+    <div id="navBg" style="transition:all 0.3s;">
+        <div style="max-width:1280px;margin:0 auto;padding:0 12px;display:flex;justify-content:space-between;align-items:center;height:64px;" class="sm:px-6">
+            <a href="../">
+                <img src="/images/cssi-logo-header.webp" alt="CSSI Logo" id="logoImg" style="height:56px;width:auto;transition:all 0.3s;filter:brightness(0) invert(1) drop-shadow(0 0 1px rgba(255,255,255,0.8));">
+            </a>
+            <nav class="hidden md:flex" style="align-items:center;gap:4px;">
+                <a href="../" id="navLink1" style="padding:6px 12px;font-size:14px;font-weight:500;color:#fff;transition:all 0.2s;border-radius:8px;" onmouseover="this.style.color='#f87171'" onmouseout="this.style.color=navTextColor">🏠 Acasă</a>
+                <div class="dropdown" style="position:relative;">
+                    <button id="navLink2" style="padding:6px 12px;font-size:14px;font-weight:500;color:#fff;transition:all 0.2s;border-radius:8px;background:none;border:none;cursor:pointer;display:flex;align-items:center;font-family:inherit;">
+                        🛠️ Servicii
+                        <svg style="margin-left:4px;width:16px;height:16px;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+                    </button>
+                    <div class="dropdown-menu dropdown-scroll" style="position:absolute;top:100%;left:0;width:280px;background:#fff;box-shadow:0 10px 15px -3px rgba(0,0,0,0.1);border-radius:12px;padding:8px;border:1px solid #f1f5f9;max-height:80vh;overflow-y:auto;z-index:100;">
+                        <a href="../detectie-incendiu-isu" style="display:block;padding:10px 16px;font-size:13px;color:#334155;border-radius:8px;" onmouseover="this.style.background='#fef2f2';this.style.color='#dc2626'" onmouseout="this.style.background='';this.style.color='#334155'">🔥 Detecție Incendiu ISU</a>
+                        <a href="../camere-supraveghere" style="display:block;padding:10px 16px;font-size:13px;color:#334155;border-radius:8px;" onmouseover="this.style.background='#fef2f2';this.style.color='#dc2626'" onmouseout="this.style.background='';this.style.color='#334155'">📹 Camere Supraveghere</a>
+                        <a href="../alarma-antiefractie" style="display:block;padding:10px 16px;font-size:13px;color:#334155;border-radius:8px;" onmouseover="this.style.background='#fef2f2';this.style.color='#dc2626'" onmouseout="this.style.background='';this.style.color='#334155'">🚨 Alarmă Antiefracție</a>
+                        <a href="../control-acces" style="display:block;padding:10px 16px;font-size:13px;color:#334155;border-radius:8px;" onmouseover="this.style.background='#fef2f2';this.style.color='#dc2626'" onmouseout="this.style.background='';this.style.color='#334155'">🚪 Control Acces</a>
+                        <a href="../pontaj-electronic" style="display:block;padding:10px 16px;font-size:13px;color:#334155;border-radius:8px;" onmouseover="this.style.background='#fef2f2';this.style.color='#dc2626'" onmouseout="this.style.background='';this.style.color='#334155'">⏱️ Pontaj Electronic</a>
+                        <a href="../bariere-auto" style="display:block;padding:10px 16px;font-size:13px;color:#334155;border-radius:8px;" onmouseover="this.style.background='#fef2f2';this.style.color='#dc2626'" onmouseout="this.style.background='';this.style.color='#334155'">🚧 Bariere Auto</a>
+                        <a href="../interfoane-videointerfoane" style="display:block;padding:10px 16px;font-size:13px;color:#334155;border-radius:8px;" onmouseover="this.style.background='#fef2f2';this.style.color='#dc2626'" onmouseout="this.style.background='';this.style.color='#334155'">🔔 Interfoane &amp; Videointerfoane</a>
+                        <a href="../sonorizare" style="display:block;padding:10px 16px;font-size:13px;color:#334155;border-radius:8px;" onmouseover="this.style.background='#fef2f2';this.style.color='#dc2626'" onmouseout="this.style.background='';this.style.color='#334155'">🔊 Sonorizare</a>
+                        <a href="../automatizari-porti" style="display:block;padding:10px 16px;font-size:13px;color:#334155;border-radius:8px;" onmouseover="this.style.background='#fef2f2';this.style.color='#dc2626'" onmouseout="this.style.background='';this.style.color='#334155'">🚗 Automatizări Porți</a>
+                        <a href="../usi-garaj" style="display:block;padding:10px 16px;font-size:13px;color:#334155;border-radius:8px;" onmouseover="this.style.background='#fef2f2';this.style.color='#dc2626'" onmouseout="this.style.background='';this.style.color='#334155'">🏠 Uși Garaj</a>
+                        <a href="../aer-conditionat" style="display:block;padding:10px 16px;font-size:13px;color:#334155;border-radius:8px;" onmouseover="this.style.background='#fef2f2';this.style.color='#dc2626'" onmouseout="this.style.background='';this.style.color='#334155'">❄️ Aer Condiționat</a>
+                        <a href="../ventilatie" style="display:block;padding:10px 16px;font-size:13px;color:#334155;border-radius:8px;" onmouseover="this.style.background='#fef2f2';this.style.color='#dc2626'" onmouseout="this.style.background='';this.style.color='#334155'">💨 Ventilație</a>
+                        <a href="../instalatii-electrice" style="display:block;padding:10px 16px;font-size:13px;color:#334155;border-radius:8px;" onmouseover="this.style.background='#fef2f2';this.style.color='#dc2626'" onmouseout="this.style.background='';this.style.color='#334155'">⚡ Instalații Electrice</a>
+                        <a href="../instalatii-termice-sanitare" style="display:block;padding:10px 16px;font-size:13px;color:#334155;border-radius:8px;" onmouseover="this.style.background='#fef2f2';this.style.color='#dc2626'" onmouseout="this.style.background='';this.style.color='#334155'">🔧 Instalații Termice &amp; Sanitare</a>
+                    </div>
+                </div>
+                <a href="../despre-noi" id="navLink3" style="padding:6px 12px;font-size:14px;font-weight:500;color:#fff;transition:all 0.2s;border-radius:8px;" onmouseover="this.style.color='#f87171'" onmouseout="this.style.color=navTextColor">ℹ️ Despre Noi</a>
+                <a href="../portofoliu" id="navLink4" style="padding:6px 12px;font-size:14px;font-weight:500;color:#fff;transition:all 0.2s;border-radius:8px;" onmouseover="this.style.color='#f87171'" onmouseout="this.style.color=navTextColor">📁 Portofoliu</a>
+                <a href="/blog/" style="padding:6px 12px;font-size:14px;font-weight:500;color:#fff;transition:all 0.2s;border-radius:8px;" id="navLinkBlog" onmouseover="this.style.color='#f87171'" onmouseout="this.style.color=navTextColor">📝 Blog</a>
+                <a href="../contact" id="navLink5" style="padding:6px 12px;font-size:14px;font-weight:500;color:#fff;transition:all 0.2s;border-radius:8px;" onmouseover="this.style.color='#f87171'" onmouseout="this.style.color=navTextColor">📍 Contact</a>
+            </nav>
+            <div class="hidden lg:flex" style="align-items:center;gap:12px;">
+                <a href="tel:0752288400" id="phoneLink" style="display:flex;align-items:center;font-size:14px;font-weight:500;color:#fff;transition:all 0.2s;">
+                    <svg style="width:16px;height:16px;margin-right:6px;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/></svg>
+                    0752 288 400
+                </a>
+                <a href="../contact" style="background:linear-gradient(to right,#dc2626,#b91c1c);color:#fff;padding:8px 20px;border-radius:8px;font-size:14px;font-weight:600;box-shadow:0 4px 6px -1px rgba(0,0,0,0.1);transition:all 0.2s;" onmouseover="this.style.background='linear-gradient(to right,#b91c1c,#991b1b)'" onmouseout="this.style.background='linear-gradient(to right,#dc2626,#b91c1c)'">Cere Ofertă</a>
+            </div>
+            <div class="md:hidden" style="display:flex;align-items:center;gap:8px;">
+                <button onclick="toggleMobileMenu()" id="menuBtn" class="animate-subtle-pulse" style="padding:4px;border-radius:6px;border:none;cursor:pointer;background:linear-gradient(to right,#ef4444,#dc2626);color:#fff;">
+                    <svg id="menuIcon" style="width:20px;height:20px;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
+                    <svg id="closeIcon" style="width:20px;height:20px;display:none;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+                </button>
+            </div>
+        </div>
+        <div id="mobileMenu" style="background:#fff;border-radius:16px;box-shadow:0 20px 25px -5px rgba(0,0,0,0.1);margin:8px 12px;padding:8px;max-height:80vh;overflow-y:auto;">
+            <nav style="display:flex;flex-direction:column;gap:4px;">
+                <a href="../" style="padding:10px 16px;font-size:16px;font-weight:500;color:#334155;border-radius:8px;">🏠 Acasă</a>
+                <button onclick="toggleServicesSubmenu()" style="padding:10px 16px;font-size:16px;font-weight:500;color:#334155;border-radius:8px;background:none;border:none;cursor:pointer;display:flex;justify-content:space-between;align-items:center;width:100%;font-family:inherit;text-align:left;">
+                    🛠️ Servicii
+                    <svg id="servicesArrow" style="width:16px;height:16px;transition:transform 0.2s;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+                </button>
+                <div id="servicesSubmenu" style="padding-left:16px;overflow-y:auto;">
+                    <a href="../detectie-incendiu-isu" onclick="closeMobile()" style="display:block;padding:8px 16px;font-size:14px;color:#475569;border-radius:8px;">🔥 Detecție Incendiu ISU</a>
+                    <a href="../camere-supraveghere" onclick="closeMobile()" style="display:block;padding:8px 16px;font-size:14px;color:#475569;border-radius:8px;">📹 Camere Supraveghere</a>
+                    <a href="../alarma-antiefractie" onclick="closeMobile()" style="display:block;padding:8px 16px;font-size:14px;color:#475569;border-radius:8px;">🚨 Alarmă Antiefracție</a>
+                    <a href="../control-acces" onclick="closeMobile()" style="display:block;padding:8px 16px;font-size:14px;color:#475569;border-radius:8px;">🚪 Control Acces</a>
+                    <a href="../pontaj-electronic" onclick="closeMobile()" style="display:block;padding:8px 16px;font-size:14px;color:#475569;border-radius:8px;">⏱️ Pontaj Electronic</a>
+                    <a href="../bariere-auto" onclick="closeMobile()" style="display:block;padding:8px 16px;font-size:14px;color:#475569;border-radius:8px;">🚧 Bariere Auto</a>
+                    <a href="../interfoane-videointerfoane" onclick="closeMobile()" style="display:block;padding:8px 16px;font-size:14px;color:#475569;border-radius:8px;">🔔 Interfoane &amp; Videointerfoane</a>
+                    <a href="../sonorizare" onclick="closeMobile()" style="display:block;padding:8px 16px;font-size:14px;color:#475569;border-radius:8px;">🔊 Sonorizare</a>
+                    <a href="../automatizari-porti" onclick="closeMobile()" style="display:block;padding:8px 16px;font-size:14px;color:#475569;border-radius:8px;">🚗 Automatizări Porți</a>
+                    <a href="../usi-garaj" onclick="closeMobile()" style="display:block;padding:8px 16px;font-size:14px;color:#475569;border-radius:8px;">🏠 Uși Garaj</a>
+                    <a href="../aer-conditionat" onclick="closeMobile()" style="display:block;padding:8px 16px;font-size:14px;color:#475569;border-radius:8px;">❄️ Aer Condiționat</a>
+                    <a href="../ventilatie" onclick="closeMobile()" style="display:block;padding:8px 16px;font-size:14px;color:#475569;border-radius:8px;">💨 Ventilație</a>
+                    <a href="../instalatii-electrice" onclick="closeMobile()" style="display:block;padding:8px 16px;font-size:14px;color:#475569;border-radius:8px;">⚡ Instalații Electrice</a>
+                    <a href="../instalatii-termice-sanitare" onclick="closeMobile()" style="display:block;padding:8px 16px;font-size:14px;color:#475569;border-radius:8px;">🔧 Instalații Termice &amp; Sanitare</a>
+                </div>
+                <a href="../despre-noi" onclick="closeMobile()" style="padding:10px 16px;font-size:16px;font-weight:500;color:#334155;border-radius:8px;">ℹ️ Despre Noi</a>
+                <a href="../portofoliu" onclick="closeMobile()" style="padding:10px 16px;font-size:16px;font-weight:500;color:#334155;border-radius:8px;">📁 Portofoliu</a>
+                <a href="/blog/" onclick="closeMobile()" style="padding:10px 16px;font-size:16px;font-weight:500;color:#334155;border-radius:8px;">📝 Blog</a>
+                <a href="../contact" onclick="closeMobile()" style="padding:10px 16px;font-size:16px;font-weight:500;color:#334155;border-radius:8px;">📍 Contact</a>
+                <div style="padding:12px 8px;">
+                    <a href="../contact" onclick="closeMobile()" style="display:block;text-align:center;background:linear-gradient(to right,#dc2626,#b91c1c);color:#fff;padding:10px 16px;border-radius:12px;font-weight:600;">Cere Ofertă</a>
+                </div>
+            </nav>
+        </div>
+    </div>
+</header>
+
+
+  
+  
+  <nav class="breadcrumb" aria-label="Breadcrumb">
+    <div class="inner">
+      <a href="/">Acasă</a><span class="sep">›</span>
+      <a href="/blog/">Blog</a><span class="sep">›</span>
+      <span style="color:rgba(255,255,255,.9)">Camere cu inteligență artificială: deep learning | CSSI</span>
+    </div>
+  </nav>
+
+  <header class="hero">
+    <div class="inner">
+      <div class="hero-content">
+      <div class="hero-badge">📹 Ghid CSSI · 2026</div>
+      <h1>Camere cu inteligență artificială: deep learning și alerte inteligente</h1>
+      <p class="lead">O cameră clasică îți spune că <strong>se mișcă ceva</strong>. O cameră cu inteligență artificială încearcă să înțeleagă <strong>ce anume</strong> se mișcă — un om, un vehicul sau doar o creangă în vânt. Diferența pare mică, dar în practică schimbă totul: primești <strong>alerte relevante</strong> în loc de sute de notificări false. Acest ghid explică pe înțelesul unui proprietar de firmă din Brașov ce fac camerele AI, ce tipuri de alerte poți configura, cum se reglează ca să nu te obosească și cât costă, orientativ, în 2026.</p>
+      <div class="hero-meta">
+        <span>✍ CSSI Brașov</span><span class="dot">·</span>
+        <span>📅 12 Nov 2026</span><span class="dot">·</span>
+        <span>⏱ 21 min lectură</span>
+      </div>
+      <div class="topic-pills">
+        <span class="pill pill-blue">🛡 Securitate firme</span>
+        <span class="pill pill-green">📍 Brașov & împrejurimi</span>
+        <span class="pill pill-amber">✅ Ghid practic</span>
+      </div>
+    </div>
+      <div class="hero-img-wrap"><img src="/images/blog/camere-ai-deep-learning-cover.jpg" alt="Camere cu inteligență artificială: deep learning | CSSI"></div>
+    </div>
+  </header>
+
+  <div class="article-wrap">
+    <main class="article-body" id="articol">
+<h2 id="raspunsul-scurt">Răspunsul scurt</h2>
+<p>Camerele cu inteligență artificială folosesc <strong>deep learning</strong> pentru a clasifica ce văd — în primul rând <strong>om vs. vehicul</strong> — și pentru a declanșa <strong>alerte de comportament</strong>: trecerea peste o linie virtuală, intrarea într-o zonă interzisă, staționarea prea lungă, un obiect lăsat în cadru. Rezultatul practic e o scădere mare a <strong>alarmelor false</strong> față de detecția clasică de mișcare și o reacție mai rapidă la evenimentele reale. Analiza rulează de obicei <strong>local</strong>, în cameră sau în înregistrator, fără abonament pentru funcțiile de bază. Orientativ, în 2026, un sistem de <strong>4 camere cu AI și NVR montat</strong> pornește de la aproximativ <strong>4.000–6.000 RON</strong>, iar unul de <strong>8 camere</strong> de la <strong>7.000–9.500 RON</strong>; oferta fermă vine după evaluarea scenei. Condiția pentru ca totul să funcționeze: imagine bună, camere poziționate corect și praguri reglate pe locul tău, nu lăsate pe valorile din fabrică. Sistemul se proiectează respectând Legea 333/2003 și GDPR.</p>
+
+
+<h2 id="de-la-se-misca-ceva-la-e-un-om-acolo">De la „se mișcă ceva" la „e un om acolo"</h2>
+<p>Detecția clasică de mișcare compară cadre succesive și se declanșează la orice schimbare de pixeli. Sună bine pe hârtie, dar în realitate se aprinde la <strong>umbre, ploaie, ninsoare, insecte pe lentilă, faruri de mașini, animale și crengi</strong>. După câteva zile cu zeci de notificări inutile, cei mai mulți oameni pur și simplu opresc alertele — și atunci sistemul nu mai apără nimic. Am detaliat această capcană în articolul despre <a href="https://cssi.ro/blog/detectoare-miscare-senzori-exterior-alarme-false-brasov">detectoarele de mișcare și alarmele false</a>.</p>
+<p>Camera AI schimbă logica: un model antrenat pe milioane de imagini recunoaște <strong>silueta unui om sau forma unui vehicul</strong> și ignoră restul. Practic, alarma sună când chiar contează. Este continuarea firească a ideii de analiză video aplicată la <a href="https://cssi.ro/blog/detectie-perimetrala-bariere-ir-cablu-senzor-firma-brasov">detecția perimetrală avansată</a>, dusă mai departe cu alerte de comportament.</p>
+<p>Mai e o diferență, mai puțin vizibilă la început: o alertă clasică îți spune „a fost mișcare între 02:14 și 02:15", iar tu trebuie să te uiți la imagine ca să afli dacă a fost ceva. O alertă AI vine deja cu o etichetă — „persoană", „vehicul" — și, de multe ori, cu un cadru decupat. Decizia „mă duc să verific sau nu" se ia în două secunde, nu în două minute. Pentru cine are un depozit, o curte sau o clădire de birouri goală noaptea, asta e diferența dintre un sistem pe care îl folosești și unul pe care îl ignori.</p>
+
+<table class="compare-table">
+<thead><tr><th>Aspect</th><th>Detecție clasică de mișcare</th><th>Detecție cu AI (deep learning)</th></tr></thead>
+<tbody>
+<tr><td>Ce observă</td><td>Orice schimbare de pixeli</td><td>Obiecte clasificate: om, vehicul</td></tr>
+<tr><td>Umbre, ploaie, insecte, crengi</td><td class="no">Declanșează alarma</td><td class="yes">De regulă ignorate</td></tr>
+<tr><td>Alerte de comportament (linie, zonă, staționare)</td><td class="no">Limitate sau lipsă</td><td class="yes">Disponibile pe majoritatea modelelor</td></tr>
+<tr><td>Căutare în înregistrări după „om" sau „vehicul"</td><td class="no">Nu, doar după oră</td><td class="yes">Da, pe modelele care salvează etichetele</td></tr>
+<tr><td>Reglaj necesar</td><td>Sensibilitate și zone</td><td>Sensibilitate, zone, linii, timp de staționare</td></tr>
+<tr><td>Dependență de imagine bună</td><td>Mare</td><td>Mare (modelul nu face minuni pe o imagine proastă)</td></tr>
+<tr><td>Cost de achiziție</td><td>Mai mic</td><td>Mai mare, dar compensat de timpul pierdut cu alarmele false</td></tr>
+</tbody>
+</table>
+
+      <div class="cta-banner" style="margin:32px 0">
+        <div>
+          <h3>Vrei o evaluare pentru firma ta?</h3>
+          <p>Evaluarea la fața locului e gratuită în Brașov și împrejurimi — vii cu nevoia, pleci cu o soluție și un preț defalcat.</p>
+        </div>
+        <div class="cta-buttons">
+          <a href="/camere-supraveghere" class="btn btn-secondary">📍 Camere supraveghere în Brașov</a>
+          <a href="/contact" class="btn btn-secondary">📩 Cere ofertă</a>
+          <a href="tel:0752288400" class="btn btn-primary">📞 0752 288 400</a>
+          <a target="_blank" rel="noopener" href="https://wa.me/40752288400" class="btn btn-secondary">💬 WhatsApp</a>
+        </div>
+      </div>
+<h2 id="ce-este-mai-exact-deep-learning-ul-dintr">Ce este, mai exact, deep learning-ul dintr-o cameră</h2>
+<p>„Deep learning" sună complicat, dar ideea e simplă: în loc să programezi manual reguli („dacă se schimbă atâția pixeli, alarmă"), <strong>antrenezi</strong> un model arătându-i milioane de exemple etichetate — asta e o persoană, ăsta e un camion, asta e o pisică. Modelul învață tiparele și apoi, în teren, decide singur ce vede. Important pentru tine: acest „creier" rulează <strong>chiar în cameră sau în înregistrator</strong>, deci nu depinde de un server îndepărtat și, în majoritatea cazurilor, nici de internet.</p>
+<p>Un model de acest tip nu „știe" nimic despre firma ta. Nu înțelege dacă omul din curte e angajat sau intrus; vede doar că e o siluetă umană. Ce face valoroasă tehnologia e combinația cu <strong>regulile pe care le setezi tu</strong>: o persoană în curte la ora 14:00 e normală, aceeași persoană la 02:00 în zona depozitului e o alertă. Inteligența sistemului vine din modelul din cameră plus programul și zonele configurate de un specialist.</p>
+
+<h3>Unde rulează analiza: în cameră sau în înregistrator</h3>
+<p>Există două arhitecturi mari, iar alegerea ține de numărul de camere și de buget:</p>
+<ul>
+  <li><strong>AI „la margine" (în cameră)</strong> — fiecare cameră face singură clasificarea și trimite înregistratorului doar evenimentele. Avantaj: funcționează chiar dacă înregistratorul e simplu, iar o cameră poate fi adăugată oricând. Dezavantaj: fiecare cameră cu AI costă mai mult.</li>
+  <li><strong>AI în înregistrator (NVR cu procesare AI)</strong> — camerele pot fi mai simple, iar înregistratorul analizează fluxurile video. Avantaj: cost mai bun când ai multe camere. Dezavantaj: înregistratorul are o limită de canale pe care le poate analiza simultan, așa că se verifică în fișa tehnică câte canale AI suportă, nu doar câte canale video.</li>
+  <li><strong>Soluție mixtă</strong> — camere AI la punctele critice (poartă, perimetru, intrări) și camere clasice în interior, pentru context. De multe ori e cea mai echilibrată variantă.</li>
+</ul>
+<p>Unde se păstrează apoi imaginile, local, în cloud sau mixt, e o discuție separată, pe care am tratat-o în articolul despre <a href="https://cssi.ro/blog/inregistrari-video-nvr-local-cloud-hibrid-brasov">înregistrările pe NVR local, cloud sau hibrid</a>.</p>
+
+<h2 id="tipurile-de-alerte-inteligente-pe-care-l">Tipurile de alerte inteligente pe care le poți folosi</h2>
+<p>Aici stă valoarea reală pentru o firmă. Cele mai folosite alerte AI sunt:</p>
+<ul>
+  <li><strong>Clasificare om/vehicul</strong> — filtrezi din start tot ce nu e relevant.</li>
+  <li><strong>Line crossing (trecerea peste o linie virtuală)</strong> — cineva sare gardul sau trece de o limită pe care ai desenat-o pe imagine.</li>
+  <li><strong>Intruziune în zonă</strong> — intrarea într-o arie interzisă (depozit, curte tehnică).</li>
+  <li><strong>Loitering (staționare suspectă)</strong> — o persoană rămâne prea mult într-un loc, un semnal tipic de recunoaștere înainte de o spargere.</li>
+  <li><strong>Obiect lăsat sau luat</strong> — un colet abandonat sau un bun care dispare din cadru.</li>
+</ul>
+<p>Fiecare alertă se poate lega de o <strong>acțiune</strong>: notificare pe telefon, pornirea unei sirene sau a unei lumini de descurajare, sau anunțarea dispeceratului de monitorizare.</p>
+
+<h3>Cum alegi alerta potrivită pentru fiecare punct</h3>
+<p>Greșeala frecventă e să activezi tot, peste tot. Rezultatul e același val de notificări, doar cu alt nume. Mai bine alegi pentru fiecare cameră <strong>o singură întrebare</strong> la care vrei răspuns:</p>
+<ul>
+  <li><strong>Gardul și limita proprietății</strong> — „a trecut cineva peste linie?" → line crossing, activ doar în program de noapte și în weekend.</li>
+  <li><strong>Poarta și accesul auto</strong> — „a intrat un vehicul sau un om?" → clasificare om/vehicul, eventual cu ANPR dacă ai nevoie de evidența numerelor, funcție tratată separat în articolul despre <a href="https://cssi.ro/blog/recunoastere-numar-inmatriculare-anpr-acces-auto-parcari-brasov">recunoașterea numărului de înmatriculare</a>.</li>
+  <li><strong>Depozit, curte tehnică, spate de clădire</strong> — „stă cineva acolo fără motiv?" → intruziune în zonă plus loitering, cu timp de staționare de 20–40 de secunde.</li>
+  <li><strong>Vitrine, holuri, zone de predare marfă</strong> — „a rămas ceva lăsat sau a dispărut ceva?" → obiect lăsat/luat, folosit cu moderație, pentru că cere o scenă stabilă.</li>
+  <li><strong>Interior, în afara programului</strong> — „e cineva în clădire?" → detecție de persoană, cuplată cu armarea alarmei.</li>
+</ul>
+
+
+<h2 id="cum-ajung-alertele-la-tine">Cum ajung alertele la tine</h2>
+<p>O alertă e utilă doar dacă ajunge repede și clar la persoana potrivită. La camerele AI, o detecție relevantă poate declanșa în același timp o <strong>notificare în aplicația de pe telefon</strong>, o reacție locală (sirenă, lumină) și un semnal către <strong>dispecerat</strong>, dacă ai abonament de monitorizare. Vezi imaginea în timp real și decizi. Despre cum ții accesul de la distanță sigur și cum eviți ca aplicația să devină o vulnerabilitate am scris în ghidul despre <a href="https://cssi.ro/blog/securizare-retea-cctv-ip-parole-vlan-protectie-brasov">securizarea rețelei unui sistem CCTV IP</a>.</p>
+<p>Un lanț bine făcut are, de obicei, trei trepte, în ordinea gravității:</p>
+<ol>
+  <li><strong>Treapta 1 — notificare simplă</strong> pe telefon, cu cadru decupat, pentru evenimente de rutină (un vehicul în parcare în program).</li>
+  <li><strong>Treapta 2 — reacție locală</strong>: lumină și voce înregistrată („zonă supravegheată, părăsiți perimetrul"), pentru o persoană în zona interzisă. Variantele de acest tip sunt explicate în articolul despre <a href="https://cssi.ro/blog/camere-descurajare-activa-sirena-lumina-voce-brasov">camerele cu descurajare activă</a>.</li>
+  <li><strong>Treapta 3 — escaladare</strong> către dispecerat sau către responsabilul de securitate, atunci când persoana nu pleacă sau când alerta vine din zone critice. Cum funcționează monitorizarea cu intervenție e descris în articolul despre <a href="https://cssi.ro/blog/alarma-monitorizare-interventie-dispecerat-brasov">alarma cu monitorizare și intervenție</a>.</li>
+</ol>
+<p>Merită stabilit de la început <strong>cine primește ce</strong>. O alertă care ajunge la cinci telefoane nu e verificată de nimeni, pentru că fiecare crede că se ocupă altul. Mai bine: o persoană principală, una de rezervă și, pentru zonele sensibile, dispeceratul.</p>
+
+<h2 id="ai-nu-inseamna-ca-renunti-la-o-imagine-b">AI nu înseamnă că renunți la o imagine bună</h2>
+<p>Un model bun tot are nevoie de o imagine clară ca să lucreze corect. Rezoluția, obiectivul și poziționarea rămân esențiale — o cameră AI prost pusă, cu contralumină, va greși oricât de deștept ar fi modelul. De aceea corelăm alegerea funcțiilor AI cu decizia de <a href="https://cssi.ro/blog/camere-4k-vs-full-hd-cand-merita-rezolutia-brasov">rezoluție (4K vs. Full HD)</a> și, unde e nevoie de detecție pe întuneric total sau la distanță, cu tehnologii complementare precum <a href="https://cssi.ro/blog/camere-termice-detectie-timpurie-firma-brasov">camerele termice</a>.</p>
+<p>Câțiva factori de imagine care influențează direct cât de bine „vede" modelul:</p>
+<ul>
+  <li><strong>Mărimea omului în cadru</strong> — dacă silueta e prea mică (persoana e departe), modelul nu o mai poate clasifica sigur. De aceea distanța maximă de detecție se alege după obiectiv și rezoluție, nu după speranță. Regulile de montaj, înălțime și unghi sunt în articolul despre <a href="https://cssi.ro/blog/unde-cum-montezi-corect-camerele-inaltime-unghi-greseli-brasov">montarea corectă a camerelor</a>.</li>
+  <li><strong>Lumina</strong> — contralumina (soare jos în spatele subiectului, un reflector orientat spre cameră) „scrie" siluete negre, greu de clasificat. Pe timp de noapte contează tehnologia senzorului; detalii în ghidul despre <a href="https://cssi.ro/blog/camera-noapte-ir-vs-color-night-vision-starlight-brasov">IR vs. color night vision</a>.</li>
+  <li><strong>Unghiul</strong> — o cameră montată prea sus vede omul „de sus", scurtat, ceea ce scade precizia. Un unghi moderat, de 30–45° față de verticală, e de regulă mai bun.</li>
+  <li><strong>Curățenia lentilei</strong> — pânze de păianjen, praf, urme de ploaie și insecte reduc claritatea și, odată cu ea, încrederea modelului.</li>
+</ul>
+
+<h2 id="ai-anpr-si-recunoastere-faciala-nu-confu">AI, ANPR și recunoaștere facială — nu confunda funcțiile</h2>
+<p>Multă lume pune sub aceeași umbrelă „AI" lucruri foarte diferite. Clasificarea om/vehicul și alertele de comportament <strong>nu identifică persoane anume</strong>. <a href="https://cssi.ro/blog/recunoastere-numar-inmatriculare-anpr-acces-auto-parcari-brasov">Recunoașterea numărului de înmatriculare (ANPR)</a> e o funcție separată, folosită la parcări și acces auto. Iar <strong>recunoașterea facială</strong> prelucrează date biometrice, are cerințe legale suplimentare și nu se pune „pentru că se poate" — o recomandăm doar în cazuri clar justificate și conforme GDPR; am discutat-o în detaliu în articolul despre <a href="https://cssi.ro/blog/control-acces-recunoastere-faciala-gdpr-brasov">controlul accesului cu recunoaștere facială</a>.</p>
+<table class="compare-table">
+<thead><tr><th>Funcție</th><th>Ce face</th><th>Identifică o persoană anume?</th><th>Unde se folosește</th></tr></thead>
+<tbody>
+<tr><td>Clasificare om/vehicul</td><td>Separă oamenii și vehiculele de restul mișcărilor</td><td class="no">Nu</td><td>Perimetre, curți, parcări, depozite</td></tr>
+<tr><td>Line crossing, intruziune, loitering</td><td>Alertează la un comportament într-o zonă</td><td class="no">Nu</td><td>Garduri, spatele clădirii, zone tehnice</td></tr>
+<tr><td>Numărare de persoane</td><td>Contorizează intrările și ieșirile</td><td class="no">Nu</td><td>Magazine, săli, spații comerciale (vezi <a href="https://cssi.ro/blog/camere-numarare-persoane-analiza-retail-brasov">numărarea de persoane pentru retail</a>)</td></tr>
+<tr><td>ANPR</td><td>Citește numărul de înmatriculare</td><td>Identifică un vehicul, nu un om</td><td>Parcări, bariere, acces auto</td></tr>
+<tr><td>Recunoaștere facială</td><td>Compară fața cu o bază de date</td><td class="yes">Da (date biometrice)</td><td>Doar în cazuri justificate și conforme GDPR</td></tr>
+</tbody>
+</table>
+
+<div class="box box-warn"><div class="box-title">⚠️ „AI" pe cutie nu înseamnă același lucru la toate camerele</div><p>Unele camere ieftine promit „detecție inteligentă", dar fac doar o filtrare simplă a mișcării, fără un model real de clasificare. Înainte să cumperi, întreabă concret: <strong>ce obiecte clasifică</strong> (om, vehicul, animal?), <strong>unde rulează analiza</strong> (în cameră sau în înregistrator), câte canale AI suportă înregistratorul și dacă funcțiile se pot folosi <strong>fără abonament</strong>. Dacă răspunsul rămâne vag, e semn că „AI" e doar o etichetă de marketing.</p></div>
+
+<h2 id="reducerea-alarmelor-false-cum-o-faci-in-">Reducerea alarmelor false: cum o faci în practică</h2>
+<p>Camera AI scade drastic alarmele false doar dacă e și <strong>reglată</strong>. Din experiența instalărilor din Brașov, aproape toate problemele rămase după montaj vin din câteva cauze previzibile. Iată cum le tratăm:</p>
+<ul>
+  <li><strong>Zone de detecție desenate cu grijă</strong> — excludem strada, trotuarul, copacii mari și acoperișul vecin din zona activă. O cameră care „vede" tot cadrul va alerta și pentru trecătorii de pe stradă, care nu te interesează.</li>
+  <li><strong>Praguri de sensibilitate pe scenă</strong> — o sensibilitate prea mare duce la clasificări greșite, una prea mică la omisiuni. Se ajustează în câteva zile, pe baza evenimentelor reale.</li>
+  <li><strong>Programe diferite zi/noapte/weekend</strong> — aceleași alerte nu au sens la 14:00 într-o zi lucrătoare și la 03:00 duminică.</li>
+  <li><strong>Timp minim de staționare</strong> la loitering — un curier care lasă un colet și pleacă nu trebuie să declanșeze alarma; cineva care stă un minut lângă ușa din spate, da.</li>
+  <li><strong>Eliminarea surselor de reflexii</strong> — o sticlă, o pânză albă, o placă lucioasă pot induce în eroare modelul la anumite ore; uneori se rezolvă mutând obstacolul sau ajustând camera.</li>
+  <li><strong>Perioadă de probă cu revizuire</strong> — după montaj se urmărește sistemul 1–2 săptămâni, apoi se corectează pragurile. E pasul pe care îl sar cei mai mulți și care contează cel mai mult.</li>
+</ul>
+
+<div class="box box-tip"><div class="box-title">✅ Checklist: camerele tale AI sunt reglate corect dacă…</div><p><strong>1.</strong> zonele de detecție exclud strada, trotuarul și vegetația mare; <strong>2.</strong> fiecare cameră are o singură întrebare principală (linie, zonă sau staționare), nu toate funcțiile pornite; <strong>3.</strong> alertele au program diferit zi/noapte/weekend; <strong>4.</strong> timpul de staționare la loitering e setat realist (20–40 de secunde sau mai mult, după loc); <strong>5.</strong> persoana prinsă în cadru are cel puțin o mărime utilă pentru model, nu o siluetă minusculă; <strong>6.</strong> lentila e curată și camera nu are contralumină; <strong>7.</strong> notificările ajung la o persoană principală și una de rezervă, nu la zece telefoane; <strong>8.</strong> ai testat alertele mergând efectiv prin zona respectivă, pe lumină și pe întuneric; <strong>9.</strong> înregistrările pot fi căutate după eveniment, nu doar după oră; <strong>10.</strong> după 1–2 săptămâni de funcționare s-au corectat pragurile pe baza alertelor reale. Dacă lipsesc mai mult de două-trei puncte, sistemul va produce din nou notificări de care nu ai nevoie.</p></div>
+
+<h2 id="cautarea-dupa-eveniment-castigul-de-care">Căutarea după eveniment: câștigul de care nu te gândești la început</h2>
+<p>Alerta în timp real e partea vizibilă. A doua parte, la fel de utilă, apare după un incident: în loc să derulezi opt ore de imagini ca să afli când a intrat cineva în curte, <strong>cauți în înregistrări după „persoană" sau „vehicul"</strong> într-un interval de timp și o zonă. Multe înregistratoare cu AI păstrează etichetele evenimentelor și afișează doar fragmentele relevante. Pentru o firmă cu 8–16 camere, asta înseamnă minute în loc de ore la verificarea unui incident.</p>
+<p>Nu toate modelele fac acest lucru, așa că e un criteriu de întrebat la alegere. Pentru folosirea înregistrărilor ca probă după o spargere, contează și cum le exporți și le păstrezi; am explicat pașii în articolul despre <a href="https://cssi.ro/blog/dupa-o-spargere-inregistrari-camere-proba-brasov">ce faci după o spargere cu înregistrările camerelor</a>.</p>
+
+<h2 id="partea-de-gdpr-si-lege-pe-scurt">Partea de GDPR și lege, pe scurt</h2>
+<p>Camerele AI se supun acelorași reguli ca orice supraveghere video: trebuie <strong>semnalizate</strong>, limitate la zonele justificate și configurate cu o durată rezonabilă de păstrare. Funcțiile biometrice cer o atenție specială. Proiectăm sistemul respectând <strong>Legea 333/2003</strong> și principiile GDPR și îți spunem clar ce este permis pentru situația ta — fără surprize la un control. Pe larg, ce ai voie și ce nu, e în ghidul despre <a href="https://cssi.ro/blog/camere-supraveghere-gdpr-ghid-complet">camerele de supraveghere și GDPR</a>.</p>
+<p>Trei reguli practice pentru camerele cu analiză video:</p>
+<ul>
+  <li><strong>Marchează zonele</strong> cu panouri de informare vizibile; faptul că analiza e „automată" nu te scutește de semnalizare.</li>
+  <li><strong>Limitează cadrul</strong> la proprietatea ta: zonele de detecție desenate cu grijă ajută și la acest lucru, nu doar la alarmele false. O cameră care filmează curtea vecinului sau domeniul public fără motiv justificat e o problemă, indiferent dacă are AI sau nu.</li>
+  <li><strong>Evită funcțiile biometrice</strong> dacă nu ai un motiv clar și documentat. Pentru majoritatea firmelor din Brașov, clasificarea om/vehicul și alertele de comportament acoperă nevoia reală de securitate.</li>
+</ul>
+
+<h2 id="greseli-frecvente-la-camerele-cu-ai">Greșeli frecvente la camerele cu AI</h2>
+<p>Din lucrările și evaluările făcute în județul Brașov, acestea sunt greșelile pe care le întâlnim cel mai des:</p>
+<ol>
+  <li><strong>Funcțiile AI lăsate pe valorile din fabrică</strong> — sensibilitate generală, zone întregi, fără program. Rezultatul: alarme false aproape ca la o cameră clasică.</li>
+  <li><strong>Toate alertele active pe toate camerele</strong> — fără prioritizare, notificările devin zgomot și ajung să fie ignorate.</li>
+  <li><strong>Cameră AI montată prost</strong> — prea sus, contra luminii sau prea departe de zona monitorizată; modelul nu poate clasifica o siluetă mică și neclară.</li>
+  <li><strong>Înregistrator cu prea puține canale AI</strong> — se cumpără după numărul de camere, nu după câte canale poate analiza simultan; unele camere rămân fără analiză.</li>
+  <li><strong>Neverificarea condițiilor grele</strong> — ceață deasă, ninsoare abundentă sau ploaie torențială pot scădea precizia; sistemul trebuie testat și iarna, nu doar vara.</li>
+  <li><strong>Notificări către prea mulți oameni</strong> — fiecare crede că verifică altcineva și până la urmă nu verifică nimeni.</li>
+  <li><strong>Rețea nesecurizată</strong> — parole implicite și acces deschis din exterior fac camera inteligentă o poartă de intrare în rețeaua firmei.</li>
+  <li><strong>Lipsa semnalizării și a unei politici de păstrare</strong> — sistemul funcționează, dar nu e conform cu regulile GDPR.</li>
+  <li><strong>Așteptări absolute</strong> — AI-ul reduce mult alarmele false, dar nu e infailibil; un sistem serios păstrează și detecția clasică sau alarma pe senzori ca strat suplimentar la punctele critice.</li>
+</ol>
+
+<h2 id="cat-costa-camerele-cu-ai-in-2026-orienta">Cât costă camerele cu AI în 2026 (orientativ)</h2>
+<p>Prețurile depind de numărul de camere, de unde rulează analiza (în cameră sau în înregistrator), de rezoluție, de cablare și de accesorii. Intervalele de mai jos sunt <strong>orientative pentru Brașov și împrejurimi</strong>, cu montaj inclus; oferta fermă vine după evaluarea la fața locului, pe baza scenei și a cerințelor tale.</p>
+<table class="compare-table">
+<thead><tr><th>Lucrare</th><th>Cost orientativ</th><th>Ce include, de regulă</th></tr></thead>
+<tbody>
+<tr><td>4 camere cu AI + NVR, montat</td><td>4.000–6.000 RON</td><td>Camere cu clasificare om/vehicul, NVR cu hard disk, cablare, configurare, aplicație pe telefon</td></tr>
+<tr><td>8 camere cu AI + NVR, montat</td><td>7.000–9.500 RON</td><td>Ca mai sus, pentru o clădire sau un perimetru mai mare</td></tr>
+<tr><td>Cameră AI adăugată la un sistem existent</td><td>600–1.800 RON</td><td>Cameră, montaj, cablu, integrare în NVR compatibil</td></tr>
+<tr><td>Reglarea alertelor pe un sistem existent (zone, linii, programe)</td><td>300–800 RON</td><td>Vizită, desenarea zonelor, teste pe teren, ajustări după probă</td></tr>
+<tr><td>Sirenă + lumină de descurajare legate la alerte</td><td>300–900 RON</td><td>Dispozitive, montaj, legarea la evenimentul din cameră</td></tr>
+<tr><td>Dispecerat cu monitorizare</td><td>80–250 RON/lună</td><td>Preluarea semnalelor, verificare, anunțare, în funcție de pachet</td></tr>
+<tr><td>Vizită de mentenanță a sistemului</td><td>250–600 RON</td><td>Curățare lentile, verificare alerte, actualizări, test de înregistrare</td></tr>
+</tbody>
+</table>
+<p>Pentru context: diferența de preț față de o cameră clasică e, de regulă, de câteva sute de RON pe cameră, iar pentru multe firme se amortizează prin timpul care nu se mai pierde cu alarmele false și prin verificarea mai rapidă a incidentelor. Cum se dimensionează un sistem, ca număr de camere și rezoluție, e explicat în articolul despre <a href="https://cssi.ro/blog/cate-camere-ce-rezolutie-dimensionare-sistem-cctv-brasov">câte camere și ce rezoluție îți trebuie</a>.</p>
+
+<div class="box box-danger"><div class="box-title">🔥 Nu te baza doar pe AI ca singură linie de apărare</div><p>Camera AI e un strat de detecție, nu un sistem complet de securitate. Fără alarmă pe senzori la punctele critice, fără iluminare corectă și fără o procedură clară de reacție, o alertă primită la 03:00 rămâne doar o notificare. <strong>Stabilește dinainte ce faci când vine alerta</strong>: cine verifică, în cât timp, la ce număr se sună, când se anunță dispeceratul sau poliția. Un sistem inteligent fără plan de reacție nu protejează mai mult decât unul clasic. Pașii de urmat în prima clipă după o declanșare sunt descriși în ghidul despre <a href="https://cssi.ro/blog/ce-faci-cand-se-declanseaza-alarma-firma-ghid-brasov">ce faci când se declanșează alarma firmei</a>.</p></div>
+
+<div class="box box-info"><div class="box-title">ℹ️ Specific Brașov: iarnă lungă, ceață și hale la marginea orașului</div><p>În județul Brașov, camerele AI au de făcut față câtorva condiții locale. <strong>Ninsoarea abundentă și ceața</strong> din sezonul rece, în special în zonele de munte și în depresiuni, pot scădea precizia clasificării, așa că testăm sistemul și iarna, iar protecția lentilei și direcția camerei contează mai mult decât vara. <strong>Zilele scurte</strong> înseamnă mai multe ore de întuneric în programul firmei, deci imaginea de noapte decide cât de bine lucrează modelul. În <strong>zonele industriale și logistice</strong> de la marginea orașului, perimetrele lungi și depozitele mari se potrivesc cu line crossing și loitering, iar pentru <strong>spații comerciale din centru</strong> și firme mici, clasificarea om/vehicul pe intrare și curte acoperă de obicei nevoia, fără complicații.</p></div>
+
+<h2 id="cum-arata-implementarea-cssi">Cum arată implementarea CSSI</h2>
+<p>Un sistem cu AI nu se montează „din catalog". La CSSI, procesul are patru pași clari:</p>
+<p><strong>Pasul 1 — Evaluarea.</strong> Venim la fața locului și analizăm scena: ce vrei să detectezi, unde sunt punctele sensibile, ce condiții de lumină ai, de unde vin cele mai frecvente alarme false la sistemul actual. Evaluarea e gratuită în Brașov și împrejurimi.</p>
+<p><strong>Pasul 2 — Proiectul și oferta defalcată.</strong> Alegem camerele și funcțiile AI potrivite (clasificare, line crossing, zone, loitering), stabilim unde rulează analiza (în cameră sau în NVR) și câte canale AI sunt necesare. Primești o ofertă defalcată pe camere, înregistrator, cablare și configurare, fără costuri ascunse. Pentru sistemele mai mari, conectarea mai multor tipuri de echipamente pe o singură platformă e discutată în articolul despre <a href="https://cssi.ro/blog/integrare-sisteme-securitate-platforma-unica-vms-brasov">integrarea sistemelor de securitate pe o platformă unică</a>.</p>
+<p><strong>Pasul 3 — Montajul și reglarea.</strong> Montăm camerele la înălțimea și în unghiul potrivit, tragem cablurile cu alimentare PoE corect dimensionată (detalii în articolul despre <a href="https://cssi.ro/blog/alimentare-poe-camere-ip-switch-ups-distante-brasov">alimentarea camerelor IP</a>), desenăm zonele și liniile, setăm programele și testăm alertele mergând efectiv prin zonă, ziua și noaptea. Rețeaua se securizează: parole proprii, acces controlat din exterior.</p>
+<p><strong>Pasul 4 — Predarea și mentenanța.</strong> Instalăm aplicația pe telefoanele persoanelor desemnate, te învățăm cum citești o alertă și cum cauți în înregistrări, apoi revenim după 1–2 săptămâni să corectăm pragurile pe baza evenimentelor reale. Primești documentația lucrării și un plan de mentenanță periodică.</p>
+
+<h2 id="mentenanta-si-verificari-periodice">Mentenanță și verificări periodice</h2>
+<p>Un sistem cu AI nu e „montează și uită". Câteva verificări simple păstrează precizia în timp:</p>
+<ul>
+  <li><strong>Lunar</strong> — te uiți la câteva alerte din ultima lună: sunt relevante sau au apărut cauze noi de alarme false (un copac crescut, o firmă luminoasă nouă, un depozit mutat)?</li>
+  <li><strong>După schimbări în scenă</strong> — dacă muți mașini, mărfuri, panouri sau faci lucrări în curte, zonele de detecție se revăd.</li>
+  <li><strong>Sezonier</strong> — toamna și primăvara se curăță lentilele, se verifică orientarea și se retestează alertele în condiții de ceață sau ninsoare.</li>
+  <li><strong>Anual</strong> — actualizarea firmware-ului camerelor și a înregistratorului, verificarea hard disk-urilor și a duratei reale de păstrare a imaginilor și testarea accesului de la distanță.</li>
+</ul>
+<p>Ce verifică un tehnician la o vizită de mentenanță și cât de des se recomandă e detaliat în articolul despre <a href="https://cssi.ro/blog/mentenanta-sisteme-securitate-de-ce-cat-de-des-brasov">mentenanța sistemelor de securitate</a>.</p>
+
+<h2 id="citeste-si">Citește și</h2>
+<ul>
+  <li><a href="https://cssi.ro/blog/detectoare-miscare-senzori-exterior-alarme-false-brasov">Detectoare de mișcare și senzori de exterior: cum scapi de alarmele false</a> — baza de la care pornește detecția clasică.</li>
+  <li><a href="https://cssi.ro/blog/detectie-perimetrala-bariere-ir-cablu-senzor-firma-brasov">Detecție perimetrală avansată: bariere IR, cablu senzor și analitică video</a>.</li>
+  <li><a href="https://cssi.ro/blog/camere-descurajare-activa-sirena-lumina-voce-brasov">Camere cu descurajare activă: sirenă, lumină și voce care opresc intrusul</a>.</li>
+  <li><a href="https://cssi.ro/blog/securizare-retea-cctv-ip-parole-vlan-protectie-brasov">Cum securizezi rețeaua unui sistem CCTV IP: parole, VLAN și protecție</a>.</li>
+  <li><a href="https://cssi.ro/blog/camere-supraveghere-gdpr-ghid-complet">Camere supraveghere și GDPR în 2026: ce ai voie și ce nu</a>.</li>
+</ul>
+      <h2 id="faq">Întrebări frecvente</h2>
+      <div class="faq-wrap">
+        <div class="faq-item">
+          <button class="faq-q" onclick="toggleFaq(this)">Ce înseamnă, de fapt, o cameră cu inteligență artificială? <svg class="faq-chevron" width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg></button>
+          <div class="faq-a"><p>Este o cameră care nu se mulțumește să vadă că se mișcă ceva, ci încearcă să înțeleagă ce vede: dacă e un om, un vehicul sau doar o creangă mișcată de vânt. Folosește un model de deep learning antrenat pe milioane de imagini, care rulează în cameră sau în înregistrator. Rezultatul practic e că primești alerte relevante și eviți sutele de notificări false ale detecției clasice.</p></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q" onclick="toggleFaq(this)">Cu ce e mai bună decât detecția clasică de mișcare? <svg class="faq-chevron" width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg></button>
+          <div class="faq-a"><p>Detecția clasică se declanșează la orice schimbare de pixeli: umbre, ploaie, insecte, faruri, animale. Camera AI face diferența între un om și restul, așa că alarma sună când chiar contează. Asta înseamnă mai puține alarme false, mai puțină oboseală de notificări și o reacție mai rapidă la evenimentele reale.</p></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q" onclick="toggleFaq(this)">Ce tipuri de alerte inteligente pot configura? <svg class="faq-chevron" width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg></button>
+          <div class="faq-a"><p>Cele mai folosite sunt: clasificarea om/vehicul, trecerea peste o linie virtuală (line crossing), intrarea într-o zonă interzisă, staționarea prea lungă într-un loc (loitering) și detectarea unui obiect lăsat sau luat. Fiecare se poate lega de o acțiune: notificare pe telefon, pornirea unei sirene sau a unei lumini, sau anunțarea dispeceratului.</p></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q" onclick="toggleFaq(this)">Chiar reduc camerele AI alarmele false? <svg class="faq-chevron" width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg></button>
+          <div class="faq-a"><p>Da, și e principalul motiv pentru care firmele trec la ele. Prin filtrarea a tot ce nu e om sau vehicul, numărul de alerte inutile scade puternic. Nu dispar complet — condițiile grele și o reglare proastă pot genera erori — dar diferența față de detecția clasică este mare. La CSSI reglăm pragurile și zonele exact pentru scena ta, ca să ai alerte de încredere.</p></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q" onclick="toggleFaq(this)">Camera AI recunoaște fețe sau numere de înmatriculare? <svg class="faq-chevron" width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg></button>
+          <div class="faq-a"><p>Sunt funcții diferite. Clasificarea om/vehicul și alertele de comportament nu identifică persoane anume. Recunoașterea numărului de înmatriculare (ANPR) este o funcție separată, folosită la parcări și acces auto. Recunoașterea facială este și mai sensibilă legal și o recomandăm doar în cazuri justificate și conforme GDPR. Îți explicăm ce e permis pentru situația ta.</p></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q" onclick="toggleFaq(this)">Am nevoie de internet sau de un abonament ca să funcționeze AI-ul? <svg class="faq-chevron" width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg></button>
+          <div class="faq-a"><p>În cele mai multe cazuri, nu. Analiza AI rulează local, în cameră sau în înregistrator, așa că detecția merge și fără internet. Ai nevoie de conexiune doar pentru a primi alertele pe telefon și a vedea imaginile de la distanță. Nu impunem abonamente pentru funcțiile de bază — îți spunem clar ce merge local și ce cere conectare.</p></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q" onclick="toggleFaq(this)">Camerele AI respectă GDPR? <svg class="faq-chevron" width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg></button>
+          <div class="faq-a"><p>Da, dacă sunt configurate corect. Supravegherea trebuie semnalizată, limitată la zonele justificate și cu o durată rezonabilă de păstrare a imaginilor. Funcțiile care prelucrează date biometrice, precum recunoașterea facială, au cerințe suplimentare și nu se folosesc la întâmplare. Proiectăm sistemul respectând Legea 333/2003 și regulile GDPR și îți spunem exact ce este permis.</p></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q" onclick="toggleFaq(this)">Pot transforma camerele pe care le am deja în camere cu AI? <svg class="faq-chevron" width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg></button>
+          <div class="faq-a"><p>Depinde de modelul lor. Camerele mai vechi, fără analiză video, nu pot clasifica obiecte singure, dar uneori înregistratorul poate face analiza pentru ele, dacă are procesare AI și suficiente canale. Alteori e mai simplu să înlocuiești doar camerele de la punctele critice (poartă, perimetru, intrări) și să le păstrezi pe celelalte. Verificăm la evaluare ce model ai, ce suportă înregistratorul și îți spunem ce merită păstrat și ce nu.</p></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q" onclick="toggleFaq(this)">Funcționează camera AI bine noaptea, la ceață sau la ninsoare? <svg class="faq-chevron" width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg></button>
+          <div class="faq-a"><p>Funcționează, dar precizia scade pe măsură ce imaginea devine mai slabă. Pe timp de noapte contează senzorul și iluminarea, iar la ceață deasă sau ninsoare abundentă modelul poate rata detecții sau clasifica greșit. De aceea testăm sistemul în condiții diferite și, unde situația cere, completăm cu iluminare suplimentară sau cu tehnologii precum camerele termice. Nu promitem detecție perfectă în orice condiții; promitem un sistem testat pe scena ta.</p></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q" onclick="toggleFaq(this)">Cât durează reglarea și când văd efectul? <svg class="faq-chevron" width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg></button>
+          <div class="faq-a"><p>Montajul și configurarea de bază se fac, de obicei, într-o zi sau două, în funcție de numărul de camere. Reglarea fină durează mai mult: urmărim sistemul 1–2 săptămâni, vedem ce alerte apar și corectăm zonele, pragurile și programele. Efectul se simte încă din primele zile, dar sistemul ajunge la nivelul lui bun după această perioadă de ajustare.</p></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q" onclick="toggleFaq(this)">Ce se întâmplă dacă pică internetul sau curentul? <svg class="faq-chevron" width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg></button>
+          <div class="faq-a"><p>Dacă analiza rulează local, camerele și înregistratorul continuă să detecteze și să înregistreze fără internet; ce nu merge e trimiterea alertelor pe telefon și accesul de la distanță, până revine conexiunea. La pana de curent, sistemul se oprește dacă nu are alimentare de rezervă, de aceea la punctele critice recomandăm un UPS dimensionat pentru înregistrator și switch. Alertele locale, precum sirena și lumina, rămân utile și fără internet, dacă sunt legate direct la eveniment.</p></div>
+        </div>
+      </div>
+
+      <aside class="discuta-in-grup">
+        <h3>Ai o întrebare despre asta?</h3>
+        <p>Discutăm subiectul în grupul nostru de pe Facebook, împreună cu electricieni, instalatori și proprietari din Brașov și împrejurimi. Pune întrebarea acolo și primești răspuns de la oameni care lucrează efectiv în domeniu. Suntem deja <!-- MEMBRI-GRUP -->351<!-- /MEMBRI-GRUP --> în grup.</p>
+        <a href="https://www.facebook.com/groups/1970585079825010" rel="noopener" target="_blank">Intră în grupul Instalații Brașov →</a>
+      </aside>
+      <div class="cta-banner">
+        <div>
+          <h3>Pașii următori — cere oferta ta</h3>
+          <p>Fără obligații: vii cu nevoia, pleci cu o soluție și un preț defalcat. CSSI — 20 de ani, 8.700+ proiecte în județul Brașov.</p>
+        </div>
+        <div class="cta-buttons">
+          <a href="/camere-supraveghere" class="btn btn-secondary">📍 Camere supraveghere în Brașov</a>
+          <a href="/contact" class="btn btn-secondary">📩 Cere ofertă</a>
+          <a href="tel:0752288400" class="btn btn-primary">📞 0752 288 400</a>
+          <a target="_blank" rel="noopener" href="https://wa.me/40752288400" class="btn btn-secondary">💬 WhatsApp</a>
+        </div>
+      </div>
+
+    </main>
+
+    <aside class="sidebar">
+      <div class="sidebar-card">
+        <div class="sidebar-card-head">📑 Cuprins</div>
+        <div class="sidebar-card-body" style="padding:10px 18px">
+          <ol class="toc-list">
+            <li><a href="#raspunsul-scurt">Răspunsul scurt</a></li>
+            <li><a href="#de-la-se-misca-ceva-la-e-un-om-acolo">De la „se mișcă ceva" la „e un om acolo"</a></li>
+            <li><a href="#ce-este-mai-exact-deep-learning-ul-dintr">Ce este, mai exact, deep learning-ul dintr-o cameră</a></li>
+            <li><a href="#tipurile-de-alerte-inteligente-pe-care-l">Tipurile de alerte inteligente pe care le poți folosi</a></li>
+            <li><a href="#cum-ajung-alertele-la-tine">Cum ajung alertele la tine</a></li>
+            <li><a href="#ai-nu-inseamna-ca-renunti-la-o-imagine-b">AI nu înseamnă că renunți la o imagine bună</a></li>
+            <li><a href="#ai-anpr-si-recunoastere-faciala-nu-confu">AI, ANPR și recunoaștere facială — nu confunda funcțiile</a></li>
+            <li><a href="#reducerea-alarmelor-false-cum-o-faci-in-">Reducerea alarmelor false: cum o faci în practică</a></li>
+            <li><a href="#cautarea-dupa-eveniment-castigul-de-care">Căutarea după eveniment: câștigul de care nu te gândești la început</a></li>
+            <li><a href="#partea-de-gdpr-si-lege-pe-scurt">Partea de GDPR și lege, pe scurt</a></li>
+            <li><a href="#greseli-frecvente-la-camerele-cu-ai">Greșeli frecvente la camerele cu AI</a></li>
+            <li><a href="#cat-costa-camerele-cu-ai-in-2026-orienta">Cât costă camerele cu AI în 2026 (orientativ)</a></li>
+            <li><a href="#cum-arata-implementarea-cssi">Cum arată implementarea CSSI</a></li>
+            <li><a href="#mentenanta-si-verificari-periodice">Mentenanță și verificări periodice</a></li>
+            <li><a href="#citeste-si">Citește și</a></li>
+            <li><a href="#faq">Întrebări frecvente</a></li>
+          </ol>
+        </div>
+      </div>
+      <div class="sidebar-card">
+        <div class="sidebar-card-head">📞 Contact CSSI Brașov</div>
+        <div class="sidebar-card-body">
+          <ul class="contact-info">
+            <li><div class="ci-icon">📞</div><div><strong>0752 288 400</strong><span>Lun–Vin 08:00–18:00</span></div></li>
+            <li><div class="ci-icon">📧</div><div><strong>office@cssi.ro</strong><span>Răspuns în max 24h</span></div></li>
+            <li><div class="ci-icon">📍</div><div><strong>Brașov</strong><span>și județele înconjurătoare</span></div></li>
+          </ul>
+          <a target="_blank" rel="noopener" href="https://wa.me/40752288400" class="btn btn-primary" style="margin-top:12px">💬 Scrie pe WhatsApp</a>
+        </div>
+      </div>
+    </aside>
+  </div>
+
+<footer class="article-footer">
+    <p>Articol scris de echipa <strong>CSSI Brașov</strong> — firmă autorizată IGPR și ISU, cu peste 20 de ani de experiență în sisteme de securitate și instalații.</p>
+    <div class="tags">
+      <span class="tag">camere supraveghere brasov</span>
+      <span class="tag">instalare camere</span>
+      <span class="tag">preturi camere 2026</span>
+      <span class="tag">Hikvision</span>
+      <span class="tag">Dahua</span>
+      <span class="tag">Uniview</span>
+      <span class="tag">CCTV</span>
+      <span class="tag">Brașov</span>
+    </div>
+    <p style="font-size:12px;color:#aaa;margin-top:8px">© 2026 CSSI — Confort, Securitate, Siguranță, Imobil | <a href="/">cssi.ro</a></p>
+  </footer>
+<script>
+    function toggleFaq(btn) {
+      const item = btn.closest('.faq-item');
+      const isOpen = item.classList.contains('open');
+      document.querySelectorAll('.faq-item.open').forEach(el => el.classList.remove('open'));
+      if (!isOpen) item.classList.add('open');
+    }
+    const headings = document.querySelectorAll('h2[id]');
+    const tocLinks = document.querySelectorAll('.toc-list a');
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          tocLinks.forEach(a => a.style.color = '');
+          const active = document.querySelector(`.toc-list a[href="#${entry.target.id}"]`);
+          if (active) active.style.color = 'var(--brand-blue)';
+        }
+      });
+    }, { rootMargin: '-20% 0px -70% 0px' });
+    headings.forEach(h => observer.observe(h));
+  </script>
+  <script>
+    let navTextColor = '#fff';
+    window.addEventListener('scroll', function() {
+        const navBg = document.getElementById('navBg');
+        const logo = document.getElementById('logoImg');
+        const scrolled = window.scrollY > 50;
+        if (scrolled) {
+            navBg.style.background = '#ffffff';
+            navBg.style.backdropFilter = 'blur(12px)';
+            navBg.style.boxShadow = '0 1px 2px rgba(0,0,0,0.05)';
+            if (logo) logo.style.filter = '';
+            navTextColor = '#334155';
+        } else {
+            navBg.style.background = 'transparent';
+            navBg.style.backdropFilter = '';
+            navBg.style.boxShadow = '';
+            if (logo) logo.style.filter = 'brightness(0) invert(1) drop-shadow(0 0 1px rgba(255,255,255,0.8))';
+            navTextColor = '#fff';
+        }
+        ['navLink1','navLink2','navLink3','navLink4','navLinkBlog','navLink5','phoneLink'].forEach(id=>{
+            const el=document.getElementById(id);
+            if(el) el.style.color=navTextColor;
+        });
+    });
+    function toggleMobileMenu(){
+        const menu=document.getElementById('mobileMenu');
+        const menuIcon=document.getElementById('menuIcon');
+        const closeIcon=document.getElementById('closeIcon');
+        const btn=document.getElementById('menuBtn');
+        if(menu.classList.contains('open')){
+            menu.classList.remove('open');
+            menuIcon.style.display='';
+            closeIcon.style.display='none';
+            btn.style.background='linear-gradient(to right,#ef4444,#dc2626)';
+            btn.classList.add('animate-subtle-pulse');
+        } else {
+            menu.classList.add('open');
+            menuIcon.style.display='none';
+            closeIcon.style.display='';
+            btn.style.background='#6b7280';
+            btn.classList.remove('animate-subtle-pulse');
+        }
+    }
+    function closeMobile(){
+        document.getElementById('mobileMenu').classList.remove('open');
+        document.getElementById('menuIcon').style.display='';
+        document.getElementById('closeIcon').style.display='none';
+    }
+    function toggleServicesSubmenu(){
+        const sub=document.getElementById('servicesSubmenu');
+        const arrow=document.getElementById('servicesArrow');
+        if(sub.classList.contains('open')){
+            sub.classList.remove('open');
+            arrow.style.transform='';
+        } else {
+            sub.classList.add('open');
+            arrow.style.transform='rotate(180deg)';
+        }
+    }
+  </script>
+<script>
+// GA4 tracking: phone_call & whatsapp_click
+document.addEventListener('DOMContentLoaded', function() {
+    document.querySelectorAll('a[href^="tel:"]').forEach(function(link) {
+        link.addEventListener('click', function() {
+            if (typeof gtag === 'function') {
+                gtag('event', 'phone_call', {event_category:'Contact', event_label:this.href.replace('tel:',''), value:100, currency:'RON'});
+            }
+        });
+    });
+    document.querySelectorAll('a[href*="wa.me"]').forEach(function(link) {
+        link.addEventListener('click', function() {
+            if (typeof gtag === 'function') {
+                gtag('event', 'whatsapp_click', {event_category:'Contact', event_label:'WhatsApp Direct', value:100, currency:'RON'});
+            }
+        });
+    });
+});
+</script>
+<a id="waFloat" href="https://wa.me/40752288400" target="_blank" rel="noopener noreferrer" aria-label="Scrie-ne pe WhatsApp"><svg width="28" height="28" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg></a><button id="toTop" aria-label="Înapoi sus" onclick="window.scrollTo({top:0,behavior:&#39;smooth&#39;})"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 15l-6-6-6 6"/></svg></button><script>(function(){var b=document.getElementById("toTop");window.addEventListener("scroll",function(){if(window.scrollY>400)b.classList.add("show");else b.classList.remove("show");});})();</script>
+</body>
+</html>
