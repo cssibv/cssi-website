@@ -117,8 +117,9 @@
     @media (max-width: 639px) { .auth-w2 { display: block; } }
     .badges-desk { display: none; margin-bottom: 16px; }
     @media (max-width: 380px) { .auth-grid { gap: 6px; } }
+    @media (max-width: 400px) { .hero-stats { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; } }
     @media (min-width: 1024px) {
-        .lg-grid-2 { grid-template-columns: 1fr 1fr !important; }
+        .lg-grid-2 { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; }
         .badges-mob { display: none !important; }
         .badges-desk { display: grid !important; }
         .lg-grid-3 { grid-template-columns: repeat(3, 1fr) !important; }
@@ -163,7 +164,7 @@
 
     <!-- Top Bar Desktop -->
     <div class="hidden sm:block" style="background:#0f172a;color:#fff;font-size:12px;padding:6px 0;">
-        <div style="max-width:1280px;margin:0 auto;padding:0 24px;display:flex;justify-content:space-between;align-items:center;">
+        <div style="max-width:1280px;margin:0 auto;padding:0 16px;display:flex;justify-content:space-between;align-items:center;">
             <span id="topExp">⭐ <span style="font-weight:600;">Peste 20 ani de experiență</span></span>
             <div style="display:flex;align-items:center;gap:16px;">
                 <span>⭐ <span style="font-weight:600;">8.700+ proiecte</span></span>
@@ -173,7 +174,7 @@
 
     <!-- Top Bar Mobile -->
     <div class="sm:hidden" style="background:#0f172a;color:#fff;font-size:12px;padding:6px 0;">
-        <div style="max-width:1280px;margin:0 auto;padding:0 12px;display:flex;justify-content:space-between;align-items:center;">
+        <div style="max-width:1280px;margin:0 auto;padding:0 16px;display:flex;justify-content:space-between;align-items:center;">
             <span id="topExpMob">⭐ <span style="font-weight:600;">Peste 20 ani de experiență</span></span>
             <a href="tel:0752288400" style="display:flex;align-items:center;gap:4px;font-weight:600;color:#fff;">
                 📞 Sună acum
@@ -183,7 +184,7 @@
 
     <!-- Main Nav -->
     <div id="navBg" style="transition:all 0.3s;">
-        <div style="max-width:1280px;margin:0 auto;padding:0 12px;display:flex;justify-content:space-between;align-items:center;height:64px;" class="sm:px-6 nav-row">
+        <div style="max-width:1280px;margin:0 auto;padding:0 16px;display:flex;justify-content:space-between;align-items:center;height:64px;" class="nav-row">
 
             <!-- Logo -->
             <a href="/">
@@ -286,7 +287,7 @@
     </div>
 
     <div class="hero-content sm:pt-32" style="position:relative;max-width:1280px;margin:0 auto;padding:96px 16px 80px;">
-        <div style="display:grid;grid-template-columns:1fr;gap:64px;align-items:center;min-height:70vh;" class="lg-grid-2">
+        <div style="display:grid;grid-template-columns:minmax(0,1fr);gap:64px;align-items:center;min-height:70vh;" class="lg-grid-2">
 
             <!-- Left Content -->
             <div style="color:#fff;">
@@ -305,7 +306,7 @@
                 </p>
 
                 <!-- Stats -->
-                <div class="hero-stats" style="display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:32px;">
+                <div class="hero-stats" style="display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px;margin-bottom:32px;">
                     <div style="text-align:center;padding:16px 8px;background:rgba(255,255,255,0.06);border-radius:12px;border:1px solid rgba(255,255,255,0.1);backdrop-filter:blur(4px);"><div style="font-size:clamp(1.25rem,3vw,1.875rem);font-weight:800;color:#fff;">8.700+</div><div style="color:#94a3b8;font-size:12px;margin-top:4px;">Proiecte Finalizate</div></div>
                     <div style="text-align:center;padding:16px 8px;background:rgba(255,255,255,0.06);border-radius:12px;border:1px solid rgba(255,255,255,0.1);backdrop-filter:blur(4px);"><div style="font-size:clamp(1.25rem,3vw,1.875rem);font-weight:800;color:#fff;">4.700+</div><div style="color:#94a3b8;font-size:12px;margin-top:4px;">Clienți Mulțumiți</div></div>
                     <div style="text-align:center;padding:16px 8px;background:rgba(255,255,255,0.06);border-radius:12px;border:1px solid rgba(255,255,255,0.1);backdrop-filter:blur(4px);"><div style="font-size:clamp(1.25rem,3vw,1.875rem);font-weight:800;color:#fff;">22</div><div style="color:#94a3b8;font-size:12px;margin-top:4px;">Ani Experiență</div></div>
